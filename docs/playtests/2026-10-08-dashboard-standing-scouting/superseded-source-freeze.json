@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/esports_sim/web/server.py",
+    "sha256": "216B19BBAB3E1A995716DF90B962B0019135C8E31DAAFF6DDF8EF5502FBD53CE"
+  },
+  {
+    "path": "src/esports_sim/web/static/app.js",
+    "sha256": "9406CA18972C1216AF48823E97B83343FF92591912142CD144AE30FAAAE3A12C"
+  },
+  {
+    "path": "tests/test_web_scout_readiness.py",
+    "sha256": "BD4357297717EEFC7C31BECFF11F18F93AFF3CD1F3DA519B51CB1DD031C82B55"
+  }
+]

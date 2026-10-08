@@ -1984,8 +1984,7 @@ async function dashboard(v) {
       fix.stage === "regular" ? `${region} League` : stageLabel(fix.stage).toUpperCase();
     const burnoutWatch = (s.rotation || []).filter((r) => r.burnout);
     const rosterShort = s.roster_readiness?.ready === false;
-    const scoutOnOpponent = s.scout && s.scout.target === oppId;
-    const scoutPct = scoutOnOpponent ? Math.round((s.scout.progress || 0) * 100) : 0;
+    const scoutReady = s.scout?.readiness;
     const planSet = !!(gameplan && gameplan.plan);
 
     const heroTop = el("div", "es-matchday-top");
@@ -1995,7 +1994,7 @@ async function dashboard(v) {
       `<p class="muted">Everything to settle before you advance the week.</p>`));
     const readiness = el("div", "es-readiness",
       `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
-      `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
+      `<span class="pill ${scoutReady?.ready ? "good" : ""}">${esc(scoutReady?.badge || "Scouting unassigned")}</span>` +
       `<span class="pill ${rosterShort || burnoutWatch.length ? "warn" : "good"}">${rosterShort ? "Squad short" : burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
     const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
     mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
@@ -2074,12 +2073,10 @@ async function dashboard(v) {
         App.tacticsTab = "gameplan"; dashGoTab("tactics");
       });
 
-    prepCard("Analyst", scoutOnOpponent ? `Turn ${scoutPct}% coverage into edges` : `Put the book on ${esc(oppName)}`,
-      scoutOnOpponent
-        ? (scoutPct >= 50 ? "The identity read is coming into focus. Review tendencies, danger players, and map evidence before finalizing the plan."
-          : "Coverage is building. Keep the assignment active, then use verified reads instead of guessing at their setup.")
-        : `Your scout is not assigned to ${esc(oppName)}. Switch coverage if this match is the priority.`,
-      scoutOnOpponent ? `${scoutPct}%` : "Unassigned", scoutPct >= 50 ? "ready" : "urgent", "Scouting desk", () => dashGoTab("scouting"));
+    prepCard("Analyst", esc(scoutReady?.title || "Review scouting"),
+      esc(scoutReady?.copy || "Open the scouting desk to review coverage."),
+      esc(scoutReady?.status || "Unassigned"), scoutReady?.tone || "",
+      "Scouting desk", () => dashGoTab("scouting"));
 
     const devPlayer = (s.movers || []).find((m) => m.delta < 0) || (s.movers || [])[0];
     const devTitle = burnoutWatch.length ? "Ease the load, keep growth targeted"
@@ -6272,7 +6269,7 @@ function scoutLanesCard(lanes) {
 
   const post = async (body) => {
     const r = await api("/api/actions/scout-directive", body);
-    toast(r.message); renderApp();
+    toast(r.message); await refresh();
   };
 
   const grid = el("div", "scout-lanes-grid");

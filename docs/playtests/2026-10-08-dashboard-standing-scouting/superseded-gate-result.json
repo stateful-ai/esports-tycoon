@@ -1,0 +1,1 @@
+{"exit_code":1,"status":"interrupted by Ctrl-C after real JS source correction","terminal_session":91786,"command":"python -m pytest -q -n 2","result":"no completed test count"}
