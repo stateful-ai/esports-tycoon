@@ -1,0 +1,335 @@
+{
+  "events": 88,
+  "event_observations": 6012,
+  "unique_event_players": 2212,
+  "maps": 8043,
+  "unique_map_players": 2268,
+  "unique_observed_players": 2268,
+  "player_map_observations": 79900,
+  "fully_reconciled_event_candidates": 80,
+  "round_rows": 166527,
+  "economy_team_round_rows": 289764,
+  "performance_player_map_rows": 68547,
+  "player_map_side_rows": 159800,
+  "side_rows_with_no_reported_stats": 12168,
+  "round_eligible_maps": 7887,
+  "round_ineligible_maps": 156,
+  "economy_eligible_maps": 6835,
+  "economy_ineligible_maps": 1208,
+  "performance_values_requiring_review": 3,
+  "maps_with_economy": 6871,
+  "maps_with_performance": 6855,
+  "missingness": "Unreported values remain blank; displayed bank strings are rounded. Performance blanks do not become zero.",
+  "provenance": "Compact round/performance facts join map_id + tab to tab_coverage.csv, which reconciles hash and timestamp to sources.csv.",
+  "map_eligibility_reasons": {
+    "ten_identified_players": 7929,
+    "incomplete_or_ambiguous_source_lineup": 105,
+    "unknown_map_requires_review": 6,
+    "administrative_scoreline_without_observed_play": 3
+  },
+  "maps_by_year": {
+    "2024": 1357,
+    "2025": 1461,
+    "2026": 5225
+  },
+  "observed_lineup_changes": 789,
+  "observed_player_team_changes": 891,
+  "players_observed_with_multiple_teams": 643,
+  "model": {
+    "model_version": 2,
+    "input_sha256": {
+      "event_manifest.json": "ed8f6791903c6a2e6dc487d09813c67e212de8ac7caf31d9852b12cc83953b19",
+      "map_outcomes.csv": "71c88aec18c3da9c0066261f7d1d93bf51153f93f38aae35327561d129ceb12e",
+      "player_map_stats.csv": "1150b599c7b3250069026fbb818832cca20e7584fa751efb73d6912a4012306d",
+      "map_context.csv": "ec8af3105073fb41ab2325a47dd81f6a89849f6a51a1a2f086fd0078ada5929a",
+      "agent_role_reference.csv": "3b431103d523840ea6ddc1d1d79f0f05ac3bf63d9d669dbc3d500bef01573e02"
+    },
+    "code_sha256": {
+      "analyze_vlr_war_history.py": "cb9c28c466987955167c763195bd86bd801b23eedb7fab2588a5315c291469ca",
+      "analyze_vlr_research.py": "fffa780690901cf55a17b0e15017aea09db580bf02ffc0cd0cc324748bd9470d"
+    },
+    "dependencies": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    },
+    "cutoffs": {
+      "validation_start": "2026-04-01",
+      "test_start": "2026-07-15"
+    },
+    "split_unit": "UTC calendar date; entire series kept together",
+    "eligible_maps": 7929,
+    "players": 2255,
+    "exactly_inseparable_players": 1185,
+    "connected_components": 2,
+    "matched_2026_cohort_identification": {
+      "players_2026": 2041,
+      "inseparable_with_2026_only": 1370,
+      "inseparable_with_history": 1083,
+      "exact_ties_resolved_by_history": 287
+    },
+    "unknown_role_players": 36,
+    "train_maps": 7250,
+    "test_maps": 679,
+    "models": {
+      "team_year_map": {
+        "validation": [
+          {
+            "penalty": 1.0,
+            "half_life_days": null,
+            "log_loss": 0.74113,
+            "brier_score": 0.267883,
+            "accuracy": 0.531499
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": null,
+            "log_loss": 0.694581,
+            "brier_score": 0.250581,
+            "accuracy": 0.525706
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": null,
+            "log_loss": 0.689811,
+            "brier_score": 0.248347,
+            "accuracy": 0.523172
+          },
+          {
+            "penalty": 1.0,
+            "half_life_days": 365,
+            "log_loss": 0.735416,
+            "brier_score": 0.266241,
+            "accuracy": 0.52824
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": 365,
+            "log_loss": 0.693347,
+            "brier_score": 0.250055,
+            "accuracy": 0.527878
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": 365,
+            "log_loss": 0.689951,
+            "brier_score": 0.248417,
+            "accuracy": 0.527154
+          }
+        ],
+        "selected_penalty": 20.0,
+        "selected_half_life_days": null,
+        "train_maps": 7250,
+        "test": {
+          "log_loss": 0.692495,
+          "brier_score": 0.249542,
+          "accuracy": 0.530191
+        }
+      },
+      "lineup_history": {
+        "validation": [
+          {
+            "penalty": 1.0,
+            "half_life_days": null,
+            "log_loss": 0.80183,
+            "brier_score": 0.284807,
+            "accuracy": 0.530413
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": null,
+            "log_loss": 0.725328,
+            "brier_score": 0.262876,
+            "accuracy": 0.516655
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": null,
+            "log_loss": 0.695776,
+            "brier_score": 0.251171,
+            "accuracy": 0.511224
+          },
+          {
+            "penalty": 1.0,
+            "half_life_days": 365,
+            "log_loss": 0.799115,
+            "brier_score": 0.283939,
+            "accuracy": 0.529327
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": 365,
+            "log_loss": 0.722806,
+            "brier_score": 0.261853,
+            "accuracy": 0.520999
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": 365,
+            "log_loss": 0.694595,
+            "brier_score": 0.250599,
+            "accuracy": 0.517017
+          }
+        ],
+        "selected_penalty": 20.0,
+        "selected_half_life_days": 365,
+        "train_maps": 7250,
+        "test": {
+          "log_loss": 0.695857,
+          "brier_score": 0.250806,
+          "accuracy": 0.547865
+        }
+      },
+      "lineup_2026_only": {
+        "validation": [
+          {
+            "penalty": 1.0,
+            "half_life_days": null,
+            "log_loss": 0.80248,
+            "brier_score": 0.283012,
+            "accuracy": 0.536206
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": null,
+            "log_loss": 0.720485,
+            "brier_score": 0.260159,
+            "accuracy": 0.532585
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": null,
+            "log_loss": 0.692778,
+            "brier_score": 0.249636,
+            "accuracy": 0.52643
+          }
+        ],
+        "selected_penalty": 20.0,
+        "selected_half_life_days": null,
+        "train_maps": 4435,
+        "test": {
+          "log_loss": 0.704684,
+          "brier_score": 0.254522,
+          "accuracy": 0.546392
+        }
+      },
+      "hybrid_history": {
+        "validation": [
+          {
+            "penalty": 1.0,
+            "half_life_days": null,
+            "log_loss": 0.819234,
+            "brier_score": 0.288902,
+            "accuracy": 0.530775
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": null,
+            "log_loss": 0.729367,
+            "brier_score": 0.264046,
+            "accuracy": 0.523534
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": null,
+            "log_loss": 0.696613,
+            "brier_score": 0.251497,
+            "accuracy": 0.513758
+          },
+          {
+            "penalty": 1.0,
+            "half_life_days": 365,
+            "log_loss": 0.814244,
+            "brier_score": 0.287942,
+            "accuracy": 0.529689
+          },
+          {
+            "penalty": 5.0,
+            "half_life_days": 365,
+            "log_loss": 0.726795,
+            "brier_score": 0.26321,
+            "accuracy": 0.521723
+          },
+          {
+            "penalty": 20.0,
+            "half_life_days": 365,
+            "log_loss": 0.695499,
+            "brier_score": 0.25099,
+            "accuracy": 0.519189
+          }
+        ],
+        "selected_penalty": 20.0,
+        "selected_half_life_days": 365,
+        "train_maps": 7250,
+        "test": {
+          "log_loss": 0.700729,
+          "brier_score": 0.2528,
+          "accuracy": 0.552283
+        }
+      }
+    },
+    "paired_comparison": {
+      "lineup_history": {
+        "lineup_minus_team_log_loss": 0.003361894948378179,
+        "bootstrap_95pct_interval": [
+          -0.008163183269394563,
+          0.015149151124643254
+        ],
+        "series": 270,
+        "method": "2000 paired series-cluster bootstrap resamples; blake2b-derived seed from vlr-war-history:series-bootstrap:20261008. Conditional on fixed fitted models; not player-coefficient uncertainty."
+      },
+      "lineup_2026_only": {
+        "lineup_minus_team_log_loss": 0.012189019350899815,
+        "bootstrap_95pct_interval": [
+          -0.0008914052016214904,
+          0.02665781714739724
+        ],
+        "series": 270,
+        "method": "2000 paired series-cluster bootstrap resamples; blake2b-derived seed from vlr-war-history:series-bootstrap:20261008. Conditional on fixed fitted models; not player-coefficient uncertainty."
+      },
+      "hybrid_history": {
+        "lineup_minus_team_log_loss": 0.008233700643191705,
+        "bootstrap_95pct_interval": [
+          -0.0037842560398255397,
+          0.021451802922863535
+        ],
+        "series": 270,
+        "method": "2000 paired series-cluster bootstrap resamples; blake2b-derived seed from vlr-war-history:series-bootstrap:20261008. Conditional on fixed fitted models; not player-coefficient uncertainty."
+      }
+    },
+    "changed_lineup_test_maps": 392,
+    "changed_lineup_test_metrics": {
+      "team_year_map": {
+        "log_loss": 0.698327,
+        "brier_score": 0.252387,
+        "accuracy": 0.502551
+      },
+      "lineup_history": {
+        "log_loss": 0.701237,
+        "brier_score": 0.253511,
+        "accuracy": 0.533163
+      },
+      "lineup_2026_only": {
+        "log_loss": 0.712082,
+        "brier_score": 0.258067,
+        "accuracy": 0.530612
+      },
+      "hybrid_history": {
+        "log_loss": 0.707489,
+        "brier_score": 0.25613,
+        "accuracy": 0.538265
+      }
+    },
+    "feature_rules": "Signed player identities; team-year and team-map identities for baseline/hybrid; map starting side. Same-map outcome stats are excluded. Unseen columns fit to zero under ridge.",
+    "historical_weighting": "Equal weights versus 365-day half-life chosen on validation only; age measured before each fitting boundary. Team-year baseline permits team strength to change by year.",
+    "war_rules": "Full-history refit after heldout evaluation; replace player coefficient with 25th percentile same-component/same-role >=10-map 2026 tier2 pool; blank when <8 peers. Dominant role uses 2026 appearances, with historical fallback for players absent in 2026.",
+    "limits": [
+      "Observational, not causal WAR",
+      "Lineup variation does not eliminate near-collinearity, coaching or selection confounds",
+      "2024/2025 coverage is tier1 plus Ascension; historical tier2 league coverage is incomplete",
+      "Bank/economy are rounded source displays; no weapon inventory/trades/utility event feed",
+      "Replacement pool is not a verified available free-agent market",
+      "No coefficient uncertainty or automatic overall updates"
+    ]
+  },
+  "runtime_roster_edits": false
+}

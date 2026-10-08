@@ -1,0 +1,2 @@
+# Preserve whitespace inside quoted source stage labels in the research CSV.
+data/research/war-history/map_context.csv -whitespace

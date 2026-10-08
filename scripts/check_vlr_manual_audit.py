@@ -32,7 +32,8 @@ def equivalent(expected, actual):
 def check(data):
     audit = data / "manual_audit"
     spec = json.loads((audit / "observations.json").read_text())
-    tables = {name: rows(data / name) for name in ["map_outcomes.csv", "player_map_stats.csv", "player_event_stats.csv", "player_profiles.csv"]}
+    names = sorted({o['table'] for p in spec['pages'] for o in p['observations']})
+    tables = {name: rows(data / name) for name in names}
     checks = []
     for page in spec["pages"]:
         screenshot = audit / page["screenshot"]
@@ -56,7 +57,7 @@ def check(data):
                "checked_csv_sha256": {name: hashlib.sha256((data / name).read_bytes()).hexdigest() for name in tables},
                "pages": len({p["url"] for p in spec["pages"]}), "screenshots": len(spec["pages"]), "field_checks": len(checks),
                "passed": sum(r["passed"] for r in checks), "failed": sum(not r["passed"] for r in checks),
-               "scope": "Purposive sample: tier 1, tier 2, overtime, event totals, missing stats/lineups, and free-agent profile identity/current versus past listings; not a statistical accuracy estimate."}
+               "scope": spec.get('scope', "Purposive sample: tier 1, tier 2, overtime, event totals, missing stats/lineups, and free-agent profile identity/current versus past listings; not a statistical accuracy estimate.")}
     (audit / "result.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps(receipt))
     if receipt["failed"]:

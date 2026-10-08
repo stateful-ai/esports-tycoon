@@ -274,3 +274,13 @@ edit a draft/compact source, validate, compile deterministically, and run gates.
 
 The dataset's exact final counts, identified gaps, and evaluation results are
 summarized in `data/research/vct-2026/research_summary.json` after collection.
+
+## Historical follow-up
+
+The [historical WAR research](vlr-war-history.md) expands all 50 selected
+2026 events to full-map collection and adds 2024–25 tier-1 events and
+regional Ascension finals. Its separate snapshot includes rounds, economy,
+performance and side splits, observed lineup changes, profile roster-history
+evidence, and a chronological model comparison. The original dataset and
+its results above remain the initial snapshot; use the follow-up report for
+the expanded coverage and current experimental results.

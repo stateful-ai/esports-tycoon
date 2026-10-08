@@ -9,6 +9,7 @@ import argparse
 import csv
 import gzip
 import hashlib
+import http.client
 import json
 import re
 import time
@@ -80,7 +81,7 @@ class Cache:
         self.sources = {}
         self.last_request = 0.0
 
-    def get(self, url):
+    def get(self, url, parse_only=None):
         key = hashlib.sha256(url.encode()).hexdigest()
         p, meta = self.path / (key + ".html.gz"), self.path / (key + ".json")
         if p.exists() and meta.exists():
@@ -94,18 +95,25 @@ class Cache:
             # Respect the source's robots policy and keep requests sequential.
             if not url.startswith(HOST + "/") or "/search/auto" in url or "/rr/" in url:
                 raise ValueError(f"Unsupported URL: {url}")
-            time.sleep(max(0, self.delay - (time.monotonic() - self.last_request)))
             req = urllib.request.Request(url, headers={"User-Agent": "esports-tycoon-research/1.0 (public match statistics; cached)"})
-            self.last_request = time.monotonic()
-            with urllib.request.urlopen(req, timeout=40) as response:
-                body = response.read()
+            for attempt in range(3):
+                time.sleep(max(0, self.delay - (time.monotonic() - self.last_request)))
+                self.last_request = time.monotonic()
+                try:
+                    with urllib.request.urlopen(req, timeout=40) as response:
+                        body = response.read()
+                    break
+                except (http.client.IncompleteRead, TimeoutError, ConnectionResetError, urllib.error.URLError) as error:
+                    if attempt == 2 or isinstance(error,urllib.error.HTTPError) and error.code<500:
+                        raise
+                    time.sleep(attempt + 1)
             record = {"source_url": url, "sha256": hashlib.sha256(body).hexdigest(),
                       "retrieved_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                       "bytes": len(body), "parser_version": VERSION}
             p.write_bytes(gzip.compress(body, mtime=0))
             meta.write_text(json.dumps(record, sort_keys=True) + "\n")
         self.sources[url] = record
-        return BeautifulSoup(body, "lxml"), record
+        return BeautifulSoup(body, "lxml", parse_only=parse_only), record
 
 
 def parse_event_stats(soup, event, provenance):
@@ -143,10 +151,10 @@ def parse_event_stats(soup, event, provenance):
     return rows
 
 
-def parse_match(soup, event, provenance, cutoff):
+def parse_match(soup, event, provenance, cutoff, start_date="2026-01-01"):
     date = soup.select_one(".match-header-date [data-utc-ts]")
     stamp = date.get("data-utc-ts", "") if date else ""
-    if not stamp or stamp[:10] > cutoff or stamp[:4] != "2026":
+    if not stamp or not start_date <= stamp[:10] <= cutoff:
         return [], [], "outside_cutoff_or_missing_date"
     links = soup.select(".match-header-vs a.match-header-link")
     if len(links) != 2 or any(not a.get("href", "").startswith("/team/") for a in links):

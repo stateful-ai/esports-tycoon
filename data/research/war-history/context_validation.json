@@ -1,0 +1,22 @@
+{
+  "round_rows": 166527,
+  "economy_team_round_rows": 289764,
+  "performance_player_map_rows": 68547,
+  "player_map_side_rows": 159800,
+  "side_rows_with_no_reported_stats": 12168,
+  "round_eligible_maps": 7887,
+  "round_ineligible_maps": 156,
+  "economy_eligible_maps": 6835,
+  "economy_ineligible_maps": 1208,
+  "performance_values_requiring_review": 3,
+  "maps_with_economy": 6871,
+  "maps_with_performance": 6855,
+  "errors": [],
+  "warnings": [
+    "Source-negative ECON retained for review: 269508 player 20828",
+    "Source-negative ECON retained for review: 269508 player 46104",
+    "Source-negative ECON retained for review: 269508 player 51696"
+  ],
+  "missingness": "Unreported values remain blank; displayed bank strings are rounded. Performance blanks do not become zero.",
+  "provenance": "Compact round/performance facts join map_id + tab to tab_coverage.csv, which reconciles hash and timestamp to sources.csv."
+}

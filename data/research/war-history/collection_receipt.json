@@ -1,0 +1,20 @@
+{
+  "collector_version": 3,
+  "python_version": "3.12.14",
+  "dependencies": {
+    "beautifulsoup4": "4.15.0",
+    "lxml": "6.1.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "source_cache_metadata_note": "sources.csv parser_version is the immutable cache acquisition version; current parser code hashes are recorded here.",
+  "code_sha256": {
+    "collect_vlr_research.py": "5573e7b428d109a28f87b332d35129ceeb31acd1ea89cb91c4089a1187e24d35",
+    "collect_vlr_war_history.py": "b8dc557cdf858479ef6e5df14451adcd8f03888f1a732728263d3e942261a524"
+  },
+  "code_hash_capture": "Files captured at collector startup, before cache reads or requests.",
+  "manifest_sha256": "ed8f6791903c6a2e6dc487d09813c67e212de8ac7caf31d9852b12cc83953b19",
+  "events": 88,
+  "sources": 9943,
+  "issues": 81
+}

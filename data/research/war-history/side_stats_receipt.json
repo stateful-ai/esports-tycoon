@@ -1,0 +1,9 @@
+{
+  "rows": 159800,
+  "source_pages": 3245,
+  "offline": true,
+  "sha256": "c461743f3608d29f5a77821ed24107c88ff111652dac84db3c4d83fbb51468d4",
+  "code_sha256": "c848462d50746587fa9d248dee43ba16f89d55b019ce0a17aed9bc8f1b521fcb",
+  "exposure_rule": "Count validated displayed rounds for that team and side; blank when round history is ineligible.",
+  "source_rule": "Join map_id to map_context.csv for overview source URL/hash/timestamp. Unknown player identities and series aggregates excluded."
+}

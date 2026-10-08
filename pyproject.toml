@@ -23,6 +23,7 @@ esports-map-mcp = "esports_sim.mcp.map_server:main"
 research = [
   "beautifulsoup4>=4.12,<5",  # optional, offline-capable VLR research pipeline
   "lxml>=5,<7",  # fast parsing of large match pages during cached rebuilds
+  "scipy>=1.13,<2",  # sparse historical lineup research models
 ]
 dev = [
   "pytest>=8.0",

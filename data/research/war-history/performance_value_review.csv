@@ -1,0 +1,4 @@
+match_id,map_id,vlr_player_id,field,source_value,use_for_performance_model,review_state
+681318,269508,20828,econ_rating,-101,False,negative_source_econ_requires_definition_review
+681318,269508,46104,econ_rating,-64,False,negative_source_econ_requires_definition_review
+681318,269508,51696,econ_rating,-32,False,negative_source_econ_requires_definition_review

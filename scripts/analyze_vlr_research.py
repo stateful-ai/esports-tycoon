@@ -105,7 +105,7 @@ def validate(data):
         # mean neither must equal the number of rounds.
         fk = sum(num(p, "first_kills") or 0 for p in rows)
         fd = sum(num(p, "first_deaths") or 0 for p in rows)
-        opening_complete = all(num(p, k) is not None for p in rows for k in ["first_kills", "first_deaths"])
+        opening_complete = len(rows) == 10 and all(num(p, k) is not None for p in rows for k in ["first_kills", "first_deaths"])
         if opening_complete and fk != fd:
             warnings.append(f"map {key}: FK {fk} != FD {fd}; source inconsistency")
     for r in stats:

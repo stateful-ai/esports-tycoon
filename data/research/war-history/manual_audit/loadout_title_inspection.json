@@ -1,0 +1,8 @@
+{
+  "source_url": "https://www.vlr.gg/753455/team-liquid-vs-paper-rex-valorant-champions-2026-opening-c/?game=283184&tab=economy",
+  "method": "Independent Playwright DOM title inspection of the first two round cells, team order TL then PRX",
+  "round1_team1": 4000,
+  "round1_team2": 4100,
+  "round2_team1": 1950,
+  "round2_team2": 14600
+}
