@@ -413,16 +413,21 @@ def _dev_suggestion(
     return "", ""
 
 
+def stamina_cost(gs: "GameState", team_id: str, intensity: str) -> float:
+    """Per-participant condition charge, shared by resolution and previews."""
+    from esports_sim.manager import economy
+
+    return max(
+        0.0,
+        _STAMINA_COST[intensity]
+        - economy.facility_prep_stamina_reduction(gs, team_id),
+    )
+
+
 def _apply_tradeoffs(
     gs: "GameState", plan: PrepPlan, participant_ids: list[str]
 ) -> tuple[float, float]:
-    from esports_sim.manager import economy
-
-    cost = max(
-        0.0,
-        _STAMINA_COST[plan.intensity]
-        - economy.facility_prep_stamina_reduction(gs, plan.team_id),
-    )
+    cost = stamina_cost(gs, plan.team_id, plan.intensity)
     total_stamina = 0.0
     total_morale = 0.0
     if plan.objective == "mental_reset":
@@ -741,16 +746,32 @@ def prep_edge_breakdown(
     }
 
 
-def view(gs: "GameState", team_id: str) -> dict[str, dict | None]:
+def view(gs: "GameState", team_id: str) -> dict:
     """Serializer-friendly current booking, latest resolved report, plus the
     coach's proposal for the next fixture when nothing is booked."""
     current = gs.preparation_plans_by.get(team_id)
     last = gs.preparation_reports_by.get(team_id)
     proposal = propose(gs, team_id) if current is None else None
+    def plan_view(plan: PrepPlan | None) -> dict | None:
+        if plan is None:
+            return None
+        return {
+            **plan.model_dump(mode="json"),
+            "partner_name": gs.teams[plan.partner_id].name,
+            "condition_cost": stamina_cost(gs, team_id, plan.intensity),
+        }
+
     return {
-        "current": current.model_dump(mode="json") if current is not None else None,
+        "current": plan_view(current),
         "last": last.model_dump(mode="json") if last is not None else None,
-        "proposal": (
-            proposal.model_dump(mode="json") if proposal is not None else None
-        ),
+        "proposal": plan_view(proposal),
+        "condition_costs": {
+            intensity: stamina_cost(gs, team_id, intensity)
+            for intensity in INTENSITIES
+        },
+        "participants": [
+            {"id": pid, "handle": gs.players[pid].handle,
+             "condition": gs.players[pid].stamina}
+            for pid in _participants(gs, team_id)
+        ],
     }

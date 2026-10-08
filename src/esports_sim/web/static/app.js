@@ -3705,6 +3705,11 @@ async function tacticsPrep(ws) {
   const pc = el("div", "card ws-6");
   pc.innerHTML = `<h2>Match preparation</h2>`;
   const pr = d.preparation;
+  const costText = (cost) => `Session condition cost: up to ${esc(cost)} points per squad player, including the bench (condition floors at 0).`;
+  const recoveryText = "This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.";
+  if (pr.participants?.length) {
+    pc.appendChild(el("p", "muted", `Current squad condition: ${pr.participants.map((p) => `${esc(p.handle)} ${esc(p.condition)}`).join(" · ")}.`));
+  }
   if (!pr.fixture) {
     pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
   } else {
@@ -3717,13 +3722,23 @@ async function tacticsPrep(ws) {
     for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
     const intensity = el("select", "sel-sm");
     for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
-    const form = el("div", "row"); form.append(partner, map, obj, intensity);
+    const form = el("div", "row prep-controls");
+    for (const [name, control] of [["Sparring partner", partner], ["Preparation map", map], ["Session objective", obj], ["Session intensity", intensity]]) {
+      const label = el("label", "prep-control");
+      const caption = el("span", "muted", name);
+      caption.id = `prep-label-${name.toLowerCase().replaceAll(" ", "-")}`;
+      control.setAttribute("aria-labelledby", caption.id);
+      label.append(caption, control); form.appendChild(label);
+    }
+    const preview = el("p", "muted prep-condition-preview");
+    const updatePreview = () => { preview.textContent = costText(pr.condition_costs[intensity.value]); };
+    intensity.onchange = updatePreview; updatePreview();
     const book = el("button", "btn btn-primary", "Book session");
     book.onclick = async () => {
       const r = await api("/api/actions/preparation", { fixture_id: pr.fixture.id, partner_id: partner.value, map_id: map.value, objective: obj.value, intensity: intensity.value });
       toast(r.message); refresh();
     };
-    pc.append(form, book);
+    pc.append(form, preview, el("p", "muted", recoveryText), book);
   }
   // F7 — the coach proposes a concrete scrim plan for the next fixture, one
   // click to accept. The whole proposal (map/partner/objective) is
@@ -3732,10 +3747,9 @@ async function tacticsPrep(ws) {
     const prop = pr.proposal;
     const propBox = el("div", "prep-proposal");
     propBox.innerHTML = `<div class="prep-proposal-head"><span class="chip tone-accent">Coach proposal</span>` +
-      `<b>${humanize(prop.objective || "scrim")} on ${humanize(prop.map_id || "")}</b></div>` +
-      `<p class="muted">${esc(prop.rationale || `Recommended against ${prop.partner_name || "a sparring partner"} to prep the next fixture.`)}` +
-      `${prop.partner_name ? ` Partner: <b>${esc(prop.partner_name)}</b>.` : ""}` +
-      `${prop.expected_edge != null ? ` Expected +${Number(prop.expected_edge).toFixed(1)} prep edge.` : ""}</p>`;
+      `<b>${humanize(prop.objective)} on ${humanize(prop.map_id)}</b></div>` +
+      `<p class="muted">Partner: <b>${esc(prop.partner_name)}</b>. Intensity: <b>${humanize(prop.intensity)}</b>.</p>` +
+      `<p class="muted">${costText(prop.condition_cost)}</p><p class="muted">${recoveryText}</p>`;
     const acceptBtn = el("button", "btn btn-sm btn-primary", "Accept coach plan");
     acceptBtn.onclick = async () => {
       const r = await api("/api/actions/preparation", { accept: true });
@@ -3744,7 +3758,7 @@ async function tacticsPrep(ws) {
     propBox.appendChild(acceptBtn);
     pc.appendChild(propBox);
   }
-  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} (${humanize(pr.current.intensity)}).`));
+  if (pr.current) pc.appendChild(el("p", "muted", `Booked: ${humanize(pr.current.objective)} on ${humanize(pr.current.map_id)} with ${esc(pr.current.partner_name)} (${humanize(pr.current.intensity)}). ${costText(pr.current.condition_cost)}`));
   if (pr.last) {
     // F7 — surface the named artifact the last session produced (not just the
     // prose finding), so scrims read as consequential.
