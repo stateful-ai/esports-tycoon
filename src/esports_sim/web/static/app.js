@@ -792,7 +792,10 @@ function setupLobby(lob) {
       createGame(t.id, shared_, world, "sandbox", scenario)
     );
   };
-  $("#ng-seed").addEventListener("change", () => renderPick());
+  $("#ng-seed").addEventListener("change", () => {
+    window.Usage?.interaction("lobby/seed_change");
+    renderPick();
+  });
   const showCreate = (shared) => {
     shared_ = shared;
     create.classList.remove("hidden");
@@ -8325,6 +8328,7 @@ function startWeekReveal(rep) {
     e.stopPropagation();
     closeWeekReveal();
     showReport(rep);
+    window.Usage?.interaction("week/full_report_open");
   };
   fin.appendChild(cont);
   fin.appendChild(full);

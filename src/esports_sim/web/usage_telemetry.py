@@ -16,7 +16,7 @@ from starlette.concurrency import run_in_threadpool
 
 class UsageEvent(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
-    kind: Literal["session_start", "session_end", "view", "visible_time", "attempt", "result", "replay"]
+    kind: Literal["session_start", "session_end", "view", "visible_time", "attempt", "result", "replay", "interaction"]
     target: str = Field(default="", max_length=100, pattern=r"^[a-z0-9_/.-]*$")
     request_id: int | None = Field(default=None, ge=1, le=2**31-1)
     outcome: Literal["success", "http_error", "transport_error", "rejected"] | None = None
@@ -36,6 +36,8 @@ SUBTABS = {"overview", "squad", "development", "locker_room", "operations", "str
            "gameplan", "league", "fixtures", "playoffs", "records", "players", "scouting", "staff",
            "leaders", "races", "meta", "history", "teams", "agents", "maps", "finances", "brand"}
 REPLAY = {"open", "close", "play", "pause", "seek", "round", "speed_1", "speed_4", "speed_16", "speed_inst"}
+# Coarse control use only: never values, labels, selectors, or report contents.
+INTERACTIONS = {"lobby/seed_change", "week/full_report_open"}
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
@@ -45,6 +47,8 @@ def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
             valid = parts[0] in VIEWS and len(parts) <= 2 and (len(parts) == 1 or parts[1] in SUBTABS)
         elif event.kind == "replay":
             valid = event.target in REPLAY
+        elif event.kind == "interaction":
+            valid = event.target in INTERACTIONS
         elif event.kind in {"attempt", "result"}:
             valid = event.target in endpoints and event.request_id is not None
         else:

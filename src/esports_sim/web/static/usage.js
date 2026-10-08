@@ -60,7 +60,11 @@
     if (target === "open") { replayReturn = current; view("replay"); }
     if (target === "close") view(replayReturn || "dashboard");
   }
-  window.Usage = {view, request, result, boundary, replay, flush};
+  const interactions = new Set(["lobby/seed_change", "week/full_report_open"]);
+  function interaction(target) {
+    if (interactions.has(target)) emit({kind: "interaction", target});
+  }
+  window.Usage = {view, request, result, boundary, replay, interaction, flush};
   emit({kind: "session_start"}); view("lobby");
   setInterval(() => { dwell(); void flush(); }, 15000);
   document.addEventListener("visibilitychange", () => {
