@@ -7351,9 +7351,15 @@ def advance() -> dict:
                 f"waiting on a manager to accept a new post ({names})",
             )
         # A manager can't tick the week without a legal (five-deep) roster.
-        ok, why = market.roster_ready(gs, me)
+        ok, _ = market.roster_ready(gs, me)
         if not ok:
-            raise HTTPException(409, why)
+            short = market.ROSTER_MIN - len(gs.teams[me].player_ids)
+            raise HTTPException(
+                409,
+                f"you need {market.ROSTER_MIN} players to advance — "
+                f"open Market → Players and sign {short} more free "
+                f"{'agent' if short == 1 else 'agents'}, then try Advance Week again",
+            )
         game = _ctx.get().game
         game.ready.add(me)
         waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
@@ -7377,7 +7383,7 @@ def advance() -> dict:
             raise HTTPException(
                 409,
                 f"can't advance — {names} need {market.ROSTER_MIN} players "
-                "(re-ready once fixed)",
+                "— open Market → Players to sign free agents, then re-ready",
             )
         # Everyone's in — advance the shared world exactly once. Each
         # seat's ready-up is its own recorded decision (the advance is
