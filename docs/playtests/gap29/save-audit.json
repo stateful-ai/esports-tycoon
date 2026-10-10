@@ -1,0 +1,10 @@
+{
+  "source_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "copy_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "full_state_equal": true,
+  "action_log_equal": true,
+  "telemetry_snaps_equal": true,
+  "decisions": 63,
+  "snaps": 1,
+  "changed_keys": []
+}
