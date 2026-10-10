@@ -94,6 +94,12 @@ each other). The week only advances once **every** manager has hit *Advance*
 (solo advances instantly). Sessions survive a browser refresh or a server
 restart.
 
+**AI managers can take seats too**: the `/api/agent/*` HTTP surface (plus an
+in-process `AgentWorld`) lets LLM or scripted agents join the same shared
+worlds as ordinary seats — same ready-up week barrier, fog-safe observations
+with explicit legal-action masks, and a championship-objective scoreboard to
+compete on. See [docs/agent-play.md](docs/agent-play.md).
+
 ### Boot options (PowerShell)
 
 `scripts\serve.ps1` is a friendly launcher: it finds the project's Python,

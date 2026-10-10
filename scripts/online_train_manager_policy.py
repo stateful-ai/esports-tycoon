@@ -5,6 +5,15 @@ only when the candidate passes held-out safety and regression gates.
 
 Usage:
     python scripts/online_train_manager_policy.py BASE_CHECKPOINT [options]
+
+Contract-growth note: checkpoints carry their own action vocabulary, so a
+base checkpoint saved before an additive decision-contract extension (e.g.
+the transfer-market kinds ``bid``/``buyout``/``transfer_offer``/
+``assignment``/``igl``) still loads, fine-tunes, and is re-saved with ITS
+vocabulary — it will never emit the newer kinds. Fine-tuning updates only
+the action head, so it cannot grow the vocabulary either; to adopt newly
+added actions, retrain from fresh demonstrations with
+``scripts/train_manager_policy.py`` and use that checkpoint as the new base.
 """
 
 from __future__ import annotations

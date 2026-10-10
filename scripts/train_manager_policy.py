@@ -6,6 +6,14 @@ Usage:
 
 Defaults: 4 training seeds, 2 disjoint validation seeds, 4 profiles, 3 weeks,
 telemetry/manager_policy_v1.json.
+
+Contract-growth note: the decision contract only ever GROWS additively
+(``OBSERVATION_VERSION`` stays put; checkpoints store their own action
+vocabulary), so existing checkpoints and recorded traces keep working when
+new action kinds land — an old checkpoint simply never emits them. To teach
+a policy the newer actions (e.g. the transfer-market kinds ``bid``,
+``buyout``, ``transfer_offer``, ``assignment``, ``igl``), rerun this script:
+a fresh train picks up the full current vocabulary.
 """
 
 from __future__ import annotations
