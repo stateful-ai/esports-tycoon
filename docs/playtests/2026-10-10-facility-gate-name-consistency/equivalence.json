@@ -1,0 +1,110 @@
+[
+  {
+    "facility": "training_center",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Training Center upgraded to level 1",
+    "canonical_message": "Training Centre upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Training Center to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Training Centre to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "training_center",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Training Center upgraded to level 2",
+    "canonical_message": "Training Centre upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Training Center to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Training Centre to level 2 (350,000 cr)."
+  },
+  {
+    "facility": "analytics_suite",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Analytics Suite upgraded to level 1",
+    "canonical_message": "VOD Review Room upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Analytics Suite to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade VOD Review Room to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "analytics_suite",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Analytics Suite upgraded to level 2",
+    "canonical_message": "VOD Review Room upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Analytics Suite to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade VOD Review Room to level 2 (350,000 cr)."
+  },
+  {
+    "facility": "marketing_office",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Marketing Office upgraded to level 1",
+    "canonical_message": "Media Department upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Marketing Office to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Media Department to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "marketing_office",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Marketing Office upgraded to level 2",
+    "canonical_message": "Media Department upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Marketing Office to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Media Department to level 2 (350,000 cr)."
+  },
+  {
+    "facility": "recovery_suite",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Recovery Suite upgraded to level 1",
+    "canonical_message": "Recovery Suite upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Recovery Suite to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Recovery Suite to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "recovery_suite",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Recovery Suite upgraded to level 2",
+    "canonical_message": "Recovery Suite upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Recovery Suite to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Recovery Suite to level 2 (350,000 cr)."
+  },
+  {
+    "facility": "strategy_lab",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Strategy Lab upgraded to level 1",
+    "canonical_message": "Strategy Lab upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Strategy Lab to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Strategy Lab to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "strategy_lab",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Strategy Lab upgraded to level 2",
+    "canonical_message": "Strategy Lab upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Strategy Lab to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Strategy Lab to level 2 (350,000 cr)."
+  },
+  {
+    "facility": "team_house",
+    "level": 1,
+    "mechanical_state_equal": true,
+    "original_message": "Team House upgraded to level 1",
+    "canonical_message": "Team House upgraded to level 1",
+    "original_news": "[S1 W1] Team Nexus upgrade Team House to level 1 (150,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Team House to level 1 (150,000 cr)."
+  },
+  {
+    "facility": "team_house",
+    "level": 2,
+    "mechanical_state_equal": true,
+    "original_message": "Team House upgraded to level 2",
+    "canonical_message": "Team House upgraded to level 2",
+    "original_news": "[S1 W1] Team Nexus upgrade Team House to level 2 (350,000 cr).",
+    "canonical_news": "[S1 W1] Team Nexus upgrade Team House to level 2 (350,000 cr)."
+  }
+]
