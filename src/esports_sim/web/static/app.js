@@ -5094,12 +5094,20 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const timerRef = useRef(null);
+  const userSearchRef = useRef(false);
+  const inputRef = useRef(null);
 
   const performSearch = async (q) => {
+    // Tab navigation can detach the Preact root without running its cleanup.
+    if (!inputRef.current?.isConnected) return;
+    const userTriggered = userSearchRef.current;
+    userSearchRef.current = false;
     if (q.trim().length < 2) {
       setResults([]);
       return;
     }
+    // Request initiation only; never transmit the query or imply a result.
+    if (userTriggered) window.Usage?.interaction("market/player_search");
     setLoading(true);
     try {
       const r = await api("/api/market/search?q=" + encodeURIComponent(q.trim()));
@@ -5122,8 +5130,15 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       if (timerRef.current) clearTimeout(timerRef.current);
+      userSearchRef.current = true;
       performSearch(query);
     }
+  };
+
+  const handleInput = (e) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    userSearchRef.current = true;
+    setQuery(e.target.value);
   };
 
   const handleBuyout = async (p) => {
@@ -5142,10 +5157,11 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
       <h2>Find a player</h2>
       <div class="row">
         <input 
-          class="field mono player-search-input" 
+          class="field mono player-search-input"
+          ref=${inputRef}
           placeholder="search by handle or real name…" 
           value=${query}
-          onInput=${(e) => setQuery(e.target.value)}
+          onInput=${handleInput}
           onKeyDown=${handleKeyDown}
         />
       </div>
