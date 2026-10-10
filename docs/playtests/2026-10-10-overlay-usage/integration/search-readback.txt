@@ -1,0 +1,6 @@
+### Result
+"MARKET\nPLAYERS\nSCOUTING\nSTAFF\n~20,933 CR/WK FREE · STABLE\nWINDOW CLOSED · THE TRANSFER DEADLINE HAS PASSED; ONLY EMERGENCY FREE AGENTS ARE AVAILABLE.\nFIND A PLAYER\nPLAYER\tROLE\tAGE\tOVR\tCLUB\tPRICE\t\nJinxecho Felix Jensen\nTR\nEN\n\tCONTROLLERIGL\t26\t~77\tTokyo Drift Six\t\n777,000 cr\nNOT FOR SALE\nWHY THIS PRICE?\n\tBuy outOffer…\nEcho Noa Fischer\nPT\nEN\n\tSENTINELANCHOR\t23\t76\tTeam Nexus YOURS\t\n—\n\t\nVoltecho Diego Santos\nES\nEN\n\tCONTROLLERIGL\t25\t~74\tAlpine Echo\t\n552,000 cr\nCLUB PILLAR\nWHY THIS PRICE?\n\tOffer…\nFrostecho Ravi Sato\nJA\nEN\n\tCONTROLLERIGL\t18\t~70\tCoral Sea Drakes\t\n1,419,000 cr\nRELUCTANT\nWHY THIS PRICE?\n\tBuy outOffer…\nFrostecho Santiago Reyes\nEN\n\tDUELISTENTRY\t17\t~68\tSahara Compass\t\n396,000 cr\nRELUCTANT\nWHY THIS PRICE?\n\tOffer…\nJinxecho Haru Park\nEN\n\tINITIATORSUPPORT\t20\t~57\tNova Rift\t\n385,000 cr\nRELUCTANT\nWHY THIS PRICE?\n\tBuy outOffer…\nSlyecho Tan Nguyen\nKO\n\tDUELISTENTRY\t19\t~49\tYucatan Ceibas\t\n123,00"
+### Ran Playwright code
+```js
+await page.evaluate('async () => {await window.Usage.boundary();return document.querySelector("main").innerText.slice(0,900)}');
+```

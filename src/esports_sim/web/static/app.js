@@ -258,23 +258,40 @@ function helpGlossaryMarkup() {
   ).join("")}</div><div class="help-note"><b>Hover for detail</b><span>Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.</span></div>`;
 }
 
+let helpUsageSection = null;
+
+function recordHelpSection(section) {
+  const overlay = document.getElementById("help");
+  if (!overlay || overlay.classList.contains("hidden") || helpUsageSection === section) return;
+  helpUsageSection = section;
+  window.Usage?.interaction(`handbook/section_${section.replace("-", "_")}`);
+}
+
 function renderHelp(section = "first-week", selected = App.tab) {
   const body = document.getElementById("help-body");
   if (!body) return;
+  section = ["first-week", "screens", "glossary"].includes(section) ? section : "first-week";
   document.querySelectorAll("[data-help-section]").forEach((button) => {
     button.classList.toggle("active", button.dataset.helpSection === section);
   });
   body.innerHTML = section === "screens"
     ? helpScreensMarkup(selected)
     : section === "glossary" ? helpGlossaryMarkup() : helpFirstWeekMarkup();
+  recordHelpSection(section);
 }
 
 function openHelp(section = "first-week", selected = App.tab, automatic = false) {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!document.getElementById("help-body")) return;
+  const opening = overlay.classList.contains("hidden");
   overlay.dataset.automatic = automatic ? "true" : "false";
-  renderHelp(section, selected);
   overlay.classList.remove("hidden");
+  if (opening) {
+    helpUsageSection = null;
+    window.Usage?.interaction("handbook/open");
+  }
+  renderHelp(section, selected);
   overlay.setAttribute("aria-hidden", "false");
   overlay.querySelector("[data-help-section].active")?.focus();
 }
@@ -282,6 +299,8 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
 function closeHelp() {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!overlay.classList.contains("hidden")) window.Usage?.interaction("handbook/close");
+  helpUsageSection = null;
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {

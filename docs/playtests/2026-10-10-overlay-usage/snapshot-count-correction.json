@@ -1,0 +1,19 @@
+{
+  "recorded_at_utc": "2026-10-10T19:24:51.764753+00:00",
+  "original_audit_sha256": "9e2edee5a9b44839ade20d581b17d002be441b171568b30f5e8d9525e3cc18d7",
+  "corrected_audit_sha256": "78e5bb6f311ff6bd219844afd23032c2665c9654b9f1fa0dfa2b328bad983d43",
+  "snapshot_entry_total_before": 8,
+  "snapshot_entry_total_after": 8,
+  "manager_group_count_before": 1,
+  "manager_group_count_after": 1,
+  "snapshot_counts_by_manager_before": {
+    "mgr_team_nexus": 8
+  },
+  "snapshot_counts_by_manager_after": {
+    "mgr_team_nexus": 8
+  },
+  "snapshots_unchanged": true,
+  "csv_outcome_claiming_one_snapshot": [],
+  "csv_action": "No CSV row claimed one snapshot; all original intention/outcome rows preserved without changes",
+  "frozen_source_unchanged": true
+}
