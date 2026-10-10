@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-10T20:30:21.425384+00:00",
+  "rows_before": 684,
+  "rows_after": 698,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "8bd8fa790427a14beeed479f805483e9e77002966a28b035872adbb500333556",
+  "sha256_after": "c5c96567ecd0f2e3002b778599d83eec06ba797a48aba73afbe5fa9ef5077a9b",
+  "sources": [
+    {
+      "path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-sponsor-obligation\\actions.csv",
+      "rows": 14,
+      "sha256": "2994e6218496f9238f63703e33838fb583bf82b3016abc9f09a80bf51942b9d8"
+    }
+  ],
+  "publication": "Primary working tree only; append requires a separately reviewed history publication. Previously merged PR362 preserves its original 597-row snapshot."
+}

@@ -1,0 +1,39 @@
+{
+  "status": 200,
+  "week": 9,
+  "season": 1,
+  "flavor_event": null,
+  "user_team": {
+    "id": "team_nexus",
+    "name": "Team Nexus",
+    "tag": "NXS",
+    "logo": "/assets/logos/logo_1.webp",
+    "region": "americas",
+    "balance": 461864,
+    "reputation": 63.1,
+    "fan_count": 308091,
+    "world_rank": 3,
+    "chemistry": 70.1,
+    "captain_id": "apex",
+    "player_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "starter_ids": [
+      "apex",
+      "vortex",
+      "fa_13",
+      "fa_0",
+      "ghost"
+    ],
+    "record": {
+      "wins": 7,
+      "losses": 1,
+      "diff": 46
+    }
+  }
+}

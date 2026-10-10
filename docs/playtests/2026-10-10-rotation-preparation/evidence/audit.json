@@ -1,0 +1,158 @@
+{
+  "checked_at_utc": "2026-10-10T17:57:25.981977+00:00",
+  "tested_commit": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "game_version": "0.0.1",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "source_paths_unchanged": 543,
+  "fixture_sha256": "0339185f60e890ebaac72ab3dc10d6b65ff76e44a06797f3ae8673311a64eac5",
+  "baseline_decisions": 36,
+  "final_decisions": 40,
+  "prefix_unchanged": true,
+  "new_decisions": [
+    {
+      "season": 1,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agents": "False",
+        "default_five": "True",
+        "fixture_id": "",
+        "map_id": "",
+        "per_map": "False"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "7",
+        "fixture_id": "s1w7m1am",
+        "id": "7b1240954b4b6a24",
+        "intensity": "light",
+        "map_id": "lotus",
+        "objective": "mental_reset",
+        "opponent_id": "team_vanguard",
+        "partner_id": "team_hokkaido_drift",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "fixture_id": "s1w7m1am",
+        "focus_target": "",
+        "n_dials": "0",
+        "one_match_lineup": "False",
+        "opponent": "team_vanguard",
+        "site_focus": ""
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 6,
+  "final_snapshots": 7,
+  "snapshot_prefix_unchanged": true,
+  "retained_usage_records": 132,
+  "world_usage_records": 116,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 14,
+    "visible_time": 101,
+    "attempt": 5,
+    "result": 5,
+    "interaction": 1,
+    "replay": 2,
+    "session_end": 1
+  },
+  "usage_sessions": [
+    "6742b2fcf435e16d3a0ad98aafe1914a",
+    "8a237497359dfee8abd14c2b2517fe69",
+    "a46e8ba846bc82389a420fd781b30f16"
+  ],
+  "request_groups": 5,
+  "request_kind_counts": {
+    "attempt": 5,
+    "result": 5
+  },
+  "request_targets": {
+    "/api/actions/lineup": 2,
+    "/api/actions/preparation": 2,
+    "/api/actions/gameplan": 2,
+    "/api/actions/advance": 2,
+    "/api/actions/save": 2
+  },
+  "report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "cleaned_own_server_processes": [
+    {
+      "pid": 31080,
+      "cwd": "C:\\WINDOWS",
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 2004,
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\current-main-recovery-playtest\\ESports Simulator\\runs\\playtests\\2026-10-10-rotation-preparation",
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8474",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 32912,
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\current-main-recovery-playtest\\ESports Simulator\\runs\\playtests\\2026-10-10-rotation-preparation",
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8474",
+        "--no-browser"
+      ]
+    }
+  ],
+  "port8474_listening": false,
+  "limits": [
+    "Best-effort retained sidecar is not a complete funnel or proof of attention",
+    "Direct browser fetch diagnostics bypass wrapper usage hooks; incorrect /api/team/team_nexus GET404 requests are not accepted decisions",
+    "IAB Join prompt automation blockage had no observed game request; cannot count it as an HTTP rejection",
+    "This main build records coarse lineup/game-plan flags; exact choices additionally require saved state and public receipts",
+    "Row11 corrects row9 media versus flavor label; original row9 preserved"
+  ]
+}

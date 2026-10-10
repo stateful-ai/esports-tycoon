@@ -1,0 +1,91 @@
+- main [ref=e30]:
+  - generic [ref=e676]:
+    - generic [ref=e677]:
+      - generic [ref=e678]: Club
+      - generic [ref=e679]: S1 · W9
+      - generic [ref=e680]:
+        - button "Squad" [ref=e681] [cursor=pointer]
+        - button "Development" [ref=e682] [cursor=pointer]
+        - button "Locker Room" [ref=e683] [cursor=pointer]
+        - button "Operations" [ref=e684] [cursor=pointer]
+      - button "Guide" [ref=e685] [cursor=pointer]
+    - generic [ref=e687]:
+      - heading "Locker Room" [level=2] [ref=e688]
+      - paragraph [ref=e689]: Check the squad hierarchy, cliques, duos, feuds and manager promises.
+      - generic [ref=e690]:
+        - generic [ref=e691]:
+          - heading "Team Leaders" [level=3] [ref=e692]
+          - generic [ref=e694]:
+            - generic [ref=e695]: Apex
+            - generic [ref=e696]: Incumbent Leader
+        - generic [ref=e698]:
+          - heading "Influential" [level=3] [ref=e699]
+          - generic [ref=e701]:
+            - generic [ref=e702]: Vortex
+            - generic [ref=e703]: Key Influencer
+        - generic [ref=e705]:
+          - heading "Core & Rookies" [level=3] [ref=e706]
+          - generic [ref=e707]:
+            - generic [ref=e708]:
+              - generic [ref=e709]: Ghost
+              - generic [ref=e710]: Rookie
+            - generic [ref=e712]:
+              - generic [ref=e713]: Slyblade
+              - generic [ref=e714]: Core
+            - generic [ref=e716]:
+              - generic [ref=e717]: Echo
+              - generic [ref=e718]: Core
+            - generic [ref=e720]:
+              - generic [ref=e721]: Hollowlock
+              - generic [ref=e722]: Core
+        - generic [ref=e724]:
+          - heading "Rebels & Outcasts" [level=3] [ref=e725]
+          - paragraph [ref=e727]: None
+      - generic [ref=e728]:
+        - heading "Relationships & Cliques" [level=2] [ref=e729]
+        - generic [ref=e730]:
+          - generic [ref=e731]:
+            - heading "Duos Active" [level=3] [ref=e732]:
+              - text: Duos
+              - generic [ref=e733]: Active
+            - paragraph [ref=e734]: No close duos in the squad.
+          - generic [ref=e735]:
+            - heading "Feuds Tension" [level=3] [ref=e736]:
+              - text: Feuds
+              - generic [ref=e737]: Tension
+            - paragraph [ref=e738]: No active feuds in the squad.
+      - generic [ref=e739]:
+        - heading "Promises" [level=2] [ref=e740]
+        - paragraph [ref=e741]: Monitor active manager promises, kept/broken history and morale/chemistry outcomes.
+        - generic [ref=e742]:
+          - heading "Active Promises" [level=3] [ref=e743]
+          - generic [ref=e744]:
+            - generic [ref=e745]:
+              - generic [ref=e746]:
+                - strong [ref=e747]: Echo
+                - text: ": Play Time"
+              - generic [ref=e748]: "Target: 60 · Dressed 5 weeks"
+              - generic [ref=e749]:
+                - generic [ref=e750]: Progress
+                - generic [ref=e751]: 1 weeks left
+            - generic [ref=e754]:
+              - generic [ref=e755]:
+                - strong [ref=e756]: Apex
+                - text: ": Play Time"
+              - generic [ref=e757]: "Target: 60 · Dressed 5 weeks"
+              - generic [ref=e758]:
+                - generic [ref=e759]: Progress
+                - generic [ref=e760]: 2 weeks left
+            - generic [ref=e763]:
+              - generic [ref=e764]:
+                - strong [ref=e765]: Vortex
+                - text: ": Play Time"
+              - generic [ref=e766]: "Target: 60 · Dressed 3 weeks"
+              - generic [ref=e767]:
+                - generic [ref=e768]: Progress
+                - generic [ref=e769]: 5 weeks left
+        - generic [ref=e772]:
+          - heading "Promise History" [level=3] [ref=e773]
+          - generic [ref=e775]:
+            - generic [ref=e776]: Slyblade · Play Time
+            - generic [ref=e777]: kept

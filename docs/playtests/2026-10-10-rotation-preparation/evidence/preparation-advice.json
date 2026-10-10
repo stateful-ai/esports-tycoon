@@ -1,0 +1,49 @@
+{
+  "last": {
+    "plan_id": "7b1240954b4b6a24",
+    "team_id": "team_nexus",
+    "fixture_id": "s1w7m1am",
+    "opponent_id": "team_vanguard",
+    "partner_id": "team_hokkaido_drift",
+    "map_id": "lotus",
+    "objective": "mental_reset",
+    "intensity": "light",
+    "season": 1,
+    "week": 7,
+    "status": "completed",
+    "finding_code": "composure_ready",
+    "finding": "Squad morale entered at 91.2/100; the group reset with a lighter load.",
+    "evidence": {
+      "own_map_samples": 1,
+      "opponent_map_samples": 3,
+      "partner_map_samples": 4,
+      "own_attack_win_pct": 83.3,
+      "own_defense_win_pct": 100,
+      "opponent_attack_win_pct": 66.7,
+      "opponent_defense_win_pct": 60.5,
+      "partner_map_win_pct": 100,
+      "scouting_confidence": 0.34,
+      "average_stamina": 63.5,
+      "average_morale": 91.2,
+      "rotation_candidate_id": "echo"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "methodology",
+    "knowledge_gain": 0.72,
+    "stamina_cost": 1.5,
+    "morale_delta": 2,
+    "chemistry_delta": 0.3,
+    "artifact_label": "Methodology +0.7",
+    "prep_edge_contribution": 0,
+    "dev_suggestion_player_id": "echo",
+    "dev_suggestion": "Echo pushed the starters on lotus; a focused development block could make that rotation real."
+  },
+  "body": "MATCH\nS1 · W8 · Regular\nSTRATEGY\nGAME PLAN\nPREP\nGuide\nMATCH PREPARATION\n\nCurrent squad condition: Apex 76 · Echo 55 · Hollowlock 55.900000000000006 · Slyblade 74.9 · Ghost 59 · Vortex 100.\n\nNext: Sahara Compass vs Team Nexus · week 8\n\nSparring partner\nAdriatic Sirens\nAlpine Echo\nAnatolia Forge\nApex Syndicate\nAzure Vanta\nBaltic Meridian\nBayou Kings\nBerlin Wolves\nBusan Tempest\nCascadia Youth\nChao Phraya Owls\nCoral Sea Drakes\nCrimson Order\nGallic Storm\nGhostline\nHarbour City Nine\nHighlands Nine\nHokkaido Drift\nIron Pact\nKathmandu Apex\nKraken Unit\nLisbon Tide\nMekong Vipers\nMeridian Cross\nMidnight Polders\nNordic Frost\nNova Rift\nOutback Sentinels\nPatagonia Sur\nPhantom Core\nPrairie Signal\nRust Belt Gaming\nSaracen Guard\nSeoul Dynasty Prime\nSolar Flare\nTaipei Circuit\nTokyo Drift Six\nTeam Vanguard\nVolga Reign\nYucatan Ceibas\nPreparation map\nAscent\nSession objective\nAnti Exec\nRetakes\nLineup Test\nMental Reset\nSession intensity\nLight\nNormal\nIntense\n\nSession condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).\n\nThis is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.\n\nBook session\nCOACH PROPOSAL\nRetakes on Ascent\n\nPartner: Crimson Order. Intensity: Normal.\n\nSession condition cost: up to 4 points per squad player, including the bench (condition floors at 0).\n\nThis is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.\n\nAccept coach plan\nPrep artifact: Methodology +0.7 +0.0 EDGE Knowledge +0.72; stamina −1.5.\n\nSquad morale entered at 91.2/100; the group reset with a lighter load.\n\nDev note: Echo — Echo pushed the starters on lotus; a focused development block could make that rotation real.\nTOURNAMENT SIX\n\nFive starters plus one between-map substitute.\n\nApex\n26 · Starter\nEcho\n23 · Starter\nHollowlock\n26 · Bench\nSlyblade\n28 · Starter\nGhost\n19 · Starter\nVortex\n22 · Starter\nSubmit roster\nSERIES PLAN\n\nSet a between-map response that applies after map one when its condition is met.\n\nNo upcoming best-of-three is on the calendar."
+}

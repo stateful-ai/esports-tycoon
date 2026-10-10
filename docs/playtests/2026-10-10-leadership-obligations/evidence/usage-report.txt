@@ -1,0 +1,49 @@
+{
+  "attempts": 4,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/flavor_event": 1,
+    "attempt:/api/actions/lineup": 1,
+    "attempt:/api/actions/save": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/lineup": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 2,
+    "session_start:": 2,
+    "view:club/locker_room": 5,
+    "view:club/squad": 4,
+    "view:dashboard": 3,
+    "view:lobby": 2,
+    "visible_time:club/locker_room": 18,
+    "visible_time:club/squad": 24,
+    "visible_time:dashboard": 10,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "bdb17bcf2ae73ec92e7aae5cc4640530": 555850,
+    "f4f977a3bbf7c3e0ab1ffa6911cb1389": 28046
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/lineup:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/locker_room": 215792,
+    "club/squad": 294979,
+    "dashboard": 102879,
+    "lobby": 253
+  },
+  "world_events": {
+    "26UHC": 81
+  }
+}

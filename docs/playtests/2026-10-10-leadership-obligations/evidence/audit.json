@@ -1,0 +1,87 @@
+{
+  "audited_at_utc": "2026-10-10T19:06:02.468724+00:00",
+  "baseline_action_count": 43,
+  "final_action_count": 46,
+  "old_action_prefix_unchanged": true,
+  "new_decision_indices": [
+    43,
+    44,
+    45
+  ],
+  "accepted_coverage": {
+    "matched": 3,
+    "attempted": 3
+  },
+  "lineup_decision_params": {
+    "agents": "False",
+    "default_five": "True",
+    "fixture_id": "",
+    "map_id": "",
+    "per_map": "False"
+  },
+  "exact_lineup_ids_in_decision_log": false,
+  "lineup_public_and_save_readback": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "source_paths_unchanged": 543,
+  "fixture_unchanged": true,
+  "report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "usage_events": 81,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 14,
+    "visible_time": 54,
+    "attempt": 4,
+    "result": 4,
+    "interaction": 1,
+    "session_end": 2
+  },
+  "page_session_ids": [
+    "bdb17bcf2ae73ec92e7aae5cc4640530",
+    "f4f977a3bbf7c3e0ab1ffa6911cb1389"
+  ],
+  "paired_requests": 4,
+  "unmatched_attempts": [],
+  "orphan_results": [],
+  "server_family_stopped": [
+    {
+      "pid": 29168,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 20336,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8479",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 5508,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8479",
+        "--no-browser"
+      ]
+    }
+  ],
+  "bounds": "Retained best-effort usage; no request inferred for stale control or wrong observer route; three accepted decisions distinct from four browser requests"
+}

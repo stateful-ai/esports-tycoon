@@ -1,0 +1,88 @@
+[
+  {
+    "index": 50,
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "sponsor_demand_respond",
+    "params": {
+      "accept": "True",
+      "demand_id": "0981f9afb97a945c"
+    },
+    "source": "web"
+  },
+  {
+    "index": 51,
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agent_choices": "null",
+      "agents": "False",
+      "choice_encoding": "json-v1",
+      "default_five": "False",
+      "fixture_id": "s1w11m2am",
+      "lineup_ids": "null",
+      "map_id": "lotus",
+      "per_map": "True",
+      "player_ids": "[\"apex\",\"vortex\",\"ghost\",\"fa_13\",\"echo\"]"
+    },
+    "source": "web"
+  },
+  {
+    "index": 52,
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1w11m2am",
+      "focus_target": "",
+      "map_control": "30.0",
+      "n_dials": "1",
+      "one_match_lineup": "False",
+      "opponent": "team_saracen_guard",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 53,
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "negotiate",
+      "event_id": "a5bda2cfa792e3d7"
+    },
+    "source": "web"
+  },
+  {
+    "index": 54,
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

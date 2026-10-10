@@ -1,0 +1,2252 @@
+{
+  "state": {
+    "season": 1,
+    "week": 9,
+    "phase": "regular",
+    "window": {
+      "open": false,
+      "kind": "closed",
+      "label": "Window closed",
+      "detail": "The transfer deadline has passed; only emergency free agents are available.",
+      "next_open_week": null
+    },
+    "roster_readiness": {
+      "ready": true,
+      "reason": "",
+      "count": 6,
+      "minimum": 5,
+      "shortfall": 0
+    },
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 461864,
+      "reputation": 63.1,
+      "fan_count": 308091,
+      "world_rank": 3,
+      "chemistry": 70.1,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "fa_13",
+        "fa_0",
+        "ghost"
+      ],
+      "record": {
+        "wins": 7,
+        "losses": 1,
+        "diff": 46
+      }
+    },
+    "next_fixture": {
+      "id": "s1w9m3am",
+      "week": 9,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nexus",
+      "team_b": "team_nordic_frost",
+      "team_a_name": "Team Nexus",
+      "team_b_name": "Nordic Frost",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "h2h": {
+        "meetings": 1,
+        "wins": 1,
+        "losses": 0,
+        "streak_team": "team_nexus",
+        "streak_len": 1,
+        "you_lead": true
+      },
+      "preview": [
+        "Team Nexus won the season's only prior meeting.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Crimrush — Nordic Frost's form pick at 1.22."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 2,
+            "wins": 2,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 4,
+            "wins": 4,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 2,
+            "wins": 1,
+            "win_rate": 50
+          }
+        ],
+        "veto": {
+          "opponent": "Nordic Frost",
+          "ban": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 0,
+            "our_wr": 100
+          },
+          "pick": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 0,
+            "our_wr": 100
+          }
+        }
+      },
+      "opp_manager": {
+        "name": "Liam Santos",
+        "identity": "Showman"
+      }
+    },
+    "leaders": [
+      {
+        "pid": "team_crimson_order_p2",
+        "handle": "Wraithghost",
+        "team": "Crimson Order",
+        "team_id": "team_crimson_order",
+        "rating": 1.85,
+        "kills": 201
+      },
+      {
+        "pid": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "team": "Outback Sentinels",
+        "team_id": "team_outback_sentinels",
+        "rating": 1.62,
+        "kills": 208
+      },
+      {
+        "pid": "team_ghostline_p2",
+        "handle": "Zephyrsurge",
+        "team": "Ghostline",
+        "team_id": "team_ghostline",
+        "rating": 1.48,
+        "kills": 178
+      }
+    ],
+    "movers": [],
+    "run_in": [
+      {
+        "week": 9,
+        "opponent": "Nordic Frost",
+        "opponent_id": "team_nordic_frost",
+        "opp_rank": 40,
+        "difficulty": "easy"
+      },
+      {
+        "week": 10,
+        "opponent": "Kathmandu Apex",
+        "opponent_id": "team_kathmandu_apex",
+        "opp_rank": 41,
+        "difficulty": "easy"
+      },
+      {
+        "week": 11,
+        "opponent": "Saracen Guard",
+        "opponent_id": "team_saracen_guard",
+        "opp_rank": 15,
+        "difficulty": "easy"
+      },
+      {
+        "week": 12,
+        "opponent": "Rust Belt Gaming",
+        "opponent_id": "team_rust_belt_gaming",
+        "opp_rank": 13,
+        "difficulty": "medium"
+      },
+      {
+        "week": 13,
+        "opponent": "Baltic Meridian",
+        "opponent_id": "team_baltic_meridian",
+        "opp_rank": 31,
+        "difficulty": "easy"
+      }
+    ],
+    "on_this_day": [],
+    "debrief": {
+      "result": "Beat Sahara Compass 13-3",
+      "won": true,
+      "standout": "Vortex (1.43)",
+      "underperformer": "Hollowlock (0.59)"
+    },
+    "last_match_review": {
+      "fixture_id": "s1w8m2am",
+      "won": true,
+      "contested": true,
+      "best_of": 1,
+      "your_maps": 1,
+      "their_maps": 0,
+      "your_rounds": 13,
+      "their_rounds": 3,
+      "opp_id": "team_sahara_compass",
+      "opp_name": "Sahara Compass",
+      "potm": {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "badges": []
+      },
+      "tier": 0,
+      "tier_label": "box scores only",
+      "momentum_beat": {
+        "player_id": "fa_16",
+        "tone": "hot",
+        "rounds": 8,
+        "start_round": 6,
+        "end_round": 13,
+        "peak": 0.44,
+        "handle": "Wraithmark",
+        "text": "got hot mid-map (8-round run)."
+      },
+      "your_calls": {
+        "plan_set": false,
+        "dials": [],
+        "site_focus": null,
+        "focus_target": null,
+        "team_talk": null,
+        "lineup": {
+          "override": false,
+          "followed": false,
+          "picked": [
+            {
+              "player_id": "fa_0",
+              "handle": "Hollowlock",
+              "rating": 0.59
+            }
+          ],
+          "benched": [
+            {
+              "player_id": "echo",
+              "handle": "Echo"
+            }
+          ]
+        },
+        "prep": null
+      },
+      "working": [
+        {
+          "code": "def_side",
+          "category": "defense",
+          "tone": "good",
+          "headline": "Defense is a wall",
+          "detail": "10/12 defense rounds won (83%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "player_std",
+          "category": "player",
+          "tone": "good",
+          "headline": "Vortex carried",
+          "detail": "Team-high 1.43 average rating.",
+          "player_id": "vortex",
+          "handle": "Vortex",
+          "site": null,
+          "badges": []
+        }
+      ],
+      "breaking": [
+        {
+          "code": "player_under",
+          "category": "player",
+          "tone": "bad",
+          "headline": "Hollowlock off-colour",
+          "detail": "0.59 average rating across the series.",
+          "player_id": "fa_0",
+          "handle": "Hollowlock",
+          "site": null,
+          "badges": [
+            {
+              "id": "inconsistent",
+              "name": "Inconsistent",
+              "emoji": "🎲",
+              "polarity": -1,
+              "blurb": "a different player week to week",
+              "kind": "negative",
+              "impact": "While held: -2 Composure.",
+              "decay": "It can fade after 2 seasons without re-qualifying.",
+              "art": "/assets/badges/inconsistent.webp",
+              "season": 1
+            }
+          ],
+          "dev_note": "Near their ceiling (proj. 55–66) — a lineup call."
+        }
+      ],
+      "levers": [
+        {
+          "code": "player_form",
+          "tab": "roster",
+          "specialty": "team",
+          "on_focus": false,
+          "text": "Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.",
+          "adjustment": null
+        }
+      ],
+      "coach": {
+        "present": true,
+        "specialty": "mechanical"
+      },
+      "locked": true,
+      "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+    },
+    "decision_ledger": [],
+    "press": "Team Nexus have put themselves in the title picture from second.",
+    "suggested_lineup": {
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "quality": 78,
+          "dressed": true
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "quality": 76,
+          "dressed": true
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "quality": 76,
+          "dressed": false
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "quality": 75,
+          "dressed": true
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "quality": 72,
+          "dressed": true
+        }
+      ],
+      "changed": true
+    },
+    "board": null,
+    "form_trend": [
+      {
+        "n": 1,
+        "week": 1,
+        "wins": 1,
+        "won": true
+      },
+      {
+        "n": 2,
+        "week": 2,
+        "wins": 2,
+        "won": true
+      },
+      {
+        "n": 3,
+        "week": 3,
+        "wins": 3,
+        "won": true
+      },
+      {
+        "n": 4,
+        "week": 4,
+        "wins": 4,
+        "won": true
+      },
+      {
+        "n": 5,
+        "week": 5,
+        "wins": 5,
+        "won": true
+      },
+      {
+        "n": 6,
+        "week": 6,
+        "wins": 6,
+        "won": true
+      },
+      {
+        "n": 7,
+        "week": 7,
+        "wins": 6,
+        "won": false
+      },
+      {
+        "n": 8,
+        "week": 8,
+        "wins": 7,
+        "won": true
+      }
+    ],
+    "squad_profile": {
+      "avg_age": 24,
+      "buckets": {
+        "youth": 1,
+        "prime": 4,
+        "veteran": 1
+      },
+      "expiries": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 19,
+          "weeks_left": 36
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 26,
+          "weeks_left": 43
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 22,
+          "weeks_left": 44
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 23,
+          "weeks_left": 48
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 26,
+          "weeks_left": 54
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 28,
+          "weeks_left": 54
+        }
+      ]
+    },
+    "objectives_hub": [
+      {
+        "kind": "sponsor",
+        "label": "win the regional split",
+        "state": "on_track",
+        "detail": "currently 2nd of 8"
+      }
+    ],
+    "rotation": [
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "maps": 8,
+        "starter": true,
+        "stamina": 86,
+        "burnout": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "maps": 8,
+        "starter": true,
+        "stamina": 100,
+        "burnout": false
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "maps": 7,
+        "starter": true,
+        "stamina": 87,
+        "burnout": false
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "maps": 7,
+        "starter": true,
+        "stamina": 70,
+        "burnout": false
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "maps": 6,
+        "starter": false,
+        "stamina": 79,
+        "burnout": false
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "maps": 4,
+        "starter": true,
+        "stamina": 43,
+        "burnout": false
+      }
+    ],
+    "training_focus": "tactical",
+    "training_delegated": false,
+    "focus_options": [
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "rest"
+    ],
+    "news": [
+      "[S1 W8] Warden (Team Vanguard) passes 100 kills this season.",
+      "[S1 W8] Ciphermark (Yucatan Ceibas) passes 100 kills this season.",
+      "[S1 W8] Slystorm (Yucatan Ceibas) passes 100 kills this season.",
+      "[S1 W8] Havocwing (Taipei Circuit) passes 100 kills this season.",
+      "[S1 W8] Havocflare (Taipei Circuit) passes 100 kills this season.",
+      "[S1 W8] Grimwing (Solar Flare) passes 100 kills this season.",
+      "[S1 W8] Zephyrdash (Seoul Dynasty Prime) passes 100 kills this season.",
+      "[S1 W8] Zephyrzero (Rust Belt Gaming) passes 100 kills this season.",
+      "[S1 W8] Karmastep (Rust Belt Gaming) passes 100 kills this season.",
+      "[S1 W8] Crimghost (Phantom Core) passes 100 kills this season.",
+      "[S1 W8] Voltshot (Patagonia Sur) passes 100 kills this season.",
+      "[S1 W8] Karmahawk (Outback Sentinels) passes 200 kills this season."
+    ],
+    "scout": {
+      "target": null,
+      "target_name": null,
+      "progress": 0,
+      "cap": 1
+    },
+    "standings_top": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "wins": 8,
+        "losses": 0,
+        "rounds_won": 106,
+        "rounds_lost": 51
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "wins": 7,
+        "losses": 1,
+        "rounds_won": 100,
+        "rounds_lost": 54
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "wins": 5,
+        "losses": 3,
+        "rounds_won": 87,
+        "rounds_lost": 61
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "wins": 5,
+        "losses": 3,
+        "rounds_won": 91,
+        "rounds_lost": 76
+      }
+    ],
+    "champions": [],
+    "transfer_offers": [],
+    "flavor_event": {
+      "id": "72b29241b2f60658",
+      "season": 1,
+      "week": 9,
+      "team_id": "team_nexus",
+      "player_id": "fa_13",
+      "type_id": "press_scrum",
+      "title": "The microphones are waiting for Slyblade",
+      "prompt": "A producer wants a quick interview with Slyblade before the next match. The question is about Team Nexus's expectations this split.",
+      "choices": [
+        {
+          "id": "team_first",
+          "label": "Keep the answer team-first"
+        },
+        {
+          "id": "swing_big",
+          "label": "Set a public target"
+        },
+        {
+          "id": "keep_private",
+          "label": "Decline and keep it internal"
+        }
+      ],
+      "ai": false
+    },
+    "media_event": null,
+    "career": {
+      "mode": "sandbox",
+      "seat": {
+        "id": "mgr_team_nexus",
+        "name": "NXS manager",
+        "team_id": "team_nexus",
+        "archetype": "",
+        "unemployed": false
+      },
+      "contract": null,
+      "offers": [],
+      "blocked": false
+    },
+    "multiplayer": {
+      "mode": "solo",
+      "code": "26UHC",
+      "humans": [
+        {
+          "team_id": "team_nexus",
+          "name": "Team Nexus",
+          "is_you": true
+        }
+      ],
+      "ready": [],
+      "you_ready": false
+    },
+    "save": {
+      "dirty": false,
+      "autosave_enabled": true,
+      "autosave_every_weeks": 1
+    },
+    "promise_pending": false,
+    "scout_shortlist_ready": false,
+    "scrim_proposal_pending": true,
+    "culture_violation_unack": false
+  },
+  "finances": {
+    "balance": 461864,
+    "weekly_payroll": 42200,
+    "marketability": 1.09,
+    "marketability_breakdown": {
+      "score": 1.09,
+      "facility_mult": 1,
+      "reach": 1494922,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.69
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": 0.15
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.07
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.05
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": 0.02
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        }
+      ]
+    },
+    "last_week_income": 67874,
+    "last_week_expenses": 47100,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": null,
+        "offer": null,
+        "market": [
+          {
+            "brand": "Polar Compute",
+            "slot": "title",
+            "weeks": 37,
+            "expires_week": 10,
+            "upfront": {
+              "signing_bonus": 722000,
+              "weekly": 6400,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 41300,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 16500,
+              "per_win": 28300
+            },
+            "objectives": [
+              {
+                "kind": "win_split",
+                "bonus": 424000,
+                "met": null
+              },
+              {
+                "kind": "make_masters",
+                "bonus": 445000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "win_split",
+                "bonus": 424000,
+                "label": "win the regional split"
+              },
+              {
+                "kind": "make_masters",
+                "bonus": 445000,
+                "label": "qualify for Masters"
+              }
+            ]
+          }
+        ],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 23,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": null,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 2nd of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": null,
+        "offer": null,
+        "market": [
+          {
+            "brand": "Deadzone Desks",
+            "slot": "peripheral",
+            "weeks": 16,
+            "expires_week": 9,
+            "upfront": {
+              "signing_bonus": 112000,
+              "weekly": 800,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 6300,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 2700,
+              "per_win": 3600
+            },
+            "objectives": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 18000,
+                "met": null
+              },
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 18000,
+                "label": "make the regional playoffs"
+              },
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "label": "beat a world top-4 team (per win)"
+              }
+            ]
+          }
+        ],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "stream": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Marketing Office level 1",
+        "objective_labels_deal": []
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Marketing Office level 2",
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [],
+    "commitments": [],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 42200,
+      "staff": 4900,
+      "sponsors_base": 46402,
+      "sponsors_by_slot": {
+        "title": 0,
+        "jersey": 10100,
+        "peripheral": 0
+      },
+      "sponsors_total": 56502,
+      "merch": 3373,
+      "tickets": 2249,
+      "streaming": 5909,
+      "facility_upkeep": 0,
+      "prizes": 0,
+      "income_total": 68033,
+      "expense_total": 47100,
+      "net": 20933
+    },
+    "projection": [
+      {
+        "week": 10,
+        "net": 20933,
+        "balance": 482797
+      },
+      {
+        "week": 11,
+        "net": 20933,
+        "balance": 503730
+      },
+      {
+        "week": 12,
+        "net": 20933,
+        "balance": 524663
+      },
+      {
+        "week": 13,
+        "net": 20933,
+        "balance": 545596
+      },
+      {
+        "week": 14,
+        "net": 20933,
+        "balance": 566529
+      },
+      {
+        "week": 15,
+        "net": 20933,
+        "balance": 587462
+      },
+      {
+        "week": 16,
+        "net": 20933,
+        "balance": 608395
+      },
+      {
+        "week": 17,
+        "net": 20933,
+        "balance": 629328
+      }
+    ]
+  },
+  "social": {
+    "feed": [
+      {
+        "id": "2ebcac333940aa01",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "team_outback_sentinels_p2",
+        "author": "OneTapDaily",
+        "text": "Karmahawk is not human. someone check the demo.",
+        "likes": 29331,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "1936ab8f76850bda",
+        "season": 1,
+        "week": 8,
+        "author_kind": "player",
+        "author_id": "team_baltic_meridian_p0",
+        "author": "Pyromark",
+        "text": "That series stays in the VOD room.",
+        "likes": 11847,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "220c78f6260d88c3",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "team_berlin_wolves",
+        "author": "OneTapDaily",
+        "text": "BWV just took down MKV. The timeline is working overtime.",
+        "likes": 6741,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "92f9fd9949d336d5",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "",
+        "author": "BalanceDesk",
+        "text": "Patch 1.08 is live: Chamber (nerf): Trademark 200 -> 250 credits.",
+        "likes": 10680,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "8464ac83f9730329",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "slice",
+        "author": "Round Eleven",
+        "text": "Slice cannot miss right now.",
+        "likes": 57470,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "a22837628a651fbc",
+        "season": 1,
+        "week": 8,
+        "author_kind": "player",
+        "author_id": "team_harbour_city_nine_p0",
+        "author": "Riftbyte",
+        "text": "Monday during split should be optional.",
+        "likes": 36321,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "2830dabb9bd2636c",
+        "season": 1,
+        "week": 8,
+        "author_kind": "player",
+        "author_id": "team_coral_sea_drakes_p2",
+        "author": "Slyflare",
+        "text": "250K. Thank you all, honestly.",
+        "likes": 13717,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "734caf7283ef882a",
+        "season": 1,
+        "week": 8,
+        "author_kind": "team",
+        "author_id": "team_nexus",
+        "author": "NXS",
+        "text": "Series secured: 1-0 over @SHC.",
+        "likes": 18601,
+        "kind": "result",
+        "ai": false
+      },
+      {
+        "id": "1b9aa86c3caa34a1",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "team_outback_sentinels_p2",
+        "author": "Round Eleven",
+        "text": "Player of the Week: Karmahawk — 1.97 rating across 1 map.",
+        "likes": 12907,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "92af3aed8eadc2ed",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "team_patagonia_sur_p3",
+        "author": "OneTapDaily",
+        "text": "That Cipherflare clip is everywhere.",
+        "likes": 6697,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "fd50e9c468681bd1",
+        "season": 1,
+        "week": 8,
+        "author_kind": "media",
+        "author_id": "team_crimson_order_p3",
+        "author": "OneTapDaily",
+        "text": "That Frosthawk clip is everywhere.",
+        "likes": 7700,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "c37b43015fee1dc3",
+        "season": 1,
+        "week": 7,
+        "author_kind": "media",
+        "author_id": "team_highlands_nine_p1",
+        "author": "OneTapDaily",
+        "text": "Driftrush is not human. someone check the demo.",
+        "likes": 5145,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "af5fae9bd886e07e",
+        "season": 1,
+        "week": 7,
+        "author_kind": "player",
+        "author_id": "fa_10",
+        "author": "Nightwing",
+        "text": "not going to say what I want to say. gn.",
+        "likes": 19797,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "707000bb31d42909",
+        "season": 1,
+        "week": 7,
+        "author_kind": "media",
+        "author_id": "team_chao_phraya_owls",
+        "author": "OneTapDaily",
+        "text": "CPO had the better series over TD6. Nobody saw it coming.",
+        "likes": 48666,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "8c801e1235f63d85",
+        "season": 1,
+        "week": 7,
+        "author_kind": "player",
+        "author_id": "pulse",
+        "author": "Pulse",
+        "text": "Back in the server tomorrow.",
+        "likes": 46085,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "66a2cb63ffade056",
+        "season": 1,
+        "week": 7,
+        "author_kind": "player",
+        "author_id": "team_midnight_polders_p0",
+        "author": "Cipherlock",
+        "text": "100K. Thank you all, honestly.",
+        "likes": 5061,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "116dbb837d3852d7",
+        "season": 1,
+        "week": 7,
+        "author_kind": "player",
+        "author_id": "team_adriatic_sirens_p2",
+        "author": "Hollowwing",
+        "text": "Hit 100K. Appreciate every one of you.",
+        "likes": 4521,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "6b2dbe3e30900206",
+        "season": 1,
+        "week": 7,
+        "author_kind": "team",
+        "author_id": "team_nexus",
+        "author": "NXS",
+        "text": "Not enough this week: 0-1 vs @VGD. VOD first thing Monday.",
+        "likes": 10609,
+        "kind": "result",
+        "ai": false
+      },
+      {
+        "id": "0799418e827504c8",
+        "season": 1,
+        "week": 7,
+        "author_kind": "media",
+        "author_id": "phantom",
+        "author": "Round Eleven",
+        "text": "Player of the Week: Phantom — 2.44 rating across 1 map.",
+        "likes": 6012,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "8815424ab8b36cd9",
+        "season": 1,
+        "week": 7,
+        "author_kind": "media",
+        "author_id": "team_outback_sentinels_p0",
+        "author": "OneTapDaily",
+        "text": "That Emberwolf clip is everywhere.",
+        "likes": 30604,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "784426a1f3f14e2d",
+        "season": 1,
+        "week": 7,
+        "author_kind": "player",
+        "author_id": "team_highlands_nine_p1",
+        "author": "Driftrush",
+        "text": "I said what I said.",
+        "likes": 3244,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "7e6eca7349dc506f",
+        "season": 1,
+        "week": 6,
+        "author_kind": "media",
+        "author_id": "team_seoul_dynasty_prime_p1",
+        "author": "OneTapDaily",
+        "text": "Riftstrike is not human. someone check the demo.",
+        "likes": 18765,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "a196bb2d63f6755f",
+        "season": 1,
+        "week": 6,
+        "author_kind": "player",
+        "author_id": "team_baltic_meridian_p0",
+        "author": "Pyromark",
+        "text": "not going to say what I want to say. gn.",
+        "likes": 34165,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "32edb383da789fbd",
+        "season": 1,
+        "week": 6,
+        "author_kind": "media",
+        "author_id": "team_yucatan_ceibas",
+        "author": "OneTapDaily",
+        "text": "BST fans are closing the app in real time. YCB, what was that?",
+        "likes": 4900,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "12103bba7c2604c6",
+        "season": 1,
+        "week": 6,
+        "author_kind": "player",
+        "author_id": "team_adriatic_sirens_p0",
+        "author": "Karmahawk",
+        "text": "Scrims had a moment. The VOD is classified.",
+        "likes": 26388,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "73efe1fc8a321a62",
+        "season": 1,
+        "week": 6,
+        "author_kind": "player",
+        "author_id": "team_seoul_dynasty_prime_p1",
+        "author": "Riftstrike",
+        "text": "250K? That does not feel real. Thank you.",
+        "likes": 9917,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "c4dda27b37323898",
+        "season": 1,
+        "week": 6,
+        "author_kind": "player",
+        "author_id": "team_harbour_city_nine_p0",
+        "author": "Riftbyte",
+        "text": "500K? That does not feel real. Thank you.",
+        "likes": 20563,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "87f4a15d5f8ccd70",
+        "season": 1,
+        "week": 6,
+        "author_kind": "player",
+        "author_id": "team_adriatic_sirens_p3",
+        "author": "Ironbyte",
+        "text": "Hit 250K. Appreciate every one of you.",
+        "likes": 7569,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "df105b29294fd75e",
+        "season": 1,
+        "week": 6,
+        "author_kind": "team",
+        "author_id": "team_nexus",
+        "author": "NXS",
+        "text": "Series secured: 1-0 over @BLM.",
+        "likes": 23930,
+        "kind": "result",
+        "ai": false
+      },
+      {
+        "id": "7b52e0557a6416e0",
+        "season": 1,
+        "week": 6,
+        "author_kind": "media",
+        "author_id": "team_solar_flare_p2",
+        "author": "Round Eleven",
+        "text": "Player of the Week: Karmawire — 2.07 rating across 1 map.",
+        "likes": 38542,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "c2eb802cf65a7ce5",
+        "season": 1,
+        "week": 6,
+        "author_kind": "media",
+        "author_id": "team_iron_pact_p2",
+        "author": "OneTapDaily",
+        "text": "That Pyromark clip is everywhere.",
+        "likes": 9269,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "fdb2843bdda30a5d",
+        "season": 1,
+        "week": 6,
+        "author_kind": "media",
+        "author_id": "team_cascadia_youth_p3",
+        "author": "OneTapDaily",
+        "text": "That Staticshot clip is everywhere.",
+        "likes": 5860,
+        "kind": "viral",
+        "ai": false
+      },
+      {
+        "id": "1935b60741a1f4a5",
+        "season": 1,
+        "week": 5,
+        "author_kind": "player",
+        "author_id": "team_saracen_guard_p3",
+        "author": "Crimghost",
+        "text": "Anti-strat did not travel today.",
+        "likes": 49268,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "f8e862334c6f4d0d",
+        "season": 1,
+        "week": 5,
+        "author_kind": "media",
+        "author_id": "team_hokkaido_drift",
+        "author": "OneTapDaily",
+        "text": "MKV fans are closing the app in real time. HKD, what was that?",
+        "likes": 3663,
+        "kind": "drama",
+        "ai": false
+      },
+      {
+        "id": "c07c3486acf539c9",
+        "season": 1,
+        "week": 5,
+        "author_kind": "player",
+        "author_id": "team_saracen_guard_p3",
+        "author": "Crimghost",
+        "text": "Back in the server tomorrow.",
+        "likes": 34736,
+        "kind": "hype",
+        "ai": false
+      },
+      {
+        "id": "34e31a0681b2433a",
+        "season": 1,
+        "week": 5,
+        "author_kind": "player",
+        "author_id": "team_volga_reign_p0",
+        "author": "Emberstorm",
+        "text": "Hit 100K. Appreciate every one of you.",
+        "likes": 6388,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "3ad0c39f7b5c4ee6",
+        "season": 1,
+        "week": 5,
+        "author_kind": "player",
+        "author_id": "team_tokyo_drift_six_p4",
+        "author": "Jinxsurge",
+        "text": "100K. Thank you all, honestly.",
+        "likes": 6726,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "db670d0cf6e97933",
+        "season": 1,
+        "week": 5,
+        "author_kind": "player",
+        "author_id": "team_solar_flare_p2",
+        "author": "Karmawire",
+        "text": "Hit 500K. Appreciate every one of you.",
+        "likes": 15599,
+        "kind": "milestone",
+        "ai": false
+      },
+      {
+        "id": "ec7c73f5da76c98e",
+        "season": 1,
+        "week": 5,
+        "author_kind": "team",
+        "author_id": "team_nexus",
+        "author": "NXS",
+        "text": "Series secured: 1-0 over @RBG.",
+        "likes": 22410,
+        "kind": "result",
+        "ai": false
+      },
+      {
+        "id": "3830805c16058fa1",
+        "season": 1,
+        "week": 5,
+        "author_kind": "media",
+        "author_id": "team_berlin_wolves_p2",
+        "author": "Round Eleven",
+        "text": "Player of the Week: Falconzero — 2.02 rating across 1 map.",
+        "likes": 6297,
+        "kind": "hype",
+        "ai": false
+      }
+    ],
+    "leaderboard": [
+      {
+        "player_id": "team_meridian_cross_p0",
+        "handle": "Wraithsurge",
+        "team_tag": "MRC",
+        "team_id": "team_meridian_cross",
+        "followers": 1223021,
+        "is_user": false
+      },
+      {
+        "player_id": "warden",
+        "handle": "Warden",
+        "team_tag": "VGD",
+        "team_id": "team_vanguard",
+        "followers": 853807,
+        "is_user": false
+      },
+      {
+        "player_id": "zenith",
+        "handle": "Zenith",
+        "team_tag": "VGD",
+        "team_id": "team_vanguard",
+        "followers": 850313,
+        "is_user": false
+      },
+      {
+        "player_id": "team_adriatic_sirens_p0",
+        "handle": "Karmahawk",
+        "team_tag": "ADS",
+        "team_id": "team_adriatic_sirens",
+        "followers": 742863,
+        "is_user": false
+      },
+      {
+        "player_id": "shade",
+        "handle": "Shade",
+        "team_tag": "VGD",
+        "team_id": "team_vanguard",
+        "followers": 590300,
+        "is_user": false
+      },
+      {
+        "player_id": "pulse",
+        "handle": "Pulse",
+        "team_tag": "VGD",
+        "team_id": "team_vanguard",
+        "followers": 586918,
+        "is_user": false
+      },
+      {
+        "player_id": "slice",
+        "handle": "Slice",
+        "team_tag": "VGD",
+        "team_id": "team_vanguard",
+        "followers": 569866,
+        "is_user": false
+      },
+      {
+        "player_id": "team_solar_flare_p2",
+        "handle": "Karmawire",
+        "team_tag": "SOL",
+        "team_id": "team_solar_flare",
+        "followers": 558869,
+        "is_user": false
+      },
+      {
+        "player_id": "team_harbour_city_nine_p0",
+        "handle": "Riftbyte",
+        "team_tag": "HC9",
+        "team_id": "team_harbour_city_nine",
+        "followers": 524415,
+        "is_user": false
+      },
+      {
+        "player_id": "team_saracen_guard_p3",
+        "handle": "Crimghost",
+        "team_tag": "SRG",
+        "team_id": "team_saracen_guard",
+        "followers": 493171,
+        "is_user": false
+      },
+      {
+        "player_id": "fa_10",
+        "handle": "Nightwing",
+        "team_tag": "ALE",
+        "team_id": "team_alpine_echo",
+        "followers": 480359,
+        "is_user": false
+      },
+      {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "team_tag": "NXS",
+        "team_id": "team_nexus",
+        "followers": 446117,
+        "is_user": true
+      },
+      {
+        "player_id": "team_coral_sea_drakes_p4",
+        "handle": "Nightghost",
+        "team_tag": "CSD",
+        "team_id": "team_coral_sea_drakes",
+        "followers": 445668,
+        "is_user": false
+      },
+      {
+        "player_id": "team_meridian_cross_p1",
+        "handle": "Falconghost",
+        "team_tag": "MRC",
+        "team_id": "team_meridian_cross",
+        "followers": 337879,
+        "is_user": false
+      },
+      {
+        "player_id": "fa_6",
+        "handle": "Voltecho",
+        "team_tag": "ALE",
+        "team_id": "team_alpine_echo",
+        "followers": 337061,
+        "is_user": false
+      }
+    ],
+    "your_roster": [
+      {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "followers": 446117,
+        "stream_load": 58.5,
+        "stream_status": "balanced",
+        "stream_income": 2035
+      },
+      {
+        "player_id": "apex",
+        "handle": "Apex",
+        "followers": 319858,
+        "stream_load": 50.9,
+        "stream_status": "balanced",
+        "stream_income": 1367
+      },
+      {
+        "player_id": "echo",
+        "handle": "Echo",
+        "followers": 264046,
+        "stream_load": 46.4,
+        "stream_status": "balanced",
+        "stream_income": 1029
+      },
+      {
+        "player_id": "fa_13",
+        "handle": "Slyblade",
+        "followers": 210036,
+        "stream_load": 40.4,
+        "stream_status": "balanced",
+        "stream_income": 738
+      },
+      {
+        "player_id": "ghost",
+        "handle": "Ghost",
+        "followers": 186683,
+        "stream_load": 37.4,
+        "stream_status": "balanced",
+        "stream_income": 628
+      },
+      {
+        "player_id": "fa_0",
+        "handle": "Hollowlock",
+        "followers": 68182,
+        "stream_load": 18.3,
+        "stream_status": "practice-focused",
+        "stream_income": 112
+      }
+    ],
+    "your_reach": 1494922,
+    "your_stream_income": 5909,
+    "fan_count": 308091,
+    "sentiment": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "tag": "VGD",
+        "sentiment": 58.9,
+        "word": "warm",
+        "tone": "good",
+        "is_user": false
+      },
+      {
+        "team_id": "team_solar_flare",
+        "name": "Solar Flare",
+        "tag": "SOL",
+        "sentiment": 57,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "tag": "NXS",
+        "sentiment": 56.3,
+        "word": "neutral",
+        "tone": "",
+        "is_user": true
+      },
+      {
+        "team_id": "team_tokyo_drift_six",
+        "name": "Tokyo Drift Six",
+        "tag": "TD6",
+        "sentiment": 55.6,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "tag": "SRG",
+        "sentiment": 54.7,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_outback_sentinels",
+        "name": "Outback Sentinels",
+        "tag": "OBS",
+        "sentiment": 54.5,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_baltic_meridian",
+        "name": "Baltic Meridian",
+        "tag": "BLM",
+        "sentiment": 52.2,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_coral_sea_drakes",
+        "name": "Coral Sea Drakes",
+        "tag": "CSD",
+        "sentiment": 51.6,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "tag": "RBG",
+        "sentiment": 51.4,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_meridian_cross",
+        "name": "Meridian Cross",
+        "tag": "MRC",
+        "sentiment": 51.2,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_bayou_kings",
+        "name": "Bayou Kings",
+        "tag": "BYK",
+        "sentiment": 51.1,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_iron_pact",
+        "name": "Iron Pact",
+        "tag": "IRP",
+        "sentiment": 50.7,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_midnight_polders",
+        "name": "Midnight Polders",
+        "tag": "MDP",
+        "sentiment": 49.9,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_chao_phraya_owls",
+        "name": "Chao Phraya Owls",
+        "tag": "CPO",
+        "sentiment": 49.8,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_crimson_order",
+        "name": "Crimson Order",
+        "tag": "CRO",
+        "sentiment": 49.1,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_adriatic_sirens",
+        "name": "Adriatic Sirens",
+        "tag": "ADS",
+        "sentiment": 48.8,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_alpine_echo",
+        "name": "Alpine Echo",
+        "tag": "ALE",
+        "sentiment": 48.7,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_seoul_dynasty_prime",
+        "name": "Seoul Dynasty Prime",
+        "tag": "SDP",
+        "sentiment": 48.6,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_sahara_compass",
+        "name": "Sahara Compass",
+        "tag": "SHC",
+        "sentiment": 44.9,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_nordic_frost",
+        "name": "Nordic Frost",
+        "tag": "NFR",
+        "sentiment": 44.7,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_ghostline",
+        "name": "Ghostline",
+        "tag": "GHL",
+        "sentiment": 44.3,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_kathmandu_apex",
+        "name": "Kathmandu Apex",
+        "tag": "KTA",
+        "sentiment": 43.6,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_harbour_city_nine",
+        "name": "Harbour City Nine",
+        "tag": "HC9",
+        "sentiment": 43.2,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      },
+      {
+        "team_id": "team_prairie_signal",
+        "name": "Prairie Signal",
+        "tag": "PRS",
+        "sentiment": 42.5,
+        "word": "neutral",
+        "tone": "",
+        "is_user": false
+      }
+    ],
+    "your_sentiment": 56.3,
+    "your_mood": {
+      "word": "neutral",
+      "tone": ""
+    },
+    "movement": [
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "signing",
+        "text": "Anatolia Forge sign Ciphershot.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "team_alpine_echo_p0",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "release",
+        "text": "Anatolia Forge release Blitzwire.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "team_anatolia_forge_p0",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "signing",
+        "text": "Harbour City Nine sign Driftstrike.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_crimson_order_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "signing",
+        "text": "Bayou Kings sign Pyrowire.",
+        "team_id": "team_bayou_kings",
+        "team_tag": "BYK",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "transfer",
+        "text": "Blitzshot joins Crimson Order from Bayou Kings.",
+        "team_id": "team_crimson_order",
+        "team_tag": "CRO",
+        "player_id": "team_bayou_kings_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "release",
+        "text": "Harbour City Nine release Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Falconflare re-signs with Highlands Nine.",
+        "team_id": "team_highlands_nine",
+        "team_tag": "HL9",
+        "player_id": "team_highlands_nine_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Riftbyte re-signs with Harbour City Nine.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p0",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Falconstrike re-signs with Gallic Storm.",
+        "team_id": "team_gallic_storm",
+        "team_tag": "GST",
+        "player_id": "team_gallic_storm_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Pyrofade re-signs with Busan Tempest.",
+        "team_id": "team_busan_tempest",
+        "team_tag": "BST",
+        "player_id": "team_busan_tempest_p0",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Driftveil re-signs with Azure Vanta.",
+        "team_id": "team_azure_vanta",
+        "team_tag": "AZV",
+        "player_id": "team_azure_vanta_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 8,
+        "kind": "renewal",
+        "text": "Pyrosnap re-signs with Azure Vanta.",
+        "team_id": "team_azure_vanta",
+        "team_tag": "AZV",
+        "player_id": "team_azure_vanta_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "signing",
+        "text": "Lisbon Tide sign Crimzero.",
+        "team_id": "team_lisbon_tide",
+        "team_tag": "LTD",
+        "player_id": "team_sahara_compass_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "signing",
+        "text": "Harbour City Nine sign Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "transfer",
+        "text": "Cipherhawk joins Nordic Frost from Lisbon Tide.",
+        "team_id": "team_nordic_frost",
+        "team_tag": "NFR",
+        "player_id": "team_lisbon_tide_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "release",
+        "text": "Harbour City Nine release Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "renewal",
+        "text": "Cipherhawk re-signs with Lisbon Tide.",
+        "team_id": "team_lisbon_tide",
+        "team_tag": "LTD",
+        "player_id": "team_lisbon_tide_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "kind": "renewal",
+        "text": "Crimwolf re-signs with Cascadia Youth.",
+        "team_id": "team_cascadia_youth",
+        "team_tag": "CSY",
+        "player_id": "team_cascadia_youth_p2",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 6,
+        "kind": "renewal",
+        "text": "Slywing re-signs with Yucatan Ceibas.",
+        "team_id": "team_yucatan_ceibas",
+        "team_tag": "YCB",
+        "player_id": "team_yucatan_ceibas_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 6,
+        "kind": "renewal",
+        "text": "Vortex re-signs with Team Nexus.",
+        "team_id": "team_nexus",
+        "team_tag": "NXS",
+        "player_id": "vortex",
+        "mine": true
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "signing",
+        "text": "Anatolia Forge sign Lunarshot.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "team_alpine_echo_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "release",
+        "text": "Anatolia Forge release Voltdash.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "team_anatolia_forge_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "signing",
+        "text": "Harbour City Nine sign Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "release",
+        "text": "Harbour City Nine release Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "renewal",
+        "text": "Cipherflare re-signs with Patagonia Sur.",
+        "team_id": "team_patagonia_sur",
+        "team_tag": "PSU",
+        "player_id": "team_patagonia_sur_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "renewal",
+        "text": "Pyroecho re-signs with Kraken Unit.",
+        "team_id": "team_kraken_unit",
+        "team_tag": "KRK",
+        "player_id": "team_kraken_unit_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "renewal",
+        "text": "Frostmark re-signs with Apex Syndicate.",
+        "team_id": "team_apex_syndicate",
+        "team_tag": "APX",
+        "player_id": "team_apex_syndicate_p4",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 5,
+        "kind": "signing",
+        "text": "Team Nexus sign Hollowlock.",
+        "team_id": "team_nexus",
+        "team_tag": "NXS",
+        "player_id": "fa_0",
+        "mine": true
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "signing",
+        "text": "Sahara Compass sign Emberzero.",
+        "team_id": "team_sahara_compass",
+        "team_tag": "SHC",
+        "player_id": "fa_9",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "signing",
+        "text": "Harbour City Nine sign Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "release",
+        "text": "Sahara Compass release Crimzero.",
+        "team_id": "team_sahara_compass",
+        "team_tag": "SHC",
+        "player_id": "team_sahara_compass_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "release",
+        "text": "Harbour City Nine release Pyrowire.",
+        "team_id": "team_harbour_city_nine",
+        "team_tag": "HC9",
+        "player_id": "team_harbour_city_nine_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "renewal",
+        "text": "Havocflare re-signs with Taipei Circuit.",
+        "team_id": "team_taipei_circuit",
+        "team_tag": "TPC",
+        "player_id": "team_taipei_circuit_p0",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "renewal",
+        "text": "Ciphershot re-signs with Prairie Signal.",
+        "team_id": "team_prairie_signal",
+        "team_tag": "PRS",
+        "player_id": "team_prairie_signal_p2",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 4,
+        "kind": "renewal",
+        "text": "Driftpulse re-signs with Alpine Echo.",
+        "team_id": "team_alpine_echo",
+        "team_tag": "ALE",
+        "player_id": "team_alpine_echo_p3",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 3,
+        "kind": "signing",
+        "text": "Anatolia Forge sign Phantom.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "phantom",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 3,
+        "kind": "release",
+        "text": "Anatolia Forge release Falconlock.",
+        "team_id": "team_anatolia_forge",
+        "team_tag": "ANF",
+        "player_id": "team_anatolia_forge_p1",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 3,
+        "kind": "signing",
+        "text": "Sahara Compass sign Cipherpulse.",
+        "team_id": "team_sahara_compass",
+        "team_tag": "SHC",
+        "player_id": "team_sahara_compass_p2",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 3,
+        "kind": "release",
+        "text": "Sahara Compass release Cipherpulse.",
+        "team_id": "team_sahara_compass",
+        "team_tag": "SHC",
+        "player_id": "team_sahara_compass_p2",
+        "mine": false
+      },
+      {
+        "season": 1,
+        "week": 3,
+        "kind": "renewal",
+        "text": "Apex re-signs with Team Nexus.",
+        "team_id": "team_nexus",
+        "team_tag": "NXS",
+        "player_id": "apex",
+        "mine": true
+      }
+    ]
+  }
+}

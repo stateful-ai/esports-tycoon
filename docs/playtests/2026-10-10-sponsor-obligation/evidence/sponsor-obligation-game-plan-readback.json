@@ -1,0 +1,69 @@
+{
+  "dials": [
+    {
+      "label": "Aggression",
+      "override": false,
+      "value": "50"
+    },
+    {
+      "label": "Pace",
+      "override": false,
+      "value": "50"
+    },
+    {
+      "label": "Utility discipline",
+      "override": false,
+      "value": "50"
+    },
+    {
+      "label": "Eco greed",
+      "override": false,
+      "value": "50"
+    },
+    {
+      "label": "Map control",
+      "override": true,
+      "value": "30"
+    }
+  ],
+  "radios": [
+    {
+      "value": "on",
+      "checked": true
+    },
+    {
+      "value": "on",
+      "checked": false
+    },
+    {
+      "value": "on",
+      "checked": false
+    },
+    {
+      "value": "on",
+      "checked": false
+    },
+    {
+      "value": "on",
+      "checked": false
+    },
+    {
+      "value": "on",
+      "checked": false
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Book",
+      "class": "tac-seg-btn on"
+    },
+    {
+      "text": "Use standing five",
+      "class": "btn"
+    },
+    {
+      "text": "None — let them focus",
+      "class": "btn btn-sm active"
+    }
+  ]
+}

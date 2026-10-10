@@ -1,0 +1,8 @@
+43. [POST] http://127.0.0.1:8489/api/actions/sponsor_demand => [200] OK
+98. [POST] http://127.0.0.1:8489/api/actions/lineup => [200] OK
+161. [POST] http://127.0.0.1:8489/api/actions/gameplan => [200] OK
+179. [POST] http://127.0.0.1:8489/api/actions/flavor_event => [200] OK
+190. [POST] http://127.0.0.1:8489/api/actions/advance => [200] OK
+215. [POST] http://127.0.0.1:8489/api/actions/save => [200] OK
+
+Note: 126 static requests not shown, run with "static" option to see them.
