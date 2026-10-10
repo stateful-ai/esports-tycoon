@@ -2123,9 +2123,10 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
     name = gs.teams[opponent].name
     desk = scouting.scout_desk_view(gs, team_id)
     pro = desk["pro"]
-    standing = (pro["directive"] == "scout_opponents"
+    standing = ((pro["directive"] == "scout_opponents"
                 and pro["opponent"] is not None
                 and pro["opponent"]["team_id"] == opponent)
+                or pro["directive"] in (opponent, f"match:{fixture.id}"))
     target = gs.scout_targets.get(team_id)
     deep_dive = target in (opponent, f"match:{fixture.id}")
     assigned = standing or deep_dive

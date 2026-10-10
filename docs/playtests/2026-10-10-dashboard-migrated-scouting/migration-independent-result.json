@@ -1,0 +1,17 @@
+{
+  "started_at_utc": "2026-10-10T21:18:46.558213+00:00",
+  "runner_pid": 37176,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\dashboard-standing-scouting\\ESports Simulator",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n",
+    "2"
+  ],
+  "pytest_pid": 33316,
+  "exit_code": 0,
+  "source_unchanged": true,
+  "finished_at_utc": "2026-10-10T23:03:44.880053+00:00"
+}

@@ -1,0 +1,18 @@
+{
+  "tested_head": "adf3ab9270f1af356c700741dfc2e3092bc5f7a9",
+  "tested_base": "063452905f69edd85ea866d0278ce609494308a9",
+  "frozen_files": 544,
+  "all_tracked_src_data_tests_covered": true,
+  "source_unchanged": true,
+  "imported_package": "C:\\Users\\aidan\\.codex\\worktrees\\dashboard-standing-scouting\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "terminal_count": 1261,
+  "terminal_exit_code": 0,
+  "seconds": 6295.37,
+  "scoped_csv_rows": 7,
+  "scoped_csv_sha256": "f73d595d4384b94b13b2385da9a04d180efaa2476361de7cf0507da47cb6d8b5",
+  "original_six_rows_first_19_fields_unchanged": true,
+  "save_pair_statuses": {
+    "2": "recorded",
+    "5": "recorded"
+  }
+}
