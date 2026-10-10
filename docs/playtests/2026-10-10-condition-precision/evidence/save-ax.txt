@@ -1,0 +1,9 @@
+Browser tab: 1, Title: "esports-sim", URL: "http://127.0.0.1:8477/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~			8 button Save, ID: save-btn
++	158 text World saved.
++	159 container SAVE Save your campaign, ID: es-tooltip
++		160 heading SAVE, Value: 4
++			161 text SAVE
++		162 text Save your campaign
+The focused UI element is 8 button Save, ID: save-btn

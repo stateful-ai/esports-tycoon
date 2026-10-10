@@ -3725,7 +3725,7 @@ async function tacticsPrep(ws) {
   const costText = (cost) => `Session condition cost: up to ${esc(cost)} points per squad player, including the bench (condition floors at 0).`;
   const recoveryText = "This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.";
   if (pr.participants?.length) {
-    pc.appendChild(el("p", "muted", `Current squad condition: ${pr.participants.map((p) => `${esc(p.handle)} ${esc(p.condition)}`).join(" · ")}.`));
+    pc.appendChild(el("p", "muted", `Current squad condition: ${pr.participants.map((p) => `${esc(p.handle)} ${Number(p.condition).toFixed(1)}`).join(" · ")}.`));
   }
   if (!pr.fixture) {
     pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
