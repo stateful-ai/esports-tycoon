@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0134",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor feedback needs realized social deltas",
+    "problem": "The clinic small-group narrative does not say which meter moved",
+    "solution": "Resolve the real W12 choice through the browser and render server-authored before/after deltas",
+    "lesson": "The limited-turnout result applied only team sentiment59.1to58.1; no selected-player or small-group roster mechanics exist in this outcome",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0135",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Reporting-only flavor feedback can preserve complete state",
+    "problem": "Nominal outcome effects may be clamped or combined with culture consequences",
+    "solution": "Snapshot public meters before and after existing resolution and compare entire saved state to exact64 baseline",
+    "lesson": "Actual deltas and no-op rows can explain settlement while retaining byte-equivalent GameState/mechanics; future choices continue to hide outcomes",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0136",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement receipts have a browser-session lifetime",
+    "problem": "A short toast cannot support deliberate review of consequences",
+    "solution": "Keep a dismissible receipt inside existing Needs you card until page reload and show changed meter names",
+    "lesson": "Receipt survives Dashboard refresh but deliberately ends on browser reload; saved decision and actual meter changes persist. Browser automation argument failure is separately logged rather than treated as an HTTP rejection",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

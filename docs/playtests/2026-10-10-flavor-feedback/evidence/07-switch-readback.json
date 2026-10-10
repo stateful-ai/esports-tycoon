@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"mp\": {\n    \"code\": \"27UHC\",\n    \"team_id\": \"team_nexus\",\n    \"mode\": \"solo\"\n  },\n  \"week\": 12,\n  \"flavor\": {\n    \"id\": \"8f43d112fb4700ed\",\n    \"season\": 1,\n    \"week\": 12,\n    \"team_id\": \"team_nexus\",\n    \"player_id\": \"\",\n    \"type_id\": \"community_clinic\",\n    \"title\": \"A community clinic asks for Team Nexus\",\n    \"prompt\": \"A local organizer can put Team Nexus in front of a youth clinic this week. It is good visibility, but it takes time away from the routine.\",\n    \"choices\": [\n      {\n        \"id\": \"full_roster\",\n        \"label\": \"Send the full roster\"\n      },\n      {\n        \"id\": \"small_group\",\n        \"label\": \"Send a small group\"\n      },\n      {\n        \"id\": \"decline\",\n        \"label\": \"Protect the practice schedule\"\n      }\n    ],\n    \"ai\": false\n  },\n  \"receipt\": null,\n  \"toast\": \"Resumed world 27UHC.\"\n}\n### Ran Playwright code\n```js\nawait page.evaluate('() => ({mp:App.mp, week:App.state?.week, flavor:App.state?.flavor_event, receipt:App.flavorSettlement || null, toast:document.querySelector(\\'#toast\\').innerText})');\n```"
+    }
+  ]
+}
