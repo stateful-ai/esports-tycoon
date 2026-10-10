@@ -70,9 +70,15 @@ def play_time_assessment(gs: GameState, promise: ManagerPromise) -> dict | None:
     target_basis = (f"original {duration}-week promise" if promise.initial_duration > 0
                     else f"reconstructed {duration}-week target basis")
     deadline = (
-        "Deadline: at the next weekly evaluation."
-        if remaining <= 1 else f"Deadline: after {remaining} more weekly evaluations."
+        "Final scheduled evaluation: at the next weekly evaluation."
+        if remaining <= 1 else f"Final scheduled evaluation: after {remaining} more weekly evaluations."
     )
+    if remaining > 1 and needed:
+        deadline += " It can break earlier if the required credits become unreachable."
+        if next_benched == "broken":
+            deadline += " If not dressed next evaluation, it breaks then."
+        if next_dressed == "broken":
+            deadline += " Even if dressed next evaluation, it breaks then."
     outcomes = {"active": "promise stays active", "kept": "promise kept", "broken": "promise broken"}
     return {
         "window_weeks": duration,
@@ -124,6 +130,10 @@ def create_promise(
                 break
 
     if existing is not None:
+        # Freeze a migrated play-time target before changing the remaining
+        # time used by the evaluator's legacy duration reconstruction.
+        if existing.promise_type == "play_time" and existing.initial_duration <= 0:
+            existing.initial_duration = _play_time_duration(gs, existing)
         existing.weeks_left = duration
         return existing
 

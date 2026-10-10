@@ -180,3 +180,66 @@ def test_public_duplicate_action_returns_retained_target_and_reset_deadline(worl
         assert "125%" not in str(a)
     finally:
         server._ctx.reset(token)
+
+
+@pytest.mark.parametrize("played,expected", [(False, "broken"), (True, "active")])
+def test_final_scheduled_evaluation_distinguishes_earlier_break(world, played, expected):
+    pr = promise_for(world, dressed_count=3, weeks_left=2)
+    a = promises.play_time_assessment(world, pr)
+    assert "Final scheduled evaluation: after 2" in a["deadline_label"]
+    assert "can break earlier" in a["deadline_label"]
+    assert "If not dressed next evaluation, it breaks then" in a["deadline_label"]
+    assert "Even if dressed" not in a["deadline_label"]
+    promises.weekly_tick(world, {pr.team_id: {pr.player_id} if played else set()})
+    assert pr.status == expected == a["next_dressed_status" if played else "next_not_dressed_status"]
+
+
+@pytest.mark.parametrize("season,week,created_season,created_week", [(1, 9, 1, 2), (2, 2, 1, 3)])
+def test_legacy_renewal_freezes_inferred_basis_before_reset_and_survives_reload(world, season, week, created_season, created_week):
+    from esports_sim.manager.state import GameState
+    world.season, world.week = season, week
+    pr = promise_for(world, initial_duration=0, created_season=created_season, created_week=created_week)
+    original = pr.model_dump()
+    a = promises.play_time_assessment(world, pr)
+    repeated = promises.create_promise(world, pr.team_id, pr.player_id, "play_time", target_value=60, duration=6)
+    assert repeated is pr
+    assert pr.model_dump() == {**original, "initial_duration": a["target_basis_weeks"], "weeks_left": 6}
+    world = GameState.model_validate_json(world.model_dump_json())
+    pr = world.promises[0]
+    for _ in range(6):
+        forecast = promises.play_time_assessment(world, pr)
+        assert forecast["target_basis_weeks"] == a["target_basis_weeks"]
+        assert forecast["required_dressed_weeks"] == a["required_dressed_weeks"]
+        promises.weekly_tick(world, {})
+        assert pr.status == forecast["next_not_dressed_status"]
+        world.week += 1
+        if pr.status != "active":
+            break
+    assert pr.status == ("kept" if pr.dressed_count >= a["required_dressed_weeks"] else "broken")
+
+
+@pytest.mark.parametrize("kind", ["make_captain", "unknown"])
+def test_legacy_duration_is_not_frozen_for_other_promise_types(world, kind):
+    pr = promise_for(world, initial_duration=0, promise_type=kind)
+    before = pr.model_dump()
+    promises.create_promise(world, pr.team_id, pr.player_id, kind, target_value=60, duration=6)
+    assert pr.model_dump() == {**before, "weeks_left": 6}
+
+
+def test_public_legacy_renewal_retains_pre_action_requirement(world, game_data):
+    pytest.importorskip("fastapi")
+    from esports_sim.web import server
+    world.week = 9
+    pr = promise_for(world, initial_duration=0, created_week=2)
+    original = promises.play_time_assessment(world, pr)
+    token = server._ctx.set(server._ReqCtx(server._Game(game_data, "LEGACY", gs=world), world.user_team_id))
+    try:
+        result = server.promise_action(server.PromiseBody(kind="bench_minutes", player_id=pr.player_id))
+        assert "5 dressed-week credits" in result["message"]
+        roster = server.roster(world.user_team_id)["promises"][0]
+        profile = server.player_profile(pr.player_id)["player"]["promises"][0]
+        assert roster == profile
+        assert (pr.initial_duration, pr.weeks_left, pr.dressed_count) == (8, 6, 5)
+        assert roster["play_time_assessment"]["required_dressed_weeks"] == original["required_dressed_weeks"]
+    finally:
+        server._ctx.reset(token)
