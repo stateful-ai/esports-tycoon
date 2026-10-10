@@ -202,6 +202,11 @@ def _effect_lines(gs: GameState, name: str, level: int) -> list[dict[str, str]]:
     raise ValueError(f"unknown facility {name}")
 
 
+def facility_label(name: str) -> str:
+    """Canonical player-facing department name for a stable facility key."""
+    return _SPECS[name]["label"]
+
+
 def facility_view(gs: GameState, name: str) -> dict[str, Any]:
     """Return one exact, mutation-free facility menu contract."""
     if name not in _SPECS:
@@ -232,7 +237,7 @@ def facility_view(gs: GameState, name: str) -> dict[str, Any]:
     )
     return {
         "id": name,
-        "label": spec["label"],
+        "label": facility_label(name),
         "description": spec["description"],
         "level": level,
         "max_level": economy.FACILITY_MAX_LEVEL,
