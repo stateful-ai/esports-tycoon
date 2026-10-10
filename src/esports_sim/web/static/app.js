@@ -7613,10 +7613,10 @@ const FinancesTab = ({ onOpenBrand }) => {
                       <div>
                         <b>
                           ${d.kind === "field_rookie" ? html`
-                            Play <span data-pid=${d.player_id}>${d.player_name}</span>
-                            against <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Play${" "}<span data-pid=${d.player_id}>${d.player_name}</span>${" "}
+                            against${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           ` : html`
-                            Beat rivals <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Beat rivals${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           `}
                         </b>
                       </div>
