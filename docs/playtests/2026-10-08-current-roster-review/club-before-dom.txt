@@ -1,0 +1,136 @@
+ESPORTSSIM
+Season 1 · Week 2 · Regular — Team Nexus
+504,811 cr
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD
+INBOX3
+MATCH2
+ORG
+CLUB2
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+CLUB
+Team Nexus · 5/10
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+
+Tip: a 6-man roster is advised for tournaments (register a bench).
+
+PLAYER	ROLE	AGENT	AGE	OVR	CEILING	FORM	MORALE	CONDITION	CONFIDENCE	SALARY	WKS	
+Apex IGL	CONTROLLER IGL	OMEN ?	26	78.3	★★★½	
+61
+	
+76
+	
+66
+	
+52
+▲
+	8,000 cr/wk	2w	
+Talk
+Renew
+Release
+
+Phantom	DUELIST ENTRY	RAZE ?	20	65.5	★★★★½	
+67
+	
+74
+	
+71
+	
+53
+▲
+	6,500 cr/wk	17w	
+Talk
+Renew
+Release
+
+Echo	SENTINEL ANCHOR	KILLJOY ?	23	75.5	★★★	
+66
+▼
+	
+86
+	
+75
+	
+51
+	5,500 cr/wk	29w	
+Talk
+Renew
+Release
+
+Vortex	DUELIST AWPER	JETT ?	22	74.6	★★★	
+82
+▲
+	
+58
+	
+19
+	
+53
+▲
+	7,000 cr/wk	7w	
+Talk
+Renew
+Release
+
+Ghost	INITIATOR LURKER	SOVA ?	19	75.6	★★★★★	
+68
+▼
+	
+82
+	
+79
+	
+52
+▲
+	4,500 cr/wk	43w	
+Talk
+Renew
+Release
+FORM & FITNESS
+YOUR MOVERS · THIS WEEK
+Phantom
+▲ 0.4
+SQUAD PROFILE
+
+Average age 22
+
+Youth ≤21
+2
+Prime 22–26
+3
+Veteran 27+
+0
+SCOUTING BOOK
+
+Balanced
+
+LOCKER ROOM
+
+No standout duos or feuds.
+
+COMMS 56 shared languages feed chemistry.
+
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.

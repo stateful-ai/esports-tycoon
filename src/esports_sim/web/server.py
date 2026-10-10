@@ -1196,7 +1196,14 @@ def _review_point_view(gs: GameState, p) -> dict:
         # (a Choker off-colour or a Clutch Master carry reads instantly).
         "badges": _badge_views(pl) if pl else [],
     }
-    if p.code == "player_under" and pl is not None:
+    if p.code == "player_under" and (
+        pl is None or p.player_id not in gs.teams[gs.acting_team_id].player_ids
+    ):
+        out["dev_note"] = (
+            "Historical match finding — this player is no longer in your squad, "
+            "so roster changes for them are unavailable."
+        )
+    elif p.code == "player_under" and pl is not None:
         developing, band = _player_developing(gs, pl)
         out["dev_note"] = (
             f"Young with room (proj. {band[0]}–{band[1]}) — a development call, "
@@ -1407,6 +1414,14 @@ def _last_match_review(
         for p in vis_breaking:
             spec = _REVIEW_LEVERS.get(p.lever_code)
             if not p.lever_code or spec is None or p.lever_code in seen:
+                continue
+            # Reviews describe the match roster, but levers act on today's
+            # squad. Skip before deduplication so a current player's finding
+            # can still supply the same lever after a departed player's one.
+            if p.lever_code == "player_form" and (
+                p.player_id not in gs.teams[gs.acting_team_id].player_ids
+                or p.player_id not in gs.players
+            ):
                 continue
             seen.add(p.lever_code)
             handle = ""

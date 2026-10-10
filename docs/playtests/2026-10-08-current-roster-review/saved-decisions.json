@@ -1,0 +1,26 @@
+[
+  {
+    "index": 0,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 1,
+    "season": 1,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "release",
+    "params": {
+      "player_id": "echo"
+    },
+    "source": "web"
+  }
+]

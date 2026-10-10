@@ -1,0 +1,177 @@
+ESPORTSSIM
+Season 1 · Week 1 · Regular — Team Nexus
+487,320 cr
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD
+INBOX
+MATCH2
+ORG
+CLUB2
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+DASHBOARD
+S1 · W1 · Regular
+Guide
+Career ▸
+0–0
+RECORD
+0 rd
+3rd
+LEAGUE
+Americas
+487,320 cr
+BALANCE
+72
+MORALE
+75
+CONDITION
+W1 · STAFF BRIEFING
+MATCH DAY
+
+Everything to settle before you advance the week.
+
+PLAN NEEDED
+SCOUT ELSEWHERE
+SQUAD READY
+Match day briefing ▸
+Team Nexus
+3rd · 0–0
+VS
+S1 · W1
+AMERICAS LEAGUE
+BEST OF 1
+VS MATEO COSTA · UNSHAKEABLE
+Sahara Compass
+6th · 0–0
+TODAY'S PREP
+Sahara Compass in W1
+Set the five, build the plan, sharpen the week.
+ASSISTANT COACH
+STABLE
+Keep the match five settled
+
+No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+
+Open roster ▸
+HEAD COACH
+PRIORITY
+Turn the brief into a game plan
+
+No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+
+Build plan ▸
+ANALYST
+UNASSIGNED
+Put the book on Sahara Compass
+
+Your scout is not assigned to Sahara Compass. Switch coverage if this match is the priority.
+
+Scouting desk ▸
+PERFORMANCE
+TACTICAL
+Align development with Tactical
+
+Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.
+
+Development plans ▸
+MATCH INTELLIGENCE
+Opponent, form, maps and run-in
+
+Three points here tighten their grip on a top-four berth.
+
+MAP
+LOTUS
+RUN-IN
+W1 Sahara Compass
+W2 Nordic Frost
+W3 Kathmandu Apex
+W4 Saracen Guard
+W5 Rust Belt Gaming
+DANGER MEN
+Voltwing
+SENTINEL
+~62
+Cipherlock
+CONTROLLER
+~60
+Crimzero
+INITIATOR
+~58
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Baltic Meridian	0	0	0
+2	Kathmandu Apex	0	0	0
+3	Team Nexus	0	0	0
+4	Nordic Frost	0	0	0
+
+World #24 · Rep 58 · Fans 284K
+
+Full table ▸
+NEEDS YOU
+▸ Apex contract up in 3w
+▸ Vortex contract up in 8w
+▸ No game plan set for W1
+▸ Coach proposed a scrim plan Match · Prep
+NEWS
+[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters.
+MANAGER HANDBOOK
+LEARN THE JOB
+
+A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.
+
+Close
+FIRST WEEK
+SCREEN GUIDE
+KEY TERMS
+Your first week
+Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.
+1
+Clear urgent work
+
+Open Actionable Items and resolve anything with a deadline.
+
+Open Inbox
+2
+Check the squad
+
+Confirm five starters, inspect condition and confidence, and set training.
+
+Open Club
+3
+Prepare the fixture
+
+Read the opponent report and make a simple game plan.
+
+Open Match
+4
+Know your options
+
+Scout one realistic target; you do not need to sign anyone immediately.
+
+Open Market
+5
+Advance when ready
+
+Return to the Dashboard, check Needs You, then advance the week.
+
+Open Dashboard
+A safe learning setup
+Keep tactics near 50, use normal training intensity, scout before buying, and leave cash for several weeks of wages.
+
+Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.
