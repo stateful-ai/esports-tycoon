@@ -1,5 +1,22 @@
 # Weekly facility expense accounting acceptance
 
+**CLI review correction completed:** Root held PR #373 after noticing
+that the CLI still called total expenses payroll. The same branch now changes
+only that reporting surface: general income/expenses, plus actual primary-manager
+upkeep when nonzero. Three Console-render tests passed, covering nonzero net,
+manager isolation, zero upkeep, negative income and ASCII output. CSV step7
+records intent before rendering the retained actual browser accounting payload,
+then the observed [CLI output](cli-revision/rendered-output.txt) and unchanged-save
+[receipt](cli-revision/receipt.json). The original six rows remain a prefix.
+A fresh unfiltered full suite completed at **23:40:15 UTC**: **1260 passed in
+5986.33s**, actual native pytest exit **0**, all **611 frozen source paths**
+match before, after and at publication. Imported package was this checkout's
+`src`; no source edits or rebase followed the gate. [Current terminal log](cli-revision/gate/pytest.log),
+[receipt](cli-revision/gate/status.json), raw [pre](cli-revision/gate/source-pre.json)
+and [post](cli-revision/gate/source-post.json) manifests preserve the proof.
+The completed 1257/610 gate below is historical; it does not cover this CLI
+correction. See the [current handoff](HANDOFF.md).
+
 Tested baseline `042d86d3161fc5fa3185091031ba546193b2e97e` plus the scoped
 uncommitted accounting fix, branch `fix/weekly-facility-expense-reporting`.
 Normal Chromium browser, own server port 8487, copied world 26UHC / seed 2038.
@@ -57,13 +74,14 @@ encoding, producing mojibake in one private-news line. This caused a false state
 mismatch; the helper now reads UTF-8 explicitly. The diagnostic failures remain
 under `runs/gap25/`, and no source edits were needed.
 
-The full **unfiltered** `python -m pytest -q -n2` gate finished with **1,257
+The first publication's historical **unfiltered** `python -m pytest -q -n2` gate finished with **1,257
 passed in 7,451.32 seconds**, native subprocess exit **0**, at 21:41:54 UTC.
 All **610** raw pre/post source, test, data, script and configuration file hashes
 match, with no changed files. The imported package was this worktree's `src`.
 [Terminal log](gate/pytest.log), [native receipt](gate/status.json), and raw
 [before](gate/source-pre.json) / [after](gate/source-post.json) manifests retain
-the proof. No tested source was changed or rebased after this gate.
+the proof. This historical proof covered the first published head before the
+CLI correction above; the corrected source requires its fresh full gate.
 
 ## Telemetry reconciliation and limitations
 

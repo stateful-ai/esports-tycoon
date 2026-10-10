@@ -1,5 +1,52 @@
 # Gap 25 durable gate handoff
 
+## CLI review correction: completed current gate
+
+Root held PR #373 after inline review `4239346985`: CLI weekly results still
+called all report expenses payroll. This is corrected in the same checkout and
+PR scope, without rebase. The corrected gate started from published head
+`ba274aec3748830be6f3d88f358572459fd97e16` plus the scoped CLI correction.
+
+`src/esports_sim/app/cli.py` now prints general income and expenses, and a
+separate actual primary-manager facility charge only when nonzero. It reads
+`report.facility_upkeep_by`; no upkeep formula is copied. Three rendered Console
+tests passed (0.52s), including nonzero charge/net, primary-manager isolation
+while another manager is acting, zero upkeep, negative income, ASCII output,
+and complete GameState non-mutation.
+
+CLI intent and actual results are appended as **step 7**, preserving the
+original six CSV rows. Actual browser-settled values render as income110732,
+expenses48600, net62132 and upkeep1500 included in expenses. The persisted save
+remains unchanged. Evidence: `cli-revision/rendered-output.txt`, `receipt.json`.
+This is a financial-section render of the retained actual advance payload,
+not a new campaign advance or claim of a complete original CLI player session.
+
+Fresh **unfiltered** gate started **2026-10-10 22:00:28 UTC**, with source/tests
+frozen. Actual writer PID **34476** (launcher **34388**), pytest invocation PID
+**43028**, two xdist workers, **611** raw source paths. Imported own `src`.
+It completed at **23:40:15 UTC**: **1260 passed in 5986.33s**, actual native
+pytest exit **0**, all **611** pre/post/current raw hashes equal, no changed files.
+The writer was followed without interruption or restart. Source remains frozen.
+
+- Writer: `runs/gap25/full_gate_cli_revision.py`.
+- Terminal log: `runs/gap25/full-gate-cli-revision/pytest.log`.
+- Native receipt: `runs/gap25/full-gate-cli-revision/status.json`.
+- Raw pre/post: `source-pre.json`, eventual `source-post.json` in that folder.
+- Writer stderr/stdout: `runs/gap25/cli-revision-writer.err.log`, `.out.log`.
+
+The old 1257/610 gate below stays **historical**, and cannot approve the changed
+CLI source. The fresh terminal proof is retained under `cli-revision/gate/`.
+Manifest SHA256: `2dc4f61f12fa8d2f909aa8f946d1b9c6cb96b3136ae2cde8b05aba249e9e2f7f`.
+Receipt SHA256: `d3387f4372bd21b1668f61463ff1b410e9cfb6a837d2063e5dc9f5a570f2d99e`.
+CLI raw source SHA256: `6618592e704a401fbf0b64dd4c2e8586cdfef7dfa93083e1efde592dccbfd7e6`.
+CLI test SHA256: `02dac9a39b5f96ecc1798edec91f4285eaaaf393694f1e71f9f93300032ece2b`.
+Root authorized publication after independently seeing the genuine terminal
+result. Stage only CLI source, `tests/test_cli_weekly_finances.py`, appended
+CSV and session evidence; push the existing branch/PR. Root independently
+reviews the new head and its new CI. Do not merge.
+
+## Historical first publication gate
+
 Worktree: `C:/Users/aidan/.codex/worktrees/weekly-facility-expense-reporting`
 Branch: `fix/weekly-facility-expense-reporting`
 Base: `042d86d3161fc5fa3185091031ba546193b2e97e`
@@ -9,7 +56,7 @@ actual native pytest exit **0**, all **610** raw paths equal. Production source
 and tests remain exactly as tested. Publication follows root's authorized
 resumption; do not rebase or edit tested source under this proof.
 
-## Completed detached full gate
+## Completed historical detached full gate
 
 - Actual native writer PID **11276** (venv launcher PID 37452).
 - Actual pytest subprocess PID **3496**; two xdist workers.
