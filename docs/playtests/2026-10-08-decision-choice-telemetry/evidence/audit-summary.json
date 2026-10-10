@@ -1,0 +1,53 @@
+{
+  "baseline_prefix_identical": true,
+  "baseline_sha256": "40d4f3d782a74a980c0c0cce65b68f34f2f87ed6991001cf046f60d1003ca5f3",
+  "final_save_sha256": "6c7e16c189d63bcbbea504b31ab3e113074a322306698fd34aed359457be08c8",
+  "seed": 2038,
+  "world": "26UHC",
+  "baseline_decisions": 27,
+  "final_decisions": 33,
+  "new_accepted_decisions": 6,
+  "snapshots_before": 5,
+  "snapshots_after": 5,
+  "new_choices_from_saved_ledger_only": {
+    "default_auto_clear": 1,
+    "explicit_default_five": 1,
+    "explicit_per_map_five": 1,
+    "harbor_lock_assignments": 1,
+    "game_plans": 2,
+    "aggression72": 2,
+    "pace31": 2,
+    "reassure": 2,
+    "exact_starter_five": 2,
+    "repeated_identical_gameplan": 1
+  },
+  "browser_usage": {
+    "retained_events_total": 29,
+    "world_events": 25,
+    "sessions": [
+      "3f10162cf3f89783925fbf02d1a037f2"
+    ],
+    "attempts": 7,
+    "results": 7,
+    "unmatched_attempts": 0,
+    "orphan_results": 0,
+    "statuses": {
+      "200": 7
+    }
+  },
+  "direct_http_rejections": 1,
+  "no_accepted_record_for_rejection": true,
+  "navigation_failure_row": 1,
+  "baseline_snapshot_values_identical": true,
+  "immutable_source_fixture_unchanged": true,
+  "observations": 12,
+  "outcomes": {
+    "met": 10,
+    "unexpected": 2
+  },
+  "accepted_choice_coverage": {
+    "matched": 6,
+    "accepted": 6,
+    "percent": 100
+  }
+}

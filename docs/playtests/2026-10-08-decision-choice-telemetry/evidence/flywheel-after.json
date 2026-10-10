@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0092",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Exact accepted choices can be counted from saved ledger",
+    "problem": "Coarse set_lineup and gameplan flags omitted selected choices",
+    "solution": "Six new decisions preserve exact five, HollowlockHarbor, Aggression72 Pace31 and Reassure; baseline27rows unchanged",
+    "lesson": "Decode additive json-v1 fields only when present; legacy rows cannot establish exact preference counts",
+    "confidence": "high",
+    "source": "Browser8470 copied26UHC seed2038 S1W6 docs/playtests/2026-10-08-decision-choice-telemetry/report.md",
+    "code": "26UHC",
+    "tags": [
+      "telemetry",
+      "choices",
+      "lineup",
+      "gameplan"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0093",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Rejected mixed lineup requests must validate before mutation",
+    "problem": "An agent change could precede per-map lineup validation",
+    "solution": "HTTP422 mixed request leaves public book unchanged and contributes zero accepted decisions",
+    "lesson": "Keep accepted-choice telemetry and browser attempts separate; rejected requests must not silently apply choices",
+    "confidence": "high",
+    "source": "Browser8470 copied26UHC seed2038 S1W6 docs/playtests/2026-10-08-decision-choice-telemetry/report.md",
+    "code": "26UHC",
+    "tags": [
+      "telemetry",
+      "choices",
+      "lineup",
+      "gameplan"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0094",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Cloned campaign resume needs its copied browser session",
+    "problem": "Fresh browser had no history for copied world, causing30second selector timeout",
+    "solution": "Recovered using copied authorized sessions cookie; failure and correction retained separately",
+    "lesson": "Copied campaign JSON alone does not provide a new browser resume history",
+    "confidence": "high",
+    "source": "Browser8470 copied26UHC seed2038 S1W6 docs/playtests/2026-10-08-decision-choice-telemetry/report.md",
+    "code": "26UHC",
+    "tags": [
+      "telemetry",
+      "choices",
+      "lineup",
+      "gameplan"
+    ],
+    "kind": "pain-point"
+  }
+]
