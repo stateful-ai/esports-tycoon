@@ -1,0 +1,149 @@
+[
+  {
+    "id": "esports-playtest-0040",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Classic report does not close with Escape",
+    "problem": "After Full report, Escape left the overlay covering Save and the driver click was blocked",
+    "solution": "Use the visible Continue control or reopen the same test world before saving; no production change in this analytics patch",
+    "lesson": "Results overlay currently requires its visible Continue control; Escape cannot be assumed to dismiss it",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0039",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Browser recovery must retain blocked attempts separately from requests",
+    "problem": "Guide intercepted Advance and report intercepted Save without an emitted request",
+    "solution": "Keep blocked rows, resume same world, use Close Guide and Save, reconcile one accepted advance and one snapshot",
+    "lesson": "A timed-out browser click is not an HTTP rejection; preserve its gap and the subsequent successful action as separate observations",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0038",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Coarse control hooks capture previously invisible seed and full-report use",
+    "problem": "Lobby seed edits and explicit report opening were absent from retained browser usage",
+    "solution": "Exercise actual Seed change and Full report controls; reconcile one event each with isolated sidecar",
+    "lesson": "Interaction counts can record control use without seed values or report contents; they do not establish accepted decisions or attention",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0037",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current roster rewrote historical replay identities",
+    "problem": "Original replay showed Frostecho/Reyna who never played, omitted Grimveil/Jett and lost his team in the box score",
+    "solution": "Pure serializer preserves match-time participant, agent and team evidence; focused tests cover release, transfer, lock edits and substitutes",
+    "lesson": "A replay must not consult mutable current rosters or agent locks to label historical events",
+    "confidence": "medium",
+    "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+    "code": "WJBF7",
+    "tags": [
+      "browser",
+      "replay",
+      "historical-identity",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0036",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Keep match participation separate from training recovery",
+    "problem": "Vortex rest focus could be mistaken for a bench instruction",
+    "solution": "Read the actual played lineup and development report after advancing",
+    "lesson": "Vortex rest pauses practice but retains match experience; he still appeared on the actual Lotus13-2 map",
+    "confidence": "medium",
+    "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+    "code": "WJBF7",
+    "tags": [
+      "browser",
+      "replay",
+      "historical-identity",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0035",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Read replay participants from the played map",
+    "problem": "Weekly AI released Grimveil and signed Frostecho before replay was opened",
+    "solution": "Use match.start agents and complete opening placements rather than the current roster and locks",
+    "lesson": "The patched replay retains Grimveil/Jett/Sahara and 11K12D even though current Sahara roster contains Frostecho",
+    "confidence": "medium",
+    "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+    "code": "WJBF7",
+    "tags": [
+      "browser",
+      "replay",
+      "historical-identity",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0034",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Replay uses post-match roster and loses departed player identity",
+    "problem": "Sahara released Grimveil after the fixture; replay lists later-signing Frostecho, omits Grimveil, and box score loses Grimveil team",
+    "solution": "Retained match.start agents and public replay response showing mismatch; queued a dedicated gap agent",
+    "lesson": "Replays need match-time participants and agents rather than the club roster at viewing time",
+    "confidence": "medium",
+    "source": "26UHC seed2038 S1W2 read-only replay follow-up; clean3ac34df; docs/playtests/2026-10-08-replay-roster.md",
+    "code": "26UHC",
+    "tags": [
+      "replay",
+      "roster",
+      "identity"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0033",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Cross-check replay participants with the match box score",
+    "problem": "Current opponent roster can change immediately after a played fixture",
+    "solution": "Compared Frostecho in replay roster with Grimveil in match box score and match.start agents",
+    "lesson": "Roster names alone are not proof of historical participants; verify the actual match identities",
+    "confidence": "medium",
+    "source": "26UHC seed2038 S1W2 read-only replay follow-up; clean3ac34df; docs/playtests/2026-10-08-replay-roster.md",
+    "code": "26UHC",
+    "tags": [
+      "replay",
+      "roster",
+      "identity"
+    ],
+    "kind": "learning"
+  }
+]

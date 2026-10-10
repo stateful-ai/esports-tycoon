@@ -1,0 +1,120 @@
+{
+  "world": "26UHC",
+  "played_pages": [
+    "19793c50ffc6b80b3c9102a22a558c8d"
+  ],
+  "retained_events": 123,
+  "all_events": 123,
+  "request_pairs": [
+    {
+      "attempt_index": 11,
+      "result_index": 12,
+      "target": "/api/negotiation",
+      "request_id": 13,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 17,
+      "result_index": 18,
+      "target": "/api/negotiation",
+      "request_id": 15,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 60,
+      "result_index": 61,
+      "target": "/api/actions/dev_plan",
+      "request_id": 25,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 62,
+      "result_index": 63,
+      "target": "/api/actions/dev_plan",
+      "request_id": 27,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 67,
+      "result_index": 68,
+      "target": "/api/actions/dev_plan",
+      "request_id": 29,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 69,
+      "result_index": 70,
+      "target": "/api/actions/dev_plan",
+      "request_id": 31,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 75,
+      "result_index": 76,
+      "target": "/api/actions/lineup",
+      "request_id": 34,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 79,
+      "result_index": 80,
+      "target": "/api/actions/advance",
+      "request_id": 36,
+      "outcome": "http_error",
+      "status": 409
+    },
+    {
+      "attempt_index": 88,
+      "result_index": 89,
+      "target": "/api/actions/flavor_event",
+      "request_id": 43,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 92,
+      "result_index": 94,
+      "target": "/api/actions/advance",
+      "request_id": 52,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 113,
+      "result_index": 114,
+      "target": "/api/actions/save",
+      "request_id": 68,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "status_counts": {
+    "200": 10,
+    "409": 1
+  },
+  "views": {
+    "lobby": 1,
+    "dashboard": 3,
+    "club/squad": 2,
+    "club/development": 1,
+    "replay": 1
+  },
+  "interactions": {
+    "week/full_report_open": 1
+  },
+  "replay": {
+    "open": 1,
+    "close": 1
+  },
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "bounded_best_effort": true,
+  "note": "Nine accepted decisions; two training controls each emit a decision. Rejected Advance409 is captured only as usage failure. Save, read-only profiles and replay are outside deterministic decisions. Failed selectors and intercepted clicks are not HTTP rejections. Public fetch readbacks do not emit browser usage; visible time is a visibility proxy, not attention or intent."
+}

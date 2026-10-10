@@ -1,0 +1,163 @@
+{
+  "baseline_decisions": 27,
+  "final_decisions": 36,
+  "new_decisions": [
+    {
+      "index": 27,
+      "csv_step": 2,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "vortex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 28,
+      "csv_step": 3,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "442000",
+        "no_transfer": "False",
+        "player_id": "vortex",
+        "release_fee": "110000",
+        "role": "starter",
+        "salary": "9200",
+        "status": "accepted",
+        "stream_share": "74",
+        "weeks": "47"
+      },
+      "source": "web"
+    },
+    {
+      "index": 29,
+      "csv_step": 4,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "echo"
+      },
+      "source": "web"
+    },
+    {
+      "index": 30,
+      "csv_step": 4,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "echo"
+      },
+      "source": "web"
+    },
+    {
+      "index": 31,
+      "csv_step": 5,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 32,
+      "csv_step": 5,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 33,
+      "csv_step": 6,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agents": "False",
+        "default_five": "True",
+        "fixture_id": "",
+        "map_id": "",
+        "per_map": "False"
+      },
+      "source": "web"
+    },
+    {
+      "index": 34,
+      "csv_step": 9,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "let_loose",
+        "event_id": "39e83f39373aa3ea"
+      },
+      "source": "web"
+    },
+    {
+      "index": 35,
+      "csv_step": 10,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 5,
+  "final_snapshots": 6,
+  "old_prefix_unchanged": true,
+  "save_sha256": "0339185f60e890ebaac72ab3dc10d6b65ff76e44a06797f3ae8673311a64eac5",
+  "parameter_gaps": [
+    "Legacy set_lineup records flags but omits selected player IDs. This current-main build predates gap17; public roster and resolved replay independently corroborate the selected five.",
+    "Rejected Advance409 and read-only views are outside accepted decision vocabulary."
+  ]
+}

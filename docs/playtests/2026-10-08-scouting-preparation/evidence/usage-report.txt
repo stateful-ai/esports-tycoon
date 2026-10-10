@@ -1,0 +1,62 @@
+{
+  "attempts": 7,
+  "events": {
+    "attempt:/api/actions/advance": 2,
+    "attempt:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/flavor_event": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/actions/scout-directive": 1,
+    "result:/api/actions/advance": 2,
+    "result:/api/actions/dev_plan": 1,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/actions/scout-directive": 1,
+    "session_start:": 1,
+    "view:club/development": 1,
+    "view:club/squad": 1,
+    "view:dashboard": 3,
+    "view:lobby": 1,
+    "view:market/scouting": 1,
+    "view:tactics/prep": 1,
+    "view:tactics/strategy": 1,
+    "visible_time:club/development": 11,
+    "visible_time:club/squad": 4,
+    "visible_time:dashboard": 14,
+    "visible_time:lobby": 1,
+    "visible_time:market/scouting": 26,
+    "visible_time:tactics/prep": 12,
+    "visible_time:tactics/strategy": 1
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "346e5ee7c1d648067f99cc81d7e50f4d": 899995
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/actions/scout-directive:success": 1
+  },
+  "paired_results": 7,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 161560,
+    "club/squad": 35574,
+    "dashboard": 173072,
+    "lobby": 50,
+    "market/scouting": 381220,
+    "tactics/prep": 162462,
+    "tactics/strategy": 1068
+  },
+  "world_events": {
+    "26UHC": 93
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"id\": \"echo\",\n  \"overview\": {\n    \"salary\": 7700,\n    \"contract_weeks\": 55,\n    \"contract_terms\": {\n      \"stream_share\": 72,\n      \"release_fee\": 92000,\n      \"buyout\": 400000,\n      \"no_transfer\": false,\n      \"roster_role\": \"starter\"\n    }\n  }\n}\n### Ran Playwright code\n```js\nawait page.evaluate('async () => {const r=await api(\\'/api/players/echo/profile\\');return {id:r.player.id,overview:Object.fromEntries(Object.entries(r.overview).filter(([k])=>/salary|contract/.test(k)))};}');\n```"
+    }
+  ]
+}

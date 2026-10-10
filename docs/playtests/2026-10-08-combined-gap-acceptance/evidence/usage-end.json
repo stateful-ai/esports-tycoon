@@ -1,0 +1,72 @@
+{
+  "attempts": 8,
+  "events": {
+    "attempt:/api/actions/advance": 2,
+    "attempt:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/release": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 2,
+    "attempt:/api/new": 1,
+    "interaction:lobby/seed_change": 1,
+    "interaction:week/full_report_open": 1,
+    "replay:close": 1,
+    "replay:open": 1,
+    "replay:pause": 1,
+    "result:/api/actions/advance": 2,
+    "result:/api/actions/dev_plan": 1,
+    "result:/api/actions/release": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 2,
+    "result:/api/new": 1,
+    "session_end:": 1,
+    "session_start:": 1,
+    "view:club/development": 2,
+    "view:club/squad": 2,
+    "view:dashboard": 1,
+    "view:lobby": 1,
+    "view:market/players": 1,
+    "view:replay": 1,
+    "view:tactics/gameplan": 2,
+    "view:tactics/strategy": 1,
+    "visible_time:club/development": 16,
+    "visible_time:club/squad": 9,
+    "visible_time:dashboard": 3,
+    "visible_time:lobby": 5,
+    "visible_time:market/players": 10,
+    "visible_time:replay": 8,
+    "visible_time:tactics/gameplan": 15,
+    "visible_time:tactics/strategy": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "f2a52698f00800bbf3f68d485a1a60ca": 816784
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/release:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 2,
+    "/api/new:success": 1
+  },
+  "paired_results": 8,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 187322,
+    "club/squad": 103815,
+    "dashboard": 39581,
+    "lobby": 47110,
+    "market/players": 136315,
+    "replay": 110256,
+    "tactics/gameplan": 193323,
+    "tactics/strategy": 14075
+  },
+  "world_events": {
+    "26UHC": 94,
+    "lobby": 8
+  }
+}
