@@ -1903,6 +1903,21 @@ let pfOverlayEl = null;
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
+let pfInspected = null; // successful visible identity; never sent to telemetry
+
+function pfEndInspection() {
+  if (pfInspected) window.Usage?.interaction(`profile/${pfInspected.kind}_close`);
+  pfInspected = null;
+}
+
+function pfInspectVisible() {
+  if (!pfCurrent || !isProfileOpen()) return;
+  if (pfInspected && pfInspected.kind === pfCurrent.kind
+      && String(pfInspected.id) === String(pfCurrent.id)) return;
+  pfEndInspection();
+  pfInspected = {kind: pfCurrent.kind, id: pfCurrent.id};
+  window.Usage?.interaction(`profile/${pfInspected.kind}_open`);
+}
 
 function pfNavTo(entry, opts) {
   const replace = !!(opts && opts.replace);
@@ -1951,7 +1966,7 @@ function pfShow(vnode) {
 }
 
 function closeProfile() {
-  pfStack.length = 0;
+  pfEndInspection();  pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
   if (pfOverlayEl) {
@@ -1974,8 +1989,10 @@ async function openPlayerProfile(pid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${PlayerProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -1987,8 +2004,10 @@ async function openTeamProfile(tid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${TeamProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -2000,8 +2019,10 @@ async function openStaffProfile(sid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${StaffProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -2009,6 +2030,7 @@ window.openManagerProfile = (career, opts) => {
   if (!career) return;
   pfNavTo({ kind: "manager", id: career.id || "me", career }, opts);
   pfShow(html`<${ManagerProfile} career=${career} />`);
+  pfInspectVisible();
 };
 
 async function pfReopenManager(entry) {
@@ -2019,8 +2041,10 @@ async function pfReopenManager(entry) {
   const payload = data || entry.career;
   if (payload) {
     pfShow(html`<${ManagerProfile} career=${payload} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 

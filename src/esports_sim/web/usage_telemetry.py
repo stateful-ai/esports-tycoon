@@ -37,7 +37,13 @@ SUBTABS = {"overview", "squad", "development", "locker_room", "operations", "str
            "leaders", "races", "meta", "history", "teams", "agents", "maps", "finances", "brand"}
 REPLAY = {"open", "close", "play", "pause", "seek", "round", "speed_1", "speed_4", "speed_16", "speed_inst"}
 # Coarse control use only: never values, labels, selectors, or report contents.
-INTERACTIONS = {"lobby/seed_change", "week/full_report_open"}
+# Overlay inspections count successful visible content, not attempted fetches.
+PROFILE_INTERACTIONS = {f"profile/{kind}_{action}"
+                        for kind in ("player", "team", "staff", "manager")
+                        for action in ("open", "close")}
+HANDBOOK_INTERACTIONS = {"handbook/open", "handbook/close", "handbook/section_first_week",
+                         "handbook/section_screens", "handbook/section_glossary"}
+INTERACTIONS = {"lobby/seed_change", "week/full_report_open"} | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
