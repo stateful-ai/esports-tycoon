@@ -140,6 +140,13 @@ _CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 _SESSIONS_PATH = SAVE_DIR / "sessions.json"
 
 
+def _promise_view(gs: GameState, promise) -> dict:
+    view = promise.model_dump()
+    view["play_time_assessment"] = promises.play_time_assessment(gs, promise)
+    view["time_remaining_percent"] = min(100, max(0, round(promise.weeks_left / (promise.initial_duration or 1) * 100)))
+    return view
+
+
 def _save_path_for(code: str) -> Path:
     digest = hashlib.blake2b(code.encode(), digest_size=8).hexdigest()
     return SAVE_DIR / f"campaign_{digest}.json"
@@ -872,7 +879,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
     mentor_id = gs.mentorships.get(p.id) if hasattr(gs, "mentorships") else None
     mentor_progress = gs.mentorship_progress.get(p.id) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
     mentor = gs.players.get(mentor_id) if mentor_id else None
-    player_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
+    player_promises = [_promise_view(gs, prom) for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
 
     attrs = {
         k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
@@ -3009,7 +3016,8 @@ def promise_action(body: PromiseBody) -> dict:
                 target_value=60, duration=6, source="bench_demand",
             )
             handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
-            msg = f"You promised {handle} regular minutes."
+            assessment = promises.play_time_assessment(gs, pr)
+            msg = f"You promised {handle} playing time. {assessment['target_label']} {assessment['deadline_label']}"
         elif body.kind == "captaincy":
             pr = promises.offer_from_leadership(gs, tid, body.player_id)
             handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
@@ -3354,7 +3362,7 @@ def roster(team_id: str) -> dict:
             "roster_max": market.roster_cap(gs, team_id),
             "upcoming": upcoming,
             "hierarchy": locker_room.calculate_hierarchy(gs, team_id),
-            "promises": [p.model_dump() for p in gs.promises if p.team_id == team_id] if hasattr(gs, "promises") else [],
+            "promises": [_promise_view(gs, p) for p in gs.promises if p.team_id == team_id] if hasattr(gs, "promises") else [],
             "relationships": relationships.duos_and_feuds(gs, team_id),
             "dev_focus_options": DEV_FOCUS_OPTIONS,
             "intensity_options": INTENSITY_OPTIONS,
@@ -8200,7 +8208,7 @@ def player_profile(pid: str) -> dict:
         mentor_id = gs.mentorships.get(pid) if hasattr(gs, "mentorships") else None
         mentor_progress = gs.mentorship_progress.get(pid) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
         mentor = gs.players.get(mentor_id) if mentor_id else None
-        active_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
+        active_promises = [_promise_view(gs, prom) for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
 
         st = gs.player_stats.get(pid)
         if st is not None:
