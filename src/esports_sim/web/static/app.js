@@ -3715,6 +3715,16 @@ async function tactics(v) {
    Scrim/bootcamp booking, tournament-six registration and the between-map
    series card. Reads /api/club (these are campaign-layer prep systems);
    moved out of Club · Operations so match prep has a single home. */
+function hydratePreparationForm(pr, controls) {
+  const plan = pr.current;
+  // A booking belongs to one fixture. Ignore stale or unavailable choices as
+  // a whole, so the form never silently assembles a different booked session.
+  if (!plan || !pr.fixture || plan.fixture_id !== pr.fixture.id) return;
+  if (!Object.entries(controls).every(([key, control]) =>
+    Array.from(control.options).some(option => option.value === plan[key]))) return;
+  for (const [key, control] of Object.entries(controls)) control.value = plan[key];
+}
+
 async function tacticsPrep(ws) {
   const d = await api("/api/club");
 
@@ -3739,6 +3749,7 @@ async function tacticsPrep(ws) {
     for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
     const intensity = el("select", "sel-sm");
     for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
+    hydratePreparationForm(pr, { partner_id: partner, map_id: map, objective: obj, intensity });
     const form = el("div", "row prep-controls");
     for (const [name, control] of [["Sparring partner", partner], ["Preparation map", map], ["Session objective", obj], ["Session intensity", intensity]]) {
       const label = el("label", "prep-control");
