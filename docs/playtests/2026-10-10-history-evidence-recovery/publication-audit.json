@@ -166,5 +166,8 @@
       "sha256": "d80c39191b49d6db419283b268d1a4551da4f942383e615758ebfe380d9b15bc"
     }
   },
-  "new_session_shard_rows": 39
+  "new_session_shard_rows": 39,
+  "published_git_blob_files_exact": 203,
+  "published_git_blob_sha256_match": true,
+  "archive685_blob_sha256": "a4ab52cb1a0760b18ec97fd681ff2421a287b36e7a24d9a283141b7dda8cd5cb"
 }
