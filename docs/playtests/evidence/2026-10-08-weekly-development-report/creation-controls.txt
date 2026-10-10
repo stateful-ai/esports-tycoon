@@ -1,0 +1,108 @@
+Pick your organisation. Seed controls the generated league.
+
+Seed
+Fictional world
+VCT 2021
+VCT 2026
+Game mode
+Sandbox
+Legacy career
+
+Pick any organisation and manage it forever. No contracts, no sack race - the classic game.
+
+Rosters
+Existing rosters
+Fantasy draft
+Scenario
+Standard start
+Insolvent giant
+Youth project
+Crisis club
+Superteam headache
+AMERICAS
+Azure Vanta AZV
+rep 56.8 · 185,100 cr
+Baltic Meridian BLM
+rep 74.4 · 546,000 cr
+Gallic Storm GST
+rep 39.7 · 182,700 cr
+Kathmandu Apex KTA
+rep 72.1 · 671,000 cr
+Kraken Unit KRK
+rep 57.3 · 197,700 cr
+Team Nexus NXS
+rep 58 · 487,320 cr
+Nordic Frost NFR
+rep 60.3 · 772,000 cr
+Patagonia Sur PSU
+rep 52.3 · 133,200 cr
+Rust Belt Gaming RBG
+rep 62.6 · 539,000 cr
+Sahara Compass SHC
+rep 57.7 · 443,000 cr
+Saracen Guard SRG
+rep 80 · 604,000 cr
+Taipei Circuit TPC
+rep 61.1 · 210,900 cr
+Team Vanguard VGD
+rep 78 · 920,000 cr
+Volga Reign VLG
+rep 47.7 · 159,000 cr
+EMEA
+Adriatic Sirens ADS
+rep 66 · 431,000 cr
+Anatolia Forge ANF
+rep 52.6 · 235,800 cr
+Apex Syndicate APX
+rep 59.3 · 126,300 cr
+Bayou Kings BYK
+rep 64.1 · 882,000 cr
+Berlin Wolves BWV
+rep 47.2 · 157,500 cr
+Chao Phraya Owls CPO
+rep 55 · 760,000 cr
+Crimson Order CRO
+rep 65.7 · 775,000 cr
+Hokkaido Drift HKD
+rep 45.2 · 185,700 cr
+Mekong Vipers MKV
+rep 68.3 · 248,100 cr
+Meridian Cross MRC
+rep 67.4 · 636,000 cr
+Midnight Polders MDP
+rep 55.7 · 366,000 cr
+Phantom Core PHC
+rep 53.8 · 188,100 cr
+Prairie Signal PRS
+rep 71.5 · 678,000 cr
+Tokyo Drift Six TD6
+rep 67.4 · 651,000 cr
+PACIFIC
+Alpine Echo ALE
+rep 71.3 · 629,000 cr
+Busan Tempest BST
+rep 55.1 · 154,200 cr
+Cascadia Youth CSY
+rep 56.4 · 168,600 cr
+Coral Sea Drakes CSD
+rep 72.4 · 866,000 cr
+Ghostline GHL
+rep 64.5 · 591,000 cr
+Harbour City Nine HC9
+rep 64.9 · 782,000 cr
+Highlands Nine HL9
+rep 48 · 117,000 cr
+Iron Pact IRP
+rep 62 · 342,000 cr
+Lisbon Tide LTD
+rep 65.3 · 244,200 cr
+Nova Rift NVR
+rep 57.5 · 229,200 cr
+Outback Sentinels OBS
+rep 56.6 · 748,000 cr
+Seoul Dynasty Prime SDP
+rep 66.8 · 648,000 cr
+Solar Flare SOL
+rep 83.3 · 611,000 cr
+Yucatan Ceibas YCB
+rep 41 · 163,200 cr

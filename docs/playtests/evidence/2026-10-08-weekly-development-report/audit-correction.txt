@@ -1,0 +1,1 @@
+Initial saved-decision inspection correctly found seed2038 and3action_log records but attempted list indexing on telemetry_snaps, raising KeyError:-1. telemetry_snaps is manager-keyed; corrected audit exports the entire mapping and counts each manager series. Authoritative corrected evidence: saved-decisions.json and reconciliation.json.
