@@ -24,6 +24,7 @@ from __future__ import annotations
 from esports_sim.labels import humanize_identifier
 
 import hashlib
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -831,11 +832,27 @@ def decline_slot_offer(gs: GameState, slot: str) -> tuple[bool, str]:
 # Weekly tick
 
 
+@dataclass(frozen=True)
+class WeeklySettlement:
+    """Transient accounting for the amounts actually applied by the tick."""
+
+    income: int
+    facility_upkeep: int
+
+    @property
+    def net(self) -> int:
+        return self.income - self.facility_upkeep
+
+
 def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
+    """Apply the settlement; preserve the historical net-return contract."""
+    return weekly_settlement(gs, user_won_this_week).net
+
+
+def weekly_settlement(gs: GameState, user_won_this_week: bool) -> WeeklySettlement:
     """Pay out every active deal, resolve objectives, expire stale market
-    offers, and charge facility upkeep. Returns the net delta applied to
-    the user's balance (report display). Called weekly from advance_week
-    (step 3b) — signature stable.
+    offers, and charge facility upkeep. Return income and the actual upkeep
+    charge separately so reports can classify costs without charging again.
 
     Facility upkeep is charged here rather than in apply_weekly_finance's
     per-team loop because this function already runs exactly once a week
@@ -936,4 +953,4 @@ def weekly_tick(gs: GameState, user_won_this_week: bool) -> int:
         team.balance -= upkeep
         total -= upkeep
 
-    return total
+    return WeeklySettlement(income=total + upkeep, facility_upkeep=upkeep)

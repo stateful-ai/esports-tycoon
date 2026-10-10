@@ -8400,6 +8400,8 @@ function showReport(rep) {
   }
   body.appendChild(el("p", "muted",
     `income ${money(rep.user_income)} · expenses ${money(rep.user_expenses)}`));
+  body.appendChild(el("p", "muted",
+    `Facility upkeep ${money(rep.user_facility_upkeep || 0)} (included in expenses)`));
   const development = rep.development;
   if (development && development.season === rep.season && development.week === rep.week) {
     const card = el("section", "card weekly-development");

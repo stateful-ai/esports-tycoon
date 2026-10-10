@@ -4952,6 +4952,9 @@ def finances() -> dict:
             "last_week_expenses": rep.expenses_by.get(gs.acting_team_id)
             if rep
             else None,
+            "last_week_facility_upkeep": rep.facility_upkeep_by.get(gs.acting_team_id, 0)
+            if rep
+            else None,
             # Legacy (pre-M4) fields, kept for saves with an in-flight deal.
             "sponsor": gs.sponsor.model_dump() if gs.sponsor else None,
             "sponsor_offer": gs.sponsor_offer.model_dump()
@@ -7680,6 +7683,7 @@ def _report_view(report, gs: GameState, me: str, development_report: dict | None
         "fixtures": [_fixture_view(f, gs) for f in report.fixtures],
         "user_income": report.income_by.get(me, 0),
         "user_expenses": report.expenses_by.get(me, 0),
+        "user_facility_upkeep": report.facility_upkeep_by.get(me, 0),
         "notes": report.notes,
         "development": (
             development_report
