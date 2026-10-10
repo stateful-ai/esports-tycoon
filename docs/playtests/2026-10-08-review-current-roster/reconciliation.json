@@ -1,0 +1,97 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 1,
+  "week": 2,
+  "expected_new_gameplay_decisions": 0,
+  "observed_new_gameplay_decisions": 0,
+  "existing_decisions_unchanged": 6,
+  "page_session": "65256909de4f3d6134d0473d435f542c",
+  "retained_page_events": 28,
+  "retained_views": [
+    {
+      "index": 1,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:44:57.739455+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "index": 3,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:44:57.739455+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "index": 6,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:45:12.737891+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "club/squad"
+    },
+    {
+      "index": 10,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:45:42.739074+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "index": 13,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:45:57.738399+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "club/squad"
+    },
+    {
+      "index": 19,
+      "schema_version": 1,
+      "session_id": "65256909de4f3d6134d0473d435f542c",
+      "received_at": "2026-10-08T18:46:27.738275+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "view",
+      "target": "dashboard"
+    }
+  ],
+  "save_pairs": [
+    {
+      "attempt_index": 16,
+      "result_index": 17,
+      "request_id": 18,
+      "status": 200
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "save_sha256": "a92920c4a6078b0b80e9084bed354fef9f3ce1b8d67504afb2ccea1dd3d22587",
+  "limits": "Coarse views prove destination usage only; the recommendation click and inspection have no dedicated target. Excludes all other page sessions, including old lobby pages."
+}

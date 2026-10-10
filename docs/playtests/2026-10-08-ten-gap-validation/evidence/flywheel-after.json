@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0068",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current roster eligibility follows departure and return",
+    "problem": "Historical player advice could point at an unavailable roster member",
+    "solution": "Preserved Echo0.72 finding with departure explanation, re-signed actual terms and verified advice returns while short-squad blocker clears",
+    "lesson": "Historical findings stay intact while current membership gates actionable controls; native release cancellation adds neither decision nor HTTP request",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0069",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Resolved weekly development and bounded usage agree in integration",
+    "problem": "Players need visible reasons for growth and analytics needs separate usage evidence",
+    "solution": "Full S1W2 report matches five report-time players and Vortex Rest/match/career attribution; three decisions and two bounded control receipts reconcile separately",
+    "lesson": "Attribute actual outcomes to server-resolved sources and distinguish search/report initiation counts from accepted decisions and causal claims",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0070",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Read actual state before completing an observation",
+    "problem": "Incomplete cloned-save fixture opened lobby and root prematurely marked expected Dashboard behavior met",
+    "solution": "Retained unsupported row and failed screenshots, added explicit diagnosis/recovery observations and copied identified companion files without exposing credentials",
+    "lesson": "Do not finish a CSV row from expected tool behavior; inspect result before judgment and preserve later corrections rather than rewriting evidence",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

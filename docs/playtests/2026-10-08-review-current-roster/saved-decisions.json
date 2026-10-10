@@ -1,0 +1,93 @@
+{
+  "existing_action_log": [
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "release",
+      "params": {
+        "player_id": "phantom"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "fa_13"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "180000",
+        "no_transfer": "True",
+        "player_id": "fa_13",
+        "release_fee": "76000",
+        "role": "starter",
+        "salary": "6300",
+        "status": "accepted",
+        "stream_share": "71",
+        "weeks": "62"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "vortex"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "release",
+      "params": {
+        "player_id": "echo"
+      },
+      "source": "web"
+    }
+  ],
+  "no_new_decisions": true,
+  "snapshots_unchanged": true,
+  "current_roster": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13"
+  ]
+}

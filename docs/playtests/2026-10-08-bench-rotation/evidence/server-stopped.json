@@ -1,0 +1,42 @@
+{
+  "verified_processes": [
+    {
+      "pid": 28480,
+      "name": "python.exe",
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\combined-gap-acceptance\\ESports Simulator\\runs\\playtests\\2026-10-08-bench-rotation",
+      "command": [
+        "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8467",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 14860,
+      "name": "conhost.exe",
+      "cwd": "C:\\WINDOWS",
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 7192,
+      "name": "python3.13.exe",
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\combined-gap-acceptance\\ESports Simulator\\runs\\playtests\\2026-10-08-bench-rotation",
+      "command": [
+        "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8467",
+        "--no-browser"
+      ]
+    }
+  ],
+  "port8467_listeners": 0
+}

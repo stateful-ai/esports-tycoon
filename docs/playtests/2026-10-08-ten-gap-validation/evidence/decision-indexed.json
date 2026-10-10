@@ -1,0 +1,60 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "baseline_decisions": 6,
+  "final_decisions": 9,
+  "new_decisions": [
+    {
+      "index": 6,
+      "csv_step": 7,
+      "season": 1,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "echo"
+      },
+      "source": "web"
+    },
+    {
+      "index": 7,
+      "csv_step": 8,
+      "season": 1,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "400000",
+        "no_transfer": "False",
+        "player_id": "echo",
+        "release_fee": "92000",
+        "role": "starter",
+        "salary": "7700",
+        "status": "accepted",
+        "stream_share": "72",
+        "weeks": "55"
+      },
+      "source": "web"
+    },
+    {
+      "index": 8,
+      "csv_step": 12,
+      "season": 1,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 1,
+  "final_snapshots": 2,
+  "cancelled_release_added_decision": false,
+  "save_sha256": "eb65617553ec77b4997ce6f231f75ec7c839b55bca776da011dba368090094d1"
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0056",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Integrated release recovery and control receipts agree",
+    "problem": "Short-roster rejection used CLI guidance and searches were not separately counted",
+    "solution": "Verified78000 release, Market->Players sign1 recovery copy, visible Slyblade negotiation and three coarse control receipts",
+    "lesson": "Rejected Advance appears in browser usage as409, accepted release/sign/development/advance decisions remain a separate deterministic ledger",
+    "confidence": "medium",
+    "source": "Fresh isolated8458 world26UHC seed2038 S1W1-W2, integrated tree833ae36; docs/playtests/2026-10-08-eight-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "development",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0057",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Resolved development and replay survive later roster moves",
+    "problem": "Live roster recomputation could rewrite participants in resolved-week views",
+    "solution": "After actual Echo release, Full report snapshot remains identical withEcho; replay retainsEcho andAI-releasedGrimveil instead ofcurrentFrostecho",
+    "lesson": "Preserve report-time ownership, while new-player missing adjacent snapshots should report unavailable comparisons",
+    "confidence": "medium",
+    "source": "Fresh isolated8458 world26UHC seed2038 S1W1-W2, integrated tree833ae36; docs/playtests/2026-10-08-eight-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "development",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0058",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Dashboard says squad ready after roster falls to four",
+    "problem": "Club says4/10 need5sign1, while refreshed Staffbriefing saysSquad ready andKeep the match five settled",
+    "solution": "Retained screenshot/CSVunexpected row15 and dispatched separate dashboard-roster-readiness agent",
+    "lesson": "Dashboard readiness must use the same server-owned five-player availability contract as Advance, rather than only fatigue/lineup flags",
+    "confidence": "medium",
+    "source": "Fresh isolated8458 world26UHC seed2038 S1W1-W2, integrated tree833ae36; docs/playtests/2026-10-08-eight-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "development",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

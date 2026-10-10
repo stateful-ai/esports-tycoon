@@ -1,0 +1,13 @@
+{
+  "base_commit": "26b9281357e74de1bdc7beffe5d5660fe05e47b4",
+  "command": "python -m pytest -q -n2",
+  "returncode": 0,
+  "terminal_summary": "1200 passed in 6310.53s (1:45:10)",
+  "started_at_utc": "2026-10-08T21:21:27.748286+00:00",
+  "finished_at_utc": "2026-10-08T23:06:39.511382+00:00",
+  "source_paths_unchanged": 539,
+  "canonical_rows": 597,
+  "canonical_sha256": "9b27202d85ef0dd68357a77e8456e9bdc2774b2dba1c845485482326d17794bc",
+  "original_350_and_frozen_500_bytes_preserved": true,
+  "scope": "Documentation only; all tested source/data/tests unchanged. Later main integration requires CI."
+}

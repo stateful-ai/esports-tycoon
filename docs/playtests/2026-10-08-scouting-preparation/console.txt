@@ -1,0 +1,5 @@
+[     382ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8462/favicon.ico:0
+[  709671ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:8462/api/actions/advance:0
+[  709674ms] Error: resolve the pending flavor event in Action required before advancing
+    at api (http://127.0.0.1:8462/app.js:140:13)
+    at async $.onclick (http://127.0.0.1:8462/app.js:8122:17)

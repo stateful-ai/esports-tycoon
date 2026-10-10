@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"header\": \"ESPORTSSIM\\nAdvance Week ▸\\nSim ahead ▸▸\\n🛠️\\n🔇\\nGuide\",\n  \"levers\": [],\n  \"findings\": [],\n  \"findPlayersButtons\": [],\n  \"main\": \"\"\n}\n### Ran Playwright code\n```js\nawait page.evaluate('() => ({header:document.querySelector(\\'header\\')?.innerText,readiness:document.querySelector(\\'.es-readiness\\')?.innerText,levers:[...document.querySelectorAll(\\'.es-review-lever\\')].map(e=>e.innerText),findings:[...document.querySelectorAll(\\'.es-review-pt\\')].map(e=>e.innerText),findPlayersButtons:[...document.querySelectorAll(\\'button\\')].filter(e=>e.innerText.includes(\\'Find players\\')).map(e=>e.innerText),main:document.querySelector(\\'main\\').innerText.slice(0,2200)})');\n```\n### Page\n- Page URL: http://127.0.0.1:8458/\n- Page Title: esports-sim\n- Console: 1 errors, 0 warnings\n### Events\n- New console entries: .playwright-mcp\\console-2026-10-08T19-06-42-920Z.log#L1"
+    }
+  ]
+}

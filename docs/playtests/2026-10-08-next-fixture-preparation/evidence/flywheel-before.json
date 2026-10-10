@@ -1,0 +1,154 @@
+[
+  {
+    "id": "esports-playtest-0070",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Read actual state before completing an observation",
+    "problem": "Incomplete cloned-save fixture opened lobby and root prematurely marked expected Dashboard behavior met",
+    "solution": "Retained unsupported row and failed screenshots, added explicit diagnosis/recovery observations and copied identified companion files without exposing credentials",
+    "lesson": "Do not finish a CSV row from expected tool behavior; inspect result before judgment and preserve later corrections rather than rewriting evidence",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0069",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Resolved weekly development and bounded usage agree in integration",
+    "problem": "Players need visible reasons for growth and analytics needs separate usage evidence",
+    "solution": "Full S1W2 report matches five report-time players and Vortex Rest/match/career attribution; three decisions and two bounded control receipts reconcile separately",
+    "lesson": "Attribute actual outcomes to server-resolved sources and distinguish search/report initiation counts from accepted decisions and causal claims",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0068",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current roster eligibility follows departure and return",
+    "problem": "Historical player advice could point at an unavailable roster member",
+    "solution": "Preserved Echo0.72 finding with departure explanation, re-signed actual terms and verified advice returns while short-squad blocker clears",
+    "lesson": "Historical findings stay intact while current membership gates actionable controls; native release cancellation adds neither decision nor HTTP request",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0067",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Automatic guide blocked an Advance attempt",
+    "problem": "First-week handbook intercepted the intended Advance click",
+    "solution": "Retained blocked pre-action log and closed guide before recovery",
+    "lesson": "Do not infer an action request from a blocked click; distinguish UI recovery from accepted decisions",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0066",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Review dedup after membership filtering",
+    "problem": "A departed finding can occupy the single player_form recommendation",
+    "solution": "Regression covers current teammate after departed finding and second human manager",
+    "lesson": "Filter unavailable advice before deduplicating so current teammates remain actionable",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0065",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current-roster review advice",
+    "problem": "Historical Echo finding persisted after release",
+    "solution": "Retained 0.55 finding with squad-unavailable explanation and removed Echo lever",
+    "lesson": "Generate current player advice only for an existing player in the acting manager squad",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0064",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Recommendation click is not individually instrumented",
+    "problem": "Retained sidecar shows Club navigation after advice click but no advice-control event",
+    "solution": "Reported six coarse views, one Save200pair and zero new decisions separately; did not infer exact click intent from destination",
+    "lesson": "Navigation usage quantifies destination visits, not which recommendation was followed",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0063",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Separate historical diagnosis from current transfer outcomes",
+    "problem": "Removing a historical rating to hide unavailable advice would erase legitimate match evidence",
+    "solution": "Kept Echo0.72 historical finding in the player report while identifying the current recommendation as unavailable",
+    "lesson": "Preserve the roster and outcomes that produced a match; revalidate only present-tense actionability after transfers",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]
