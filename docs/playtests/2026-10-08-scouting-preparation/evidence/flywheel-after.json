@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0077",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Standing scouting differs from the deep-dive assignment",
+    "problem": "Empty deep-dive target can be mistaken for absent continuous coverage",
+    "solution": "Public pro directive persists scout_opponents then rotatesSaracen toRustBelt with34percentprogress after resolution",
+    "lesson": "Read both contracts and reconcile standing coverage separately from one-off assignments",
+    "confidence": "medium",
+    "source": "Browser8462 world26UHC seed2038 S1W4-W5 docs/playtests/2026-10-08-scouting-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "preparation",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0078",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Blocked attempts and accepted decisions reconcile separately",
+    "problem": "A failed Advance or refused selector can be falsely counted as success",
+    "solution": "Five accepted decisions preserved against15prefix; browser7pairs include rejected409 andSave; row5prematureclaim explicitlycorrected6",
+    "lesson": "Inspect actual readback before finish; retain corrections and rejected requests outside accepted ledger",
+    "confidence": "medium",
+    "source": "Browser8462 world26UHC seed2038 S1W4-W5 docs/playtests/2026-10-08-scouting-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "preparation",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0079",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Dashboard scouting advice ignores active standing lane",
+    "problem": "UNASSIGNED andScoutElsewhere contradict currentSaracen thenRustBelt procoverage",
+    "solution": "Retained publicdesk anddashboard receipts; queued isolated6.1-solmedium gap14",
+    "lesson": "Dashboard preparation guidance must reconcile effective standing coverage rather than only the one-off target",
+    "confidence": "medium",
+    "source": "Browser8462 world26UHC seed2038 S1W4-W5 docs/playtests/2026-10-08-scouting-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "preparation",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -1,0 +1,307 @@
+{
+  "season": 1,
+  "week": 1,
+  "phase": "regular",
+  "window": {
+    "open": true,
+    "kind": "opening",
+    "label": "Opening window",
+    "detail": "Closes after week 5.",
+    "closes_week": 5
+  },
+  "user_team": {
+    "id": "team_nexus",
+    "name": "Team Nexus",
+    "tag": "NXS",
+    "logo": "/assets/logos/logo_1.webp",
+    "region": "americas",
+    "balance": 487320,
+    "reputation": 58,
+    "fan_count": 284000,
+    "world_rank": 24,
+    "chemistry": 82,
+    "captain_id": "apex",
+    "player_ids": [
+      "apex",
+      "phantom",
+      "echo",
+      "vortex",
+      "ghost"
+    ],
+    "starter_ids": [
+      "apex",
+      "phantom",
+      "echo",
+      "vortex",
+      "ghost"
+    ],
+    "record": {
+      "wins": 0,
+      "losses": 0,
+      "diff": 0
+    }
+  },
+  "next_fixture": {
+    "id": "s1w1m2am",
+    "week": 1,
+    "stage": "regular",
+    "best_of": 1,
+    "team_a": "team_highlands_nine",
+    "team_b": "team_nexus",
+    "team_a_name": "Highlands Nine",
+    "team_b_name": "Team Nexus",
+    "rivalry": null,
+    "potm": null,
+    "maps": [
+      "lotus"
+    ],
+    "map_thumbs": {
+      "lotus": "/assets/maps/lotus.webp"
+    },
+    "veto": [],
+    "series_notes": [],
+    "played": false,
+    "winner_id": null,
+    "map_score": [
+      0,
+      0
+    ],
+    "results": [],
+    "preview": [
+      "A win would haul them back toward the playoff places."
+    ],
+    "map_pool": {
+      "maps": [],
+      "veto": {
+        "opponent": "Highlands Nine",
+        "ban": null,
+        "pick": null
+      }
+    },
+    "opp_manager": {
+      "name": "Liam Moreno",
+      "identity": "Unshakeable"
+    }
+  },
+  "leaders": [],
+  "movers": [],
+  "run_in": [
+    {
+      "week": 1,
+      "opponent": "Highlands Nine",
+      "opponent_id": "team_highlands_nine",
+      "opp_rank": 27,
+      "difficulty": "easy"
+    },
+    {
+      "week": 2,
+      "opponent": "Yucatan Ceibas",
+      "opponent_id": "team_yucatan_ceibas",
+      "opp_rank": 2,
+      "difficulty": "hard"
+    },
+    {
+      "week": 3,
+      "opponent": "Cascadia Youth",
+      "opponent_id": "team_cascadia_youth",
+      "opp_rank": 6,
+      "difficulty": "hard"
+    },
+    {
+      "week": 4,
+      "opponent": "Iron Pact",
+      "opponent_id": "team_iron_pact",
+      "opp_rank": 15,
+      "difficulty": "easy"
+    },
+    {
+      "week": 5,
+      "opponent": "Gallic Storm",
+      "opponent_id": "team_gallic_storm",
+      "opp_rank": 18,
+      "difficulty": "easy"
+    }
+  ],
+  "on_this_day": [],
+  "debrief": {},
+  "last_match_review": null,
+  "decision_ledger": [],
+  "press": null,
+  "suggested_lineup": null,
+  "board": null,
+  "form_trend": [],
+  "squad_profile": {
+    "avg_age": 22,
+    "buckets": {
+      "youth": 2,
+      "prime": 3,
+      "veteran": 0
+    },
+    "expiries": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "weeks_left": 3
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "weeks_left": 8
+      },
+      {
+        "id": "phantom",
+        "handle": "Phantom",
+        "age": 20,
+        "weeks_left": 18
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "weeks_left": 30
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "weeks_left": 44
+      }
+    ]
+  },
+  "objectives_hub": [],
+  "rotation": [
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "maps": 0,
+      "starter": true,
+      "stamina": 79,
+      "burnout": false
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "maps": 0,
+      "starter": true,
+      "stamina": 88,
+      "burnout": false
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "maps": 0,
+      "starter": true,
+      "stamina": 92,
+      "burnout": false
+    },
+    {
+      "id": "phantom",
+      "handle": "Phantom",
+      "maps": 0,
+      "starter": true,
+      "stamina": 84,
+      "burnout": false
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "maps": 0,
+      "starter": true,
+      "stamina": 32,
+      "burnout": false
+    }
+  ],
+  "training_focus": "tactical",
+  "training_delegated": false,
+  "focus_options": [
+    "mechanical",
+    "tactical",
+    "mental",
+    "team",
+    "rest"
+  ],
+  "news": [
+    "[S1 W1] Season 1 begins \u2014 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+  ],
+  "scout": {
+    "target": null,
+    "target_name": null,
+    "progress": 0,
+    "cap": 1
+  },
+  "standings_top": [
+    {
+      "team_id": "team_cascadia_youth",
+      "name": "Cascadia Youth",
+      "wins": 0,
+      "losses": 0,
+      "rounds_won": 0,
+      "rounds_lost": 0
+    },
+    {
+      "team_id": "team_gallic_storm",
+      "name": "Gallic Storm",
+      "wins": 0,
+      "losses": 0,
+      "rounds_won": 0,
+      "rounds_lost": 0
+    },
+    {
+      "team_id": "team_highlands_nine",
+      "name": "Highlands Nine",
+      "wins": 0,
+      "losses": 0,
+      "rounds_won": 0,
+      "rounds_lost": 0
+    },
+    {
+      "team_id": "team_iron_pact",
+      "name": "Iron Pact",
+      "wins": 0,
+      "losses": 0,
+      "rounds_won": 0,
+      "rounds_lost": 0
+    }
+  ],
+  "champions": [],
+  "transfer_offers": [],
+  "flavor_event": null,
+  "media_event": null,
+  "career": {
+    "mode": "sandbox",
+    "seat": {
+      "id": "mgr_team_nexus",
+      "name": "NXS manager",
+      "team_id": "team_nexus",
+      "archetype": "",
+      "unemployed": false
+    },
+    "contract": null,
+    "offers": [],
+    "blocked": false
+  },
+  "multiplayer": {
+    "mode": "solo",
+    "code": "S9FSG",
+    "humans": [
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "is_you": true
+      }
+    ],
+    "ready": [],
+    "you_ready": false
+  },
+  "save": {
+    "dirty": false,
+    "autosave_enabled": true,
+    "autosave_every_weeks": 1
+  },
+  "promise_pending": false,
+  "scout_shortlist_ready": false,
+  "scrim_proposal_pending": true,
+  "culture_violation_unack": false
+}

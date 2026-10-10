@@ -1,0 +1,9 @@
+{
+  "earlier_failure": "AssertionError counting outerdictionary1seat rather than5snapshots",
+  "first_recovery_failure": "UnicodeDecodeError cp1252 read_text atbyte0x81 before assertions",
+  "recovery_encoding": "utf-8",
+  "corrected_nested_snapshots": 5,
+  "baseline_prefix_identical": true,
+  "new_decisions": 6,
+  "observation": "Explicit UTF8 independent audit confirms5to5nested snapshots,27identical oldrows and6new choices. First audit counted dictionary seats; first recovery hit cp1252 decode. Both failures retained; no state correction needed."
+}

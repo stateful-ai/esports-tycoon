@@ -43,7 +43,7 @@ PROFILE_INTERACTIONS = {f"profile/{kind}_{action}"
                         for action in ("open", "close")}
 HANDBOOK_INTERACTIONS = {"handbook/open", "handbook/close", "handbook/section_first_week",
                          "handbook/section_screens", "handbook/section_glossary"}
-INTERACTIONS = {"lobby/seed_change", "week/full_report_open"} | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS
+INTERACTIONS = {"lobby/seed_change", "week/full_report_open", "market/player_search"} | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:

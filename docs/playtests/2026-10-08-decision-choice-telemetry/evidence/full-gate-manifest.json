@@ -1,0 +1,18 @@
+{
+  "runner_pid": 38560,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\decision-choice-telemetry\\ESports Simulator",
+  "argv": [
+    "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n2"
+  ],
+  "started_at": "2026-10-08T21:55:30.998846+00:00",
+  "source_sha256": {
+    "src/esports_sim/web/server.py": "440938c87c2874b57f6b62e757f3fefc7c0cb8759b8ca3b4bed946128efe0d59",
+    "tests/test_web_choice_telemetry.py": "92cd8083ded955dc78606f9e82f1a574417a58565d664915e0b28f0ae61e7c82"
+  },
+  "status": "running",
+  "pytest_pid": 420
+}

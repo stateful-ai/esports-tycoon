@@ -1,0 +1,6 @@
+### Result
+"ESPORTSSIM\nSeason 1 · Week 9 · Regular — Team Nexus\n461,864 cr\nSave\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide"
+### Ran Playwright code
+```js
+await page.evaluate('async () => {await window.Usage.boundary();return document.querySelector("header").innerText}');
+```

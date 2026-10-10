@@ -1,0 +1,108 @@
+{
+  "baseline_decisions": 9,
+  "final_decisions": 15,
+  "new_decisions": [
+    {
+      "index": 9,
+      "csv_step": 2,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "apex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 10,
+      "csv_step": 3,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "340000",
+        "no_transfer": "True",
+        "player_id": "apex",
+        "release_fee": "126000",
+        "role": "starter",
+        "salary": "10500",
+        "status": "accepted",
+        "stream_share": "72",
+        "weeks": "49"
+      },
+      "source": "web"
+    },
+    {
+      "index": 11,
+      "csv_step": 5,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "mentor",
+      "params": {
+        "mentor_id": "apex",
+        "protege_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 12,
+      "csv_step": 6,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "apex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 13,
+      "csv_step": 8,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "fixture_id": "s1w3m3am",
+        "focus_target": "",
+        "n_dials": "0",
+        "one_match_lineup": "False",
+        "opponent": "team_kathmandu_apex",
+        "site_focus": ""
+      },
+      "source": "web"
+    },
+    {
+      "index": 14,
+      "csv_step": 9,
+      "season": 1,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 2,
+  "final_snapshots": 3,
+  "save_sha256": "ef829b33fb6300c35b65cd2ee75b1daed841fd780e93c593d135448ca7284f23"
+}

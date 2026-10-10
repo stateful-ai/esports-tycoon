@@ -1,0 +1,138 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 1,
+  "week": 2,
+  "action_log": [
+    {
+      "index": 0,
+      "csv_step": 5,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "release",
+      "params": {
+        "player_id": "phantom"
+      },
+      "source": "web"
+    },
+    {
+      "index": 1,
+      "csv_step": 8,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "fa_13"
+      },
+      "source": "web"
+    },
+    {
+      "index": 2,
+      "csv_step": 9,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "180000",
+        "no_transfer": "True",
+        "player_id": "fa_13",
+        "release_fee": "76000",
+        "role": "starter",
+        "salary": "6300",
+        "status": "accepted",
+        "stream_share": "71",
+        "weeks": "62"
+      },
+      "source": "web"
+    },
+    {
+      "index": 3,
+      "csv_step": 11,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "vortex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 4,
+      "csv_step": 13,
+      "season": 1,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "telemetry_snaps": {
+    "mgr_team_nexus": [
+      {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "team_id": "team_nexus",
+        "features": {
+          "balance": 427505.0,
+          "board_patience": -1.0,
+          "chemistry": 78.7,
+          "contract_weeks_min": 2.0,
+          "facility_analytics_suite": 0.0,
+          "facility_marketing_office": 0.0,
+          "facility_recovery_suite": 0.0,
+          "facility_strategy_lab": 0.0,
+          "facility_team_house": 0.0,
+          "facility_training_center": 0.0,
+          "fan_count": 287340.0,
+          "league_position": 1.0,
+          "losses": 0.0,
+          "n": 5.0,
+          "phase": 0.0,
+          "reputation": 58.8,
+          "roster_age": 23.6,
+          "roster_ca": 75.271,
+          "roster_confidence": 52.7,
+          "roster_form": 66.32,
+          "roster_morale": 76.64,
+          "roster_size": 5.0,
+          "roster_stamina": 64.58,
+          "round_diff": 11.0,
+          "scout_progress": 0.0,
+          "season": 1.0,
+          "sentiment": 52.0,
+          "sponsor_deals": 0.0,
+          "staff_analyst": 0.0,
+          "staff_coach": 74.1,
+          "staff_language_coach": 0.0,
+          "staff_performance_coach": 0.0,
+          "staff_physio": 0.0,
+          "staff_psychologist": 0.0,
+          "week": 1.0,
+          "weekly_payroll": 36200.0,
+          "wins": 1.0,
+          "world_rank": 5.0
+        }
+      }
+    ]
+  },
+  "save_sha256": "ef8d6daaced45e805b43a0e503e4f4bcf901c1359ebfed02a5d5bb4650c5e7e8"
+}

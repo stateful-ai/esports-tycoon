@@ -1,0 +1,25 @@
+{
+  "tested_premerge_head": "28cb13a6cf48ce8937f18ac17f7bc9534eb2d203",
+  "integrated_main": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "terminal_summary": "1285 passed in 5155.67s (1:25:55)",
+  "receipt": {
+    "exit_code": 0,
+    "source_freeze_unchanged": true,
+    "writer_pid": 10092,
+    "pytest_pid": 2348,
+    "finished_at": 1791673344.0282905
+  },
+  "frozen_path_count": 616,
+  "source_freeze_unchanged_at_publication": true,
+  "runtime_patch_sha256": "bc024f72b98dd9d6e63b6b598fe8052a17076d42afa12921b16fde8ffe10361b",
+  "original_five_row_csv_sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f",
+  "fresh_integration_rows": 3,
+  "artifact_sha256": {
+    "gate-receipt.json": "91a597b11ae925df25fae3bf855cac25c8e086b1b60639f4d16ac023f47b6417",
+    "gate-running.json": "28e2f669ddfa14fc63a9b829e083d25c9755a3fdfdc06ed0b58c7710c03ad976",
+    "full-pytest.log": "b822ba7166635533a7122c04148d737bea6c29d21f19d4443d96015265dc8c7d",
+    "source-freeze.json": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9",
+    "source-freeze-after.json": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9"
+  },
+  "canonical_csv_delta_against_integrated_main": false
+}

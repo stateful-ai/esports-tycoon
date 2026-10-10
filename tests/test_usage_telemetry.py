@@ -282,3 +282,46 @@ def test_overlay_inspection_counts_have_no_decision_or_duration_semantics(client
 ])
 def test_overlay_capture_rejects_private_payloads_and_wrong_semantics(client, event):
     assert client.post('/api/usage/events', json=payload(event)).status_code == 422
+
+
+def test_market_search_receipts_are_coarse_counts(client):
+    event = {"kind": "interaction", "target": "market/player_search"}
+    assert client.post("/api/usage/events", json=payload(event, event)).json()["accepted"]
+    report = client.get("/api/usage/report").json()
+    assert report["events"] == {"interaction:market/player_search": 2}
+    assert report["attempts"] == report["paired_results"] == 0
+
+
+@pytest.mark.parametrize("event", [
+    {"kind": "interaction", "target": "market/player_search/secret"},
+    {"kind": "interaction", "target": "market/search"},
+    *[{"kind": "interaction", "target": "market/player_search", field: value}
+      for field, value in [("query", "secret"), ("handle", "secret"), ("player_id", "secret"),
+                           ("selector", "secret"), ("label", "secret"), ("url", "secret"),
+                           ("request_id", 1), ("outcome", "success"), ("duration_ms", 1)]],
+])
+def test_market_search_rejects_values_and_unknown_targets(client, event):
+    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
+
+
+def test_market_search_actual_js_callbacks():
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("Node unavailable")
+    subprocess.run([node, "tests/market_search_usage_check.cjs"], check=True, capture_output=True)
+
+
+
+def test_market_and_overlay_events_share_one_valid_batch(client):
+    from esports_sim.web.usage_telemetry import INTERACTIONS
+    events = [{'kind': 'interaction', 'target': target} for target in sorted(INTERACTIONS)]
+    events += [{'kind': 'attempt', 'target': '/api/actions/train', 'request_id': 17},
+               {'kind': 'result', 'target': '/api/actions/train', 'request_id': 17,
+                'outcome': 'success'}]
+    assert client.post('/api/usage/events', json=payload(*events)).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert all(report['events'][f'interaction:{target}'] == 1 for target in INTERACTIONS)
+    assert report['attempts'] == report['paired_results'] == 1
+    assert report['unmatched_attempts'] == report['orphan_results'] == 0

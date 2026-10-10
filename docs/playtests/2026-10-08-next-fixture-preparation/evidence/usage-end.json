@@ -1,0 +1,59 @@
+{
+  "attempts": 7,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/mentor": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 2,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/dev_plan": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/mentor": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 2,
+    "session_start:": 1,
+    "view:club/development": 1,
+    "view:club/squad": 1,
+    "view:dashboard": 1,
+    "view:lobby": 1,
+    "view:tactics/gameplan": 1,
+    "view:tactics/strategy": 1,
+    "visible_time:club/development": 7,
+    "visible_time:club/squad": 30,
+    "visible_time:dashboard": 18,
+    "visible_time:lobby": 1,
+    "visible_time:tactics/gameplan": 16,
+    "visible_time:tactics/strategy": 1
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "53a2ed1677a3d32c33dd07f10457e1bb": 1004989
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/mentor:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 2
+  },
+  "paired_results": 7,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 81652,
+    "club/squad": 438621,
+    "dashboard": 262814,
+    "lobby": 72,
+    "tactics/gameplan": 227367,
+    "tactics/strategy": 9480
+  },
+  "world_events": {
+    "26UHC": 95
+  }
+}

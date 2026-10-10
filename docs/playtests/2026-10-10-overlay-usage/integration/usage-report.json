@@ -1,0 +1,40 @@
+{
+  "sessions": 1,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "interaction:handbook/close": 1,
+    "interaction:handbook/open": 1,
+    "interaction:handbook/section_first_week": 1,
+    "interaction:handbook/section_glossary": 1,
+    "interaction:handbook/section_screens": 1,
+    "interaction:market/player_search": 1,
+    "interaction:profile/player_close": 1,
+    "interaction:profile/player_open": 1,
+    "result:/api/actions/save": 1,
+    "view:club/squad": 1,
+    "view:market/players": 1,
+    "visible_time:club/squad": 11,
+    "visible_time:dashboard": 3,
+    "visible_time:market/players": 5
+  },
+  "visible_ms": {
+    "club/squad": 120695,
+    "dashboard": 32202,
+    "market/players": 57103
+  },
+  "outcomes": {
+    "/api/actions/save:success": 1
+  },
+  "attempts": 1,
+  "paired_results": 1,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "world_events": {
+    "26UHC": 31
+  },
+  "observed_session_span_ms": {
+    "6d4513933fea21ba19d06470d943197c": 195053
+  },
+  "malformed_lines": 0,
+  "retention_bytes": 8388608
+}

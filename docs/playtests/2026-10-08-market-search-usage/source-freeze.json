@@ -1,0 +1,51 @@
+{
+  "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "branch": "codex/market-search-usage",
+  "source_and_test_files": [
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "git_blob": "e8807b2967ebcdfc00d1d8d786484dcf57a5a92a",
+      "sha256": "6a6717073a954660f66d39e03eb452c837609aefd9c490de2278fe596420478d",
+      "matches_review_freeze": true
+    },
+    {
+      "path": "src/esports_sim/web/static/usage.js",
+      "git_blob": "a138057acae44c01d3588c16f63c670b082164de",
+      "sha256": "afafc055e4f36a3f7ce332c5741512542fd63e0d40d8c9874217218dc20b460e",
+      "matches_review_freeze": true
+    },
+    {
+      "path": "src/esports_sim/web/usage_telemetry.py",
+      "git_blob": "617291af1a95b6da452582eb4c3736fb75f36d9e",
+      "sha256": "f85b7927b2dc55e9b6ba7c8225e9170fdb825e5abd5c9869bba63a1b53d78d46",
+      "matches_review_freeze": true
+    },
+    {
+      "path": "tests/market_search_usage_check.cjs",
+      "git_blob": "c501315502a705b577861b24304fde0926c20171",
+      "sha256": "66467e3278ba91933940274c09199206812278fa0f0d8572757efd9081e815f2",
+      "matches_review_freeze": true
+    },
+    {
+      "path": "tests/test_usage_telemetry.py",
+      "git_blob": "67d72bd6c0d132604fc7f81fea7bd8132c934bb9",
+      "sha256": "38abadd6cb97db785f878ee4b8fa4a83aaed99935e763b3b262cffdfe561539f",
+      "matches_review_freeze": true
+    },
+    {
+      "path": "tests/usage_frontend_check.cjs",
+      "git_blob": "68140ff19a1e34aee181ffc4b1cc78de0b4c2443",
+      "sha256": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064",
+      "matches_review_freeze": true
+    }
+  ],
+  "frozen_patch_sha256": "9866da0f9dbfacc43907e8304104da5d05ce114b4ffc08e4edcb98757c051924",
+  "full_gate": {
+    "pid": 26320,
+    "exit_code": 0
+  },
+  "full_gate_summary": "1203 passed in 6194.08s (1:43:14)",
+  "dependency_pr": 350,
+  "dependency_head": "96ee00692e435fbbb4cb6c54054abca1b9f53dfe",
+  "publication": "Wait for PR350 merge then deduplicate before isolated publication; no source changes after completed gate."
+}

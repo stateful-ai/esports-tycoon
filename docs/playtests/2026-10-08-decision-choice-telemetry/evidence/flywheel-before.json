@@ -1,0 +1,156 @@
+[
+  {
+    "id": "esports-playtest-0091",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Readback distinguishes browser reload from durable save",
+    "problem": "Selector typo blocked explicit Save",
+    "solution": "Retained blocked step9 then actual Save step13 and reload16 readback",
+    "lesson": "Inspect actual Save control and saved ledger before claiming durable persistence",
+    "confidence": "high",
+    "source": "Browser8469 world26UHC seed2038 S1W5 base26b9281 dirty gap16; docs/playtests/2026-10-08-preparation-form-retention.md",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0090",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Fixture boundaries prevent stale preparation edits",
+    "problem": "Prior fixture booking must not preselect unrelated fixture choices",
+    "solution": "Node regression rejects different fixture and unavailable options atomically",
+    "lesson": "Retain only legal server choices for the displayed fixture",
+    "confidence": "high",
+    "source": "Browser8469 world26UHC seed2038 S1W5 base26b9281 dirty gap16; docs/playtests/2026-10-08-preparation-form-retention.md",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0089",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Retain current preparation booking in editing controls",
+    "problem": "Booking rerender discarded partner/objective/intensity",
+    "solution": "Alpine Echo Bind mental_reset intense retained; changed only intensity to normal and retained again",
+    "lesson": "Hydrate form from validated current-fixture booking before drawing previews",
+    "confidence": "high",
+    "source": "Browser8469 world26UHC seed2038 S1W5 base26b9281 dirty gap16; docs/playtests/2026-10-08-preparation-form-retention.md",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0088",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Lineup decision telemetry lacks exact selected IDs",
+    "problem": "set_lineup records only flags",
+    "solution": "Persisted readbacks document exact five; separate gap17 owns telemetry correction",
+    "lesson": "Do not infer exact player selection from coarse accepted-action flags",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0087",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Auto clear keeps a full effective default",
+    "problem": "Empty saved preference can look like no players selected",
+    "solution": "Clear and reload shows0saved5automatic and matching5of5; four persisted actions matched",
+    "lesson": "Verify cleared preferences and resolved participants independently",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0086",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Partial defaults resolve to full five after churn",
+    "problem": "Saved three and resolved five appeared contradictory",
+    "solution": "Render server effective selection and provenance; copied W5 shows3saved2automatic",
+    "lesson": "Keep saved preference separate from effective participant selection",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0085",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Default five displays conflicting saved and resolved counts",
+    "problem": "Clubheader5of5 versus detailedDefaultfive3of5 afterrosterchurn",
+    "solution": "Saved public raw three and resolved five plus screenshot retained; a valid manual five resolves displays, underlying gap15queued",
+    "lesson": "Explain automatic completion or render consistent server-derived effective selection",
+    "confidence": "medium",
+    "source": "Browser8467 world26UHC seed2038 S1W5-W6 docs/playtests/2026-10-08-bench-rotation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "recovery",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0084",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Action type capture does not capture exact lineup choices",
+    "problem": "Two set_lineup rows record only agents/defaultfive flags",
+    "solution": "Seven new ledger decisions match nine browser pairs, but exact five andHarbor rely on retained public receipts",
+    "lesson": "Report parameter omissions explicitly; coarse usage counts cannot quantify selected lineup or agent preferences",
+    "confidence": "medium",
+    "source": "Browser8467 world26UHC seed2038 S1W5-W6 docs/playtests/2026-10-08-bench-rotation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "recovery",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]

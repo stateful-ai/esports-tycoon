@@ -77,7 +77,7 @@ async function take() {
   delete nodes.help; context.openHelp(); assert.deepEqual(await take(), []);
   context.window.Usage.interaction('profile/player_open/SECRET');
   context.window.Usage.interaction('handbook/section_PRIVATE'); assert.deepEqual(await take(), []);
-  const allowed = ['lobby/seed_change','week/full_report_open', ...['player','team','staff','manager'].flatMap(k => ['open','close'].map(a => `profile/${k}_${a}`)),
+  const allowed = ['lobby/seed_change','week/full_report_open','market/player_search', ...['player','team','staff','manager'].flatMap(k => ['open','close'].map(a => `profile/${k}_${a}`)),
     'handbook/open','handbook/close','handbook/section_first_week','handbook/section_screens','handbook/section_glossary'];
   for (const target of allowed) context.window.Usage.interaction(target);
   console.log(JSON.stringify(await take()));

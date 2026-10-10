@@ -1,0 +1,30 @@
+{
+  "step": 7,
+  "result": "met",
+  "observation": {
+    "response": {
+      "ok": true,
+      "message": "Game plan confirmed for the next match."
+    },
+    "plan": {
+      "fixture_id": "s1w6m0am",
+      "aggression": 72.0,
+      "pace": 31.0,
+      "util_discipline": null,
+      "eco_greed": null,
+      "map_control": null,
+      "site_focus": null,
+      "focus_target": null,
+      "starter_ids": [
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "team_talk": "reassure",
+      "halftime_talk": null,
+      "shouts": {}
+    }
+  }
+}

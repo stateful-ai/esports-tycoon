@@ -1,0 +1,151 @@
+{
+  "baseline_decisions": 27,
+  "baseline_prefix_identical": true,
+  "baseline_snapshots": 5,
+  "final_decisions": 33,
+  "final_snapshots": 5,
+  "new_decisions": [
+    {
+      "index": 27,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agent_choices": "null",
+        "agents": "False",
+        "choice_encoding": "json-v1",
+        "default_five": "True",
+        "fixture_id": "",
+        "lineup_ids": "[]",
+        "map_id": "",
+        "per_map": "False",
+        "player_ids": "null"
+      },
+      "source": "web",
+      "csv_step": 3
+    },
+    {
+      "index": 28,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agent_choices": "null",
+        "agents": "False",
+        "choice_encoding": "json-v1",
+        "default_five": "True",
+        "fixture_id": "",
+        "lineup_ids": "[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]",
+        "map_id": "",
+        "per_map": "False",
+        "player_ids": "null"
+      },
+      "source": "web",
+      "csv_step": 4
+    },
+    {
+      "index": 29,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agent_choices": "null",
+        "agents": "False",
+        "choice_encoding": "json-v1",
+        "default_five": "False",
+        "fixture_id": "s1w6m0am",
+        "lineup_ids": "null",
+        "map_id": "bind",
+        "per_map": "True",
+        "player_ids": "[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]"
+      },
+      "source": "web",
+      "csv_step": 5
+    },
+    {
+      "index": 30,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agent_choices": "{\"fa_0\":\"harbor\"}",
+        "agents": "True",
+        "choice_encoding": "json-v1",
+        "default_five": "False",
+        "fixture_id": "",
+        "lineup_ids": "null",
+        "map_id": "",
+        "per_map": "False",
+        "player_ids": "null"
+      },
+      "source": "web",
+      "csv_step": 6
+    },
+    {
+      "index": 31,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "72.0",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s1w6m0am",
+        "focus_target": "",
+        "map_control": "",
+        "n_dials": "2",
+        "one_match_lineup": "True",
+        "opponent": "team_baltic_meridian",
+        "pace": "31.0",
+        "site_focus": "",
+        "starter_ids": "[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]",
+        "team_talk": "reassure",
+        "util_discipline": ""
+      },
+      "source": "web",
+      "csv_step": 7
+    },
+    {
+      "index": 32,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "72.0",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s1w6m0am",
+        "focus_target": "",
+        "map_control": "",
+        "n_dials": "2",
+        "one_match_lineup": "True",
+        "opponent": "team_baltic_meridian",
+        "pace": "31.0",
+        "site_focus": "",
+        "starter_ids": "[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]",
+        "team_talk": "reassure",
+        "util_discipline": ""
+      },
+      "source": "web",
+      "csv_step": 8
+    }
+  ]
+}
