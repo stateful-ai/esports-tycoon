@@ -1,0 +1,66 @@
+{
+  "audited_at_utc": "2026-10-10T20:48:34.362923+00:00",
+  "tested_parent": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "baseline_actions": 55,
+  "final_actions": 56,
+  "prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 1,
+    "accepted": 1
+  },
+  "snapshot_unchanged": true,
+  "exact_baseline_GameState_equal": true,
+  "baseline_save_sha256": "ab7bc4396ba8193ef4996befcb5c0a3bb909585a5ac098ffe5cf7f4618e67946",
+  "new_save_sha256": "ab7bc4396ba8193ef4996befcb5c0a3bb909585a5ac098ffe5cf7f4618e67946",
+  "fixture_unchanged": true,
+  "usage_events": 18,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 4,
+    "visible_time": 7,
+    "attempt": 2,
+    "result": 2,
+    "session_end": 1
+  },
+  "page_sessions": [
+    "5358d9afd82433c6c35b7b6293fd9bcf",
+    "7f36de5b5de690e9bf668fe45445a8bd"
+  ],
+  "paired_requests": 2,
+  "unmatched_attempts": [],
+  "orphan_results": [],
+  "server_stopped": [
+    {
+      "pid": 31208,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 41524,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8493",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 6664,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8493",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limitations": "Best-effort retained usage cannot prove complete duration/attention. Step2 failed tool validation before click and is unverified, not an HTTP rejection. Screenshot export denied for own worktree; exact public DOM and response text preserved. Session receipt does not persist after page reload."
+}

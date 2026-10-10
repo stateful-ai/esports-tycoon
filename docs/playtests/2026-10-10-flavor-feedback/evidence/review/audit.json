@@ -1,0 +1,81 @@
+{
+  "accepted_coverage": {
+    "matched": 2,
+    "accepted": 2
+  },
+  "worlds": [
+    "26UHC",
+    "27UHC"
+  ],
+  "replica": "review-run",
+  "prefix55_unchanged": true,
+  "telemetry_snaps_unchanged": true,
+  "both_saved_bytes_equal_exact64_baseline": true,
+  "baseline_sha256": "ab7bc4396ba8193ef4996befcb5c0a3bb909585a5ac098ffe5cf7f4618e67946",
+  "usage_events": 38,
+  "kind_counts": {
+    "session_start": 4,
+    "view": 8,
+    "visible_time": 14,
+    "session_end": 3,
+    "attempt": 5,
+    "result": 4
+  },
+  "complete_request_pairs": 4,
+  "unmatched_attempts": [
+    {
+      "session_id": "803d51fd54e51a41fc6fbdeb77e6cda1",
+      "request_id": 10,
+      "target": "/api/actions/flavor_event",
+      "events": [
+        {
+          "schema_version": 1,
+          "session_id": "803d51fd54e51a41fc6fbdeb77e6cda1",
+          "received_at": "2026-10-10T20:53:10.843078+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 12,
+          "kind": "attempt",
+          "target": "/api/actions/flavor_event",
+          "request_id": 10
+        }
+      ]
+    }
+  ],
+  "orphan_results": [],
+  "server_family_stopped": [
+    {
+      "pid": 7612,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 23912,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8493",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 22952,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8493",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Held26UHC response has no usage result; accepted choice is independently proven by save. Browser Campaigns navigation reloads document, so same-document completion regression is proven separately by actual Node handler with deferred API and same-team/different-world context."
+}

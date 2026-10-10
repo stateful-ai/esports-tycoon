@@ -1,0 +1,211 @@
+{
+  "reason": "Root review requires changed zero-net wording and captured origin identity; superseded gate interrupted before source edits",
+  "writer": {
+    "pid": 31544,
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "runs/playtests/2026-10-10-flavor-feedback/full-gate.py"
+    ],
+    "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+  },
+  "pytest": {
+    "pid": 8612,
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+  },
+  "owned_family": [
+    {
+      "pid": 19076,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ],
+      "cwd": "C:\\WINDOWS"
+    },
+    {
+      "pid": 22804,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 4944,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 6300,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 7532,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 29796,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 35796,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 35976,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 42416,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 32616,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 28792,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 10184,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 19216,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 41160,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 16724,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 10344,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 1704,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 11480,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-u",
+        "-c",
+        "import sys;exec(eval(sys.stdin.readline()))"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    },
+    {
+      "pid": 8612,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010"
+    }
+  ]
+}

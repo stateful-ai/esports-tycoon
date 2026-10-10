@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"receipt\": {\n    \"ok\": true,\n    \"message\": \"The limited turnout is noted, but quickly forgotten.\",\n    \"event_title\": \"A community clinic asks for Team Nexus\",\n    \"realized_effects\": [\n      {\n        \"metric\": \"team_sentiment\",\n        \"subject_id\": \"team_nexus\",\n        \"label\": \"Team Nexus: Community sentiment\",\n        \"before\": 59.1,\n        \"after\": 58.1,\n        \"delta\": -1,\n        \"text\": \"Team Nexus: Community sentiment: 59.1 -> 58.1 (-1)\"\n      }\n    ]\n  },\n  \"world\": \"27UHC\",\n  \"team\": \"team_nexus\",\n  \"current\": {\n    \"code\": \"27UHC\",\n    \"team_id\": \"team_nexus\",\n    \"mode\": \"solo\"\n  },\n  \"week\": 12,\n  \"pending\": null,\n  \"visible\": \"\\nTEAM MOMENT RESOLVED\\nA community clinic asks for Team Nexus\\n\\nThe limited turnout is noted, but quickly forgotten.\\n\\nTeam Nexus: Community sentiment: 59.1 -> 58.1 (-1)\\nDismiss result\\n▸ No game plan set for W12\\n▸ Coach proposed a scrim plan Match · Prep\\n▸ Vortex: Season MVP Award · In Contention · 3rd · 1.50\\n▸ Vortex: Opening King Award · In Contention · 2nd · 44\\n\"\n}\n### Ran Playwright code\n```js\nawait page.evaluate('() => ({receipt:App.flavorSettlement, world:App.flavorSettlementWorld, team:App.flavorSettlementTeam, current:App.mp, week:App.state?.week, pending:App.state?.flavor_event, visible:document.body.innerText.split(\\'NEEDS YOU\\')[1]?.split(\\'YOUR CALLS\\')[0]})');\n```"
+    }
+  ]
+}

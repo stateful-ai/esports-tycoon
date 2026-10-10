@@ -1,0 +1,46 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/flavor_event": 2,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/leave": 1,
+    "attempt:/api/resume": 1,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/leave": 1,
+    "result:/api/resume": 1,
+    "session_end:": 3,
+    "session_start:": 4,
+    "view:dashboard": 4,
+    "view:lobby": 4,
+    "visible_time:dashboard": 7,
+    "visible_time:lobby": 7
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "6c8583298f72da8eb4f418bcef539311": 40651,
+    "803d51fd54e51a41fc6fbdeb77e6cda1": 11298,
+    "a5ceb3ff9bc711e244f97a0f79420a45": 0,
+    "c50d200ecb01239c7a68d88e8230f6c0": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/leave:success": 1,
+    "/api/resume:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 1,
+  "visible_ms": {
+    "dashboard": 70277,
+    "lobby": 38611
+  },
+  "world_events": {
+    "26UHC": 14,
+    "27UHC": 15,
+    "lobby": 9
+  }
+}
