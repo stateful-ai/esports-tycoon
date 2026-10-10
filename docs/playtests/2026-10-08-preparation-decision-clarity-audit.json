@@ -1,0 +1,308 @@
+{
+  "seed": 2038,
+  "world": "26UHC",
+  "season": 1,
+  "week": 4,
+  "baseline_actions": 15,
+  "final_actions": 19,
+  "new_actions": [
+    {
+      "index": 15,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "4",
+        "fixture_id": "s1w4m2am",
+        "id": "50fadd1cec4334f7",
+        "intensity": "light",
+        "map_id": "bind",
+        "objective": "anti_exec",
+        "opponent_id": "team_saracen_guard",
+        "partner_id": "team_adriatic_sirens",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 16,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "4",
+        "fixture_id": "s1w4m2am",
+        "id": "e41a89baef5645ef",
+        "intensity": "intense",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "opponent_id": "team_saracen_guard",
+        "partner_id": "team_alpine_echo",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 17,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "4",
+        "fixture_id": "s1w4m2am",
+        "id": "129614670d15a719",
+        "intensity": "normal",
+        "map_id": "bind",
+        "objective": "anti_exec",
+        "opponent_id": "team_saracen_guard",
+        "partner_id": "team_adriatic_sirens",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 18,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "4",
+        "fixture_id": "s1w4m2am",
+        "id": "50fadd1cec4334f7",
+        "intensity": "light",
+        "map_id": "bind",
+        "objective": "anti_exec",
+        "opponent_id": "team_saracen_guard",
+        "partner_id": "team_adriatic_sirens",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    }
+  ],
+  "baseline_prefix_equal": true,
+  "telemetry_snaps_before": 3,
+  "telemetry_snaps_after": 3,
+  "telemetry_snaps_equal": true,
+  "usage_event_count": 61,
+  "usage_kinds": {
+    "session_start": 3,
+    "view": 12,
+    "visible_time": 34,
+    "attempt": 5,
+    "result": 5,
+    "session_end": 2
+  },
+  "usage_targets": {
+    "": 5,
+    "lobby": 6,
+    "dashboard": 8,
+    "tactics/strategy": 9,
+    "tactics/prep": 23,
+    "/api/actions/preparation": 8,
+    "/api/actions/save": 2
+  },
+  "usage_mutations": [
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 16,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 16,
+      "outcome": "success",
+      "status": 200,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 20,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 20,
+      "outcome": "success",
+      "status": 200,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 24,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 24,
+      "outcome": "success",
+      "status": 200,
+      "page": 2
+    }
+  ],
+  "final_preparation": {
+    "id": "50fadd1cec4334f7",
+    "team_id": "team_nexus",
+    "fixture_id": "s1w4m2am",
+    "opponent_id": "team_saracen_guard",
+    "partner_id": "team_adriatic_sirens",
+    "map_id": "bind",
+    "objective": "anti_exec",
+    "intensity": "light",
+    "created_season": 1,
+    "created_week": 4
+  },
+  "condition_readback_steps": [
+    3,
+    7,
+    16,
+    18,
+    20,
+    24,
+    27
+  ],
+  "public_condition_unchanged": true,
+  "public_condition": [
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "condition": 43
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "condition": 49
+    },
+    {
+      "id": "fa_13",
+      "handle": "Slyblade",
+      "condition": 33.9
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "condition": 53
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "condition": 65
+    }
+  ],
+  "manager_contract_check": {
+    "seed": 707,
+    "checks": [
+      {
+        "booked": false,
+        "legal_masks_equal": true,
+        "encoded_vectors_byte_equal": true,
+        "game_states_byte_equal_after_observation": true,
+        "heuristic_profiles_equal": 6,
+        "encoded_vector_size": 406
+      },
+      {
+        "booked": true,
+        "legal_masks_equal": true,
+        "encoded_vectors_byte_equal": true,
+        "game_states_byte_equal_after_observation": true,
+        "heuristic_profiles_equal": 6,
+        "encoded_vector_size": 406
+      }
+    ]
+  },
+  "source_hashes": {
+    "src\\esports_sim\\manager\\preparation.py": "b0cb460165de778240bb30ab5c49aad6ba6d729f985b565cf28a09882fc6f8c9",
+    "src\\esports_sim\\web\\static\\app.js": "8f7c2a19a8aa86d04531618d8c443c615eb194a8a082592f5b79e7c0339b65ae",
+    "src\\esports_sim\\web\\static\\app.css": "cf88ff2cf63e29651580e5d29ae6dc7170863e6d275284e53e4ff42f032bd4a0",
+    "tests\\test_preparation.py": "e250d3908d235374d5814bf083a86e9beaa588f26f7cbbe454ff343608c53c1f"
+  }
+}
