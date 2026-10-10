@@ -1,0 +1,1 @@
+C:\Users\aidan\.codex\worktrees\badge-attribution-rebuild\ESports Simulator\src\esports_sim\__init__.py

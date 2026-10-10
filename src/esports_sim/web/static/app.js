@@ -3488,7 +3488,7 @@ function developmentReportCard(report) {
   const body = el("tbody");
   for (const p of report.players) {
     const week = p.latest_week;
-    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events", badge_gains: "Badges" };
     const sourceText = week ? Object.entries(week.sources || {})
       .filter(([, source]) => Object.values(source.skills || {}).some((gain) => gain !== 0))
       .map(([key, source]) => {
@@ -8391,7 +8391,7 @@ function showReport(rep) {
     const card = el("section", "card weekly-development");
     card.appendChild(el("h2", "", `Squad development · Season ${development.season} · Week ${development.week}`));
     card.appendChild(el("p", "muted", "Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision."));
-    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events", badge_gains: "Badges" };
     for (const p of development.players || []) {
       const week = p.attribution;
       const measured = p.measured;
@@ -8403,12 +8403,17 @@ function showReport(rep) {
           const skills = Object.entries(source.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${signedGain(gain, 2)}`).join(" · ");
           return `<div><b>${esc(sourceLabels[key] || humanize(key))} ${esc(amount)}</b><span class="muted"> · ${esc(skills)}</span></div>`;
         }).join("");
+      const badgeEvidence = (week.badge_events || []).map((event) => {
+        const skills = Object.entries(event.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${signedGain(gain, 2)}`).join(" · ");
+        return `<div>Badge ${esc(event.action)}: ${esc(event.name)} · ${esc(signedGain(event.overall_gain, 2))} OVR${skills ? ` · ${esc(skills)}` : " · No current ability change"}</div>`;
+      }).join("") || `<div class="muted">${week.badge_tracking ? "No badge changes this week" : "Badge attribution unavailable for this saved week"}</div>`;
       const rating = measured
         ? `OVR ${Number(measured.overall_start).toFixed(1)} → ${Number(measured.overall_current).toFixed(1)} (${signedGain(measured.overall_delta, 1)})`
         : "Weekly OVR comparison unavailable";
       card.appendChild(el("div", "newsline", `<b>${plink(p.id, p.handle)}</b> <span class="muted">${esc(rating)}</span>
         <div>${esc(humanize(week.focus))} / ${esc(humanize(week.intensity))} · ${week.maps} ${week.maps === 1 ? "map" : "maps"}</div>
         ${sources || '<div class="muted">No measured skill gains</div>'}
+        ${badgeEvidence}
         ${(week.factors || []).map((text) => `<div class="muted">${esc(text)}</div>`).join("")}
         ${week.career_event ? `<div>${esc(week.career_event)}</div>` : ""}`));
     }

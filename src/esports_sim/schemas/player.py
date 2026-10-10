@@ -71,6 +71,15 @@ class DevelopmentCurveModel(BaseModel):
     volatility: float
 
 
+class BadgeDevelopmentEvent(BaseModel):
+    """Measured attribute changes at a badge earn/loss, separate from ceilings."""
+
+    model_config = ConfigDict(extra="forbid")
+    badge: str
+    action: Literal["earned", "lost"]
+    skills: dict[str, float] = Field(default_factory=dict)
+
+
 class DevelopmentWeek(BaseModel):
     """Measured sources of the latest week's progress, never forecasts."""
 
@@ -87,6 +96,9 @@ class DevelopmentWeek(BaseModel):
     match_gains: dict[str, float] = Field(default_factory=dict)
     scrim_gains: dict[str, float] = Field(default_factory=dict)
     event_gains: dict[str, float] = Field(default_factory=dict)
+    badge_gains: dict[str, float] = Field(default_factory=dict)
+    badge_events: list[BadgeDevelopmentEvent] = Field(default_factory=list)
+    badge_tracking: bool = False
     factors: list[str] = Field(default_factory=list)
     career_event: str | None = None
 
