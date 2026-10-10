@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0080",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Standing scouting readiness must be fixture-specific",
+    "problem": "Legacy deep-dive slot was empty despite pro opponent coverage",
+    "solution": "Dashboard serializes effective standing/deep-dive assignment and measured depth/playbook independently",
+    "lesson": "Treat assignment and measured intel as distinct public facts",
+    "confidence": "medium",
+    "source": "Gap14 browser8466 own copied26UHC seed2038 S1W5 docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0081",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Refresh derived state after changing standing directives",
+    "problem": "Returning immediately to Dashboard showed prior guidance after successful directive change",
+    "solution": "Await existing refresh after scout-directive POST and verify actual rendered text",
+    "lesson": "A persisted setting readback and a destination-screen readback catch different defects",
+    "confidence": "medium",
+    "source": "Gap14 browser8466 own copied26UHC seed2038 S1W5 docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0082",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Stale Dashboard guidance after a scouting mutation",
+    "problem": "Browser rows4 and6 failed rendered-copy assertions while server state was already correct",
+    "solution": "Preserve partial and unexpected results, correct refresh, then recheck rows7 and8",
+    "lesson": "Do not count an HTTP200 as visual acceptance",
+    "confidence": "medium",
+    "source": "Gap14 browser8466 own copied26UHC seed2038 S1W5 docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14"
+    ],
+    "kind": "pain-point"
+  }
+]

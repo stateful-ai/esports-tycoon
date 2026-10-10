@@ -1,0 +1,9 @@
+{
+  "checked_at_utc": "2026-10-10T18:06:26.505775+00:00",
+  "prior_command": "long-lived unified exec PowerShell wrapper",
+  "last_output": "34%, no terminal suite result",
+  "exit_code": null,
+  "source_unchanged": true,
+  "old_log_sha256": "86e8f8ac92aac283178f7485e1bfc8875e24616d53d795d099c41a5df3bfd8a4",
+  "reason": "All observed old wrapper/pytest/worker PIDs gone after agent yield; no result file; interrupted run cannot be counted as passed. Fresh detached run required."
+}

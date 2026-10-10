@@ -1,0 +1,125 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 1,
+  "week": 5,
+  "baseline_actions": 20,
+  "final_actions": 25,
+  "prefix_identical": true,
+  "new_actions": [
+    {
+      "index": 20,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "fill_gap:duelist:any",
+        "lane": "pro"
+      },
+      "source": "web"
+    },
+    {
+      "index": 21,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "fill_gap:duelist:any",
+        "lane": "pro"
+      },
+      "source": "web"
+    },
+    {
+      "index": 22,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "scout_opponents",
+        "lane": "pro"
+      },
+      "source": "web"
+    },
+    {
+      "index": 23,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "fill_gap:duelist:any",
+        "lane": "pro"
+      },
+      "source": "web"
+    },
+    {
+      "index": 24,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "scout_opponents",
+        "lane": "pro"
+      },
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 4,
+  "final_snapshots": 4,
+  "snapshots_identical": true,
+  "usage": {
+    "baseline_records": 93,
+    "retained_total": 133,
+    "new_page_records": 40,
+    "new_page_sessions": 3,
+    "counts": {
+      "session_start": 3,
+      "view": 14,
+      "visible_time": 11,
+      "attempt": 6,
+      "result": 6
+    },
+    "pairs": [
+      {
+        "target": "/api/actions/scout-directive",
+        "status": 200
+      },
+      {
+        "target": "/api/actions/scout-directive",
+        "status": 200
+      },
+      {
+        "target": "/api/actions/scout-directive",
+        "status": 200
+      },
+      {
+        "target": "/api/actions/scout-directive",
+        "status": 200
+      },
+      {
+        "target": "/api/actions/scout-directive",
+        "status": 200
+      },
+      {
+        "target": "/api/actions/save",
+        "status": 200
+      }
+    ],
+    "unmatched_attempts": 0,
+    "orphan_results": 0
+  }
+}

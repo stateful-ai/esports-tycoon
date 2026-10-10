@@ -1,0 +1,23 @@
+{
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-08T22:45:50.4499084Z",
+  "command": "python -m pytest -q -n 2",
+  "source": [
+    {
+      "path": "src/esports_sim/web/server.py",
+      "sha256": "216B19BBAB3E1A995716DF90B962B0019135C8E31DAAFF6DDF8EF5502FBD53CE"
+    },
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "sha256": "B30CA349D7F45F2888075A1443C1FB07CF3674A8B6B73BAE0865AD9AD6AEE6A2"
+    },
+    {
+      "path": "tests/test_web_scout_readiness.py",
+      "sha256": "BD4357297717EEFC7C31BECFF11F18F93AFF3CD1F3DA519B51CB1DD031C82B55"
+    }
+  ],
+  "terminal_session": 5146,
+  "terminal_result": "1199 passed in 6253.06s (1:44:13)",
+  "source_unchanged": true,
+  "unfiltered": true
+}

@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "world": "MG35R",
+      "target": "team_rust_belt_gaming",
+      "schema_version": 36,
+      "season": 1,
+      "week": 5,
+      "action_count": 25,
+      "new_decisions": 0,
+      "actions_identical": true,
+      "snapshots_identical": true,
+      "saved_lane": {
+        "pro": "team_rust_belt_gaming"
+      },
+      "legacy_slot": null
+    },
+    {
+      "world": "MG35M",
+      "target": "match:s1w5m1am",
+      "schema_version": 36,
+      "season": 1,
+      "week": 5,
+      "action_count": 25,
+      "new_decisions": 0,
+      "actions_identical": true,
+      "snapshots_identical": true,
+      "saved_lane": {
+        "pro": "match:s1w5m1am"
+      },
+      "legacy_slot": null
+    }
+  ],
+  "baseline_usage_records": 133,
+  "retained_total": 149,
+  "test_world_usage_records": 16,
+  "pairs": [
+    {
+      "target": "/api/actions/save",
+      "status": 200
+    },
+    {
+      "target": "/api/actions/save",
+      "status": 200
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0
+}

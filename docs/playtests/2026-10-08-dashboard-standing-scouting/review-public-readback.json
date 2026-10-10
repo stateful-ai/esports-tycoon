@@ -1,0 +1,201 @@
+{
+  "readiness": {
+    "opponent_id": "team_rust_belt_gaming",
+    "assigned": true,
+    "source": "Standing pro lane",
+    "progress": 0.34,
+    "playbook": 0.85,
+    "measured": true,
+    "ready": false,
+    "badge": "34% scouted",
+    "status": "34% / 85% playbook",
+    "title": "Review the intel on Rust Belt Gaming",
+    "copy": "Standing pro lane covers this fixture. Scouting depth 34%; playbook read 85%. Opponent identity and counter reads unlock at 50% scouting depth.",
+    "tone": ""
+  },
+  "matchday": {
+    "fixture": {
+      "id": "s1w5m1am",
+      "week": 5,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_rust_belt_gaming",
+      "team_b": "team_nexus",
+      "team_a_name": "Rust Belt Gaming",
+      "team_b_name": "Team Nexus",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "preview": [
+        "Team Nexus arrive on a 4-match winning run.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Zephyrpulse \u2014 Rust Belt Gaming's form pick at 1.35."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 2,
+            "wins": 2,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          }
+        ],
+        "veto": {
+          "opponent": "Rust Belt Gaming",
+          "ban": null,
+          "pick": null
+        }
+      },
+      "opp_manager": {
+        "name": "Marco Ferreira",
+        "identity": "Recluse"
+      }
+    },
+    "you": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "form": [
+        {
+          "result": "W",
+          "opponent": "Sahara Compass",
+          "score": "1-0",
+          "week": 1
+        },
+        {
+          "result": "W",
+          "opponent": "Nordic Frost",
+          "score": "1-0",
+          "week": 2
+        },
+        {
+          "result": "W",
+          "opponent": "Kathmandu Apex",
+          "score": "1-0",
+          "week": 3
+        },
+        {
+          "result": "W",
+          "opponent": "Saracen Guard",
+          "score": "1-0",
+          "week": 4
+        }
+      ],
+      "danger_men": [
+        {
+          "player_id": "vortex",
+          "handle": "Vortex",
+          "role": "duelist",
+          "rating": 1.47,
+          "maps": 4
+        },
+        {
+          "player_id": "apex",
+          "handle": "Apex",
+          "role": "controller",
+          "rating": 1.04,
+          "maps": 4
+        },
+        {
+          "player_id": "fa_13",
+          "handle": "Slyblade",
+          "role": "duelist",
+          "rating": 1.02,
+          "maps": 4
+        }
+      ]
+    },
+    "them": {
+      "id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming",
+      "form": [
+        {
+          "result": "W",
+          "opponent": "Nordic Frost",
+          "score": "1-0",
+          "week": 1
+        },
+        {
+          "result": "W",
+          "opponent": "Kathmandu Apex",
+          "score": "1-0",
+          "week": 2
+        },
+        {
+          "result": "L",
+          "opponent": "Saracen Guard",
+          "score": "0-1",
+          "week": 3
+        },
+        {
+          "result": "W",
+          "opponent": "Baltic Meridian",
+          "score": "1-0",
+          "week": 4
+        }
+      ],
+      "danger_men": [
+        {
+          "player_id": "team_rust_belt_gaming_p1",
+          "handle": "Zephyrpulse",
+          "role": "duelist",
+          "rating": 1.35,
+          "maps": 4
+        },
+        {
+          "player_id": "team_rust_belt_gaming_p0",
+          "handle": "Havocflare",
+          "role": "controller",
+          "rating": 1.12,
+          "maps": 4
+        },
+        {
+          "player_id": "team_rust_belt_gaming_p2",
+          "handle": "Karmastep",
+          "role": "duelist",
+          "rating": 0.95,
+          "maps": 4
+        }
+      ],
+      "coach": {
+        "name": "Jan Andersen",
+        "specialty": "tactical",
+        "style": "Utility first"
+      },
+      "identity": null,
+      "tendencies": [],
+      "scouted": false
+    },
+    "plan_set": false
+  }
+}
