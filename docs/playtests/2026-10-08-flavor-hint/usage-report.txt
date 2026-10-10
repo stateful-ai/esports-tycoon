@@ -1,0 +1,36 @@
+{
+  "attempts": 4,
+  "events": {
+    "attempt:/api/actions/advance": 3,
+    "attempt:/api/actions/flavor_event": 1,
+    "result:/api/actions/advance": 3,
+    "result:/api/actions/flavor_event": 1,
+    "session_start:": 2,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "visible_time:dashboard": 3,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "094c012f8323def4e63bcbaf1e90c5b3": 19611,
+    "b66a1b7c29cba388c7b10373c7f1c499": 1526
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 2,
+    "/api/actions/advance:success": 1,
+    "/api/actions/flavor_event:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 21707,
+    "lobby": 504
+  },
+  "world_events": {
+    "26UHC": 19
+  }
+}

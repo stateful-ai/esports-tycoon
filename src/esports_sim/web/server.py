@@ -7343,7 +7343,8 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Advance Week again.",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
@@ -7454,7 +7455,8 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Sim Ahead again.",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(

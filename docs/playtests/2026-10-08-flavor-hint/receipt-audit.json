@@ -1,0 +1,19 @@
+{
+  "verified_at_utc": "2026-10-10T18:03:25.749667+00:00",
+  "status": "terminal pytest summary present; durable subprocess receipt unavailable",
+  "terminal_summary": "1206 passed in 2619.55s (0:43:39)",
+  "log_sha256": "dca2665f24fd847ac9cf899814eb69349e3c7bd48b0aa67360f312f3fdb007da",
+  "subprocess_exit_code": null,
+  "full_result_present": false,
+  "exec_session_id": 34530,
+  "exec_receipt_error": "write_stdin failed: Unknown process id 34530",
+  "runner_pid": 9664,
+  "pytest_launcher_pid": 26352,
+  "actual_pytest_pid": 30364,
+  "all_processes_no_longer_live": true,
+  "source_files_verified": 606,
+  "source_mismatches": [],
+  "source_freeze_sha256": "703a39db83eb79e160d4acb0dc3da9e304d3365a8844ac0f1146727559a88635",
+  "receipt_search": "Original session transcript, retained process_manager registry and local execution logs had no terminal process receipt. Security event log unavailable. Runner stderr was not captured for this recovery launch; legacy runner.log remains empty.",
+  "limitation": "Cause of missing writer result is unknown. Green pytest text does not establish child process exit code. No suite rerun, source change, commit, push or PR performed."
+}
