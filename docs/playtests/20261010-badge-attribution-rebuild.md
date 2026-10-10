@@ -10,7 +10,7 @@ Badges record their measured post-clamp skill deltas in a distinct weekly source
 
 ## Player session and controlled rendering
 
-Runtime: gpt-6.1-sol, medium. Browser acceptance server: 8464, social LLM off. Intents/expectations precede actions in append-only actions.csv under session `20261010-badge-attribution-rebuild`; all prior CSV bytes remain a prefix. Each meaningful action, recovery, and blocked attempt is retained.
+Runtime: gpt-6.1-sol, medium. Browser acceptance server: 8464, social LLM off. Intents/expectations precede actions under session `20261010-badge-attribution-rebuild`. The four original session rows are preserved verbatim in [session actions.csv](evidence/20261010-badge-attribution/actions.csv), isolated for sequential integration into the canonical history by the parent task. The canonical CSV in this PR equals the base version. Each meaningful action, recovery, and blocked attempt is retained.
 
 Natural world **247PG**, seed **2026**: created Team Nexus at S1 W1, advanced one week, opened Full report, then saved via the browser. Public report: 13-1 versus Tokyo Drift Six. Phantom's Practice +0.50 OVR appears separately from Matches +0.03 OVR. All five say "No badge changes this week". This is a counterexample to attributing the +0.50 growth to a badge.
 
