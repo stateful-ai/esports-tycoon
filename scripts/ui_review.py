@@ -54,6 +54,13 @@ async def main():
             await page.wait_for_timeout(800)
         await page.screenshot(path=out / "01_after_load.png")
 
+        # The first-week help overlay auto-opens on a fresh profile (season 1
+        # week 1) and intercepts all pointer events. Dismiss it so tab clicks
+        # work; this mirrors a real user closing the guide.
+        await page.evaluate(
+            "const h = document.getElementById('help'); if (h) { h.classList.add('hidden'); h.setAttribute('aria-hidden','true'); }"
+        )
+
         for tab in [t.strip() for t in args.tabs.split(",") if t.strip()]:
             try:
                 await page.click(f'nav#tabs [data-tab="{tab}"]', timeout=3000)
