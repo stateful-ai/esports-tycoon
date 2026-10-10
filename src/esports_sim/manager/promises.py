@@ -48,10 +48,14 @@ def _play_time_result(dressed: int, remaining: int, required: int) -> str:
 
 
 def play_time_assessment(gs: GameState, promise: ManagerPromise) -> dict | None:
-    """Pure public assessment using the same window, threshold and deadline rules.
+    """Pure public assessment using the same target, credit and deadline rules.
 
     Resolved promises retain their recorded outcome; their weeks_left is a
     history-retention timer, not a deadline. Unknown types remain untouched.
+    Repeating an active promise resets evaluations left, but keeps its target
+    basis and accumulated credits. Credits are not a fraction of a window.
+    ``window_weeks`` remains an alias for the evaluator's target basis, never
+    the current deadline or an inferred total period after repeat promises.
     """
     if promise.promise_type != "play_time" or promise.status != "active":
         return None
@@ -60,11 +64,11 @@ def play_time_assessment(gs: GameState, promise: ManagerPromise) -> dict | None:
     dressed = promise.dressed_count
     needed = max(0, required - dressed)
     remaining = promise.weeks_left
-    percent = round(dressed / duration * 100, 1) if duration > 0 else None
     fulfillment = min(100, max(0, round(dressed / required * 100))) if required > 0 else 100
     next_dressed = _play_time_result(dressed + 1, remaining - 1, required)
     next_benched = _play_time_result(dressed, remaining - 1, required)
-    week_word = "week" if duration == 1 else "weeks"
+    target_basis = (f"original {duration}-week promise" if promise.initial_duration > 0
+                    else f"reconstructed {duration}-week target basis")
     deadline = (
         "Deadline: at the next weekly evaluation."
         if remaining <= 1 else f"Deadline: after {remaining} more weekly evaluations."
@@ -72,20 +76,21 @@ def play_time_assessment(gs: GameState, promise: ManagerPromise) -> dict | None:
     outcomes = {"active": "promise stays active", "kept": "promise kept", "broken": "promise broken"}
     return {
         "window_weeks": duration,
+        "target_basis_weeks": duration,
+        "target_basis_inferred": promise.initial_duration <= 0,
         "target_percent": target,
         "required_dressed_weeks": required,
         "dressed_weeks": dressed,
-        "dressed_percent": percent,
         "additional_dressed_weeks_needed": needed,
         "evaluations_left": remaining,
         "fulfillment_percent": fulfillment,
         "next_dressed_status": next_dressed,
         "next_not_dressed_status": next_benched,
-        "target_label": f"Target: {target}% of {duration} window {week_word}, rounded up = {required} dressed weeks.",
-        "progress_label": f"Progress: {dressed}/{duration} window weeks dressed" + (f" ({percent:g}%)." if percent is not None else ".") + f" {needed} more needed to reach {required}.",
+        "target_label": f"Target: {required} dressed-week credits ({target}% of the {target_basis}, rounded up).",
+        "progress_label": f"Progress: {dressed} accumulated dressed-week credits; {required} required. " + (f"{needed} more needed." if needed else "Target reached."),
         "deadline_label": deadline,
-        "counting_label": "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.",
-        "next_evaluation_label": f"Next evaluation: if dressed, {dressed + 1}/{required} required weeks ({outcomes[next_dressed]}); if not dressed, {dressed}/{required} ({outcomes[next_benched]}).",
+        "counting_label": "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits.",
+        "next_evaluation_label": f"Next evaluation: if dressed, {dressed + 1} accumulated credits ({outcomes[next_dressed]}); if not dressed, {dressed} credits ({outcomes[next_benched]}).",
     }
 
 def create_promise(

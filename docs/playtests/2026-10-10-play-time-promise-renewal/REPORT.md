@@ -1,0 +1,23 @@
+# Play-time promise renewal follow-up
+
+Controlled acceptance on published PR366 head `3220db1fe28aecfa294072d4e831d3e723e0302c`, then the uncommitted revised display source. Model GPT-6.1-sol, effort medium; game version 0.0.1. Own worlds RNL22 and NAT22, seed2038, Team Nexus. Primary files, root browser and canonical CSV remained untouched. Isolated eleven-row CSV records intention before each action.
+
+## Reproduction and result
+
+Review comment [4238985088](https://github.com/stateful-ai/esports-tycoon/pull/366#discussion_r4238985088) is actionable. A controlled fixture uses `create_promise` at W6 for a four-week60% Echo promise, then three isolated promise evaluations with Echo dressed. Those initial credits are explicit fixture inputs, not natural match evidence. At W9 a supported `/api/actions/promise` request repeats `bench_minutes`: original duration4 and accumulated count3 survive, while evaluations left1 become6. Two actual browser advances, with Echo in the default five and both intervening flavor events resolved/read back, produce count5, evaluations left4. Both original public screens incorrectly say `5/4 window weeks (125%)`.
+
+The corrected assessment separates original target basis, required dressed-week credit, accumulated credit and current evaluations left. Both real Locker Room and Echo profile show target3, accumulated5, target reached, deadline after4 evaluations, next dressed6 / undressed5 and active in either case. Repeating the promise keeps its target and earned credit and resets evaluations left; this is stated explicitly. No counter reset, target change, calendar reconstruction of an extended window, JS formula, save schema change or RNG effect is introduced.
+
+A second own server loads a byte-identical copy of the immutable natural W9 save. Both screens still correctly show the original8-week60% basis, requirement5 and accumulated5, next-evaluation deadline, and kept whether dressed or undressed next time. Screenshots were visually inspected. The natural profile API independently confirms that forecast; the auxiliary roster request used an incomplete endpoint and returned404, so no successful natural roster API claim is made. The actual Locker Room DOM supplies that readback.
+
+## Compatibility and verification
+
+All six mechanical helpers/create/resolve/tick source segments are byte-identical to the published head. Six renewal traces covering reset durations1/4/6 and played/undressed paths produce28 byte-identical full GameState comparisons with the pre-PR evaluator. Forecasts are checked against actual weekly ticks. The22 focused tests pass, including duplicate supported action, both serializers and inferred legacy target-basis labels. Original17-case/1269-test green receipt remains historical evidence for3220; it does not validate the revised source.
+
+The fresh unfiltered native full suite completed2026-10-10T20:44:20.763364Z: **1274 passed in2363.98s**, native exit0, empty stderr and source_unchanged=true. Its runner started20:04:56.138117Z. All545 frozen source/test/data/config hashes and the worktree import were independently verified before commit; the native runner family is gone. `gate-proof.json` contains receipt/artifact hashes and exact tested parent3220db1. Original1269-test proof and root's original3220 review are superseded for this revised source; they remain historical evidence. Balance/pacing/floor/snowball gates do not apply to these pure assessment changes. No rebase or source changes followed the completed gate.
+
+## Separate audit
+
+Accepted decisions43->48: repeat promise, team_first flavor choice, advance, no_comment flavor choice, advance. All5 expected decisions match; the prior43 structured records are unchanged. Manager snapshots8->10. Retained renewal usage has98 events,5 complete successful200 request pairs (two choices, two advances, save). Direct HTTP renewal is accepted decision evidence but has no frontend usage pair. Natural read-only usage has22 retained events and zero campaign request pairs. Profile opening lacks a distinct usage view. No unavailable runtime metadata was invented; optional flywheel tools are unavailable in this child session.
+
+Only verified own8483/8484 server families and both own browser sessions were stopped. The native gate survives independently. Local observations learned: renewals extend evaluation time while keeping original credit; fulfillment can exceed the original duration while still waiting for deadline; the pain was showing accumulated credit as a window percentage. Setup/readback failures (wrong server argument, failed connection, relative URL, incomplete roster endpoint) are recorded in CSV and bounded evidence rather than counted as accepted decisions.

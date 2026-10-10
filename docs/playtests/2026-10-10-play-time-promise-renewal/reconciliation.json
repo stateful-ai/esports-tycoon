@@ -1,0 +1,138 @@
+{
+  "baseline_action_count": 43,
+  "end_action_count": 48,
+  "action_prefix_unchanged": true,
+  "new_actions": [
+    {
+      "index": 43,
+      "season": 1,
+      "week": 9,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "promise_respond",
+      "params": {
+        "kind": "bench_minutes",
+        "player_id": "echo",
+        "promise_type": "play_time",
+        "source": "talk"
+      },
+      "source": "web"
+    },
+    {
+      "index": 44,
+      "season": 1,
+      "week": 9,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "team_first",
+        "event_id": "72b29241b2f60658"
+      },
+      "source": "web"
+    },
+    {
+      "index": 45,
+      "season": 1,
+      "week": 9,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    },
+    {
+      "index": 46,
+      "season": 1,
+      "week": 10,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "no_comment",
+        "event_id": "7487538f6944b101"
+      },
+      "source": "web"
+    },
+    {
+      "index": 47,
+      "season": 1,
+      "week": 10,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "matched_decisions": 5,
+  "expected_accepted_decisions": 5,
+  "decision_coverage_percent": 100,
+  "snapshots_before": {
+    "mgr_team_nexus": 8
+  },
+  "snapshots_after": {
+    "mgr_team_nexus": 10
+  },
+  "renewal_browser_usage": {
+    "events": 98,
+    "kinds": {
+      "session_start": 4,
+      "view": 12,
+      "visible_time": 70,
+      "session_end": 2,
+      "attempt": 5,
+      "result": 5
+    },
+    "complete_request_pairs": 5,
+    "requests": [
+      {
+        "target": "/api/actions/flavor_event",
+        "status": 200,
+        "outcome": "success"
+      },
+      {
+        "target": "/api/actions/advance",
+        "status": 200,
+        "outcome": "success"
+      },
+      {
+        "target": "/api/actions/flavor_event",
+        "status": 200,
+        "outcome": "success"
+      },
+      {
+        "target": "/api/actions/advance",
+        "status": 200,
+        "outcome": "success"
+      },
+      {
+        "target": "/api/actions/save",
+        "status": 200,
+        "outcome": "success"
+      }
+    ]
+  },
+  "natural_readonly_browser_usage": {
+    "events": 22,
+    "kinds": {
+      "session_start": 2,
+      "view": 5,
+      "visible_time": 14,
+      "session_end": 1
+    },
+    "complete_request_pairs": 0,
+    "requests": []
+  },
+  "limitations": [
+    "Direct HTTP promise renewal has accepted decision telemetry but no frontend attempt/result usage pair.",
+    "Profile-open has no distinct usage view.",
+    "Retained UI events are bounded; counts describe retained evidence.",
+    "Initial controlled credits are evaluator fixture inputs, not natural match evidence."
+  ]
+}

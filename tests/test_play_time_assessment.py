@@ -97,10 +97,86 @@ def test_both_public_surfaces_serialize_the_same_pure_assessment(world, game_dat
         assert roster_pr["play_time_assessment"] == promises.play_time_assessment(world, pr)
         assert world.model_dump_json() == before
         a = roster_pr["play_time_assessment"]
-        assert "60% of 8 window weeks" in a["target_label"]
-        assert "5/8" in a["progress_label"]
-        assert "62.5%" in a["progress_label"]
+        assert "60% of the original 8-week promise" in a["target_label"]
+        assert "5 accumulated dressed-week credits; 5 required" in a["progress_label"]
+        assert "Target reached" in a["progress_label"]
+        assert "dressed_percent" not in a
         assert "next weekly evaluation" in a["deadline_label"]
         assert a["fulfillment_percent"] == 100
+    finally:
+        server._ctx.reset(token)
+
+
+@pytest.mark.parametrize("reset_duration", [1, 4, 6])
+def test_repeating_late_promise_keeps_original_requirement_and_accumulated_credits(world, reset_duration):
+    tid = world.user_team_id
+    pid = world.teams[tid].player_ids[0]
+    pr = promises.create_promise(world, tid, pid, "play_time", target_value=60, duration=4)
+    for week in (1, 2, 3):
+        world.week = week
+        promises.weekly_tick(world, {tid: {pid}})
+    assert (pr.initial_duration, pr.dressed_count, pr.weeks_left, pr.status) == (4, 3, 1, "active")
+    world.week = 4
+    original = pr.model_dump()
+    repeated = promises.create_promise(world, tid, pid, "play_time", target_value=60, duration=reset_duration)
+    assert repeated is pr
+    assert pr.model_dump() == {**original, "weeks_left": reset_duration}
+
+    # Every forecast is checked against the real evaluator, including enough
+    # credited appearances to exceed the original basis after an extension.
+    for elapsed in range(reset_duration):
+        before = world.model_dump_json()
+        a = promises.play_time_assessment(world, pr)
+        assert world.model_dump_json() == before
+        assert a["target_basis_weeks"] == 4
+        assert a["required_dressed_weeks"] == 3
+        assert a["dressed_weeks"] == 3 + elapsed
+        assert a["evaluations_left"] == reset_duration - elapsed
+        assert "original 4-week promise" in a["target_label"]
+        assert f"{3 + elapsed} accumulated dressed-week credits; 3 required" in a["progress_label"]
+        assert "Target reached" in a["progress_label"]
+        assert "window weeks dressed" not in a["progress_label"]
+        assert "%" not in a["progress_label"]
+        assert "Repeating this promise resets evaluations left" in a["counting_label"]
+        assert a["fulfillment_percent"] == 100
+        promises.weekly_tick(world, {tid: {pid}})
+        assert pr.status == a["next_dressed_status"]
+        world.week += 1
+    assert pr.status == "kept"
+    assert pr.initial_duration == 4
+    assert pr.dressed_count == 3 + reset_duration
+    assert promises.play_time_assessment(world, pr) is None
+
+
+def test_legacy_reconstructed_basis_is_labeled_as_inferred(world):
+    world.week = 9
+    pr = promise_for(world, initial_duration=0, created_week=2)
+    a = promises.play_time_assessment(world, pr)
+    assert a["target_basis_inferred"] is True
+    assert "reconstructed 8-week target basis" in a["target_label"]
+    assert "original 8-week promise" not in a["target_label"]
+    promises.weekly_tick(world, {})
+    assert pr.initial_duration == a["target_basis_weeks"]
+
+
+def test_public_duplicate_action_returns_retained_target_and_reset_deadline(world, game_data):
+    pytest.importorskip("fastapi")
+    from esports_sim.web import server
+    pr = promise_for(world, initial_duration=4, dressed_count=5, weeks_left=1)
+    token = server._ctx.set(server._ReqCtx(server._Game(game_data, "RENEW", gs=world), world.user_team_id))
+    try:
+        original = pr.model_dump()
+        result = server.promise_action(server.PromiseBody(kind="bench_minutes", player_id=pr.player_id))
+        assert pr.model_dump() == {**original, "weeks_left": 6}
+        assert "3 dressed-week credits" in result["message"]
+        assert "original 4-week promise" in result["message"]
+        assert "after 6 more weekly evaluations" in result["message"]
+        roster = next(p for p in server.roster(world.user_team_id)["promises"] if p["id"] == pr.id)
+        profile = server.player_profile(pr.player_id)["player"]["promises"][0]
+        assert roster == profile
+        a = roster["play_time_assessment"]
+        assert "5 accumulated dressed-week credits; 3 required" in a["progress_label"]
+        assert "Target reached" in a["progress_label"]
+        assert "125%" not in str(a)
     finally:
         server._ctx.reset(token)
