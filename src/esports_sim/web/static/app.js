@@ -1711,7 +1711,7 @@ async function openMatchday() {
   // 4. Map pool & suggested veto (the server's board; hidden until it has data).
   const mp = f.map_pool;
   const maps = el("div", "card ws-6");
-  maps.appendChild(el("h2", "", "Map pool & veto"));
+  maps.appendChild(el("h2", "", "Your map pool & veto"));
   if (mp && mp.veto && (mp.veto.ban || mp.veto.pick)) {
     const vr = el("div", "es-veto");
     if (mp.veto.ban) {
@@ -1725,6 +1725,7 @@ async function openMatchday() {
     maps.appendChild(vr);
   }
   if (mp && mp.maps.length) {
+    maps.appendChild(el("p", "es-scout-lab muted", `${esc(mp.team_name)} — season map record (wins / played)`));
     const bars = el("div", "es-mapbars");
     for (const m of mp.maps.slice(0, 7)) {
       const wr = m.win_rate == null ? 0 : m.win_rate;
@@ -2113,7 +2114,7 @@ async function dashboard(v) {
     }
     // Grounded prose preview.
     if ((fix.preview || []).length) {
-      colL.appendChild(el("p", "es-preview muted", fix.preview.join(" ")));
+      colL.appendChild(el("p", "es-preview muted", fix.preview.map(esc).join(" ")));
     }
     // Map feature — the veto ladder in playoffs, else the map pool thumbs.
     if (fix.veto && fix.veto.length) {
@@ -2206,6 +2207,7 @@ async function dashboard(v) {
         board.appendChild(vr);
       }
       if (mp.maps.length) {
+        board.appendChild(el("span", "es-scout-lab muted", `${esc(mp.team_name)} — season map record (wins / played)`));
         const bars = el("div", "es-mapbars");
         for (const m of mp.maps.slice(0, 7)) {
           const wr = m.win_rate == null ? 0 : m.win_rate;
@@ -2218,7 +2220,7 @@ async function dashboard(v) {
         board.appendChild(bars);
       }
       const wrap = el("div", "es-spot-sub");
-      wrap.appendChild(el("span", "es-scout-lab muted", "Map pool & veto"));
+      wrap.appendChild(el("span", "es-scout-lab muted", "Your map pool & veto"));
       wrap.appendChild(board);
       colR.appendChild(wrap);
     }
@@ -2228,7 +2230,7 @@ async function dashboard(v) {
     if (cols.childElementCount) {
       const intel = el("div", "es-intel");
       intel.appendChild(el("div", "es-intel-head",
-        `<span class="microlabel">Match intelligence</span><span class="muted">Opponent, form, maps and run-in</span>`));
+        `<span class="microlabel">Match intelligence</span><span class="muted">Opponent read, your stakes, maps and run-in</span>`));
       intel.appendChild(cols);
       spot.appendChild(intel);
     }

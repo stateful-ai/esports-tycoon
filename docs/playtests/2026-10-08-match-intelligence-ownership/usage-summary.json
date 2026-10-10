@@ -1,0 +1,26 @@
+{
+  "attempts": 1,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/save": 1,
+    "session_start:": 1,
+    "view:dashboard": 1,
+    "view:lobby": 1,
+    "visible_time:lobby": 1
+  },
+  "malformed_lines": 0,
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 1,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "lobby": 245
+  },
+  "world_events": {
+    "26UHC": 6
+  }
+}

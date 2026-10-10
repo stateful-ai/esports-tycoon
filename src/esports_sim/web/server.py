@@ -2104,7 +2104,9 @@ def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
             "streak_len": h["streak_len"],
             "you_lead": h["wins_a"] > h["wins_b"],
         }
-    view["preview"] = narrative.match_preview(gs, fixture, gs.acting_team_id)
+    view["preview"] = narrative.match_preview(
+        gs, fixture, gs.acting_team_id, named_subject=True,
+    )
     view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id)
     # Who is across the aisle: the opponent's named manager (rival persona
     # or human seat) — name + one-word identity, both public facts.
@@ -3946,7 +3948,10 @@ def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
                 if pick_pick else None
             ),
         }
-    return {"maps": maps, "veto": veto}
+    return {
+        "team_id": tid, "team_name": gs.teams[tid].name,
+        "maps": maps, "veto": veto,
+    }
 
 
 def _team_of_week(gs: GameState, n: int = 5) -> dict:

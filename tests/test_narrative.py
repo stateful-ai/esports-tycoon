@@ -552,3 +552,23 @@ def test_match_debrief_reads_last_result_and_box_score():
 def test_match_debrief_empty_without_a_played_match():
     from esports_sim.manager.narrative import match_debrief
     assert match_debrief(_gs(fixtures=[], week=1), "nxs") == {}
+
+def test_match_preview_named_subject_preserves_default_and_state():
+    from esports_sim.manager.narrative import match_preview
+    from esports_sim.manager.state import TeamRecord
+    gs = _gs([
+        _played_fixture("one", 1, "nxs", "vgd", "nxs"),
+        _played_fixture("two", 2, "nxs", "vgd", "nxs"),
+        Fixture(id="next", week=3, team_a="nxs", team_b="vgd", maps=["bind"]),
+    ], week=3)
+    gs.standings = {tid: TeamRecord() for tid in gs.teams}
+    before = gs.model_dump_json()
+    generic = match_preview(gs, gs.fixtures[-1], "nxs")
+    named = match_preview(gs, gs.fixtures[-1], "nxs", named_subject=True)
+    assert generic == ["They arrive on a 2-match winning run.",
+                       "They've won all 2 meetings this season.",
+                       "Three points here tighten their grip on a top-four berth."]
+    assert named == ["Nexus arrive on a 2-match winning run.",
+                     "Nexus have won all 2 meetings this season.",
+                     "Three points here tighten Nexus's grip on a top-four berth."]
+    assert gs.model_dump_json() == before
