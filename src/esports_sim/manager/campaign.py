@@ -128,6 +128,7 @@ class WeekReport:
     # reads income_by/expenses_by for the manager actually being served.
     income_by: dict[str, int] = field(default_factory=dict)
     expenses_by: dict[str, int] = field(default_factory=dict)
+    facility_upkeep_by: dict[str, int] = field(default_factory=dict)
     user_income: int = 0
     user_expenses: int = 0
     notes: list[str] = field(default_factory=list)
@@ -862,8 +863,13 @@ def advance_week(
         fx = gs.team_fixture(tid)
         won = bool(fx and fx.winner_id == tid)
         sponsor_delta = sponsors.settle_demands(gs, week_dressed)
-        sponsor_delta += sponsors.weekly_tick(gs, won)
+        settlement = sponsors.weekly_settlement(gs, won)
+        sponsor_delta += settlement.income
         report.income_by[tid] = report.income_by.get(tid, 0) + sponsor_delta
+        report.facility_upkeep_by[tid] = settlement.facility_upkeep
+        report.expenses_by[tid] = (
+            report.expenses_by.get(tid, 0) + settlement.facility_upkeep
+        )
         sponsors.maybe_offer(gs, week_rng)
         sponsors.maybe_demand(
             gs,

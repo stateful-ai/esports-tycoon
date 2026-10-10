@@ -1,0 +1,23 @@
+{
+  "advance_response": {
+    "season": 1,
+    "week": 10,
+    "user_income": 110732,
+    "user_expenses": 48600,
+    "user_facility_upkeep": 1500
+  },
+  "report_readback": {
+    "season": 1,
+    "week": 10,
+    "user_income": 110732,
+    "user_expenses": 48600,
+    "user_facility_upkeep": 1500
+  },
+  "finances_readback": {
+    "balance": 395538,
+    "last_week_income": 110732,
+    "last_week_expenses": 48600,
+    "last_week_facility_upkeep": 1500
+  },
+  "report_net": 62132
+}
