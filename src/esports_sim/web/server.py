@@ -2685,6 +2685,10 @@ def _club_view(gs: GameState) -> dict:
     if fixture is not None:
         opponent = fixture.team_b if fixture.team_a == tid else fixture.team_a
     prep = preparation.view(gs, tid)
+    if prep["last"] is not None:
+        pid = prep["last"].get("dev_suggestion_player_id", "")
+        player = gs.players.get(pid)
+        prep["last"]["dev_suggestion_handle"] = player.handle if player else ""
     partners = [
         {"id": other, "name": gs.teams[other].name}
         for other in sorted(gs.teams)
@@ -6494,6 +6498,10 @@ def _last_prep_artifact(gs: GameState, tid: str) -> dict | None:
         ),
         "dev_suggestion": getattr(rep, "dev_suggestion", "") or "",
         "dev_suggestion_player_id": getattr(rep, "dev_suggestion_player_id", "") or "",
+        "dev_suggestion_handle": (
+            gs.players[rep.dev_suggestion_player_id].handle
+            if rep.dev_suggestion_player_id in gs.players else ""
+        ),
     }
 
 
