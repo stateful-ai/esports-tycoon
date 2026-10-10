@@ -3293,7 +3293,9 @@ def roster(team_id: str) -> dict:
         )
         # Starter flags + (for a deep own roster) the upcoming fixture's per-map
         # dressed lineups, so the UI can pick who plays each map.
-        starters = set(default_five(gs, team_id))
+        effective_lineup = default_five(gs, team_id)
+        starters = set(effective_lineup)
+        saved_starters = set(team.lineup_ids) & starters
         for v in players:
             v["starter"] = v["id"] in starters
         upcoming = None
@@ -3340,6 +3342,14 @@ def roster(team_id: str) -> dict:
             "players": players,
             "is_user_team": team_id == gs.acting_team_id,
             "lineup_ids": list(gs.teams[team_id].lineup_ids),
+            # The picker displays the same resolved default as the header and
+            # starter flags. Retain raw preferences separately for compatibility;
+            # roster churn can leave a partial saved pick that the campaign tops up.
+            "effective_lineup_ids": list(effective_lineup),
+            "default_lineup_selection": {
+                "saved_count": len(saved_starters),
+                "automatic_count": len(starters - saved_starters),
+            } if own else None,
             "roster_min": market.ROSTER_MIN,
             "roster_max": market.roster_cap(gs, team_id),
             "upcoming": upcoming,

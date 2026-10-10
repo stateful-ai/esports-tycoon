@@ -3562,7 +3562,11 @@ function mapLineupCard(data) {
   // Default five.
   const dflt = el("div", "lineup-block");
   dflt.appendChild(el("h3", "", "Default five"));
-  dflt.appendChild(chipRow(data.lineup_ids ?? [], async (ids) => {
+  const selection = data.default_lineup_selection;
+  if (selection?.automatic_count) {
+    dflt.appendChild(el("p", "muted", `${selection.saved_count} saved picks · ${selection.automatic_count} automatically selected. Save five to lock this selection.`));
+  }
+  dflt.appendChild(chipRow(data.effective_lineup_ids ?? [], async (ids) => {
     if (ids.length && ids.length !== 5) { toast("pick exactly 5 (or none for auto)"); return; }
     const r = await api("/api/actions/lineup", { lineup_ids: ids });
     toast(r.message); renderApp();

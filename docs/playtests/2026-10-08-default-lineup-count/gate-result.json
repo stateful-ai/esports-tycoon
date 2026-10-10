@@ -1,0 +1,19 @@
+{
+  "result": {
+    "exit_code": 0,
+    "finished": "2026-10-08T21:58:09.605157+00:00"
+  },
+  "pytest_summary": "1208 passed in 2247.98s (0:37:27)",
+  "frozen_manifest": {
+    "started": "2026-10-08T21:20:40.925957+00:00",
+    "head": "26b9281357e74de1bdc7beffe5d5660fe05e47b4",
+    "files": {
+      "src/esports_sim/web/server.py": "04d2b5a8f6d181fbccde4e0c92b92fb527c7cf0a84e0a5e5003e368693d4e662",
+      "src/esports_sim/web/static/app.js": "ab2d6c52c02126b8c831027938a0678d52518c70befbd7a3d3c9b025b8de21cc",
+      "tests/test_web_default_lineup.py": "f9492ec76be1f02f811a35c0f69a5f0beb88f48b61201151c58c823795bbb301"
+    }
+  },
+  "source_hashes_reverified_before_publication": true,
+  "incoming_main": "121e55ed (PR353 presentation changes in separate state/dashboard regions)",
+  "acceptance_scope": "26b9281 plus gap15 patch; no new-main browser acceptance claimed"
+}

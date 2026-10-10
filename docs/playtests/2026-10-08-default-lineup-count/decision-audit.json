@@ -1,0 +1,83 @@
+{
+  "baseline_actions": 20,
+  "baseline_snapshots": 4,
+  "end_actions": 24,
+  "end_snapshots": 4,
+  "new_decisions": [
+    {
+      "index": 20,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "fa_0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 21,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "126000",
+        "no_transfer": "False",
+        "player_id": "fa_0",
+        "release_fee": "28000",
+        "role": "bench",
+        "salary": "4000",
+        "status": "accepted",
+        "stream_share": "70",
+        "weeks": "58"
+      },
+      "source": "web"
+    },
+    {
+      "index": 22,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agents": "False",
+        "default_five": "True",
+        "fixture_id": "",
+        "map_id": "",
+        "per_map": "False"
+      },
+      "source": "web"
+    },
+    {
+      "index": 23,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_lineup",
+      "params": {
+        "agents": "False",
+        "default_five": "True",
+        "fixture_id": "",
+        "map_id": "",
+        "per_map": "False"
+      },
+      "source": "web"
+    }
+  ],
+  "csv_mapping": {
+    "2": 20,
+    "3": 21,
+    "6": 22,
+    "7": 23
+  },
+  "lineup_parameter_gap": "set_lineup captures flags, not exact selected IDs; persisted public/save readbacks provide selection evidence"
+}
