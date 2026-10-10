@@ -1,0 +1,9 @@
+{
+  "frozen_head": "d8e3dcaf40e52ff14585daf5967c01cfda90b7e4",
+  "tested_parent": "063452905f69edd85ea866d0278ce609494308a9",
+  "frozen_files": 544,
+  "covered_tracked_source_data_tests": 544,
+  "missing": [],
+  "mismatches": [],
+  "verified_package_path": "C:\\Users\\aidan\\.codex\\worktrees\\dashboard-standing-scouting\\ESports Simulator\\src\\esports_sim\\__init__.py"
+}

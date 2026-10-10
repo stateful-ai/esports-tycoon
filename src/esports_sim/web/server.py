@@ -2132,7 +2132,9 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
     progress = round(gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0), 2)
     playbook = round(scouting.team_playbook_read(gs, team_id, opponent), 2)
     measured = progress > 0 or playbook > 0
-    ready = progress >= 0.5 or playbook >= 0.5
+    # Matchday identity and counter reads unlock from team scouting depth.
+    # Playbook confidence remains useful measured intel, not that unlock.
+    ready = gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0) >= 0.5
     source = "Standing pro lane" if standing else "Deep dive" if deep_dive else None
     if assigned and not measured:
         badge, status = "Scouting assigned", "Assigned"
@@ -2146,7 +2148,9 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
         copy = (f"{source} covers this fixture. " if assigned else
                 "Stored intel is available, but no assignment covers this fixture. ")
         copy += (f"Scouting depth {round(progress * 100)}%; "
-                 f"playbook read {round(playbook * 100)}%. Review verified reads before finalizing the plan.")
+                 f"playbook read {round(playbook * 100)}%. ")
+        copy += ("Review verified reads before finalizing the plan." if ready else
+                 "Opponent identity and counter reads unlock at 50% scouting depth.")
     else:
         badge = "Scout elsewhere" if target or pro["directive"] else "Scouting unassigned"
         status = "Unassigned"

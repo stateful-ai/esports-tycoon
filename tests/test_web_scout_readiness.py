@@ -3,7 +3,7 @@ import pytest
 from esports_sim.manager import new_campaign
 from esports_sim.web import server
 
-@pytest.mark.parametrize('progress,playbook', [(0,0),(.34,.85)])
+@pytest.mark.parametrize('progress,playbook', [(0,0),(.34,.85),(.499,.85),(.5,0)])
 def test_standing_coverage_without_deep_dive(game_data, progress, playbook):
     gs = new_campaign(game_data, seed=2038, user_team_id='team_nexus')
     tid = gs.acting_team_id
@@ -19,7 +19,12 @@ def test_standing_coverage_without_deep_dive(game_data, progress, playbook):
     assert view['assigned'] and view['source'] == 'Standing pro lane'
     assert 'Unassigned' not in view['status']
     assert view['measured'] == bool(progress or playbook)
-    assert view['ready'] == bool(playbook)
+    assert view['ready'] == (progress >= .5)
+    assert (view['tone'] == 'ready') == (progress >= .5)
+    counter = server._gameplan_counter_reads(gs, fix, None)
+    assert view['ready'] == counter['opponent_revealed']
+    if progress and progress < .5:
+        assert 'unlock at 50% scouting depth' in view['copy']
     if not progress:
         assert view['status'] == 'Assigned'
         assert 'No measured intel yet' in view['copy']
