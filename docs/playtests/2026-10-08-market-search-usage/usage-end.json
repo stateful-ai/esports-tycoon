@@ -1,0 +1,46 @@
+{
+  "sessions": 4,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/new": 1,
+    "interaction:lobby/seed_change": 1,
+    "interaction:market/player_search": 3,
+    "result:/api/actions/save": 1,
+    "result:/api/new": 1,
+    "session_start:": 4,
+    "view:club/squad": 1,
+    "view:dashboard": 4,
+    "view:lobby": 4,
+    "view:market/players": 4,
+    "visible_time:club/squad": 1,
+    "visible_time:dashboard": 5,
+    "visible_time:lobby": 5,
+    "visible_time:market/players": 7
+  },
+  "visible_ms": {
+    "club/squad": 576,
+    "dashboard": 30671,
+    "lobby": 3247,
+    "market/players": 8042
+  },
+  "outcomes": {
+    "/api/actions/save:success": 1,
+    "/api/new:success": 1
+  },
+  "attempts": 2,
+  "paired_results": 2,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "world_events": {
+    "S9FSG": 38,
+    "lobby": 5
+  },
+  "observed_session_span_ms": {
+    "03b2463322f58ed1aaf43915cab55a97": 5891,
+    "353f586148dd050901521159990d506c": 0,
+    "76f68ae3f7eb7b903918ea5afa8cb4e7": 886,
+    "cdcb123a429bcba97091813b44bd1a05": 27890
+  },
+  "malformed_lines": 0,
+  "retention_bytes": 8388608
+}
