@@ -1,0 +1,424 @@
+ESPORTSSIM
+Season 1 · Week 9 · Regular — Team Nexus
+451,764 cr
+CODE 26UHC ⧉ · 0/1 READY
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX15
+MATCH2
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+CLUB
+Team Nexus · 6/10
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+TEAM TRAINING FOCUS
+
+The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+
+Mechanical
+Tactical
+Mental
+Team
+Rest
+Delegate to Coach
+Keep choosing the weekly focus yourself
+PLAYER	AGE	OVR	CEILING	FORM	CONFIDENCE	DEV FOCUS	LANGUAGE	INTENSITY	MENTOR
+Apex IGL	26	78.3	★★★½
+▼
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Vortex	22	74.7	★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Ghost 🎓	19	76.5	★★★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+
+no mentor
+🎓 Apex (teach 73)
+🎓 Slyblade (teach 62)
+🎓 Hollowlock (teach 38)
+0% complete
+
+Slyblade	28	72.3	★★★½
+▼
+▼
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Echo 	23	76	★★★
+
+
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+Hollowlock 	26	63.1	★★
+▲
+▲
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+
+light
+normal
+intense
+	—
+SQUAD PROFILE
+
+Average age 24
+
+Youth ≤21
+1
+Prime 22–26
+4
+Veteran 27+
+1
+SCOUTING BOOK
+
+Balanced
+
+LOCKER ROOM
+
+No standout duos or feuds.
+
+COMMS 58 shared languages feed chemistry.
+
+FUTURE OF THE ORG
+
+Where the roster is trending — risers, milestones and the prospects behind them.
+
+RISERS
+Ghost 19
+CA +1.0
+Echo 23
+CA +0.5
+MILESTONES
+ACADEMY STANDOUTS
+Nightsurge 17
+pot 65–99
+CA 48
+Grimpulse 20
+pot 63–92
+CA 46
+Pyroecho 17
+pot 53–85
+CA 42
+Nightecho 19
+pot 57–82
+CA 47
+Voltflare 22
+pot 56–75
+CA 49
+PROSPECT UPDATES
+
+No new scouting movement.
+
+TALENT PIPELINE
+
+The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+
+YOUTH INTAKE 0
+
+Empty
+
+ACADEMY 5
+Nightsurge
+17
+—
+48
+Grimpulse
+20
+—
+46
+Pyroecho
+17
+—
+42
+Nightecho
+19
+—
+47
+Voltflare
+22
+—
+49
+BENCH 1
+Echo
+23
+76
+STARTERS 5
+Apex
+26
+78
+Vortex
+22
+75
+Slyblade
+28
+72
+Hollowlock
+26
+63
+Ghost
+19
+77
+DEVELOPMENT REPORT
+
+Season 1 · Week 0 to Week 8
+
+SQUAD OVR +0.3
+4 GROWN
+0 REGRESSED
+2 STEADY
+PLAYER	TRACKED	START	NOW	CHANGE	SKILLS CHANGED	LATEST WEEK: WHY IT CHANGED
+Ghost	W0–W8 · 9 pts	75.5	76.5	+1.0
+UTILITY USAGE +3.6
+POSITIONING +2.0
+AIM PRECISION +1.8
+AIM REACTIVITY +1.1
+COMMS QUALITY +0.5
+GAME SENSE +0.4
+COMPOSURE +0.3
+CLUTCH FACTOR +0.2
+
+MATCHES +0.09 OVR
+S1 W8 · Rest / light · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+
+Echo	W0–W8 · 9 pts	75.5	76.0	+0.5
+CLUTCH FACTOR +3.0
+COMPOSURE +2.0
+
+No measured skill gains
+S1 W8 · Rest / light · 0 maps · Settling
+Individual recovery: practice paused, match experience retained
+
+Vortex	W0–W8 · 9 pts	74.5	74.7	+0.2
+COMMS QUALITY +0.7
+COMPOSURE +0.6
+GAME SENSE +0.6
+UTILITY USAGE +0.3
+POSITIONING +0.1
+
+MATCHES +0.01 OVR
+S1 W8 · Rest / normal · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+
+Hollowlock	W5–W8 · 4 pts	63.0	63.1	+0.1
+POSITIONING +0.6
+
+PRACTICE +0.01 OVR
+MATCHES UNDER 0.01 OVR
+S1 W8 · Tactical / normal · 1 maps · Struggling
+Poor match performances are slowing learning; useful practice still counts
+Tired legs are reducing practice quality; ease intensity or rest
+Coaching and club support are improving practice
+
+Apex	W0–W8 · 9 pts	78.3	78.3	0.0
+AIM PRECISION +0.2
+AIM REACTIVITY +0.1
+
+MATCHES UNDER 0.01 OVR
+S1 W8 · Rest / light · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+
+Slyblade	W1–W8 · 8 pts	72.3	72.3	0.0
+POSITIONING +0.1
+
+No measured skill gains
+S1 W8 · Rest / normal · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.

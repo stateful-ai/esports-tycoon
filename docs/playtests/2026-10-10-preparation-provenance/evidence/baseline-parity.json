@@ -1,0 +1,43 @@
+[
+  {
+    "objective": "anti_exec",
+    "changed_report_fields": [
+      "dev_suggestion"
+    ],
+    "all_mechanics_and_rng_identical": true,
+    "candidate_id": "echo",
+    "old_advice": "Echo pushed the starters on ascent; a focused development block could make that rotation real.",
+    "new_advice": "Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  {
+    "objective": "retakes",
+    "changed_report_fields": [
+      "dev_suggestion"
+    ],
+    "all_mechanics_and_rng_identical": true,
+    "candidate_id": "echo",
+    "old_advice": "Echo pushed the starters on ascent; a focused development block could make that rotation real.",
+    "new_advice": "Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  {
+    "objective": "lineup_test",
+    "changed_report_fields": [
+      "finding",
+      "dev_suggestion"
+    ],
+    "all_mechanics_and_rng_identical": true,
+    "candidate_id": "echo",
+    "old_advice": "Echo pushed the starters on ascent; a focused development block could make that rotation real.",
+    "new_advice": "Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  {
+    "objective": "mental_reset",
+    "changed_report_fields": [
+      "dev_suggestion"
+    ],
+    "all_mechanics_and_rng_identical": true,
+    "candidate_id": "echo",
+    "old_advice": "Echo pushed the starters on ascent; a focused development block could make that rotation real.",
+    "new_advice": "Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  }
+]
