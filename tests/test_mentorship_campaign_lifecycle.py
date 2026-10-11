@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from esports_sim.manager import campaign, development, mentorship
+from esports_sim.manager.decision_env import HeadlessManagerEnv, InvalidManagerAction
 from esports_sim.manager.state import GameState
 
 
@@ -185,3 +186,73 @@ def test_lifecycle_visits_pairs_in_stable_id_order(world):
     with patch("esports_sim.manager.locker_room.get_hierarchy_role", side_effect=hierarchy):
         mentorship.tick_mentorship(gs, apply_rewards=False)
     assert seen == sorted([protege, second])
+
+
+def mentor_action(protege, mentor=""):
+    return {"kind": "mentor", "params": {"protege_id": protege, "mentor_id": mentor}}
+
+
+def test_manager_clear_reassign_resets_saved_program(world, game_data, tmp_path):
+    gs, protege, mentor = world
+    env = HeadlessManagerEnv(gs, game_data)
+    gs.mentorship_progress[protege] = 95.0
+    env.step(mentor_action(protege))
+    assert protege not in gs.mentorships
+    assert protege not in gs.mentorship_progress
+    path = tmp_path / "cleared.json"
+    gs.save(path)
+    loaded = GameState.load(path)
+    HeadlessManagerEnv(loaded, game_data).step(mentor_action(protege, mentor))
+    assert loaded.mentorship_progress[protege] == 0.0
+    advance(loaded, game_data)
+    assert loaded.mentorships[protege] == mentor
+    assert loaded.mentorship_progress[protege] == 5.0
+
+
+def test_manager_replacement_does_not_complete_from_previous_95_percent(world, game_data, tmp_path):
+    gs, protege, _ = world
+    replacement = gs.teams[gs.user_team_id].player_ids[2]
+    gs.players[replacement].age = 28
+    gs.players[replacement].attributes = {key: 90.0 for key in gs.players[replacement].attributes}
+    gs.mentorship_progress[protege] = 95.0
+    env = HeadlessManagerEnv(gs, game_data)
+    assert {"protege_id": protege, "mentor_id": replacement} in env.observe()["legal_actions"]["mentor"]["pairs"]
+    env.step(mentor_action(protege, replacement))
+    assert gs.mentorship_progress[protege] == 0.0
+    path = tmp_path / "replacement.json"
+    gs.save(path)
+    loaded = GameState.load(path)
+    advance(loaded, game_data)
+    assert loaded.mentorships[protege] == replacement
+    assert loaded.mentorship_progress[protege] == 5.0
+
+
+def test_repeating_same_legal_manager_pair_preserves_progress(world, game_data):
+    gs, protege, mentor = world
+    gs.mentorship_progress[protege] = 40.0
+    env = HeadlessManagerEnv(gs, game_data)
+    assert env.observe()["observation_version"] == 8
+    assert {"protege_id": protege, "mentor_id": mentor} in env.observe()["legal_actions"]["mentor"]["pairs"]
+    env.step(mentor_action(protege, mentor))
+    assert gs.mentorship_progress[protege] == 40.0
+
+
+def test_manager_admission_keeps_older_higher_ability_contract(world, game_data):
+    gs, protege, mentor = world
+    gs.mentorships.clear()
+    gs.mentorship_progress.clear()
+    # Manager/MCP eligibility deliberately differs from web's veteran/youth
+    # admission. Do not impose the web's 25/20 ages on this version-8 mask.
+    gs.players[mentor].age = 24
+    gs.players[protege].age = 22
+    env = HeadlessManagerEnv(gs, game_data)
+    pair = {"protege_id": protege, "mentor_id": mentor}
+    assert pair in env.observe()["legal_actions"]["mentor"]["pairs"]
+    env.step(mentor_action(protege, mentor))
+    assert gs.mentorship_progress[protege] == 0.0
+    gs.mentorship_progress[protege] = 40.0
+    gs.players[mentor].attributes = {key: 40.0 for key in gs.players[mentor].attributes}
+    before = gs.model_dump_json()
+    with pytest.raises(InvalidManagerAction):
+        env.step(mentor_action(protege, mentor))
+    assert gs.model_dump_json() == before

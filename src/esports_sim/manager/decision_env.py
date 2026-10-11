@@ -672,7 +672,14 @@ class HeadlessManagerEnv:
                     raise InvalidManagerAction("protege is not on the roster")
                 if not mentor:
                     self.gs.mentorships.pop(protege, None)
+                    self.gs.mentorship_progress.pop(protege, None)
                 elif development.mentorship_valid(self.gs, protege, mentor):
+                    # A changed assignment starts a new program; repeating
+                    # the same legal pair preserves its accumulated progress.
+                    if self.gs.mentorships.get(protege) != mentor:
+                        self.gs.mentorship_progress[protege] = 0.0
+                    else:
+                        self.gs.mentorship_progress.setdefault(protege, 0.0)
                     self.gs.mentorships[protege] = mentor
                 else:
                     raise InvalidManagerAction("mentor must be an older, higher-rated teammate")
