@@ -664,6 +664,11 @@ def manager_observation(
             if opponent_id in gs.teams
             else None
         )
+        prep_view = preparation.view(gs, team_id)
+        if prep_view["last"] is not None:
+            # Save-only provenance guides the public projection, but is not
+            # part of the version-8 policy/trace observation contract.
+            prep_view["last"].pop("dev_suggestion_basis", None)
         return {
             "observation_version": OBSERVATION_VERSION,
             "manager_profile": dict(sorted((manager_profile or {}).items())),
@@ -678,7 +683,7 @@ def manager_observation(
             "club": {
                 "market_window": market.market_window_status(gs),
                 "academy": academy.academy_view(gs, team_id),
-                "preparation": preparation.view(gs, team_id),
+                "preparation": prep_view,
                 "culture": culture.culture_snapshot(gs, team_id),
                 "delegation": delegation.view(gs, team_id),
                 "media": media_events.view(gs, team_id),
