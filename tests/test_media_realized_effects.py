@@ -93,6 +93,31 @@ def test_zero_missing_target_and_negative_cap(campaign):
     assert campaign.media_history_by[tid][-1].immediate_effects.sentiment.delta == 0
 
 
+@pytest.mark.parametrize("announce", [False, True])
+def test_measured_feedback_is_private_to_the_resolving_club(campaign, announce):
+    tid, fixture = queue(campaign)
+    rival = next(team_id for team_id in campaign.teams if team_id != tid)
+    # The active context can belong to another manager during weekly settlement.
+    campaign.set_acting(rival)
+    public_before = list(campaign.news)
+    rival_before = list(campaign.private_news_by.get(rival, []))
+    ok, message, _ = media_events.resolve(campaign, tid, "respect_rival", announce=announce)
+    assert ok and "Immediate MEDIA effect" in message
+    if announce:
+        assert "Immediate MEDIA effect" in campaign.private_news_by[tid][-1]
+        assert len(campaign.news) == len(public_before) + 1
+    else:
+        assert campaign.news == public_before
+        assert not campaign.private_news_by.get(tid)
+    settle(campaign, fixture)
+    assert "Result settlement MEDIA effect" in campaign.private_news_by[tid][-1]
+    assert all("MEDIA effect" not in line and "Player trust:" not in line
+               and "Sponsor relations:" not in line for line in campaign.news)
+    assert campaign.private_news_by.get(rival, []) == rival_before
+    assert media_events.view(campaign, tid)["history"][-1]["effect_feedback"]
+    assert not media_events.view(campaign, rival)["history"]
+
+
 @pytest.mark.parametrize("base,delta,after,actual", [(99, 3, 100, 1), (1, -3, 0, -1), (50, 0, 50, 0)])
 def test_each_target_measures_caps_and_noop(campaign, base, delta, after, actual):
     tid = campaign.user_team_id

@@ -317,7 +317,8 @@ def resolve(
     culture.register_choice(gs, team_id, "media", event.type_id, choice_id, event.player_id)
     feedback = summary + " Immediate MEDIA effect: " + effect_feedback(measured)
     if announce:
-        gs.push_news(feedback)
+        gs.push_news(summary)
+        gs.push_private_news(feedback, owner=team_id)
     del gs.media_events_by[team_id]
     return True, feedback, {
         "sentiment": sent, "sponsor_relation": actual_sponsor, "trust": trust_delta
@@ -357,7 +358,11 @@ def settle_commitments(gs: "GameState", report) -> None:
                 decision.trust_delta += trust_delta
                 decision.settlement_effects = measured
                 break
-        gs.push_news(settlement + " Result settlement MEDIA effect: " + effect_feedback(measured))
+        gs.push_news(settlement)
+        gs.push_private_news(
+            settlement + " Result settlement MEDIA effect: " + effect_feedback(measured),
+            owner=team_id,
+        )
         del gs.media_commitments_by[team_id]
 
 
