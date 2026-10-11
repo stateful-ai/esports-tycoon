@@ -72,6 +72,35 @@ def test_legacy_inbox_projection_withholds_private_target_and_preserves_history(
     assert item.body == original
 
 
+def test_aged_legacy_report_labels_current_reconstruction_not_historical_read(game_data):
+    gs = new_campaign(game_data, seed=707)
+    report = _report(gs)
+    report.dev_suggestion_player_id = report.participant_ids[-1]
+    report.dev_suggestion = "Old target has ~21 points of untapped ceiling."
+    saved = report.model_dump(mode="json")
+    gs.season = report.season + 1
+    gs.week = 2
+    for pid in report.participant_ids:
+        gs.players[pid].age = 25
+    current_youth = report.participant_ids[1]
+    gs.players[current_youth].age = 23
+
+    public = preparation.public_report(gs, report)
+    assert public["season"] == saved["season"]
+    assert public["week"] == saved["week"]
+    assert public["dev_suggestion_player_id"] == current_youth
+    assert "Reconstructed legacy lead using current public ages" in public["dev_suggestion"]
+    assert "not the session's original recommendation" in public["dev_suggestion"]
+    assert "At current age 23" in public["dev_suggestion"]
+    assert report.model_dump(mode="json") == saved
+
+    gs.players[current_youth].age = 24
+    public = preparation.public_report(gs, report)
+    assert public["dev_suggestion_player_id"] == ""
+    assert public["dev_suggestion"] == ""
+    assert report.model_dump(mode="json") == saved
+
+
 def test_public_reports_keep_recorded_lead_and_map_mastery_legacy(game_data):
     gs = new_campaign(game_data, seed=707)
     report = _report(gs)

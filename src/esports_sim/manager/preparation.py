@@ -439,7 +439,14 @@ def public_dev_suggestion(gs: "GameState", report: PrepReport) -> tuple[str, str
         return "", ""
     if report.dev_suggestion.startswith("Map mastery projects "):
         return report.dev_suggestion_player_id, report.dev_suggestion
-    return _youth_development_lead(gs, report.participant_ids)
+    pid, text = _youth_development_lead(gs, report.participant_ids)
+    if not text:
+        return pid, text
+    return pid, (
+        "Reconstructed legacy lead using current public ages of the recorded "
+        "participants; this is not the session's original recommendation. "
+        + text.replace("At age ", "At current age ", 1)
+    )
 
 
 def public_report(gs: "GameState", report: PrepReport) -> dict:
