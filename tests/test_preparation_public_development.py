@@ -1,5 +1,7 @@
 """Development leads must not reveal hidden PA, including legacy reports."""
 
+import pytest
+
 from esports_sim.manager import preparation, inbox
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.decision_env import manager_observation
@@ -50,7 +52,8 @@ def test_legacy_projection_replaces_hidden_ranked_id_without_mutating_save(game_
     assert public["dev_suggestion_player_id"] == report.participant_ids[0]
     assert "~21" not in public["dev_suggestion"]
     assert report.model_dump(mode="json") == saved
-    assert manager_observation(gs, game_data, report.team_id)["club"]["preparation"]["last"] == public
+    expected_policy = {k: v for k, v in public.items() if k != "dev_suggestion_basis"}
+    assert manager_observation(gs, game_data, report.team_id)["club"]["preparation"]["last"] == expected_policy
     for pid in report.participant_ids:
         gs.players[pid].potential = 99
     assert preparation.view(gs, report.team_id)["last"] == public
@@ -116,3 +119,45 @@ def test_public_reports_keep_recorded_lead_and_map_mastery_legacy(game_data):
     assert preparation.public_dev_suggestion(gs, report) == (
         report.dev_suggestion_player_id, report.dev_suggestion,
     )
+
+
+@pytest.mark.parametrize("basis", ["", "age", "map_mastery"])
+def test_version_8_prep_observation_omits_save_provenance_without_mutation(game_data, basis):
+    gs = new_campaign(game_data, seed=707)
+    report = _report(gs)
+    report.dev_suggestion_basis = basis
+    report.dev_suggestion_player_id = report.participant_ids[-1]
+    report.dev_suggestion = (
+        "Old target has ~21 points of untapped ceiling." if not basis
+        else "Recorded public development lead."
+    )
+    gs.preparation_reports_by[report.team_id] = report
+    saved = gs.model_dump_json()
+    public = preparation.view(gs, report.team_id)["last"]
+    obs = manager_observation(gs, game_data, report.team_id)
+    last = obs["club"]["preparation"]["last"]
+
+    assert obs["observation_version"] == 8
+    # Explicit pre-provenance report contract: adding another field must not
+    # silently widen the versioned observation again.
+    assert set(last) == {
+        "plan_id", "team_id", "fixture_id", "opponent_id", "partner_id",
+        "map_id", "objective", "intensity", "season", "week", "status",
+        "finding_code", "finding", "evidence", "participant_ids",
+        "knowledge_key", "knowledge_gain", "stamina_cost", "morale_delta",
+        "chemistry_delta", "artifact_label", "prep_edge_contribution",
+        "dev_suggestion_player_id", "dev_suggestion",
+    }
+    assert last == {k: v for k, v in public.items() if k != "dev_suggestion_basis"}
+    assert public["dev_suggestion_basis"] == basis
+    assert report.model_dump(mode="json")["dev_suggestion_basis"] == basis
+    if not basis:
+        assert last["dev_suggestion_player_id"] == report.participant_ids[0]
+        assert "~21" not in last["dev_suggestion"]
+        assert "untapped ceiling" not in last["dev_suggestion"]
+        assert "age-based" in last["dev_suggestion"]
+    else:
+        assert last["dev_suggestion_player_id"] == report.dev_suggestion_player_id
+        assert last["dev_suggestion"] == report.dev_suggestion
+    assert preparation.view(gs, report.team_id)["last"] == public
+    assert gs.model_dump_json() == saved
