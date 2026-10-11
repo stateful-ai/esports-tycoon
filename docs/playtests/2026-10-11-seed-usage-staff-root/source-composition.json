@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-11T17:55:50.273178+00:00",
+  "base": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "head": "a2393e2f770ec5112f8bce3cc992f15b5fb19fb0",
+  "tree": "2c4e7ee31293a166e129afbb2f73f46f9892c4f0",
+  "parents": [
+    "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+    "f66bb54da65b426cd88b66821951a0482c406504"
+  ],
+  "delta_paths": [
+    "docs/playtests/lobby-seed-preview-gap.md",
+    "src/esports_sim/web/static/app.js",
+    "src/esports_sim/web/static/draft.js",
+    "tests/lobby_seed_preview_check.cjs",
+    "tests/test_lobby_seed_preview_frontend.py"
+  ],
+  "exact_independently_reviewed_computed_tree": true,
+  "clean": true,
+  "local_tests_launched": false,
+  "runtime_claim": false
+}

@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-10-11T17:44:04.963655+00:00",
+  "old_rows": 1204,
+  "new_rows": 1212,
+  "old_sha256": "6fd06d9ab4cf838e3e1e65aab5bac47bd4573ab8e9a489aceacf2af8f8b13add",
+  "new_sha256": "377127a0d23dd0c3019d964d2e6fa3f67c518ba05d8735ba39f6f18a68e551e4",
+  "old_raw_prefix_exact": true,
+  "old_all_25284_fields_exact": true,
+  "added_rows": 8,
+  "sessions": 112,
+  "columns": 21,
+  "local_tests_launched": false,
+  "publication": "local staged; remote1044/finite4141120 unchanged"
+}

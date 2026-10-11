@@ -1,0 +1,342 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Phantom Core
+  - generic: 269,034 cr
+  - button "Save" [active]
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W2 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Match preparation" [level=2]
+  - paragraph: "Current squad condition: Pyrofade 77.6 · Staticpulse 84.2 · Zephyrbyte 57.5 · Wraithhawk 74.5 · Blitzzero 67.6."
+  - paragraph: "Next: Hokkaido Drift vs Phantom Core · week 2"
+  - generic: Sparring partner
+  - combobox "Sparring partner":
+    - option "Adriatic Sirens" [selected]
+    - option "Alpine Echo"
+    - option "Apex Syndicate"
+    - option "Baltic Meridian"
+    - option "Bayou Kings"
+    - option "Berlin Wolves"
+    - option "Busan Tempest"
+    - option "Cascadia Youth"
+    - option "Chao Phraya Owls"
+    - option "Coral Sea Drakes"
+    - option "Crimson Order"
+    - option "Gallic Storm"
+    - option "Ghostline"
+    - option "Harbour City Nine"
+    - option "Highlands Nine"
+    - option "Iron Pact"
+    - option "Jakarta Ravens"
+    - option "Kathmandu Apex"
+    - option "Kraken Unit"
+    - option "Lisbon Tide"
+    - option "Manila Monsoon"
+    - option "Mekong Vipers"
+    - option "Midnight Polders"
+    - option "Mumbai Meteors"
+    - option "Team Nexus"
+    - option "Nordic Frost"
+    - option "Nova Rift"
+    - option "Outback Sentinels"
+    - option "Patagonia Sur"
+    - option "Prairie Signal"
+    - option "Rust Belt Gaming"
+    - option "Sahara Compass"
+    - option "Saracen Guard"
+    - option "Seoul Dynasty Prime"
+    - option "Solar Flare"
+    - option "Taipei Circuit"
+    - option "Tokyo Drift Six"
+    - option "Team Vanguard"
+    - option "Volga Reign"
+    - option "Yucatan Ceibas"
+  - generic: Preparation map
+  - combobox "Preparation map":
+    - option "Lotus" [selected]
+  - generic: Session objective
+  - combobox "Session objective":
+    - option "Anti Exec" [selected]
+    - option "Retakes"
+    - option "Lineup Test"
+    - option "Mental Reset"
+  - generic: Session intensity
+  - combobox "Session intensity":
+    - option "Light" [selected]
+    - option "Normal"
+    - option "Intense"
+  - paragraph: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Book session"
+  - generic: Coach proposal
+  - generic: Anti Exec on Lotus
+  - paragraph: "Partner: Busan Tempest. Intensity: Normal."
+  - paragraph: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Accept coach plan"
+  - text: "Prep artifact: bind anti-exec book +0.8"
+  - generic: +0.0 edge
+  - text: Knowledge +0.75; stamina −1.5.
+  - paragraph: No bind sample exists for the opponent; the anti-exec read is provisional.
+  - generic: "Dev note: Team Phantom Core P3 — Wraithhawk has ~21 points of untapped ceiling; a targeted development focus would compound these reps."
+  - heading "Tournament six" [level=2]
+  - paragraph: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+  - 'checkbox "Pyrofade 19 · Promised squad role: Starter" [checked]'
+  - generic: Pyrofade
+  - generic: "19 · Promised squad role: Starter"
+  - 'checkbox "Staticpulse 18 · Promised squad role: Starter" [checked]'
+  - generic: Staticpulse
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Zephyrbyte 20 · Promised squad role: Starter" [checked]'
+  - generic: Zephyrbyte
+  - generic: "20 · Promised squad role: Starter"
+  - 'checkbox "Wraithhawk 18 · Promised squad role: Starter" [checked]'
+  - generic: Wraithhawk
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Blitzzero 17 · Promised squad role: Starter" [checked]'
+  - generic: Blitzzero
+  - generic: "17 · Promised squad role: Starter"
+  - button "Submit roster"
+  - heading "Series plan" [level=2]
+  - paragraph: Set a between-map response that applies after map one when its condition is met.
+  - paragraph: No upcoming best-of-three is on the calendar.
+- generic: World saved.
+- tooltip "Save Save your campaign":
+  - heading "Save" [level=4]
+  - generic: Save your campaign
+- button "Close profile": ✕
+- text: Wraithhawk
+- generic: Rookie
+- generic: Initiator
+- generic: Support
+- generic "nationality": AU
+- generic "spoken languages (fluency)": EN 94
+- generic: age 18
+- generic "social reach": 14.5K followers
+- generic "long tenure builds loyalty — affects transfer asks and renewals": 76w at club
+- generic "development plan": auto · normal
+- generic "View team":
+  - generic: Phantom Core
+- generic: 13w left · 3,700 cr/wk
+- generic: 70% streams · 44,000 cr release · 178,000 cr buyout · starter
+- button "Change role/style…"
+- button "Make IGL"
+- button "Scout development"
+- generic: "51"
+- generic: OVR
+- generic: ★½
+- generic: 58–61
+- generic: Current ability
+- generic: 100 comfort
+- generic: 38–72
+- generic: Potential
+- generic: peak forecast
+- generic: "56"
+- generic: Form
+- generic: "79"
+- generic: Morale
+- generic: "75"
+- generic: Condition
+- generic: "53"
+- generic: Confidence
+- generic: drives duels & nerve
+- generic: 83,000 cr
+- generic: Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Attributes" [level=3]
+- generic: Aim Precision
+- text: "40"
+- generic "projected outcome range for this skill": →62.1–81.1
+- generic: Aim Reactivity
+- text: "45"
+- generic "projected outcome range for this skill": →57.4–74.4
+- generic: Clutch Factor
+- text: "47"
+- generic "projected outcome range for this skill": →63.3–83
+- generic: Comms Quality
+- text: "53"
+- generic "projected outcome range for this skill": →63.8–83.7
+- generic: Composure
+- text: "59"
+- generic "projected outcome range for this skill": →61.7–80.7
+- generic: Game Sense
+- text: "59"
+- generic "projected outcome range for this skill": →60.1–78.4
+- generic: Movement
+- text: "36"
+- generic "projected outcome range for this skill": →58.6–76.1
+- generic: Positioning
+- text: "59"
+- generic "projected outcome range for this skill": →59.2–76.9
+- generic: Tilt Resistance
+- text: "48"
+- generic "projected outcome range for this skill": →63.1–82.7
+- generic: Utility Usage
+- text: "69"
+- generic "projected outcome range for this skill": →69–82.7
+- heading "Traits" [level=3]
+- generic "born for the 1vX": Clutch Gene
+- generic "belongs to the supporters": Fan Favorite
+- heading "Agent pool" [level=3]
+- generic "Role & playstyle comfort grows as this player settles into an assignment; a fresh role/style resets it low.":
+  - generic: Role comfort
+  - generic: "100"
+- generic: Sova
+- generic: "71"
+- generic: Skye
+- generic: "46"
+- generic: Tejo
+- generic: "45"
+- generic: Gekko
+- generic: "43"
+- generic: KAY/O
+- generic: "40"
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- generic: "0.60"
+- generic: Rating
+- generic: "0.52"
+- generic: K/D
+- generic: "5"
+- generic: "FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 1 matches · 11 / 21 / — K / D / A
+- generic: ACS by week
+- text: Kills &amp; deaths by week
+- text: K
+- text: D
+- img "Kills and deaths by week":
+  - 'generic "S1·W1: 11 kills"'
+  - 'generic "S1·W1: 21 deaths"'
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over recorded observations
+- text: CA
+- text: Conf
+- img "Ability and confidence over time":
+  - 'generic "S1·W0: CA 51.0 / conf 50"'
+  - 'generic "S1·W1: CA 51.5 / conf 53"'
+  - generic: "55"
+  - generic: "48"
+- paragraph: CA 51.0 to 51.5 · S1 W0 to S1 W1 · 1 elapsed week· 2 recorded observations
+- generic: Latest recorded week · S1 W1
+- paragraph: Tactical · Normal · 1 senior map this week · Settling
+- generic "Game Sense +1.00 / Positioning +2.06 / Utility Usage +0.47": Practice +0.35 OVR
+- generic "Aim Precision +0.40 / Aim Reactivity +0.40 / Comms Quality +0.09 / Composure +0.02 / Game Sense +0.05 / Positioning +0.06": Senior matches +0.10 OVR
+- generic "No recorded skill gains from this source": Bench scrims 0.00 OVR
+- generic "No recorded skill gains from this source": Career events 0.00 OVR
+- generic "No recorded skill gains from this source": Badges 0.00 OVR
+- generic "Latest-week skill breakdown"
+- paragraph: No badge changes this week
+- paragraph: Tactical practice reinforces skills used in matches
+- generic: Season 1 skill growth · S1 W0 to S1 W1
+- generic: Positioning this season
+- img "Positioning trajectory this season":
+  - 'generic "S1·W0: 56.6"'
+  - 'generic "S1·W1: 58.7"'
+  - generic: "58.7"
+  - generic: "56.6"
+- button "Positioning 59+2.1 ▲":
+  - generic: Positioning
+  - text: "59"
+  - generic "change from S1 W0 to S1 W1": +2.1 ▲
+- button "Game Sense 59+1.1 ▲":
+  - generic: Game Sense
+  - text: "59"
+  - generic "change from S1 W0 to S1 W1": +1.1 ▲
+- button "Utility Usage 69+0.5 ▲":
+  - generic: Utility Usage
+  - text: "69"
+  - generic "change from S1 W0 to S1 W1": +0.5 ▲
+- button "Aim Precision 40+0.4 ▲":
+  - generic: Aim Precision
+  - text: "40"
+  - generic "change from S1 W0 to S1 W1": +0.4 ▲
+- button "Aim Reactivity 45+0.4 ▲":
+  - generic: Aim Reactivity
+  - text: "45"
+  - generic "change from S1 W0 to S1 W1": +0.4 ▲
+- button "Comms Quality 53+0.1 ▲":
+  - generic: Comms Quality
+  - text: "53"
+  - generic "change from S1 W0 to S1 W1": +0.1 ▲
+- button "Clutch Factor 470.0 —":
+  - generic: Clutch Factor
+  - text: "47"
+  - generic "change from S1 W0 to S1 W1": 0.0 —
+- button "Composure 590.0 —":
+  - generic: Composure
+  - text: "59"
+  - generic "change from S1 W0 to S1 W1": 0.0 —
+- heading "Relationships" [level=3]
+- generic "Neutral · strength 52":
+  - text: Pyrofade
+  - generic: Neutral
+- generic "Neutral · strength 52":
+  - text: Blitzzero
+  - generic: Neutral
+- generic "Neutral · strength 51":
+  - text: Staticpulse
+  - generic: Neutral
+- generic "Neutral · strength 51":
+  - text: Zephyrbyte
+  - generic: Neutral
+- heading "Career" [level=3]
+- generic: "1"
+- generic: Seasons
+- generic: "1"
+- generic: Maps
+- generic: "11"
+- generic: Kills
+- generic: "0.52"
+- generic: K/D
+- generic: "0"
+- generic: Honours
+- generic: "0"
+- generic: MVPs
+- generic: "0"
+- generic: All-Star
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Pyrofade"
+  - option "Staticpulse"
+  - option "Zephyrbyte"
+  - option "Blitzzero"

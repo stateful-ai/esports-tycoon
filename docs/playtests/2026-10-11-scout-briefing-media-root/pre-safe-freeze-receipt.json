@@ -1,0 +1,31 @@
+{
+  "phase": "pre",
+  "utc": "2026-10-11T18:24:19.581662+00:00",
+  "checkout": "C:\\Users\\aidan\\.codex\\worktrees\\staff-profile-employment\\ESports Simulator",
+  "head": "754f525ce5f13636034a951a43e6da7346953df9",
+  "tree": "0b37a6329db0e7780d9a21bde7e320d2b70669d5",
+  "parents": [
+    "754f525ce5f13636034a951a43e6da7346953df9 99e6477aa129c0411dc869c3decfc31792f8dad2 6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71 0b37a6329db0e7780d9a21bde7e320d2b70669d5",
+    "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71 732d21cc4512b702a2e9b9f18a0c096d7e7c20c5 b3883b104e07946cf11f0515cea8da2bce7ab6ec",
+    "732d21cc4512b702a2e9b9f18a0c096d7e7c20c5 83cd64d1d15b066c17cb392c483f21b870356831 743b014d0c9bee5449fe60d225af5c863e8e92f7"
+  ],
+  "index_raw_sha256": "0a1d98ef6c6ec3228168578746e8e470036fe1f3543bdf9a41b7220ede8c3ef7",
+  "index_stage_sha256": "23e37e43dd67fbe1c910ce752007846ca79f486d6920a2ba0bfb631ad439b180",
+  "tracked_files": 3563,
+  "source_files": 707,
+  "tracked_blob_mismatches": [],
+  "source_scope": [
+    "src/**",
+    "data/**",
+    "assets/**",
+    "ui/**",
+    "telemetry/**"
+  ],
+  "excluded_generated_source": [
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ],
+  "private_save_files": 4,
+  "source_status": "",
+  "all_local_tests_validators_sims_gates_reports": "SKIPPED by user instruction"
+}

@@ -1,0 +1,212 @@
+{
+  "at_utc": "2026-10-11T19:05:00.409722+00:00",
+  "head": "d04096e29491d6acb380d0ae1bf9b4771bd84f67",
+  "tree": "37bd5bfb24c79baa93528da11ed0e4496a2cb038",
+  "actual_played_base": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "combined427_428": true,
+  "excluded358_419_420_421_422_423_424": true,
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "7K7GL",
+  "seed": 2071,
+  "saved_week": 4,
+  "saved_balance": 203015,
+  "tracked_files": 3565,
+  "source_files": 707,
+  "raw_Git_exact": 2392,
+  "CRLF_only": 1173,
+  "actual_raw_prepost_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_decisions": 6,
+  "new_accepted_decisions": 2,
+  "total_decisions": 8,
+  "decisions": [
+    {
+      "index": 6,
+      "csv_step": 7,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_game_plan",
+        "params": {
+          "aggression": "",
+          "choice_encoding": "json-v1",
+          "eco_greed": "",
+          "fixture_id": "s1w3m0emt2",
+          "focus_target": "",
+          "map_control": "",
+          "n_dials": "0",
+          "one_match_lineup": "False",
+          "opponent": "team_patagonia_sur",
+          "pace": "",
+          "site_focus": "",
+          "starter_ids": "[]",
+          "team_talk": "reassure",
+          "util_discipline": ""
+        }
+      }
+    },
+    {
+      "index": 7,
+      "csv_step": 10,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "full_params_team_source_order_verified": true,
+  "prior_decision_prefix_exact": true,
+  "baseline_snapshot_records": 2,
+  "total_snapshot_records": 3,
+  "prior_snapshot_prefix_exact": true,
+  "save_before_sha256": "f7b8e3f9e1196e3633e1eaa660a185e701870fbb2cdb31991aafa809414d49dd",
+  "save_after_sha256": "1b6c253006360b48a527d1f4edce64930d9fd33c86fb21ca54eb37ed52a2aae9",
+  "plan_consumed": true,
+  "baseline_usage": 0,
+  "retained_usage": 56,
+  "world_events": 49,
+  "null_world_events": 7,
+  "private_page_sessions": 2,
+  "distinct_from_prior_play": true,
+  "kind_counts": {
+    "session_start": 2,
+    "view": 10,
+    "visible_time": 31,
+    "session_end": 1,
+    "interaction": 6,
+    "attempt": 3,
+    "result": 3
+  },
+  "request_pairs": [
+    {
+      "target": "/api/actions/gameplan",
+      "csv_step": 7,
+      "status": 200,
+      "attempt_index": 30,
+      "result_index": 31
+    },
+    {
+      "target": "/api/actions/advance",
+      "csv_step": 10,
+      "status": 200,
+      "attempt_index": 45,
+      "result_index": 47
+    },
+    {
+      "target": "/api/actions/save",
+      "csv_step": 12,
+      "status": 200,
+      "attempt_index": 53,
+      "result_index": 54
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 20,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T18:59:53.992942+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 22,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:00:08.991239+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 24,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T19:00:23.994043+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 25,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:00:23.994043+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 35,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T19:01:08.994125+00:00",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 36,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:01:08.994125+00:00",
+      "csv_step_from_observed_UI_order": 8
+    }
+  ],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 11,
+      "target": "lobby",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 13,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 16,
+      "target": "season/league",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 19,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 27,
+      "target": "tactics/gameplan",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 34,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 38,
+      "target": "tactics/gameplan",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 41,
+      "target": "stats/leaders",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 51,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 11
+    }
+  ],
+  "three_actual_briefing_intervals_retained": true,
+  "no_advance_briefing_interaction": true,
+  "static_pre_auth_end_separate_and_exact": true,
+  "owned_tab12_closed_user8421_untouched": true,
+  "owned8566_stopped_and_zero_listeners_observed": true,
+  "local_tests_launched": false,
+  "qualification": "Combined427/428 actual acceptance. Dashboard5th correct Challengers before and after13-8win, fulltable corroborates. Three briefings open/close retained for Continue/Setplan/Reviewplan. Reassure/No target/book defaults independently reopened. First lobby/disabledseat blocked, auth-only exact test companion recovery preserved campaign. One session_end belongs reloadpage, not finalsession. No attention/exactduration/fullfunnel/causalvictory claims. No standalone latestmain/new358 acceptance. Initial frozen-read formatting script failed print(indent) before emitting receipt; corrected fresh read and this independent audit retain honest provenance."
+}

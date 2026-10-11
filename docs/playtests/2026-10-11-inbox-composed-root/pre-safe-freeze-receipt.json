@@ -1,0 +1,31 @@
+{
+  "phase": "pre",
+  "utc": "2026-10-11T16:45:57.026808+00:00",
+  "checkout": "C:\\Users\\aidan\\workspace\\esports-inbox-composed-acceptance",
+  "head": "ce71dea2f6854b66850e93d4a06c083ea261eeb3",
+  "tree": "8567f146e35dbd659d22d5bd1642759701072a78",
+  "parents": [
+    "ce71dea2f6854b66850e93d4a06c083ea261eeb3 5d10581fa7ef68a9ec961797dc7709be3efe6c60 eaac8f3852f737ae3eab2f1e1f07ccdcd0854da4 8567f146e35dbd659d22d5bd1642759701072a78",
+    "5d10581fa7ef68a9ec961797dc7709be3efe6c60 d38b09d1c3ba6378cecf669e6229e162a4c0e4cd 5674bad4ac3ca15794f12d2020ed1f47ad92ba04 6679f4e5e260825bc16c83ce20e8e6f836562605",
+    "d38b09d1c3ba6378cecf669e6229e162a4c0e4cd b9ec161f85d8dcca1152fd3d1b874c1afec77980 da2207febaf8bf577e7c49650449cf54ab9a59cc 9fda35192a33e3b81d230e71e68c95aef4c7ad1a"
+  ],
+  "index_raw_sha256": "395bc9691f0121b8a1a3882f66db88472660ccd10fd4e7b2e618625726133632",
+  "index_stage_sha256": "3262eefac885f2b5a2fe33c3665cf4267193a3c1e72980961bb43dc3bf3420b5",
+  "tracked_files": 3555,
+  "source_files": 707,
+  "tracked_blob_mismatches": [],
+  "source_scope": [
+    "src/**",
+    "data/**",
+    "assets/**",
+    "ui/**",
+    "telemetry/**"
+  ],
+  "excluded_generated_source": [
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ],
+  "private_save_files": 0,
+  "source_status": "",
+  "all_local_tests_validators_sims_gates_reports": "SKIPPED by user instruction"
+}

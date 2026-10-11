@@ -1,0 +1,51 @@
+- banner:
+  - generic: ESPORTSSIM
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main
+- heading "Play" [level=1]
+- button "New campaign"
+- button "Create shared campaign"
+- button "Join campaign"
+- link "Roster Studio":
+  - /url: /roster-studio.html
+- link "Map Studio":
+  - /url: /map-studio.html
+- paragraph: Pick your organisation. Seed controls the generated league.
+- text: Seed
+- spinbutton "Seed"
+- button "Fictional world" [active]
+- button "VCT 2021"
+- button "VCT 2026"
+- generic: Game mode
+- button "Sandbox"
+- button "Legacy career"
+- paragraph: Pick any organisation and manage it forever. No contracts, no sack race - the classic game.
+- generic: Rosters
+- button "Existing rosters"
+- button "Fantasy draft"
+- generic: Scenario
+- button "Standard start"
+- button "Insolvent giant"
+- button "Youth project"
+- button "Crisis club"
+- button "Superteam headache"
+- status: Updating organisations…
+- tooltip

@@ -1,0 +1,131 @@
+{
+  "at_utc": "2026-10-11T16:53:32.438458+00:00",
+  "head": "ce71dea2f6854b66850e93d4a06c083ea261eeb3",
+  "tree": "8567f146e35dbd659d22d5bd1642759701072a78",
+  "base": "b9ec161f85d8dcca1152fd3d1b874c1afec77980",
+  "PR_heads": [
+    418,
+    419,
+    420
+  ],
+  "acceptance_scope": "local composed candidate; not actual-main integration or standalone PR runtime",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "REWKH",
+  "seed": 2039,
+  "saved_week": 2,
+  "saved_balance": 508816,
+  "frozen_tracked_files": 3555,
+  "frozen_source_files": 707,
+  "raw_git_exact_files": 2385,
+  "CRLF_only_files": 1170,
+  "all_actual_prepost_raw_hashes_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_actions": 0,
+  "accepted_decisions": 1,
+  "decision_csv_step": 2,
+  "decision_full_params_team_source_order_verified": true,
+  "baseline_snapshot_records": 0,
+  "snapshot_records": 1,
+  "save_before_sha256": "265229bef27ce98c7c726571adb8d71f92a4c542b1f38b01cff17fab623378bc",
+  "save_after_sha256": "875f2d04313e05ec85a877b551a930e8f3c1b8404c35baa28d9cba4604aeecfc",
+  "baseline_usage_events": 12,
+  "retained_usage_events": 39,
+  "new_usage_after_baseline": 27,
+  "retained_world_events": 34,
+  "retained_null_world_events": 5,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 5,
+    "visible_time": 16,
+    "attempt": 5,
+    "result": 5,
+    "interaction": 7
+  },
+  "request_pairs": [
+    {
+      "attempt_index": 3,
+      "result_index": 5,
+      "target": "/api/new",
+      "csv_step": 1,
+      "status": 200
+    },
+    {
+      "attempt_index": 13,
+      "result_index": 15,
+      "target": "/api/actions/advance",
+      "csv_step": 2,
+      "status": 200
+    },
+    {
+      "attempt_index": 21,
+      "result_index": 22,
+      "target": "/api/inbox/read",
+      "csv_step": 3,
+      "status": 200
+    },
+    {
+      "attempt_index": 34,
+      "result_index": 35,
+      "target": "/api/inbox/read",
+      "csv_step": 6,
+      "status": 200
+    },
+    {
+      "attempt_index": 37,
+      "result_index": 38,
+      "target": "/api/actions/save",
+      "csv_step": 7,
+      "status": 200
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 8,
+      "target": "handbook/open",
+      "received_at": "2026-10-11T16:49:42.600049+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 9,
+      "target": "handbook/section_first_week",
+      "received_at": "2026-10-11T16:49:42.600049+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 12,
+      "target": "handbook/close",
+      "received_at": "2026-10-11T16:50:12.795671+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 20,
+      "target": "inbox/item_open",
+      "received_at": "2026-10-11T16:50:51.431936+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 24,
+      "target": "inbox/item_close",
+      "received_at": "2026-10-11T16:51:12.598343+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 26,
+      "target": "inbox/item_open",
+      "received_at": "2026-10-11T16:51:27.597458+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 30,
+      "target": "inbox/shortcut_club",
+      "received_at": "2026-10-11T16:51:42.595415+00:00",
+      "csv_step_from_observed_UI_order": 5
+    }
+  ],
+  "Inbox_interactions": 4,
+  "Inbox_read_pairs": 2,
+  "local_tests_launched": false,
+  "qualification": "received_at is server batch-receipt time, not client occurrence time. shortcut_club arrived after CSV step5 finished; its mapping uses observed UI and event order, never rewritten timestamps. No session_end retained; counts are bounded best-effort, not complete funnels, attention or causal outcome evidence."
+}

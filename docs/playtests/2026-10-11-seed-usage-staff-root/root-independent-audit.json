@@ -1,0 +1,260 @@
+{
+  "at_utc": "2026-10-11T18:11:44.741192+00:00",
+  "head": "a2393e2f770ec5112f8bce3cc992f15b5fb19fb0",
+  "tree": "2c4e7ee31293a166e129afbb2f73f46f9892c4f0",
+  "candidate_base": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "acceptance_scope": "genuine main6fd+PR424 (including421) composed candidate; no standalone/latest-main claim",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "7K7GL",
+  "seed": 2071,
+  "saved_week": 2,
+  "saved_balance": 166850,
+  "frozen_tracked_files": 3563,
+  "frozen_source_files": 707,
+  "raw_git_exact_files": 2392,
+  "CRLF_only_files": 1171,
+  "all_actual_prepost_raw_hashes_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_actions": 0,
+  "accepted_decisions": 3,
+  "decisions": [
+    {
+      "index": 0,
+      "csv_step": 8,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "hire_staff",
+        "params": {
+          "candidate_id": "vct_slk"
+        }
+      }
+    },
+    {
+      "index": 1,
+      "csv_step": 11,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_scout_directive",
+        "params": {
+          "directive": "scout_opponents",
+          "lane": "pro"
+        }
+      }
+    },
+    {
+      "index": 2,
+      "csv_step": 12,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "decision_full_params_team_source_order_verified": true,
+  "baseline_snapshot_records": 0,
+  "snapshot_records": 1,
+  "save_before_sha256": "df139f365dce00e347788368e2806bd7429aaf91ba4e3f621dd4ae35a9995293",
+  "save_after_sha256": "04ecb00ed07dd466e2658131396c9b59deb12f83b65d36e87f62c191b6525209",
+  "standing_opponent_directive_saved": true,
+  "hired_analyst_saved": true,
+  "standing_opponent_depth": 0.5,
+  "legacy_oneoff_target_empty": true,
+  "baseline_usage_events": 22,
+  "retained_usage_events": 92,
+  "new_usage_after_baseline": 70,
+  "retained_world_events": 77,
+  "retained_null_world_events": 15,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 10,
+    "visible_time": 61,
+    "interaction": 10,
+    "attempt": 5,
+    "result": 5
+  },
+  "request_pairs": [
+    {
+      "attempt_index": 13,
+      "result_index": 15,
+      "target": "/api/new",
+      "csv_step": 4,
+      "status": 200
+    },
+    {
+      "attempt_index": 59,
+      "result_index": 60,
+      "target": "/api/actions/hire_staff",
+      "csv_step": 8,
+      "status": 200
+    },
+    {
+      "attempt_index": 73,
+      "result_index": 74,
+      "target": "/api/actions/scout-directive",
+      "csv_step": 11,
+      "status": 200
+    },
+    {
+      "attempt_index": 78,
+      "result_index": 80,
+      "target": "/api/actions/advance",
+      "csv_step": 12,
+      "status": 200
+    },
+    {
+      "attempt_index": 89,
+      "result_index": 90,
+      "target": "/api/actions/save",
+      "csv_step": 14,
+      "status": 200
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 3,
+      "target": "lobby/seed_change",
+      "received_at": "2026-10-11T17:57:16.455119+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 6,
+      "target": "lobby/seed_change",
+      "received_at": "2026-10-11T17:57:46.466090+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 9,
+      "target": "lobby/seed_change",
+      "received_at": "2026-10-11T17:58:16.468004+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 18,
+      "target": "handbook/open",
+      "received_at": "2026-10-11T17:59:01.456698+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 19,
+      "target": "handbook/section_first_week",
+      "received_at": "2026-10-11T17:59:01.456698+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 24,
+      "target": "handbook/close",
+      "received_at": "2026-10-11T18:00:01.454335+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 55,
+      "target": "profile/staff_open",
+      "received_at": "2026-10-11T18:05:31.452455+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 57,
+      "target": "profile/staff_close",
+      "received_at": "2026-10-11T18:05:46.451623+00:00",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 66,
+      "target": "profile/staff_open",
+      "received_at": "2026-10-11T18:07:16.450567+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 69,
+      "target": "profile/staff_close",
+      "received_at": "2026-10-11T18:07:46.451299+00:00",
+      "csv_step_from_observed_UI_order": 10
+    }
+  ],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "received_at": "2026-10-11T17:57:01.456761+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 17,
+      "target": "dashboard",
+      "received_at": "2026-10-11T17:59:01.456698+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 26,
+      "target": "club/squad",
+      "received_at": "2026-10-11T18:00:01.454335+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 29,
+      "target": "club/operations",
+      "received_at": "2026-10-11T18:00:16.454688+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 32,
+      "target": "market/players",
+      "received_at": "2026-10-11T18:00:31.454000+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 35,
+      "target": "market/staff",
+      "received_at": "2026-10-11T18:00:46.454150+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 71,
+      "target": "market/scouting",
+      "received_at": "2026-10-11T18:07:46.451299+00:00",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 77,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:08:16.555802+00:00",
+      "csv_step_from_observed_UI_order": 12
+    },
+    {
+      "index": 84,
+      "target": "market/scouting",
+      "received_at": "2026-10-11T18:09:01.463479+00:00",
+      "csv_step_from_observed_UI_order": 13
+    },
+    {
+      "index": 86,
+      "target": "market/staff",
+      "received_at": "2026-10-11T18:09:01.463479+00:00",
+      "csv_step_from_observed_UI_order": 13
+    }
+  ],
+  "seed_interactions": 3,
+  "seed_payload_absent": true,
+  "six_static_assets_200_raw_equal": true,
+  "owned_server_stopped": true,
+  "local_tests_launched": false,
+  "qualification": "Three changed seed values correspond in observed UI order to zero/empty/2071; unchanged refill/blur has no extra retained event. Events omit seed payload; receipt times are batched, so this is coarse sequence correspondence. Negative/race/mode/shared/draft/legacy/authored regressions UNRUN. DOM retained closed staff profile content; screenshots and reopened correct employer invalidate initial visible-defect hypothesis. Dashboard standing warning is known pending358; candidate excludes358. No session_end retained; bounded best-effort usage does not establish complete funnels, attention, exact duration or causal wins."
+}

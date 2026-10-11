@@ -1,0 +1,31 @@
+{
+  "world": "REWKH",
+  "seed": 2039,
+  "played_commit": "27a2ea2f40aec80fed9ec57b04c7d8baf52f1ee9",
+  "learn": [
+    {
+      "observation": "A separate Sandbox world created through the visible lobby allows legitimate ownership and normal sponsor play; the copied occupied26UHC attempt remains blocked historical evidence.",
+      "confidence": "high"
+    },
+    {
+      "observation": "Rest/light persisted and condition19\u219230; the server separately reports paused practice, match+.02 and career-event+.18 OVR. This run does not show rest caused growth or victories.",
+      "confidence": "high"
+    },
+    {
+      "observation": "ClutchgearAudio Peripheral identity matches Company and Dashboard for one actual signed contract; multi-slot duplicate-goal cases remain unrun coverage.",
+      "confidence": "high"
+    }
+  ],
+  "pain": [
+    {
+      "observation": "Head-to-head TeamNexus and TeamVanguard both render TEA although public standings expose NXS/VGD. Agent PR417 fixes public tag identity; fixed-head acceptance pending.",
+      "confidence": "high"
+    },
+    {
+      "observation": "Collapsed Inbox controls appear enabled to accessibility tools although invisible and not pointer-operable. Expanded OpenRoster routes correctly. Agent PR418 handles collapsed exposure and keyboard disclosure; fixed-head acceptance pending.",
+      "confidence": "high"
+    }
+  ],
+  "external_flywheel": "Play MCP/flywheel capabilities unavailable; inherited findings and local replacement retained.",
+  "local_tests_launched": false
+}

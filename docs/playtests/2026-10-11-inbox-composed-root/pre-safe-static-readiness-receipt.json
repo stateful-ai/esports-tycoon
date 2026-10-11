@@ -1,0 +1,40 @@
+{
+  "base_url": "http://127.0.0.1:8561",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "bytes": 12585,
+      "served_sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0",
+      "disk_sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0",
+      "raw_equal": true
+    },
+    {
+      "path": "/inbox.js",
+      "status": 200,
+      "bytes": 24350,
+      "served_sha256": "6dbdafc445cdc740ad1836ad319a3c5104f3e7d1b2a9c1ed4550e85a7ce5a20b",
+      "disk_sha256": "6dbdafc445cdc740ad1836ad319a3c5104f3e7d1b2a9c1ed4550e85a7ce5a20b",
+      "raw_equal": true
+    },
+    {
+      "path": "/usage.js",
+      "status": 200,
+      "bytes": 4504,
+      "served_sha256": "72511115520e19084c5c39602c8f2870c2c30615d76403e1b5d7f4d3b7c523c7",
+      "disk_sha256": "72511115520e19084c5c39602c8f2870c2c30615d76403e1b5d7f4d3b7c523c7",
+      "raw_equal": true
+    },
+    {
+      "path": "/app.css",
+      "status": 200,
+      "bytes": 145158,
+      "served_sha256": "87ec0ba72b214b173abd416dffa4f9573915b5010fd992cde7cf5d0ef4aab364",
+      "disk_sha256": "87ec0ba72b214b173abd416dffa4f9573915b5010fd992cde7cf5d0ef4aab364",
+      "raw_equal": true
+    }
+  ],
+  "world_created": false,
+  "browser_operated": false,
+  "note": "HTTP static readiness only; headers and cookies omitted"
+}

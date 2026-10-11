@@ -1,0 +1,252 @@
+{
+  "at_utc": "2026-10-11T19:33:13.445297+00:00",
+  "scope": "Finite 1263-row append above PR432; only existing curated observations and safe receipts, no feature fixes or new gameplay",
+  "branch": "codex/playtest-history-followup-1263",
+  "parent_head": "ccd06acd7b69b648fa9664436d15aefca1ebc52a",
+  "parent_tree": "ef1eb415b8f982267e283fe2c435f8787c43de91",
+  "observed_origin_main": "fd0df90d5aa691464e67c70e28480451e005d017",
+  "observed_main_rows": 1120,
+  "canonical_csv": {
+    "old_rows": 1249,
+    "new_rows": 1263,
+    "sessions": 116,
+    "columns": 21,
+    "old_raw_prefix_exact": true,
+    "old_all_26229_fields_exact": true,
+    "duplicate_session_step_keys": 0,
+    "old_sha256": "7d59c5440f090bd5dc6f94789852709c1ab7a649c96571d43b5403c3fb5d1218",
+    "sha256": "db5a30d29a92c495e3bed880143f3fead4ba9865671868527fae7f2a4373a606",
+    "bytes": 1862346
+  },
+  "new_rows": {
+    "count": 14,
+    "origin": "docs/playtests/2026-10-11-early-samples-stats-usage-root/actions.csv",
+    "all_294_fields_equal_canonical_suffix": true,
+    "session_ids": [
+      "2026-10-11-early-samples-stats-usage-root"
+    ]
+  },
+  "actual_played_head": "cde009e5221b5cd4f90af8d49d9395004a6c7e3d",
+  "actual_played_tree": "addcdcebba03621eb11d95dda25187fb56eb25d8",
+  "actual_played_base": "0194b426f9c141591959443f44e092ed873e5df4",
+  "acceptance_scope": "Recorded combined427/428/430/431 historical candidate on0194; new Meta repair433 runtimeUNRUN; no latest-main or standalone-head acceptance claim",
+  "recorded_session_coverage": {
+    "new_accepted_decisions": 4,
+    "complete_http200_pairs": 5,
+    "retained_usage_events": 71,
+    "briefing_open_close_pairs": 3,
+    "source": "docs/playtests/2026-10-11-early-samples-stats-usage-root/root-independent-audit.json",
+    "qualification": "Existing recorded audit, not rerun; two changed Stats selections retained with no active/default extras; new tier Meta content gap retained. No final session_end; bounded capture does not prove attention/duration/full funnels/causal victory."
+  },
+  "source_inventory": [
+    {
+      "path": "docs/playtests/actions.csv",
+      "bytes": 1862346,
+      "sha256": "db5a30d29a92c495e3bed880143f3fead4ba9865671868527fae7f2a4373a606"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/actions.csv",
+      "bytes": 17173,
+      "sha256": "8374d9fed15eaba047fb045589814b87910eee1b6aee478b4a3734332af0127d"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/candidate-source-qualification.json",
+      "bytes": 1943,
+      "sha256": "cb7a2ce83cb7ba2446b27d800d6a1f07a9deac1318d129f607336827a12c27bd"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/end-safe-freeze-receipt.json",
+      "bytes": 817,
+      "sha256": "542ebfa5c1504b7f79a6e90f3a822efd90e298cb98a1ab92c1186ef39be4a0c1"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/end-safe-static-readiness-receipt.json",
+      "bytes": 1793,
+      "sha256": "6fa2a2d6970c2640e5f57f7213a8d0674970e3ed1e7ec68e2fd61ef876cbf80d"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/findings.json",
+      "bytes": 771,
+      "sha256": "d9f841aa7231d8474d57e633a9970de91952a54e09390d85910b1a7783f476a9"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/pre-safe-freeze-receipt.json",
+      "bytes": 817,
+      "sha256": "b6f157ea63e66deeb37d5dcdba002312b409c7a2089aadda26784b304a124c9b"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/pre-safe-static-readiness-receipt.json",
+      "bytes": 1793,
+      "sha256": "0e52a85b16cd9aef9cc4a393fa81cbb5b8257230f9249a7ebb46d902da118d0d"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/report.md",
+      "bytes": 6435,
+      "sha256": "1bd268ae05388526f0f82c50665c7a8683cf476a033c84a4518654b488332351"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/root-independent-audit.json",
+      "bytes": 8943,
+      "sha256": "69e1f2df73a6cf8c1c093846b25e772b6bf1af720e014258e9ac0ba215277a2b"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/safe-shutdown-receipt.json",
+      "bytes": 133,
+      "sha256": "5bbf4bfd319a7fb3886796571b8b2e558df460e40b2ccec50df65d3fccece4f9"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step01-resumed.dom.txt",
+      "bytes": 7595,
+      "sha256": "42724f539f97f63d964138907660ed3583d8657aed97afa86d1170c195f0b46e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step02-early-briefing.dom.txt",
+      "bytes": 9342,
+      "sha256": "f6484b097d9430f1ecce40121a458f2a6f4d9024e5fb99e7cbcd839ebf95e13a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step03-stats-default.dom.txt",
+      "bytes": 31602,
+      "sha256": "62bc1b14783572643b24f24eb7e5e72558d8952011a2ff5752cfd7a0c9191a29"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step04-challengers.dom.txt",
+      "bytes": 31501,
+      "sha256": "e0a9b655bf604d001980cd0bbfd16a0acd94fd13ac0702bada96b3a0d8bedc1f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step05-active-control.json",
+      "bytes": 39,
+      "sha256": "2cc74b55f52b2fbf54bd65575f2489660793907aac5d546f7e7bea781a182bad"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step05-unchanged-challengers.dom.txt",
+      "bytes": 31510,
+      "sha256": "c3c5c9a993a3e6d62a48aff62b72346bb1f327cbe2db615a3cc1337cf47b1af8"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step06-challengers-meta.dom.txt",
+      "bytes": 8712,
+      "sha256": "05b578e1945900bdd6b553357e50bbe1fe7e721445881525da27d1a208a61833"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step06-topflight-meta.dom.txt",
+      "bytes": 8712,
+      "sha256": "05b578e1945900bdd6b553357e50bbe1fe7e721445881525da27d1a208a61833"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step07-development.dom.txt",
+      "bytes": 21502,
+      "sha256": "9cde2617db09166344f4d1c6dbb303a5e4a0079cdd86b8ae5d7710c44d62e36d"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step08-independent-readback.dom.txt",
+      "bytes": 21416,
+      "sha256": "09d2708fcba253a67cf463b893df71334ac6bb89adee90558d846eab330d1ed9"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step08-rest-focus.dom.txt",
+      "bytes": 21579,
+      "sha256": "a4a718967969b7b47b405a16fd821a5836e484bd73203624f036cb6ab34b7618"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step08-rest-light.dom.txt",
+      "bytes": 21492,
+      "sha256": "0c4f2c2a0a485b18e6d11e5d5ff25bdbb13b707750ff881c47bdd963eb2dec2e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step09-briefing-reopen.dom.txt",
+      "bytes": 9342,
+      "sha256": "f6484b097d9430f1ecce40121a458f2a6f4d9024e5fb99e7cbcd839ebf95e13a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step09-gameplan.dom.txt",
+      "bytes": 11404,
+      "sha256": "3daacb3420bb1f0a0ef4e9f8444d307cf3615cb1c335d3439ee1354eb7633c2a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step10-independent-controls.json",
+      "bytes": 626,
+      "sha256": "ac8edc87373ae481db7a2cf5cb051ce2af1d681b25836f3cfc3e4faeebe05445"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step10-independent-plan-readback.dom.txt",
+      "bytes": 11541,
+      "sha256": "52dae794d2c98ade91e9fa009370c23f4d31709c4c084c8ac5a961a3408a7c8c"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step10-plan-committed.dom.txt",
+      "bytes": 11515,
+      "sha256": "1c786b1b10860683a6c1be27e486bc9316dbdd122f7694e683f7d66697113ba0"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step11-advance-initial.dom.txt",
+      "bytes": 11787,
+      "sha256": "2d7ad007f7fe111b4c9053bea8f5d974f6f025cd43a5f4d31ce0ff5516ea0905"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step11-match-result-final.dom.txt",
+      "bytes": 11897,
+      "sha256": "6eea6780b19c807d4df86b6f60bfe84d639e50f029d058695aee78cc6e8f7ff8"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step11-match-result.dom.txt",
+      "bytes": 11787,
+      "sha256": "657a1d68c100794260361d72833254275157129bb744081edd9213d67bb70ff3"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step12-settled-dashboard.dom.txt",
+      "bytes": 8140,
+      "sha256": "b9da6b227d2f16259b1b47a94541d9f1db732a0bce2e967b11109b322b6ffd52"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step12-settled-development.dom.txt",
+      "bytes": 21439,
+      "sha256": "3c0b6152f18ce2e97cf9cf50550f202823e258792916f67d5b12c6fafd7a1abb"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step13-three-map-briefing.dom.txt",
+      "bytes": 9585,
+      "sha256": "800e19c239433668293c48f5e55cd484a19fd98cc10a54051540ba7ad70df1bc"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step14-saved.dom.txt",
+      "bytes": 7895,
+      "sha256": "02c25f49731586a7f563798087d66aae2b8c983204fa26db4adcb55f5592f314"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-early-samples-stats-usage-root/step14-saved.png",
+      "bytes": 75221,
+      "sha256": "9952199cc2aec79a51267f9b1f0e04d57d9df08388b763ce81a2ebc2ebf5464b"
+    }
+  ],
+  "append_receipt": {
+    "source": "runs/playtests/append-early-samples-1263.json",
+    "published": "docs/playtests/2026-10-11-history-followup-1263/append-receipt.json",
+    "bytes": 556,
+    "sha256": "b86ac533ac1897d4e8fa32a0c1c624af7b486a64786c51a3a253ce693082ca99"
+  },
+  "private_omissions": [
+    "raw usage JSONL",
+    "full campaign saves",
+    "raw authentication companion or tokens",
+    "private page identifiers",
+    "transport harnesses",
+    "server logs"
+  ],
+  "parent_retention": {
+    "parent_files": 4360,
+    "retained_other_parent_blobs_and_modes": 4359,
+    "only_changed_parent_path": "docs/playtests/actions.csv",
+    "source_and_attributes_unchanged": true
+  },
+  "primary_index_sha256_before": "7cd99c440b1cb14cafc8748ca9278fec33d65ab7bba006a8f37d9243e6469d68",
+  "runtime": {
+    "root_model": "unknown (not exposed)",
+    "root_effort": "unknown (not exposed)",
+    "packaging_child_model": "gpt-6.1-sol",
+    "packaging_child_effort": "medium"
+  },
+  "validation": "Only file/hash/CSV/Git bookkeeping. All local tests, validators, syntax, simulations, gates, application reports and hooks skipped by user instruction. CI UNQUALIFIED.",
+  "git_bytes_policy": "Stage with core.autocrlf=false and compare postcommit raw Git blobs to every copied file. Existing parent files never restaged."
+}

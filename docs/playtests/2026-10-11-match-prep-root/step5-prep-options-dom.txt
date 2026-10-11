@@ -1,0 +1,134 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Phantom Core
+  - generic: 246,900 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W1 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Match preparation" [level=2]
+  - paragraph: "Current squad condition: Pyrofade 92.1 · Staticpulse 98.7 · Zephyrbyte 80.0 · Wraithhawk 89.0 · Blitzzero 82.1."
+  - paragraph: "Next: Alpine Echo vs Phantom Core · week 1"
+  - generic: Sparring partner
+  - combobox "Sparring partner":
+    - option "Adriatic Sirens" [selected]
+    - option "Apex Syndicate"
+    - option "Baltic Meridian"
+    - option "Bayou Kings"
+    - option "Berlin Wolves"
+    - option "Busan Tempest"
+    - option "Cascadia Youth"
+    - option "Chao Phraya Owls"
+    - option "Coral Sea Drakes"
+    - option "Crimson Order"
+    - option "Gallic Storm"
+    - option "Ghostline"
+    - option "Harbour City Nine"
+    - option "Highlands Nine"
+    - option "Hokkaido Drift"
+    - option "Iron Pact"
+    - option "Jakarta Ravens"
+    - option "Kathmandu Apex"
+    - option "Kraken Unit"
+    - option "Lisbon Tide"
+    - option "Manila Monsoon"
+    - option "Mekong Vipers"
+    - option "Midnight Polders"
+    - option "Mumbai Meteors"
+    - option "Team Nexus"
+    - option "Nordic Frost"
+    - option "Nova Rift"
+    - option "Outback Sentinels"
+    - option "Patagonia Sur"
+    - option "Prairie Signal"
+    - option "Rust Belt Gaming"
+    - option "Sahara Compass"
+    - option "Saracen Guard"
+    - option "Seoul Dynasty Prime"
+    - option "Solar Flare"
+    - option "Taipei Circuit"
+    - option "Tokyo Drift Six"
+    - option "Team Vanguard"
+    - option "Volga Reign"
+    - option "Yucatan Ceibas"
+  - generic: Preparation map
+  - combobox "Preparation map":
+    - option "Bind" [selected]
+  - generic: Session objective
+  - combobox "Session objective":
+    - option "Anti Exec" [selected]
+    - option "Retakes"
+    - option "Lineup Test"
+    - option "Mental Reset"
+  - generic: Session intensity
+  - combobox "Session intensity":
+    - option "Light" [selected]
+    - option "Normal"
+    - option "Intense"
+  - paragraph: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Book session"
+  - generic: Coach proposal
+  - generic: Anti Exec on Bind
+  - paragraph: "Partner: Adriatic Sirens. Intensity: Normal."
+  - paragraph: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Accept coach plan"
+  - heading "Tournament six" [level=2]
+  - paragraph: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+  - 'checkbox "Pyrofade 19 · Promised squad role: Starter" [checked]'
+  - generic: Pyrofade
+  - generic: "19 · Promised squad role: Starter"
+  - 'checkbox "Staticpulse 18 · Promised squad role: Starter" [checked]'
+  - generic: Staticpulse
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Zephyrbyte 20 · Promised squad role: Starter" [checked]'
+  - generic: Zephyrbyte
+  - generic: "20 · Promised squad role: Starter"
+  - 'checkbox "Wraithhawk 18 · Promised squad role: Starter" [checked]'
+  - generic: Wraithhawk
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Blitzzero 17 · Promised squad role: Starter" [checked]'
+  - generic: Blitzzero
+  - generic: "17 · Promised squad role: Starter"
+  - button "Submit roster"
+  - heading "Series plan" [level=2]
+  - paragraph: Set a between-map response that applies after map one when its condition is met.
+  - paragraph: No upcoming best-of-three is on the calendar.
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.

@@ -1,0 +1,193 @@
+{
+  "at_utc": "2026-10-11T17:42:42.665776+00:00",
+  "head": "f4a0a08e7e284943d8274a0c7984cfab05fa53c9",
+  "tree": "1059e8519a5e034fc5cb177100a0d04d87beee34",
+  "candidate_base": "732d21cc4512b702a2e9b9f18a0c096d7e7c20c5",
+  "acceptance_scope": "genuine composed PR421/422/423 session; not latest-main or standalone-PR acceptance",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "TTJVS",
+  "world_scope": "Isolated candidate server; same deterministic seed-derived world code as earlier actual-main session does not make the sessions equivalent.",
+  "seed": 2040,
+  "saved_week": 2,
+  "saved_balance": 266600,
+  "frozen_tracked_files": 3567,
+  "frozen_source_files": 707,
+  "raw_git_exact_files": 2392,
+  "CRLF_only_files": 1175,
+  "all_actual_prepost_raw_hashes_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_actions": 0,
+  "accepted_decisions": 2,
+  "decisions": [
+    {
+      "index": 0,
+      "csv_step": 4,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_phantom_core",
+        "team_id": "team_phantom_core",
+        "source": "web",
+        "kind": "set_preparation",
+        "params": {
+          "created_season": "1",
+          "created_week": "1",
+          "fixture_id": "s1w1m0pat2",
+          "id": "1c2532d72479c1d9",
+          "intensity": "light",
+          "map_id": "bind",
+          "objective": "anti_exec",
+          "opponent_id": "team_alpine_echo",
+          "partner_id": "team_adriatic_sirens",
+          "team_id": "team_phantom_core"
+        }
+      }
+    },
+    {
+      "index": 1,
+      "csv_step": 5,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_phantom_core",
+        "team_id": "team_phantom_core",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "decision_full_params_team_source_order_verified": true,
+  "baseline_snapshot_records": 0,
+  "snapshot_records": 1,
+  "save_before_sha256": "be5cb974c10d388dc0bd459c1860296801748affcc31842d57ef02ce3414b99c",
+  "save_after_sha256": "2a6db3b78d9aa527b2fe85f7985f4ccc422294af68dc013d023f26ef9c70aece",
+  "resolved_prep": {
+    "knowledge_gain": 0.75,
+    "stamina_cost": 1.5,
+    "development_basis": "age",
+    "public_handle": "Blitzzero"
+  },
+  "prep_inbox_read_flag_verified": true,
+  "baseline_usage_events": 23,
+  "retained_usage_events": 53,
+  "new_usage_after_baseline": 30,
+  "retained_world_events": 36,
+  "retained_null_world_events": 17,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 6,
+    "visible_time": 33,
+    "attempt": 4,
+    "result": 4,
+    "interaction": 5
+  },
+  "request_pairs": [
+    {
+      "attempt_index": 15,
+      "result_index": 17,
+      "target": "/api/new",
+      "csv_step": 3,
+      "status": 200
+    },
+    {
+      "attempt_index": 31,
+      "result_index": 32,
+      "target": "/api/actions/preparation",
+      "csv_step": 4,
+      "status": 200
+    },
+    {
+      "attempt_index": 34,
+      "result_index": 35,
+      "target": "/api/actions/advance",
+      "csv_step": 5,
+      "status": 200
+    },
+    {
+      "attempt_index": 51,
+      "result_index": 52,
+      "target": "/api/actions/save",
+      "csv_step": 8,
+      "status": 200
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 20,
+      "target": "handbook/open",
+      "received_at": "2026-10-11T17:33:07.374370+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 21,
+      "target": "handbook/section_first_week",
+      "received_at": "2026-10-11T17:33:07.374370+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 25,
+      "target": "handbook/close",
+      "received_at": "2026-10-11T17:33:52.375545+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 39,
+      "target": "profile/player_open",
+      "received_at": "2026-10-11T17:35:07.374478+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 40,
+      "target": "profile/player_close",
+      "received_at": "2026-10-11T17:35:07.374478+00:00",
+      "csv_step_from_observed_UI_order": 6
+    }
+  ],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "received_at": "2026-10-11T17:29:52.389294+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 19,
+      "target": "dashboard",
+      "received_at": "2026-10-11T17:33:07.374370+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 27,
+      "target": "tactics/strategy",
+      "received_at": "2026-10-11T17:33:52.375545+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 29,
+      "target": "tactics/prep",
+      "received_at": "2026-10-11T17:33:52.375545+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 43,
+      "target": "inbox",
+      "received_at": "2026-10-11T17:35:22.371344+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 50,
+      "target": "tactics/prep",
+      "received_at": "2026-10-11T17:36:28.435483+00:00",
+      "csv_step_from_observed_UI_order": 8
+    }
+  ],
+  "six_static_assets_200_raw_equal": true,
+  "owned_server_stopped": true,
+  "local_tests_launched": false,
+  "qualification": "No seed_change, Inbox disclosure/read interaction or session_end retained. Candidate does not include PR419/420 hooks. Views and read flag do not prove per-item usage coverage. received_at is server batch receipt time, not client occurrence. Bounded best-effort counts cannot establish complete funnels, attention, exact duration or causal wins. Negative seeds, races, legacy projections, shared/draft campaigns and authored regressions remain unrun."
+}

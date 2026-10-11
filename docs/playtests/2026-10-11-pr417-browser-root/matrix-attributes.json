@@ -1,0 +1,185 @@
+[
+  {
+    "ariaLabel": null,
+    "link": [],
+    "scope": null,
+    "text": "",
+    "title": null
+  },
+  {
+    "ariaLabel": "Chao Phraya Owls",
+    "link": [],
+    "scope": "col",
+    "text": "CPO",
+    "title": "Chao Phraya Owls"
+  },
+  {
+    "ariaLabel": "Coral Sea Drakes",
+    "link": [],
+    "scope": "col",
+    "text": "CSD",
+    "title": "Coral Sea Drakes"
+  },
+  {
+    "ariaLabel": "Gallic Storm",
+    "link": [],
+    "scope": "col",
+    "text": "GST",
+    "title": "Gallic Storm"
+  },
+  {
+    "ariaLabel": "Harbour City Nine",
+    "link": [],
+    "scope": "col",
+    "text": "HC9",
+    "title": "Harbour City Nine"
+  },
+  {
+    "ariaLabel": "Meridian Cross",
+    "link": [],
+    "scope": "col",
+    "text": "MRC",
+    "title": "Meridian Cross"
+  },
+  {
+    "ariaLabel": "Team Nexus",
+    "link": [],
+    "scope": "col",
+    "text": "NXS",
+    "title": "Team Nexus"
+  },
+  {
+    "ariaLabel": "Outback Sentinels",
+    "link": [],
+    "scope": "col",
+    "text": "OBS",
+    "title": "Outback Sentinels"
+  },
+  {
+    "ariaLabel": "Team Vanguard",
+    "link": [],
+    "scope": "col",
+    "text": "VGD",
+    "title": "Team Vanguard"
+  },
+  {
+    "ariaLabel": "Chao Phraya Owls",
+    "link": [
+      {
+        "ariaLabel": "Chao Phraya Owls",
+        "id": "team_chao_phraya_owls",
+        "tag": "SPAN",
+        "text": "CPO",
+        "title": "Chao Phraya Owls"
+      }
+    ],
+    "scope": "row",
+    "text": "CPO",
+    "title": "Chao Phraya Owls"
+  },
+  {
+    "ariaLabel": "Coral Sea Drakes",
+    "link": [
+      {
+        "ariaLabel": "Coral Sea Drakes",
+        "id": "team_coral_sea_drakes",
+        "tag": "SPAN",
+        "text": "CSD",
+        "title": "Coral Sea Drakes"
+      }
+    ],
+    "scope": "row",
+    "text": "CSD",
+    "title": "Coral Sea Drakes"
+  },
+  {
+    "ariaLabel": "Gallic Storm",
+    "link": [
+      {
+        "ariaLabel": "Gallic Storm",
+        "id": "team_gallic_storm",
+        "tag": "SPAN",
+        "text": "GST",
+        "title": "Gallic Storm"
+      }
+    ],
+    "scope": "row",
+    "text": "GST",
+    "title": "Gallic Storm"
+  },
+  {
+    "ariaLabel": "Harbour City Nine",
+    "link": [
+      {
+        "ariaLabel": "Harbour City Nine",
+        "id": "team_harbour_city_nine",
+        "tag": "SPAN",
+        "text": "HC9",
+        "title": "Harbour City Nine"
+      }
+    ],
+    "scope": "row",
+    "text": "HC9",
+    "title": "Harbour City Nine"
+  },
+  {
+    "ariaLabel": "Meridian Cross",
+    "link": [
+      {
+        "ariaLabel": "Meridian Cross",
+        "id": "team_meridian_cross",
+        "tag": "SPAN",
+        "text": "MRC",
+        "title": "Meridian Cross"
+      }
+    ],
+    "scope": "row",
+    "text": "MRC",
+    "title": "Meridian Cross"
+  },
+  {
+    "ariaLabel": "Team Nexus",
+    "link": [
+      {
+        "ariaLabel": "Team Nexus",
+        "id": "team_nexus",
+        "tag": "SPAN",
+        "text": "NXS",
+        "title": "Team Nexus"
+      }
+    ],
+    "scope": "row",
+    "text": "NXS",
+    "title": "Team Nexus"
+  },
+  {
+    "ariaLabel": "Outback Sentinels",
+    "link": [
+      {
+        "ariaLabel": "Outback Sentinels",
+        "id": "team_outback_sentinels",
+        "tag": "SPAN",
+        "text": "OBS",
+        "title": "Outback Sentinels"
+      }
+    ],
+    "scope": "row",
+    "text": "OBS",
+    "title": "Outback Sentinels"
+  },
+  {
+    "ariaLabel": "Team Vanguard",
+    "link": [
+      {
+        "ariaLabel": "Team Vanguard",
+        "id": "team_vanguard",
+        "tag": "SPAN",
+        "text": "VGD",
+        "title": "Team Vanguard"
+      }
+    ],
+    "scope": "row",
+    "text": "VGD",
+    "title": "Team Vanguard"
+  }
+]

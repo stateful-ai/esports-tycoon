@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0274",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Shipped profile inspection hooks match nested navigation",
+    "problem": "Read-only profile browsing was not separately visible in accepted decision telemetry.",
+    "solution": "Vortex to Team Nexus to Back and Close produced player open-close twice and team once; Career produced manager once. Full saved world stayed byte-identical.",
+    "lesson": "On shipped8563d46 inspection interactions are a separate coarse usage stream, not accepted campaign decisions.",
+    "confidence": "high",
+    "source": "2026-10-11-main369-inspection-hooks exact8563d46 world26UHC seed2038 S2W8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "usage",
+      "profiles",
+      "handbook"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0275",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Handbook section usage is deduplicated and coarse",
+    "problem": "Repeated section activation could inflate usage or leak text.",
+    "solution": "Guide opened Screens, then First week, Screens, Glossary twice, Close. Retained Screens twice and other sections once; no search text or entity IDs in targets.",
+    "lesson": "Same active section is deduplicated; usage target strings record coarse sections while the existing world/team envelope remains.",
+    "confidence": "high",
+    "source": "2026-10-11-main369-inspection-hooks exact8563d46 world26UHC seed2038 S2W8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "usage",
+      "profiles",
+      "handbook"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0276",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Ambiguous accessible names interrupt browser evidence",
+    "problem": "Broad Vortex matched two visible links and Dashboard exact name missed a badge; kernel reset interrupted manager attempt.",
+    "solution": "Preserved partial rows, scoped roster-table identity, recovered a fresh page and used visible unique Career. Retained raw prior responses; first page has no session-end receipt. Corrected inaccurate manager narrative in separate row.",
+    "lesson": "Read live unique control names and retained DOM before claiming outcomes; interrupted page receipt spans are incomplete.",
+    "confidence": "high",
+    "source": "2026-10-11-main369-inspection-hooks exact8563d46 world26UHC seed2038 S2W8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "usage",
+      "profiles",
+      "handbook"
+    ],
+    "kind": "pain-point"
+  }
+]

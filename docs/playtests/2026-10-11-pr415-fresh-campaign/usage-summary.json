@@ -1,0 +1,41 @@
+{
+  "all_retained": 140,
+  "baseline_records": 8,
+  "baseline_event_prefix_preserved": true,
+  "delta_records": 132,
+  "all_world_records": 126,
+  "delta_world_records": 126,
+  "delta_null_world_records": 6,
+  "delta_kind_counts": {
+    "session_start": 1,
+    "view": 17,
+    "visible_time": 93,
+    "attempt": 9,
+    "result": 9,
+    "interaction": 3
+  },
+  "delta_target_counts": {
+    "": 1,
+    "lobby": 5,
+    "/api/new": 2,
+    "dashboard": 25,
+    "handbook/open": 1,
+    "handbook/section_first_week": 1,
+    "handbook/close": 1,
+    "company/finances": 17,
+    "season/league": 10,
+    "/api/actions/advance": 4,
+    "inbox": 12,
+    "club/squad": 24,
+    "/api/negotiation": 4,
+    "club/development": 14,
+    "/api/actions/dev_plan": 4,
+    "/api/actions/sponsor": 2,
+    "company/brand": 3,
+    "/api/actions/save": 2
+  },
+  "attempts": 9,
+  "results": 9,
+  "interaction_records": 3,
+  "caveat": "Bounded best-effort sidecar; null-world events are not inferred as campaign-bound. Root owns actual receipt pairing and original CSV reconciliation."
+}

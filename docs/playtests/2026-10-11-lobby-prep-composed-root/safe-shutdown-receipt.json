@@ -1,0 +1,13 @@
+{
+  "launcher_pid": 29536,
+  "port_has_listener": false,
+  "tree": "1059e8519a5e034fc5cb177100a0d04d87beee34",
+  "listener_pid": 19100,
+  "utc": "2026-10-11T17:37:09.8165106Z",
+  "head": "f4a0a08e7e284943d8274a0c7984cfab05fa53c9",
+  "listener_parent_pid": 29536,
+  "host": "127.0.0.1",
+  "stopped_owned_only": true,
+  "ownership_rechecked": true,
+  "port": 8563
+}

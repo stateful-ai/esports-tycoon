@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T19:32:19.019899+00:00",
+  "old_rows": 1249,
+  "new_rows": 1263,
+  "old_sha256": "7d59c5440f090bd5dc6f94789852709c1ab7a649c96571d43b5403c3fb5d1218",
+  "new_sha256": "db5a30d29a92c495e3bed880143f3fead4ba9865671868527fae7f2a4373a606",
+  "old_raw_prefix_exact": true,
+  "old_all26229_fields_exact": true,
+  "added_rows": 14,
+  "sessions": 116,
+  "columns": 21,
+  "curated_files": 35,
+  "local_tests_launched": false,
+  "publication": "local append only; actualmain1120, finite4251212/4261226/4291237/4321249 unchanged"
+}

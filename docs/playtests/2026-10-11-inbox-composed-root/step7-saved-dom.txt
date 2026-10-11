@@ -1,0 +1,71 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Team Nexus
+  - generic: 508,816 cr
+  - button "Save" [active]
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 2":
+      - text: Club
+      - generic: "2"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - heading "Actionable Items" [level=2]
+  - button "Actionable Items"
+  - button "League Feed"
+  - button "All"
+  - button "Development"
+  - button "Board"
+  - generic: S1 - W1
+  - button "Board Apex's contract expires in 2 weeks W1":
+    - generic: Board
+    - generic: Apex's contract expires in 2 weeks
+    - generic: W1
+  - generic: Apex (igl, age 26) has 2 week(s) left on a 8,000/wk deal. Renew from the roster screen before they walk to free agency.
+  - button: Open Roster
+  - button "Development Coach proposes a scrim on lotus W1":
+    - generic: Development
+    - generic: Coach proposes a scrim on lotus
+    - generic: W1
+  - generic: Coach recommends a anti-execute scrim on lotus before Team Vanguard, partnering with Crimson Order. Accept to book it in one click.
+  - button: Open Tactics
+  - button: Book scrim
+  - heading "This week's priorities" [level=2]
+  - generic: This week's calls
+  - generic "Open item":
+    - generic: "1"
+    - generic: Board
+    - generic: Apex's contract expires in 2 weeks
+    - generic: "84"
+  - generic: S1 - W1
+  - generic "Open item":
+    - generic: Development
+    - generic: Coach proposes a scrim on lotus
+- tooltip "Save Save your campaign":
+  - heading "Save" [level=4]
+  - generic: Save your campaign

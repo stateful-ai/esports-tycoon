@@ -1,0 +1,42 @@
+{
+  "at_utc": "2026-10-11T17:28:41.542177+00:00",
+  "base": "732d21cc4512b702a2e9b9f18a0c096d7e7c20c5",
+  "head": "f4a0a08e7e284943d8274a0c7984cfab05fa53c9",
+  "tree": "1059e8519a5e034fc5cb177100a0d04d87beee34",
+  "parents": [
+    "43f4819527099878adf6678db55aa2c3ea96a875",
+    "411051a08e50fee1c06da98eb27af69ed5552b91"
+  ],
+  "intermediate_head": "43f4819527099878adf6678db55aa2c3ea96a875",
+  "intermediate_parents": [
+    "732d21cc4512b702a2e9b9f18a0c096d7e7c20c5",
+    "741d1ea806a36eeb9edb1146b1db00e7e44f4cad"
+  ],
+  "PR_heads": {
+    "421": "741d1ea806a36eeb9edb1146b1db00e7e44f4cad",
+    "422": "e495bf7dfe2836324cce740846637d680611758c",
+    "423": "411051a08e50fee1c06da98eb27af69ed5552b91"
+  },
+  "delta_paths": [
+    "docs/playtests/2026-10-11-prep-player-identity.md",
+    "docs/playtests/lobby-seed-preview-gap.md",
+    "docs/prep-development-public-evidence.md",
+    "src/esports_sim/manager/inbox.py",
+    "src/esports_sim/manager/preparation.py",
+    "src/esports_sim/web/server.py",
+    "src/esports_sim/web/static/app.js",
+    "src/esports_sim/web/static/draft.js",
+    "tests/lobby_seed_preview_check.cjs",
+    "tests/test_lobby_seed_preview_frontend.py",
+    "tests/test_preparation_public_development.py",
+    "tests/test_web_preparation_identity.py"
+  ],
+  "exact_full_scope_union": true,
+  "all_nonoverlapping_candidate_blobs_exact": true,
+  "all_other_actual_main_blobs_exact": true,
+  "overlapping_app_diff_independently_read": true,
+  "all_app_feature_added_deleted_lines_equal_exact_union": true,
+  "canonical_current_main_CSV_exact": true,
+  "local_tests_launched": false,
+  "runtime_claim": false
+}

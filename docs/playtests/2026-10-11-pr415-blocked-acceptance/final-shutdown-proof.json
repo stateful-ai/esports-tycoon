@@ -1,0 +1,11 @@
+{
+  "other_servers_touched": false,
+  "worker_pid": 22660,
+  "port8558_listener_absent": true,
+  "launcher_absent": true,
+  "worker_absent": true,
+  "launcher_pid": 12924,
+  "child_browser_never_created": true,
+  "root_owned_tab_closed_reported": true,
+  "ownership_verified_before_stop": true
+}

@@ -1,0 +1,33 @@
+{
+  "phase": "end",
+  "utc": "2026-10-11T17:20:00.285685+00:00",
+  "checkout": "C:\\Users\\aidan\\workspace\\esports-match-prep-playtest",
+  "head": "83cd64d1d15b066c17cb392c483f21b870356831",
+  "tree": "4bcc0ca59c7dbc121d3a0feecb0665ebd943af81",
+  "parents": [
+    "83cd64d1d15b066c17cb392c483f21b870356831 b9ec161f85d8dcca1152fd3d1b874c1afec77980 4bcc0ca59c7dbc121d3a0feecb0665ebd943af81",
+    "b9ec161f85d8dcca1152fd3d1b874c1afec77980 8d6315303205e6ebefa425a9015fc5523ccef701 2c276c9b144ca0d706508edca42bac677d9cf3b3",
+    "8d6315303205e6ebefa425a9015fc5523ccef701 db9c6c19453c4020362815eded0e9fc0e717f4ac ebe858ac33b3adfda71fd081378f2f2513bb0fd3"
+  ],
+  "index_raw_sha256": "81f1807c4b50be602c87758954788eb354886edb4d7ab37223eefc63d48d700e",
+  "index_stage_sha256": "511e519829cb054093a049fb0aad7a3a33d86b64af8f90219e2e4e22ad5bbafe",
+  "tracked_files": 3560,
+  "source_files": 707,
+  "tracked_blob_mismatches": [],
+  "source_scope": [
+    "src/**",
+    "data/**",
+    "assets/**",
+    "ui/**",
+    "telemetry/**"
+  ],
+  "excluded_generated_source": [
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ],
+  "private_save_files": 5,
+  "source_status": "",
+  "all_local_tests_validators_sims_gates_reports": "SKIPPED by user instruction",
+  "changed_source_paths": [],
+  "head_tree_index_equal_pre": true
+}

@@ -1,0 +1,7 @@
+{
+  "body": "inbox-body",
+  "item": "inbox-item open",
+  "maxHeight": "500px",
+  "opacity": "1",
+  "pointerEvents": "auto"
+}

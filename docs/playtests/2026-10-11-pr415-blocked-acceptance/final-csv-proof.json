@@ -1,0 +1,16 @@
+{
+  "rows": 2,
+  "steps": [
+    "1",
+    "2"
+  ],
+  "results": [
+    "blocked",
+    "met"
+  ],
+  "original_first_row_unchanged": true,
+  "changed_analytics_fields": [],
+  "final_preannotation_copy_equal": true,
+  "correction_row": "step2 explicitly corrects manager-key/snapshot count and handoff runtime scope",
+  "reconciliation_child_csv_rows_qualification": "final-reconciliation captured before step2 finish, so its child_csv_rows=1; final CSV now contains original blocked row plus correction row"
+}

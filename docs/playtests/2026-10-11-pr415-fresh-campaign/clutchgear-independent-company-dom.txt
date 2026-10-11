@@ -1,0 +1,204 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 3 · Regular — Team Nexus
+  - generic: 528,465 cr
+  - button "Save •"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 1":
+      - text: Club
+      - generic: "1"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Company
+  - button "Finances" [active]
+  - button "Brand"
+  - paragraph: 528,465 cr banked · net +26,775 cr/wk
+  - heading "Sponsorships — marketability 1.27" [level=2]:
+    - text: Sponsorships
+    - generic: — marketability 1.27
+  - generic: open
+  - generic: Title
+  - generic: no active deal — no suitors yet
+  - generic: open
+  - generic: Jersey
+  - generic: no active deal — no suitors yet
+  - generic: active
+  - generic: Peripheral
+  - generic: Clutchgear Audio
+  - generic: Steady
+  - generic: 7,000 cr/wk — 12 weeks
+  - generic "pays per qualifying win": beat a world top-4 team (per win) → 2,000 cr · In Progress
+  - generic: locked
+  - generic: Stream
+  - generic: requires Media Department level 1
+  - generic: locked
+  - generic: Apparel
+  - generic: requires Media Department level 2
+  - heading "This week" [level=2]
+  - generic: 528,465 cr
+  - generic: Balance
+  - generic: +26,775 cr
+  - generic: Net / wk
+  - generic: 62,875 cr
+  - generic: Income
+  - generic: 36,100 cr
+  - generic: Expenses
+  - generic: 55,749 cr
+  - generic: Last income
+  - generic: 36,100 cr
+  - generic: Last exp.
+  - heading "This week's run rate" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item cr / wk":
+        - columnheader "Item"
+        - columnheader "cr / wk"
+    - rowgroup:
+      - row "Base sponsorship 44,268 cr":
+        - cell "Base sponsorship"
+        - cell "44,268 cr"
+      - row "Title sponsor 0 cr":
+        - cell "Title sponsor"
+        - cell "0 cr"
+      - row "Jersey sponsor 0 cr":
+        - cell "Jersey sponsor"
+        - cell "0 cr"
+      - row "Peripheral sponsor 7,000 cr":
+        - cell "Peripheral sponsor"
+        - cell "7,000 cr"
+      - row "Stream sponsor 0 cr":
+        - cell "Stream sponsor"
+        - cell "0 cr"
+      - row "Apparel sponsor 0 cr":
+        - cell "Apparel sponsor"
+        - cell "0 cr"
+      - row "Merchandise 3,488 cr":
+        - cell "Merchandise"
+        - cell "3,488 cr"
+      - row "Ticket sales 2,325 cr":
+        - cell "Ticket sales"
+        - cell "2,325 cr"
+      - row "Streaming → Brand 5,794 cr":
+        - cell "Streaming → Brand":
+          - text: Streaming
+          - button "→ Brand"
+        - cell "5,794 cr"
+      - row "Prize money 0 cr":
+        - cell "Prize money"
+        - cell "0 cr"
+      - row "Income total 62,875 cr":
+        - cell "Income total"
+        - cell "62,875 cr"
+      - row "Salaries → Squad -33,900 cr":
+        - cell "Salaries → Squad":
+          - text: Salaries
+          - button "→ Squad"
+        - cell "-33,900 cr"
+      - row "Staff -2,200 cr":
+        - cell "Staff"
+        - cell "-2,200 cr"
+      - row "Facility upkeep → Facilities -0 cr":
+        - cell "Facility upkeep → Facilities":
+          - text: Facility upkeep
+          - button "→ Facilities"
+        - cell "-0 cr"
+      - row "Expense total -36,100 cr":
+        - cell "Expense total"
+        - cell "-36,100 cr":
+          - generic: "-36,100 cr"
+      - row "Net +26,775 cr":
+        - cell "Net"
+        - cell "+26,775 cr":
+          - generic: +26,775 cr
+  - paragraph: A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.
+  - heading "8-week cash projection" [level=2]
+  - img "projected balance"
+  - generic: 742,665 cr in 8w
+  - table:
+    - rowgroup:
+      - row "Week Net Balance":
+        - columnheader "Week"
+        - columnheader "Net"
+        - columnheader "Balance"
+    - rowgroup:
+      - row "W4 +26,775 cr 555,240 cr":
+        - cell "W4"
+        - cell "+26,775 cr"
+        - cell "555,240 cr"
+      - row "W5 +26,775 cr 582,015 cr":
+        - cell "W5"
+        - cell "+26,775 cr"
+        - cell "582,015 cr"
+      - row "W6 +26,775 cr 608,790 cr":
+        - cell "W6"
+        - cell "+26,775 cr"
+        - cell "608,790 cr"
+      - row "W7 +26,775 cr 635,565 cr":
+        - cell "W7"
+        - cell "+26,775 cr"
+        - cell "635,565 cr"
+      - row "W8 +26,775 cr 662,340 cr":
+        - cell "W8"
+        - cell "+26,775 cr"
+        - cell "662,340 cr"
+      - row "W9 +26,775 cr 689,115 cr":
+        - cell "W9"
+        - cell "+26,775 cr"
+        - cell "689,115 cr"
+      - row "W10 +26,775 cr 715,890 cr":
+        - cell "W10"
+        - cell "+26,775 cr"
+        - cell "715,890 cr"
+      - row "W11 +26,775 cr 742,665 cr":
+        - cell "W11"
+        - cell "+26,775 cr"
+        - cell "742,665 cr"
+  - paragraph: Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.
+  - heading "Brand value — marketability 1.27 (facility ×1)" [level=2]:
+    - text: Brand value
+    - generic: — marketability 1.27 (facility ×1)
+  - generic: Reputation
+  - generic: "+0.66"
+  - generic: Star power
+  - generic: "+0.28"
+  - generic: Results
+  - generic: "+0.2"
+  - generic: Social reach
+  - generic: "+0.07"
+  - generic: Fanbase
+  - generic: "+0.05"
+  - generic: Community mood
+  - generic: "+0.01"
+  - generic: International run
+  - generic: "+0"
+- tooltip:
+  - heading [level=4]: beat a world top-4 team (per win) → 2,000 cr · In Progress
+  - generic: pays per qualifying win

@@ -1,0 +1,243 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Team Nexus
+  - generic: 508,816 cr
+  - button "Save •"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 1":
+      - text: Club
+      - generic: "1"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Club
+  - generic: Team Nexus · 5/10
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - paragraph: "Tip: a 6-man roster is advised for tournaments (register a bench)."
+  - table:
+    - rowgroup:
+      - row "Player Role Agent Age OVR Ceiling Form Morale Condition Confidence Salary Wks":
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Agent"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ceiling"
+        - columnheader "Form"
+        - columnheader "Morale"
+        - columnheader "Condition"
+        - columnheader "Confidence"
+        - columnheader "Salary"
+        - columnheader "Wks"
+        - columnheader
+    - rowgroup:
+      - row "Apex IGL Controller IGL Omen ? 26 78.3 ★★★½ 61 81 66 52 ▲ 10,400 cr/wk 57w Talk Renew Release":
+        - cell "Apex IGL":
+          - generic: Apex
+          - generic: IGL
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "Omen ?":
+          - generic "likely auto-pick — not locked by the coach": Omen ?
+        - cell "26"
+        - cell "78.3"
+        - cell "★★★½"
+        - cell "61":
+          - generic "61"
+          - generic: "61"
+        - cell "81":
+          - generic "81"
+          - generic: "81"
+        - cell "66":
+          - generic "66"
+          - generic: "66"
+        - cell "52 ▲":
+          - generic "52"
+          - generic: "52"
+          - generic "trending up": ▲
+        - cell "10,400 cr/wk"
+        - cell "57w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "Phantom Duelist Entry Raze ? 20 65.5 ★★★★½ 68 74 71 53 ▲ 6,500 cr/wk 17w Talk Renew Release":
+        - cell "Phantom":
+          - generic: Phantom
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "Raze ?":
+          - generic "likely auto-pick — not locked by the coach": Raze ?
+        - cell "20"
+        - cell "65.5"
+        - cell "★★★★½"
+        - cell "68":
+          - generic "68"
+          - generic: "68"
+        - cell "74":
+          - generic "74"
+          - generic: "74"
+        - cell "71":
+          - generic "71"
+          - generic: "71"
+        - cell "53 ▲":
+          - generic "53"
+          - generic: "53"
+          - generic "trending up": ▲
+        - cell "6,500 cr/wk"
+        - cell "17w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "Echo Sentinel Anchor Killjoy ? 23 75.5 ★★½ 66 ▼ 86 75 53 ▲ 5,500 cr/wk 29w Talk Renew Release":
+        - cell "Echo":
+          - generic: Echo
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "Killjoy ?":
+          - generic "likely auto-pick — not locked by the coach": Killjoy ?
+        - cell "23"
+        - cell "75.5"
+        - cell "★★½"
+        - cell "66 ▼":
+          - generic "66"
+          - generic: "66"
+          - generic "trending down": ▼
+        - cell "86":
+          - generic "86"
+          - generic: "86"
+        - cell "75":
+          - generic "75"
+          - generic: "75"
+        - cell "53 ▲":
+          - generic "53"
+          - generic: "53"
+          - generic "trending up": ▲
+        - cell "5,500 cr/wk"
+        - cell "29w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "Vortex Duelist Awper Jett ? 22 74.6 ★★★ 74 ▼ 58 19 53 ▲ 7,000 cr/wk 7w Talk Renew Release":
+        - cell "Vortex":
+          - generic: Vortex
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "Jett ?":
+          - generic "likely auto-pick — not locked by the coach": Jett ?
+        - cell "22"
+        - cell "74.6"
+        - cell "★★★"
+        - cell "74 ▼":
+          - generic "74"
+          - generic: "74"
+          - generic "trending down": ▼
+        - cell "58":
+          - generic "58"
+          - generic: "58"
+        - cell "19":
+          - generic "19"
+          - generic: "19"
+        - cell "53 ▲":
+          - generic "53"
+          - generic: "53"
+          - generic "trending up": ▲
+        - cell "7,000 cr/wk"
+        - cell "7w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "Ghost Initiator Lurker Sova ? 19 75.8 ★★★★★ 68 ▼ 82 79 53 ▲ 4,500 cr/wk 43w Talk Renew Release":
+        - cell "Ghost":
+          - generic: Ghost
+        - cell "Initiator Lurker":
+          - generic: Initiator
+          - generic: Lurker
+        - cell "Sova ?":
+          - generic "likely auto-pick — not locked by the coach": Sova ?
+        - cell "19"
+        - cell "75.8"
+        - cell "★★★★★"
+        - cell "68 ▼":
+          - generic "68"
+          - generic: "68"
+          - generic "trending down": ▼
+        - cell "82":
+          - generic "82"
+          - generic: "82"
+        - cell "79":
+          - generic "79"
+          - generic: "79"
+        - cell "53 ▲":
+          - generic "53"
+          - generic: "53"
+          - generic "trending up": ▲
+        - cell "4,500 cr/wk"
+        - cell "43w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+  - heading "Form & fitness" [level=2]
+  - text: Your movers · this week
+  - generic: Phantom
+  - generic: ▲ 0.4
+  - generic: Ghost
+  - generic: ▲ 0.3
+  - heading "Squad profile" [level=2]
+  - paragraph: Average age 22
+  - generic: Youth ≤21
+  - generic: "2"
+  - generic: Prime 22–26
+  - generic: "3"
+  - generic: Veteran 27+
+  - generic: "0"
+  - heading "Scouting book" [level=2]
+  - paragraph: Balanced
+  - heading "Locker room" [level=2]
+  - paragraph: No standout duos or feuds.
+  - paragraph:
+    - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry.": Comms 56
+    - text: shared languages feed chemistry.
+- tooltip:
+  - heading [level=4]: Club
+  - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+  - generic: Name a default five, check condition and confidence, then set team and player training plans.

@@ -1,0 +1,965 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 3 · Regular — Azure Vanta
+  - generic: 184,625 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 6":
+      - text: Inbox
+      - generic: "6"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Season
+  - generic: S1 · W3 · Regular
+  - button "League"
+  - button "Fixtures"
+  - button "Playoffs"
+  - button "Records"
+  - button "Guide"
+  - heading "EMEA league — your region" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Nova Rift NVR 2 0 27 18 +9 75 W W":
+        - cell "1"
+        - cell "Nova Rift NVR":
+          - generic: Nova Rift
+          - generic: NVR
+        - cell "2"
+        - cell "0"
+        - cell "27"
+        - cell "18"
+        - cell "+9"
+        - cell "75"
+        - cell "W W":
+          - generic "W 1-0 vs Busan Tempest (W1)": W
+          - generic "W 1-0 vs Solar Flare (W2)": W
+      - row "2 Mumbai Meteors MUM 1 1 23 16 +7 78.7 W L":
+        - cell "2"
+        - cell "Mumbai Meteors MUM":
+          - generic: Mumbai Meteors
+          - generic: MUM
+        - cell "1"
+        - cell "1"
+        - cell "23"
+        - cell "16"
+        - cell "+7"
+        - cell "78.7"
+        - cell "W L":
+          - generic "W 1-0 vs Ghostline (W1)": W
+          - generic "L 0-1 vs Anatolia Forge (W2)": L
+      - row "3 Solar Flare SOL 1 1 25 21 +4 64.6 W L":
+        - cell "3"
+        - cell "Solar Flare SOL":
+          - generic: Solar Flare
+          - generic: SOL
+        - cell "1"
+        - cell "1"
+        - cell "25"
+        - cell "21"
+        - cell "+4"
+        - cell "64.6"
+        - cell "W L":
+          - generic "W 1-0 vs Adriatic Sirens (W1)": W
+          - generic "L 0-1 vs Nova Rift (W2)": L
+      - row "4 Anatolia Forge ANF 1 1 23 23 0 83.9 L W":
+        - cell "4"
+        - cell "Anatolia Forge ANF":
+          - generic: Anatolia Forge
+          - generic: ANF
+        - cell "1"
+        - cell "1"
+        - cell "23"
+        - cell "23"
+        - cell "0"
+        - cell "83.9"
+        - cell "L W":
+          - generic "L 0-1 vs Sahara Compass (W1)": L
+          - generic "W 1-0 vs Mumbai Meteors (W2)": W
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Sahara Compass SHC 1 1 22 23 -1 54.9 W L":
+        - cell "5"
+        - cell "Sahara Compass SHC":
+          - generic: Sahara Compass
+          - generic: SHC
+        - cell "1"
+        - cell "1"
+        - cell "22"
+        - cell "23"
+        - cell "-1"
+        - cell "54.9"
+        - cell "W L":
+          - generic "W 1-0 vs Anatolia Forge (W1)": W
+          - generic "L 0-1 vs Adriatic Sirens (W2)": L
+      - row "6 Adriatic Sirens ADS 1 1 20 22 -2 50.5 L W":
+        - cell "6"
+        - cell "Adriatic Sirens ADS":
+          - generic: Adriatic Sirens
+          - generic: ADS
+        - cell "1"
+        - cell "1"
+        - cell "20"
+        - cell "22"
+        - cell "-2"
+        - cell "50.5"
+        - cell "L W":
+          - generic "L 0-1 vs Solar Flare (W1)": L
+          - generic "W 1-0 vs Sahara Compass (W2)": W
+      - row "7 Busan Tempest BST 1 1 19 24 -5 62.7 L W":
+        - cell "7"
+        - cell "Busan Tempest BST":
+          - generic: Busan Tempest
+          - generic: BST
+        - cell "1"
+        - cell "1"
+        - cell "19"
+        - cell "24"
+        - cell "-5"
+        - cell "62.7"
+        - cell "L W":
+          - generic "L 0-1 vs Nova Rift (W1)": L
+          - generic "W 1-0 vs Ghostline (W2)": W
+      - row "8 Ghostline GHL 0 2 14 26 -12 57.3 L L":
+        - cell "8"
+        - cell "Ghostline GHL":
+          - generic: Ghostline
+          - generic: GHL
+        - cell "0"
+        - cell "2"
+        - cell "14"
+        - cell "26"
+        - cell "-12"
+        - cell "57.3"
+        - cell "L L":
+          - generic "L 0-1 vs Mumbai Meteors (W1)": L
+          - generic "L 0-1 vs Busan Tempest (W2)": L
+  - heading "EMEA Challengers — the tier-2 development circuit" [level=2]:
+    - text: EMEA Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Taipei Circuit TPC 2 0 26 5 +21 69.6 W W":
+        - cell "1"
+        - cell "Taipei Circuit TPC":
+          - generic: Taipei Circuit
+          - generic: TPC
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "5"
+        - cell "+21"
+        - cell "69.6"
+        - cell "W W":
+          - generic "W 1-0 vs Azure Vanta (W1)": W
+          - generic "W 1-0 vs Patagonia Sur (W2)": W
+      - row "2 Prairie Signal PRS 2 0 26 15 +11 65.9 W W":
+        - cell "2"
+        - cell "Prairie Signal PRS":
+          - generic: Prairie Signal
+          - generic: PRS
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "15"
+        - cell "+11"
+        - cell "65.9"
+        - cell "W W":
+          - generic "W 1-0 vs Bayou Kings (W1)": W
+          - generic "W 1-0 vs Azure Vanta (W2)": W
+      - row "3 Highlands Nine HL9 1 1 24 15 +9 59.3 W L":
+        - cell "3"
+        - cell "Highlands Nine HL9":
+          - generic: Highlands Nine
+          - generic: HL9
+        - cell "1"
+        - cell "1"
+        - cell "24"
+        - cell "15"
+        - cell "+9"
+        - cell "59.3"
+        - cell "W L":
+          - generic "W 1-0 vs Patagonia Sur (W1)": W
+          - generic "L 0-1 vs Bayou Kings (W2)": L
+      - row "4 Bayou Kings BYK 1 1 23 24 -1 50.8 L W":
+        - cell "4"
+        - cell "Bayou Kings BYK":
+          - generic: Bayou Kings
+          - generic: BYK
+        - cell "1"
+        - cell "1"
+        - cell "23"
+        - cell "24"
+        - cell "-1"
+        - cell "50.8"
+        - cell "L W":
+          - generic "L 0-1 vs Prairie Signal (W1)": L
+          - generic "W 1-0 vs Highlands Nine (W2)": W
+      - row "5 Azure Vanta AZV 0 2 9 26 -17 51.1 L L":
+        - cell "5"
+        - cell "Azure Vanta AZV":
+          - generic: Azure Vanta
+          - generic: AZV
+        - cell "0"
+        - cell "2"
+        - cell "9"
+        - cell "26"
+        - cell "-17"
+        - cell "51.1"
+        - cell "L L":
+          - generic "L 0-1 vs Taipei Circuit (W1)": L
+          - generic "L 0-1 vs Prairie Signal (W2)": L
+      - row "6 Patagonia Sur PSU 0 2 3 26 -23 44.8 L L":
+        - cell "6"
+        - cell "Patagonia Sur PSU":
+          - generic: Patagonia Sur
+          - generic: PSU
+        - cell "0"
+        - cell "2"
+        - cell "3"
+        - cell "26"
+        - cell "-23"
+        - cell "44.8"
+        - cell "L L":
+          - generic "L 0-1 vs Highlands Nine (W1)": L
+          - generic "L 0-1 vs Taipei Circuit (W2)": L
+  - heading "AMERICAS league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Tokyo Drift Six TD6 2 0 26 12 +14 62.5 W W":
+        - cell "1"
+        - cell "Tokyo Drift Six TD6":
+          - generic: Tokyo Drift Six
+          - generic: TD6
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "12"
+        - cell "+14"
+        - cell "62.5"
+        - cell "W W":
+          - generic "W 1-0 vs Jakarta Ravens (W1)": W
+          - generic "W 1-0 vs Volga Reign (W2)": W
+      - row "2 Team Nexus NXS 2 0 26 14 +12 59.6 W W":
+        - cell "2"
+        - cell "Team Nexus NXS":
+          - generic: Team Nexus
+          - generic: NXS
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "14"
+        - cell "+12"
+        - cell "59.6"
+        - cell "W W":
+          - generic "W 1-0 vs Seoul Dynasty Prime (W1)": W
+          - generic "W 1-0 vs Jakarta Ravens (W2)": W
+      - row "3 Baltic Meridian BLM 2 0 29 23 +6 58.9 W W":
+        - cell "3"
+        - cell "Baltic Meridian BLM":
+          - generic: Baltic Meridian
+          - generic: BLM
+        - cell "2"
+        - cell "0"
+        - cell "29"
+        - cell "23"
+        - cell "+6"
+        - cell "58.9"
+        - cell "W W":
+          - generic "W 1-0 vs Volga Reign (W1)": W
+          - generic "W 1-0 vs Team Vanguard (W2)": W
+      - row "4 Team Vanguard VGD 1 1 27 17 +10 78.3 W L":
+        - cell "4"
+        - cell "Team Vanguard VGD":
+          - generic: Team Vanguard
+          - generic: VGD
+        - cell "1"
+        - cell "1"
+        - cell "27"
+        - cell "17"
+        - cell "+10"
+        - cell "78.3"
+        - cell "W L":
+          - generic "W 1-0 vs Hokkaido Drift (W1)": W
+          - generic "L 0-1 vs Baltic Meridian (W2)": L
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Hokkaido Drift HKD 1 1 14 23 -9 57.5 L W":
+        - cell "5"
+        - cell "Hokkaido Drift HKD":
+          - generic: Hokkaido Drift
+          - generic: HKD
+        - cell "1"
+        - cell "1"
+        - cell "14"
+        - cell "23"
+        - cell "-9"
+        - cell "57.5"
+        - cell "L W":
+          - generic "L 0-1 vs Team Vanguard (W1)": L
+          - generic "W 1-0 vs Seoul Dynasty Prime (W2)": W
+      - row "6 Seoul Dynasty Prime SDP 0 2 16 26 -10 65.7 L L":
+        - cell "6"
+        - cell "Seoul Dynasty Prime SDP":
+          - generic: Seoul Dynasty Prime
+          - generic: SDP
+        - cell "0"
+        - cell "2"
+        - cell "16"
+        - cell "26"
+        - cell "-10"
+        - cell "65.7"
+        - cell "L L":
+          - generic "L 0-1 vs Team Nexus (W1)": L
+          - generic "L 0-1 vs Hokkaido Drift (W2)": L
+      - row "7 Volga Reign VLG 0 2 16 26 -10 54.8 L L":
+        - cell "7"
+        - cell "Volga Reign VLG":
+          - generic: Volga Reign
+          - generic: VLG
+        - cell "0"
+        - cell "2"
+        - cell "16"
+        - cell "26"
+        - cell "-10"
+        - cell "54.8"
+        - cell "L L":
+          - generic "L 0-1 vs Baltic Meridian (W1)": L
+          - generic "L 0-1 vs Tokyo Drift Six (W2)": L
+      - row "8 Jakarta Ravens JKR 0 2 13 26 -13 62.6 L L":
+        - cell "8"
+        - cell "Jakarta Ravens JKR":
+          - generic: Jakarta Ravens
+          - generic: JKR
+        - cell "0"
+        - cell "2"
+        - cell "13"
+        - cell "26"
+        - cell "-13"
+        - cell "62.6"
+        - cell "L L":
+          - generic "L 0-1 vs Tokyo Drift Six (W1)": L
+          - generic "L 0-1 vs Team Nexus (W2)": L
+  - heading "AMERICAS Challengers — the tier-2 development circuit" [level=2]:
+    - text: AMERICAS Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Harbour City Nine HC9 2 0 26 17 +9 50 W W":
+        - cell "1"
+        - cell "Harbour City Nine HC9":
+          - generic: Harbour City Nine
+          - generic: HC9
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "17"
+        - cell "+9"
+        - cell "50"
+        - cell "W W":
+          - generic "W 1-0 vs Phantom Core (W1)": W
+          - generic "W 1-0 vs Meridian Cross (W2)": W
+      - row "2 Midnight Polders MDP 2 0 26 18 +8 59.3 W W":
+        - cell "2"
+        - cell "Midnight Polders MDP":
+          - generic: Midnight Polders
+          - generic: MDP
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "18"
+        - cell "+8"
+        - cell "59.3"
+        - cell "W W":
+          - generic "W 1-0 vs Meridian Cross (W1)": W
+          - generic "W 1-0 vs Yucatan Ceibas (W2)": W
+      - row "3 Phantom Core PHC 1 1 22 13 +9 57.3 L W":
+        - cell "3"
+        - cell "Phantom Core PHC":
+          - generic: Phantom Core
+          - generic: PHC
+        - cell "1"
+        - cell "1"
+        - cell "22"
+        - cell "13"
+        - cell "+9"
+        - cell "57.3"
+        - cell "L W":
+          - generic "L 0-1 vs Harbour City Nine (W1)": L
+          - generic "W 1-0 vs Gallic Storm (W2)": W
+      - row "4 Yucatan Ceibas YCB 1 1 21 24 -3 44 W L":
+        - cell "4"
+        - cell "Yucatan Ceibas YCB":
+          - generic: Yucatan Ceibas
+          - generic: YCB
+        - cell "1"
+        - cell "1"
+        - cell "21"
+        - cell "24"
+        - cell "-3"
+        - cell "44"
+        - cell "W L":
+          - generic "W 1-0 vs Gallic Storm (W1)": W
+          - generic "L 0-1 vs Midnight Polders (W2)": L
+      - row "5 Meridian Cross MRC 0 2 18 26 -8 49.6 L L":
+        - cell "5"
+        - cell "Meridian Cross MRC":
+          - generic: Meridian Cross
+          - generic: MRC
+        - cell "0"
+        - cell "2"
+        - cell "18"
+        - cell "26"
+        - cell "-8"
+        - cell "49.6"
+        - cell "L L":
+          - generic "L 0-1 vs Midnight Polders (W1)": L
+          - generic "L 0-1 vs Harbour City Nine (W2)": L
+      - row "6 Gallic Storm GST 0 2 11 26 -15 50.1 L L":
+        - cell "6"
+        - cell "Gallic Storm GST":
+          - generic: Gallic Storm
+          - generic: GST
+        - cell "0"
+        - cell "2"
+        - cell "11"
+        - cell "26"
+        - cell "-15"
+        - cell "50.1"
+        - cell "L L":
+          - generic "L 0-1 vs Yucatan Ceibas (W1)": L
+          - generic "L 0-1 vs Phantom Core (W2)": L
+  - heading "PACIFIC league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Chao Phraya Owls CPO 2 0 26 11 +15 70.6 W W":
+        - cell "1"
+        - cell "Chao Phraya Owls CPO":
+          - generic: Chao Phraya Owls
+          - generic: CPO
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "11"
+        - cell "+15"
+        - cell "70.6"
+        - cell "W W":
+          - generic "W 1-0 vs Iron Pact (W1)": W
+          - generic "W 1-0 vs Cascadia Youth (W2)": W
+      - row "2 Berlin Wolves BWV 2 0 26 12 +14 82.1 W W":
+        - cell "2"
+        - cell "Berlin Wolves BWV":
+          - generic: Berlin Wolves
+          - generic: BWV
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "12"
+        - cell "+14"
+        - cell "82.1"
+        - cell "W W":
+          - generic "W 1-0 vs Outback Sentinels (W1)": W
+          - generic "W 1-0 vs Iron Pact (W2)": W
+      - row "3 Rust Belt Gaming RBG 2 0 26 13 +13 76.9 W W":
+        - cell "3"
+        - cell "Rust Belt Gaming RBG":
+          - generic: Rust Belt Gaming
+          - generic: RBG
+        - cell "2"
+        - cell "0"
+        - cell "26"
+        - cell "13"
+        - cell "+13"
+        - cell "76.9"
+        - cell "W W":
+          - generic "W 1-0 vs Apex Syndicate (W1)": W
+          - generic "W 1-0 vs Kraken Unit (W2)": W
+      - row "4 Cascadia Youth CSY 1 1 19 20 -1 62.8 W L":
+        - cell "4"
+        - cell "Cascadia Youth CSY":
+          - generic: Cascadia Youth
+          - generic: CSY
+        - cell "1"
+        - cell "1"
+        - cell "19"
+        - cell "20"
+        - cell "-1"
+        - cell "62.8"
+        - cell "W L":
+          - generic "W 1-0 vs Kraken Unit (W1)": W
+          - generic "L 0-1 vs Chao Phraya Owls (W2)": L
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Outback Sentinels OBS 1 1 17 24 -7 54.3 L W":
+        - cell "5"
+        - cell "Outback Sentinels OBS":
+          - generic: Outback Sentinels
+          - generic: OBS
+        - cell "1"
+        - cell "1"
+        - cell "17"
+        - cell "24"
+        - cell "-7"
+        - cell "54.3"
+        - cell "L W":
+          - generic "L 0-1 vs Berlin Wolves (W1)": L
+          - generic "W 1-0 vs Apex Syndicate (W2)": W
+      - row "6 Apex Syndicate APX 0 2 17 26 -9 52.2 L L":
+        - cell "6"
+        - cell "Apex Syndicate APX":
+          - generic: Apex Syndicate
+          - generic: APX
+        - cell "0"
+        - cell "2"
+        - cell "17"
+        - cell "26"
+        - cell "-9"
+        - cell "52.2"
+        - cell "L L":
+          - generic "L 0-1 vs Rust Belt Gaming (W1)": L
+          - generic "L 0-1 vs Outback Sentinels (W2)": L
+      - row "7 Kraken Unit KRK 0 2 14 26 -12 72.3 L L":
+        - cell "7"
+        - cell "Kraken Unit KRK":
+          - generic: Kraken Unit
+          - generic: KRK
+        - cell "0"
+        - cell "2"
+        - cell "14"
+        - cell "26"
+        - cell "-12"
+        - cell "72.3"
+        - cell "L L":
+          - generic "L 0-1 vs Cascadia Youth (W1)": L
+          - generic "L 0-1 vs Rust Belt Gaming (W2)": L
+      - row "8 Iron Pact IRP 0 2 13 26 -13 66.5 L L":
+        - cell "8"
+        - cell "Iron Pact IRP":
+          - generic: Iron Pact
+          - generic: IRP
+        - cell "0"
+        - cell "2"
+        - cell "13"
+        - cell "26"
+        - cell "-13"
+        - cell "66.5"
+        - cell "L L":
+          - generic "L 0-1 vs Chao Phraya Owls (W1)": L
+          - generic "L 0-1 vs Berlin Wolves (W2)": L
+  - heading "PACIFIC Challengers — the tier-2 development circuit" [level=2]:
+    - text: PACIFIC Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Alpine Echo ALE 2 0 27 14 +13 48.5 W W":
+        - cell "1"
+        - cell "Alpine Echo ALE":
+          - generic: Alpine Echo
+          - generic: ALE
+        - cell "2"
+        - cell "0"
+        - cell "27"
+        - cell "14"
+        - cell "+13"
+        - cell "48.5"
+        - cell "W W":
+          - generic "W 1-0 vs Saracen Guard (W1)": W
+          - generic "W 1-0 vs Lisbon Tide (W2)": W
+      - row "2 Crimson Order CRO 2 0 29 19 +10 38.4 W W":
+        - cell "2"
+        - cell "Crimson Order CRO":
+          - generic: Crimson Order
+          - generic: CRO
+        - cell "2"
+        - cell "0"
+        - cell "29"
+        - cell "19"
+        - cell "+10"
+        - cell "38.4"
+        - cell "W W":
+          - generic "W 1-0 vs Kathmandu Apex (W1)": W
+          - generic "W 1-0 vs Coral Sea Drakes (W2)": W
+      - row "3 Kathmandu Apex KTA 1 1 27 27 0 49.3 L W":
+        - cell "3"
+        - cell "Kathmandu Apex KTA":
+          - generic: Kathmandu Apex
+          - generic: KTA
+        - cell "1"
+        - cell "1"
+        - cell "27"
+        - cell "27"
+        - cell "0"
+        - cell "49.3"
+        - cell "L W":
+          - generic "L 0-1 vs Crimson Order (W1)": L
+          - generic "W 1-0 vs Saracen Guard (W2)": W
+      - row "4 Coral Sea Drakes CSD 1 1 18 20 -2 59.7 W L":
+        - cell "4"
+        - cell "Coral Sea Drakes CSD":
+          - generic: Coral Sea Drakes
+          - generic: CSD
+        - cell "1"
+        - cell "1"
+        - cell "18"
+        - cell "20"
+        - cell "-2"
+        - cell "59.7"
+        - cell "W L":
+          - generic "W 1-0 vs Lisbon Tide (W1)": W
+          - generic "L 0-1 vs Crimson Order (W2)": L
+      - row "5 Saracen Guard SRG 0 2 23 27 -4 54.7 L L":
+        - cell "5"
+        - cell "Saracen Guard SRG":
+          - generic: Saracen Guard
+          - generic: SRG
+        - cell "0"
+        - cell "2"
+        - cell "23"
+        - cell "27"
+        - cell "-4"
+        - cell "54.7"
+        - cell "L L":
+          - generic "L 0-1 vs Alpine Echo (W1)": L
+          - generic "L 0-1 vs Kathmandu Apex (W2)": L
+      - row "6 Lisbon Tide LTD 0 2 9 26 -17 53.3 L L":
+        - cell "6"
+        - cell "Lisbon Tide LTD":
+          - generic: Lisbon Tide
+          - generic: LTD
+        - cell "0"
+        - cell "2"
+        - cell "9"
+        - cell "26"
+        - cell "-17"
+        - cell "53.3"
+        - cell "L L":
+          - generic "L 0-1 vs Coral Sea Drakes (W1)": L
+          - generic "L 0-1 vs Alpine Echo (W2)": L
+  - heading "Team of the Week — week 2" [level=2]:
+    - text: Team of the Week
+    - generic: — week 2
+  - generic: Duelist
+  - generic: Staticecho
+  - generic: Prairie Signal
+  - generic: "2.31"
+  - generic: Duelist
+  - generic: Nightblade
+  - generic: Alpine Echo
+  - generic: "2.12"
+  - generic: Duelist
+  - generic: Jinxwire
+  - generic: Yucatan Ceibas
+  - generic: "2.06"
+  - generic: Duelist
+  - generic: Slymark
+  - generic: Anatolia Forge
+  - generic: "1.72"
+  - generic: Sentinel
+  - generic: Slyecho
+  - generic: Taipei Circuit
+  - generic: "1.66"
+  - heading "Projected finish — if current form holds" [level=2]:
+    - text: Projected finish
+    - generic: — if current form holds
+  - table:
+    - rowgroup:
+      - row "# Team W Rem Proj W":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "Rem"
+        - columnheader "Proj W"
+    - rowgroup:
+      - row "1 Prairie Signal 2 8 10":
+        - cell "1"
+        - cell "Prairie Signal"
+        - cell "2"
+        - cell "8"
+        - cell "10"
+      - row "2 Taipei Circuit 2 8 10":
+        - cell "2"
+        - cell "Taipei Circuit"
+        - cell "2"
+        - cell "8"
+        - cell "10"
+      - row "3 Bayou Kings 1 8 5":
+        - cell "3"
+        - cell "Bayou Kings"
+        - cell "1"
+        - cell "8"
+        - cell "5"
+      - row "4 Highlands Nine 1 8 5":
+        - cell "4"
+        - cell "Highlands Nine"
+        - cell "1"
+        - cell "8"
+        - cell "5"
+      - row "5 Azure Vanta 0 8 0":
+        - cell "5"
+        - cell "Azure Vanta"
+        - cell "0"
+        - cell "8"
+        - cell "0"
+      - row "6 Patagonia Sur 0 8 0":
+        - cell "6"
+        - cell "Patagonia Sur"
+        - cell "0"
+        - cell "8"
+        - cell "0"
+  - heading "Power rankings — global form book" [level=2]:
+    - text: Power rankings
+    - generic: — global form book
+  - generic: "1"
+  - generic: Chao Phraya Owls
+  - generic: PACIFIC
+  - generic: ▲1
+  - generic: "2"
+  - generic: Berlin Wolves
+  - generic: PACIFIC
+  - generic: ▲1
+  - generic: "3"
+  - generic: Tokyo Drift Six
+  - generic: AMERICAS
+  - generic: ▲1
+  - generic: "4"
+  - generic: Rust Belt Gaming
+  - generic: PACIFIC
+  - generic: ▲1
+  - generic: "5"
+  - generic: Team Nexus
+  - generic: AMERICAS
+  - generic: ▲2
+  - generic: "6"
+  - generic: Nova Rift
+  - generic: EMEA
+  - generic: ▲4
+  - generic: "7"
+  - generic: Baltic Meridian
+  - generic: AMERICAS
+  - generic: ▲6
+  - generic: "8"
+  - generic: Team Vanguard
+  - generic: AMERICAS
+  - generic: ▲6
+  - generic: "9"
+  - generic: Mumbai Meteors
+  - generic: EMEA
+  - generic: ▲8
+  - generic: "10"
+  - generic: Solar Flare
+  - generic: EMEA
+  - generic: ▲8
+  - heading "Head-to-head — series record" [level=2]:
+    - text: Head-to-head
+    - generic: — series record
+  - table:
+    - rowgroup:
+      - row "TAI PRA HIG BAY AZU PAT":
+        - columnheader
+        - columnheader "TAI"
+        - columnheader "PRA"
+        - columnheader "HIG"
+        - columnheader "BAY"
+        - columnheader "AZU"
+        - columnheader "PAT"
+    - rowgroup:
+      - row "TAI — · · · 1-0 1-0":
+        - rowheader "TAI"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "1-0"
+        - cell "1-0"
+      - row "PRA · — · 1-0 1-0 ·":
+        - rowheader "PRA"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "1-0"
+        - cell "1-0"
+        - cell "·"
+      - row "HIG · · — 0-1 · 1-0":
+        - rowheader "HIG"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "0-1"
+        - cell "·"
+        - cell "1-0"
+      - row "BAY · 0-1 1-0 — · ·":
+        - rowheader "BAY"
+        - cell "·"
+        - cell "0-1"
+        - cell "1-0"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+      - row "AZU 0-1 0-1 · · — ·":
+        - rowheader "AZU"
+        - cell "0-1"
+        - cell "0-1"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+      - row "PAT 0-1 · 0-1 · · —":
+        - rowheader "PAT"
+        - cell "0-1"
+        - cell "·"
+        - cell "0-1"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+  - heading "Recent results" [level=2]
+  - generic: W2
+  - generic: Ghostline
+  - generic: 0-1
+  - generic: Busan Tempest
+  - generic: W2
+  - generic: Highlands Nine
+  - generic: 0-1
+  - generic: Bayou Kings
+  - generic: W2
+  - generic: Mumbai Meteors
+  - generic: 0-1
+  - generic: Anatolia Forge
+  - generic: W2
+  - generic: Patagonia Sur
+  - generic: 0-1
+  - generic: Taipei Circuit
+  - generic: W2
+  - generic: Nova Rift
+  - generic: 1-0
+  - generic: Solar Flare
+  - generic: W2
+  - generic: Prairie Signal
+  - generic: 1-0
+  - generic: Azure Vanta
+  - generic: W2
+  - generic: Sahara Compass
+  - generic: 0-1
+  - generic: Adriatic Sirens
+  - generic: W1
+  - generic: Ghostline
+  - generic: 0-1
+  - generic: Mumbai Meteors
+  - generic: W1
+  - generic: Highlands Nine
+  - generic: 1-0
+  - generic: Patagonia Sur
+  - generic: W1
+  - generic: Busan Tempest
+  - generic: 0-1
+  - generic: Nova Rift
+  - generic: W1
+  - generic: Bayou Kings
+  - generic: 0-1
+  - generic: Prairie Signal
+  - generic: W1
+  - generic: Anatolia Forge
+  - generic: 0-1
+  - generic: Sahara Compass
+  - generic: W1
+  - generic: Azure Vanta
+  - generic: 0-1
+  - generic: Taipei Circuit
+  - generic: W1
+  - generic: Adriatic Sirens
+  - generic: 0-1
+  - generic: Solar Flare
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.

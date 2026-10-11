@@ -1,0 +1,15 @@
+{
+  "only_fields_changed": [
+    "analytics_status",
+    "analytics_evidence"
+  ],
+  "only_session": "2026-10-11-pr406-late-profile",
+  "original_retained": "actions-before-analytics.csv",
+  "canonical_untouched": true,
+  "rows": 8,
+  "verified_actual_changed_fields": [
+    "analytics_evidence",
+    "analytics_status"
+  ],
+  "all_other_fields_equal": true
+}

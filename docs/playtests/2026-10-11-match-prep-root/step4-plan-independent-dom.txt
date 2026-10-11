@@ -1,0 +1,376 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Phantom Core
+  - generic: 246,900 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W1 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Game plan — vs Alpine Echo ALE plan set" [level=2]:
+    - text: Game plan — vs
+    - generic: Alpine Echo
+    - generic: ALE
+    - generic: plan set
+  - paragraph: "league · best of 1 · bind · their record 0-0 · world #41. A plan is one match's prep — consumed when the match sims; your standing strategy above is untouched."
+  - generic: Prep edge
+  - generic: "+0.3"
+  - generic "scout": scout +0.3
+  - generic "book": book 0.0
+  - generic "coach": coach 0.0
+  - generic: duel points while a plan is set — from scouting, your map book and your coach. Alpine Echo is 0% scouted · capped at +1.5.
+  - generic: Counter-strat
+  - generic: —
+  - generic: duel points public map-meta needs completed matches. Opposing their dial lean helps; matching it reinforces their strength. Range ±3.0. Scout Alpine Echo to 50% for their private read.
+  - generic: Focus target
+  - generic: edge vs the hunted man, a small tax vs everyone else
+  - table:
+    - rowgroup:
+      - row "Player Role Style CA Form":
+        - columnheader
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Style"
+        - columnheader "CA"
+        - columnheader "Form"
+        - columnheader
+    - rowgroup:
+      - row "No target — play our own game":
+        - cell:
+          - radio
+        - cell "No target — play our own game"
+      - row "Grimfade Controller IGL ~43 ~64":
+        - cell:
+          - radio
+        - cell "Grimfade":
+          - generic: Grimfade
+        - cell "Controller"
+        - cell "IGL"
+        - cell "~43"
+        - cell "~64"
+        - cell
+      - row "Havocshot Duelist Entry ~41 ~53":
+        - cell:
+          - radio
+        - cell "Havocshot":
+          - generic: Havocshot
+        - cell "Duelist"
+        - cell "Entry"
+        - cell "~41"
+        - cell "~53"
+        - cell
+      - row "Havocpulse Duelist Awper ~56 ~49":
+        - cell:
+          - radio [checked]
+        - cell "Havocpulse":
+          - generic: Havocpulse
+        - cell "Duelist"
+        - cell "Awper"
+        - cell "~56"
+        - cell "~49"
+        - cell
+      - row "Frostblade Initiator Support ~42 ~40":
+        - cell:
+          - radio
+        - cell "Frostblade":
+          - generic: Frostblade
+        - cell "Initiator"
+        - cell "Support"
+        - cell "~42"
+        - cell "~40"
+        - cell
+      - row "Irondash Sentinel Anchor ~45 ~46":
+        - cell:
+          - radio
+        - cell "Irondash":
+          - generic: Irondash
+        - cell "Sentinel"
+        - cell "Anchor"
+        - cell "~45"
+        - cell "~46"
+        - cell
+  - paragraph: Scout them past 35% and your analyst will name the weak link.
+  - generic: Dial overrides
+  - generic: unchecked dials play the standing book
+  - checkbox
+  - generic: Aggression
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Pace
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Utility discipline
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Eco greed
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Map control
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - generic: Site focus
+  - button "Book"
+  - button "Balanced"
+  - button "A site"
+  - button "B site"
+  - button "C site"
+  - text: Team talk
+  - button "None — let them focus"
+  - button "Fire them up (lift, best for ambitious players)"
+  - button "Reassure (steadies fragile nerves)"
+  - button "Refocus (settle tilt and hubris alike)"
+  - button "Update game plan"
+  - button "Scrap the plan"
+  - heading "This week's lineup" [level=2]
+  - paragraph: Choose one agent per player for every map they play. When a fixture is listed, use its maps to plan; otherwise, pick for comfort. Auto fields their best-mastery agent. Off-role picks work but low mastery hurts duels.
+  - table:
+    - rowgroup:
+      - row "Player Role Agent Mastery Edge":
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Agent"
+        - columnheader "Mastery"
+        - columnheader "Edge"
+    - rowgroup:
+      - row "Pyrofade Controller IGL Auto — Brimstone 62 +0.5":
+        - cell "Pyrofade":
+          - generic: Pyrofade
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "Auto — Brimstone":
+          - combobox:
+            - option "Auto — Brimstone" [selected]
+            - option "Brimstone"
+            - option "Astra"
+            - option "Killjoy"
+            - option "Omen"
+            - option "Sova"
+            - option "Fade"
+            - option "Miks"
+            - option "Yoru"
+            - option "Sage"
+            - option "Chamber"
+            - option "Viper"
+            - option "Raze"
+            - option "Waylay"
+            - option "Clove"
+            - option "Deadlock"
+            - option "Harbor"
+            - option "Neon"
+            - option "Phoenix"
+            - option "Vyse"
+            - option "KAY/O"
+            - option "Skye"
+            - option "Jett"
+            - option "Reyna"
+            - option "Veto"
+            - option "Iso"
+            - option "Cypher"
+            - option "Gekko"
+            - option "Breach"
+            - option "Tejo"
+        - cell "62"
+        - cell "+0.5"
+      - row "Staticpulse Duelist Entry Auto — Jett 68 +0.7":
+        - cell "Staticpulse":
+          - generic: Staticpulse
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "Auto — Jett":
+          - combobox:
+            - option "Auto — Jett" [selected]
+            - option "Jett"
+            - option "Cypher"
+            - option "Reyna"
+            - option "Iso"
+            - option "Neon"
+            - option "Raze"
+            - option "Phoenix"
+            - option "Waylay"
+            - option "Chamber"
+            - option "Gekko"
+            - option "Yoru"
+            - option "Astra"
+            - option "Clove"
+            - option "Brimstone"
+            - option "KAY/O"
+            - option "Tejo"
+            - option "Fade"
+            - option "Harbor"
+            - option "Killjoy"
+            - option "Skye"
+            - option "Sova"
+            - option "Vyse"
+            - option "Deadlock"
+            - option "Miks"
+            - option "Omen"
+            - option "Viper"
+            - option "Breach"
+            - option "Veto"
+            - option "Sage"
+        - cell "68"
+        - cell "+0.7"
+      - row "Zephyrbyte Duelist Awper Auto — Cypher 60 +0.4":
+        - cell "Zephyrbyte":
+          - generic: Zephyrbyte
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "Auto — Cypher":
+          - combobox:
+            - option "Auto — Cypher" [selected]
+            - option "Cypher"
+            - option "Jett"
+            - option "Neon"
+            - option "Waylay"
+            - option "Yoru"
+            - option "Raze"
+            - option "Reyna"
+            - option "Astra"
+            - option "Tejo"
+            - option "Iso"
+            - option "Gekko"
+            - option "Phoenix"
+            - option "Killjoy"
+            - option "Sova"
+            - option "Fade"
+            - option "Omen"
+            - option "Breach"
+            - option "Clove"
+            - option "Miks"
+            - option "Vyse"
+            - option "Brimstone"
+            - option "KAY/O"
+            - option "Viper"
+            - option "Deadlock"
+            - option "Sage"
+            - option "Veto"
+            - option "Chamber"
+            - option "Harbor"
+            - option "Skye"
+        - cell "60"
+        - cell "+0.4"
+      - row "Wraithhawk Initiator Support Auto — Sova 71 +0.8":
+        - cell "Wraithhawk":
+          - generic: Wraithhawk
+        - cell "Initiator Support":
+          - generic: Initiator
+          - generic: Support
+        - cell "Auto — Sova":
+          - combobox:
+            - option "Auto — Sova" [selected]
+            - option "Sova"
+            - option "Neon"
+            - option "Skye"
+            - option "Tejo"
+            - option "Killjoy"
+            - option "Gekko"
+            - option "KAY/O"
+            - option "Veto"
+            - option "Chamber"
+            - option "Fade"
+            - option "Astra"
+            - option "Breach"
+            - option "Clove"
+            - option "Deadlock"
+            - option "Jett"
+            - option "Brimstone"
+            - option "Omen"
+            - option "Cypher"
+            - option "Raze"
+            - option "Iso"
+            - option "Miks"
+            - option "Viper"
+            - option "Yoru"
+            - option "Waylay"
+            - option "Harbor"
+            - option "Vyse"
+            - option "Sage"
+            - option "Phoenix"
+            - option "Reyna"
+        - cell "71"
+        - cell "+0.8"
+      - row "Blitzzero Sentinel Anchor Auto — Chamber 66 +0.7":
+        - cell "Blitzzero":
+          - generic: Blitzzero
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "Auto — Chamber":
+          - combobox:
+            - option "Auto — Chamber" [selected]
+            - option "Chamber"
+            - option "Killjoy"
+            - option "KAY/O"
+            - option "Clove"
+            - option "Cypher"
+            - option "Veto"
+            - option "Vyse"
+            - option "Waylay"
+            - option "Deadlock"
+            - option "Sage"
+            - option "Omen"
+            - option "Breach"
+            - option "Astra"
+            - option "Phoenix"
+            - option "Gekko"
+            - option "Jett"
+            - option "Miks"
+            - option "Yoru"
+            - option "Fade"
+            - option "Brimstone"
+            - option "Raze"
+            - option "Reyna"
+            - option "Tejo"
+            - option "Skye"
+            - option "Iso"
+            - option "Sova"
+            - option "Harbor"
+            - option "Viper"
+            - option "Neon"
+        - cell "66"
+        - cell "+0.7"
+  - button "Lock agents"
+  - generic: Saved agents stay in place until changed — rivals need 50%+ scouting to read them.
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.

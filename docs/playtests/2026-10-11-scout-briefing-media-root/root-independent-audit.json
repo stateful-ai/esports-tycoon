@@ -1,0 +1,228 @@
+{
+  "at_utc": "2026-10-11T18:35:06.926338+00:00",
+  "head": "754f525ce5f13636034a951a43e6da7346953df9",
+  "tree": "0b37a6329db0e7780d9a21bde7e320d2b70669d5",
+  "candidate_base": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "acceptance_scope": "actual repaired PR358 normal main6fd integration754; excludes419/420/421/422/423/424",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "7K7GL",
+  "seed": 2071,
+  "saved_week": 3,
+  "saved_balance": 184625,
+  "frozen_tracked_files": 3563,
+  "frozen_source_files": 707,
+  "raw_git_exact_files": 2393,
+  "CRLF_only_files": 1170,
+  "all_actual_prepost_raw_hashes_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_actions": 3,
+  "new_accepted_decisions": 3,
+  "total_accepted_decisions": 6,
+  "decisions": [
+    {
+      "index": 3,
+      "csv_step": 4,
+      "record": {
+        "season": 1,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "flavor_choice",
+        "params": {
+          "choice_id": "measured",
+          "event_id": "8339d89d7173ae85"
+        }
+      }
+    },
+    {
+      "index": 4,
+      "csv_step": 6,
+      "record": {
+        "season": 1,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_game_plan",
+        "params": {
+          "aggression": "",
+          "choice_encoding": "json-v1",
+          "eco_greed": "",
+          "fixture_id": "s1w2m0emt2",
+          "focus_target": "team_prairie_signal_p2",
+          "map_control": "",
+          "n_dials": "0",
+          "one_match_lineup": "False",
+          "opponent": "team_prairie_signal",
+          "pace": "",
+          "site_focus": "",
+          "starter_ids": "[]",
+          "team_talk": "focus",
+          "util_discipline": ""
+        }
+      }
+    },
+    {
+      "index": 5,
+      "csv_step": 8,
+      "record": {
+        "season": 1,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "decision_full_params_team_source_order_verified": true,
+  "prior_decision_prefix_exact": true,
+  "baseline_snapshot_records": 1,
+  "snapshot_records": 2,
+  "prior_snapshot_prefix_exact": true,
+  "save_before_sha256": "04ecb00ed07dd466e2658131396c9b59deb12f83b65d36e87f62c191b6525209",
+  "save_after_sha256": "f7b8e3f9e1196e3633e1eaa660a185e701870fbb2cdb31991aafa809414d49dd",
+  "standing_opponent_directive_saved": true,
+  "hired_analyst_saved": true,
+  "standing_next_opponent_depth": 0.5,
+  "legacy_oneoff_target_empty": true,
+  "prior_plan_consumed": true,
+  "measured_moment_resolved": true,
+  "baseline_usage_events": 0,
+  "retained_usage_events": 61,
+  "new_usage_after_baseline": 61,
+  "retained_world_events": 61,
+  "retained_null_world_events": 0,
+  "private_page_session_distinct_from_prior_build": true,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 12,
+    "visible_time": 40,
+    "attempt": 4,
+    "result": 4
+  },
+  "request_pairs": [
+    {
+      "attempt_index": 24,
+      "result_index": 25,
+      "target": "/api/actions/flavor_event",
+      "csv_step": 4,
+      "status": 200
+    },
+    {
+      "attempt_index": 31,
+      "result_index": 32,
+      "target": "/api/actions/gameplan",
+      "csv_step": 6,
+      "status": 200
+    },
+    {
+      "attempt_index": 39,
+      "result_index": 41,
+      "target": "/api/actions/advance",
+      "csv_step": 8,
+      "status": 200
+    },
+    {
+      "attempt_index": 58,
+      "result_index": 59,
+      "target": "/api/actions/save",
+      "csv_step": 11,
+      "status": 200
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "received_at": "2026-10-11T18:25:26.668157+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 3,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:25:26.668157+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 19,
+      "target": "market/scouting",
+      "received_at": "2026-10-11T18:28:56.664512+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 22,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:29:11.664093+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 28,
+      "target": "tactics/gameplan",
+      "received_at": "2026-10-11T18:29:41.669692+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 35,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:30:26.667174+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 37,
+      "target": "tactics/gameplan",
+      "received_at": "2026-10-11T18:30:26.667174+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 45,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:31:26.664334+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 47,
+      "target": "market/scouting",
+      "received_at": "2026-10-11T18:31:26.664334+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 50,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:31:41.664461+00:00",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 52,
+      "target": "season/league",
+      "received_at": "2026-10-11T18:31:41.664461+00:00",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 57,
+      "target": "dashboard",
+      "received_at": "2026-10-11T18:32:23.184399+00:00",
+      "csv_step_from_observed_UI_order": 11
+    }
+  ],
+  "end_six_static_assets_200_raw_equal": true,
+  "static_receipt_limitation": {
+    "pre_static_readiness_captured": "Initial readiness tool output before root browser play; all six static HTTP 200 raw bytes equal disk.",
+    "end_static_readiness_path": "end-safe-static-readiness-receipt.json",
+    "initial_receipt_path": "safe-static-readiness-receipt.json",
+    "initial_receipt_was_overwritten_by_identical_end_payload": true,
+    "receipt_contains_no_timestamp": true,
+    "note": "No separately timestamped pre-static file is claimed. Initial readiness was emitted in the tool transcript before root play; end checks emitted the same six asset hashes and lengths."
+  },
+  "owned_server_stopped": true,
+  "local_tests_launched": false,
+  "qualification": "Real754runtime recognizes standing scouting for PrairieSignal then PatagoniaSur at50%/85%. Plan Staticdash/Refocus retained in independently reopened UI and consumed; Your calls exposed focus/confidence+1.7/prep+0.80. No causal match/performance claim. Recap5th-of6Challengers correct; Dashboard mini-table wrongtopdivision is newdelegatedgap. No standalone latest-main claim or legacy/migration/negative regressions run. No dedicated briefing-open/close, target selection or talk-selection interactions retained: gameplan request/accepted fullparams captures only committed values. No session_end retained. Bounded best-effort usage does not establish complete funnels/attention/exactduration."
+}

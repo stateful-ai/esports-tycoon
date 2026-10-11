@@ -1,0 +1,387 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 3 · Regular — Azure Vanta
+  - generic: 184,625 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 6":
+      - text: Inbox
+      - generic: "6"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W3 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Game plan — vs Patagonia Sur PSU" [level=2]:
+    - text: Game plan — vs
+    - generic: Patagonia Sur
+    - generic: PSU
+  - paragraph: "league · best of 1 · lotus · their record 0-2 · world #42. A plan is one match's prep — consumed when the match sims; your standing strategy above is untouched."
+  - generic: Prep edge
+  - generic: "+0.8"
+  - generic "scout": scout +0.8
+  - generic "book": book 0.0
+  - generic "coach": coach 0.0
+  - generic: duel points while a plan is set — from scouting, your map book and your coach. Patagonia Sur is 50% scouted · capped at +1.5.
+  - generic: Counter-strat
+  - generic: "0.0"
+  - generic: duel points against Patagonia Sur's scouted standing identity. Opposing their dial lean helps; matching it reinforces their strength. Range ±3.0.
+  - generic: Focus target
+  - generic: edge vs the hunted man, a small tax vs everyone else
+  - table:
+    - rowgroup:
+      - row "Player Role Style CA Form":
+        - columnheader
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Style"
+        - columnheader "CA"
+        - columnheader "Form"
+        - columnheader
+    - rowgroup:
+      - row "No target — play our own game":
+        - cell:
+          - radio [checked]
+        - cell "No target — play our own game"
+      - row "Staticcore scout's pick Controller IGL ~36 ~42":
+        - cell:
+          - radio
+        - cell "Staticcore scout's pick":
+          - generic: Staticcore
+          - generic: scout's pick
+        - cell "Controller"
+        - cell "IGL"
+        - cell "~36"
+        - cell "~42"
+        - cell
+      - row "Blitzsnap Duelist Entry ~36 ~54":
+        - cell:
+          - radio
+        - cell "Blitzsnap":
+          - generic: Blitzsnap
+        - cell "Duelist"
+        - cell "Entry"
+        - cell "~36"
+        - cell "~54"
+        - cell
+      - row "Slypulse Duelist Awper ~43 ~54":
+        - cell:
+          - radio
+        - cell "Slypulse":
+          - generic: Slypulse
+        - cell "Duelist"
+        - cell "Awper"
+        - cell "~43"
+        - cell "~54"
+        - cell
+      - row "Crimstep Initiator Support ~46 ~43":
+        - cell:
+          - radio
+        - cell "Crimstep":
+          - generic: Crimstep
+        - cell "Initiator"
+        - cell "Support"
+        - cell "~46"
+        - cell "~43"
+        - cell
+      - row "Ironwing Sentinel Anchor ~47 ~52":
+        - cell:
+          - radio
+        - cell "Ironwing":
+          - generic: Ironwing
+        - cell "Sentinel"
+        - cell "Anchor"
+        - cell "~47"
+        - cell "~52"
+        - cell
+  - generic: Dial overrides
+  - generic: unchecked dials play the standing book
+  - checkbox
+  - generic: Aggression
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Pace
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Utility discipline
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Eco greed
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - checkbox
+  - generic: Map control
+  - slider [disabled]: "50"
+  - generic: 50 (book)
+  - generic: Site focus
+  - button "Book"
+  - button "Balanced"
+  - button "A site"
+  - button "B site"
+  - button "C site"
+  - text: Team talk
+  - button "None — let them focus"
+  - button "Fire them up (lift, best for ambitious players)"
+  - button "Reassure (steadies fragile nerves)"
+  - button "Refocus (settle tilt and hubris alike)"
+  - button "Lock in game plan"
+  - heading "This week's lineup" [level=2]
+  - paragraph: Choose one agent per player for every map they play. When a fixture is listed, use its maps to plan; otherwise, pick for comfort. Auto fields their best-mastery agent. Off-role picks work but low mastery hurts duels.
+  - table:
+    - rowgroup:
+      - row "Player Role Agent Mastery Edge":
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Agent"
+        - columnheader "Mastery"
+        - columnheader "Edge"
+    - rowgroup:
+      - row "Jinxghost Controller IGL Auto — Vyse 69 +0.8":
+        - cell "Jinxghost":
+          - generic: Jinxghost
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "Auto — Vyse":
+          - combobox:
+            - option "Auto — Vyse" [selected]
+            - option "Vyse"
+            - option "Brimstone"
+            - option "Miks"
+            - option "Astra"
+            - option "Omen"
+            - option "Sova"
+            - option "Clove"
+            - option "Harbor"
+            - option "Viper"
+            - option "Fade"
+            - option "Phoenix"
+            - option "Iso"
+            - option "Chamber"
+            - option "Gekko"
+            - option "Breach"
+            - option "KAY/O"
+            - option "Deadlock"
+            - option "Raze"
+            - option "Reyna"
+            - option "Neon"
+            - option "Waylay"
+            - option "Killjoy"
+            - option "Sage"
+            - option "Yoru"
+            - option "Jett"
+            - option "Veto"
+            - option "Cypher"
+            - option "Tejo"
+            - option "Skye"
+        - cell "69"
+        - cell "+0.8"
+      - row "Wraithpulse Duelist Entry Auto — Waylay 81 +1.2":
+        - cell "Wraithpulse":
+          - generic: Wraithpulse
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "Auto — Waylay":
+          - combobox:
+            - option "Auto — Waylay" [selected]
+            - option "Waylay"
+            - option "Tejo"
+            - option "Jett"
+            - option "Yoru"
+            - option "Iso"
+            - option "Neon"
+            - option "Clove"
+            - option "Fade"
+            - option "Reyna"
+            - option "Brimstone"
+            - option "Raze"
+            - option "Deadlock"
+            - option "Phoenix"
+            - option "Chamber"
+            - option "Gekko"
+            - option "Miks"
+            - option "Killjoy"
+            - option "Veto"
+            - option "Cypher"
+            - option "Breach"
+            - option "Sage"
+            - option "Vyse"
+            - option "Skye"
+            - option "Viper"
+            - option "Harbor"
+            - option "Astra"
+            - option "Sova"
+            - option "KAY/O"
+            - option "Omen"
+        - cell "81"
+        - cell "+1.2"
+      - row "Hollowdash Duelist Awper Auto — Jett 64 +0.6":
+        - cell "Hollowdash":
+          - generic: Hollowdash
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "Auto — Jett":
+          - combobox:
+            - option "Auto — Jett" [selected]
+            - option "Jett"
+            - option "Phoenix"
+            - option "Clove"
+            - option "Neon"
+            - option "Iso"
+            - option "Raze"
+            - option "Reyna"
+            - option "Waylay"
+            - option "Yoru"
+            - option "Sage"
+            - option "Vyse"
+            - option "Brimstone"
+            - option "Breach"
+            - option "Viper"
+            - option "Astra"
+            - option "Miks"
+            - option "Sova"
+            - option "Cypher"
+            - option "Omen"
+            - option "Skye"
+            - option "Veto"
+            - option "Killjoy"
+            - option "KAY/O"
+            - option "Gekko"
+            - option "Harbor"
+            - option "Chamber"
+            - option "Deadlock"
+            - option "Fade"
+            - option "Tejo"
+        - cell "64"
+        - cell "+0.6"
+      - row "Riftwolf Initiator Support Auto — Fade 55 +0.2":
+        - cell "Riftwolf":
+          - generic: Riftwolf
+        - cell "Initiator Support":
+          - generic: Initiator
+          - generic: Support
+        - cell "Auto — Fade":
+          - combobox:
+            - option "Auto — Fade" [selected]
+            - option "Fade"
+            - option "Reyna"
+            - option "Tejo"
+            - option "Skye"
+            - option "Breach"
+            - option "Gekko"
+            - option "KAY/O"
+            - option "Vyse"
+            - option "Sova"
+            - option "Waylay"
+            - option "Brimstone"
+            - option "Raze"
+            - option "Omen"
+            - option "Viper"
+            - option "Astra"
+            - option "Jett"
+            - option "Sage"
+            - option "Veto"
+            - option "Killjoy"
+            - option "Cypher"
+            - option "Yoru"
+            - option "Deadlock"
+            - option "Chamber"
+            - option "Harbor"
+            - option "Iso"
+            - option "Miks"
+            - option "Clove"
+            - option "Phoenix"
+            - option "Neon"
+        - cell "55"
+        - cell "+0.2"
+      - row "Zephyrblade Sentinel Anchor Auto — Cypher 56 +0.3":
+        - cell "Zephyrblade":
+          - generic: Zephyrblade
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "Auto — Cypher":
+          - combobox:
+            - option "Auto — Cypher" [selected]
+            - option "Cypher"
+            - option "Breach"
+            - option "Vyse"
+            - option "Chamber"
+            - option "Deadlock"
+            - option "Killjoy"
+            - option "Sage"
+            - option "Veto"
+            - option "Waylay"
+            - option "Viper"
+            - option "Iso"
+            - option "Phoenix"
+            - option "Clove"
+            - option "Gekko"
+            - option "KAY/O"
+            - option "Omen"
+            - option "Astra"
+            - option "Brimstone"
+            - option "Raze"
+            - option "Tejo"
+            - option "Yoru"
+            - option "Harbor"
+            - option "Miks"
+            - option "Reyna"
+            - option "Fade"
+            - option "Skye"
+            - option "Jett"
+            - option "Neon"
+            - option "Sova"
+        - cell "56"
+        - cell "+0.3"
+  - button "Lock agents"
+  - generic: Saved agents stay in place until changed — rivals need 50%+ scouting to read them.
+- generic: league · Season 1 · Week 2
+- generic: Azure Vanta vs Prairie Signal
+- generic: Haven
+- generic: 5–13
+- generic: Defeat
+- generic: League position
+- generic: Holding 5th of 6
+- button "Continue"
+- button "Full report"
+- generic: click anywhere to skip
+- generic: 2 new inbox items
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.

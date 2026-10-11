@@ -1,0 +1,529 @@
+ESPORTSSIM
+Season 2 · Week 8 · Regular — Team Nexus
+2,441,133 cr
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX16
+MATCH2
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET1
+STATS
+COMPANY
+CLUB
+Team Nexus · 8/10
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+TEAM TRAINING FOCUS
+
+The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+
+Mechanical
+Tactical
+Mental
+Team
+Rest
+Delegate to Coach
+Keep choosing the weekly focus yourself
+PLAYER	AGE	OVR	CEILING	FORM	CONFIDENCE	DEV FOCUS	LANGUAGE	INTENSITY	MENTOR
+Apex IGL 	27	79	★★★★	
+	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+Vortex   📺	23	76.8	★★★	
+▲	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+Ghost 🎓  	20	79.3	★★★★★	
+▼	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+⚠ TOO EXHAUSTED TO TRAIN
+Aim Precision, Aim Reactivity, Movement
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	
+no mentor
+🎓 Apex (teach 83)
+🎓 Slyblade (teach 72)
+🎓 Frostdash (teach 49)
+🎓 Hollowlock (teach 47)
+0% complete
+
+Slyblade 	29	72.9	★★★½	
+	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+Echo 	24	75.1	★★★	
+	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+Hollowlock  	27	62.8	★★	
+▲	
+▼	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+Nightsurge 🎓	18	53	★★★½	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Game Sense, Utility Usage, Positioning
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	
+no mentor
+🎓 Apex (teach 83)
+🎓 Slyblade (teach 72)
+🎓 Frostdash (teach 49)
+🎓 Hollowlock (teach 47)
+0% complete
+
+Frostdash	29	50.7	★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Clutch Factor, Tilt Resistance, Composure
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—
+SQUAD PROFILE
+
+Average age 24.6
+
+Youth ≤21
+2
+Prime 22–26
+2
+Veteran 27+
+4
+SCOUTING BOOK
+
+Balanced
+
+LOCKER ROOM
+
+No standout duos or feuds.
+
+COMMS 49 shared languages feed chemistry.
+
+FUTURE OF THE ORG
+
+Where the roster is trending — risers, milestones and the prospects behind them.
+
+RISERS
+Nightsurge 18
+CA +0.8
+Ghost 20
+CA +0.6
+MILESTONES
+ACADEMY STANDOUTS
+Grimpulse 21
+pot 63–88
+CA 51
+Pyroecho 18
+pot 53–85
+CA 45
+Nightecho 20
+pot 57–79
+CA 50
+Voltflare 23
+pot 56–73
+CA 50
+Frostwire 18
+pot 42–71
+CA 44
+PROSPECT UPDATES
+
+No new scouting movement.
+
+TALENT PIPELINE
+
+The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+
+YOUTH INTAKE 0
+
+Empty
+
+ACADEMY 5
+Grimpulse
+21
+—
+51
+Pyroecho
+18
+—
+45
+Nightecho
+20
+—
+50
+Voltflare
+23
+—
+50
+Frostwire
+18
+—
+44
+BENCH 3
+Apex
+27
+79
+Frostdash
+29
+51
+Nightsurge
+18
+53
+STARTERS 5
+Vortex
+23
+77
+Ghost
+20
+79
+Slyblade
+29
+73
+Echo
+24
+75
+Hollowlock
+27
+63
+DEVELOPMENT REPORT
+
+Season 2 · Week 0 to Week 7
+
+COMPARED OVR +0.2 · 8 PLAYERS
+4 GROWN
+0 REGRESSED
+4 STEADY
+PLAYER	TRACKED	START	NOW	CHANGE	SKILLS CHANGED	LATEST WEEK: WHY IT CHANGED
+Nightsurge	W4–W7 · 4 pts	52.2	53.0	+0.8	
+UTILITY USAGE +4.3
+POSITIONING +2.5
+GAME SENSE +1.6
+	
+PRACTICE +0.21 OVR
+BENCH SCRIMS +0.01 OVR
+S2 W7 · Tactical / light · 0 maps · Struggling
+Poor match performances are slowing learning; useful practice still counts
+Mentorship is accelerating practice
+Coaching and club support are improving practice
+
+Ghost	W0–W7 · 8 pts	78.7	79.3	+0.6	
+MOVEMENT +2.1
+AIM PRECISION +1.5
+AIM REACTIVITY +1.2
+COMPOSURE +0.4
+COMMS QUALITY +0.3
+GAME SENSE +0.2
+CLUTCH FACTOR +0.1
+POSITIONING +0.1
+	
+PRACTICE +0.02 OVR
+MATCHES +0.01 OVR
+S2 W7 · Mechanical / light · 1 maps · Struggling
+Poor match performances are slowing learning; useful practice still counts
+Mechanical practice reinforces skills used in matches
+Tired legs are reducing practice quality; ease intensity or rest
+Streaming is taking time away from practice
+Coaching and club support are improving practice
+
+Vortex	W0–W7 · 8 pts	76.5	76.8	+0.3	
+TILT RESISTANCE +2.1
+COMMS QUALITY +0.4
+COMPOSURE +0.4
+UTILITY USAGE +0.2
+CLUTCH FACTOR +0.1
+GAME SENSE +0.1
+	
+MATCHES +0.02 OVR
+S2 W7 · Rest / normal · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+
+Echo	W0–W7 · 8 pts	75.0	75.1	+0.1	
+MOVEMENT +0.6
+	
+No measured skill gains
+S2 W7 · Rest / light · 1 maps · Struggling
+Individual recovery: practice paused, match experience retained
+
+Apex	W0–W7 · 8 pts	79.0	79.0	0.0	
+AIM PRECISION +0.1
+AIM REACTIVITY +0.1
+CLUTCH FACTOR +0.1
+	
+No measured skill gains
+S2 W7 · Rest / light · 0 maps · Thriving
+Individual recovery: practice paused, match experience retained
+
+Frostdash	W5–W7 · 3 pts	50.7	50.7	0.0	
+CLUTCH FACTOR +0.1
+	
+PRACTICE +0.01 OVR
+S2 W7 · Mental / normal · 0 maps · Settling
+Coaching and club support are improving practice
+
+Hollowlock	W0–W7 · 8 pts	62.8	62.8	0.0	
+AIM PRECISION +0.1
+	
+MATCHES UNDER 0.01 OVR
+S2 W7 · Rest / normal · 1 maps · Settling
+Individual recovery: practice paused, match experience retained
+
+Slyblade	W0–W7 · 8 pts	72.9	72.9	0.0	
+No skill changes of 0.1 or more
+	
+No measured skill gains
+S2 W7 · Rest / normal · 1 maps · Thriving
+Individual recovery: practice paused, match experience retained
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.

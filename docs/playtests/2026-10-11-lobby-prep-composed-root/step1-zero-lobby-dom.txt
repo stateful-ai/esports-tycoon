@@ -1,0 +1,221 @@
+- banner:
+  - generic: ESPORTSSIM
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main
+- heading "Play" [level=1]
+- button "New campaign"
+- button "Create shared campaign"
+- button "Join campaign"
+- link "Roster Studio":
+  - /url: /roster-studio.html
+- link "Map Studio":
+  - /url: /map-studio.html
+- paragraph: Pick your organisation. Seed controls the generated league.
+- text: Seed
+- spinbutton "Seed": "0"
+- button "Fictional world" [active]
+- button "VCT 2021"
+- button "VCT 2026"
+- generic: Game mode
+- button "Sandbox"
+- button "Legacy career"
+- paragraph: Pick any organisation and manage it forever. No contracts, no sack race - the classic game.
+- generic: Rosters
+- button "Existing rosters"
+- button "Fantasy draft"
+- generic: Scenario
+- button "Standard start"
+- button "Insolvent giant"
+- button "Youth project"
+- button "Crisis club"
+- button "Superteam headache"
+- generic: AMERICAS
+- button "Azure Vanta AZV rep 54 · 248,700 cr":
+  - text: Azure Vanta
+  - generic: AZV
+  - text: rep 54 · 248,700 cr
+- button "Bayou Kings BYK rep 67.7 · 489,000 cr":
+  - text: Bayou Kings
+  - generic: BYK
+  - text: rep 67.7 · 489,000 cr
+- button "Busan Tempest BST rep 44.8 · 239,400 cr":
+  - text: Busan Tempest
+  - generic: BST
+  - text: rep 44.8 · 239,400 cr
+- button "Harbour City Nine HC9 rep 61.6 · 745,000 cr":
+  - text: Harbour City Nine
+  - generic: HC9
+  - text: rep 61.6 · 745,000 cr
+- button "Hokkaido Drift HKD rep 50 · 136,500 cr":
+  - text: Hokkaido Drift
+  - generic: HKD
+  - text: rep 50 · 136,500 cr
+- button "Jakarta Ravens JKR rep 57.6 · 364,000 cr":
+  - text: Jakarta Ravens
+  - generic: JKR
+  - text: rep 57.6 · 364,000 cr
+- button "Midnight Polders MDP rep 66.4 · 617,000 cr":
+  - text: Midnight Polders
+  - generic: MDP
+  - text: rep 66.4 · 617,000 cr
+- button "Team Nexus NXS rep 58 · 487,320 cr":
+  - text: Team Nexus
+  - generic: NXS
+  - text: rep 58 · 487,320 cr
+- button "Patagonia Sur PSU rep 65.1 · 603,000 cr":
+  - text: Patagonia Sur
+  - generic: PSU
+  - text: rep 65.1 · 603,000 cr
+- button "Prairie Signal PRS rep 52.5 · 99,000 cr":
+  - text: Prairie Signal
+  - generic: PRS
+  - text: rep 52.5 · 99,000 cr
+- button "Rust Belt Gaming RBG rep 50.4 · 231,300 cr":
+  - text: Rust Belt Gaming
+  - generic: RBG
+  - text: rep 50.4 · 231,300 cr
+- button "Solar Flare SOL rep 44 · 269,700 cr":
+  - text: Solar Flare
+  - generic: SOL
+  - text: rep 44 · 269,700 cr
+- button "Team Vanguard VGD rep 78 · 920,000 cr":
+  - text: Team Vanguard
+  - generic: VGD
+  - text: rep 78 · 920,000 cr
+- button "Yucatan Ceibas YCB rep 77.1 · 715,000 cr":
+  - text: Yucatan Ceibas
+  - generic: YCB
+  - text: rep 77.1 · 715,000 cr
+- generic: EMEA
+- button "Anatolia Forge ANF rep 74.1 · 868,000 cr":
+  - text: Anatolia Forge
+  - generic: ANF
+  - text: rep 74.1 · 868,000 cr
+- button "Berlin Wolves BWV rep 44.4 · 98,400 cr":
+  - text: Berlin Wolves
+  - generic: BWV
+  - text: rep 44.4 · 98,400 cr
+- button "Cascadia Youth CSY rep 58.8 · 422,000 cr":
+  - text: Cascadia Youth
+  - generic: CSY
+  - text: rep 58.8 · 422,000 cr
+- button "Highlands Nine HL9 rep 52.4 · 876,000 cr":
+  - text: Highlands Nine
+  - generic: HL9
+  - text: rep 52.4 · 876,000 cr
+- button "Mekong Vipers MKV rep 57.3 · 600,000 cr":
+  - text: Mekong Vipers
+  - generic: MKV
+  - text: rep 57.3 · 600,000 cr
+- button "Nordic Frost NFR rep 53.5 · 353,000 cr":
+  - text: Nordic Frost
+  - generic: NFR
+  - text: rep 53.5 · 353,000 cr
+- button "Nova Rift NVR rep 75.3 · 348,000 cr":
+  - text: Nova Rift
+  - generic: NVR
+  - text: rep 75.3 · 348,000 cr
+- button "Phantom Core PHC rep 45.6 · 128,700 cr":
+  - text: Phantom Core
+  - generic: PHC
+  - text: rep 45.6 · 128,700 cr
+- button "Sahara Compass SHC rep 42.5 · 267,600 cr":
+  - text: Sahara Compass
+  - generic: SHC
+  - text: rep 42.5 · 267,600 cr
+- button "Saracen Guard SRG rep 47.8 · 214,200 cr":
+  - text: Saracen Guard
+  - generic: SRG
+  - text: rep 47.8 · 214,200 cr
+- button "Seoul Dynasty Prime SDP rep 62.5 · 412,000 cr":
+  - text: Seoul Dynasty Prime
+  - generic: SDP
+  - text: rep 62.5 · 412,000 cr
+- button "Taipei Circuit TPC rep 62.9 · 704,000 cr":
+  - text: Taipei Circuit
+  - generic: TPC
+  - text: rep 62.9 · 704,000 cr
+- button "Tokyo Drift Six TD6 rep 42 · 244,800 cr":
+  - text: Tokyo Drift Six
+  - generic: TD6
+  - text: rep 42 · 244,800 cr
+- button "Volga Reign VLG rep 53 · 240,600 cr":
+  - text: Volga Reign
+  - generic: VLG
+  - text: rep 53 · 240,600 cr
+- generic: PACIFIC
+- button "Adriatic Sirens ADS rep 70.9 · 859,000 cr":
+  - text: Adriatic Sirens
+  - generic: ADS
+  - text: rep 70.9 · 859,000 cr
+- button "Alpine Echo ALE rep 56 · 895,000 cr":
+  - text: Alpine Echo
+  - generic: ALE
+  - text: rep 56 · 895,000 cr
+- button "Apex Syndicate APX rep 53.3 · 816,000 cr":
+  - text: Apex Syndicate
+  - generic: APX
+  - text: rep 53.3 · 816,000 cr
+- button "Baltic Meridian BLM rep 64.1 · 207,300 cr":
+  - text: Baltic Meridian
+  - generic: BLM
+  - text: rep 64.1 · 207,300 cr
+- button "Chao Phraya Owls CPO rep 67 · 379,000 cr":
+  - text: Chao Phraya Owls
+  - generic: CPO
+  - text: rep 67 · 379,000 cr
+- button "Coral Sea Drakes CSD rep 38.1 · 261,900 cr":
+  - text: Coral Sea Drakes
+  - generic: CSD
+  - text: rep 38.1 · 261,900 cr
+- button "Crimson Order CRO rep 68.3 · 535,000 cr":
+  - text: Crimson Order
+  - generic: CRO
+  - text: rep 68.3 · 535,000 cr
+- button "Iron Pact IRP rep 58.9 · 93,600 cr":
+  - text: Iron Pact
+  - generic: IRP
+  - text: rep 58.9 · 93,600 cr
+- button "Kathmandu Apex KTA rep 59.3 · 258,300 cr":
+  - text: Kathmandu Apex
+  - generic: KTA
+  - text: rep 59.3 · 258,300 cr
+- button "Kraken Unit KRK rep 46.6 · 383,000 cr":
+  - text: Kraken Unit
+  - generic: KRK
+  - text: rep 46.6 · 383,000 cr
+- button "Manila Monsoon MMS rep 62.8 · 498,000 cr":
+  - text: Manila Monsoon
+  - generic: MMS
+  - text: rep 62.8 · 498,000 cr
+- button "Meridian Cross MRC rep 56.2 · 153,000 cr":
+  - text: Meridian Cross
+  - generic: MRC
+  - text: rep 56.2 · 153,000 cr
+- button "Mumbai Meteors MUM rep 64.7 · 150,000 cr":
+  - text: Mumbai Meteors
+  - generic: MUM
+  - text: rep 64.7 · 150,000 cr
+- button "Obsidian Watch OBW rep 69.8 · 683,000 cr":
+  - text: Obsidian Watch
+  - generic: OBW
+  - text: rep 69.8 · 683,000 cr
+- tooltip

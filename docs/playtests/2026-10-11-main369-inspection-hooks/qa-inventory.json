@@ -1,0 +1,18 @@
+{
+  "claims": [
+    "Player open/close coarse events",
+    "Nested team open/close with Back",
+    "Manager profile open/close",
+    "Handbook open/sections/close",
+    "Exact shipping main; zero accepted decisions"
+  ],
+  "exploratory": [
+    "Nested Back ordering",
+    "Repeated same Handbook section does not duplicate coarse event"
+  ],
+  "unclaimed": [
+    "411 native player semantics",
+    "406 closed profile lifecycle",
+    "Handbook search hook absent on source"
+  ]
+}

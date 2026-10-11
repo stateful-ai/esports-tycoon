@@ -1,0 +1,17 @@
+{
+  "external_flywheel": "unavailable",
+  "inherited_evidence": "inherited-flywheel.json copied from original main401 session; not new acceptance evidence",
+  "learnings": [
+    {
+      "text": "This child agent exposes an empty CUA browser inventory; a queued Codex panel does not enable child-agent browser control.",
+      "confidence": "high",
+      "scope": "this blocked setup only"
+    },
+    {
+      "text": "Candidate setup can preserve all tracked source bytes and the copied career while recording the setup blocker separately.",
+      "confidence": "high",
+      "scope": "source/save bookkeeping only"
+    }
+  ],
+  "pain_point": "Unavailable browser control prevents genuine acceptance; no sponsorship gameplay learning was observed."
+}
