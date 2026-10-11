@@ -1061,7 +1061,7 @@ const PlayerProfile = ({ data }) => {
                 ${hasMirror && html`
                   <div class="pf-chart-box">
                     <div class="pf-chart-cap">
-                      Kills &amp; deaths by week
+                      Kills & deaths by week
                       <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>K<span class="pf-sw pf-sw-d"></span>D</span>
                     </div>
                     <${KdMirrorBars} weekly=${weekly} />
@@ -1079,7 +1079,7 @@ const PlayerProfile = ({ data }) => {
           ${devSeries.length > 0 && html`
             <div class="pf-chart-box">
               <div class="pf-chart-cap">
-                Ability &amp; confidence over recorded observations
+                Ability & confidence over recorded observations
                 <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>CA<span class="pf-sw pf-sw-d"></span>Conf</span>
               </div>
               <${DevChart} series=${devSeries} />
@@ -1602,7 +1602,7 @@ const TeamProfile = ({ data }) => {
 
       ${know && (know.methodology != null || (know.playbooks || []).length > 0 || (know.antistrats || []).length > 0) && html`
         <div class="pf-section">
-          <h3 class="pf-section-title">Playbook &amp; knowledge</h3>
+          <h3 class="pf-section-title">Playbook & knowledge</h3>
           ${know.methodology != null && html`
             <p class="pf-season-line muted">
               Methodology <b class="mono">${pfNum(know.methodology, 1)}</b> — training-ground know-how that survives roster churn
