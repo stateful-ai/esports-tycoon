@@ -1,0 +1,22 @@
+{
+  "recorded_at_utc": "2026-10-11T01:43:07.252413+00:00",
+  "phase": "late publication recovery, not a new play session",
+  "pre_play_inheritance_unavailable_in_original_agent": true,
+  "entries": [
+    {
+      "id": "esports-playtest-0176",
+      "kind": "learning",
+      "topic": "Resolved prizes belong in weekly income reports"
+    },
+    {
+      "id": "esports-playtest-0177",
+      "kind": "learning",
+      "topic": "Complete-state comparison isolates reporting fixes"
+    },
+    {
+      "id": "esports-playtest-0178",
+      "kind": "pain-point",
+      "topic": "Receipt wrapper assumptions can invalidate acceptance harnesses"
+    }
+  ]
+}

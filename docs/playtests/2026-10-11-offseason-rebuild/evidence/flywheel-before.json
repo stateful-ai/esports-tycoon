@@ -1,0 +1,138 @@
+[
+  {
+    "id": "esports-playtest-0200",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Weekly cash summary still omits a resolved cash difference",
+    "problem": "Bank increased280289 while income127389 minus expenses47100 explains80289.",
+    "solution": "Reproduced existing PR380 gap; retained actual raw report and public finance state instead of opening duplicate.",
+    "lesson": "Check actual bank movement against realized totals; run-rate is a different period and objective-achieved labels do not isolate payout.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0199",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Recovery versus mental practice is measurable",
+    "problem": "After elimination five starters rested and one benched player trained.",
+    "solution": "Four auto mental plans reported practice; two resting players recovered to100 condition; all0maps.",
+    "lesson": "Use server-authored practice attribution and condition readback; mental focus does not guarantee immediate confidence growth.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0198",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Mentor text can select the wrong player",
+    "problem": "Broad row text matched Ghost mentor options for Slyblade/Hollowlock.",
+    "solution": "Preserved partial Ghostauto/rest decisions, then leading identity-cell targeted retry and public per-ID readback.",
+    "lesson": "Validate the player identity cell and unique controls; a200 result alone does not prove intended player selection.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0197",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Series note ownership is shorthand",
+    "problem": "Both-team notes use VGD and NXS abbreviations.",
+    "solution": "Clear both-teams explanatory text preserves raw engine-owned notes without English parsing.",
+    "lesson": "Team shorthand remains a minor readability friction; a structured future contract could identify owners.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0196",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Read-only debrief preserved campaign",
+    "problem": "Saving could have changed copied acceptance career.",
+    "solution": "Independent complete save hashes match;90 decisions and21 snapshots unchanged.",
+    "lesson": "Compare complete saved bytes as well as decision telemetry for read-only acceptance.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0195",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Last-match series notes are discoverable",
+    "problem": "Dashboard formerly showed only initial plan dials.",
+    "solution": "Both teams fixture notes now appear below Initial plan in Your calls.",
+    "lesson": "Expose recorded series events alongside initial plans; do not attribute results to them.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0194",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Initial-plan recap obscures applied between-map calls",
+    "problem": "Fourinitialdials appear inDashboardYourCalls despite laterStabilize",
+    "solution": "Delegatedgap37 to ownGPT6.1solmediumagent to exposeexistingfixture notes nearby",
+    "lesson": "Surface engine-authoredseriesnotes besideinitialplan without JSformulas or claims that a response caused the result. Avoidduplicate378 formprefill.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-semifinal world26UHC seed2038 main20273cd7; root model/effort unknown; afterplay 2026-10-11T06:32:59.952229+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0193",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Sponsor structure has independently measurable immediate effect",
+    "problem": "Needed cash after semifinal loss without futurewin dependence",
+    "solution": "SignedRedlineChairsupfront and checkedUIbank plus savedcontractdecision",
+    "lesson": "Immediate106000 and1800/wk contract are confirmed; achievedscaledgoal12600 does not prove a payout. One13weekpackage comparison is visible arithmetic, not actual futureincome.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-semifinal world26UHC seed2038 main20273cd7; root model/effort unknown; afterplay 2026-10-11T06:32:59.952229+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  }
+]

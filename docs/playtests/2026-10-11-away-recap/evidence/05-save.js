@@ -1,0 +1,1 @@
+async page => {const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/save')&&r.request().method()==='POST');await page.getByRole('button',{name:'Save',exact:true}).click();const res=await response;return {status:res.status(),response:await res.json()};}

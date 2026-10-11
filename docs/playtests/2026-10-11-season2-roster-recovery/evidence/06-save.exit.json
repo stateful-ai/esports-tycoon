@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:18:15.563518+00:00",
+  "exit_code": 1,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-roster-recovery",
+    "run-code",
+    "async (page) => { const promise=page.waitForResponse(r=>r.url().endsWith(\"/api/actions/save\")&&r.request().method()===\"POST\",{timeout:30000}); await page.getByRole(\"button\",{name:\"Save\",exact:true}).first().click(); const r=await promise; return {status:r.status,body:await r.json()}; }"
+  ],
+  "stdout_bytes": 106,
+  "stderr_bytes": 0
+}

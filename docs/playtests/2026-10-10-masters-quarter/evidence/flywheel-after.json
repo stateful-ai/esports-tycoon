@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0161",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "One-match rotation preserves default five and recovery",
+    "problem": "Rest fatigued Ghost without losing quarterfinal roster control",
+    "solution": "Save GhostRest and five-player fixture plan replacing him with Hollowlock, skip extra scrim then Advance once",
+    "lesson": "Hollowlock plays all3 maps, Ghost none, defaultfive restored after consumption; Ghost35.5->59.5. Fullreport separates benchscrims under0.01 from Hollowlock match+0.01. Win2-1 is descriptive, not causal.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0162",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Fixture guidance must acknowledge locked veto",
+    "problem": "Find useful map prep advice for Masters quarterfinal",
+    "solution": "Compare Dashboard suggestions to actual public fixture veto and Prep legalmaps",
+    "lesson": "ActualAscent/Lotus/Split only, Haven/Bind alreadybanned; generic all-history BanHaven/PickBind advice is unavailable. Gap33 measured patch shows locked veto/playablemap records while preserving historicalmaps.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0163",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Post-match bench advice ignores consumed rotation",
+    "problem": "Understand coach advice after temporary Hollowlock start",
+    "solution": "Read fresh Dashboard and current upcoming roster after one-match plan consumed",
+    "lesson": "Hollowlock alreadybench, currentVanguardmapfives exclude him and plannull, yet WhattoTweak saysconsiderbench. Gap34 owns currentselection-aware advice. Historical0.69 review remains valid. Root wrong effectivearray claim corrected separately inrow7.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

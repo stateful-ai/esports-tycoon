@@ -1,0 +1,57 @@
+[
+  {
+    "index": 65,
+    "season": 1,
+    "week": 15,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "series_directive",
+    "params": {
+      "clear": "False",
+      "fixture_id": "s1amsemi1",
+      "response": "reset",
+      "substitute_in": "fa_0",
+      "substitute_out": "ghost",
+      "trigger": "always"
+    },
+    "source": "web"
+  },
+  {
+    "index": 66,
+    "season": 1,
+    "week": 15,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1amsemi1",
+      "focus_target": "",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_rust_belt_gaming",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 67,
+    "season": 1,
+    "week": 15,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]
