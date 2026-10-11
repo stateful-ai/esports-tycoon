@@ -30,6 +30,8 @@ from esports_sim.manager.state import (
     PlayerLineSnap,
     PlayerSeasonStats,
     StaffMember,
+    SponsorDeal,
+    SponsorObjective,
     TeamRecord,
 )
 from esports_sim.registry import GameData
@@ -1399,6 +1401,31 @@ def test_objectives_hub_and_rotation_shape(env):
     rot = server_mod._rotation_usage(gs, h.user_team)
     assert all(set(r) == {"id", "handle", "maps", "starter", "stamina", "burnout"} for r in rot)
     assert rot == sorted(rot, key=lambda r: (-r["maps"], r["handle"]))
+
+
+@pytest.mark.parametrize("names", [("Hypercarry Energy", "GlitchTV"), ("Legacy Brand", "Legacy Brand")])
+def test_sponsor_objectives_keep_contract_identity_and_read_purity(env, names):
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    tid = h.user_team
+    gs.sponsor_slots_by[tid] = {
+        slot: SponsorDeal(name=name, kind="steady", weeks_left=12,
+                          objectives=[SponsorObjective(kind="make_playoffs", bonus=40000),
+                                      SponsorObjective(kind="win_split", bonus=60000, met=True)])
+        for slot, name in zip(("jersey", "stream"), names)
+    }
+    before = gs.model_dump_json()
+    expected_status = server_mod.career.objective_status(gs, tid, "make_playoffs")
+    rows = [o for o in server_mod._objectives_hub(gs, tid) if o["kind"] == "sponsor"]
+    assert len(rows) == 2
+    assert [(o["sponsor_name"], o["sponsor_slot"]) for o in rows] == list(zip(names, ("jersey", "stream")))
+    assert all(o["label"] == server_mod.sponsors.OBJECTIVE_LABELS["make_playoffs"] for o in rows)
+    assert all((o["state"], o["detail"]) == (expected_status["state"], expected_status["detail"]) for o in rows)
+    assert gs.model_dump_json() == before
+    gs.sponsor_slots_by.pop(tid)
+    before = gs.model_dump_json()
+    assert not any(o["kind"] == "sponsor" for o in server_mod._objectives_hub(gs, tid))
+    assert gs.model_dump_json() == before
 
 @pytest.mark.parametrize("reverse", [False, True])
 @pytest.mark.parametrize("acting", ["own", "opponent"])
