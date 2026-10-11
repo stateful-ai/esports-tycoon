@@ -2146,12 +2146,15 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
     target = gs.scout_targets.get(team_id)
     deep_dive = target in (opponent, f"match:{fixture.id}")
     assigned = standing or deep_dive
-    progress = round(gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0), 2)
+    raw_progress = gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0)
+    progress = round(raw_progress, 2)
+    # Display completed depth without rounding a locked read up to its unlock.
+    depth_pct = math.floor(raw_progress * 100)
     playbook = round(scouting.team_playbook_read(gs, team_id, opponent), 2)
     measured = progress > 0 or playbook > 0
     # Matchday identity and counter reads unlock from team scouting depth.
     # Playbook confidence remains useful measured intel, not that unlock.
-    ready = gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0) >= 0.5
+    ready = raw_progress >= 0.5
     source = "Standing pro lane" if standing else "Deep dive" if deep_dive else None
     if assigned and not measured:
         badge, status = "Scouting assigned", "Assigned"
@@ -2159,12 +2162,12 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
         copy = (f"{source} covers this fixture. No measured intel yet; "
                 "coverage builds when the week resolves.")
     elif measured:
-        badge = f"{round(progress * 100)}% scouted"
-        status = f"{round(progress * 100)}% / {round(playbook * 100)}% playbook"
+        badge = f"{depth_pct}% scouted"
+        status = f"{depth_pct}% / {round(playbook * 100)}% playbook"
         title = f"Review the intel on {name}"
         copy = (f"{source} covers this fixture. " if assigned else
                 "Stored intel is available, but no assignment covers this fixture. ")
-        copy += (f"Scouting depth {round(progress * 100)}%; "
+        copy += (f"Scouting depth {depth_pct}%; "
                  f"playbook read {round(playbook * 100)}%. ")
         copy += ("Review verified reads before finalizing the plan." if ready else
                  "Opponent identity and counter reads unlock at 50% scouting depth.")

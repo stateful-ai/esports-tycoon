@@ -31,6 +31,40 @@ def test_standing_coverage_without_deep_dive(game_data, progress, playbook):
         assert view['status'] == 'Assigned'
         assert 'No measured intel yet' in view['copy']
 
+
+@pytest.mark.parametrize('assigned', [False, True])
+@pytest.mark.parametrize('depth,displayed', [
+    (.494, 49), (.495, 49), (.499, 49), (.499999, 49),
+    (.5, 50), (.999, 99), (1.0, 100),
+])
+def test_displayed_depth_does_not_round_across_unlock(game_data, assigned, depth, displayed):
+    gs = new_campaign(game_data, seed=2038, user_team_id='team_nexus')
+    tid = gs.acting_team_id
+    fix = gs.team_fixture(tid)
+    opp = fix.team_b if fix.team_a == tid else fix.team_a
+    gs.scout_lanes_by[tid] = {'pro': 'scout_opponents'} if assigned else {}
+    gs.scout_targets[tid] = None
+    gs.scout_progress_by[tid] = {opp: depth}
+    gs.scout_playbook_by[tid] = {opp: {'value': .85}}
+    before = gs.model_dump_json()
+
+    view = server._fixture_scout_readiness(gs, tid)
+
+    assert view['assigned'] == assigned
+    assert view['badge'] == f'{displayed}% scouted'
+    assert view['status'] == f'{displayed}% / 85% playbook'
+    assert f'Scouting depth {displayed}%;' in view['copy']
+    assert view['ready'] == (depth >= .5)
+    assert view['ready'] == server._gameplan_counter_reads(gs, fix, None)['opponent_revealed']
+    if depth < .5:
+        assert displayed < 50
+        assert 'Scouting depth 50%;' not in view['copy']
+        assert 'unlock at 50% scouting depth' in view['copy']
+    else:
+        assert 'Review verified reads' in view['copy']
+    assert gs.model_dump_json() == before
+
+
 @pytest.mark.parametrize('assignment', ['other','current','match','none','fill_gap'])
 def test_one_off_and_unassigned_contracts(game_data, assignment):
     gs = new_campaign(game_data, seed=2038, user_team_id='team_nexus')

@@ -36,3 +36,23 @@ head only. This merged tree needs fresh root review and remote CI before merge.
 No new player session or accepted decision is claimed by this Git-only repair.
 The preliminary staff employment report was a closed-overlay DOM false
 positive and produced no product change.
+
+## Follow-up display correction
+
+Inline finding 4242676212 on merged head `754f525` identified that raw depth
+0.499 was correctly locked but displayed as 50%. The forward correction floors
+the displayed team-depth percentage from raw progress in badge, status and
+copy. Raw depth >= 0.5 remains the readiness rule; playbook confidence and
+assignment handling are unchanged. Authored regressions cover 49.4%, 49.5%,
+49.9%, just below 50%, exactly 50%, 99.9% and 100%, both with a standing
+assignment and with stored intel alone. These regressions remain unrun.
+
+Root's ordinary browser session on exact `754f525` confirmed standing
+assignment/readiness, its next-week opponent rollover and saved persistence.
+That session qualifies the earlier merged head's exercised behavior; it does
+not establish runtime acceptance of this display correction. The qualification
+JSON above records the original integration tree and original regression blob;
+the follow-up changes only this README, the readiness serializer and regression
+file. Historical native 1261-test and prior remote CI results remain historical.
+All local checks and hooks are skipped under the user's current instruction;
+fresh remote CI and root review are required for the forward commit.
