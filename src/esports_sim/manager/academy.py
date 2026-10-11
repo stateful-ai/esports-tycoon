@@ -159,10 +159,8 @@ def affiliate_for(gs: "GameState", parent_tid: str) -> str | None:
     return affiliate_tid
 
 
-def academy_view(
-    gs: "GameState", parent_tid: str, *, window_check: WindowCheck | None = None
-) -> dict[str, Any]:
-    """Project the roster and live move availability without mutating state."""
+def academy_view(gs: "GameState", parent_tid: str) -> dict[str, Any]:
+    """Serialize one organization's academy without exposing rival state."""
     parent = gs.teams.get(parent_tid)
     affiliate_tid = affiliate_for(gs, parent_tid)
     if parent is None or affiliate_tid is None:
@@ -171,8 +169,6 @@ def academy_view(
             "affiliate_id": None,
             "level": 0,
             "roster": [],
-            "send_down_roster": [],
-            "movement_detail": "Organization has no academy affiliate.",
             "reports": [],
         }
 
@@ -184,9 +180,6 @@ def academy_view(
             continue
         stats = gs.player_stats.get(pid)
         pa_low, pa_high = development.potential_projection(player, own=True)
-        allowed, reason = can_move(
-            gs, parent_tid, pid, "promote", window_check=window_check
-        )
         roster.append(
             {
                 "id": pid,
@@ -199,14 +192,47 @@ def academy_view(
                 "maps": stats.maps if stats is not None else 0,
                 "rating": round(stats.rating, 2) if stats is not None else 0.0,
                 "owned": gs.academy_player_rights.get(pid) == parent_tid,
-                "promote": {"allowed": allowed, "reason": reason},
             }
         )
     roster.sort(
         key=lambda row: (-row["potential_band"][1], -row["ability"], row["id"])
     )
 
-    send_down_roster = []
+    reports = _state_map(gs, "academy_reports_by").get(parent_tid, [])
+    return {
+        "parent_id": parent_tid,
+        "parent_name": parent.name,
+        "affiliate_id": affiliate_tid,
+        "affiliate_name": affiliate.name,
+        "level": _level(gs, parent_tid),
+        "roster": roster,
+        "reports": [dict(report) for report in reports[-8:]],
+        "next_upgrade_cost": UPGRADE_COST.get(_level(gs, parent_tid) + 1),
+    }
+
+
+def academy_view_for_club(
+    gs: "GameState", parent_tid: str, *, window_check: WindowCheck
+) -> dict[str, Any]:
+    """Augment the shared view for web controls using their required window check.
+
+    Keep these UI-only fields out of academy_view: decision_env embeds that
+    original projection in its versioned manager observation contract.
+    """
+    view = academy_view(gs, parent_tid)
+    view["send_down_roster"] = []
+    view["movement_detail"] = "Organization has no academy affiliate."
+    affiliate_tid = view["affiliate_id"]
+    if affiliate_tid is None:
+        return view
+
+    parent = gs.teams[parent_tid]
+    affiliate = gs.teams[affiliate_tid]
+    for row in view["roster"]:
+        allowed, reason = can_move(
+            gs, parent_tid, row["id"], "promote", window_check=window_check
+        )
+        row["promote"] = {"allowed": allowed, "reason": reason}
     for pid in sorted(parent.player_ids):
         player = gs.players.get(pid)
         if player is None or player.age > ACADEMY_MAX_AGE:
@@ -214,7 +240,7 @@ def academy_view(
         allowed, reason = can_move(
             gs, parent_tid, pid, "send_down", window_check=window_check
         )
-        send_down_roster.append(
+        view["send_down_roster"].append(
             {
                 "id": pid,
                 "handle": player.handle,
@@ -224,7 +250,7 @@ def academy_view(
             }
         )
     roster_min, roster_max = _roster_limits()
-    movement_detail = (
+    view["movement_detail"] = (
         f"Affiliate: {len(affiliate.player_ids)} players; first team: "
         f"{len(parent.player_ids)}. Each must retain at least {roster_min} players "
         f"and can hold up to {roster_max}. Promotion needs spare affiliate depth "
@@ -232,19 +258,7 @@ def academy_view(
         f"depth; only players age {ACADEMY_MAX_AGE} or younger can be sent down. "
         "Both moves require an open market window."
     )
-    reports = _state_map(gs, "academy_reports_by").get(parent_tid, [])
-    return {
-        "parent_id": parent_tid,
-        "parent_name": parent.name,
-        "affiliate_id": affiliate_tid,
-        "affiliate_name": affiliate.name,
-        "level": _level(gs, parent_tid),
-        "roster": roster,
-        "send_down_roster": send_down_roster,
-        "movement_detail": movement_detail,
-        "reports": [dict(report) for report in reports[-8:]],
-        "next_upgrade_cost": UPGRADE_COST.get(_level(gs, parent_tid) + 1),
-    }
+    return view
 
 
 def upgrade(gs: "GameState", parent_tid: str) -> tuple[bool, str]:

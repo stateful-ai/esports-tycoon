@@ -7,6 +7,7 @@ from fastapi import HTTPException
 
 from esports_sim.manager import academy, market
 from esports_sim.manager.campaign import new_campaign
+from esports_sim.manager.decision_env import manager_observation
 from esports_sim.web import server
 
 
@@ -128,3 +129,51 @@ def test_no_affiliate_has_no_move_candidates(game_data):
     view = server._club_view(gs)["academy"]
     assert view["roster"] == view["send_down_roster"] == []
     assert view["movement_detail"] == "Organization has no academy affiliate."
+
+
+@pytest.mark.parametrize("phase", ["regular", "playoffs"])
+def test_web_fields_do_not_expand_shared_manager_observation(game_data, phase):
+    gs, tid, affiliate, pid = _academy_world(game_data)
+    _add_player(gs, affiliate)
+    gs.phase = phase
+    shared = academy.academy_view(gs, tid)
+    assert set(shared) == {
+        "parent_id", "parent_name", "affiliate_id", "affiliate_name", "level",
+        "roster", "reports", "next_upgrade_cost",
+    }
+    assert all(set(row) == {
+        "id", "handle", "age", "role", "roster_role", "ability",
+        "potential_band", "maps", "rating", "owned",
+    } for row in shared["roster"])
+
+    web = server._club_view(gs)["academy"]
+    row = next(p for p in web["roster"] if p["id"] == pid)
+    assert row["promote"]["allowed"] == (phase == "regular")
+    assert row["promote"]["reason"] == market.market_move_allowed(gs, tid)[1]
+    # The Club augmentation must preserve all original fields and row values.
+    original_web = {key: value for key, value in web.items() if key in shared}
+    original_web["roster"] = [
+        {key: value for key, value in row.items() if key != "promote"}
+        for row in web["roster"]
+    ]
+    assert original_web == shared
+    assert academy.academy_view(gs, tid) == shared
+    observation = manager_observation(gs, game_data, tid)
+    assert observation["observation_version"] == 8
+    assert observation["club"]["academy"] == shared
+
+
+def test_shared_missing_affiliate_contract_stays_unchanged(game_data):
+    gs, tid, _, _ = _academy_world(game_data)
+    gs.academy_affiliates.pop(tid)
+    shared = {
+        "parent_id": tid,
+        "affiliate_id": None,
+        "level": 0,
+        "roster": [],
+        "reports": [],
+    }
+    assert academy.academy_view(gs, tid) == shared
+    server._club_view(gs)
+    assert academy.academy_view(gs, tid) == shared
+    assert manager_observation(gs, game_data, tid)["club"]["academy"] == shared

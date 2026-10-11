@@ -2720,7 +2720,9 @@ def _club_view(gs: GameState) -> dict:
         series_management.starting_five(gs, tid, series_fixture)
         if series_fixture else []
     )
-    academy_view = academy.academy_view(gs, tid, window_check=_academy_move_window)
+    academy_view = academy.academy_view_for_club(
+        gs, tid, window_check=_academy_move_window
+    )
     return {
         "market_window": market.market_window_status(gs),
         "academy": academy_view,
