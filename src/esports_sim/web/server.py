@@ -2313,7 +2313,7 @@ def state() -> dict:
                 },
             }
         user = gs.teams[gs.acting_team_id]
-        order = gs.standings_order(str(user.region))
+        competition = _competition_table(gs, gs.acting_team_id)
         next_fixture, _next_opp = _next_fixture_board(gs)
         pending_flavor = flavor_events.pending_for(gs)
         flavor_view = flavor_events.to_api(pending_flavor) if pending_flavor else None
@@ -2396,10 +2396,11 @@ def state() -> dict:
                 "cap": scout_cap,
                 "readiness": _fixture_scout_readiness(gs, gs.acting_team_id),
             },
+            "competition_table": competition,
             "standings_top": [
-                {"team_id": tid, "name": gs.teams[tid].name, **gs.standings[tid].model_dump()}
-                for tid in order[:4]
-            ],
+                {"team_id": row["id"], **{k: v for k, v in row.items() if k != "id"}}
+                for row in competition["rows"][:4]
+            ] if competition else [],
             "champions": [c.model_dump() for c in gs.champions],
             "transfer_offers": [
                 {
@@ -7784,13 +7785,45 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         }
 
 
+def _competition_order(gs: GameState, tid: str) -> list[str]:
+    """The manager's regional competition, shared by Dashboard and recap."""
+    team = gs.teams.get(tid)
+    if team is None:
+        return []
+    return gs.standings_order(str(team.region), tier=team.tier)
+
+
+def _competition_table(gs: GameState, tid: str) -> dict | None:
+    """Pure presentation snapshot; the server owns tier and canonical ordering.
+
+    Include the whole competition so a manager outside the top four still
+    appears in the Dashboard with the same position as the weekly recap.
+    Old saves use Team's default tier through the normal schema migration.
+    """
+    team = gs.teams.get(tid)
+    if team is None:
+        return None
+    region = str(team.region)
+    name = "Challengers" if team.tier == 2 else "league"
+    return {
+        "region": region,
+        "tier": team.tier,
+        "label": f"{region.upper()} {name} (Tier {team.tier})",
+        "rows": [
+            {"id": t, "name": gs.teams[t].name,
+             **gs.standings[t].model_dump(), "diff": gs.standings[t].diff}
+            for t in _competition_order(gs, tid)
+        ],
+    }
+
+
 def _league_position(gs: GameState, tid: str) -> dict | None:
     """1-based region-table position plus the table size for a team, or None
     when it isn't in a table. Pure read of standings_order."""
     t = gs.teams.get(tid)
     if t is None:
         return None
-    order = gs.standings_order(str(t.region), tier=t.tier)
+    order = _competition_order(gs, tid)
     if tid not in order:
         return None
     return {"pos": order.index(tid) + 1, "of": len(order)}
