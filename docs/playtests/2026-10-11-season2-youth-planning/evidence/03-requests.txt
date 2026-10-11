@@ -1,0 +1,21 @@
+### Result
+23. [GET] http://127.0.0.1:8537/api/lobby => [200] OK
+24. [GET] http://127.0.0.1:8537/api/state => [200] OK
+25. [GET] http://127.0.0.1:8537/api/inbox => [200] OK
+26. [GET] http://127.0.0.1:8537/api/gameplan => [200] OK
+27. [GET] http://127.0.0.1:8537/api/schedule => [200] OK
+28. [GET] http://127.0.0.1:8537/api/standings => [200] OK
+29. [GET] http://127.0.0.1:8537/api/roster/team_nexus => [200] OK
+30. [GET] http://127.0.0.1:8537/api/roster/team_saracen_guard => [200] OK
+31. [GET] http://127.0.0.1:8537/api/career => [200] OK
+32. [GET] http://127.0.0.1:8537/api/gameplan => [200] OK
+39. [POST] http://127.0.0.1:8537/api/usage/events => [200] OK
+40. [GET] http://127.0.0.1:8537/api/roster/team_nexus => [200] OK
+47. [POST] http://127.0.0.1:8537/api/usage/events => [200] OK
+48. [GET] http://127.0.0.1:8537/api/club => [200] OK
+49. [POST] http://127.0.0.1:8537/api/usage/events => [200] OK
+50. [POST] http://127.0.0.1:8537/api/usage/events => [200] OK
+51. [POST] http://127.0.0.1:8537/api/actions/academy_move => [422] Unprocessable Content
+52. [POST] http://127.0.0.1:8537/api/usage/events => [200] OK
+
+Note: 34 static requests not shown, run with --static option to see them.
