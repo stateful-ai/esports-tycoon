@@ -51,3 +51,26 @@ and browser acceptance checks were **SKIPPED by explicit user instruction**.
 Only source/evidence reads and Git operations were performed. The dirty primary
 checkout and the shared gameplay CSV were left untouched. Runtime acceptance
 and CI remain pending root review; no passing gate is claimed.
+
+## Integration qualification, 2026-10-11
+
+After the original identity commit `da0be2f560bd86ddfa7f461893de4f10c0121d6a`,
+this branch normally merged the root-reviewed precision commit
+`e495bf7dfe2836324cce740846637d680611758c` from PR #422. The source finding and
+root observation above describe the original current-main playtest; this
+integration adds no child gameplay reproduction or runtime acceptance claim.
+
+The game-plan artifact now projects the development ID and text through
+`preparation.public_report` before identity enrichment, matching the Club
+latest-report path. A legacy report's hidden-selected ID therefore cannot
+reappear through handle lookup. The identity fixtures now explicitly declare
+the frozen `age` suggestion basis; an additional authored, UNRUN regression
+covers legacy public-target selection, its correct public handle, preserved
+stored report text, and independence from hidden potential counterfactuals.
+
+The original identity scope statement above applies to that feature's changes.
+This composed candidate additionally contains PR #422's public development
+projection and inbox sanitization. Its original root-provenance document is
+retained separately in `docs/prep-development-public-evidence.md`. Every local
+test, check, simulation, validator, gate, report command, and runtime acceptance
+remains SKIPPED as instructed. PR #422 is the prerequisite for PR #423.

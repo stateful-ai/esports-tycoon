@@ -44,6 +44,7 @@ def test_latest_prep_serializers_resolve_public_identity_without_changing_report
         map_id=fixture.maps[0], objective="anti_exec", intensity="light",
         season=gs.season, week=gs.week, artifact_label="Anti-exec book",
         dev_suggestion_player_id=pid, dev_suggestion="Archived development observation.",
+        dev_suggestion_basis="age",
     )
     gs.preparation_reports_by[tid] = report
     saved_report = report.model_dump_json()
@@ -58,6 +59,46 @@ def test_latest_prep_serializers_resolve_public_identity_without_changing_report
         assert view["dev_suggestion"] == report.dev_suggestion
     assert report.model_dump_json() == saved_report
     assert gs.model_dump_json() == before
+
+
+def test_legacy_hidden_target_projects_public_identity_before_resolving_handle(game_data):
+    gs = new_campaign(game_data, seed=2040)
+    tid = gs.user_team_id
+    pids = sorted(gs.teams[tid].player_ids)
+    public_pid, private_pid = pids[0], pids[-1]
+    for pid in pids:
+        gs.players[pid].age = 25
+    gs.players[public_pid].age = 19
+    gs.players[public_pid].handle = "Public youth"
+    gs.players[private_pid].handle = "Hidden selected target"
+    report = PrepReport(
+        plan_id="legacy-identity-report", team_id=tid, fixture_id="fixture",
+        opponent_id=tid, partner_id=tid, map_id="bind", objective="anti_exec",
+        intensity="light", season=gs.season, week=gs.week,
+        participant_ids=pids, artifact_label="Bind prep book",
+        dev_suggestion_player_id=private_pid,
+        dev_suggestion="Hidden selected target has ~21 points of untapped ceiling.",
+    )
+    gs.preparation_reports_by[tid] = report
+    saved_report = report.model_dump_json()
+    server._club_view(gs)
+    before = gs.model_dump_json()
+    club = server._club_view(gs)["preparation"]["last"]
+    artifact = server._last_prep_artifact(gs, tid)
+    for view in (club, artifact):
+        assert view["dev_suggestion_player_id"] == public_pid
+        assert view["dev_suggestion_handle"] == "Public youth"
+        assert "Hidden selected target" not in view["dev_suggestion"]
+        assert "~21" not in view["dev_suggestion"]
+        assert "age-based" in view["dev_suggestion"]
+    assert gs.model_dump_json() == before
+    for pid in pids:
+        gs.players[pid].potential = 1 if pid == public_pid else 99
+    counterfactual_before = gs.model_dump_json()
+    assert server._club_view(gs)["preparation"]["last"] == club
+    assert server._last_prep_artifact(gs, tid) == artifact
+    assert report.model_dump_json() == saved_report
+    assert gs.model_dump_json() == counterfactual_before
 
 
 def test_prep_identity_handles_no_report_and_does_not_mutate_projection(game_data):
