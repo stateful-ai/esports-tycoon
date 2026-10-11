@@ -282,16 +282,19 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     base_sponsor = weekly_sponsor_income(team)
     merch, tickets = merch_ticket_income(team, win_rate)
     streaming = roster_stream_income(roster)
+    # Convenience properties materialize absent team entries; display reads
+    # must leave a fresh save's sparse maps untouched.
+    active_slots = gs.sponsor_slots_by.get(gs.acting_team_id, {})
     sponsors_by_slot = {
         slot: (
             deal.weekly + int(deal.per_win * win_rate)
-            if (deal := gs.sponsor_slots.get(slot)) and deal.weeks_left > 0
+            if (deal := active_slots.get(slot)) and deal.weeks_left > 0
             else 0
         )
         for slot in SLOT_ORDER
     }
     sponsors_total = base_sponsor + sum(sponsors_by_slot.values())
-    upkeep = facility_weekly_upkeep(gs.facilities)
+    upkeep = facility_weekly_upkeep(gs.facilities_by.get(gs.acting_team_id, {}))
 
     income_total = sponsors_total + merch + tickets + streaming
     expense_total = salaries + staff_cost + upkeep
@@ -327,16 +330,17 @@ def cash_projection(gs: GameState, staff_cost: int = 0, weeks: int = 8) -> list[
     base_sponsor = weekly_sponsor_income(team)
     merch, tickets = merch_ticket_income(team, win_rate)
     streaming = roster_stream_income(roster)
-    upkeep = facility_weekly_upkeep(gs.facilities)
+    upkeep = facility_weekly_upkeep(gs.facilities_by.get(gs.acting_team_id, {}))
     flat_net = (
         (base_sponsor + merch + tickets + streaming)
         - (salaries + staff_cost + upkeep)
     )
 
-    remaining = {slot: deal.weeks_left for slot, deal in gs.sponsor_slots.items()}
+    active_slots = gs.sponsor_slots_by.get(gs.acting_team_id, {})
+    remaining = {slot: deal.weeks_left for slot, deal in active_slots.items()}
     weekly_amounts = {
         slot: deal.weekly + int(deal.per_win * win_rate)
-        for slot, deal in gs.sponsor_slots.items()
+        for slot, deal in active_slots.items()
     }
 
     balance = team.balance
