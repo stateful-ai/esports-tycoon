@@ -8049,6 +8049,10 @@ def agent_act(body: AgentActBody) -> dict:
             # accept_job: the seat moved clubs — mirror the human endpoint's
             # session rebinding (ready flag + acting pointer now).
             S.ready.discard(me)
+            # The digest follows the manager, as in AgentWorld. Its contents
+            # still describe the resolved week at the old club.
+            if me in S.agent_last_tick:
+                S.agent_last_tick[moved_to] = S.agent_last_tick.pop(me)
             gs.set_acting(moved_to)
             game = _ctx.get().game
             game.save(force=True)  # a career move must survive a restart
