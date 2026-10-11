@@ -817,7 +817,7 @@
   "source612_raw_unchanged": true,
   "source_Git_tree_equal_tested64": true,
   "local_tests_or_acceptance_helpers_or_gameplay": false,
-  "publication_order": "Actual765 then808 then885 then957 then982 merges; retarget only on root direction",
+  "publication_order": "Actual publication order: 765 -> 808 -> 885 -> 938 -> 957 -> 982; retarget only on root direction",
   "inherited_CI_success": false,
   "additional_original_report": "docs/playtests/2026-10-11-away-recap-score-perspective.md"
 }
