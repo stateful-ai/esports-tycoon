@@ -1,0 +1,42 @@
+{
+  "verified_at_utc": "2026-10-11T01:50:00.377698+00:00",
+  "native": {
+    "exit_code": 0,
+    "source_freeze_matches": true,
+    "changed_source_files": [],
+    "started_at_utc": "2026-10-10T23:44:01.158281+00:00",
+    "finished_at_utc": "2026-10-11T01:18:18.142772+00:00",
+    "native_python": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap33-fixture-map-advice\\ESports Simulator",
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-n2"
+    ]
+  },
+  "terminal": "1278 passed in 5656.29s (1:34:16)",
+  "frozen_paths": 624,
+  "complete_pre_post_current_runtime_scope_exact": true,
+  "complete_saved_state_byte_identical": true,
+  "save_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "accepted_decisions": 72,
+  "snapshots": 16,
+  "new_accepted_decisions": 0,
+  "paired_save_request_id": 21,
+  "scoped_world_events": 507,
+  "current_raw_events": 507,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 7,
+    "visible_time": 495,
+    "session_end": 1,
+    "attempt": 1,
+    "result": 1
+  },
+  "observation_fields_protected": true,
+  "scoped_csv_sha256": "8e7b6b0a42a2cad455f4c8dfa8e639d733473e6522f5927f5116ed74a97d6b96",
+  "local_tests_launched": false,
+  "limits": "No new play or local test in publication recovery. Bounded retained usage, not attention, complete funnels or exact overlay intent. Original audit/failure/intent ordering and corrected numeric records preserved."
+}

@@ -118,6 +118,21 @@ function screenHead(title, opts = {}) {
   return head;
 }
 
+// Shared fixture facts on Dashboard and Match; all records come from the server.
+function fixtureMapRead(board, mp) {
+  if (!mp?.fixture) return;
+  const f = mp.fixture;
+  board.appendChild(el("p", "es-scout-lab muted",
+    f.veto_locked ? "Series maps — veto locked" : "Scheduled maps"));
+  if (f.veto.length) board.appendChild(el("p", "muted", esc(f.veto.join(" · "))));
+  const record = r => r.played ? `${r.win_rate}% (${r.wins}/${r.played})` : "no season maps played";
+  for (const m of f.maps) {
+    board.appendChild(el("p", "es-fixture-map",
+      `${esc(m.map)} — you ${record(m.ours)} · ${esc(f.opponent)} ${record(m.theirs)}`));
+  }
+  board.appendChild(el("p", "muted", "Season records on the scheduled maps; prepare for these maps."));
+}
+
 function toast(msg) {
   const t = el("div", "t", msg);
   $("#toast").appendChild(t);
@@ -1711,16 +1726,17 @@ async function openMatchday() {
   // 4. Map pool & suggested veto (the server's board; hidden until it has data).
   const mp = f.map_pool;
   const maps = el("div", "card ws-6");
-  maps.appendChild(el("h2", "", "Your map pool & veto"));
+  maps.appendChild(el("h2", "", "Your map pool & fixture"));
+  fixtureMapRead(maps, mp);
   if (mp && mp.veto && (mp.veto.ban || mp.veto.pick)) {
     const vr = el("div", "es-veto");
     if (mp.veto.ban) {
       vr.appendChild(el("span", "es-veto-chip ban",
-        `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.opponent} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+        `Historical weakness: ${esc(mp.veto.ban.map)} <span class="muted">(${esc(mp.veto.opponent)} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
     }
     if (mp.veto.pick) {
       vr.appendChild(el("span", "es-veto-chip pick",
-        `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+        `Historical strength: ${esc(mp.veto.pick.map)} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
     }
     maps.appendChild(vr);
   }
@@ -2192,17 +2208,18 @@ async function dashboard(v) {
     // and no veto ban/pick yet, so the section (and its label) must stay hidden
     // rather than render an empty box.
     const mp = fix.map_pool;
-    if (mp && (mp.maps.length || (mp.veto && (mp.veto.ban || mp.veto.pick)))) {
+    if (mp && (mp.fixture || mp.maps.length || (mp.veto && (mp.veto.ban || mp.veto.pick)))) {
       const board = el("div", "es-mappool");
+      fixtureMapRead(board, mp);
       if (mp.veto && (mp.veto.ban || mp.veto.pick)) {
         const vr = el("div", "es-veto");
         if (mp.veto.ban) {
           vr.appendChild(el("span", "es-veto-chip ban",
-            `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.ban.map ? mp.veto.opponent : ""} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+            `Historical weakness: ${esc(mp.veto.ban.map)} <span class="muted">(${esc(mp.veto.opponent)} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
         }
         if (mp.veto.pick) {
           vr.appendChild(el("span", "es-veto-chip pick",
-            `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+            `Historical strength: ${esc(mp.veto.pick.map)} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
         }
         board.appendChild(vr);
       }

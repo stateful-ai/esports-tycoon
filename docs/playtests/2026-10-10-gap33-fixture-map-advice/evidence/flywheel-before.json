@@ -1,0 +1,76 @@
+[
+  {
+    "id": "esports-playtest-0157",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Browser stale save reference needs explicit recovery",
+    "problem": "Save used a stale reference after result UI refresh; setup also used invalid SID length",
+    "solution": "Preserve blocked/partial rows, obtain fresh refs and save/reload before auditing own world",
+    "lesson": "Retained Save attempt/result exists only for fresh recovery; no HTTP rejection should be invented for a stale-reference click",
+    "confidence": "high",
+    "source": "2026-10-10-gap32-media main64ee dirty browser8510 G32M1 seed2038 S1W16-W17",
+    "code": "",
+    "tags": [
+      "media",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0156",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "MEDIA settlement differs from whole-week change",
+    "problem": "A final result and other weekly systems can obscure the chosen press contribution",
+    "solution": "Display immediate and result-settlement snapshots plus summed MEDIA-only deltas",
+    "lesson": "Actual final0-2 gave measured settlement -1 sentiment/+1 trust and cumulative0/+4. This establishes choice accounting, not match causality",
+    "confidence": "high",
+    "source": "2026-10-10-gap32-media main64ee dirty browser8510 G32M1 seed2038 S1W16-W17",
+    "code": "",
+    "tags": [
+      "media",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0155",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "MEDIA snapshots attribute clamped effects",
+    "problem": "Authored trust/sentiment deltas do not prove actual changes at caps",
+    "solution": "Measure before/after server mutations per player and active sponsor and keep old phases unknown",
+    "lesson": "Browser showed immediate +1 sentiment, +3 per player, sponsors +0; cap/noop cases need quantitative tests",
+    "confidence": "high",
+    "source": "2026-10-10-gap32-media main64ee dirty browser8510 G32M1 seed2038 S1W16-W17",
+    "code": "",
+    "tags": [
+      "media",
+      "browser",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0154",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Media feedback omits measured change explanation",
+    "problem": "Understand Respect rival choice and delayed loss settlement",
+    "solution": "Compare immediate acknowledgement and Operations history to independent pre/post trust",
+    "lesson": "Visible feedback is generic and Operations shows absolute trust54/62. Saved trust actually rises3 immediately then1 after settlement for six players. Nominal record totals do not establish realized clamped effects. New gap32 owns measured server-side feedback; root row8 visibility overstatement requires correction.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-final main64ee15f browser8500 world26UHC seed2038 W16-W17",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "preparation",
+      "prize",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]
