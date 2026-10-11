@@ -1,0 +1,183 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Team Nexus
+  - generic: 487,320 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸" [disabled]
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 2":
+      - text: Club
+      - generic: "2"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W1 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 0–0
+  - generic: Record
+  - generic: 0 rd
+  - button "6th League Americas":
+    - generic: 6th
+    - generic: League
+    - generic: Americas
+  - button "487,320 cr Balance":
+    - generic: 487,320 cr
+    - generic: Balance
+  - generic: "72"
+  - generic: Morale
+  - button "75 Condition":
+    - generic: "75"
+    - generic: Condition
+  - text: W1 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Team Nexus
+  - generic: 6th · 0–0
+  - generic: VS
+  - generic: S1 · W1
+  - generic: Americas League
+  - generic: Best of 1
+  - generic "The manager across the aisle": vs Diego Vargas · Recluse
+  - generic: Gallic Storm
+  - generic: 3rd · 0–0
+  - generic: Today's prep
+  - generic: Gallic Storm in W1
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Gallic Storm
+  - paragraph: Your scout is not assigned to Gallic Storm. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Align development with Tactical
+  - paragraph: Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: A win would haul Team Nexus back toward the playoff places.
+  - generic: Map
+  - figure "lotus":
+    - img "lotus"
+    - generic: lotus
+  - text: Run-in
+  - generic: W1 Gallic Storm
+  - generic: W2 Team Vanguard
+  - generic: W3 Chao Phraya Owls
+  - generic: W4 Harbour City Nine
+  - generic: W5 Coral Sea Drakes
+  - generic: Danger men
+  - generic: Voltsurge
+  - generic: Controller
+  - generic: ~76
+  - generic: Havocstep
+  - generic: Duelist
+  - generic: ~61
+  - generic: Embermark
+  - generic: Duelist
+  - generic: ~60
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Chao Phraya Owls 0 0 0":
+        - cell "1"
+        - cell "Chao Phraya Owls"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "2 Coral Sea Drakes 0 0 0":
+        - cell "2"
+        - cell "Coral Sea Drakes"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "3 Gallic Storm 0 0 0":
+        - cell "3"
+        - cell "Gallic Storm"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "4 Harbour City Nine 0 0 0":
+        - cell "4"
+        - cell "Harbour City Nine"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "5 Meridian Cross 0 0 0":
+        - cell "5"
+        - cell "Meridian Cross"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "6 Team Nexus 0 0 0":
+        - cell "6"
+        - cell "Team Nexus"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+  - paragraph: "World #23 · Rep 58 · Fans 284K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: ▸
+  - generic: Apex contract up in 3w
+  - text: ▸
+  - generic: Vortex contract up in 8w
+  - generic: ▸ No game plan set for W1
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "News" [level=2]
+  - generic: "[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+- status:
+  - generic: Campaign processing
+  - heading "Advancing week" [level=1]
+  - paragraph: Resolving fixtures across the league, then settling training, scouting, and finances.
+  - generic: Building the next week
+  - generic: 0s
+- tooltip

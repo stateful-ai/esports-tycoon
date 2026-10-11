@@ -1,0 +1,12 @@
+{
+  "phase": "begin",
+  "head": "b5fcd57dfa2b99527d518fd2c51f5e6060712865",
+  "tree": "ad0ee3155aad7f3b37314718606b7e0897c82b97",
+  "expected_head_matches": true,
+  "tracked_files": 3547,
+  "normalized_raw_blob_mismatches": [],
+  "index_sha256": "61b12385c9cf36e2d3c559d4702ace9bc517911c7ac797d74b04d97821ee3764",
+  "staged_paths": [],
+  "untracked_nonignored": [],
+  "private_save_files": 0
+}

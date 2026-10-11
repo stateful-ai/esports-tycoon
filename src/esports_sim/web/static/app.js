@@ -1,8 +1,8 @@
 /* Campaign hub. Pure API consumer — all state lives server-side. */
 
-import { h, render } from 'https://esm.sh/preact@10.19.2';
-import { useState, useEffect, useMemo, useRef } from 'https://esm.sh/preact@10.19.2/hooks';
-import htm from 'https://esm.sh/htm@3.1.1';
+import { h, render } from './vendor/preact.mjs';
+import { useState, useEffect, useMemo, useRef } from './vendor/preact-hooks.mjs';
+import htm from './vendor/htm.mjs';
 const html = htm.bind(h);
 
 const $ = (s) => document.querySelector(s);
@@ -116,6 +116,21 @@ function screenHead(title, opts = {}) {
   }
   for (const node of opts.right || []) head.appendChild(node);
   return head;
+}
+
+// Shared fixture facts on Dashboard and Match; all records come from the server.
+function fixtureMapRead(board, mp) {
+  if (!mp?.fixture) return;
+  const f = mp.fixture;
+  board.appendChild(el("p", "es-scout-lab muted",
+    f.veto_locked ? "Series maps — veto locked" : "Scheduled maps"));
+  if (f.veto.length) board.appendChild(el("p", "muted", esc(f.veto.join(" · "))));
+  const record = r => r.played ? `${r.win_rate}% (${r.wins}/${r.played})` : "no season maps played";
+  for (const m of f.maps) {
+    board.appendChild(el("p", "es-fixture-map",
+      `${esc(m.map)} — you ${record(m.ours)} · ${esc(f.opponent)} ${record(m.theirs)}`));
+  }
+  board.appendChild(el("p", "muted", "Season records on the scheduled maps; prepare for these maps."));
 }
 
 function toast(msg) {
@@ -233,7 +248,8 @@ function helpSeenKey() {
 }
 
 function helpFirstWeekMarkup() {
-  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span></div>` +
+  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span>` +
+    `<button class="btn btn-sm btn-primary help-tour-btn" data-tour-start>▶ Take the 1-minute tour</button></div>` +
     `<ol class="help-steps">${FIRST_WEEK_STEPS.map(([tab, title, body], i) =>
       `<li><span class="help-step-num">${i + 1}</span><div><b>${esc(title)}</b><p>${esc(body)}</p></div>` +
       `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`
@@ -286,6 +302,16 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
   if (!document.getElementById("help-body")) return;
   const opening = overlay.classList.contains("hidden");
   overlay.dataset.automatic = automatic ? "true" : "false";
+  // The "don't open automatically again" box only makes sense for the
+  // first-week auto-open; a manual open is always intentional.
+  const skipWrap = document.getElementById("help-skip-wrap");
+  if (skipWrap) skipWrap.hidden = !automatic;
+  overlay.dataset.preferenceKey = helpSeenKey();
+  const skip = document.getElementById("help-skip");
+  if (skip) {
+    skip.checked = false;
+    try { skip.checked = localStorage.getItem(overlay.dataset.preferenceKey) === "1"; } catch (_e) {}
+  }
   overlay.classList.remove("hidden");
   if (opening) {
     helpUsageSection = null;
@@ -304,8 +330,14 @@ function closeHelp() {
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
-    try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {}
+    const key = overlay.dataset.preferenceKey || helpSeenKey();
+    const skip = document.getElementById("help-skip");
+    try {
+      if (skip?.checked) localStorage.setItem(key, "1");
+      else localStorage.removeItem(key);
+    } catch (_e) {}
   }
+  overlay.dataset.automatic = "false";
 }
 
 function maybeShowFirstWeekHelp(state) {
@@ -320,7 +352,19 @@ function maybeShowFirstWeekHelp(state) {
 function initHelpSystem() {
   document.getElementById("help-open")?.addEventListener("click", () => openHelp("first-week"));
   document.getElementById("help-close")?.addEventListener("click", closeHelp);
+  // Persist the "don't open automatically again" choice the moment it changes,
+  // so it holds even if the user dismisses the overlay some other way.
+  document.getElementById("help-skip")?.addEventListener("change", (event) => {
+    const key = document.getElementById("help")?.dataset.preferenceKey || helpSeenKey();
+    if (event.target.checked) { try { localStorage.setItem(key, "1"); } catch (_e) {} }
+    else { try { localStorage.removeItem(key); } catch (_e) {} }
+  });
   document.getElementById("help")?.addEventListener("click", (event) => {
+    if (event.target.closest("[data-tour-start]")) {
+      closeHelp();
+      if (window.startTour) window.startTour();
+      return;
+    }
     const section = event.target.closest("[data-help-section]");
     if (section) return renderHelp(section.dataset.helpSection, App.tab);
     const destination = event.target.closest("[data-help-tab]");
@@ -586,7 +630,17 @@ function renderOfferGrid(grid, offers, onPick) {
   }
 }
 
+let lobbyGeneration = 0;
+
+function lobbySeed() {
+  const value = $("#ng-seed").value.trim();
+  if (!/^[+-]?\d+$/.test(value)) return null;
+  const seed = Number(value);
+  return Number.isSafeInteger(seed) ? seed : null;
+}
+
 function setupLobby(lob) {
+  const generation = ++lobbyGeneration;
   window.Usage?.view("lobby");
   const create = $("#lobby-create");
   const join = $("#lobby-join");
@@ -631,6 +685,19 @@ function setupLobby(lob) {
   // Sandbox-only fantasy-draft start: tier-1 rosters enter one shared pool
   // and every org (human + AI) snake-drafts its ten before week 1.
   let fantasyDraft = false;
+  let pickRevision = 0;
+  let seedTimer = null;
+  let seedEditPending = false;
+  let reportedSeedValue = $("#ng-seed").value;
+  const recordSeedEdit = () => {
+    if (generation !== lobbyGeneration || !seedEditPending) return;
+    seedEditPending = false;
+    const value = $("#ng-seed").value;
+    if (value === reportedSeedValue) return;
+    reportedSeedValue = value;
+    // Coarse usage only: never send the seed or one event per keystroke.
+    window.Usage?.interaction("lobby/seed_change");
+  };
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
   const renderScenarios = () => {
@@ -745,6 +812,29 @@ function setupLobby(lob) {
     for (const p of packs) mk(p.name, p.id);
   };
   const renderPick = () => {
+    clearTimeout(seedTimer);
+    if (generation !== lobbyGeneration) return;
+    recordSeedEdit();
+    const revision = ++pickRevision;
+    const seed = lobbySeed();
+    const pack = world;
+    const mode = gameMode;
+    const shared = shared_;
+    const draft = fantasyDraft;
+    const grid = $("#ng-teams");
+    const isCurrent = () => generation === lobbyGeneration &&
+      revision === pickRevision && seed === lobbySeed() &&
+      pack === world && mode === gameMode && shared === shared_ &&
+      draft === fantasyDraft && !create.classList.contains("hidden");
+    const pick = (teamId, interview = null) => {
+      if (!isCurrent()) return;
+      return createGame(teamId, shared, pack, mode, draft ? null : scenario, draft, interview, seed);
+    };
+    grid.innerHTML = "";
+    if (seed === null) {
+      grid.innerHTML = '<span role="status" class="muted">Enter a whole-number seed to choose an organisation.</span>';
+      return;
+    }
     const p = packs.find((x) => x.id === world);
     const desc = $("#ng-world-desc");
     if (p) {
@@ -758,33 +848,26 @@ function setupLobby(lob) {
     if (gameMode === "legacy") {
       // Career offers come from the server (same seed/pack derivation
       // the create call validates against). Repaint on seed edits.
-      const grid = $("#ng-teams");
       grid.innerHTML = '<span class="muted">Loading offers…</span>';
-      const seed = parseInt($("#ng-seed").value) || 2026;
       api(
         `/api/lobby/offers?seed=${seed}` +
           (world ? `&pack=${encodeURIComponent(world)}` : "")
       )
-        .then((r) =>
-          renderOfferGrid(grid, r.offers, (o) =>
-            createGame(o.team_id, shared_, world, "legacy")
-          )
-        )
-        .catch(() => (grid.innerHTML = '<span class="muted">Could not load offers.</span>'));
+        .then((r) => {
+          if (isCurrent()) renderOfferGrid(grid, r.offers, (o) => pick(o.team_id));
+        })
+        .catch(() => {
+          if (isCurrent()) grid.innerHTML = '<span role="status" class="muted">Could not load offers. Change the seed or mode to retry.</span>';
+        });
       return;
     }
     if (fantasyDraft) {
       // A fantasy-draft career starts with the interview, not a team
       // grid: answer five questions, field four org offers, sign one.
-      const grid = $("#ng-teams");
-      grid.innerHTML = "";
       runDraftInterview(
         grid,
-        { pack: world, getSeed: () => parseInt($("#ng-seed").value) || 2026 },
-        (offer, answers) =>
-          createGame(
-            offer.team_id, shared_, world, "sandbox", null, true, answers
-          )
+        { pack, getSeed: () => seed, isCurrent },
+        (offer, answers) => pick(offer.team_id, answers)
       );
       return;
     }
@@ -793,28 +876,32 @@ function setupLobby(lob) {
       // the CURRENT seed — otherwise a solo start at a random seed builds a
       // different league than the grid shows (and the pick 422s). Pack
       // worlds are static data, so they keep using the packs payload.
-      const grid = $("#ng-teams");
       grid.innerHTML = '<span class="muted">Preparing league…</span>';
-      const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
-        .then((r) =>
-          renderTeamGrid(grid, r.teams, (t) =>
-            createGame(t.id, shared_, world, "sandbox", scenario)
-          )
-        )
-        .catch(
-          () => (grid.innerHTML = '<span class="muted">Could not load teams.</span>')
-        );
+        .then((r) => {
+          if (isCurrent()) renderTeamGrid(grid, r.teams, (t) => pick(t.id));
+        })
+        .catch(() => {
+          if (isCurrent()) grid.innerHTML = '<span role="status" class="muted">Could not load teams. Change the seed or mode to retry.</span>';
+        });
       return;
     }
-    renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world, "sandbox", scenario)
-    );
+    renderTeamGrid(grid, worldTeams(), (t) => pick(t.id));
   };
-  $("#ng-seed").addEventListener("change", () => {
-    window.Usage?.interaction("lobby/seed_change");
+  // Assign properties so re-entering the lobby replaces old handlers.
+  $("#ng-seed").oninput = () => {
+    seedEditPending = true;
+    ++pickRevision;
+    clearTimeout(seedTimer);
+    $("#ng-teams").innerHTML = '<span role="status" class="muted">Updating organisations…</span>';
+    seedTimer = setTimeout(renderPick, 200);
+  };
+  $("#ng-seed").onchange = () => {
+    seedEditPending = true;
     renderPick();
-  });
+  };
+  // Blur can settle an input edit even when no change event reaches us.
+  $("#ng-seed").onblur = recordSeedEdit;
   const showCreate = (shared) => {
     shared_ = shared;
     create.classList.remove("hidden");
@@ -835,6 +922,9 @@ function setupLobby(lob) {
   $("#mode-solo").onclick = () => { setActiveMode($("#mode-solo")); showCreate(false); };
   $("#mode-shared").onclick = () => { setActiveMode($("#mode-shared")); showCreate(true); };
   $("#mode-join").onclick = () => {
+    recordSeedEdit();
+    ++pickRevision;
+    clearTimeout(seedTimer);
     setActiveMode($("#mode-join"));
     create.classList.add("hidden");
     join.classList.remove("hidden");
@@ -870,9 +960,10 @@ function setupLobby(lob) {
 
 async function createGame(
   teamId, shared, pack = null, gameMode = "sandbox", scenario = null,
-  fantasyDraft = false, interview = null
+  fantasyDraft = false, interview = null, previewSeed = null
 ) {
-  const seed = parseInt($("#ng-seed").value) || 2026;
+  const seed = previewSeed ?? lobbySeed();
+  if (seed === null || seed !== lobbySeed()) return toast("Choose an organisation for the current seed.");
   const r = await api("/api/new", {
     team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
     fantasy_draft: fantasyDraft, interview,
@@ -1310,7 +1401,7 @@ async function clubOps(v, sub) {
   const trustRow = el("div", "row");
   for (const p of d.media.player_trust || []) trustRow.appendChild(el("span", "pill", `${p.handle} ${Math.round(p.trust)}`));
   mc.appendChild(trustRow);
-  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
+  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}${(h.effect_feedback || []).map(line => `<div class="muted">${esc(line)}</div>`).join("")}`));
   if (d.media.commitment) mc.appendChild(el("p", "muted", "A public derby expectation will settle after the fixture."));
   ws.appendChild(mc);
 
@@ -1445,7 +1536,7 @@ async function clubOps(v, sub) {
           
           const item = el("div", "", `
             <div style="font-weight:600; font-size:14px; margin-bottom:4px;">${plink(p.id, p.handle)}</div>
-            <div><span class="pill ${toneClass}" style="font-size:10px; padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
+            <div><span class="pill ${toneClass}" style="padding:2px 6px; text-transform:uppercase;">${roleLabel}</span></div>
           `);
           listContainer.appendChild(item);
         }
@@ -1479,7 +1570,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill win" style="font-size:10px; margin-left:auto;">Friendship Bond</span>` +
+          `<span class="pill win" style="margin-left:auto;">Friendship Bond</span>` +
           `</div>`;
       }
       duosCard.appendChild(list);
@@ -1498,7 +1589,7 @@ async function clubOps(v, sub) {
         const p2 = rd.players.find(p => p.id === pair[1]) || { handle: pair[1] };
         list.innerHTML += `<div style="padding:4px 0; display:flex; align-items:center; gap:12px;">` +
           `<strong>${plink(p1.id, p1.handle)}</strong> <span class="muted">&harr;</span> <strong>${plink(p2.id, p2.handle)}</strong> ` +
-          `<span class="pill loss" style="font-size:10px; margin-left:auto;">Grave Friction</span>` +
+          `<span class="pill loss" style="margin-left:auto;">Grave Friction</span>` +
           `</div>`;
       }
       feudsCard.appendChild(list);
@@ -1659,6 +1750,14 @@ function dashGoTab(name) {
    fixture board, both sides' form + danger men, the opposing bench) laid out
    on the workspace grid. Presentation only — every number arrives computed;
    this renders, deep-links names, and hands off to the game-plan screen. */
+let matchdayUsageOpen = false;
+function recordMatchdayOpen(ov) {
+  // Count completed visible inspections, not fetch attempts or refreshes.
+  if (!ov.classList.contains("hidden") && !matchdayUsageOpen) {
+    matchdayUsageOpen = true;
+    window.Usage?.interaction("matchday/briefing_open");
+  }
+}
 async function openMatchday() {
   let md = null;
   try { md = await api("/api/matchday"); } catch (_e) { return; }
@@ -1679,6 +1778,7 @@ async function openMatchday() {
     btn.onclick = closeMatchday;
     empty.appendChild(btn);
     wrap.appendChild(empty);
+    recordMatchdayOpen(ov);
     return;
   }
   const you = md.you, them = md.them;
@@ -1706,7 +1806,8 @@ async function openMatchday() {
       box.appendChild(el("span", "es-star",
         plink(d.player_id, d.handle) +
         `<span class="pill">${esc(humanize(d.role))}</span>` +
-        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} maps</span>`));
+        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} ${d.maps === 1 ? "map" : "maps"}</span>` +
+        (d.sample_note ? `<span class="muted">${esc(d.sample_note)}</span>` : "")));
     }
     return box;
   };
@@ -1785,16 +1886,17 @@ async function openMatchday() {
   // 4. Map pool & suggested veto (the server's board; hidden until it has data).
   const mp = f.map_pool;
   const maps = el("div", "card ws-6");
-  maps.appendChild(el("h2", "", "Your map pool & veto"));
+  maps.appendChild(el("h2", "", "Your map pool & fixture"));
+  fixtureMapRead(maps, mp);
   if (mp && mp.veto && (mp.veto.ban || mp.veto.pick)) {
     const vr = el("div", "es-veto");
     if (mp.veto.ban) {
       vr.appendChild(el("span", "es-veto-chip ban",
-        `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.opponent} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+        `Historical weakness: ${esc(mp.veto.ban.map)} <span class="muted">(${esc(mp.veto.opponent)} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
     }
     if (mp.veto.pick) {
       vr.appendChild(el("span", "es-veto-chip pick",
-        `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+        `Historical strength: ${esc(mp.veto.pick.map)} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
     }
     maps.appendChild(vr);
   }
@@ -1836,11 +1938,16 @@ async function openMatchday() {
   cont.onclick = closeMatchday;
   foot.append(plan, cont);
   ws.appendChild(foot);
+  recordMatchdayOpen(ov);
 }
 
 function closeMatchday() {
   const ov = $("#matchday");
   if (!ov) return;
+  if (matchdayUsageOpen && !ov.classList.contains("hidden")) {
+    window.Usage?.interaction("matchday/briefing_close");
+  }
+  matchdayUsageOpen = false;
   ov.classList.add("hidden");
   ov.innerHTML = "";
   ov.onclick = null;
@@ -1903,16 +2010,24 @@ async function dashboard(v) {
     fix ? api("/api/gameplan").catch(() => null) : Promise.resolve(null),
   ]);
 
-  // League position + record + region for any broadcast (tier-1) team.
+  // League position + record + region, in each server-ordered competition.
   const posOf = {}, recOf = {}, regionOf = {};
   if (table) {
     for (const reg of table.regions) {
-      reg.rows.forEach((row, i) => {
-        posOf[row.id] = i + 1;
-        recOf[row.id] = `${row.wins}–${row.losses}`;
-        regionOf[row.id] = reg.region;
-      });
+      for (const rows of [reg.rows ?? [], reg.tier2_rows ?? []]) {
+        rows.forEach((row, i) => {
+          posOf[row.id] = i + 1;
+          recOf[row.id] = `${row.wins}–${row.losses}`;
+          regionOf[row.id] = reg.region;
+        });
+      }
     }
+  }
+  const competition = s.competition_table;
+  for (const [i, row] of (competition?.rows ?? []).entries()) {
+    posOf[row.id] = i + 1;
+    recOf[row.id] = `${row.wins}–${row.losses}`;
+    regionOf[row.id] = competition.region;
   }
 
   // A team's played fixtures, oldest → newest (recent form + streak).
@@ -1991,7 +2106,7 @@ async function dashboard(v) {
   }
   if (posOf[myId]) {
     tiles.appendChild(statTile("League", ordinal(posOf[myId]), {
-      sub: cap(regionOf[myId] || me.region || ""),
+      sub: competition?.label || cap(regionOf[myId] || me.region || ""),
       onClick: () => dashGoTab("standings"),
       tooltip: "<h4>League Standing</h4><div class='tooltip-desc'>Your current position in the regional league standings. Click to view the full Season table.</div>"
     }));
@@ -2058,8 +2173,7 @@ async function dashboard(v) {
       fix.stage === "regular" ? `${region} League` : stageLabel(fix.stage).toUpperCase();
     const burnoutWatch = (s.rotation || []).filter((r) => r.burnout);
     const rosterShort = s.roster_readiness?.ready === false;
-    const scoutOnOpponent = s.scout && s.scout.target === oppId;
-    const scoutPct = scoutOnOpponent ? Math.round((s.scout.progress || 0) * 100) : 0;
+    const scoutReady = s.scout?.readiness;
     const planSet = !!(gameplan && gameplan.plan);
 
     const heroTop = el("div", "es-matchday-top");
@@ -2069,7 +2183,7 @@ async function dashboard(v) {
       `<p class="muted">Everything to settle before you advance the week.</p>`));
     const readiness = el("div", "es-readiness",
       `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
-      `<span class="pill ${scoutPct >= 50 ? "good" : ""}">${scoutOnOpponent ? scoutPct + "% scouted" : "Scout elsewhere"}</span>` +
+      `<span class="pill ${scoutReady?.ready ? "good" : ""}">${esc(scoutReady?.badge || "Scouting unassigned")}</span>` +
       `<span class="pill ${rosterShort || burnoutWatch.length ? "warn" : "good"}">${rosterShort ? "Squad short" : burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
     const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
     mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
@@ -2148,12 +2262,10 @@ async function dashboard(v) {
         App.tacticsTab = "gameplan"; dashGoTab("tactics");
       });
 
-    prepCard("Analyst", scoutOnOpponent ? `Turn ${scoutPct}% coverage into edges` : `Put the book on ${esc(oppName)}`,
-      scoutOnOpponent
-        ? (scoutPct >= 50 ? "The identity read is coming into focus. Review tendencies, danger players, and map evidence before finalizing the plan."
-          : "Coverage is building. Keep the assignment active, then use verified reads instead of guessing at their setup.")
-        : `Your scout is not assigned to ${esc(oppName)}. Switch coverage if this match is the priority.`,
-      scoutOnOpponent ? `${scoutPct}%` : "Unassigned", scoutPct >= 50 ? "ready" : "urgent", "Scouting desk", () => dashGoTab("scouting"));
+    prepCard("Analyst", esc(scoutReady?.title || "Review scouting"),
+      esc(scoutReady?.copy || "Open the scouting desk to review coverage."),
+      esc(scoutReady?.status || "Unassigned"), scoutReady?.tone || "",
+      "Scouting desk", () => dashGoTab("scouting"));
 
     const devPlayer = (s.movers || []).find((m) => m.delta < 0) || (s.movers || [])[0];
     const devTitle = burnoutWatch.length ? "Ease the load, keep growth targeted"
@@ -2266,17 +2378,18 @@ async function dashboard(v) {
     // and no veto ban/pick yet, so the section (and its label) must stay hidden
     // rather than render an empty box.
     const mp = fix.map_pool;
-    if (mp && (mp.maps.length || (mp.veto && (mp.veto.ban || mp.veto.pick)))) {
+    if (mp && (mp.fixture || mp.maps.length || (mp.veto && (mp.veto.ban || mp.veto.pick)))) {
       const board = el("div", "es-mappool");
+      fixtureMapRead(board, mp);
       if (mp.veto && (mp.veto.ban || mp.veto.pick)) {
         const vr = el("div", "es-veto");
         if (mp.veto.ban) {
           vr.appendChild(el("span", "es-veto-chip ban",
-            `Ban ${mp.veto.ban.map} <span class="muted">(${mp.veto.ban.map ? mp.veto.opponent : ""} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
+            `Historical weakness: ${esc(mp.veto.ban.map)} <span class="muted">(${esc(mp.veto.opponent)} ${mp.veto.ban.their_wr}% · you ${mp.veto.ban.our_wr}%)</span>`));
         }
         if (mp.veto.pick) {
           vr.appendChild(el("span", "es-veto-chip pick",
-            `Pick ${mp.veto.pick.map} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
+            `Historical strength: ${esc(mp.veto.pick.map)} <span class="muted">(you ${mp.veto.pick.our_wr}% · them ${mp.veto.pick.their_wr}%)</span>`));
         }
         board.appendChild(vr);
       }
@@ -2413,14 +2526,32 @@ async function dashboard(v) {
     const needs = computeNeedsYou(Object.assign({}, s, { gameplan, inbox_unread: unread }));
     const urgent = needs.some((n) => n.kind === "media" || n.kind === "flavor" || n.kind === "offer");
     const card = el("div", "card" + (urgent ? " alert" : ""));
+    card.dataset.tourNeeds = "true";
     card.appendChild(el("h2", "", "Needs you"));
+
+    if (App.flavorSettlement && App.flavorSettlementWorld === App.mp?.code && App.flavorSettlementTeam === s.user_team.id) {
+      const receipt = App.flavorSettlement;
+      const settled = el("div", "flavor-event");
+      settled.appendChild(el("div", "microlabel", "Team moment resolved"));
+      settled.appendChild(el("h3", "", esc(receipt.event_title || "Your response")));
+      settled.appendChild(el("p", "", esc(receipt.message)));
+      const effects = el("ul", "");
+      for (const effect of receipt.realized_effects || []) effects.appendChild(el("li", "", esc(effect.text)));
+      settled.appendChild(effects);
+      if (!receipt.realized_effects?.length) settled.appendChild(el("p", "muted", "No tracked meters changed."));
+      const dismiss = el("button", "btn btn-sm", "Dismiss result");
+      dismiss.onclick = () => { App.flavorSettlement = null; renderApp(); };
+      settled.appendChild(dismiss);
+      card.appendChild(settled);
+    }
 
     // Interactive event prompts render in full (a list row can't hold the
     // choice buttons); computeNeedsYou still counts them for the badges.
     const eventBlock = (ev, kicker, endpoint, fallbackDone) => {
+      const displayedTitle = ev.title || "A decision is waiting";
       const event = el("div", "flavor-event");
       event.appendChild(el("div", "microlabel", kicker));
-      event.appendChild(el("h3", "", ev.title || "A decision is waiting"));
+      event.appendChild(el("h3", "", displayedTitle));
       event.appendChild(el("p", "", ev.prompt || "Choose how to respond."));
       const choices = el("div", "row flavor-choices");
       for (const choice of ev.choices ?? []) {
@@ -2429,8 +2560,18 @@ async function dashboard(v) {
         button.onclick = async () => {
           const all = [...choices.querySelectorAll("button")];
           all.forEach((b) => (b.disabled = true));
+          const originWorld = App.mp?.code;
+          const originTeam = s.user_team.id;
           try {
             const r = await api(endpoint, { event_id: ev.id, choice_id: choice.id });
+            if (endpoint === "/api/actions/flavor_event") {
+              if (App.mp?.code !== originWorld || App.state?.user_team?.id !== originTeam) return;
+              // Serving-layer prose may differ from the deterministic fallback
+              // title in the response. Keep the moment the manager actually saw.
+              App.flavorSettlement = { ...r, event_title: displayedTitle };
+              App.flavorSettlementWorld = originWorld;
+              App.flavorSettlementTeam = originTeam;
+            }
             toast(r.message || fallbackDone); refresh();
           } catch (_e) {
             all.forEach((b) => (b.disabled = false));
@@ -2580,19 +2721,18 @@ async function dashboard(v) {
   // 5c. League snapshot: the mini-table plus your last result, one card at
   // the bottom of the main column. Season owns the full results list and
   // Stats owns the rating leaders.
-  let rows = null;
-  if (table) {
-    const reg = table.regions.find((r) => r.is_user) || table.regions[0];
-    rows = reg ? reg.rows : [];
-  } else if ((s.standings_top ?? []).length) {
-    rows = s.standings_top.map((r) => ({
-      id: r.team_id, name: r.name, wins: r.wins, losses: r.losses, diff: r.diff,
-    }));
-  }
+  const rows = competition?.rows ?? [];
   {
     const card = el("div", "card");
-    card.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
+    card.appendChild(el("h2", "", competition?.label || "Competition standings"));
     if (rows && rows.length) {
+      // Zero-state: before the first fixture every row is 0-0-0, which reads
+      // as a broken/empty table. Show a friendly pre-season note instead.
+      const anyPlayed = rows.some((r) => (r.wins || 0) + (r.losses || 0) > 0);
+      if (!anyPlayed) {
+        card.appendChild(el("p", "muted es-preseason",
+          `Season not started — the ${cap(regionOf[myId] || me.region || "")} table takes shape after week 1.`));
+      } else {
       const t = el("table");
       t.dataset.nosort = "1";
       t.innerHTML =
@@ -2618,6 +2758,9 @@ async function dashboard(v) {
       }
       t.appendChild(tb);
       card.appendChild(t);
+      }
+    } else {
+      card.appendChild(el("p", "muted", "No standings available for your competition yet."));
     }
     // Last result folded in (the old Recent results card is gone — Season
     // owns the full list).
@@ -2715,6 +2858,19 @@ function computeNeedsYou(data) {
       label: `${tlink(o.to_team, o.to_team_name)} offer ${gets} for <b>${plink(o.player_id, o.handle)}</b>`,
       detail: `expires W${o.expires_week}` });
   }
+  // A tired squad is the thing the dashboard most needs to say out loud:
+  // playtesters advanced past condition 87 -> 0 while this rail stayed quiet.
+  if (s.recovery?.needs_a_break) {
+    const r = s.recovery;
+    const worst = r.worst
+      ? ` — worst ${plink(r.worst.id, r.worst.handle)} at <b class="mono">${r.worst.condition}</b>`
+      : "";
+    items.push({ tab: "club", subtab: "squad", kind: "condition", action: "Rest", needs_action: true,
+      label: `Squad condition <b class="mono">${r.average_condition}</b>${worst}`,
+      detail: r.exhausted_count
+        ? `${r.exhausted_count} player${r.exhausted_count === 1 ? "" : "s"} close to burnout`
+        : "Rest a player or book recovery" });
+  }
   for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
     items.push({ tab: "club", subtab: "squad", kind: "contract", action: "Renew", needs_action: true,
       label: `${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
@@ -2768,9 +2924,12 @@ function computeNeedsYou(data) {
   for (const o of (s.objectives_hub ?? []).slice(0, 6)) {
     const ok = o.state === "achieved" || o.state === "on_track" || o.state === "leading";
     if (ok) continue;
+    const sponsorName = o.kind === "sponsor" ? o.sponsor_name : "";
+    const sponsorSlot = o.kind === "sponsor" && o.sponsor_slot
+      ? SLOT_LABELS[o.sponsor_slot] || humanize(o.sponsor_slot) : "";
     items.push({ tab: "standings", kind: "objective", action: "Chase", needs_action: false,
-      label: esc(o.label),
-      detail: `${esc(humanize(o.kind))} · ${esc(humanize(o.state || ""))}${o.detail ? " · " + esc(o.detail) : ""}` });
+      label: esc(sponsorName ? `${sponsorName} — ${o.label}` : o.label),
+      detail: `${esc(humanize(o.kind))}${sponsorSlot ? " · " + esc(sponsorSlot) : ""} · ${esc(humanize(o.state || ""))}${o.detail ? " · " + esc(o.detail) : ""}` });
   }
   return items;
 }
@@ -3066,6 +3225,70 @@ async function roster(v, opts = {}) {
     }));
   }
 
+  // Condition panel, above the table that shows the problem. Rest is free and
+  // costs a week of development; a booking costs money and nothing else. Both
+  // are stated here because a playtester who could not find either ran the
+  // squad to zero and read it as a dead end.
+  if (clubHost && data.is_user_team) {
+    const rec = App.state.recovery;
+    const card = el("div", `card ${rec?.needs_a_break ? "alert" : ""} recovery-card`);
+    const avg = rec?.average_condition ?? 0;
+    card.innerHTML =
+      `<h3>Squad condition <b class="mono">${avg}</b>` +
+      (rec?.needs_a_break ? ' <span class="chip tone-bad">NEEDS A BREAK</span>' : "") +
+      `</h3><p class="muted">Matches and training drain condition; tired players play worse and learn less. ` +
+      `Set a player to <b>Rest</b> below to recover them for free (they train nothing that week), or buy the whole squad a break.</p>`;
+    const row = el("div", "row recovery-options");
+    card.appendChild(row);
+    v.appendChild(card);
+    // Options and prices are server-computed (see manager/recovery.py); this
+    // only renders what /api/club sends.
+    api("/api/club").then((club) => {
+      const r = club.recovery;
+      if (!r) return;
+      if (r.booked_this_week) {
+        row.appendChild(el("span", "muted", "Recovery already booked this week."));
+        return;
+      }
+      // The cap decides WHICH option to buy, so it has to be readable before
+      // you spend, not after. Two playtesters bought blind and only then found
+      // out they had used the week.
+      row.appendChild(el("span", "muted", "One booking per week — choose one:"));
+      for (const o of r.options) {
+        // Effect on the face of the button, not just the tooltip. The server
+        // already sends condition_gain; both round-two personas reported the
+        // price was stated and the effect was not, and one of them measured
+        // it by hand across twelve weeks to find out.
+        const b = el(
+          "button", "btn btn-sm",
+          `${o.label} · +${o.condition_gain} condition · ${money(o.cost)}`,
+        );
+        b.title = o.enabled
+          ? `${o.blurb} +${o.condition_gain} condition and +${o.morale_gain} morale for every player on the roster. One booking per week.`
+          : o.blocked_reason;
+        // A disabled control must say why — the Facilities screen one tab over
+        // already does this and it was cited as the right pattern.
+        if (!o.enabled && o.blocked_reason) {
+          b.setAttribute("aria-label", `${o.label}: ${o.blocked_reason}`);
+        }
+        b.disabled = !o.enabled;
+        b.onclick = async () => {
+          b.disabled = true;
+          try {
+            const res = await api("/api/actions/recovery", { tier: o.id });
+            toast(res.message);
+            await refresh();
+            renderApp();
+          } catch { b.disabled = false; }
+        };
+        row.appendChild(b);
+        if (!o.enabled && o.blocked_reason) {
+          row.appendChild(el("span", "muted", o.blocked_reason));
+        }
+      }
+    });
+  }
+
   const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
   // The roster table is wide (13 columns) — give it the full content width so
@@ -3140,7 +3363,15 @@ async function roster(v, opts = {}) {
     let rowHtml;
     if (overview) {
       const actions = data.is_user_team
-        ? `${requestChip}<button class="btn btn-sm" data-act="talk">Talk</button>
+        // Rest sits FIRST and on this screen on purpose. Condition is shown
+        // in this table, and until now the only way to act on it was a
+        // dropdown on another sub-tab — three playtesters ran a squad to
+        // zero without ever finding it.
+        // Rest on a full-condition player burns their development week for
+        // nothing, and used to do it without saying so. Still clickable (you
+        // may want it before a heavy run), but it now warns first.
+        ? `${requestChip}<button class="btn btn-sm ${p.dev_focus === "rest" ? "active" : ""}" data-act="rest" title="${p.dev_focus === "rest" ? "Resting: recovers condition instead of training. Click to resume training." : (p.stamina != null && p.stamina >= 97 ? "Already at full condition — resting costs a week of development and recovers nothing." : "Rest this player: recovers condition this week instead of training.")}">${p.dev_focus === "rest" ? "Resting" : "Rest"}</button>
+           <button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
            <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
         : p.buyout != null
@@ -3262,6 +3493,17 @@ async function roster(v, opts = {}) {
       };
     }
     if (overview && data.is_user_team) {
+      tr.querySelector('[data-act="rest"]').onclick = async (e) => {
+        e.stopPropagation();
+        // Toggle: resting -> back to the team focus, anything else -> rest.
+        const next = p.dev_focus === "rest" ? "auto" : "rest";
+        if (next === "rest" && p.stamina != null && p.stamina >= 97) {
+          toast(`${p.handle} is already at full condition — resting spends a development week for nothing.`);
+          return;
+        }
+        const r = await api("/api/actions/dev_plan", { player_id: p.id, dev_focus: next });
+        toast(r.message); await refresh(); renderApp();
+      };
       tr.querySelector('[data-act="talk"]').onclick = (e) => {
         e.stopPropagation();
         openTalk(p);
@@ -3802,6 +4044,13 @@ async function tactics(v) {
    Scrim/bootcamp booking, tournament-six registration and the between-map
    series card. Reads /api/club (these are campaign-layer prep systems);
    moved out of Club · Operations so match prep has a single home. */
+function preparationDevPlayerLabel(report) {
+  if (!report.dev_suggestion_player_id) return "";
+  return (report.dev_suggestion_handle
+    ? plink(report.dev_suggestion_player_id, report.dev_suggestion_handle)
+    : "Former player") + " — ";
+}
+
 function hydratePreparationForm(pr, controls) {
   const plan = pr.current;
   // A booking belongs to one fixture. Ignore stale or unavailable choices as
@@ -3887,7 +4136,7 @@ async function tacticsPrep(ws) {
     }
     if (pr.last.dev_suggestion) {
       pc.appendChild(el("div", "newsline prep-dev-hint",
-        `<b>Dev note:</b> ${pr.last.dev_suggestion_player_id ? plink(pr.last.dev_suggestion_player_id, pr.last.dev_suggestion_handle || humanize(pr.last.dev_suggestion_player_id)) + " — " : ""}${esc(pr.last.dev_suggestion)}`));
+        `<b>Dev note:</b> ${preparationDevPlayerLabel(pr.last)}${esc(pr.last.dev_suggestion)}`));
     }
   }
   ws.appendChild(pc);
@@ -3928,11 +4177,49 @@ async function tacticsPrep(ws) {
     for (const x of d.series.responses) { const o = el("option", "", humanize(x)); o.value = x; response.appendChild(o); }
     const sin = el("select", "sel-sm"), sout = el("select", "sel-sm");
     for (const [sel, ids] of [[sin, d.series.bench_ids], [sout, d.series.starter_ids]]) { const none = el("option", "", "No substitution"); none.value = ""; sel.appendChild(none); for (const p of d.registration.players.filter((x) => ids.includes(x.id))) { const o = el("option", "", p.handle); o.value = p.id; sel.appendChild(o); } }
+    trigger.setAttribute("aria-label", "Series condition");
+    response.setAttribute("aria-label", "Between-map response");
+    sin.setAttribute("aria-label", "Substitute in");
+    sout.setAttribute("aria-label", "Substitute out");
+    const saved = d.series.directive?.fixture_id === d.series.fixture.id ? d.series.directive : null;
+    const playerName = (pid) => d.series.substitute_handles?.[pid] || d.registration.players.find((p) => p.id === pid)?.handle || `Unavailable player (${pid})`;
+    // Keep an unavailable saved choice visible until the manager replaces it;
+    // silently selecting the first legal option would overwrite their intent.
+    const restore = (select, value, options, label) => {
+      if (!options.includes(value)) {
+        const unavailable = el("option", "", `${label} (unavailable)`);
+        unavailable.value = value; unavailable.disabled = true;
+        select.appendChild(unavailable);
+      }
+      select.value = value;
+    };
+    if (saved) {
+      restore(trigger, saved.trigger, d.series.triggers, humanize(saved.trigger));
+      restore(response, saved.response, d.series.responses, humanize(saved.response));
+      restore(sin, saved.substitute_in || "", ["", ...d.series.bench_ids], saved.substitute_in ? playerName(saved.substitute_in) : "No substitution");
+      restore(sout, saved.substitute_out || "", ["", ...d.series.starter_ids], saved.substitute_out ? playerName(saved.substitute_out) : "No substitution");
+    }
     const row = el("div", "row"); row.append(trigger, response, sin, sout);
     const save = el("button", "btn btn-primary", "Save series card");
+    const warning = el("p", "muted");
+    const checkSelection = () => {
+      const legal = d.series.triggers.includes(trigger.value) && d.series.responses.includes(response.value)
+        && ((!sin.value && !sout.value) || (d.series.bench_ids.includes(sin.value) && d.series.starter_ids.includes(sout.value)));
+      save.disabled = !legal;
+      warning.textContent = legal ? "" : "Choose an available registered substitute and starter, or set both to No substitution, before saving.";
+    };
+    for (const select of [trigger, response, sin, sout]) select.onchange = checkSelection;
+    checkSelection();
     save.onclick = async () => { const r = await api("/api/actions/series_directive", { fixture_id: d.series.fixture.id, trigger: trigger.value, response: response.value, substitute_in: sin.value || null, substitute_out: sout.value || null }); toast(r.message); refresh(); };
-    sc.append(row, save);
-    if (d.series.directive) sc.appendChild(el("p", "muted", `Current: ${humanize(d.series.directive.trigger)} → ${humanize(d.series.directive.response)}.`));
+    sc.append(row, warning, save);
+    if (saved) {
+      const summary = el("p", "muted");
+      const substitution = saved.substitute_in || saved.substitute_out
+        ? `${saved.substitute_in ? plink(saved.substitute_in, playerName(saved.substitute_in)) : "No player"} in; ${saved.substitute_out ? plink(saved.substitute_out, playerName(saved.substitute_out)) : "no player"} out.`
+        : "No substitution.";
+      summary.innerHTML = `Current: ${esc(humanize(saved.trigger))} → ${esc(humanize(saved.response))}. ${substitution}`;
+      sc.appendChild(summary);
+    }
   }
   ws.appendChild(sc);
 }
@@ -4019,6 +4306,7 @@ function tacticsStrategy(main, rail, data) {
     const slider = el("input");
     slider.type = "range"; slider.min = 0; slider.max = 100; slider.step = 1;
     slider.value = values[d.key];
+    slider.setAttribute("aria-label", `${d.label} dial — 50 is neutral`);
     track.appendChild(el("span", "tac-notch"));
     track.appendChild(slider);
     block.appendChild(track);
@@ -4741,12 +5029,16 @@ function seasonLeague(ws, data, league, power) {
   // Head-to-head matrix: each team's series record vs every other this season.
   const mx = league?.h2h_matrix;
   if (mx && mx.teams.length > 1) {
+    // Standings already carry the public tags; name prefixes can collide.
+    const tags = new Map((data?.regions || []).flatMap((reg) =>
+      [...(reg.rows || []), ...(reg.tier2_rows || [])].map((tm) => [tm.id, tm.tag])));
+    const label = (tm) => tm.tag || tags.get(tm.team_id) || tm.name;
     const c = el("div", "card");
     c.appendChild(el("h2", "", `Head-to-head <span class="muted" style="font-weight:400">— series record</span>`));
     const scroll = el("div", "card-scroll");
     const wrap = el("div", "es-h2hm-wrap");
     const t = el("table", "es-h2hm");
-    const head = mx.teams.map((tm) => `<th title="${esc(tm.name)}">${esc(tm.name.slice(0, 3).toUpperCase())}</th>`).join("");
+    const head = mx.teams.map((tm) => `<th scope="col" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">${esc(label(tm))}</th>`).join("");
     t.innerHTML = `<thead><tr><th></th>${head}</tr></thead>`;
     const tb = el("tbody");
     mx.rows.forEach((row, i) => {
@@ -4756,8 +5048,16 @@ function seasonLeague(ws, data, league, power) {
         const cls = cell.w > cell.l ? "good" : cell.w < cell.l ? "bad" : "";
         return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
       }).join("");
-      tb.appendChild(el("tr", "",
-        `<th class="es-h2hm-row">${tlink(row.team_id, mx.teams[i].name.slice(0, 3).toUpperCase())}</th>${cells}`));
+      const tm = mx.teams[i];
+      const tr = el("tr", "",
+        `<th class="es-h2hm-row" scope="row" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">` +
+        `${tlink(row.team_id, label(tm))}</th>${cells}`);
+      const link = tr.querySelector("[data-tid]");
+      if (link) {
+        link.setAttribute("title", tm.name);
+        link.setAttribute("aria-label", tm.name);
+      }
+      tb.appendChild(tr);
     });
     t.appendChild(tb);
     wrap.appendChild(t);
@@ -5262,10 +5562,11 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
     <div class="card">
       <h2>Find a player</h2>
       <div class="row">
-        <input 
+        <input
           class="field mono player-search-input"
           ref=${inputRef}
-          placeholder="search by handle or real name…" 
+          placeholder="search by handle or real name…"
+          aria-label="Search players by handle or real name"
           value=${query}
           onInput=${handleInput}
           onKeyDown=${handleKeyDown}
@@ -6408,7 +6709,7 @@ function scoutLanesCard(lanes) {
 
   const post = async (body) => {
     const r = await api("/api/actions/scout-directive", body);
-    toast(r.message); renderApp();
+    toast(r.message); await refresh();
   };
 
   const grid = el("div", "scout-lanes-grid");
@@ -6936,7 +7237,7 @@ async function stats(v) {
   const [data, racesResp, metaResp, perf] = await Promise.all([
     api("/api/stats" + qs),
     sub === "races" ? api("/api/races").catch(() => null) : Promise.resolve(null),
-    sub === "meta" ? api("/api/meta").catch(() => null) : Promise.resolve(null),
+    sub === "meta" ? api(`/api/meta?league_tier=${lgTier}`).catch(() => null) : Promise.resolve(null),
     sub === "history" ? api("/api/perf").catch(() => null) : Promise.resolve(null),
   ]);
   const tier = data.analytics.tier;
@@ -6948,7 +7249,13 @@ async function stats(v) {
   const tierSeg = el("div", "seg");
   const mkTier = (label, tval) => {
     const b = el("button", "seg-btn" + (lgTier === tval ? " on" : ""), label);
-    b.onclick = () => { App.statsTier = tval; renderApp(); };
+    b.onclick = () => {
+      if ((App.statsTier ?? 1) === tval) return;
+      App.statsTier = tval;
+      window.Usage?.interaction(tval === 1
+        ? "stats/competition_top_flight" : "stats/competition_challengers");
+      renderApp();
+    };
     tierSeg.appendChild(b);
   };
   mkTier("Top flight", 1);
@@ -7110,6 +7417,7 @@ function statsRaces(ws, data, racesResp) {
    click closure guards on isConnected (a dropped row means "recreate", not
    "collapse"). */
 function statsMeta(ws, data, metaResp, tier) {
+  const competition = data.league_tier === 2 ? "Challengers" : "Top flight";
   const main = el("div", "ws-8 ws-col");
   const rail = el("div", "ws-4 ws-col");
   ws.appendChild(main);
@@ -7117,11 +7425,11 @@ function statsMeta(ws, data, metaResp, tier) {
 
   if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
     const mc = el("div", "card");
-    mc.appendChild(el("h2", "", "Agent meta"));
+    mc.appendChild(el("h2", "", `Agent meta — ${competition}`));
     const lp = metaResp.latest_patch;
     if (lp) {
       mc.appendChild(el("p", "muted",
-        `Patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
+        `Global patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
     }
     const patched = metaResp.patched_agents || [];
     if (patched.length) {
@@ -7143,13 +7451,22 @@ function statsMeta(ws, data, metaResp, tier) {
           `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
           `<span class="mono muted">${a.pick_rate}%</span>`));
       }
-      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked in recorded competition maps this season"));
       mc.appendChild(list);
+    } else {
+      mc.appendChild(el("p", "muted", "No competition agent sample recorded yet."));
     }
     main.appendChild(mc);
   } else {
     main.appendChild(el("div", "card",
-      `<h2>Agent meta</h2><p class="muted">No meta data compiled yet.</p>`));
+      `<h2>Agent meta — ${competition}</h2><p class="muted">No competition agent sample recorded yet.</p>`));
+  }
+
+  if (metaResp?.sample) {
+    const sample = metaResp.sample;
+    main.appendChild(el("p", "muted",
+      `${competition}: ${sample.completed_team_maps} completed team maps; agent and tactic samples recorded for ${sample.recorded_team_maps}.` +
+      (sample.legacy_team_maps ? ` ${sample.legacy_team_maps} older team maps have no competition agent or tactic record.` : "")));
   }
 
   const mapTrends = metaResp?.map_trends || [];
@@ -7159,12 +7476,12 @@ function statsMeta(ws, data, metaResp, tier) {
   };
   if (mapTrends.length) {
     const trends = el("div", "card");
-    trends.innerHTML = `<h2>Map trends</h2><p class="muted">Public league data from completed maps. Use it to match the field or prepare a counter; team-specific plans remain scouting intel.</p>`;
+    trends.innerHTML = `<h2>Map trends — ${competition}</h2><p class="muted">Public competition data from completed maps. Agent picks and tactics use the recorded sample; older map counts remain visible.</p>`;
     const grid = el("div", "es-map-meta-grid");
     for (const trend of mapTrends) {
       const agents = trend.agents.length
         ? trend.agents.map((a) => `${esc(a.name)} <span class="muted">${a.pick_rate}%</span>`).join(" · ")
-        : "No agent picks yet";
+        : "No competition agent sample recorded";
       const tactics = trend.tactics.map((t) =>
         `<span class="es-map-meta-dial"><b>${esc(dialLabels[t.key] || t.key)}</b> ${t.average}</span>`
       ).join("");
@@ -7172,16 +7489,19 @@ function statsMeta(ws, data, metaResp, tier) {
         <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(humanize(trend.map_id))}</b>
           <span class="mono muted">${trend.team_maps} team maps</span></div>
         <div><span class="muted">Top agents</span> ${agents}</div>
-        <div class="es-map-meta-dials">${tactics}</div>
-        <span class="muted">Most focused site: ${esc(trend.site_focus)}</span>`));
+        <div class="es-map-meta-dials">${tactics || "No competition tactic sample recorded"}</div>
+        <span class="muted">Recorded sample: ${trend.recorded_team_maps ?? trend.team_maps} team maps${trend.site_focus ? ` · Most focused site: ${esc(trend.site_focus)}` : ""}</span>`));
     }
     trends.appendChild(grid);
     main.appendChild(trends);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Map trends — ${competition}</h2><p class="muted">No completed competition maps yet.</p>`));
   }
 
   if (data.teams.length) {
     const tc = el("div", "card");
-    tc.innerHTML = `<h2>Team tendencies</h2>` +
+    tc.innerHTML = `<h2>Team tendencies — ${competition}</h2>` +
       (tier >= 2 ? `<p class="muted">Click a team row for its per-map record.</p>` : "");
     const t = el("table");
     t.innerHTML = `<thead><tr><th>Team</th><th class="num">Maps</th>
@@ -7220,11 +7540,14 @@ function statsMeta(ws, data, metaResp, tier) {
     t.appendChild(tb);
     tc.appendChild(t);
     main.appendChild(tc);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Team tendencies — ${competition}</h2><p class="muted">No competition team sample yet.</p>`));
   }
 
   if ((data.patches ?? []).length) {
     const pc = el("div", "card");
-    pc.innerHTML = `<h2>Patch notes</h2>
+    pc.innerHTML = `<h2>Global patch notes</h2>
       <p class="muted">The meta moves twice a season — mid-split and over the break.
       Rosters built around a nerfed kit feel it.</p>`;
     const scroll = el("div", "card-scroll");
@@ -8265,6 +8588,11 @@ $("#advance-btn").onclick = async () => {
     if (!startWeekReveal(rep)) showReport(rep);
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // api() has already toasted the reason (a 409 for a decision still
+    // waiting is a normal answer here, not a fault). Swallow it: an
+    // unhandled rejection surfaces as a pageerror, which turns "you have
+    // one thing left to do" into what looks like a crashed game.
   } finally {
     hideWeekLoading();
     if (!mpPolling) $("#advance-btn").disabled = false;
@@ -8294,6 +8622,9 @@ $("#simahead-btn").onclick = async () => {
       if (!startWeekReveal(res.report)) showReport(res.report);
     }
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // Same as Advance Week: sim_ahead reuses the manual advance's 409
+    // guards, so a refusal is expected and already toasted.
   } finally {
     hideWeekLoading();
     btn.disabled = false;
@@ -8540,6 +8871,8 @@ function showReport(rep) {
   }
   body.appendChild(el("p", "muted",
     `income ${money(rep.user_income)} · expenses ${money(rep.user_expenses)}`));
+  body.appendChild(el("p", "muted",
+    `Facility upkeep ${money(rep.user_facility_upkeep || 0)} (included in expenses)`));
   const development = rep.development;
   if (development && development.season === rep.season && development.week === rep.week) {
     const card = el("section", "card weekly-development");

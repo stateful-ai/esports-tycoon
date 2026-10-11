@@ -1,0 +1,14 @@
+{
+  "mechanism": "Playwright route.fetch retrieves real origin response; hold promise delays route.fulfill with original APIResponse and original body; no mock or app-state injection",
+  "installedUtc": "2026-10-11T15:00:28.281Z",
+  "requestUtc": "2026-10-11T15:00:28.299Z",
+  "originUtc": "2026-10-11T15:00:28.309Z",
+  "status": 200,
+  "bodyBytes": 20055,
+  "held": true,
+  "closeCompletedUtc": "2026-10-11T15:00:48.450Z",
+  "releaseUtc": "2026-10-11T15:00:54.815Z",
+  "fulfilledUtc": "2026-10-11T15:00:54.817Z",
+  "originBodySha256": "d20f048b75e028674a554cbd00ec6802bd55d963a09a44895b6d64762f49453c",
+  "originBodyBytes": 20055
+}

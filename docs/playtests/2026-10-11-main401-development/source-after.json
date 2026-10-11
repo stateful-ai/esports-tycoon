@@ -1,0 +1,2127 @@
+[
+  {
+    "path": "data/agents.yaml",
+    "sha256": "3F832127DA40DC0EA8F261E1D0037FCF8B8A3067C303F99A5243C394A111E1E1",
+    "bytes": 23399
+  },
+  {
+    "path": "data/attributes.yaml",
+    "sha256": "E584BC0A484A35EAB263007A1CEF5E3B1DA3AE4EA7DA75D4A578F6CE296A117F",
+    "bytes": 3049
+  },
+  {
+    "path": "data/maps/ascent.yaml",
+    "sha256": "D4E082729D648B4B7C8C60DE59D1FDD4B9D711C2FB7280C2B67453953D24409B",
+    "bytes": 5026
+  },
+  {
+    "path": "data/maps/bind.yaml",
+    "sha256": "CEFBA86C1E5246277646AD1EE3F8AE9422D553B17055AA013DF76054F7EA83A8",
+    "bytes": 4704
+  },
+  {
+    "path": "data/maps/geometry/ascent.yaml",
+    "sha256": "6042039D5AE964AA6444C4BA3666D51D794B29B5D7D27D7418E678871F14A389",
+    "bytes": 7842
+  },
+  {
+    "path": "data/maps/geometry/bind.yaml",
+    "sha256": "69631EF293FDC26F8D66DEBC380D7814044DF2A49F5BE6D994150B90A58B4C18",
+    "bytes": 8908
+  },
+  {
+    "path": "data/maps/geometry/haven.yaml",
+    "sha256": "0FBF69478FCD3361FA9D3B9B1ECDD3FD5681B8B5E9942A83E2440387A81560B6",
+    "bytes": 8224
+  },
+  {
+    "path": "data/maps/geometry/lotus.yaml",
+    "sha256": "FC98A8B7B055519FF188E4F3E7FCA47D9CAF2EC796A76DADDFD2630A4F33099C",
+    "bytes": 8676
+  },
+  {
+    "path": "data/maps/geometry/split.yaml",
+    "sha256": "5ACA6B13FDD22A21E3C9687CB7BB3DD52D68372FB6C3ADBB946C5C9CBBBDB937",
+    "bytes": 7606
+  },
+  {
+    "path": "data/maps/haven.yaml",
+    "sha256": "10000EA3B76C901E2E84FC9FF28FE59FA47C2C1A561B13ED6F2C9EA7C0725C6D",
+    "bytes": 5363
+  },
+  {
+    "path": "data/maps/lotus.yaml",
+    "sha256": "695140E0B5667F19FA966178A929DAB6691DFD49B4A2EEBCFE404787B1F87FDA",
+    "bytes": 5981
+  },
+  {
+    "path": "data/maps/split.yaml",
+    "sha256": "A865C4A1CF87650D3196C5B5FF17A478CAED643F2BDFE4DC31FE441CC2B5DC9C",
+    "bytes": 4283
+  },
+  {
+    "path": "data/maps/studio/abyss-layout-v2.yaml",
+    "sha256": "6262DD3D4A33815AB65D64C269893D8A390D43ABA5B5DF1ED3FFF66EB1B16F0C",
+    "bytes": 49661
+  },
+  {
+    "path": "data/maps/studio/ascent-layout-v2.yaml",
+    "sha256": "BABD31423E6FFCBDCBFB242463A8BEDDA78C38471EAA7B2CAFD156D9F8AF1358",
+    "bytes": 40506
+  },
+  {
+    "path": "data/maps/studio/bind-layout-v2.yaml",
+    "sha256": "3FF702880A5E0B62350A4E45F5415D58E3CA4599EC46A122E2CD049C1641DD59",
+    "bytes": 49054
+  },
+  {
+    "path": "data/maps/studio/breeze-layout-v2.yaml",
+    "sha256": "B680C9309E0E2274856E0B8D7067AA88D43655D52BA247C7ED22A841C84E9D94",
+    "bytes": 58255
+  },
+  {
+    "path": "data/maps/studio/corrode-layout-v2.yaml",
+    "sha256": "923A4FC2D59AABFB5A0E7C4CDBE2E3FCB370F1497E920F394C1AEB5A66A06909",
+    "bytes": 44564
+  },
+  {
+    "path": "data/maps/studio/fracture-layout-v2.yaml",
+    "sha256": "9FEC9B41855866698E2084A1F9CF600875AB694897740B7A2E3F0DF8E551817C",
+    "bytes": 52349
+  },
+  {
+    "path": "data/maps/studio/haven-layout-v2.yaml",
+    "sha256": "3583E12A9A58454949585E108F79664A7C43222ED4C4325BD7F915A566C3055C",
+    "bytes": 52323
+  },
+  {
+    "path": "data/maps/studio/lotus-layout-v2.yaml",
+    "sha256": "B6F832B893B0E5D8D5F11DB63B29A89FB860EBCE1FF546F0C2A714E7D8FC0153",
+    "bytes": 52685
+  },
+  {
+    "path": "data/maps/studio/pearl-layout-v2.yaml",
+    "sha256": "D5939C6F7B7C7CCAD666F665C44BE6FD9AD5CDB2974A69FBB7EED82B4ECA51E4",
+    "bytes": 56563
+  },
+  {
+    "path": "data/maps/studio/split-layout-v2.yaml",
+    "sha256": "28A0EFB530172679EA83F5A6C6EC06682D3A8A44C0E121D39662870BBA72EA2B",
+    "bytes": 52410
+  },
+  {
+    "path": "data/maps/studio/sunset-layout-v2.yaml",
+    "sha256": "400ACDD4AE62042472413CD583B27D6B17731693D00CFA9053CC5018FA46690F",
+    "bytes": 41933
+  },
+  {
+    "path": "data/research/vct-2021/observations.json",
+    "sha256": "270CA7C2D9D4AC8DCEAECDD9DCB9D42D0EF1D717B39DEFE37186F48A90970292",
+    "bytes": 466616
+  },
+  {
+    "path": "data/research/vct-2026/collection_issues.csv",
+    "sha256": "B20CA1DAD638030F5DB05384D97254E5FDFF914395A5772E7394F6215841ECF5",
+    "bytes": 895
+  },
+  {
+    "path": "data/research/vct-2026/event_manifest.json",
+    "sha256": "CCE26B7DD1C31F2E3D9D6EACBA100ADD4AEC2575910AFF565CAA59AC7F4863FF",
+    "bytes": 18386
+  },
+  {
+    "path": "data/research/vct-2026/event_quality_signals.csv",
+    "sha256": "F1C302C81A10481797C5255CB2EBA53BF685E8788683E8EEBC481265D851F93C",
+    "bytes": 365110
+  },
+  {
+    "path": "data/research/vct-2026/events.csv",
+    "sha256": "8A6F3A69C1E2404312D8727E96E8B8863E06671E1E1A662E41919D355D5547FB",
+    "bytes": 8052
+  },
+  {
+    "path": "data/research/vct-2026/experimental_lineup_war.csv",
+    "sha256": "F293E14532F4955E9C407FE3B5F97D4327DB7E05991C2B5FF897283DCDF2B73B",
+    "bytes": 77092
+  },
+  {
+    "path": "data/research/vct-2026/free_agent_review.csv",
+    "sha256": "C5CAAC2CA866CFFD5E002DFDAFCBD3D5340DAB7DF7FAC1E981A04E1DCE2A4526",
+    "bytes": 40473
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/README.md",
+    "sha256": "1656623EE697175FDBD9C7AF525C9C85C0A14A09F1AE7A4F72BA321AB4DE2A10",
+    "bytes": 2608
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/checks.csv",
+    "sha256": "68BAA7431E204D88000E54A48B6F37951FFB084A9A63802B0F58E5115E2ABC3F",
+    "bytes": 222010
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/observations.json",
+    "sha256": "8D4317DFD66C07309A97AC0C19787FEC63DE3648505BF022543F0C1ED78650AA",
+    "bytes": 39032
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/result.json",
+    "sha256": "C2EFC22B0E0D8442F4E6B494DC5F436897D9A5F201EFE70681F07A97BB52DBED",
+    "bytes": 1059
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-china-event-nephh.png",
+    "sha256": "0BF4E062D7C7D766C71386C39F916947FEB8DC436FF09ED5EDFD85174BD174AA",
+    "bytes": 13415
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-china-event-slowly.png",
+    "sha256": "C08F85381EB78320FCC9A3B259DD883320919C135A4C63C07FB7CFC2CB3A0259",
+    "bytes": 14037
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-china-pearl-stats.png",
+    "sha256": "D21FD8B53B45C9D5C951AEBE4526041964F24C2AB5267F1CDCBDF3442DB154D5",
+    "bytes": 80024
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-china-stats.png",
+    "sha256": "F59CD59F4751D2B57027C8C1124CBABF514F4CD2B9244A68E90103AB7EF1600C",
+    "bytes": 23967
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-event-stats-stats.png",
+    "sha256": "AF42CC857E931B7560901E3EFFF73BBEB74B15B0ED4413395EC82B02D489B61D",
+    "bytes": 397731
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-fns-profile-top.png",
+    "sha256": "97F2A7F8A8587DBF68DACB76EFF3B5B67375C512A986E3297DAF4A88DE07AF76",
+    "bytes": 348667
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-marved-profile-top.png",
+    "sha256": "15689EA1996EFABDA3E9F2B168ECE4BC46891318808BD2D5AEDB96B9A3C506BD",
+    "bytes": 346661
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-missing-stats-stats.png",
+    "sha256": "A27FB3F2E9E528CF640B6B2CDB9583F87C287E616362C81684AC4BD5C8812AC1",
+    "bytes": 63622
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-na-tier2-stats.png",
+    "sha256": "A0C35444041001F1E29A9F0D0988AB9B7F41CF9A50AE88873DD7B0C58B09A6C0",
+    "bytes": 82003
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-overtime-stats.png",
+    "sha256": "259E41B7EC35F46B1B164EF0ABA7D51893E176F03F38A50A21FADD1EFAA99FAD",
+    "bytes": 86039
+  },
+  {
+    "path": "data/research/vct-2026/manual_audit/screenshots/audit-santiago-stats.png",
+    "sha256": "3A46FF6C2EA28F301A1B51C4A094EBF2E621F11622BD1D10D0F2AF64A2064030",
+    "bytes": 82921
+  },
+  {
+    "path": "data/research/vct-2026/map_model_eligibility.csv",
+    "sha256": "6AA8C313FFF4B9A5B8F9773560809FB9BC926C5F88B30AB4640EA9F2DBFA8282",
+    "bytes": 227882
+  },
+  {
+    "path": "data/research/vct-2026/map_outcomes.csv",
+    "sha256": "EE4C6267C1B172C9D964A3F8FE1B5C001B700F32997CB8E79F6E5347AFAB98BF",
+    "bytes": 466350
+  },
+  {
+    "path": "data/research/vct-2026/model_evaluation.json",
+    "sha256": "73AD9AA10818A0BC7F607239BE6C0DB8C005C5441FFF1C9D7D08C35104CF5856",
+    "bytes": 2460
+  },
+  {
+    "path": "data/research/vct-2026/player_event_stats.csv",
+    "sha256": "FACCDE287D1F65EB1FF07A488A4CEBE9D92EB0166B15DE42D6DCE3D2146B6102",
+    "bytes": 1256700
+  },
+  {
+    "path": "data/research/vct-2026/player_map_stats.csv",
+    "sha256": "FCE097CB8DBD0CEA7B5B00D31AB6D5A4B2530DECC50817DC1A1D1DEA424F28DA",
+    "bytes": 5602866
+  },
+  {
+    "path": "data/research/vct-2026/player_profiles.csv",
+    "sha256": "9371DEAD3F6A9438F1E039EE4CB27C7B63B0624F15ED6BDE7FEF9E826B258D81",
+    "bytes": 112694
+  },
+  {
+    "path": "data/research/vct-2026/profile_candidates.json",
+    "sha256": "A7DC16A8B5CA151FB6E8A89F828A31E7A9DA56C38455E419F98819693A7E8638",
+    "bytes": 4085
+  },
+  {
+    "path": "data/research/vct-2026/quality_recommendations.csv",
+    "sha256": "B6781997F025997FCD2C4F56632AAFA0CB6863F4D9EC6FFF26081086D47755D7",
+    "bytes": 195073
+  },
+  {
+    "path": "data/research/vct-2026/reproduction.json",
+    "sha256": "8750563D18DAAF78BAA4FD553F9C4F34EC497B07B3B8882016DCAE982D8C334C",
+    "bytes": 2287
+  },
+  {
+    "path": "data/research/vct-2026/research_summary.json",
+    "sha256": "16151846A5543F25EA355059E50AB6306680FC434AED7E493361FD64A00BA23B",
+    "bytes": 4613
+  },
+  {
+    "path": "data/research/vct-2026/roster_crosswalk.csv",
+    "sha256": "61BEB73F8C09EC76FF4EC972ECB36B76FF48752824127187A89F70BB9D6B4CE4",
+    "bytes": 129991
+  },
+  {
+    "path": "data/research/vct-2026/sources.csv",
+    "sha256": "2957F321284233381787480F2D5782050F844791C6FDB54E93FB4F3B2B8CD177",
+    "bytes": 193624
+  },
+  {
+    "path": "data/research/vct-2026/unmapped_player_shortlist.csv",
+    "sha256": "E70440B5D9004054A7DE29A38A68BB374AF978AFDA5CCF86FAE400DCB137C7FE",
+    "bytes": 122001
+  },
+  {
+    "path": "data/research/vct-2026/validation.json",
+    "sha256": "E6F59F331AD6C2676C4918DB70EAFCA91CF5CECC519AAAF4AD8497FF747F1BE2",
+    "bytes": 59105
+  },
+  {
+    "path": "data/research/vct-2026/verification.json",
+    "sha256": "52FE11C8F0D2D3FA40A77A90A578EE1D6CCFE5001BF9F21EA9FDE3530805091F",
+    "bytes": 1406
+  },
+  {
+    "path": "data/research/vct-history/observations.json",
+    "sha256": "46EC25C00029435E43CD2F15EC1658DD3C112AB8C3A2E77B4F576C464DE8C960",
+    "bytes": 2891284
+  },
+  {
+    "path": "data/research/war-history/agent_role_reference.csv",
+    "sha256": "C06C2508BC4C82EE7E7E5BAE14C7BD3DD2F43589F137263F989E3E41F6F831D7",
+    "bytes": 7271
+  },
+  {
+    "path": "data/research/war-history/collection_checkpoint.json",
+    "sha256": "0309BE383AE61772C03415C19FBFA27236C3710A1DF83C6EDF8640D3F576B3EB",
+    "bytes": 690
+  },
+  {
+    "path": "data/research/war-history/collection_issues.csv",
+    "sha256": "DB0A0985BFCD0E7675E2D75C8576D1F9099D886F80B3927A2EF3EA0CFC647993",
+    "bytes": 12361
+  },
+  {
+    "path": "data/research/war-history/collection_receipt.json",
+    "sha256": "1F387F83FB687A9B41503393C06227F0067D0F320768B93DC4BAD59A9125FCC9",
+    "bytes": 813
+  },
+  {
+    "path": "data/research/war-history/collection_resumes.json",
+    "sha256": "214B7CFD6491C12835C6DA8CDB54834443D8E11FE6027EEB50834B93508C3721",
+    "bytes": 875
+  },
+  {
+    "path": "data/research/war-history/context_validation.json",
+    "sha256": "E6F6E667AD784ABF8297B28237C4829672347A9D0F36E6C905C4731AC4FDA710",
+    "bytes": 954
+  },
+  {
+    "path": "data/research/war-history/economy_model_eligibility.csv",
+    "sha256": "0E01333D7AD69ADD62B4A7184A0342935D9B4A77DAD070CD1C931E2A73C2043D",
+    "bytes": 275174
+  },
+  {
+    "path": "data/research/war-history/event_manifest.json",
+    "sha256": "7810EBC384D588CBEE380AD6643C43B7B77677081BA7DFF4DE65A5EB3BDB9C9A",
+    "bytes": 34700
+  },
+  {
+    "path": "data/research/war-history/events.csv",
+    "sha256": "40708779F3C0E94741CA9BD122027C427F4ADE01CB5DE9FEB006A5D4869AAE14",
+    "bytes": 16484
+  },
+  {
+    "path": "data/research/war-history/experimental_historical_war.csv",
+    "sha256": "A2EB3165C885A5EF5D7CDF2E6A4700EF061665F8898B90E2EA42E544FDCA6C00",
+    "bytes": 445576
+  },
+  {
+    "path": "data/research/war-history/heldout_map_predictions.csv",
+    "sha256": "E243F4588B5CF4228A884975CCAB1676AE77C914F231A35869A29F03B324F60E",
+    "bytes": 58511
+  },
+  {
+    "path": "data/research/war-history/manual_audit/README.md",
+    "sha256": "8C54F88CD944F33EEBCA65879B5BE50500E7593E34E2163BB51EF2D1BBC34A0D",
+    "bytes": 2254
+  },
+  {
+    "path": "data/research/war-history/manual_audit/checks.csv",
+    "sha256": "11A149350A0D6CD14EE4B13239627FB03906EE11968B309783FBAAD717E4D8D8",
+    "bytes": 307580
+  },
+  {
+    "path": "data/research/war-history/manual_audit/historical_browser_visible_text.txt",
+    "sha256": "ABB11B86470F85A194B4F65EF4E666EFD97E871140FAB1A2B05AB0BEFAB785F1",
+    "bytes": 1835
+  },
+  {
+    "path": "data/research/war-history/manual_audit/loadout_title_inspection.json",
+    "sha256": "B7B9C3B1065EDAAE66E74095D8932F1708C7B3DDD721BA1749F4DADC3B8D2949",
+    "bytes": 349
+  },
+  {
+    "path": "data/research/war-history/manual_audit/observations.json",
+    "sha256": "8351069764FBE9324CBAE8DB90BE3D18AE3888AADE863954D9784D810D394356",
+    "bytes": 63379
+  },
+  {
+    "path": "data/research/war-history/manual_audit/result.json",
+    "sha256": "785F37951DD4543F0C00FA7C64452119EDD6174DC388811AEA2A2D355D77C0F1",
+    "bytes": 1662
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/2024-header.png",
+    "sha256": "C7A565F4E49E37A2FA72E129370AAE8B32C107F0809AC14F5410FF81A9A9D613",
+    "bytes": 25739
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/2024-stats.png",
+    "sha256": "374B1BD0CEF4DAAC66D39A94AEE70D2813B826501153E59A268A94CA7469336B",
+    "bytes": 82553
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/2025-header.png",
+    "sha256": "700C524DE0BF18B48858CA446FF1E1AFDA7280EDE2B60FFA700C961BAAADDAF6",
+    "bytes": 30273
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/2025-stats.png",
+    "sha256": "099657640EA358D6DFFF56B82A4FAF32A5BF7B26669AB087B53EFA31F2E8EBA8",
+    "bytes": 84452
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/academy-performance-stats.png",
+    "sha256": "16D6F0D5915EAD4E3DAD480B728ECFB29CC87FCE40A35856D339408644A8DDEE",
+    "bytes": 122094
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/attack-stats.png",
+    "sha256": "F50DC2C2379943E3EA7422CDCD24BAEE400EC8861D2A79027AC129DC491D3F29",
+    "bytes": 206020
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/champ-economy-stats.png",
+    "sha256": "8C1F24F7B8FAC63F3A89F061C69E20E3AA0647496DB2EB363CD24C173308974C",
+    "bytes": 37972
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/champ-economy-top.png",
+    "sha256": "7EE40BD9DF86310D6985379218FB57556E6E03F2E57148685ADC1E7824432049",
+    "bytes": 353056
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/champ-overview-header.png",
+    "sha256": "667D3AF28728C5D45C69BDD679CDEF4A81EC4A045C81758155ADE28533F4789A",
+    "bytes": 31583
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/champ-overview-stats.png",
+    "sha256": "F5C0AF6449B0895FA5D59C04E1E99C0244ECC6DF7401DEE87D99E75E57407FA0",
+    "bytes": 78181
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/composite-stats.png",
+    "sha256": "434EAAF59F790A220D2F58F8B341567EDDDAC2344F457494B00B088901AC60AE",
+    "bytes": 80568
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/defense-stats.png",
+    "sha256": "3DB80042CF6B37C4523654790CFF232E15AC764EB6D9DF5398975F66BB4AB31D",
+    "bytes": 204319
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/forfeit-header.png",
+    "sha256": "C50DB502DA3E8C1E697E651D26278280CC28C7ED81976F09BF8CA64C777324E7",
+    "bytes": 38942
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/forfeit-stats.png",
+    "sha256": "8B914DFF90332A2756E0B6EE3608526D68113A6A1CF2725801F4398F7866AD6A",
+    "bytes": 33081
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/negative-econ-stats.png",
+    "sha256": "0A2F55E64DF90A11F07A916745B2EE4A6A2BD014722750A4A60E1AC0B9BF7CE2",
+    "bytes": 122716
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/overtime-stats.png",
+    "sha256": "0F94095BDEE3A5811CA488C4E31C2DBBA8D074C5D7FF155FC49FC5D61D5F253D",
+    "bytes": 90623
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/pacific-performance-stats.png",
+    "sha256": "CF1B0C452046D171755691C0E84AA3445E361761C00A71A140A89DA75399D9A5",
+    "bytes": 113913
+  },
+  {
+    "path": "data/research/war-history/manual_audit/screenshots/pacific-performance-top.png",
+    "sha256": "688C0CCA396EEFF03BEDCE2E83E3DB646B72DFEAD018558EDBE3E2CE4B563E2B",
+    "bytes": 323516
+  },
+  {
+    "path": "data/research/war-history/map_context.csv",
+    "sha256": "E43FFBCC3F0BCA96BA1875E091E3DAE922424B87556D7638501EBE7FBA1691B0",
+    "bytes": 3164617
+  },
+  {
+    "path": "data/research/war-history/map_model_eligibility.csv",
+    "sha256": "79ED0D2E8A34BD86FF11722C3055AAF3828FC737C81CDC7F7A030474FD7916E0",
+    "bytes": 1142499
+  },
+  {
+    "path": "data/research/war-history/map_outcomes.csv",
+    "sha256": "80D9C096B95ABD95FA1F2EF4C1EFA65A2E8065DD5040FBBF6E713005A8495DCB",
+    "bytes": 2346491
+  },
+  {
+    "path": "data/research/war-history/model_evaluation.json",
+    "sha256": "3459FEC7742D080ADC16E04ADFBA8D2347BF8680A4B06E3A76EB30C90168A488",
+    "bytes": 9490
+  },
+  {
+    "path": "data/research/war-history/observed_lineup_changes.csv",
+    "sha256": "3EA7EE9510C31AC609343C998DC91B06546F0AA9939AFD9FC25B3780FEA532C1",
+    "bytes": 230682
+  },
+  {
+    "path": "data/research/war-history/observed_player_team_changes.csv",
+    "sha256": "5F66389A2F256B9C3CBA994A456073A79514878C48BF2339F75FAF7BB472ED5C",
+    "bytes": 194504
+  },
+  {
+    "path": "data/research/war-history/performance_identity_review.csv",
+    "sha256": "CFF227F4F79E0752B56B4C3DC5A46DE9EABBE8C4188450F191D98779C7625CF5",
+    "bytes": 87906
+  },
+  {
+    "path": "data/research/war-history/performance_issue_resolution.csv",
+    "sha256": "44385690661754BBCED3221DCD5580F07D7C72B9008B174CB4AC121322559F6F",
+    "bytes": 10456
+  },
+  {
+    "path": "data/research/war-history/performance_repair_receipt.json",
+    "sha256": "2DBC393B46E8636414A121C0305C8007DBFDD4D7EC0DA874B9A0DF66B164BA98",
+    "bytes": 412
+  },
+  {
+    "path": "data/research/war-history/performance_value_review.csv",
+    "sha256": "BAE036B37E9CDAAC70F9BA73E4BE58E25C52ABF80729CDFE7B2DE4521436EF4E",
+    "bytes": 363
+  },
+  {
+    "path": "data/research/war-history/player_event_stats.csv",
+    "sha256": "E25873E65F2A5C4DEEBEB0F4F521E0FA5D877B822E740D63B9FC04BD9D489D5E",
+    "bytes": 1970966
+  },
+  {
+    "path": "data/research/war-history/player_map_performance.csv",
+    "sha256": "5D741D19C458243316D7E03D96EB1D43385F2723AEF9AAD80146670D75545D86",
+    "bytes": 2992566
+  },
+  {
+    "path": "data/research/war-history/player_map_side_stats.csv",
+    "sha256": "C7D56856586A13659DCEF45F5ABE374DD1B43BBF834B4DD67D0A820C793E7A68",
+    "bytes": 10610122
+  },
+  {
+    "path": "data/research/war-history/player_map_stats.csv",
+    "sha256": "2486F0FAD42F714D704A04E311D7B12499CC31644A679A3A9E9349D91A0C242C",
+    "bytes": 29215653
+  },
+  {
+    "path": "data/research/war-history/profile_team_history.csv",
+    "sha256": "3DA822184561DFA0711BCF3AC0B3543E1A603F22BD5774E67549C93663AACBEF",
+    "bytes": 808096
+  },
+  {
+    "path": "data/research/war-history/reference/valorant-agent-source.json",
+    "sha256": "65F291EE9BE4B18075DB6998000B661D1CF9B9229557888DD7441652837AC32B",
+    "bytes": 218
+  },
+  {
+    "path": "data/research/war-history/reference/valorant-agents.json.gz",
+    "sha256": "C7DB111D6E6C56AB344DF4CB487DBDF6A61C7975500030C02385844222D23FFD",
+    "bytes": 18613
+  },
+  {
+    "path": "data/research/war-history/replacement_pool_review.csv",
+    "sha256": "3A559B26E3D0E78E7A23B025B46B35C8D976728F3F63DAB051F11DCFA1159C03",
+    "bytes": 179049
+  },
+  {
+    "path": "data/research/war-history/research_summary.json",
+    "sha256": "45BC9C8C1A2C3BD005A5016995AC5A2742176A1AA92110CE28C53B2400C33FE3",
+    "bytes": 11505
+  },
+  {
+    "path": "data/research/war-history/roster_evidence_sources.csv",
+    "sha256": "69336449D09EC63985CFCDDCC33B07F0FA638677027FBF7A7E26320456296CD1",
+    "bytes": 60934
+  },
+  {
+    "path": "data/research/war-history/roster_evidence_summary.json",
+    "sha256": "9218FF65EA4DFB38CAA72946460AD7680D58BF88AF4BAFA7F6A44E70F431B39F",
+    "bytes": 432
+  },
+  {
+    "path": "data/research/war-history/roster_news_index.csv",
+    "sha256": "EB47CADCFEFB56951E8EBCFF38730DFEFDAE6F7631D2BB366338B39FC14EA53E",
+    "bytes": 122639
+  },
+  {
+    "path": "data/research/war-history/round_economy.csv",
+    "sha256": "FD5587E66F634F54177EC55A3D8A35C72CECAD315E4388EC6E7B55EF0192087A",
+    "bytes": 13504585
+  },
+  {
+    "path": "data/research/war-history/round_model_eligibility.csv",
+    "sha256": "79DA59A131980222E12F9668CD13B8F00787F04E38A6F502878B723D587DFFC1",
+    "bytes": 204315
+  },
+  {
+    "path": "data/research/war-history/round_outcomes.csv",
+    "sha256": "FC55259E1A755B4A268FDE8904A25A61B3262C375A4D0304062A2893DCEADCAF",
+    "bytes": 7929709
+  },
+  {
+    "path": "data/research/war-history/side_stats_receipt.json",
+    "sha256": "2EEDFF6D085F4AACC6F79D00A9143AF7AC1CF9F320608A8BE22E968619E2009C",
+    "bytes": 506
+  },
+  {
+    "path": "data/research/war-history/sources.csv",
+    "sha256": "B2C11C1D85AD000FC274D142B1E360BDC4E8EF95E4ADDA3A8FF5D3F439625B42",
+    "bytes": 1996160
+  },
+  {
+    "path": "data/research/war-history/tab_coverage.csv",
+    "sha256": "920EAF6D9494F1303A052289806B2D3B74E56E8E7F7DE9EBAB8C18891352E09A",
+    "bytes": 5348070
+  },
+  {
+    "path": "data/research/war-history/team_map_lineups.csv",
+    "sha256": "87D57C39868EBE065EF4EEDA52D50A889294B85B9579EE43B0FBB29BE02E8CAD",
+    "bytes": 2781322
+  },
+  {
+    "path": "data/research/war-history/validation.json",
+    "sha256": "4DE284A6CB84F93DAD7976E6291259EF14B342E8E17717BD4F5DFC4503049295",
+    "bytes": 167106
+  },
+  {
+    "path": "data/research/war-history/verification.json",
+    "sha256": "5F4010F029E9FBEA43484C57CE2C361EE5E54C965175373C659DFDA30E1527FE",
+    "bytes": 8370
+  },
+  {
+    "path": "data/rosters/vct-2021/NOTES.md",
+    "sha256": "FABA24BF8379DBD453B617899EF894C9D468A3702B01F8F9AC8D1AAFAF7CCEB6",
+    "bytes": 2105
+  },
+  {
+    "path": "data/rosters/vct-2021/free_agents.yaml",
+    "sha256": "9C81CA3F6B85721BD1B5AAED9993D68B6861E0AE2944AF811E3DAE4AAB5D9204",
+    "bytes": 1010330
+  },
+  {
+    "path": "data/rosters/vct-2021/future_prospects.yaml",
+    "sha256": "498C84AAD5D7838A77199ECDB8D61FCFCD8AA77A8C68C4850B0E248CE8C03AB9",
+    "bytes": 816784
+  },
+  {
+    "path": "data/rosters/vct-2021/pack.yaml",
+    "sha256": "0F1C0AF8D3C293A2AA73F062BE7224CD8A86A1C299AA24FF93B710C1E91FD3D8",
+    "bytes": 281
+  },
+  {
+    "path": "data/rosters/vct-2021/src/americas.yaml",
+    "sha256": "4C6797E33CE566B3D32617951BACBA3BA020DC60BE11FD170C9CF6E50A53B550",
+    "bytes": 12208
+  },
+  {
+    "path": "data/rosters/vct-2021/src/career_profiles.yaml",
+    "sha256": "64A3440DA69A87CC5C2988EE934A7BC276932870BAF9A1C896E272D54BCE98B7",
+    "bytes": 6818
+  },
+  {
+    "path": "data/rosters/vct-2021/src/emea.yaml",
+    "sha256": "E4EAC33718385CEB8E938AAACE7913AA0FC0F4AD31AADEB8E679714BF7EFC8CF",
+    "bytes": 19482
+  },
+  {
+    "path": "data/rosters/vct-2021/src/free_agents.yaml",
+    "sha256": "6F6E0C340428C8357806F4ABEAF99AEC2A855142902566B2BA5BD6EF632E6A67",
+    "bytes": 12520
+  },
+  {
+    "path": "data/rosters/vct-2021/src/future_2026_backfill_free_agents.yaml",
+    "sha256": "44D790AF8EED371304B7900487CA0764F30981C5E18753BDD2D25A4B1E2BE4AA",
+    "bytes": 5976
+  },
+  {
+    "path": "data/rosters/vct-2021/src/future_2026_backfill_prospects.yaml",
+    "sha256": "ED7C6C61A67179A43270DE1EC66F0A42E2F06965BDE1DA9BDA5BE082CD55EE52",
+    "bytes": 8698
+  },
+  {
+    "path": "data/rosters/vct-2021/src/future_archive_free_agents.yaml",
+    "sha256": "747A940AE8C3AEFF55B7D464C23BD82366062D594A1B25C1CABFC55A1E412022",
+    "bytes": 61167
+  },
+  {
+    "path": "data/rosters/vct-2021/src/future_archive_prospects.yaml",
+    "sha256": "505A95194C66A78922B82F7298A99A63975DF554A9BC74F08D26FB053EA2555A",
+    "bytes": 48066
+  },
+  {
+    "path": "data/rosters/vct-2021/src/future_prospects.yaml",
+    "sha256": "FE85FE6FB695D4E584C9C6ACEFF2CD11569F6461D32AB564A4C366AD1B47EEF4",
+    "bytes": 927
+  },
+  {
+    "path": "data/rosters/vct-2021/src/pacific.yaml",
+    "sha256": "EB5DC843913CC2353D2D0A7C697FE8B6E79F2F4073D2DBB9632B5B34DB4F733E",
+    "bytes": 12717
+  },
+  {
+    "path": "data/rosters/vct-2021/src/pack.yaml",
+    "sha256": "A64A19E9887614C01C8BACB5CBEC26E3DAF0B37728B3BC09714031002F86279A",
+    "bytes": 267
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_100_thieves.yaml",
+    "sha256": "BA2018DF72268086D5CE500EDC9851900E844D0A2165B072FCABE51464723284",
+    "bytes": 10466
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_acend.yaml",
+    "sha256": "1B0B61955E980D82F93C6DE22C43AD16F4ADD4569CEC98D12E5D9F54BF89FB3C",
+    "bytes": 10772
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_alliance.yaml",
+    "sha256": "59CDB4F459562DF16EC1DCD20A95FF3720D00D4C4FE035D0DE483F8C3DC14FE3",
+    "bytes": 10330
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_boom_esports.yaml",
+    "sha256": "71D00A5A9BFCC3F281B5520D510C3BA9AF54A48637B745343B788D1588939215",
+    "bytes": 10398
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_bren_esports.yaml",
+    "sha256": "0B73D2BFE07025468EAA66863ECDBC6EAC1080D589A73E0A7AE16D9241D46A37",
+    "bytes": 10420
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_cloud9_blue.yaml",
+    "sha256": "DB29C717D90EDC70FA5CD86C71728B24567DDC4DC7CD9BBDED81A5EF33B93B76",
+    "bytes": 10453
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_crazy_raccoon.yaml",
+    "sha256": "0014011AA2E816911C9B8895CBF61BF2FFC798659AD3A0212B1BD756109024E1",
+    "bytes": 10530
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_damwon_gaming.yaml",
+    "sha256": "3AAF589FDA1C31D5CCDCB14BD44243A03DE82044DFA72A707A1C4785B689782C",
+    "bytes": 10493
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_f4q.yaml",
+    "sha256": "344DE77E10A32922851A43F4C926A9181A908F90126C3DC03F0E3C32FC16342A",
+    "bytes": 10299
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_faze_clan.yaml",
+    "sha256": "A2917576B3ADC2131E283EC08CC971B3B06A936B0634F271110F5B15E0D9F6F2",
+    "bytes": 10364
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_fennel.yaml",
+    "sha256": "61D352FEA7AC501B09AF49903DA6266C193F4ED23E8339CB5F13B6E79F2DA915",
+    "bytes": 10238
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_fnatic.yaml",
+    "sha256": "36F651B6EB2432672F2F07A8E0E5BF973F8B9BE2FB80E9829F29EA0AC85360AE",
+    "bytes": 10818
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_full_sense.yaml",
+    "sha256": "62321B79315A27BDB064ED141DA3C6617AF620AD50C35627B70FACB7DFF40922",
+    "bytes": 10427
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_funplus_phoenix.yaml",
+    "sha256": "BAD578E2C3E59C9AFA6E555FFAAC61BC8FDC6FEA5235D81CFD4E6756AD3A241A",
+    "bytes": 10655
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_furia_esports.yaml",
+    "sha256": "5AA2E5A198A3881FE1AA5BC71C54B5AAD4D63460547D8C1A4AB13981DB9189C9",
+    "bytes": 10455
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_futbolist.yaml",
+    "sha256": "B57EF92ABAEA748A252E075A02D94F2FBFC0E467EE3E8F90C7DEFBA38F306115",
+    "bytes": 10334
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_gambit_esports.yaml",
+    "sha256": "A79A6A7F0BD5BAAEA09F4C1CB0CD29CC55AA0B6A968A0E4871FD1CEB80584A90",
+    "bytes": 10854
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_gen_g_esports.yaml",
+    "sha256": "891AC126B392687EBCB29FC1DED398FF17DAB678AD88620C59ECA3FD7841DE8D",
+    "bytes": 10403
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_giants_gaming.yaml",
+    "sha256": "7D0CAE0D07A726A517509059E80E45F92116E1057A5E0C9115B0E57BD7495FE8",
+    "bytes": 10309
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_guild_esports.yaml",
+    "sha256": "DB4593088054C0FDA1721A8FB54530B052E16612A80CDCD85EADA201D7509EC1",
+    "bytes": 10473
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_honk.yaml",
+    "sha256": "81729249D29CB5E666742F2BA88CA86C8DC0D3973EE732BC793B8DC91C24FE72",
+    "bytes": 10282
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_immortals.yaml",
+    "sha256": "98D2B4818C1EB571005A2321AB77C401CC0C98EC485E664D4B2BC443633A28AC",
+    "bytes": 10383
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_kru_esports.yaml",
+    "sha256": "D74474FF7973DB37EB08E2526D2CA7A0D87BEDD52F776B6AD5BFF212BC70152C",
+    "bytes": 10496
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_luminosity_gaming.yaml",
+    "sha256": "A57714B3EEA1270777E455D02265585BF68C308DA889BBB104D5026B90A8B935",
+    "bytes": 10465
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_ninjas_in_pyjamas.yaml",
+    "sha256": "F548BF583F2E1A60D2C728624C3AFFB479582170BB8BBE528FA4BC8097AA7005",
+    "bytes": 10374
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_northeption.yaml",
+    "sha256": "266E867C812F2E6FEE40C4D7A0E6EED916BB4F0184CAD977FB179D3E0CA15B89",
+    "bytes": 10436
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_nrg_esports.yaml",
+    "sha256": "B39EBAB707652C6FB4380050DA9CCCE6AF698021F686C1231A7EA94142488058",
+    "bytes": 10380
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_nuturn_gaming.yaml",
+    "sha256": "9AD89A231E84D087EFC025BB709952939393688115E1C2813523AC11B7C95BB2",
+    "bytes": 10495
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_paper_rex.yaml",
+    "sha256": "F72EA520C3E4F200857F60D95A06FC5CD1922BE617E602E26881DD6A58B215FE",
+    "bytes": 10736
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_prince.yaml",
+    "sha256": "86B366ACAF581C9F6836EF3EF041004969CF018D6B91A45DFCC0F43673704CA2",
+    "bytes": 10321
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_rise.yaml",
+    "sha256": "4FEBB2C9733032797790B5DA17EE9FCF0AAEC817A186508CF4A283F7CC01DEE8",
+    "bytes": 10334
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_sentinels.yaml",
+    "sha256": "B44AE6E67132A9C7BEFC45B1F94ED19112B7A315E3ED0A5387F3A7C649A63C52",
+    "bytes": 10520
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_supermassive_blaze.yaml",
+    "sha256": "5CF1301F7EF61ED3B7F825CC1C08F63662CDB99B3235DD3E0C5D1A869A328140",
+    "bytes": 10356
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_t1.yaml",
+    "sha256": "82181A24FFE7EC0FC1D6782DA7EE7498F1AB71A39FE81B2358E10EDC3CF29080",
+    "bytes": 10271
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_team_bds.yaml",
+    "sha256": "A73D4FB520D253012AD5FA3E5CEC73870A2624E680DAD5C379A1F346E0156AC9",
+    "bytes": 10300
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_team_envy.yaml",
+    "sha256": "AB7BC1EC366FC359AD3B02CDE408381D1AF1004D612DDAFF97155B81F81A6167",
+    "bytes": 10707
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_team_finest.yaml",
+    "sha256": "D3CBABD46275818CE7818868BC9DCBD785C5973178781E70AF53CF23A9A27D2F",
+    "bytes": 10316
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_team_heretics.yaml",
+    "sha256": "AFE5F4523B61B65A755D210210329982DCE6E61F1989060216B9A79914DF627C",
+    "bytes": 10378
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_team_liquid.yaml",
+    "sha256": "CAB73E8934B01E9C54B0EE7F55B31546541742AE01A281DA53BA56675A6F59E4",
+    "bytes": 10658
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_tnl_esports.yaml",
+    "sha256": "EDA7C276177DBF30021D7A626D3B9FFA6B78FAA566751FE1309D61139F90C90D",
+    "bytes": 10328
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_tsm.yaml",
+    "sha256": "BCD7C0F67EC84606FDE11A2581F9CD955565893CE814D5259093B4D02D7D2F47",
+    "bytes": 10305
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_version1.yaml",
+    "sha256": "4AF2CB4827DE75BEB7E37B9A469AB29E954FB85A1329A59FA1CFFB2BB9CC4280",
+    "bytes": 10457
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_vision_strikers.yaml",
+    "sha256": "072027AE1443AC3BE11FC0961021EE7C927EE34A645A32370AC071CE9E0A4E4E",
+    "bytes": 10685
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_wave_esports.yaml",
+    "sha256": "4D44CD547CC2EA431084D87033311E11EA1239EAFBE0748DB600580CADD17F6F",
+    "bytes": 10308
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_world_game_star.yaml",
+    "sha256": "814594E131544B2435829218B0AD7066BB0E1B4B8910DB6C7E3B9DD9EA8C1CFC",
+    "bytes": 10346
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_x10_esports.yaml",
+    "sha256": "9B722AF6A8A1D34D84F13D20B07CCE5E9AE7C9F60B57975EC386A0DF183680DE",
+    "bytes": 10546
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_xset.yaml",
+    "sha256": "79F379415581AD26770480B42BEA050424C9A14371D67B5A3E21FC0BB6AE4ECD",
+    "bytes": 10523
+  },
+  {
+    "path": "data/rosters/vct-2021/teams/team_zeta_division.yaml",
+    "sha256": "64FA55015C10A22C9D18BF54D5E6284CC650298415FD7F2F3461AB296E3063FC",
+    "bytes": 10400
+  },
+  {
+    "path": "data/rosters/vct-2026/NOTES.md",
+    "sha256": "DF505BBD9338AF6C5C9333BA14ABF92DABBD5C6AB798FACEDF0581C7CA43DD72",
+    "bytes": 3000
+  },
+  {
+    "path": "data/rosters/vct-2026/free_agents.yaml",
+    "sha256": "ED21923561F9709E5C2EF1A66B9F2EBD28D19C283A88177C69AFC9B6E1BD6119",
+    "bytes": 175812
+  },
+  {
+    "path": "data/rosters/vct-2026/pack.yaml",
+    "sha256": "8EF12A895BBEEB75B06E7B91D4E49303DC24A4DC0D49F0C25608AECF98D3A1B0",
+    "bytes": 304
+  },
+  {
+    "path": "data/rosters/vct-2026/src/americas.yaml",
+    "sha256": "BE47C520843CB4F45C264B384991D4A0A78574F640212637E6D7D8119CDD1470",
+    "bytes": 27433
+  },
+  {
+    "path": "data/rosters/vct-2026/src/china.yaml",
+    "sha256": "0CE80B74492657610EFA1EE8C12EEC429BDEBB4BDBB50C36FA090365D4520AD8",
+    "bytes": 23021
+  },
+  {
+    "path": "data/rosters/vct-2026/src/emea.yaml",
+    "sha256": "775A4E7DDFA78B754F98DCDD1AC5DC6F73FF236E3995731D00BD86943763EAE6",
+    "bytes": 27628
+  },
+  {
+    "path": "data/rosters/vct-2026/src/free_agents.yaml",
+    "sha256": "7CBF265930DF2895437B972AF85287E648CDCF193946870D11FF58A7541FE890",
+    "bytes": 25191
+  },
+  {
+    "path": "data/rosters/vct-2026/src/pacific.yaml",
+    "sha256": "3389122F27D4F486E050ECADE1E4F06748ABC866754922FB2E5C5FE40125B40E",
+    "bytes": 27687
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_100_thieves.yaml",
+    "sha256": "9593C8E7B3076B2394D28527F755D81A1F5DAA37AC6B9452B9BCCBB2E24030A2",
+    "bytes": 10219
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_2game_esports.yaml",
+    "sha256": "516A770535ACCEA01C673FF89A21A881E553E5787F9E72DB01C1D5DB25125D1B",
+    "bytes": 10359
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_all_gamers.yaml",
+    "sha256": "57271B609871FC1E2CD8694D4FBE48AF58E7E7F174A7FC9714FEF2F0057701D1",
+    "bytes": 10183
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_alqadsiah_esports.yaml",
+    "sha256": "6047811CA4D854730C9F2C1531184CB8EDEA4BA8448F7D273AB2279D931EA2B5",
+    "bytes": 10424
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_any_questions_gaming.yaml",
+    "sha256": "005C7AE55AF94F43683B606FC3E2D177416DA020AD965362955F7CF038FE877C",
+    "bytes": 10353
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_bbl_esports.yaml",
+    "sha256": "C62CC474FC7878463AFE834975C405FC4D9F8F7847B918AA24D225C8D30FA1FD",
+    "bytes": 10311
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_besiktas_esports.yaml",
+    "sha256": "42A29D5485DCF0847AF45038B0649575AF0129BA91899B149466CBD774BA130B",
+    "bytes": 10339
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_bestia.yaml",
+    "sha256": "8C76EE70ED43E7A2CADD9247AF351B6420D0C491F027A88EEBC6BB9487EC84C2",
+    "bytes": 10314
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_bilibili_gaming.yaml",
+    "sha256": "97DB4319A98259BF7FD4A917014C07D04B59820EA0A1123176122BC3A9DF8288",
+    "bytes": 10197
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_boom_esports.yaml",
+    "sha256": "A689D234C5874266CF452233862CB06B7B47289FD78A2FDE1DD3D810C125DB08",
+    "bytes": 10374
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_cloud9.yaml",
+    "sha256": "14F4BFCFB99BF4A7C1D2CFBAD1861ED4447595C7C21A1733F2B970577DCAA55A",
+    "bytes": 10158
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_crest_gaming_zst.yaml",
+    "sha256": "E92749220D951CB3ECA670BF578FBE9438CE3817414763CA6010335DB5B6D046",
+    "bytes": 10409
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_detonation_focusme.yaml",
+    "sha256": "AF3F432CCE2CD301E7D7D996738206795C63E0F7B7A90A4DA3AD3C2FF9B310D1",
+    "bytes": 10383
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_dplus.yaml",
+    "sha256": "7EF308D5AB1ADA7A3A0A4CF72F2037D3C7B3517BA9D34165688FC9BE7F4A1E1F",
+    "bytes": 10227
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_dragon_ranger_gaming.yaml",
+    "sha256": "57B4EB4A154BA64E04860B7A9FBF716ADD6124CEDBE95FE356517EB3C7801A1C",
+    "bytes": 10324
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_edward_gaming.yaml",
+    "sha256": "EC6E9C8E9260DEF8CF9E891D933B0C40958207E126CBAD0F3738F8535D7ABAAB",
+    "bytes": 10179
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_envy.yaml",
+    "sha256": "996EA2F0B08E1640A558CE1DBC78769D5A1CD46137AF3D868699B39292A86644",
+    "bytes": 10162
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_eternal_fire.yaml",
+    "sha256": "52F227D4A51F9F1BEA593DB592D011037DF733C95FE4C3D4581D496677D8D7FC",
+    "bytes": 10291
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_evil_geniuses.yaml",
+    "sha256": "5655244F1F3769D3437801BE46BEA88FA79F304127D17BC8F780A3564299F6CA",
+    "bytes": 10298
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_fnatic.yaml",
+    "sha256": "F0BA198BE47F65B5B872F70B203A5CFE0BF81B9B707A70D025D6F62B8799B5A2",
+    "bytes": 10216
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_fokus.yaml",
+    "sha256": "C8085BE6104BCF68ABA66537CCC183720ABC0E20AB4030A8FA41C3CFC9AD5CFE",
+    "bytes": 10315
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_full_sense.yaml",
+    "sha256": "4DE3035747510A2E9D7BAF76854A946BF7D37DF62D95C14810F516333530257A",
+    "bytes": 10322
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_funplus_phoenix.yaml",
+    "sha256": "BE2E02366FC9339907853672E49C5598AFE479332F4FBB2F3E81A078840A0D01",
+    "bytes": 10296
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_furia.yaml",
+    "sha256": "98AD06D0E65AFE1434BFE155B087C01B27ABE7A44341DDEC615007ADFAB5A0E6",
+    "bytes": 10305
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_fut_esports.yaml",
+    "sha256": "D0DC3E2E4CFF6F24E5750C25EDF71D9B3BD771B9D58AF75F3177EE37CBA8F3B2",
+    "bytes": 10282
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_g2_esports.yaml",
+    "sha256": "3899C48362417DC0D8A84419EA957C9DA94106812390430660521F16ECCE9762",
+    "bytes": 10151
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_gen_g.yaml",
+    "sha256": "C3EA953A43C40EA283C9197DFA62C446246B3D5E5C4EC5CCC147C13A9D5C8F36",
+    "bytes": 10275
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_gentle_mates.yaml",
+    "sha256": "0F0322B6A0777BC39328FA2939DE2C76B1796B594B605AB5638722E55B7A891D",
+    "bytes": 10344
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_giantx.yaml",
+    "sha256": "A9E948512AB947E9BD9E4C664B61131515DD399B981988B57F91FE16194AF393",
+    "bytes": 10311
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_global_esports.yaml",
+    "sha256": "744FAE624B4B455DFF7CA130779E0B3233DCF078294E70BE19E856AA305F4D85",
+    "bytes": 10313
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_jdg_esports.yaml",
+    "sha256": "9053649A992F6C1FA72FEE972FCF08B58F9860671A530AB736D34D7E043B254D",
+    "bytes": 10260
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_joblife.yaml",
+    "sha256": "1C70A4377542B0C29D62D1F9DAAC9C3AB3C47DC395B147954EF1FBB03348A08E",
+    "bytes": 10296
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_karmine_corp.yaml",
+    "sha256": "42A0976435AE5C4BE3CD0888291DD849CAE5D5B8E6EE7A29FB8D47E6F12F3E01",
+    "bytes": 10288
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_keepbest_gaming.yaml",
+    "sha256": "8BBC96F8258891F21A6BC3D4D313CCBC65D2F8E7D4F378DDA268E9456FB868DE",
+    "bytes": 10203
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_kiwoom_drx.yaml",
+    "sha256": "CCA89485C7491D2E813243B2AB53EF04F3C6F4962AB46627BD2B2B7BB5BC7275",
+    "bytes": 10302
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_kru_esports.yaml",
+    "sha256": "0E26E28E04479AF964D6972F1881702B98B2BF28BE20202B28A1D6CD0AB0826E",
+    "bytes": 10529
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_leviatan.yaml",
+    "sha256": "A4574C4D957C9BCC73C3CA525EF0F4D6C0122AA54FB81BA3115CA91C4F68EC16",
+    "bytes": 10475
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_loud.yaml",
+    "sha256": "3D7A090BC88846ECA1ECD7F566498F2CE5C2296022A8E0B412EE2DF268798B10",
+    "bytes": 10345
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_m80.yaml",
+    "sha256": "28AF0FD205C4BFFDA32651C3BFA09A390C99A8AE49804E25CEC3C8DCDFF6BEF5",
+    "bytes": 10211
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_mibr.yaml",
+    "sha256": "65548408C34B1C79F5B123A1A88B4E8E5A76B7D779CADAD2A03B52525643A911",
+    "bytes": 10186
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_natus_vincere.yaml",
+    "sha256": "F4516E166F7961255E11B90BF1F6DD98D0BFA354CE841D7990C8B64F0002A76E",
+    "bytes": 10306
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_navi_junior.yaml",
+    "sha256": "0E11B70AB7EE4A756A8BB0D037FB8043C7E4204FFC3E5BA5A2B3E9179E256DCF",
+    "bytes": 10440
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_nightblood_gaming.yaml",
+    "sha256": "DA2D0B00D4668F84A95BCF1AC1669A938F22FE7C4E99763C6C8D263FC46FB2A0",
+    "bytes": 10199
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_nongshim_redforce.yaml",
+    "sha256": "3F6CB28833B48B3AC424C551F30155B8A56D87FBC3F806FE16F7436515223F99",
+    "bytes": 10320
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_nova_esports.yaml",
+    "sha256": "F0014DCBC71D1A2B40159296A0A9B93145F32EA1CD18EC25DF799BB0CE256C06",
+    "bytes": 10266
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_nrg.yaml",
+    "sha256": "AC44A760B6F9731D981ED79465BFB0472431B08CFB30798038FD9322F8CD299F",
+    "bytes": 10080
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_onside_gaming.yaml",
+    "sha256": "9EBD2A39A328A166F386906166735DC0C87BFC43C5A0601D3D3B98E5D5325250",
+    "bytes": 10281
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_paper_rex.yaml",
+    "sha256": "C9AD75427F51FB2E596CFEF475501FC2A386A393468D4AF1E2E4C12BD8BE1B87",
+    "bytes": 10358
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_pcific_esports.yaml",
+    "sha256": "F49E111F321BD56B77185011FF3E90B86EE07C70F9A299906622DA8CA96F27A7",
+    "bytes": 10341
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_rare_atom.yaml",
+    "sha256": "BC96017E3E106E74099BBD0FD98F33AD8EE3F797B9820D0728F79237BF461933",
+    "bytes": 10212
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_red_canids.yaml",
+    "sha256": "CB6A85782D34F81ADA965AB761CF91C4774378B46FEDCF6A361E335E575C8366",
+    "bytes": 10332
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_reject.yaml",
+    "sha256": "649393FE9E6594E70E3577DA89D3536DD92D906C821E4197DA13CD572E459A15",
+    "bytes": 10378
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_rex_regum_qeon.yaml",
+    "sha256": "5347DC9B5E5D9A47CB0112CBB3C7C37F00B257E76E0C2C35D202AAA155DCB627",
+    "bytes": 10414
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_sentinels.yaml",
+    "sha256": "51B468868E12183D81277BF1E3F22E884B32E3F9705B963B8E84AB2971F8B120",
+    "bytes": 10327
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_sharper_esports.yaml",
+    "sha256": "FB20FE86051893C8D7CB228C81B3BE3EBBEC8E2793F070AF0740122724DF40DD",
+    "bytes": 10368
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_shopify_rebellion_black.yaml",
+    "sha256": "E3509BD4C5FB565EB6D9F8349D272798A9EE25C5A9BAB64535EC7B6E8C799443",
+    "bytes": 10329
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_t1.yaml",
+    "sha256": "F6DC24FF2090B1FCFA6B74B2B0C15364C959D32E8935399D803205CEF5D8FA69",
+    "bytes": 10205
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_team_heretics.yaml",
+    "sha256": "423358DAF44AE0FBCD45F2D70230D0481A447439029030FB376864EDFB91728B",
+    "bytes": 10292
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_team_liquid.yaml",
+    "sha256": "974B4DDEF34E121836912AD39D48E5CA23A4708707FBFE672A0B6F0A0C0ECE98",
+    "bytes": 10293
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_team_secret.yaml",
+    "sha256": "6899801A67F10DC412E72FA2007580C214E44D3B6EA7843BEFFE2EE37992864A",
+    "bytes": 10329
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_team_vitality.yaml",
+    "sha256": "9C140C03E036EC913222A1706D8EC3EBDC3B56065925E61E720CEF03775EA4AD",
+    "bytes": 10357
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_titan_esports_club.yaml",
+    "sha256": "61AFD1BFEF7BF22F7275BF0D309553D16C229FC209EA4BE27AEF8605D90B2980",
+    "bytes": 10235
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_trace_esports.yaml",
+    "sha256": "6FACA64B82AECB75668D4D18B9D170E0F3A631D3C13C76435B6DB069EDC247E6",
+    "bytes": 10173
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_tyloo.yaml",
+    "sha256": "8AF39051123C0107D95076D64CBA5D885F9502539835278724F16952CED4A03D",
+    "bytes": 10237
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_ucam_esports_club.yaml",
+    "sha256": "F0FA8B43F2C6D26424AC436986F99D796DB3889FBBCEDF78E4CD55726C798C52",
+    "bytes": 10386
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_varrel.yaml",
+    "sha256": "D2C7FB1C1CEB1CDA41B0DEBD737FA89DD42E9C4ED07389BB4EC9A8EB4D97D350",
+    "bytes": 10246
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_weibo_gaming.yaml",
+    "sha256": "810A0821CF9504599694E5471A266701F1C493945606DBD498235AE723AC46B7",
+    "bytes": 10259
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_wolves_esports.yaml",
+    "sha256": "F9E76A3031B6711FAB391D504C37E926110AC633BBA0AD9D30D9BF0396C2147D",
+    "bytes": 10259
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_xi_lai_gaming.yaml",
+    "sha256": "2CE77A75A8DA80A4F8EB9EDAA48F293BD9C0F00B5EF85E3D23C8048FA2FC9D95",
+    "bytes": 10332
+  },
+  {
+    "path": "data/rosters/vct-2026/teams/team_zeta_division.yaml",
+    "sha256": "11DC9262698FA4C80D536B468E9B0CD8F140BBDBFD89F3E9397DE610DBFB60DD",
+    "bytes": 10363
+  },
+  {
+    "path": "data/teams/team_nexus.yaml",
+    "sha256": "F0FF71F1BD21F5403ED92CE591B0AE8ABC4647AB998FBC6A3177AA71C063FBB6",
+    "bytes": 3784
+  },
+  {
+    "path": "data/teams/team_vanguard.yaml",
+    "sha256": "CD67082132B6F421CF74B590D56C95413EF37BA25233FBD74F5AC7DAA6349215",
+    "bytes": 3632
+  },
+  {
+    "path": "data/weapons.yaml",
+    "sha256": "D994A3E1C42133AAF73239FBC9E0378932220F5CFC1E2485E68E030C7C3C3A94",
+    "bytes": 1655
+  },
+  {
+    "path": "src/esports_sim/__init__.py",
+    "sha256": "1496580B027BE299EB895B37953BA97DF8893A7BC98457F5E17980448EA6F122",
+    "bytes": 884
+  },
+  {
+    "path": "src/esports_sim/__main__.py",
+    "sha256": "5A3F3644B98EF1C26499748ECDBE6FD2DD41A85755D2EBD2A78754CF6F715617",
+    "bytes": 48
+  },
+  {
+    "path": "src/esports_sim/_compat.py",
+    "sha256": "B60CFCF0CDD4560D05B19955C04C018ACABD1BF5457038FD3B4344481289E809",
+    "bytes": 1430
+  },
+  {
+    "path": "src/esports_sim/app/__init__.py",
+    "sha256": "EA30F3B15C3389D2BF537F5CA2D41E4C63597D9098C6DE546E07C99B8F1A7C45",
+    "bytes": 29
+  },
+  {
+    "path": "src/esports_sim/app/cli.py",
+    "sha256": "4073729A2A00B093A3F7D6D61A26E5C52B42200C1E2B1BD7F3405CA50F9CC451",
+    "bytes": 28787
+  },
+  {
+    "path": "src/esports_sim/events/__init__.py",
+    "sha256": "5B4F25A573010836DD8396776A5BCA036DCCB8C3755915F732B72337C95F644A",
+    "bytes": 71
+  },
+  {
+    "path": "src/esports_sim/events/log.py",
+    "sha256": "C68A4F7EBEF4B203157946FE5A16E2460F472D37AB385B349A749B5D8E165D9E",
+    "bytes": 3530
+  },
+  {
+    "path": "src/esports_sim/labels.py",
+    "sha256": "36AB1029CD913A07E02D70A053EC82987950674EF8E6617D22452AFE3C4E0771",
+    "bytes": 1231
+  },
+  {
+    "path": "src/esports_sim/manager/__init__.py",
+    "sha256": "8F29C87DE2615ADCA87B0C59859ED1A660F881CE968044F87462AD1B1EA14B4B",
+    "bytes": 1354
+  },
+  {
+    "path": "src/esports_sim/manager/academy.py",
+    "sha256": "8BD0DF0F63D7742ABBFE030C0B42DAF6110F74A7A8CCF538FCA1CA89C4AEDA9F",
+    "bytes": 26399
+  },
+  {
+    "path": "src/esports_sim/manager/analytics.py",
+    "sha256": "4D9653E617645734ECCCD31FB475EDC31096605806F502AEF8A124268CBDA63E",
+    "bytes": 20688
+  },
+  {
+    "path": "src/esports_sim/manager/arcs.py",
+    "sha256": "B17E7F6C8AAACB4A9B1AD441C877FF4C8B842BE47AB4F3E431638D633F9FE4B3",
+    "bytes": 19096
+  },
+  {
+    "path": "src/esports_sim/manager/badges.py",
+    "sha256": "9A29FCFA292C1E5580435FA8FF948212EB14BB94C3399DCC608FCBAB4366559C",
+    "bytes": 10081
+  },
+  {
+    "path": "src/esports_sim/manager/campaign.py",
+    "sha256": "9ADCCA3304BE46CA9D113CB307F514883AD7C8171EA37E7E01506D7A1D36CA0D",
+    "bytes": 144342
+  },
+  {
+    "path": "src/esports_sim/manager/career.py",
+    "sha256": "7039261BB5673BADBFBCD12EE491D9FDE6C9A8B87EC360123C5569DFD0E6D89D",
+    "bytes": 30315
+  },
+  {
+    "path": "src/esports_sim/manager/chronicle.py",
+    "sha256": "6D0397C5FAFB076C8972AF665F83004FEAD3A783831A28EC6A9FB3EAD691DBE6",
+    "bytes": 9443
+  },
+  {
+    "path": "src/esports_sim/manager/culture.py",
+    "sha256": "F3E228F6553EB8484E51A98206EB7C09161CB69DD22CF663FC87D016DC4D8B10",
+    "bytes": 38129
+  },
+  {
+    "path": "src/esports_sim/manager/decision_env.py",
+    "sha256": "B1407203C0F77223AF42727C73DB3EF28EE2DF446D1876E6B2BCA344C63122E3",
+    "bytes": 45302
+  },
+  {
+    "path": "src/esports_sim/manager/decision_ledger.py",
+    "sha256": "1C366EA72970EB608A39C3D01E7C8F3A45876998B49325A5FC48B9D299D156A1",
+    "bytes": 14724
+  },
+  {
+    "path": "src/esports_sim/manager/delegation.py",
+    "sha256": "F133BC26F6EB6032C5F925050B0B32A82273F197C0089DBC7005E949ADADF861",
+    "bytes": 10466
+  },
+  {
+    "path": "src/esports_sim/manager/development.py",
+    "sha256": "9EAC39807F2ECF923900F6745CDCD17A96DE04B3C63C1621E77693733E26FF6B",
+    "bytes": 63968
+  },
+  {
+    "path": "src/esports_sim/manager/development_path.py",
+    "sha256": "1133E783C477336A9A768A37A6DB7850986BA079F70F3209C95ECD1BAAB9932E",
+    "bytes": 8355
+  },
+  {
+    "path": "src/esports_sim/manager/economy.py",
+    "sha256": "F09140EB32BFF47AE0B22B98B0E2D99FE035332BB14E3F3FC81600A0C3E4D8C4",
+    "bytes": 18737
+  },
+  {
+    "path": "src/esports_sim/manager/facilities.py",
+    "sha256": "5FA15644061CBF3920AC037E9767D40214B01894C8A20F97AD42C83DD3765734",
+    "bytes": 9991
+  },
+  {
+    "path": "src/esports_sim/manager/fantasy_draft.py",
+    "sha256": "872273BE9F7C6E290D6BB3D5048147906EC2847334B3DF90CDFD1F3801E82C55",
+    "bytes": 30734
+  },
+  {
+    "path": "src/esports_sim/manager/flavor_events.py",
+    "sha256": "53045339744F71030B242C93E9C352A01B015012D5B6DE7A1DDFD549D9EA8887",
+    "bytes": 14379
+  },
+  {
+    "path": "src/esports_sim/manager/gen.py",
+    "sha256": "118CA6199BB7645362E955BD5E435DA313E581386C05081AA38A70FB07FE2F01",
+    "bytes": 19909
+  },
+  {
+    "path": "src/esports_sim/manager/gm_personalities.py",
+    "sha256": "8031A6D70C5BAB6BFD8608C613EAA43EFAD8621E7E370080C1A50CFDC852C83E",
+    "bytes": 5343
+  },
+  {
+    "path": "src/esports_sim/manager/hof.py",
+    "sha256": "38FFEF9192F496B330A7B1C6A1CD7C1CD1E4A3F117A0C9F1912F36C9373929A0",
+    "bytes": 2933
+  },
+  {
+    "path": "src/esports_sim/manager/inbox.py",
+    "sha256": "EE7C9D47DD656E37969FAB318E849DA9A99C6325067DD0C22BAA430EA29A848B",
+    "bytes": 61878
+  },
+  {
+    "path": "src/esports_sim/manager/knowledge.py",
+    "sha256": "E0CE010B7BCA95A1E091ED693111FBB1DC517EFA93D25847470A89181F91A96B",
+    "bytes": 6521
+  },
+  {
+    "path": "src/esports_sim/manager/learned_manager_policy.py",
+    "sha256": "FBB86CA5FDB79606543D95932F9C86F14F5F59366DBB0B55E239BFB062281D79",
+    "bytes": 27718
+  },
+  {
+    "path": "src/esports_sim/manager/llm_playtest.py",
+    "sha256": "F3D48295B6F5C510779257615C50D3BE2C7796340BAEC949C6942E4C70249D76",
+    "bytes": 18670
+  },
+  {
+    "path": "src/esports_sim/manager/llm_talk.py",
+    "sha256": "CA5932E8187771E542A5AC809EF596316143FB795DF4645D9D2DE54882216161",
+    "bytes": 9424
+  },
+  {
+    "path": "src/esports_sim/manager/locker_room.py",
+    "sha256": "E020E83A904865F8EA08A6306347A61F7326A3D05AF54274525002717E955FA4",
+    "bytes": 6278
+  },
+  {
+    "path": "src/esports_sim/manager/manager_policy.py",
+    "sha256": "0098D9B149D2E91B4B87DEFF40D77A35662C2CED1F51FEF693A77E4437273591",
+    "bytes": 23418
+  },
+  {
+    "path": "src/esports_sim/manager/market.py",
+    "sha256": "9BE7B35AA559BFCDBC8FDD4F7AFE9B57F098036D3E9CADFE0E8F7B1703CDD7B9",
+    "bytes": 94039
+  },
+  {
+    "path": "src/esports_sim/manager/market_history.py",
+    "sha256": "47D5DF3A44F5A31458332B294603B210B080D00010AB18ED5ACBA6D25F5E6603",
+    "bytes": 1741
+  },
+  {
+    "path": "src/esports_sim/manager/match_review.py",
+    "sha256": "4B39B2DF928BC3BB7129E707AA03F5CDA9A656820691539BF901F1F04D32CB06",
+    "bytes": 25815
+  },
+  {
+    "path": "src/esports_sim/manager/media_events.py",
+    "sha256": "91B849F4DD01B8D620DB72EE0A6AB2F73075998977BC7A65BD85E7DAFA1FD22A",
+    "bytes": 15551
+  },
+  {
+    "path": "src/esports_sim/manager/memories.py",
+    "sha256": "8326B6B27DE6F0B5422BAC13C8C8B5342513A63743B3ED633F386F8EB791C31D",
+    "bytes": 3857
+  },
+  {
+    "path": "src/esports_sim/manager/mentorship.py",
+    "sha256": "67CF6D8C7166E81A022813A8626F5F56F0F23A51594BAFCE80ED99364411B35F",
+    "bytes": 4976
+  },
+  {
+    "path": "src/esports_sim/manager/meta.py",
+    "sha256": "BEB3B7328B9518A899749BFBB683273D9511E89653E28FC4D6185D96B83C1490",
+    "bytes": 11549
+  },
+  {
+    "path": "src/esports_sim/manager/narrative.py",
+    "sha256": "EB2519BA0ABA8E7633804C9833DE7C1455FFB0284AF3B7362FBE584D9754FC9D",
+    "bytes": 31155
+  },
+  {
+    "path": "src/esports_sim/manager/online_manager_learning.py",
+    "sha256": "581459D578A45D7B04A444EA66974F36D206AB6FAC7E551235B57BEA69833E41",
+    "bytes": 15698
+  },
+  {
+    "path": "src/esports_sim/manager/pep_talk.py",
+    "sha256": "1EA95D12081AF91C1217AD5267074EFCD1EBD10B1961468B1EEB4E354EEC7285",
+    "bytes": 2044
+  },
+  {
+    "path": "src/esports_sim/manager/personality.py",
+    "sha256": "30609943E19CD27243EABB693CF788B4036B3023B0E23C1B46B9FA64F36874BC",
+    "bytes": 3405
+  },
+  {
+    "path": "src/esports_sim/manager/preparation.py",
+    "sha256": "A7B401340FC2AFF6F647BEF852F5C9B3A84868502E6A8FA98E053E45E8A938AF",
+    "bytes": 29786
+  },
+  {
+    "path": "src/esports_sim/manager/promises.py",
+    "sha256": "C45AE9052BF1553554CA025A766E65915B50F12854377BF4DC256848DB55A494",
+    "bytes": 13090
+  },
+  {
+    "path": "src/esports_sim/manager/relationships.py",
+    "sha256": "6D65672C8C3968822D79D9458978730B6FFCF5983E3485FE1084A7FD0742CC37",
+    "bytes": 15294
+  },
+  {
+    "path": "src/esports_sim/manager/rival_managers.py",
+    "sha256": "03A5E5D5BA8EC146B50A98A8137451DD1253C0A09456CA07139AA9289C8670D7",
+    "bytes": 14932
+  },
+  {
+    "path": "src/esports_sim/manager/rivalries.py",
+    "sha256": "B77985460CBAAA7DF8BDD85969E3EDED97D5F5F63D88EFC9DE9DEC0C67B8032F",
+    "bytes": 3950
+  },
+  {
+    "path": "src/esports_sim/manager/role_fit.py",
+    "sha256": "4025A079B76EEBA7A29E002F5C8C5CD2BC5DE1BC07D9034CD21148A445395C3A",
+    "bytes": 5441
+  },
+  {
+    "path": "src/esports_sim/manager/rollout.py",
+    "sha256": "AA23FAC0BE43D9C8E0732E359115D3D7AC0DAC08F5753194B958208E1154F26F",
+    "bytes": 10968
+  },
+  {
+    "path": "src/esports_sim/manager/scenarios.py",
+    "sha256": "5E80E2D4251F13A1F037B9F861428C231F7E754C58A46781193B37D484728149",
+    "bytes": 10649
+  },
+  {
+    "path": "src/esports_sim/manager/schedule.py",
+    "sha256": "1828C71B3A4E7B5ACA7414E55D4BF4177AA8CA4BB5FCBE65B14DE683D9AED8DE",
+    "bytes": 4953
+  },
+  {
+    "path": "src/esports_sim/manager/scouting.py",
+    "sha256": "230DFEE90F150F429606CD470F7B438283CBAFA2F1C9F5C8DDE92BC6557C92D1",
+    "bytes": 23196
+  },
+  {
+    "path": "src/esports_sim/manager/series_management.py",
+    "sha256": "962A45465EB2AE8C65F66C15AB00A92E9052A2FCF7B3F46733A3CD85B8274444",
+    "bytes": 8892
+  },
+  {
+    "path": "src/esports_sim/manager/shouts.py",
+    "sha256": "9DEC50834F503917FB90053184599063E60533444AB8BB816AC123954D27270D",
+    "bytes": 2815
+  },
+  {
+    "path": "src/esports_sim/manager/sim_ahead.py",
+    "sha256": "26B22E01FECDD74C00963D6783FCD78D10F58C684551CF1399835AA0FE949999",
+    "bytes": 10487
+  },
+  {
+    "path": "src/esports_sim/manager/social.py",
+    "sha256": "F735FED1277EAE4A19C4347C4EACA03ECC6A639F97146E5F33C2ED857240FFB8",
+    "bytes": 25976
+  },
+  {
+    "path": "src/esports_sim/manager/sponsors.py",
+    "sha256": "6830F73A61D7DAB33C955FA2D73C2DA0EFB893A597A68B878E8F205D1189EF60",
+    "bytes": 36339
+  },
+  {
+    "path": "src/esports_sim/manager/staff.py",
+    "sha256": "A68611C4E3DFB353FA52E96318B32EDF43A331162B7A49CA378C6134953DCC07",
+    "bytes": 47110
+  },
+  {
+    "path": "src/esports_sim/manager/staff_effects.py",
+    "sha256": "2FDA447575C5AC36062E7A28F00DDFF4A2DF82C36FEB51C6D1C335B46E3DDB37",
+    "bytes": 11672
+  },
+  {
+    "path": "src/esports_sim/manager/state.py",
+    "sha256": "20B353FE5E5F636888B70EA1A185F4DB0529074B26B773863DD6E730E7DA34DC",
+    "bytes": 98235
+  },
+  {
+    "path": "src/esports_sim/manager/talk.py",
+    "sha256": "8A78C8A9E736483DD227FA3AE02348A153D62FC9C0CF65833FCE29D024A6F3C2",
+    "bytes": 18403
+  },
+  {
+    "path": "src/esports_sim/manager/telemetry.py",
+    "sha256": "FA88D94FF6FD8B3B5A29C7AB61CD03EC358D3D0C7C0F560F02F6B4348FCC4A3B",
+    "bytes": 10212
+  },
+  {
+    "path": "src/esports_sim/manager/training.py",
+    "sha256": "E761896BBA141300A54D867B44C6CD54A85964344926BBBC182DAB8EDAC0D1B1",
+    "bytes": 25013
+  },
+  {
+    "path": "src/esports_sim/manager/transfer_requests.py",
+    "sha256": "048B4998668B2DB7BC463A396439AEFD18C1736A8C75BDC50C11C994DF7B24B5",
+    "bytes": 1802
+  },
+  {
+    "path": "src/esports_sim/manager/xduel.py",
+    "sha256": "8084D3198184D0AABE5594BC77C5518A7A8580FEED0593CE6EE57BD8771E1E3A",
+    "bytes": 2505
+  },
+  {
+    "path": "src/esports_sim/mcp/__init__.py",
+    "sha256": "4607AC4FD9E3E7671C01F24472922D70D4286421E63D3F753F7FEF67A21292DC",
+    "bytes": 55
+  },
+  {
+    "path": "src/esports_sim/mcp/experiment_server.py",
+    "sha256": "9CA0FEAAC9C2874EE6DF12DA1C77AE90EDF044602025833D434A6251D62F3EB6",
+    "bytes": 6932
+  },
+  {
+    "path": "src/esports_sim/mcp/map_server.py",
+    "sha256": "16072E6EAAFE9F3EB56AB4497F332AF9AC412482E3B8C49ECAAE71CE778339D4",
+    "bytes": 7105
+  },
+  {
+    "path": "src/esports_sim/mcp/play_server.py",
+    "sha256": "0468D87F5D9E94A65623B565394BCCEB9024A7868B932780C0008A072D055029",
+    "bytes": 13603
+  },
+  {
+    "path": "src/esports_sim/mcp/roster_server.py",
+    "sha256": "4AD7A3B34ED92FA84F7684C0E9B806582500C05823F190C0FEEDBF6220E9BE43",
+    "bytes": 5432
+  },
+  {
+    "path": "src/esports_sim/perf.py",
+    "sha256": "AA8F9ADB3C5CDD714575AFE717B0D086BF65F554E417D355133414CA3F92E306",
+    "bytes": 3383
+  },
+  {
+    "path": "src/esports_sim/policy/__init__.py",
+    "sha256": "47A913D1071BAF3272DDD492E2B512473A2B734D551AC8649287E0D1E5E212FA",
+    "bytes": 749
+  },
+  {
+    "path": "src/esports_sim/policy/base.py",
+    "sha256": "AE22F999B0D084B9C786ECFAF0C5368742F4A744D7F6B60AEB6513848F5681A0",
+    "bytes": 8698
+  },
+  {
+    "path": "src/esports_sim/policy/heuristic.py",
+    "sha256": "BCC359F2A4ABE18C0E2FC70AFEEF015F3145EE0B26DEC77597B1E6923BF4BA79",
+    "bytes": 29101
+  },
+  {
+    "path": "src/esports_sim/policy/learned.py",
+    "sha256": "FB7751DA1665921950E3771D78D7F4F62EC28D9AC6EB130609F96B726D0041B9",
+    "bytes": 29442
+  },
+  {
+    "path": "src/esports_sim/registry/__init__.py",
+    "sha256": "055A2CF4B242F0EF09706898FF84346E92BDEF4C4F806F83DF7EA45CB1715F36",
+    "bytes": 318
+  },
+  {
+    "path": "src/esports_sim/registry/experiment_mcp_ops.py",
+    "sha256": "A38867802AB04FFAFAAAAB7BE94A919BEA139A111F6EC6029E20115C25EE4E36",
+    "bytes": 42558
+  },
+  {
+    "path": "src/esports_sim/registry/loader.py",
+    "sha256": "2DEF55AEFC8C20E255245C8594218FC9241D23411FEB7B07BF4CE9BB668C0583",
+    "bytes": 5151
+  },
+  {
+    "path": "src/esports_sim/registry/map_audit.py",
+    "sha256": "9B9EF41775709DAC6746A8EC85A7A72E862B6BF906C34FB9478F7D05F4C55FC6",
+    "bytes": 24208
+  },
+  {
+    "path": "src/esports_sim/registry/map_guide_renderer.py",
+    "sha256": "A95FCBC1F722FC027B588C27B14CC31C0A5885704202052426169FC7826978CF",
+    "bytes": 11992
+  },
+  {
+    "path": "src/esports_sim/registry/map_mcp_ops.py",
+    "sha256": "8E280FAD155526398EB152ECA3CB6EA9EEED02500DCCAB6E2F47BFBAEB47FE61",
+    "bytes": 23165
+  },
+  {
+    "path": "src/esports_sim/registry/map_probe.py",
+    "sha256": "79C8257AB1F818F4159261B03DB6D94A196EB236664DD3024C50800F56CEE1DA",
+    "bytes": 10847
+  },
+  {
+    "path": "src/esports_sim/registry/map_reference.py",
+    "sha256": "8E6F32BF7C8F8080BF78B68350C2247BDFACAADFB69E34FA1563956F1B4620EF",
+    "bytes": 12483
+  },
+  {
+    "path": "src/esports_sim/registry/map_workbench.py",
+    "sha256": "FE09EC7944E62D5B2CF32A4F3B337413039865C0DEDB2FCBB81D312BE802942A",
+    "bytes": 37469
+  },
+  {
+    "path": "src/esports_sim/registry/play_mcp_ops.py",
+    "sha256": "A0CD9E5F241676911A23DFE298CF78F72F59670A51E98702093BA4DFC29747FC",
+    "bytes": 105370
+  },
+  {
+    "path": "src/esports_sim/registry/roster_admin.py",
+    "sha256": "FDEF0548459048350464355C957EC5373ABE5FD93CEB98C2138FD8692D425663",
+    "bytes": 12523
+  },
+  {
+    "path": "src/esports_sim/registry/roster_mcp_ops.py",
+    "sha256": "546B00EC2F98BA3AF6A46A3B6987818554FCAF76110CD089D4357B281AFEF449",
+    "bytes": 13189
+  },
+  {
+    "path": "src/esports_sim/registry/roster_pack_builder.py",
+    "sha256": "DFF61D8ECE326277544C0B5498B2D5C6A4E1BB3234DAAD86BF269E76ADA2048C",
+    "bytes": 25608
+  },
+  {
+    "path": "src/esports_sim/registry/roster_workbench.py",
+    "sha256": "01C317DB54A48715268CB28644AFFFE7DDE6CBF952895A377C3CF3923B53622D",
+    "bytes": 22082
+  },
+  {
+    "path": "src/esports_sim/registry/rosters.py",
+    "sha256": "64AD657E078237E615540EBCB85262ADFC4BC6EDF87ABA9680BB73651A3F9FD0",
+    "bytes": 8681
+  },
+  {
+    "path": "src/esports_sim/rng/__init__.py",
+    "sha256": "C3A7CAE81A284E07619C18E10618B26AADAC6719898E4D44475796BED0CDFECA",
+    "bytes": 67
+  },
+  {
+    "path": "src/esports_sim/rng/tree.py",
+    "sha256": "5C149FAAA331CE80C264C4F89C19AEC2F1E214908559FA961C5669C807F9FFD6",
+    "bytes": 2749
+  },
+  {
+    "path": "src/esports_sim/schemas/__init__.py",
+    "sha256": "5EC656784328A7BD7C647608F524D649B86B54AC2F7EC5E90055A6960979B9B5",
+    "bytes": 2983
+  },
+  {
+    "path": "src/esports_sim/schemas/agent.py",
+    "sha256": "3D517341A9EED7DEAA22AAB9ACC250721A8A8512AB1858851D9734DE4D0E3215",
+    "bytes": 2235
+  },
+  {
+    "path": "src/esports_sim/schemas/attributes.py",
+    "sha256": "5BBBBD927E37A979335C7933FAC7FBB2D13805B4532FA7EACCEA54A8BCC2ED3B",
+    "bytes": 2511
+  },
+  {
+    "path": "src/esports_sim/schemas/badges.py",
+    "sha256": "EBE4A4D57DB490A62993E9C9A791D1AA8D2CF91CF362E1593854E56C874B910A",
+    "bytes": 4615
+  },
+  {
+    "path": "src/esports_sim/schemas/common.py",
+    "sha256": "BF8E940C590159D786DD67B0B3C4A6A60952807C1E174262F42F382AC9A2FD40",
+    "bytes": 1213
+  },
+  {
+    "path": "src/esports_sim/schemas/communication.py",
+    "sha256": "010F7F16E52110D33189C77C5D4BD989088AF1037E3160EB849E47EC92B5711F",
+    "bytes": 3225
+  },
+  {
+    "path": "src/esports_sim/schemas/decision.py",
+    "sha256": "DD3447B99E6C4544F4FBA47C666A200136E445D35C8B09C93A1AFD8A4801E568",
+    "bytes": 1303
+  },
+  {
+    "path": "src/esports_sim/schemas/events.py",
+    "sha256": "2A6890110597070A6768FE1F3217F73595B1F24B0C775F22AA8EC25D9DCEBCF1",
+    "bytes": 8944
+  },
+  {
+    "path": "src/esports_sim/schemas/geometry.py",
+    "sha256": "360850D7A69BCE253F06CD98A91216A40D95E735CD08D976E79B40E93B6A917D",
+    "bytes": 15778
+  },
+  {
+    "path": "src/esports_sim/schemas/map.py",
+    "sha256": "65D8BB8C6AFB8BE27700D2F90C22A5A24DCD2815C25B51821238336274C1B538",
+    "bytes": 3991
+  },
+  {
+    "path": "src/esports_sim/schemas/match.py",
+    "sha256": "65A78B380C32D1C2404410056D749FE0D7B89F76870F356D7C9FC775FFC20F5A",
+    "bytes": 2445
+  },
+  {
+    "path": "src/esports_sim/schemas/observation.py",
+    "sha256": "C57F8FFABA96F8F213A6CEDF005A2E299585711C2612AA6BC3374531D521FEF4",
+    "bytes": 3178
+  },
+  {
+    "path": "src/esports_sim/schemas/player.py",
+    "sha256": "766CE8DCCF86528A75999E426DD2CBDD959979AFBD068195C14B0D55724CC11F",
+    "bytes": 11647
+  },
+  {
+    "path": "src/esports_sim/schemas/promise.py",
+    "sha256": "7AD82DB4484B7FF7264870005B19177D64134D93B2C419A98B56E1297FAE0BCC",
+    "bytes": 690
+  },
+  {
+    "path": "src/esports_sim/schemas/studio.py",
+    "sha256": "9C97DF7CC53F6D2920B400217C46991A80465F36224BD399ACBA3ADB713E2FB2",
+    "bytes": 6554
+  },
+  {
+    "path": "src/esports_sim/schemas/team.py",
+    "sha256": "88B22E604C703A6C688A7B82FBBCB05DA7F845B65349D3831236886D6C7C4B5A",
+    "bytes": 5027
+  },
+  {
+    "path": "src/esports_sim/schemas/traits.py",
+    "sha256": "223FCD1CB8FAE529AFA4F522974F8D4E74419E33A79C4406669A2AB206E2BA38",
+    "bytes": 3425
+  },
+  {
+    "path": "src/esports_sim/schemas/weapon.py",
+    "sha256": "ED6C200864F016DD186FCC5053F073C9DA445F17EB477CFFFC2872168DFDFCA4",
+    "bytes": 1094
+  },
+  {
+    "path": "src/esports_sim/sim/__init__.py",
+    "sha256": "1BF878DED2A4AF20E73EDF67B3340AADAE70930AD06A5F8120DF510E85F422A7",
+    "bytes": 406
+  },
+  {
+    "path": "src/esports_sim/sim/comms.py",
+    "sha256": "C13B5F9F909865AFBBD6A1A8EE1D201A4F55EB5768AF9EF0C637B7958CA5F3D3",
+    "bytes": 7734
+  },
+  {
+    "path": "src/esports_sim/sim/constants.py",
+    "sha256": "03644736FEF868B9EB15F330227CDF8A186D3C1B20467BD333189E2B80EDED81",
+    "bytes": 25656
+  },
+  {
+    "path": "src/esports_sim/sim/engine.py",
+    "sha256": "4897FE8574E14D523B5E689391F6B78ED7926AF555846F436841D03261B10E0A",
+    "bytes": 165143
+  },
+  {
+    "path": "src/esports_sim/sim/free_movement.py",
+    "sha256": "D2B09C7DCEB7A7CE7725BEB8EEE0FA15BB788F03E0279A7192150853BDD6118A",
+    "bytes": 11854
+  },
+  {
+    "path": "src/esports_sim/sim/igl.py",
+    "sha256": "E593AA92C285D17B52C6D1A194013B45DDC7CBC7FF6594B365163487A9D608EA",
+    "bytes": 875
+  },
+  {
+    "path": "src/esports_sim/sim/lineup.py",
+    "sha256": "979082D1A0489614075A844CE66616A58CE8A112705365A61E7544D179156BB4",
+    "bytes": 2734
+  },
+  {
+    "path": "src/esports_sim/sim/momentum.py",
+    "sha256": "82E2B7988759972ED232F699D93E76B0A26B710A89095C892593EAF401D692EF",
+    "bytes": 3277
+  },
+  {
+    "path": "src/esports_sim/sim/stats.py",
+    "sha256": "E862B9782CF24CE8BE75BC5B1FF83043636E9AF3912DAA5E3EC2D85E0547714D",
+    "bytes": 12865
+  },
+  {
+    "path": "src/esports_sim/sim/tactics_fit.py",
+    "sha256": "71683614C5EE3F44F1196F7A3CEFC8E069F788C55AC7C3A7858F6B45B04E4ECE",
+    "bytes": 8387
+  },
+  {
+    "path": "src/esports_sim/web/__init__.py",
+    "sha256": "344B0953B030C4E9BFD07B032C703189E6324BA51F90083D69FBFD43695D575C",
+    "bytes": 145
+  },
+  {
+    "path": "src/esports_sim/web/llm_flavor.py",
+    "sha256": "FE77D216A6428C8F6A090B9EC073A76DA7A90AE5B32792D311270650CD3A0625",
+    "bytes": 6559
+  },
+  {
+    "path": "src/esports_sim/web/llm_social.py",
+    "sha256": "2A0334CE9E4FA44C1793BFF3185C40B855632C6DD7BEB63045813355D221ADB6",
+    "bytes": 12292
+  },
+  {
+    "path": "src/esports_sim/web/llm_talk.py",
+    "sha256": "FED122A827C8DDF1023A887D9817CB949C90E77BB6A9268D6D213637BEAE9C50",
+    "bytes": 11792
+  },
+  {
+    "path": "src/esports_sim/web/review_history.py",
+    "sha256": "92A8A8D0935473DB3CF8B45E3BD3C62D934B47B2229F2251983792C2E9FF522C",
+    "bytes": 4368
+  },
+  {
+    "path": "src/esports_sim/web/server.py",
+    "sha256": "AD52B327237AA69B9902A319934C6E695F0B821A1D269A4A7E82D57DBB1A84B6",
+    "bytes": 395266
+  },
+  {
+    "path": "src/esports_sim/web/static/app.css",
+    "sha256": "CF88FF2CF63E29651580E5D29AE6DC7170863E6D275284E53E4FF42F032BD4A0",
+    "bytes": 145036
+  },
+  {
+    "path": "src/esports_sim/web/static/app.js",
+    "sha256": "BCE630359457252521A72A4D03E9CE1BB2F1059A591115F03A019D1DF6DFA795",
+    "bytes": 408874
+  },
+  {
+    "path": "src/esports_sim/web/static/audio.js",
+    "sha256": "B4501B2BD86A4E2F0FC845F7D625BF9436E83DA89CF733FD9D7DD3D39BEDFB91",
+    "bytes": 1837
+  },
+  {
+    "path": "src/esports_sim/web/static/draft.js",
+    "sha256": "EF2F05910A158214D3A1A939CFE4290A5E8F1242217DB518F8AFF28189567EFA",
+    "bytes": 19008
+  },
+  {
+    "path": "src/esports_sim/web/static/facilities.css",
+    "sha256": "8A679148F132345A8CFA13512875263E428519D5DC8F2ECEBB7278C9F274B822",
+    "bytes": 4958
+  },
+  {
+    "path": "src/esports_sim/web/static/facilities.js",
+    "sha256": "9E8A447E7E85A01DA3E20DB6C2780508AC30711E65BEDF80825B51FFE7601C89",
+    "bytes": 4770
+  },
+  {
+    "path": "src/esports_sim/web/static/inbox.js",
+    "sha256": "E75F580EB5FA55042E19C4E37FD6851811DC8CBC973E221F510AEB497FABE083",
+    "bytes": 22689
+  },
+  {
+    "path": "src/esports_sim/web/static/index.html",
+    "sha256": "50416E63B5671E124E814C742BDE415C59E5B33DF4308019CF5ED9AF08A151D0",
+    "bytes": 12585
+  },
+  {
+    "path": "src/esports_sim/web/static/map-authoring.js",
+    "sha256": "F7E36A36E9C3136CAD33032EDBFF019317F13B266EE75C28AECD1BA925B743A8",
+    "bytes": 3414
+  },
+  {
+    "path": "src/esports_sim/web/static/map-studio.css",
+    "sha256": "4D084BFA6459B8A10CDB53B06F41E1AE13A8C25F02492337661783746118C043",
+    "bytes": 8403
+  },
+  {
+    "path": "src/esports_sim/web/static/map-studio.html",
+    "sha256": "CB5AC66DD9455182A82C7F01B4AB148E07139D5A4C07455FA5D21C7A1D25AC09",
+    "bytes": 11178
+  },
+  {
+    "path": "src/esports_sim/web/static/map-studio.js",
+    "sha256": "F5BD4B9C97C0DE30517FC99891FA312B9C0D7DB61D980DDE8AE7E7D3691CA72B",
+    "bytes": 85208
+  },
+  {
+    "path": "src/esports_sim/web/static/map-transform.js",
+    "sha256": "BFE05B5F113F4C1100484E41D1125E329F7E8DF4A33DBF13A9AACBC89B051B4C",
+    "bytes": 1396
+  },
+  {
+    "path": "src/esports_sim/web/static/office_plan.json",
+    "sha256": "0127746641855E92A1953E249D0550471F376F4688B916504D8A248E52737B74",
+    "bytes": 13244
+  },
+  {
+    "path": "src/esports_sim/web/static/office_sprites.json",
+    "sha256": "94244EFA2C2F422FB2D1658BB4796E2AD6D53C2E4B8E08547EA7EEFCBDBB6690",
+    "bytes": 5089
+  },
+  {
+    "path": "src/esports_sim/web/static/profile.css",
+    "sha256": "87EAD9F9DFBE867E9F61F05CBEC43890F78AFD4B1C5F0F011ACDAAB5E077F300",
+    "bytes": 30229
+  },
+  {
+    "path": "src/esports_sim/web/static/profile.js",
+    "sha256": "F4C4F924BAF01C88DFE01DB53E024A54CCAF7D2B4A914F58DC3AC23C68B10CAB",
+    "bytes": 100936
+  },
+  {
+    "path": "src/esports_sim/web/static/roster-studio.css",
+    "sha256": "5DD49EEEABF801BDEFC14D298DE9FB885043CA80D46EFD83FD7B9C6D79AC7966",
+    "bytes": 14243
+  },
+  {
+    "path": "src/esports_sim/web/static/roster-studio.html",
+    "sha256": "B174828F0E1F9F2DDF9D09B96FF74AFF903B17C80A572EE600E073F615EC966D",
+    "bytes": 5097
+  },
+  {
+    "path": "src/esports_sim/web/static/roster-studio.js",
+    "sha256": "36F7BF0C6EC35C4523099BF48340D6DE55658B57518649C2BD8904E3643BF436",
+    "bytes": 23509
+  },
+  {
+    "path": "src/esports_sim/web/static/usage.js",
+    "sha256": "B2879B5E30F10E76A4432F23E197576011A91573507EEAD9C9135AF0FCA2B714",
+    "bytes": 4134
+  },
+  {
+    "path": "src/esports_sim/web/static/viewer.js",
+    "sha256": "77B2CC708072A865718C98ED48E63C929EE64C53436122EA60DD68BEB202445C",
+    "bytes": 71011
+  },
+  {
+    "path": "src/esports_sim/web/usage_telemetry.py",
+    "sha256": "D37541C10EB8ED980AE23BAE284FBF22D8F75D7FDDD1FDF08074DFA53E5030F4",
+    "bytes": 9659
+  }
+]

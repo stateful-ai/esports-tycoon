@@ -1,0 +1,195 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Azure Vanta
+  - generic: 148,800 cr
+  - button "Save •"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸" [disabled]
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W1 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 0–0
+  - generic: Record
+  - generic: 0 rd
+  - button "148,800 cr Balance":
+    - generic: 148,800 cr
+    - generic: Balance
+  - generic: "68"
+  - generic: Morale
+  - button "82 Condition":
+    - generic: "82"
+    - generic: Condition
+  - text: W1 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Azure Vanta
+  - generic: VS
+  - generic: S1 · W1
+  - generic: Emea League
+  - generic: Best of 1
+  - generic: Taipei Circuit
+  - generic: Today's prep
+  - generic: Taipei Circuit in W1
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Taipei Circuit
+  - paragraph: Your scout is not assigned to Taipei Circuit. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Align development with Tactical
+  - paragraph: Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: Three points here tighten Azure Vanta's grip on a top-four berth.
+  - generic: Map
+  - figure "bind":
+    - img "bind"
+    - generic: bind
+  - generic: Danger men
+  - generic: Driftstep
+  - generic: Initiator
+  - generic: ~61
+  - generic: Slyecho
+  - generic: Sentinel
+  - generic: ~59
+  - generic: Emberpulse
+  - generic: Duelist
+  - generic: ~57
+  - heading "Emea league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Adriatic Sirens 0 0 0":
+        - cell "1"
+        - cell "Adriatic Sirens"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "2 Anatolia Forge 0 0 0":
+        - cell "2"
+        - cell "Anatolia Forge"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "3 Busan Tempest 0 0 0":
+        - cell "3"
+        - cell "Busan Tempest"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "4 Ghostline 0 0 0":
+        - cell "4"
+        - cell "Ghostline"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+  - paragraph: "World #32 · Rep 52 · Fans 33.3K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: ▸ No game plan set for W1
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "News" [level=2]
+  - generic: "[S1 W1] Azure Vanta bring in slk (analyst, 3,900/wk)."
+  - generic: "[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+- status:
+  - generic: Campaign processing
+  - heading "Advancing week" [level=1]
+  - paragraph: Resolving fixtures across the league, then settling training, scouting, and finances.
+  - generic: Building the next week
+  - generic: 7s
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.
+- button "Close profile": ✕
+- generic: S
+- generic: slk
+- generic: Analyst
+- generic "opponent breakdowns": opponents
+- generic: age 40
+- generic: emea
+- generic: Azure Vanta (your org)
+- text: · 3,900 cr/wk
+- generic: "73"
+- generic: Overall
+- generic: 5s
+- generic: Experience
+- generic: "0"
+- generic: Titles
+- heading "Attributes" [level=3]
+- generic "Professional command of this staff member's discipline.": Expertise
+- generic: "70"
+- generic "Understanding of systems, game plans, and the live meta.": Tactical Knowledge
+- generic: "80"
+- generic "Ability to diagnose opponents, players, and performance evidence.": Analysis
+- generic: "78"
+- generic "Ability to turn knowledge into repeatable player improvement.": Teaching
+- generic: "53"
+- generic "Trust, relationships, and individual handling.": People Management
+- generic: "67"
+- generic "Ability to set intensity and restore belief under pressure.": Motivation
+- generic: "60"
+- generic "Effectiveness outside a preferred method and during change.": Adaptability
+- generic: "67"
+- heading "What they do" [level=3]
+- generic: ▸ +76% base scouting speed
+- generic: ▸ deeper stat views (analytics tier, with the analytics suite)
+- heading "Style" [level=3]
+- generic: Data PuristAdds five points to analytics-department tier scoring.
+- generic: Talent SpotterMarket scouting progresses 8% faster.
+- heading "Career" [level=3]
+- generic: Analyst, Team Vitality (VCT 2026)
+- generic: "S1: analyst, Azure Vanta"

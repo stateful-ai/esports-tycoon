@@ -1,0 +1,43 @@
+{
+  "checkboxes": [
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "checked_radios": [
+    {
+      "row": "\tBlitzsnap\tDuelist\tEntry\t~36\t~54\t",
+      "value": "on"
+    }
+  ],
+  "sliders": [
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    }
+  ],
+  "talk_buttons": [
+    {
+      "class": "btn btn-sm active",
+      "text": "Refocus (settle tilt and hubris alike)"
+    }
+  ]
+}

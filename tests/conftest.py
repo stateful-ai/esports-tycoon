@@ -45,6 +45,7 @@ from esports_sim.registry import GameData, load_all
 # file::function ids of the whole-season / multi-seed soak tests, from
 # `pytest --durations` (roughly everything >25s on a 16-core box).
 SLOW_TESTS = frozenset({
+    "test_agent_play.py::test_two_identical_runs_are_byte_identical",
     "test_legacy_meta.py::test_multiseason_diffusion_stays_bounded",
     "test_legacy_career.py::test_full_legacy_season_ticks_clean",
     "test_manager.py::test_full_season_determinism_multiseed",
@@ -197,6 +198,16 @@ def pytest_collection_modifyitems(
             item.add_marker(pytest.mark.xdist_group("inbox_det"))
         elif "season" in fixtures or "season_copy" in fixtures:
             item.add_marker(pytest.mark.xdist_group("inbox_season"))
+
+        # --- browser lane: one worker, one server, one browser ---
+        # Every `playtest` test shares a module-scoped game server and a
+        # Chromium. Spread across xdist workers they each boot their own
+        # pair, and N servers + N browsers competing for a few cores push
+        # server startup past its timeout -- the whole lane then fails with
+        # "game server did not come up", which reads like an app bug and is
+        # not one. Pinning them to one group keeps it to a single pair.
+        if item.get_closest_marker("playtest") is not None:
+            item.add_marker(pytest.mark.xdist_group("playtest_browser"))
 
 
 # ── Fixtures ─────────────────────────────────────────────────────────────

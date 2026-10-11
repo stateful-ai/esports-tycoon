@@ -917,8 +917,7 @@ def _prep_artifact_items(gs: "GameState", season: int, week: int):
         contrib = getattr(rep, "prep_edge_contribution", 0.0)
         if contrib:
             lines.append(f"Prep edge vs {opp_name}: +{contrib:.1f}.")
-        dev_pid = getattr(rep, "dev_suggestion_player_id", "")
-        dev_txt = getattr(rep, "dev_suggestion", "")
+        dev_pid, dev_txt = preparation.public_dev_suggestion(gs, rep)
         if dev_pid and dev_txt:
             dp = gs.players.get(dev_pid)
             lines.append(f"Note on {dp.handle if dp is not None else dev_pid}: {dev_txt}")
@@ -1408,13 +1407,15 @@ def to_api(it: "InboxItem", gs: "GameState | None" = None) -> dict:
     underlying offer is still live also carry an `actions` list (Accept /
     Decline, each an existing endpoint + verbatim payload). The key is omitted
     otherwise, so non-actionable items keep the original frozen 8-field shape."""
+    from esports_sim.manager.preparation import public_prep_inbox_body
+
     d = {
         "id": it.id,
         "season": it.season,
         "week": it.week,
         "category": it.category,
         "title": it.title,
-        "body": it.body,
+        "body": public_prep_inbox_body(it.body),
         "unread": it.unread,
         "tab": it.tab,
     }

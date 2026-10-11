@@ -1,0 +1,9 @@
+{
+  "http_status": 200,
+  "scope": "Readonly static source identity; no browser acceptance or objective runtime claim",
+  "candidate_head": "27a2ea2f40aec80fed9ec57b04c7d8baf52f1ee9",
+  "frozen_worktree_sha256": "5985294B841815DB1B062236C5C1C3C2E2E2DC15767B4DE58F552957F95762E4",
+  "served_sha256": "5985294B841815DB1B062236C5C1C3C2E2E2DC15767B4DE58F552957F95762E4",
+  "url": "http://127.0.0.1:8558/app.js",
+  "raw_equal": true
+}

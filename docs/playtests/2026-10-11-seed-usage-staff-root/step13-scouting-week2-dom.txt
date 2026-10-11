@@ -1,0 +1,148 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Azure Vanta
+  - generic: 166,850 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 4":
+      - text: Inbox
+      - generic: "4"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market" [active]
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Market
+  - button "Players"
+  - button "Scouting"
+  - button "Staff"
+  - heading "Scouting lanes" [level=2]
+  - paragraph: Two standing directives run in parallel — set them once and the department works them every week. No weekly re-picks.
+  - generic: Pro
+  - generic: Opponents & market
+  - combobox:
+    - option "— no standing directive —"
+    - option "Scout upcoming opponents" [selected]
+    - option "Find a player to fill a gap"
+  - button "Set pro lane"
+  - generic: "This week: Prairie Signal"
+  - generic: Amateur
+  - generic: Academy & youth
+  - combobox:
+    - option "— no standing directive —" [selected]
+    - option "Track our academy & youth intake"
+  - button "Set amateur lane"
+  - heading "Deep-dive desk" [level=2]
+  - paragraph: "Your standing lanes run continuously above. Use the desk for a one-off deep assignment: attend a specific match, or build the book on one player (100% depth — comfort picks, how they play, their mentality, the full verdict)."
+  - paragraph: Nobody is being watched.
+  - generic: "1"
+  - generic: Attend a match
+  - generic: One-shot behavioral intel on both teams, up to 75%.
+  - combobox:
+    - option "— choose a fixture —" [selected]
+    - option "Team Vanguard vs Baltic Meridian (W2)"
+    - option "Phantom Core vs Gallic Storm (W2)"
+    - option "Sahara Compass vs Adriatic Sirens (W2)"
+    - option "Outback Sentinels vs Apex Syndicate (W2)"
+    - option "Lisbon Tide vs Alpine Echo (W2)"
+    - option "Tokyo Drift Six vs Volga Reign (W2)"
+    - option "Midnight Polders vs Yucatan Ceibas (W2)"
+    - option "Nova Rift vs Solar Flare (W2)"
+    - option "Patagonia Sur vs Taipei Circuit (W2)"
+    - option "Kraken Unit vs Rust Belt Gaming (W2)"
+    - option "Kathmandu Apex vs Saracen Guard (W2)"
+    - option "Seoul Dynasty Prime vs Hokkaido Drift (W2)"
+    - option "Meridian Cross vs Harbour City Nine (W2)"
+    - option "Mumbai Meteors vs Anatolia Forge (W2)"
+  - generic: "2"
+  - generic: Deep-dive a player
+  - generic: External full books stay uncertain; own-player books add weekly training guidance.
+  - 'textbox "deep-dive a player: search by name…"'
+  - heading "Player intel tiers" [level=2]
+  - paragraph: What a player deep-dive reveals, stage by stage.
+  - generic: First looks
+  - generic: role, ability band
+  - generic: 0%
+  - generic: Basics
+  - generic: comfort picks (agents + mastery)
+  - generic: 25%
+  - generic: Style read
+  - generic: how they play
+  - generic: 50%
+  - generic: Mental read
+  - generic: mentality, development fit
+  - generic: 75%
+  - generic: Complete book
+  - generic: the verdict + full ceilings
+  - generic: 95%
+  - heading "Quick assign" [level=2]
+  - button "Scout next week's opponent — Patagonia Sur (W3)"
+  - button "Sweep the free-agent market"
+- tooltip "Market Find players and staff who improve the club without breaking its finances or chemistry. Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.":
+  - heading "Market" [level=4]
+  - generic: Find players and staff who improve the club without breaking its finances or chemistry.
+  - generic: Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.
+- button "Close profile": ✕
+- generic: S
+- generic: slk
+- generic: Analyst
+- generic "opponent breakdowns": opponents
+- generic: age 40
+- generic: emea
+- generic: Azure Vanta (your org)
+- text: · 3,900 cr/wk
+- generic: "73"
+- generic: Overall
+- generic: 5s
+- generic: Experience
+- generic: "0"
+- generic: Titles
+- heading "Attributes" [level=3]
+- generic "Professional command of this staff member's discipline.": Expertise
+- generic: "70"
+- generic "Understanding of systems, game plans, and the live meta.": Tactical Knowledge
+- generic: "80"
+- generic "Ability to diagnose opponents, players, and performance evidence.": Analysis
+- generic: "78"
+- generic "Ability to turn knowledge into repeatable player improvement.": Teaching
+- generic: "53"
+- generic "Trust, relationships, and individual handling.": People Management
+- generic: "67"
+- generic "Ability to set intensity and restore belief under pressure.": Motivation
+- generic: "60"
+- generic "Effectiveness outside a preferred method and during change.": Adaptability
+- generic: "67"
+- heading "What they do" [level=3]
+- generic: ▸ +76% base scouting speed
+- generic: ▸ deeper stat views (analytics tier, with the analytics suite)
+- heading "Style" [level=3]
+- generic: Data PuristAdds five points to analytics-department tier scoring.
+- generic: Talent SpotterMarket scouting progresses 8% faster.
+- heading "Career" [level=3]
+- generic: Analyst, Team Vitality (VCT 2026)
+- generic: "S1: analyst, Azure Vanta"

@@ -1,0 +1,31 @@
+MANAGER HANDBOOK
+LEARN THE JOB
+
+A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.
+
+Close
+FIRST WEEK
+SCREEN GUIDE
+KEY TERMS
+OVR / current ability
+What the player can deliver now. Role comfort, confidence, form, and tactics still shape match performance.
+Ceiling / potential
+A forecast of a player's likely peak, not a guaranteed maximum or hard cap.
+Form
+Recent performance. Useful, but noisier than attributes and a longer run of match data.
+Confidence
+Belief under pressure; it affects duels and clutch nerve and moves back toward neutral over time.
+Condition
+Physical readiness. Matches and hard training drain it; rest and recovery support restore it.
+Fog / scouting range
+Uncertainty in an external read. More scouting narrows the band but never reveals private state perfectly.
+Role comfort
+Familiarity with the current role and playstyle assignment. A reassignment starts low and settles with time.
+Badge
+A public career marker earned from match or development events. Hover it to see its exact effect and how it can fade.
+xDuel / xDE
+Actual duel wins compared with expected duel wins. It helps distinguish strong results from favorable matchups.
+Hover for detail
+Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.
+
+Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.

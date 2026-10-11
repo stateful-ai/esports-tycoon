@@ -1,0 +1,12 @@
+{
+  "inventory": {"apps": [], "browsers": []},
+  "edge_result": "Browser is not available: edge",
+  "iab_result": "Browser is not available: iab",
+  "open_in_codex_result": "queued",
+  "after_panel_inventory": {"apps": [], "browsers": []},
+  "rule_source": "cua_repl returned tool documentation, Computer Use section",
+  "exact_rule": "Use cua_repl (JavaScript) for all UI actions. Do not use other technologies besides cua_repl for computer interactions, unless specifically requested by the user (e.g. AppleScript, osascript, JXA, System Events, CGEvent synthesis).",
+  "scope": "All UI actions/computer interactions, including browser control exposed through this tool. No alternate controller was used.",
+  "browser_created": false,
+  "new_acceptance_claim": false
+}

@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-11T15:05:06.543Z",
+  "selector": ".pf-close",
+  "ancestors": [
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "cls": "pf-close",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "none"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "cls": "panel pf-panel",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "0",
+      "pointerEvents": "none"
+    },
+    {
+      "tag": "DIV",
+      "id": "profile",
+      "cls": "overlay hidden",
+      "display": "flex",
+      "visibility": "visible",
+      "opacity": "0",
+      "pointerEvents": "none"
+    },
+    {
+      "tag": "BODY",
+      "id": "",
+      "cls": "",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto"
+    },
+    {
+      "tag": "HTML",
+      "id": "",
+      "cls": "",
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "pointerEvents": "auto"
+    }
+  ],
+  "activeElement": "<button id=\"save-btn\" class=\"btn\" data-tooltip=\"&lt;h4&gt;Save&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;Save your campaign&lt;/div&gt;\" aria-describedby=\"es-tooltip\">Save</button>"
+}

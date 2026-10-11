@@ -1,0 +1,138 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Phantom Core
+  - generic: 269,034 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W2 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Coaching strategy" [level=2]
+  - paragraph: The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 63.
+  - generic: Execution edge
+  - generic: "0.0"
+  - generic: duel points from how your roster fits this system (neutral = 0, capped ±8)
+  - text: Aggression
+  - generic: i
+  - generic: Neutral
+  - generic: "50"
+  - generic: Hold & anchor
+  - generic: safe spacing, patient angles
+  - generic: Swing & refrag
+  - generic: peek hard, trade every duel
+  - slider: "50"
+  - generic: Roster fit by system
+  - generic: ↓ 62 (Positioning · Game Sense · Composure)
+  - generic: ↑ 53 (Aim Reactivity · Aim Precision · Movement)
+  - generic: Blitzzero
+  - generic: neutral
+  - generic: Staticpulse
+  - generic: Zephyrbyte
+  - text: Pace
+  - generic: i
+  - generic: Neutral
+  - generic: "50"
+  - generic: Slow default
+  - generic: read it out, pull off bad hits
+  - generic: Fast execute
+  - generic: early timings, ram the site
+  - slider: "50"
+  - generic: Roster fit by system
+  - generic: ↓ 57 (Game Sense · Utility Usage · Comms Quality)
+  - generic: ↑ 54 (Movement · Aim Reactivity · Comms Quality)
+  - generic: Pyrofade
+  - generic: neutral
+  - generic: Staticpulse
+  - text: Utility discipline
+  - generic: i
+  - generic: Neutral
+  - generic: "50"
+  - generic: Dump on the hit
+  - generic: spend util entering
+  - generic: Hold for retakes
+  - generic: bank util to swing & retake
+  - slider: "50"
+  - generic: Roster fit by system
+  - generic: ↓ 54 (Utility Usage · Movement · Aim Reactivity)
+  - generic: ↑ 59 (Game Sense · Utility Usage · Comms Quality)
+  - generic: Staticpulse
+  - generic: neutral
+  - generic: Wraithhawk
+  - generic: ↑ side is coordination-heavy — leans on team chemistry (63)
+  - text: Eco greed
+  - generic: i
+  - generic: Neutral
+  - generic: "50"
+  - generic: Disciplined save
+  - generic: bank credits when broke
+  - generic: Force-buy often
+  - generic: gamble on half-buys
+  - slider: "50"
+  - generic: Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+  - text: Map control
+  - generic: i
+  - generic: Neutral
+  - generic: "50"
+  - generic: Stack & hit five
+  - generic: simple, cohesion-light
+  - generic: Spread & lurk
+  - generic: flank presence, pick timings
+  - slider: "50"
+  - generic: Roster fit by system
+  - generic: ↓ 55 (Aim Precision · Aim Reactivity · Utility Usage)
+  - generic: ↑ 58 (Game Sense · Positioning · Comms Quality)
+  - generic: Staticpulse
+  - generic: neutral
+  - generic: —
+  - generic: ↑ side is coordination-heavy — leans on team chemistry (63)
+  - heading "Site focus i" [level=2]:
+    - text: Site focus
+    - generic: i
+  - paragraph: Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+  - button "Balanced"
+  - button "A site"
+  - button "B site"
+  - button "C site"
+  - heading "Set strategy" [level=2]
+  - paragraph: Scout a rival to 50%+ to read their coaching identity on their roster page.
+  - button "Set strategy"
+- tooltip:
+  - heading [level=4]: Match
+  - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+  - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.

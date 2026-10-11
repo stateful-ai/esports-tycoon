@@ -1,0 +1,8 @@
+{
+  "rows": 13,
+  "changed_fields": [
+    "analytics_evidence",
+    "analytics_status"
+  ],
+  "original_rows_preserved_except_two_analytics_fields": true
+}

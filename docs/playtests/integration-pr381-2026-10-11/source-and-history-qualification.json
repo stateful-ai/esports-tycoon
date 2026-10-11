@@ -1,0 +1,116 @@
+{
+  "pr": 381,
+  "original_head": "a7c8b2eb0c44d3e1275bbde35ccad574b405bf36",
+  "original_tree": "ad2f8d16d18359a03888b8f2579999157aeed54a",
+  "main_parent": "a7d2c6d3d6d0fc583850b34bc07855ad1e1384f2",
+  "main_tree": "423a12179f57ebad5978703d7a0110106f881af0",
+  "conflict_count": 14,
+  "conflict_kind": "Historical evidence add/add; difference ignored by --ignore-space-at-eol",
+  "resolution": "Canonical main blobs retained at original paths; exact branch blobs retained at .pr381-original aliases using Git index blob identities",
+  "validation": "Static source review only; no local tests, scripts, validators, simulations, gates, application reports, hooks or playtesting executed. Existing historical receipts are historical, not integrated-head validation. New remote exact-head CI required.",
+  "source_paths": [
+    "src/esports_sim/web/server.py",
+    "src/esports_sim/web/static/app.js",
+    "tests/test_profiles.py"
+  ],
+  "retained": [
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/actions-before-analytics-correction.csv",
+      "original_blob": "509b5d00dd10a440bc52e5fbcdb1afe31e016047",
+      "canonical_main_blob": "e6510bee33bb292ad5566a6d38db461fb1962902",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/actions-before-analytics-correction.csv.pr381-original",
+      "retained_index_blob": "509b5d00dd10a440bc52e5fbcdb1afe31e016047"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/analytics-correction.json",
+      "original_blob": "bd713cf5d0b4ba20834521cb4d50ffaff762b8e8",
+      "canonical_main_blob": "781c37507a018fb0c254843a17976733a16f885a",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/analytics-correction.json.pr381-original",
+      "retained_index_blob": "bd713cf5d0b4ba20834521cb4d50ffaff762b8e8"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/decision-report.txt",
+      "original_blob": "82b539afebab3de2a78796b3f93a566e59e241a8",
+      "canonical_main_blob": "2b4fa3f088d4c13715eee0426d657bc2e3b9c3a1",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/decision-report.txt.pr381-original",
+      "retained_index_blob": "82b539afebab3de2a78796b3f93a566e59e241a8"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/flywheel-before.json",
+      "original_blob": "51821532907d9f9a09911b2618805493366110fe",
+      "canonical_main_blob": "5f50757c063a56c61e3b448c9840fd8fcc444fc6",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/flywheel-before.json.pr381-original",
+      "retained_index_blob": "51821532907d9f9a09911b2618805493366110fe"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/freeze-after.json",
+      "original_blob": "5477dec7c62a1549f62de57aec1156b96b9bcc0c",
+      "canonical_main_blob": "1912902842d01842b8eae60a848a27002d4c8aff",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/freeze-after.json.pr381-original",
+      "retained_index_blob": "5477dec7c62a1549f62de57aec1156b96b9bcc0c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/freeze-before.json",
+      "original_blob": "5477dec7c62a1549f62de57aec1156b96b9bcc0c",
+      "canonical_main_blob": "1912902842d01842b8eae60a848a27002d4c8aff",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/freeze-before.json.pr381-original",
+      "retained_index_blob": "5477dec7c62a1549f62de57aec1156b96b9bcc0c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/full-pytest.log",
+      "original_blob": "d9e5b1303db68d9e412c023501e752fa60cd2ed9",
+      "canonical_main_blob": "0de9b2dc140cb0b4ab22834e143b7ac5d65ab906",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/full-pytest.log.pr381-original",
+      "retained_index_blob": "d9e5b1303db68d9e412c023501e752fa60cd2ed9"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/gate-receipt.json",
+      "original_blob": "c9d36b269eab1d07b250561d037c8bde70b56e82",
+      "canonical_main_blob": "2ff448874890085b6f2a1bc3eb061401b02b5c6d",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/gate-receipt.json.pr381-original",
+      "retained_index_blob": "c9d36b269eab1d07b250561d037c8bde70b56e82"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/publication-review.json",
+      "original_blob": "93fc901821d528b603668c2bf7959e1960a5c910",
+      "canonical_main_blob": "8c5bf1a3ebcc35407def1dc4b2752430032a8e49",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/publication-review.json.pr381-original",
+      "retained_index_blob": "93fc901821d528b603668c2bf7959e1960a5c910"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/reconciliation.json",
+      "original_blob": "ede24bdcea4b26a0dc3adc71ede2b2dc4e3787ce",
+      "canonical_main_blob": "af22688429e4de06c01bc0163c0dfee41f8533c4",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/reconciliation.json.pr381-original",
+      "retained_index_blob": "ede24bdcea4b26a0dc3adc71ede2b2dc4e3787ce"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/root-server-cleanup.json",
+      "original_blob": "ea49db9c9c3a7f33a75c481b281de8fc756d4b4f",
+      "canonical_main_blob": "22e15aa760e0f7fc60834b614dc2b2facc6092b5",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/root-server-cleanup.json.pr381-original",
+      "retained_index_blob": "ea49db9c9c3a7f33a75c481b281de8fc756d4b4f"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/root-usage-readback.json",
+      "original_blob": "d5b68e0d19d793dd61023cc23fe40f531d695f79",
+      "canonical_main_blob": "9f35ff928e8cf0442874e488ea53f1738c744f9e",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/root-usage-readback.json.pr381-original",
+      "retained_index_blob": "d5b68e0d19d793dd61023cc23fe40f531d695f79"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/usage-report.json",
+      "original_blob": "6d023fe1d4975645d11bd8ab42fc6b5177b2dbc3",
+      "canonical_main_blob": "45b7047d2ccc803f154933c3d2107b5d16e1c5bc",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/usage-report.json.pr381-original",
+      "retained_index_blob": "6d023fe1d4975645d11bd8ab42fc6b5177b2dbc3"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "original_blob": "a2f17e4202b89d03e2861b00f8d99e7e956189a9",
+      "canonical_main_blob": "837e2871a8c4be75223d5b0b0991df3c421e07ef",
+      "retained_alias": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md.pr381-original",
+      "retained_index_blob": "a2f17e4202b89d03e2861b00f8d99e7e956189a9"
+    }
+  ]
+}

@@ -283,8 +283,9 @@ def test_matchday_endpoint_contract(test_env) -> None:
             assert set(chip) == {"result", "opponent", "score", "week"}
             assert chip["result"] in {"W", "L"}
         for dm in side["danger_men"]:
-            assert set(dm) == {"player_id", "handle", "role", "rating", "maps"}
-            assert dm["maps"] >= 3
+            assert set(dm) == {"player_id", "handle", "role", "rating", "maps", "sample_note"}
+            assert dm["maps"] > 0
+            assert dm["sample_note"] == ("Early sample" if dm["maps"] < 3 else None)
 
     if them["coach"] is not None:
         assert set(them["coach"]) == {"name", "specialty", "style"}

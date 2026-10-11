@@ -1,0 +1,26 @@
+{
+  "phase": "end",
+  "utc": "2026-10-11T19:03:28.396924+00:00",
+  "head": "d04096e29491d6acb380d0ae1bf9b4771bd84f67",
+  "tree": "37bd5bfb24c79baa93528da11ed0e4496a2cb038",
+  "index_raw_sha256": "8a767560c89931840e4f7fe5b65e644ee8fef635518f1a3c78dbd1778a340336",
+  "index_stage_sha256": "dd7d8e0dfba9b8e77ff111548ac04afb79183715e34d7fae8b09e9f9dc941121",
+  "tracked_files": 3565,
+  "source_files": 707,
+  "private_save_files": 5,
+  "tracked_status": "",
+  "scope": [
+    "all tracked files",
+    "src/**",
+    "data/**",
+    "assets/**",
+    "ui/**",
+    "telemetry/**",
+    "saves/** including usage"
+  ],
+  "excluded_generated_source": [
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ],
+  "validation": "All local tests/checks/validators/syntax/sims/gates/application reports/hooks SKIPPED"
+}

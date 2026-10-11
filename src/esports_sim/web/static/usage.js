@@ -37,8 +37,11 @@
     emit({kind: "view", target});
   }
   function request(path, mutation) {
-    const parts = path.split("?")[0].split("/");
-    const target = parts.slice(0, parts[2] === "actions" ? 4 : 3).join("/");
+    const cleanPath = path.split("?")[0];
+    const parts = cleanPath.split("/");
+    // One fixed read-state endpoint; all other inbox paths remain in the coarse bucket.
+    const target = cleanPath === "/api/inbox/read" ? cleanPath
+      : parts.slice(0, parts[2] === "actions" ? 4 : 3).join("/");
     if (!target.startsWith("/api/") || target.startsWith("/api/usage")) return null;
     const token = {target, id: ++serial, start: performance.now(), mutation};
     if (mutation) emit({kind: "attempt", target, request_id: token.id});
@@ -61,10 +64,15 @@
     if (target === "close") view(replayReturn || "dashboard");
   }
   const interactions = new Set(["lobby/seed_change", "week/full_report_open", "market/player_search",
+    "stats/competition_top_flight", "stats/competition_challengers",
     ...["player", "team", "staff", "manager"].flatMap(kind =>
       ["open", "close"].map(action => `profile/${kind}_${action}`)),
     "handbook/open", "handbook/close", "handbook/section_first_week",
-    "handbook/section_screens", "handbook/section_glossary"]);
+    "handbook/section_screens", "handbook/section_glossary",
+    "inbox/item_open", "inbox/item_close",
+    ...["dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company"]
+      .map(tab => `inbox/shortcut_${tab}`),
+    "matchday/briefing_open", "matchday/briefing_close"]);
   function interaction(target) {
     if (interactions.has(target)) emit({kind: "interaction", target});
   }

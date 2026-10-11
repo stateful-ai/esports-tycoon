@@ -1,0 +1,12 @@
+[
+  {
+    "ariaHidden": "true",
+    "inertAttribute": "",
+    "outerHTML": "<div class=\"inbox-body collapsed\" inert=\"\" aria-hidden=\"true\"><div class=\"inbox-body-text\">Apex (igl, age 26) has 2 week(s) left on a 8,000/wk deal.\nRenew from the roster screen before they walk to free agency.</div><button class=\"btn btn-sm inbox-goto\">Open Roster</button></div>"
+  },
+  {
+    "ariaHidden": "true",
+    "inertAttribute": "",
+    "outerHTML": "<div class=\"inbox-body collapsed\" inert=\"\" aria-hidden=\"true\"><div class=\"inbox-body-text\">Coach recommends a anti-execute scrim on lotus before Team Vanguard, partnering with Crimson Order.\nAccept to book it in one click.</div><button class=\"btn btn-sm inbox-goto\">Open Tactics</button><div class=\"inbox-actions\"><button class=\"btn btn-sm btn-primary\">Book scrim</button></div></div>"
+  }
+]

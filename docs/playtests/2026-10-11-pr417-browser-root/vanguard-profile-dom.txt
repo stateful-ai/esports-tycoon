@@ -1,0 +1,912 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Team Nexus
+  - generic: 487,320 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 2":
+      - text: Club
+      - generic: "2"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Season
+  - generic: S1 · W1 · Regular
+  - button "League"
+  - button "Fixtures"
+  - button "Playoffs"
+  - button "Records"
+  - button "Guide"
+  - heading "AMERICAS league — your region" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Chao Phraya Owls CPO 0 0 0 0 0 58.4 —":
+        - cell "1"
+        - cell "Chao Phraya Owls CPO":
+          - generic: Chao Phraya Owls
+          - generic: CPO
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "58.4"
+        - cell "—"
+      - row "2 Coral Sea Drakes CSD 0 0 0 0 0 73 —":
+        - cell "2"
+        - cell "Coral Sea Drakes CSD":
+          - generic: Coral Sea Drakes
+          - generic: CSD
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "73"
+        - cell "—"
+      - row "3 Gallic Storm GST 0 0 0 0 0 56.6 —":
+        - cell "3"
+        - cell "Gallic Storm GST":
+          - generic: Gallic Storm
+          - generic: GST
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "56.6"
+        - cell "—"
+      - row "4 Harbour City Nine HC9 0 0 0 0 0 75 —":
+        - cell "4"
+        - cell "Harbour City Nine HC9":
+          - generic: Harbour City Nine
+          - generic: HC9
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "75"
+        - cell "—"
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Meridian Cross MRC 0 0 0 0 0 70.6 —":
+        - cell "5"
+        - cell "Meridian Cross MRC":
+          - generic: Meridian Cross
+          - generic: MRC
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "70.6"
+        - cell "—"
+      - row "6 Team Nexus NXS 0 0 0 0 0 58 —":
+        - cell "6"
+        - cell "Team Nexus NXS":
+          - generic: Team Nexus
+          - generic: NXS
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "58"
+        - cell "—"
+      - row "7 Outback Sentinels OBS 0 0 0 0 0 64.1 —":
+        - cell "7"
+        - cell "Outback Sentinels OBS":
+          - generic: Outback Sentinels
+          - generic: OBS
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "64.1"
+        - cell "—"
+      - row "8 Team Vanguard VGD 0 0 0 0 0 78 —":
+        - cell "8"
+        - cell "Team Vanguard VGD":
+          - generic: Team Vanguard
+          - generic: VGD
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "78"
+        - cell "—"
+  - heading "AMERICAS Challengers — the tier-2 development circuit" [level=2]:
+    - text: AMERICAS Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Apex Syndicate APX 0 0 0 0 0 53.3 —":
+        - cell "1"
+        - cell "Apex Syndicate APX":
+          - generic: Apex Syndicate
+          - generic: APX
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "53.3"
+        - cell "—"
+      - row "2 Azure Vanta AZV 0 0 0 0 0 47.5 —":
+        - cell "2"
+        - cell "Azure Vanta AZV":
+          - generic: Azure Vanta
+          - generic: AZV
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "47.5"
+        - cell "—"
+      - row "3 Highlands Nine HL9 0 0 0 0 0 35.5 —":
+        - cell "3"
+        - cell "Highlands Nine HL9":
+          - generic: Highlands Nine
+          - generic: HL9
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "35.5"
+        - cell "—"
+      - row "4 Manila Monsoon MMS 0 0 0 0 0 58.2 —":
+        - cell "4"
+        - cell "Manila Monsoon MMS":
+          - generic: Manila Monsoon
+          - generic: MMS
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "58.2"
+        - cell "—"
+      - row "5 Seoul Dynasty Prime SDP 0 0 0 0 0 46.9 —":
+        - cell "5"
+        - cell "Seoul Dynasty Prime SDP":
+          - generic: Seoul Dynasty Prime
+          - generic: SDP
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "46.9"
+        - cell "—"
+      - row "6 Taipei Circuit TPC 0 0 0 0 0 56.7 —":
+        - cell "6"
+        - cell "Taipei Circuit TPC":
+          - generic: Taipei Circuit
+          - generic: TPC
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "56.7"
+        - cell "—"
+  - heading "EMEA league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Cascadia Youth CSY 0 0 0 0 0 63.9 —":
+        - cell "1"
+        - cell "Cascadia Youth CSY":
+          - generic: Cascadia Youth
+          - generic: CSY
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "63.9"
+        - cell "—"
+      - row "2 Hokkaido Drift HKD 0 0 0 0 0 69.5 —":
+        - cell "2"
+        - cell "Hokkaido Drift HKD":
+          - generic: Hokkaido Drift
+          - generic: HKD
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "69.5"
+        - cell "—"
+      - row "3 Kathmandu Apex KTA 0 0 0 0 0 62.8 —":
+        - cell "3"
+        - cell "Kathmandu Apex KTA":
+          - generic: Kathmandu Apex
+          - generic: KTA
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "62.8"
+        - cell "—"
+      - row "4 Mekong Vipers MKV 0 0 0 0 0 67.9 —":
+        - cell "4"
+        - cell "Mekong Vipers MKV":
+          - generic: Mekong Vipers
+          - generic: MKV
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "67.9"
+        - cell "—"
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Mumbai Meteors MUM 0 0 0 0 0 68.4 —":
+        - cell "5"
+        - cell "Mumbai Meteors MUM":
+          - generic: Mumbai Meteors
+          - generic: MUM
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "68.4"
+        - cell "—"
+      - row "6 Obsidian Watch OBW 0 0 0 0 0 78.9 —":
+        - cell "6"
+        - cell "Obsidian Watch OBW":
+          - generic: Obsidian Watch
+          - generic: OBW
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "78.9"
+        - cell "—"
+      - row "7 Solar Flare SOL 0 0 0 0 0 52.6 —":
+        - cell "7"
+        - cell "Solar Flare SOL":
+          - generic: Solar Flare
+          - generic: SOL
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "52.6"
+        - cell "—"
+      - row "8 Tokyo Drift Six TD6 0 0 0 0 0 64.1 —":
+        - cell "8"
+        - cell "Tokyo Drift Six TD6":
+          - generic: Tokyo Drift Six
+          - generic: TD6
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "64.1"
+        - cell "—"
+  - heading "EMEA Challengers — the tier-2 development circuit" [level=2]:
+    - text: EMEA Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Alpine Echo ALE 0 0 0 0 0 67.7 —":
+        - cell "1"
+        - cell "Alpine Echo ALE":
+          - generic: Alpine Echo
+          - generic: ALE
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "67.7"
+        - cell "—"
+      - row "2 Bayou Kings BYK 0 0 0 0 0 50.8 —":
+        - cell "2"
+        - cell "Bayou Kings BYK":
+          - generic: Bayou Kings
+          - generic: BYK
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "50.8"
+        - cell "—"
+      - row "3 Ghostline GHL 0 0 0 0 0 47.9 —":
+        - cell "3"
+        - cell "Ghostline GHL":
+          - generic: Ghostline
+          - generic: GHL
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "47.9"
+        - cell "—"
+      - row "4 Nordic Frost NFR 0 0 0 0 0 47.8 —":
+        - cell "4"
+        - cell "Nordic Frost NFR":
+          - generic: Nordic Frost
+          - generic: NFR
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "47.8"
+        - cell "—"
+      - row "5 Phantom Core PHC 0 0 0 0 0 50.6 —":
+        - cell "5"
+        - cell "Phantom Core PHC":
+          - generic: Phantom Core
+          - generic: PHC
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "50.6"
+        - cell "—"
+      - row "6 Saracen Guard SRG 0 0 0 0 0 44.5 —":
+        - cell "6"
+        - cell "Saracen Guard SRG":
+          - generic: Saracen Guard
+          - generic: SRG
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "44.5"
+        - cell "—"
+  - heading "PACIFIC league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Baltic Meridian BLM 0 0 0 0 0 60.1 —":
+        - cell "1"
+        - cell "Baltic Meridian BLM":
+          - generic: Baltic Meridian
+          - generic: BLM
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "60.1"
+        - cell "—"
+      - row "2 Busan Tempest BST 0 0 0 0 0 64.8 —":
+        - cell "2"
+        - cell "Busan Tempest BST":
+          - generic: Busan Tempest
+          - generic: BST
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "64.8"
+        - cell "—"
+      - row "3 Crimson Order CRO 0 0 0 0 0 79.6 —":
+        - cell "3"
+        - cell "Crimson Order CRO":
+          - generic: Crimson Order
+          - generic: CRO
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "79.6"
+        - cell "—"
+      - row "4 Iron Pact IRP 0 0 0 0 0 63.7 —":
+        - cell "4"
+        - cell "Iron Pact IRP":
+          - generic: Iron Pact
+          - generic: IRP
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "63.7"
+        - cell "—"
+      - row "Playoff cutoff":
+        - cell "Playoff cutoff"
+      - row "5 Nova Rift NVR 0 0 0 0 0 78 —":
+        - cell "5"
+        - cell "Nova Rift NVR":
+          - generic: Nova Rift
+          - generic: NVR
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "78"
+        - cell "—"
+      - row "6 Patagonia Sur PSU 0 0 0 0 0 62.4 —":
+        - cell "6"
+        - cell "Patagonia Sur PSU":
+          - generic: Patagonia Sur
+          - generic: PSU
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "62.4"
+        - cell "—"
+      - row "7 Prairie Signal PRS 0 0 0 0 0 52.9 —":
+        - cell "7"
+        - cell "Prairie Signal PRS":
+          - generic: Prairie Signal
+          - generic: PRS
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "52.9"
+        - cell "—"
+      - row "8 Yucatan Ceibas YCB 0 0 0 0 0 65.1 —":
+        - cell "8"
+        - cell "Yucatan Ceibas YCB":
+          - generic: Yucatan Ceibas
+          - generic: YCB
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "65.1"
+        - cell "—"
+  - heading "PACIFIC Challengers — the tier-2 development circuit" [level=2]:
+    - text: PACIFIC Challengers
+    - generic: — the tier-2 development circuit
+  - table:
+    - rowgroup:
+      - row "# Team W L RW RL +/- Rep Form":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "RW"
+        - columnheader "RL"
+        - columnheader "+/-"
+        - columnheader "Rep"
+        - columnheader "Form"
+    - rowgroup:
+      - row "1 Adriatic Sirens ADS 0 0 0 0 0 50.5 —":
+        - cell "1"
+        - cell "Adriatic Sirens ADS":
+          - generic: Adriatic Sirens
+          - generic: ADS
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "50.5"
+        - cell "—"
+      - row "2 Jakarta Ravens JKR 0 0 0 0 0 53.7 —":
+        - cell "2"
+        - cell "Jakarta Ravens JKR":
+          - generic: Jakarta Ravens
+          - generic: JKR
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "53.7"
+        - cell "—"
+      - row "3 Kraken Unit KRK 0 0 0 0 0 43.9 —":
+        - cell "3"
+        - cell "Kraken Unit KRK":
+          - generic: Kraken Unit
+          - generic: KRK
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "43.9"
+        - cell "—"
+      - row "4 Lisbon Tide LTD 0 0 0 0 0 53.1 —":
+        - cell "4"
+        - cell "Lisbon Tide LTD":
+          - generic: Lisbon Tide
+          - generic: LTD
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "53.1"
+        - cell "—"
+      - row "5 Midnight Polders MDP 0 0 0 0 0 54.7 —":
+        - cell "5"
+        - cell "Midnight Polders MDP":
+          - generic: Midnight Polders
+          - generic: MDP
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "54.7"
+        - cell "—"
+      - row "6 Sahara Compass SHC 0 0 0 0 0 44.6 —":
+        - cell "6"
+        - cell "Sahara Compass SHC":
+          - generic: Sahara Compass
+          - generic: SHC
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+        - cell "44.6"
+        - cell "—"
+  - heading "Projected finish — if current form holds" [level=2]:
+    - text: Projected finish
+    - generic: — if current form holds
+  - table:
+    - rowgroup:
+      - row "# Team W Rem Proj W":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "Rem"
+        - columnheader "Proj W"
+    - rowgroup:
+      - row "1 Chao Phraya Owls 0 14 7":
+        - cell "1"
+        - cell "Chao Phraya Owls"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "2 Coral Sea Drakes 0 14 7":
+        - cell "2"
+        - cell "Coral Sea Drakes"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "3 Gallic Storm 0 14 7":
+        - cell "3"
+        - cell "Gallic Storm"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "4 Harbour City Nine 0 14 7":
+        - cell "4"
+        - cell "Harbour City Nine"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "5 Meridian Cross 0 14 7":
+        - cell "5"
+        - cell "Meridian Cross"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "6 Outback Sentinels 0 14 7":
+        - cell "6"
+        - cell "Outback Sentinels"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "7 Team Nexus 0 14 7":
+        - cell "7"
+        - cell "Team Nexus"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+      - row "8 Team Vanguard 0 14 7":
+        - cell "8"
+        - cell "Team Vanguard"
+        - cell "0"
+        - cell "14"
+        - cell "7"
+  - heading "Power rankings — global form book" [level=2]:
+    - text: Power rankings
+    - generic: — global form book
+  - generic: "1"
+  - generic: Baltic Meridian
+  - generic: PACIFIC
+  - generic: ▲19
+  - generic: "2"
+  - generic: Busan Tempest
+  - generic: PACIFIC
+  - generic: ▲11
+  - generic: "3"
+  - generic: Cascadia Youth
+  - generic: EMEA
+  - generic: ▲13
+  - generic: "4"
+  - generic: Chao Phraya Owls
+  - generic: AMERICAS
+  - generic: ▲17
+  - generic: "5"
+  - generic: Coral Sea Drakes
+  - generic: AMERICAS
+  - generic: ▲1
+  - generic: "6"
+  - generic: Crimson Order
+  - generic: PACIFIC
+  - generic: ▼5
+  - generic: "7"
+  - generic: Gallic Storm
+  - generic: AMERICAS
+  - generic: ▲18
+  - generic: "8"
+  - generic: Harbour City Nine
+  - generic: AMERICAS
+  - generic: ▼3
+  - generic: "9"
+  - generic: Hokkaido Drift
+  - generic: EMEA
+  - generic: ▼1
+  - generic: "10"
+  - generic: Iron Pact
+  - generic: PACIFIC
+  - generic: ▲7
+  - heading "Head-to-head — series record" [level=2]:
+    - text: Head-to-head
+    - generic: — series record
+  - table:
+    - rowgroup:
+      - row "Chao Phraya Owls Coral Sea Drakes Gallic Storm Harbour City Nine Meridian Cross Team Nexus Outback Sentinels Team Vanguard":
+        - columnheader
+        - columnheader "Chao Phraya Owls": CPO
+        - columnheader "Coral Sea Drakes": CSD
+        - columnheader "Gallic Storm": GST
+        - columnheader "Harbour City Nine": HC9
+        - columnheader "Meridian Cross": MRC
+        - columnheader "Team Nexus": NXS
+        - columnheader "Outback Sentinels": OBS
+        - columnheader "Team Vanguard": VGD
+    - rowgroup:
+      - row "Chao Phraya Owls — · · · · · · ·":
+        - rowheader "Chao Phraya Owls": CPO
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+      - row "Coral Sea Drakes · — · · · · · ·":
+        - rowheader "Coral Sea Drakes": CSD
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+      - row "Gallic Storm · · — · · · · ·":
+        - rowheader "Gallic Storm": GST
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+      - row "Harbour City Nine · · · — · · · ·":
+        - rowheader "Harbour City Nine": HC9
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+      - row "Meridian Cross · · · · — · · ·":
+        - rowheader "Meridian Cross": MRC
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+      - row "Team Nexus · · · · · — · ·":
+        - rowheader "Team Nexus": NXS
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+        - cell "·"
+      - row "Outback Sentinels · · · · · · — ·":
+        - rowheader "Outback Sentinels": OBS
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+        - cell "·"
+      - row "Team Vanguard · · · · · · · —":
+        - rowheader "Team Vanguard": VGD
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "·"
+        - cell "—"
+- tooltip:
+  - heading [level=4]: More information
+  - generic: Team Vanguard
+- button "Close profile": ✕
+- generic: Team Vanguard
+- generic: AMERICAS · 1
+- generic: "0–0 · #8 · 0 rd"
+- button "View roster ▸"
+- button "Assign scout"
+- heading "Manager" [level=3]
+- paragraph:
+  - text: Noah Herrera
+  - generic: Unshakeable
+- paragraph: In charge since S1 (season 1)
+- heading "General manager" [level=3]
+- paragraph:
+  - text: The Analyst
+  - generic: Value-led decisions
+- paragraph: Prices every move tightly and follows proven league trends.
+- heading "Roster" [level=3]
+- table:
+  - rowgroup:
+    - row "Player Role Maps K/D ACS":
+      - columnheader "Player"
+      - columnheader "Role"
+      - columnheader "Maps"
+      - columnheader "K/D"
+      - columnheader "ACS"
+  - rowgroup:
+    - row "Pulse Duelist 0 — —":
+      - cell "Pulse"
+      - cell "Duelist":
+        - generic: Duelist
+      - cell "0"
+      - cell "—"
+      - cell "—":
+        - generic: —
+    - row "Shade Initiator 0 — —":
+      - cell "Shade"
+      - cell "Initiator":
+        - generic: Initiator
+      - cell "0"
+      - cell "—"
+      - cell "—":
+        - generic: —
+    - row "Slice Duelist 0 — —":
+      - cell "Slice"
+      - cell "Duelist":
+        - generic: Duelist
+      - cell "0"
+      - cell "—"
+      - cell "—":
+        - generic: —
+    - row "Warden Sentinel 0 — —":
+      - cell "Warden"
+      - cell "Sentinel":
+        - generic: Sentinel
+      - cell "0"
+      - cell "—"
+      - cell "—":
+        - generic: —
+    - row "Zenith Controller 0 — —":
+      - cell "Zenith"
+      - cell "Controller":
+        - generic: Controller
+      - cell "0"
+      - cell "—"
+      - cell "—":
+        - generic: —

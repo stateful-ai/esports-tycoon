@@ -1,0 +1,22 @@
+[
+  {
+    "ariaHidden": "true",
+    "bodyClass": "inbox-body collapsed",
+    "expanded": "false",
+    "header": "BoardApex's contract expires in 2 weeksW1",
+    "maxHeight": "0px",
+    "opacity": "0",
+    "role": "button",
+    "tabIndex": 0
+  },
+  {
+    "ariaHidden": "true",
+    "bodyClass": "inbox-body collapsed",
+    "expanded": "false",
+    "header": "DevelopmentCoach proposes a scrim on lotusW1",
+    "maxHeight": "0px",
+    "opacity": "0",
+    "role": "button",
+    "tabIndex": 0
+  }
+]

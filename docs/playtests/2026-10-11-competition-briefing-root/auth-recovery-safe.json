@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-11T19:06:11.734047+00:00",
+  "auth_companion_byte_identical_to_identified_prior_test_save": true,
+  "auth_companion_initially_omitted": true,
+  "campaign_raw_unchanged_during_auth_recovery": true,
+  "all_tracked_and_source_raw_before_after_recovery_equal": true,
+  "original_baselines_preserved": true,
+  "old_usage_not_copied": true,
+  "auth_tokens_and_private_identifiers_omitted": true,
+  "new_browser_reload_logged_step3": true,
+  "local_tests_launched": false
+}

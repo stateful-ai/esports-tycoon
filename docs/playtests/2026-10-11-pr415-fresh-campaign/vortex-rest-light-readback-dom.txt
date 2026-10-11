@@ -1,0 +1,516 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Team Nexus
+  - generic: 508,816 cr
+  - button "Save •"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 1":
+      - text: Inbox
+      - generic: "1"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 1":
+      - text: Club
+      - generic: "1"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Club
+  - generic: Team Nexus · 5/10
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - heading "Team training focus" [level=2]
+  - paragraph: The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+  - button "Mechanical"
+  - button "Tactical"
+  - button "Mental"
+  - button "Team"
+  - button "Rest"
+  - checkbox "Delegate to Coach Keep choosing the weekly focus yourself"
+  - generic: Delegate to Coach
+  - generic: Keep choosing the weekly focus yourself
+  - paragraph: "Tip: a 6-man roster is advised for tournaments (register a bench)."
+  - table:
+    - rowgroup:
+      - row "Player Age OVR Ceiling Form Confidence Dev focus Language Intensity Mentor":
+        - columnheader "Player"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ceiling"
+        - columnheader "Form"
+        - columnheader "Confidence"
+        - columnheader "Dev focus"
+        - columnheader "Language"
+        - columnheader "Intensity"
+        - columnheader "Mentor"
+    - rowgroup:
+      - row "Apex IGL 26 78.3 ★★★½ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Apex IGL":
+          - generic: Apex
+          - generic: IGL
+        - cell "26"
+        - cell "78.3"
+        - cell "★★★½"
+        - cell:
+          - generic "61"
+        - cell "▲":
+          - generic "52"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Consistent practice and useful match minutes build development momentum.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Phantom 20 65.5 ★★★★½ ▲ auto Game Sense, Utility Usage, Positioning choose language normal no mentor":
+        - cell "Phantom":
+          - generic: Phantom
+        - cell "20"
+        - cell "65.5"
+        - cell "★★★★½"
+        - cell:
+          - generic "68"
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Strong match performances are helping this player absorb practice.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "no mentor":
+          - combobox:
+            - option "no mentor" [selected]
+            - option "🎓 Apex (teach 73)"
+      - row "Echo 23 75.5 ★★½ ▼ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Echo":
+          - generic: Echo
+        - cell "23"
+        - cell "75.5"
+        - cell "★★½"
+        - cell "▼":
+          - generic "66"
+          - text: ▼
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Consistent practice and useful match minutes build development momentum.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Vortex 22 74.6 ★★★ ▼ ▲ rest Recovery choose language light —":
+        - cell "Vortex":
+          - generic: Vortex
+        - cell "22"
+        - cell "74.6"
+        - cell "★★★"
+        - cell "▼":
+          - generic "74"
+          - text: ▼
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "rest Recovery":
+          - combobox:
+            - option "auto"
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest" [selected]
+          - generic "Recovery pauses practice and restores condition; match learning still counts.": Recovery
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "light":
+          - combobox:
+            - option "light" [selected]
+            - option "normal"
+            - option "intense"
+        - cell "—"
+      - row "Ghost 19 75.8 ★★★★★ ▼ ▲ auto Game Sense, Utility Usage, Positioning choose language normal no mentor":
+        - cell "Ghost":
+          - generic: Ghost
+        - cell "19"
+        - cell "75.8"
+        - cell "★★★★★"
+        - cell "▼":
+          - generic "68"
+          - text: ▼
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Consistent practice and useful match minutes build development momentum.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "no mentor":
+          - combobox:
+            - option "no mentor" [selected]
+            - option "🎓 Apex (teach 73)"
+  - heading "Squad profile" [level=2]
+  - paragraph: Average age 22
+  - generic: Youth ≤21
+  - generic: "2"
+  - generic: Prime 22–26
+  - generic: "3"
+  - generic: Veteran 27+
+  - generic: "0"
+  - heading "Scouting book" [level=2]
+  - paragraph: Balanced
+  - heading "Locker room" [level=2]
+  - paragraph: No standout duos or feuds.
+  - paragraph:
+    - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry.": Comms 56
+    - text: shared languages feed chemistry.
+  - heading "Future of the Org" [level=2]
+  - paragraph: Where the roster is trending — risers, milestones and the prospects behind them.
+  - heading "Risers" [level=3]
+  - paragraph: No standout climbers this window.
+  - heading "Milestones" [level=3]
+  - paragraph: No milestones crossed.
+  - heading "Academy standouts" [level=3]
+  - generic: Frostecho 20
+  - generic: pot 73–99
+  - generic: CA 54
+  - generic: Cipherwing 22
+  - generic: pot 73–93
+  - generic: CA 67
+  - generic: Emberlock 20
+  - generic: pot 60–87
+  - generic: CA 56
+  - generic: Staticwolf 20
+  - generic: pot 58–81
+  - generic: CA 57
+  - generic: Riftblade 21
+  - generic: pot 51–69
+  - generic: CA 57
+  - heading "Prospect updates" [level=3]
+  - paragraph: No new scouting movement.
+  - heading "Talent pipeline" [level=2]
+  - paragraph: The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+  - heading "Youth intake 0" [level=3]:
+    - text: Youth intake
+    - generic: "0"
+  - paragraph: Empty
+  - heading "Academy 5" [level=3]:
+    - text: Academy
+    - generic: "5"
+  - generic: Frostecho
+  - generic: "20"
+  - generic: —
+  - generic "current ability": "54"
+  - generic: Cipherwing
+  - generic: "22"
+  - generic: —
+  - generic "current ability": "67"
+  - generic: Emberlock
+  - generic: "20"
+  - generic: —
+  - generic "current ability": "56"
+  - generic: Staticwolf
+  - generic: "20"
+  - generic: —
+  - generic "current ability": "57"
+  - generic: Riftblade
+  - generic: "21"
+  - generic: —
+  - generic "current ability": "57"
+  - heading "Bench 0" [level=3]:
+    - text: Bench
+    - generic: "0"
+  - paragraph: Empty
+  - heading "Starters 5" [level=3]:
+    - text: Starters
+    - generic: "5"
+  - generic: Apex
+  - generic: "26"
+  - generic "current ability": "78"
+  - generic: Phantom
+  - generic: "20"
+  - generic "current ability": "66"
+  - generic: Echo
+  - generic: "23"
+  - generic "current ability": "76"
+  - generic: Vortex
+  - generic: "22"
+  - generic "current ability": "75"
+  - generic: Ghost
+  - generic: "19"
+  - generic "current ability": "76"
+  - heading "Development Report" [level=2]
+  - paragraph: Season 1 · Week 0 to Week 1
+  - generic: Compared OVR +0.2 · 5 players
+  - generic: 3 grown
+  - generic: 0 regressed
+  - generic: 2 steady
+  - table:
+    - rowgroup:
+      - 'row "Player Tracked Start Now Change Skills changed Latest week: why it changed"':
+        - columnheader "Player"
+        - columnheader "Tracked"
+        - columnheader "Start"
+        - columnheader "Now"
+        - columnheader "Change"
+        - columnheader "Skills changed"
+        - 'columnheader "Latest week: why it changed"'
+    - rowgroup:
+      - row "Phantom W0–W1 · 2 pts 65.1 65.5 +0.4 Utility Usage +1.7 Positioning +0.9 Game Sense +0.8 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1 Practice +0.32 OVR Matches +0.04 OVR S1 W1 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Coaching and club support are improving practice":
+        - cell "Phantom":
+          - generic: Phantom
+        - cell "W0–W1 · 2 pts"
+        - cell "65.1"
+        - cell "65.5"
+        - cell "+0.4"
+        - cell "Utility Usage +1.7 Positioning +0.9 Game Sense +0.8 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1":
+          - generic "tactical · 48 to 49.7": Utility Usage +1.7
+          - generic "tactical · 62 to 62.9": Positioning +0.9
+          - generic "tactical · 54 to 54.8": Game Sense +0.8
+          - generic "mental · 70 to 70.1": Clutch Factor +0.1
+          - generic "team · 50 to 50.1": Comms Quality +0.1
+          - generic "mental · 55 to 55.1": Composure +0.1
+        - cell "Practice +0.32 OVR Matches +0.04 OVR S1 W1 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Coaching and club support are improving practice":
+          - generic "Game Sense +0.73; Positioning +0.80; Utility Usage +1.64": Practice +0.32 OVR
+          - generic "Clutch Factor +0.06; Comms Quality +0.15; Composure +0.06; Game Sense +0.05; Positioning +0.06; Utility Usage +0.06": Matches +0.04 OVR
+          - generic: S1 W1 · Tactical / normal · 1 maps · Thriving
+          - generic: Strong match performances are accelerating learning
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Coaching and club support are improving practice
+      - row "Ghost W0–W1 · 2 pts 75.5 75.8 +0.3 Utility Usage +1.1 Game Sense +0.6 Aim Precision +0.4 Positioning +0.4 Aim Reactivity +0.2 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1 Practice +0.19 OVR Matches +0.10 OVR S1 W1 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Coaching and club support are improving practice":
+        - cell "Ghost":
+          - generic: Ghost
+        - cell "W0–W1 · 2 pts"
+        - cell "75.5"
+        - cell "75.8"
+        - cell "+0.3"
+        - cell "Utility Usage +1.1 Game Sense +0.6 Aim Precision +0.4 Positioning +0.4 Aim Reactivity +0.2 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1":
+          - generic "tactical · 80 to 81.1": Utility Usage +1.1
+          - generic "tactical · 85 to 85.6": Game Sense +0.6
+          - generic "mechanical · 74 to 74.4": Aim Precision +0.4
+          - generic "tactical · 82 to 82.4": Positioning +0.4
+          - generic "mechanical · 76 to 76.2": Aim Reactivity +0.2
+          - generic "mental · 80 to 80.1": Clutch Factor +0.1
+          - generic "team · 60 to 60.1": Comms Quality +0.1
+          - generic "mental · 74 to 74.1": Composure +0.1
+        - cell "Practice +0.19 OVR Matches +0.10 OVR S1 W1 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Coaching and club support are improving practice":
+          - generic "Game Sense +0.54; Positioning +0.35; Utility Usage +1.04": Practice +0.19 OVR
+          - generic "Aim Precision +0.39; Aim Reactivity +0.23; Clutch Factor +0.10; Comms Quality +0.11; Composure +0.09; Game Sense +0.02; Positioning +0.02; Utility Usage +0.04": Matches +0.10 OVR
+          - generic: S1 W1 · Tactical / normal · 1 maps · Settling
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Coaching and club support are improving practice
+      - row "Vortex W0–W1 · 2 pts 74.5 74.6 +0.1 Utility Usage +0.4 Comms Quality +0.1 Game Sense +0.1 Positioning +0.1 Practice +0.06 OVR Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest Streaming is taking time away from practice Coaching and club support are improving practice":
+        - cell "Vortex":
+          - generic: Vortex
+        - cell "W0–W1 · 2 pts"
+        - cell "74.5"
+        - cell "74.6"
+        - cell "+0.1"
+        - cell "Utility Usage +0.4 Comms Quality +0.1 Game Sense +0.1 Positioning +0.1":
+          - generic "tactical · 59 to 59.4": Utility Usage +0.4
+          - generic "team · 55 to 55.1": Comms Quality +0.1
+          - generic "tactical · 72 to 72.1": Game Sense +0.1
+          - generic "tactical · 78 to 78.1": Positioning +0.1
+        - cell "Practice +0.06 OVR Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest Streaming is taking time away from practice Coaching and club support are improving practice":
+          - generic "Game Sense +0.12; Positioning +0.07; Utility Usage +0.37": Practice +0.06 OVR
+          - generic "Comms Quality +0.07; Composure +0.01; Game Sense +0.01; Positioning +0.01; Utility Usage +0.02": Matches +0.01 OVR
+          - generic: S1 W1 · Tactical / normal · 1 maps · Thriving
+          - generic: Strong match performances are accelerating learning
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Tired legs are reducing practice quality; ease intensity or rest
+          - generic: Streaming is taking time away from practice
+          - generic: Coaching and club support are improving practice
+      - row "Apex W0–W1 · 2 pts 78.3 78.3 0.0 No skill changes of 0.1 or more Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Settling Streaming is taking time away from practice Coaching and club support are improving practice This focus has little reachable headroom; try another skill area":
+        - cell "Apex":
+          - generic: Apex
+        - cell "W0–W1 · 2 pts"
+        - cell "78.3"
+        - cell "78.3"
+        - cell "0.0"
+        - cell "No skill changes of 0.1 or more":
+          - generic: No skill changes of 0.1 or more
+        - cell "Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Settling Streaming is taking time away from practice Coaching and club support are improving practice This focus has little reachable headroom; try another skill area":
+          - generic "Aim Precision +0.04; Aim Reactivity +0.02": Matches +0.01 OVR
+          - generic: S1 W1 · Tactical / normal · 1 maps · Settling
+          - generic: Streaming is taking time away from practice
+          - generic: Coaching and club support are improving practice
+          - generic: This focus has little reachable headroom; try another skill area
+      - row "Echo W0–W1 · 2 pts 75.5 75.5 0.0 No skill changes of 0.1 or more Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Settling Streaming is taking time away from practice Coaching and club support are improving practice This focus has little reachable headroom; try another skill area":
+        - cell "Echo":
+          - generic: Echo
+        - cell "W0–W1 · 2 pts"
+        - cell "75.5"
+        - cell "75.5"
+        - cell "0.0"
+        - cell "No skill changes of 0.1 or more":
+          - generic: No skill changes of 0.1 or more
+        - cell "Matches +0.01 OVR S1 W1 · Tactical / normal · 1 maps · Settling Streaming is taking time away from practice Coaching and club support are improving practice This focus has little reachable headroom; try another skill area":
+          - generic "Aim Precision +0.03; Aim Reactivity +0.02; Clutch Factor +0.02; Comms Quality +0.01": Matches +0.01 OVR
+          - generic: S1 W1 · Tactical / normal · 1 maps · Settling
+          - generic: Streaming is taking time away from practice
+          - generic: Coaching and club support are improving practice
+          - generic: This focus has little reachable headroom; try another skill area
+- tooltip:
+  - heading [level=4]: Inbox
+  - generic: Work through decisions and deadlines without losing them in league news.
+  - generic: Handle Actionable Items first; League Feed is context, not a to-do list.

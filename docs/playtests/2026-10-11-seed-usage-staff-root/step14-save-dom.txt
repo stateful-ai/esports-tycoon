@@ -1,0 +1,3369 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Azure Vanta
+  - generic: 166,850 cr
+  - button "Save" [active]
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 4":
+      - text: Inbox
+      - generic: "4"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Market
+  - button "Players"
+  - button "Scouting"
+  - button "Staff"
+  - heading "Staff market — 197 free agents" [level=2]:
+    - text: Staff market
+    - generic: — 197 free agents
+  - paragraph: One shared pool — in a shared world, rival managers hire from the same market. Hiring replaces your current Coach / Analyst / Physio / Psychologist / Performance Coach / Language Coach in that role (they return to the pool). Click a name for the full profile.
+  - button "All"
+  - button "Coaches"
+  - button "Analysts"
+  - button "Physios"
+  - button "Psychologists"
+  - button "Performance coaches"
+  - button "Language coaches"
+  - generic: 🛠️ Filter staff candidates
+  - button "Show Filters ▾"
+  - table:
+    - rowgroup:
+      - row "Role Name Age Region Specialty Identity / strengths OVR Salary Exp":
+        - columnheader "Role"
+        - columnheader "Name"
+        - columnheader "Age"
+        - columnheader "Region"
+        - columnheader "Specialty"
+        - columnheader "Identity / strengths"
+        - columnheader "OVR"
+        - columnheader "Salary"
+        - columnheader "Exp"
+        - columnheader
+    - rowgroup:
+      - row "Analyst Andre Fischer +16.2 OVR vs current 27 emea data Analysis 95 · Tactical Knowledge 93 5,900 cr/wk 3s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Andre Fischer +16.2 OVR vs current":
+          - text: Andre Fischer
+          - generic: +16.2 OVR vs current
+        - cell "27"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 95 · Tactical Knowledge 93"
+        - cell:
+          - generic "90"
+        - cell "5,900 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Beni +13.5 OVR vs current 41 emea opponents Teaching 99 · Expertise 91 6,000 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Beni +13.5 OVR vs current":
+          - text: Beni
+          - generic: +13.5 OVR vs current
+        - cell "41"
+        - cell "emea"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Teaching 99 · Expertise 91"
+        - cell:
+          - generic "87"
+        - cell "6,000 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Bacon9 +10.6 OVR vs current 28 emea data Expertise 94 · Tactical Knowledge 91 5,700 cr/wk 8s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Bacon9 +10.6 OVR vs current":
+          - text: Bacon9
+          - generic: +10.6 OVR vs current
+        - cell "28"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Expertise 94 · Tactical Knowledge 91"
+        - cell:
+          - generic "84"
+        - cell "5,700 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst r3thme +9.8 OVR vs current 26 pacific market Motivation 99 · Analysis 90 6,400 cr/wk 9s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "r3thme +9.8 OVR vs current":
+          - text: r3thme
+          - generic: +9.8 OVR vs current
+        - cell "26"
+        - cell "pacific"
+        - cell "market":
+          - generic: market
+        - cell "Motivation 99 · Analysis 90"
+        - cell:
+          - generic "83"
+        - cell "6,400 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Liam Tanaka +8.7 OVR vs current 33 americas market Tactical Knowledge 95 · Analysis 87 5,200 cr/wk 6s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Liam Tanaka +8.7 OVR vs current":
+          - text: Liam Tanaka
+          - generic: +8.7 OVR vs current
+        - cell "33"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Tactical Knowledge 95 · Analysis 87"
+        - cell:
+          - generic "82"
+        - cell "5,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Koyo +6.8 OVR vs current 37 emea data Tactical Knowledge 90 · People Management 84 5,400 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Koyo +6.8 OVR vs current":
+          - text: Koyo
+          - generic: +6.8 OVR vs current
+        - cell "37"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 90 · People Management 84"
+        - cell:
+          - generic "80"
+        - cell "5,400 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Jan Kowalski +6.3 OVR vs current 26 pacific data Tactical Knowledge 86 · Adaptability 85 5,500 cr/wk 1s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Jan Kowalski +6.3 OVR vs current":
+          - text: Jan Kowalski
+          - generic: +6.3 OVR vs current
+        - cell "26"
+        - cell "pacific"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 86 · Adaptability 85"
+        - cell:
+          - generic "80"
+        - cell "5,500 cr/wk"
+        - cell "1s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Flynn +5.9 OVR vs current 33 emea data Analysis 85 · Expertise 82 5,700 cr/wk 9s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Flynn +5.9 OVR vs current":
+          - text: Flynn
+          - generic: +5.9 OVR vs current
+        - cell "33"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 85 · Expertise 82"
+        - cell:
+          - generic "79"
+        - cell "5,700 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Kai Moreau +5.1 OVR vs current 26 americas data Analysis 87 · Motivation 84 5,100 cr/wk 3s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Kai Moreau +5.1 OVR vs current":
+          - text: Kai Moreau
+          - generic: +5.1 OVR vs current
+        - cell "26"
+        - cell "americas"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 87 · Motivation 84"
+        - cell:
+          - generic "78"
+        - cell "5,100 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Marco Kim +4.3 OVR vs current 37 emea data Tactical Knowledge 83 · Expertise 79 5,300 cr/wk 10s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Marco Kim +4.3 OVR vs current":
+          - text: Marco Kim
+          - generic: +4.3 OVR vs current
+        - cell "37"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 83 · Expertise 79"
+        - cell:
+          - generic "78"
+        - cell "5,300 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Yusuf Silva +1.9 OVR vs current 28 pacific opponents Analysis 82 · Tactical Knowledge 79 3,900 cr/wk 5s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Yusuf Silva +1.9 OVR vs current":
+          - text: Yusuf Silva
+          - generic: +1.9 OVR vs current
+        - cell "28"
+        - cell "pacific"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Analysis 82 · Tactical Knowledge 79"
+        - cell:
+          - generic "75"
+        - cell "3,900 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Fadeout +0.2 OVR vs current 33 americas opponents Adaptability 88 · People Management 77 5,100 cr/wk 6s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Fadeout +0.2 OVR vs current":
+          - text: Fadeout
+          - generic: +0.2 OVR vs current
+        - cell "33"
+        - cell "americas"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Adaptability 88 · People Management 77"
+        - cell:
+          - generic "74"
+        - cell "5,100 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Tomas Chen -1.0 OVR vs current 24 emea market Adaptability 80 · Analysis 78 4,300 cr/wk 0s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Tomas Chen -1.0 OVR vs current":
+          - text: Tomas Chen
+          - generic: "-1.0 OVR vs current"
+        - cell "24"
+        - cell "emea"
+        - cell "market":
+          - generic: market
+        - cell "Adaptability 80 · Analysis 78"
+        - cell:
+          - generic "72"
+        - cell "4,300 cr/wk"
+        - cell "0s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Nikolai Muller -1.1 OVR vs current 26 americas market Adaptability 86 · People Management 79 4,800 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Nikolai Muller -1.1 OVR vs current":
+          - text: Nikolai Muller
+          - generic: "-1.1 OVR vs current"
+        - cell "26"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Adaptability 86 · People Management 79"
+        - cell:
+          - generic "72"
+        - cell "4,800 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Dmitri Novak -1.2 OVR vs current 42 americas market Expertise 79 · Tactical Knowledge 72 4,000 cr/wk 11s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Dmitri Novak -1.2 OVR vs current":
+          - text: Dmitri Novak
+          - generic: "-1.2 OVR vs current"
+        - cell "42"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Expertise 79 · Tactical Knowledge 72"
+        - cell:
+          - generic "72"
+        - cell "4,000 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Skye -4.6 OVR vs current 44 pacific market Expertise 73 · People Management 71 4,700 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Skye -4.6 OVR vs current":
+          - text: Skye
+          - generic: "-4.6 OVR vs current"
+        - cell "44"
+        - cell "pacific"
+        - cell "market":
+          - generic: market
+        - cell "Expertise 73 · People Management 71"
+        - cell:
+          - generic "69"
+        - cell "4,700 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst gya9 -5.5 OVR vs current 36 pacific opponents Analysis 77 · Motivation 65 4,400 cr/wk 8s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "gya9 -5.5 OVR vs current":
+          - text: gya9
+          - generic: "-5.5 OVR vs current"
+        - cell "36"
+        - cell "pacific"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Analysis 77 · Motivation 65"
+        - cell:
+          - generic "68"
+        - cell "4,400 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Kenta Vargas -7.6 OVR vs current 32 americas data Analysis 74 · Adaptability 71 4,000 cr/wk 7s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Kenta Vargas -7.6 OVR vs current":
+          - text: Kenta Vargas
+          - generic: "-7.6 OVR vs current"
+        - cell "32"
+        - cell "americas"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 74 · Adaptability 71"
+        - cell:
+          - generic "66"
+        - cell "4,000 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Leon Santos -12.8 OVR vs current 41 americas opponents Tactical Knowledge 80 · People Management 72 3,800 cr/wk 10s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Leon Santos -12.8 OVR vs current":
+          - text: Leon Santos
+          - generic: "-12.8 OVR vs current"
+        - cell "41"
+        - cell "americas"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Tactical Knowledge 80 · People Management 72"
+        - cell:
+          - generic "61"
+        - cell "3,800 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Liam Vargas -18.3 OVR vs current 43 americas market Analysis 64 · Teaching 60 3,200 cr/wk 12s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Liam Vargas -18.3 OVR vs current":
+          - text: Liam Vargas
+          - generic: "-18.3 OVR vs current"
+        - cell "43"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Analysis 64 · Teaching 60"
+        - cell:
+          - generic "55"
+        - cell "3,200 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Arthur Novak -19.4 OVR vs current 32 emea data Analysis 69 · Motivation 58 3,100 cr/wk 7s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Arthur Novak -19.4 OVR vs current":
+          - text: Arthur Novak
+          - generic: "-19.4 OVR vs current"
+        - cell "32"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 69 · Motivation 58"
+        - cell:
+          - generic "54"
+        - cell "3,100 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Liam Nakamura 30 pacific mechanical Utility first fit 92 6,800 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Liam Nakamura"
+        - cell "30"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "93"
+        - cell "6,800 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Veer 49 americas mechanical Utility first fit 92 6,700 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Veer"
+        - cell "49"
+        - cell "americas"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "93"
+        - cell "6,700 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach NorthernLights 49 pacific mechanical Utility first fit 91 6,800 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "NorthernLights"
+        - cell "49"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "93"
+        - cell "6,800 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach shhhack 32 americas tactical Structured control fit 89 6,800 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "shhhack"
+        - cell "32"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "92"
+        - cell "6,800 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ANGE1 55 emea mechanical Structured control fit 90 6,000 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ANGE1"
+        - cell "55"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "91"
+        - cell "6,000 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Jhein 41 americas tactical Pragmatic fit 95 6,300 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Jhein"
+        - cell "41"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "91"
+        - cell "6,300 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach d00mbr0s 34 americas mechanical Map control fit 92 6,600 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "d00mbr0s"
+        - cell "34"
+        - cell "americas"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "91"
+        - cell "6,600 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach TK9 45 pacific team Pragmatic fit 95 6,700 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "TK9"
+        - cell "45"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "91"
+        - cell "6,700 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach mini 38 pacific mental Fast pressure fit 88 6,600 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "mini"
+        - cell "38"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "90"
+        - cell "6,600 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Romanilly 46 americas mental Utility first fit 92 6,300 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Romanilly"
+        - cell "46"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "90"
+        - cell "6,300 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach R1ckLee 51 china mechanical Pragmatic fit 97 5,700 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "R1ckLee"
+        - cell "51"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Pragmatic fit 97":
+          - generic: Pragmatic
+          - generic: fit 97
+        - cell:
+          - generic "90"
+        - cell "5,700 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach hypnotizing 31 china mental Structured control fit 91 6,200 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "hypnotizing"
+        - cell "31"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "89"
+        - cell "6,200 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach kamino 36 americas tactical Fast pressure fit 90 6,400 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "kamino"
+        - cell "36"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Fast pressure fit 90":
+          - generic: Fast pressure
+          - generic: fit 90
+        - cell:
+          - generic "89"
+        - cell "6,400 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach pipsoN 33 emea tactical Utility first fit 92 6,800 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "pipsoN"
+        - cell "33"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "89"
+        - cell "6,800 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Viento 31 emea mental Map control fit 90 6,400 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Viento"
+        - cell "31"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "89"
+        - cell "6,400 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach zonyk 51 americas mental Structured control fit 92 6,200 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "zonyk"
+        - cell "51"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 92":
+          - generic: Structured control
+          - generic: fit 92
+        - cell:
+          - generic "89"
+        - cell "6,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Yoman 45 pacific team Structured control fit 91 6,500 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Yoman"
+        - cell "45"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "88"
+        - cell "6,500 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach PAL 41 emea mechanical Map control fit 92 6,300 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "PAL"
+        - cell "41"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "88"
+        - cell "6,300 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach York 48 china mechanical Fast pressure fit 87 6,100 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "York"
+        - cell "48"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 87":
+          - generic: Fast pressure
+          - generic: fit 87
+        - cell:
+          - generic "88"
+        - cell "6,100 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach AFTER 52 china team Map control fit 92 6,700 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "AFTER"
+        - cell "52"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "88"
+        - cell "6,700 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Frost 54 pacific tactical Fast pressure fit 89 6,100 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Frost"
+        - cell "54"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Fast pressure fit 89":
+          - generic: Fast pressure
+          - generic: fit 89
+        - cell:
+          - generic "88"
+        - cell "6,100 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Scuttt 49 emea mental Structured control fit 90 6,100 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Scuttt"
+        - cell "49"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "88"
+        - cell "6,100 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Jovi 42 pacific mental Structured control fit 90 6,400 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Jovi"
+        - cell "42"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "87"
+        - cell "6,400 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Jexen 55 china team Structured control fit 91 6,300 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Jexen"
+        - cell "55"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "87"
+        - cell "6,300 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Diego Larsson 41 emea mental Utility first fit 91 6,500 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Diego Larsson"
+        - cell "41"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "87"
+        - cell "6,500 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Platoon 37 pacific team Structured control fit 90 6,200 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Platoon"
+        - cell "37"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "87"
+        - cell "6,200 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Wendler 49 pacific team Fast pressure fit 91 6,300 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Wendler"
+        - cell "49"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Fast pressure fit 91":
+          - generic: Fast pressure
+          - generic: fit 91
+        - cell:
+          - generic "87"
+        - cell "6,300 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Argency 35 pacific mechanical Utility first fit 92 6,000 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Argency"
+        - cell "35"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "87"
+        - cell "6,000 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach 24K 45 china mental Utility first fit 92 6,000 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "24K"
+        - cell "45"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "86"
+        - cell "6,000 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach peri 42 pacific team Map control fit 91 6,100 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "peri"
+        - cell "42"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "86"
+        - cell "6,100 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach CheongGak 39 pacific team Utility first fit 91 6,300 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "CheongGak"
+        - cell "39"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "86"
+        - cell "6,300 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach bonkar 51 americas team Fast pressure fit 90 6,300 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "bonkar"
+        - cell "51"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Fast pressure fit 90":
+          - generic: Fast pressure
+          - generic: fit 90
+        - cell:
+          - generic "86"
+        - cell "6,300 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach SilkAn0n 33 pacific mental Structured control fit 91 5,800 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "SilkAn0n"
+        - cell "33"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "86"
+        - cell "5,800 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Vlad 34 emea tactical Pragmatic fit 95 6,300 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Vlad"
+        - cell "34"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "86"
+        - cell "6,300 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Lt 32 china mental Fast pressure fit 90 6,200 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Lt"
+        - cell "32"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 90":
+          - generic: Fast pressure
+          - generic: fit 90
+        - cell:
+          - generic "86"
+        - cell "6,200 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach vladk0r 52 pacific tactical Pragmatic fit 99 6,000 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "vladk0r"
+        - cell "52"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 99":
+          - generic: Pragmatic
+          - generic: fit 99
+        - cell:
+          - generic "86"
+        - cell "6,000 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach yaotziN 55 emea mechanical Map control fit 90 6,000 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "yaotziN"
+        - cell "55"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "85"
+        - cell "6,000 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach alecks 47 pacific team Structured control fit 91 5,800 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "alecks"
+        - cell "47"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "85"
+        - cell "5,800 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Sungmin 50 pacific tactical Pragmatic fit 95 6,600 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Sungmin"
+        - cell "50"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "85"
+        - cell "6,600 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach NaThanD 36 china team Fast pressure fit 88 5,800 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "NaThanD"
+        - cell "36"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "84"
+        - cell "5,800 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Onur 45 americas tactical Map control fit 90 5,800 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Onur"
+        - cell "45"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "84"
+        - cell "5,800 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach salah 53 emea mechanical Structured control fit 90 5,600 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "salah"
+        - cell "53"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "83"
+        - cell "5,600 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Bati 33 americas tactical Pragmatic fit 95 6,200 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Bati"
+        - cell "33"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "83"
+        - cell "6,200 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Fayde 34 china mental Structured control fit 91 5,100 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Fayde"
+        - cell "34"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "83"
+        - cell "5,100 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Mavera 42 emea mechanical Fast pressure fit 88 5,800 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Mavera"
+        - cell "42"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "83"
+        - cell "5,800 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach termi 31 pacific tactical Map control fit 91 5,800 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "termi"
+        - cell "31"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "83"
+        - cell "5,800 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach chippy 52 emea mental Map control fit 91 5,400 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "chippy"
+        - cell "52"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "82"
+        - cell "5,400 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach XQQ 53 pacific mechanical Pragmatic fit 98 5,400 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "XQQ"
+        - cell "53"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Pragmatic fit 98":
+          - generic: Pragmatic
+          - generic: fit 98
+        - cell:
+          - generic "81"
+        - cell "5,400 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Faded 40 americas tactical Pragmatic fit 99 5,500 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Faded"
+        - cell "40"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 99":
+          - generic: Pragmatic
+          - generic: fit 99
+        - cell:
+          - generic "81"
+        - cell "5,500 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach 3water 33 china mechanical Map control fit 91 5,000 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "3water"
+        - cell "33"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "81"
+        - cell "5,000 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Vorz 44 pacific mechanical Structured control fit 90 5,100 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Vorz"
+        - cell "44"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "81"
+        - cell "5,100 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Gunter 50 americas mental Fast pressure fit 89 5,700 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Gunter"
+        - cell "50"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 89":
+          - generic: Fast pressure
+          - generic: fit 89
+        - cell:
+          - generic "80"
+        - cell "5,700 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Anderzz 55 americas mental Utility first fit 91 5,200 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Anderzz"
+        - cell "55"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "80"
+        - cell "5,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ZaeS 31 emea team Structured control fit 90 5,600 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ZaeS"
+        - cell "31"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "80"
+        - cell "5,600 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Desire 43 china team Map control fit 92 6,100 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Desire"
+        - cell "43"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "79"
+        - cell "6,100 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Muggle 32 china team Structured control fit 91 5,400 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Muggle"
+        - cell "32"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "79"
+        - cell "5,400 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ryota- 49 pacific team Map control fit 92 5,400 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ryota-"
+        - cell "49"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "79"
+        - cell "5,400 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach billyo 44 china team Pragmatic fit 95 5,500 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "billyo"
+        - cell "44"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "79"
+        - cell "5,500 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Andre Kim 33 americas tactical Map control fit 91 5,000 cr/wk 1s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Andre Kim"
+        - cell "33"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "79"
+        - cell "5,000 cr/wk"
+        - cell "1s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Strong 30 emea tactical Pragmatic fit 99 5,200 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Strong"
+        - cell "30"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 99":
+          - generic: Pragmatic
+          - generic: fit 99
+        - cell:
+          - generic "79"
+        - cell "5,200 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach sword9 55 china mechanical Map control fit 90 5,400 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "sword9"
+        - cell "55"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "79"
+        - cell "5,400 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Bail 47 china mechanical Pragmatic fit 98 6,100 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Bail"
+        - cell "47"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Pragmatic fit 98":
+          - generic: Pragmatic
+          - generic: fit 98
+        - cell:
+          - generic "78"
+        - cell "6,100 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach L7 55 emea team Pragmatic fit 97 4,900 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "L7"
+        - cell "55"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Pragmatic fit 97":
+          - generic: Pragmatic
+          - generic: fit 97
+        - cell:
+          - generic "78"
+        - cell "4,900 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ENGH 31 emea mental Fast pressure fit 88 5,400 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ENGH"
+        - cell "31"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "78"
+        - cell "5,400 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Warbirds 51 pacific mental Fast pressure fit 88 5,500 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Warbirds"
+        - cell "51"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "77"
+        - cell "5,500 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach wkn 39 americas tactical Utility first fit 91 5,200 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "wkn"
+        - cell "39"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "77"
+        - cell "5,200 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Happy 45 americas mechanical Structured control fit 90 5,600 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Happy"
+        - cell "45"
+        - cell "americas"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "76"
+        - cell "5,600 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach thinkii 51 emea team Fast pressure fit 88 5,200 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "thinkii"
+        - cell "51"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "76"
+        - cell "5,200 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Immi 49 americas team Utility first fit 90 5,000 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Immi"
+        - cell "49"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Utility first fit 90":
+          - generic: Utility first
+          - generic: fit 90
+        - cell:
+          - generic "76"
+        - cell "5,000 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach LohaN 43 emea team Map control fit 89 4,800 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "LohaN"
+        - cell "43"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Map control fit 89":
+          - generic: Map control
+          - generic: fit 89
+        - cell:
+          - generic "76"
+        - cell "4,800 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach glow 35 pacific mental Utility first fit 92 5,500 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "glow"
+        - cell "35"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "75"
+        - cell "5,500 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach KDG 44 pacific team Structured control fit 89 5,400 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "KDG"
+        - cell "44"
+        - cell "pacific"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "75"
+        - cell "5,400 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Melofovia 54 pacific mechanical Structured control fit 88 5,200 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Melofovia"
+        - cell "54"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 88":
+          - generic: Structured control
+          - generic: fit 88
+        - cell:
+          - generic "75"
+        - cell "5,200 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach potter 37 americas tactical Structured control fit 89 5,600 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "potter"
+        - cell "37"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "75"
+        - cell "5,600 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach KUNDIKUNDI 35 emea mechanical Map control fit 92 5,200 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "KUNDIKUNDI"
+        - cell "35"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "75"
+        - cell "5,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach mitch 38 americas team Structured control fit 90 5,200 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "mitch"
+        - cell "38"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "75"
+        - cell "5,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Desmo 53 emea team Utility first fit 92 5,400 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Desmo"
+        - cell "53"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Utility first fit 92":
+          - generic: Utility first
+          - generic: fit 92
+        - cell:
+          - generic "75"
+        - cell "5,400 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Bambino 39 emea tactical Map control fit 91 5,300 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Bambino"
+        - cell "39"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 91":
+          - generic: Map control
+          - generic: fit 91
+        - cell:
+          - generic "74"
+        - cell "5,300 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach solo 44 pacific mechanical Map control fit 92 4,600 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "solo"
+        - cell "44"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "74"
+        - cell "4,600 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Ewok 40 americas tactical Map control fit 90 5,000 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Ewok"
+        - cell "40"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "74"
+        - cell "5,000 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach weber 37 emea team Structured control fit 88 4,500 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "weber"
+        - cell "37"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 88":
+          - generic: Structured control
+          - generic: fit 88
+        - cell:
+          - generic "74"
+        - cell "4,500 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Milan 44 emea mechanical Fast pressure fit 88 4,600 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Milan"
+        - cell "44"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "74"
+        - cell "4,600 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach theeLoveFamily 51 pacific mental Structured control fit 91 4,500 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "theeLoveFamily"
+        - cell "51"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 91":
+          - generic: Structured control
+          - generic: fit 91
+        - cell:
+          - generic "74"
+        - cell "4,500 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Yiyee 54 china tactical Structured control fit 89 4,500 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Yiyee"
+        - cell "54"
+        - cell "china"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "74"
+        - cell "4,500 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach nbs 41 americas mental Fast pressure fit 89 4,500 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "nbs"
+        - cell "41"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Fast pressure fit 89":
+          - generic: Fast pressure
+          - generic: fit 89
+        - cell:
+          - generic "74"
+        - cell "4,500 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach wayLander 51 emea mental Utility first fit 91 4,800 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "wayLander"
+        - cell "51"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "74"
+        - cell "4,800 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach shaw 47 americas mental Pragmatic fit 99 4,300 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "shaw"
+        - cell "47"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Pragmatic fit 99":
+          - generic: Pragmatic
+          - generic: fit 99
+        - cell:
+          - generic "73"
+        - cell "4,300 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach alexRr 37 china mechanical Fast pressure fit 88 4,500 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "alexRr"
+        - cell "37"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "72"
+        - cell "4,500 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach afr0nfire 35 emea mechanical Fast pressure fit 88 4,500 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "afr0nfire"
+        - cell "35"
+        - cell "emea"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 88":
+          - generic: Fast pressure
+          - generic: fit 88
+        - cell:
+          - generic "72"
+        - cell "4,500 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach JoshRT 52 americas team Structured control fit 90 4,300 cr/wk 4s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "JoshRT"
+        - cell "52"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "72"
+        - cell "4,300 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach fRoD 44 americas team Utility first fit 91 4,200 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "fRoD"
+        - cell "44"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "71"
+        - cell "4,200 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ZE1SH 31 emea team Pragmatic fit 95 4,300 cr/wk 7s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ZE1SH"
+        - cell "31"
+        - cell "emea"
+        - cell "team":
+          - generic: team
+        - cell "Pragmatic fit 95":
+          - generic: Pragmatic
+          - generic: fit 95
+        - cell:
+          - generic "71"
+        - cell "4,300 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach stunner 48 americas team Utility first fit 89 4,300 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "stunner"
+        - cell "48"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Utility first fit 89":
+          - generic: Utility first
+          - generic: fit 89
+        - cell:
+          - generic "70"
+        - cell "4,300 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach HSK 55 pacific mechanical Utility first fit 91 4,500 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "HSK"
+        - cell "55"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "70"
+        - cell "4,500 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Arjun Weber 42 americas mechanical Fast pressure fit 87 4,500 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Arjun Weber"
+        - cell "42"
+        - cell "americas"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Fast pressure fit 87":
+          - generic: Fast pressure
+          - generic: fit 87
+        - cell:
+          - generic "70"
+        - cell "4,500 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach ED101 33 china mental Structured control fit 92 4,600 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "ED101"
+        - cell "33"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 92":
+          - generic: Structured control
+          - generic: fit 92
+        - cell:
+          - generic "69"
+        - cell "4,600 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach casteLL0 41 emea tactical Structured control fit 90 4,300 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "casteLL0"
+        - cell "41"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "69"
+        - cell "4,300 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach indigo 48 china mechanical Map control fit 92 4,900 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "indigo"
+        - cell "48"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "69"
+        - cell "4,900 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach KEY 50 emea tactical Utility first fit 91 4,600 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "KEY"
+        - cell "50"
+        - cell "emea"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Utility first fit 91":
+          - generic: Utility first
+          - generic: fit 91
+        - cell:
+          - generic "69"
+        - cell "4,600 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Septem7 30 china mechanical Structured control fit 89 4,300 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Septem7"
+        - cell "30"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "69"
+        - cell "4,300 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach neilzinho 45 emea mental Structured control fit 89 4,400 cr/wk 2s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "neilzinho"
+        - cell "45"
+        - cell "emea"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "68"
+        - cell "4,400 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach destroyer 33 china team Fast pressure fit 87 4,400 cr/wk 3s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "destroyer"
+        - cell "33"
+        - cell "china"
+        - cell "team":
+          - generic: team
+        - cell "Fast pressure fit 87":
+          - generic: Fast pressure
+          - generic: fit 87
+        - cell:
+          - generic "67"
+        - cell "4,400 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Diego Nakamura 50 americas mental Structured control fit 90 4,200 cr/wk 14s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Diego Nakamura"
+        - cell "50"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "67"
+        - cell "4,200 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Oscar Lindqvist 41 americas mental Map control fit 90 4,700 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Oscar Lindqvist"
+        - cell "41"
+        - cell "americas"
+        - cell "mental":
+          - generic: mental
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "66"
+        - cell "4,700 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach hVoya 37 china tactical Pragmatic fit 97 4,300 cr/wk 8s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "hVoya"
+        - cell "37"
+        - cell "china"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Pragmatic fit 97":
+          - generic: Pragmatic
+          - generic: fit 97
+        - cell:
+          - generic "65"
+        - cell "4,300 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Sushiboys 46 pacific tactical Structured control fit 89 4,300 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Sushiboys"
+        - cell "46"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "64"
+        - cell "4,300 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Yusuf Reyes 46 pacific tactical Fast pressure fit 86 3,400 cr/wk 11s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Yusuf Reyes"
+        - cell "46"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Fast pressure fit 86":
+          - generic: Fast pressure
+          - generic: fit 86
+        - cell:
+          - generic "64"
+        - cell "3,400 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Autumn 31 china mechanical Map control fit 92 4,700 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Autumn"
+        - cell "31"
+        - cell "china"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 92":
+          - generic: Map control
+          - generic: fit 92
+        - cell:
+          - generic "64"
+        - cell "4,700 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Ren Ito 36 pacific mechanical Map control fit 90 4,000 cr/wk 5s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Ren Ito"
+        - cell "36"
+        - cell "pacific"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Map control fit 90":
+          - generic: Map control
+          - generic: fit 90
+        - cell:
+          - generic "63"
+        - cell "4,000 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Andre Kowalski 47 pacific mental Map control fit 89 3,900 cr/wk 11s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Andre Kowalski"
+        - cell "47"
+        - cell "pacific"
+        - cell "mental":
+          - generic: mental
+        - cell "Map control fit 89":
+          - generic: Map control
+          - generic: fit 89
+        - cell:
+          - generic "60"
+        - cell "3,900 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach LEGIJA 44 china mental Utility first fit 89 4,200 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "LEGIJA"
+        - cell "44"
+        - cell "china"
+        - cell "mental":
+          - generic: mental
+        - cell "Utility first fit 89":
+          - generic: Utility first
+          - generic: fit 89
+        - cell:
+          - generic "59"
+        - cell "4,200 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Noah Andersen 46 americas team Structured control fit 90 2,900 cr/wk 9s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Noah Andersen"
+        - cell "46"
+        - cell "americas"
+        - cell "team":
+          - generic: team
+        - cell "Structured control fit 90":
+          - generic: Structured control
+          - generic: fit 90
+        - cell:
+          - generic "52"
+        - cell "2,900 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Kai Berg 47 americas mechanical Utility first fit 89 2,800 cr/wk 12s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Kai Berg"
+        - cell "47"
+        - cell "americas"
+        - cell "mechanical":
+          - generic: mechanical
+        - cell "Utility first fit 89":
+          - generic: Utility first
+          - generic: fit 89
+        - cell:
+          - generic "50"
+        - cell "2,800 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Kenta Kim 40 americas tactical Structured control fit 89 2,400 cr/wk 6s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Kenta Kim"
+        - cell "40"
+        - cell "americas"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Structured control fit 89":
+          - generic: Structured control
+          - generic: fit 89
+        - cell:
+          - generic "42"
+        - cell "2,400 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Coach Arjun Park 45 pacific tactical Map control fit 87 2,200 cr/wk 10s Hire":
+        - cell "Coach":
+          - generic: Coach
+        - cell "Arjun Park"
+        - cell "45"
+        - cell "pacific"
+        - cell "tactical":
+          - generic: tactical
+        - cell "Map control fit 87":
+          - generic: Map control
+          - generic: fit 87
+        - cell:
+          - generic "42"
+        - cell "2,200 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Jan Janssen 32 emea callouts Expertise 99 · People Management 99 6,400 cr/wk 6s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Jan Janssen"
+        - cell "32"
+        - cell "emea"
+        - cell "callouts":
+          - generic: callouts
+        - cell "Expertise 99 · People Management 99"
+        - cell:
+          - generic "95"
+        - cell "6,400 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Minho Jensen 56 americas callouts Teaching 99 · Analysis 93 6,400 cr/wk 18s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Minho Jensen"
+        - cell "56"
+        - cell "americas"
+        - cell "callouts":
+          - generic: callouts
+        - cell "Teaching 99 · Analysis 93"
+        - cell:
+          - generic "91"
+        - cell "6,400 cr/wk"
+        - cell "18s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Diego Costa 35 pacific conversation Teaching 93 · Tactical Knowledge 92 6,600 cr/wk 7s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Diego Costa"
+        - cell "35"
+        - cell "pacific"
+        - cell "conversation":
+          - generic: conversation
+        - cell "Teaching 93 · Tactical Knowledge 92"
+        - cell:
+          - generic "90"
+        - cell "6,600 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Marco Fischer 29 americas conversation Expertise 93 · Teaching 88 5,600 cr/wk 2s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Marco Fischer"
+        - cell "29"
+        - cell "americas"
+        - cell "conversation":
+          - generic: conversation
+        - cell "Expertise 93 · Teaching 88"
+        - cell:
+          - generic "86"
+        - cell "5,600 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Erik Kowalski 49 americas conversation Expertise 88 · Teaching 72 4,000 cr/wk 14s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Erik Kowalski"
+        - cell "49"
+        - cell "americas"
+        - cell "conversation":
+          - generic: conversation
+        - cell "Expertise 88 · Teaching 72"
+        - cell:
+          - generic "76"
+        - cell "4,000 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Hugo Weber 28 americas callouts People Management 79 · Teaching 72 3,700 cr/wk 3s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Hugo Weber"
+        - cell "28"
+        - cell "americas"
+        - cell "callouts":
+          - generic: callouts
+        - cell "People Management 79 · Teaching 72"
+        - cell:
+          - generic "67"
+        - cell "3,700 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Pablo Rossi 47 emea immersion People Management 71 · Expertise 69 3,800 cr/wk 14s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Pablo Rossi"
+        - cell "47"
+        - cell "emea"
+        - cell "immersion":
+          - generic: immersion
+        - cell "People Management 71 · Expertise 69"
+        - cell:
+          - generic "64"
+        - cell "3,800 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Victor Jensen 56 pacific callouts People Management 74 · Adaptability 72 3,500 cr/wk 19s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Victor Jensen"
+        - cell "56"
+        - cell "pacific"
+        - cell "callouts":
+          - generic: callouts
+        - cell "People Management 74 · Adaptability 72"
+        - cell:
+          - generic "61"
+        - cell "3,500 cr/wk"
+        - cell "19s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Jonas Chen 53 pacific conversation Teaching 66 · Expertise 65 3,100 cr/wk 17s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Jonas Chen"
+        - cell "53"
+        - cell "pacific"
+        - cell "conversation":
+          - generic: conversation
+        - cell "Teaching 66 · Expertise 65"
+        - cell:
+          - generic "59"
+        - cell "3,100 cr/wk"
+        - cell "17s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Hugo Takahashi 44 pacific conversation Analysis 66 · Teaching 63 3,000 cr/wk 12s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Hugo Takahashi"
+        - cell "44"
+        - cell "pacific"
+        - cell "conversation":
+          - generic: conversation
+        - cell "Analysis 66 · Teaching 63"
+        - cell:
+          - generic "59"
+        - cell "3,000 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Arthur Popov 26 emea immersion Teaching 69 · Analysis 64 3,100 cr/wk 2s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Arthur Popov"
+        - cell "26"
+        - cell "emea"
+        - cell "immersion":
+          - generic: immersion
+        - cell "Teaching 69 · Analysis 64"
+        - cell:
+          - generic "58"
+        - cell "3,100 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Language Coach Andre Nakamura 32 americas conversation People Management 67 · Teaching 64 3,500 cr/wk 5s Hire":
+        - cell "Language Coach":
+          - generic: Language Coach
+        - cell "Andre Nakamura"
+        - cell "32"
+        - cell "americas"
+        - cell "conversation":
+          - generic: conversation
+        - cell "People Management 67 · Teaching 64"
+        - cell:
+          - generic "56"
+        - cell "3,500 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Rebecca 34 pacific consistency Expertise 99 · Tactical Knowledge 94 6,400 cr/wk 9s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Rebecca"
+        - cell "34"
+        - cell "pacific"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Expertise 99 · Tactical Knowledge 94"
+        - cell:
+          - generic "90"
+        - cell "6,400 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Panda 33 pacific consistency Teaching 98 · Tactical Knowledge 94 6,200 cr/wk 7s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Panda"
+        - cell "33"
+        - cell "pacific"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Teaching 98 · Tactical Knowledge 94"
+        - cell:
+          - generic "90"
+        - cell "6,200 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Szed 37 emea routines Expertise 97 · Adaptability 93 6,200 cr/wk 2s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Szed"
+        - cell "37"
+        - cell "emea"
+        - cell "routines":
+          - generic: routines
+        - cell "Expertise 97 · Adaptability 93"
+        - cell:
+          - generic "89"
+        - cell "6,200 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Zuzanna 37 emea routines Motivation 89 · Expertise 85 5,700 cr/wk 2s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Zuzanna"
+        - cell "37"
+        - cell "emea"
+        - cell "routines":
+          - generic: routines
+        - cell "Motivation 89 · Expertise 85"
+        - cell:
+          - generic "85"
+        - cell "5,700 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Rob 43 emea consistency Motivation 88 · Expertise 86 5,400 cr/wk 5s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Rob"
+        - cell "43"
+        - cell "emea"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Motivation 88 · Expertise 86"
+        - cell:
+          - generic "85"
+        - cell "5,400 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Ren Andersen 46 americas consistency Analysis 94 · Motivation 90 5,600 cr/wk 12s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Ren Andersen"
+        - cell "46"
+        - cell "americas"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Analysis 94 · Motivation 90"
+        - cell:
+          - generic "84"
+        - cell "5,600 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Bajerski 30 americas consistency Analysis 91 · Expertise 88 5,700 cr/wk 4s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Bajerski"
+        - cell "30"
+        - cell "americas"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Analysis 91 · Expertise 88"
+        - cell:
+          - generic "84"
+        - cell "5,700 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Robert 39 americas consistency Teaching 89 · Analysis 80 5,100 cr/wk 4s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Robert"
+        - cell "39"
+        - cell "americas"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Teaching 89 · Analysis 80"
+        - cell:
+          - generic "77"
+        - cell "5,100 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Xirreth 48 emea peaking Teaching 82 · Analysis 82 5,300 cr/wk 3s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Xirreth"
+        - cell "48"
+        - cell "emea"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Teaching 82 · Analysis 82"
+        - cell:
+          - generic "77"
+        - cell "5,300 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Arthur Petrov 43 pacific routines Expertise 86 · People Management 75 5,000 cr/wk 10s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Arthur Petrov"
+        - cell "43"
+        - cell "pacific"
+        - cell "routines":
+          - generic: routines
+        - cell "Expertise 86 · People Management 75"
+        - cell:
+          - generic "75"
+        - cell "5,000 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Jonas Ito 28 pacific routines Motivation 81 · Teaching 80 5,100 cr/wk 2s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Jonas Ito"
+        - cell "28"
+        - cell "pacific"
+        - cell "routines":
+          - generic: routines
+        - cell "Motivation 81 · Teaching 80"
+        - cell:
+          - generic "75"
+        - cell "5,100 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Andre Costa 31 emea consistency Adaptability 82 · Expertise 80 4,900 cr/wk 2s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Andre Costa"
+        - cell "31"
+        - cell "emea"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Adaptability 82 · Expertise 80"
+        - cell:
+          - generic "73"
+        - cell "4,900 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Ethan Moreau 35 pacific peaking Analysis 78 · Teaching 76 4,200 cr/wk 4s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Ethan Moreau"
+        - cell "35"
+        - cell "pacific"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Analysis 78 · Teaching 76"
+        - cell:
+          - generic "73"
+        - cell "4,200 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Oscar Weber 49 pacific routines Motivation 80 · Expertise 73 3,800 cr/wk 14s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Oscar Weber"
+        - cell "49"
+        - cell "pacific"
+        - cell "routines":
+          - generic: routines
+        - cell "Motivation 80 · Expertise 73"
+        - cell:
+          - generic "68"
+        - cell "3,800 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Mew 36 emea routines People Management 72 · Expertise 72 3,800 cr/wk 6s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Mew"
+        - cell "36"
+        - cell "emea"
+        - cell "routines":
+          - generic: routines
+        - cell "People Management 72 · Expertise 72"
+        - cell:
+          - generic "65"
+        - cell "3,800 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Ethan Costa 29 americas peaking Expertise 74 · Teaching 67 3,000 cr/wk 2s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Ethan Costa"
+        - cell "29"
+        - cell "americas"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Expertise 74 · Teaching 67"
+        - cell:
+          - generic "63"
+        - cell "3,000 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Jan Lindqvist 42 pacific peaking Motivation 65 · Expertise 64 3,400 cr/wk 11s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Jan Lindqvist"
+        - cell "42"
+        - cell "pacific"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Motivation 65 · Expertise 64"
+        - cell:
+          - generic "61"
+        - cell "3,400 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Jonas Jensen 45 emea routines Expertise 64 · Motivation 64 3,500 cr/wk 10s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Jonas Jensen"
+        - cell "45"
+        - cell "emea"
+        - cell "routines":
+          - generic: routines
+        - cell "Expertise 64 · Motivation 64"
+        - cell:
+          - generic "60"
+        - cell "3,500 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Hugo Moreau 46 pacific peaking Expertise 64 · Motivation 59 3,000 cr/wk 11s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Hugo Moreau"
+        - cell "46"
+        - cell "pacific"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Expertise 64 · Motivation 59"
+        - cell:
+          - generic "55"
+        - cell "3,000 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Jonas Moreau 44 emea consistency Analysis 61 · Tactical Knowledge 56 2,600 cr/wk 12s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Jonas Moreau"
+        - cell "44"
+        - cell "emea"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Analysis 61 · Tactical Knowledge 56"
+        - cell:
+          - generic "50"
+        - cell "2,600 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Jonas Weber 39 americas consistency Expertise 56 · Adaptability 52 2,200 cr/wk 9s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Jonas Weber"
+        - cell "39"
+        - cell "americas"
+        - cell "consistency":
+          - generic: consistency
+        - cell "Expertise 56 · Adaptability 52"
+        - cell:
+          - generic "49"
+        - cell "2,200 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Performance Coach Leon Fischer 39 pacific peaking Adaptability 49 · Teaching 49 2,200 cr/wk 7s Hire":
+        - cell "Performance Coach":
+          - generic: Performance Coach
+        - cell "Leon Fischer"
+        - cell "39"
+        - cell "pacific"
+        - cell "peaking":
+          - generic: peaking
+        - cell "Adaptability 49 · Teaching 49"
+        - cell:
+          - generic "44"
+        - cell "2,200 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Yusuf Moreau 33 pacific prevention Analysis 97 · Expertise 93 6,100 cr/wk 4s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Yusuf Moreau"
+        - cell "33"
+        - cell "pacific"
+        - cell "prevention":
+          - generic: prevention
+        - cell "Analysis 97 · Expertise 93"
+        - cell:
+          - generic "91"
+        - cell "6,100 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Erik Takahashi 34 emea recovery Expertise 95 · Teaching 83 5,400 cr/wk 4s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Erik Takahashi"
+        - cell "34"
+        - cell "emea"
+        - cell "recovery":
+          - generic: recovery
+        - cell "Expertise 95 · Teaching 83"
+        - cell:
+          - generic "87"
+        - cell "5,400 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Erik Kim 44 emea prevention Motivation 90 · People Management 90 6,100 cr/wk 12s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Erik Kim"
+        - cell "44"
+        - cell "emea"
+        - cell "prevention":
+          - generic: prevention
+        - cell "Motivation 90 · People Management 90"
+        - cell:
+          - generic "86"
+        - cell "6,100 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Dmitri Berg 49 pacific prevention Expertise 88 · Analysis 86 5,500 cr/wk 15s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Dmitri Berg"
+        - cell "49"
+        - cell "pacific"
+        - cell "prevention":
+          - generic: prevention
+        - cell "Expertise 88 · Analysis 86"
+        - cell:
+          - generic "85"
+        - cell "5,500 cr/wk"
+        - cell "15s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Victor Horvat 28 emea recovery Expertise 90 · People Management 86 5,200 cr/wk 3s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Victor Horvat"
+        - cell "28"
+        - cell "emea"
+        - cell "recovery":
+          - generic: recovery
+        - cell "Expertise 90 · People Management 86"
+        - cell:
+          - generic "85"
+        - cell "5,200 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Yusuf Weber 44 americas longevity Analysis 88 · Expertise 87 5,400 cr/wk 10s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Yusuf Weber"
+        - cell "44"
+        - cell "americas"
+        - cell "longevity":
+          - generic: longevity
+        - cell "Analysis 88 · Expertise 87"
+        - cell:
+          - generic "84"
+        - cell "5,400 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Tomas Santos 49 emea prevention Expertise 93 · Motivation 86 5,000 cr/wk 14s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Tomas Santos"
+        - cell "49"
+        - cell "emea"
+        - cell "prevention":
+          - generic: prevention
+        - cell "Expertise 93 · Motivation 86"
+        - cell:
+          - generic "79"
+        - cell "5,000 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Santiago Nguyen 49 pacific longevity Analysis 79 · Expertise 73 4,400 cr/wk 14s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Santiago Nguyen"
+        - cell "49"
+        - cell "pacific"
+        - cell "longevity":
+          - generic: longevity
+        - cell "Analysis 79 · Expertise 73"
+        - cell:
+          - generic "72"
+        - cell "4,400 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Arthur Kowalski 26 americas recovery Expertise 69 · Adaptability 69 4,100 cr/wk 1s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Arthur Kowalski"
+        - cell "26"
+        - cell "americas"
+        - cell "recovery":
+          - generic: recovery
+        - cell "Expertise 69 · Adaptability 69"
+        - cell:
+          - generic "65"
+        - cell "4,100 cr/wk"
+        - cell "1s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Noah Lopez 30 pacific longevity Analysis 72 · Expertise 64 3,800 cr/wk 4s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Noah Lopez"
+        - cell "30"
+        - cell "pacific"
+        - cell "longevity":
+          - generic: longevity
+        - cell "Analysis 72 · Expertise 64"
+        - cell:
+          - generic "65"
+        - cell "3,800 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Santiago Moreau 39 emea recovery Expertise 67 · Analysis 66 3,800 cr/wk 8s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Santiago Moreau"
+        - cell "39"
+        - cell "emea"
+        - cell "recovery":
+          - generic: recovery
+        - cell "Expertise 67 · Analysis 66"
+        - cell:
+          - generic "62"
+        - cell "3,800 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Ren Muller 28 americas recovery Expertise 61 · Analysis 52 2,800 cr/wk 3s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Ren Muller"
+        - cell "28"
+        - cell "americas"
+        - cell "recovery":
+          - generic: recovery
+        - cell "Expertise 61 · Analysis 52"
+        - cell:
+          - generic "55"
+        - cell "2,800 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Victor Petrov 38 emea prevention People Management 58 · Teaching 52 2,300 cr/wk 8s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Victor Petrov"
+        - cell "38"
+        - cell "emea"
+        - cell "prevention":
+          - generic: prevention
+        - cell "People Management 58 · Teaching 52"
+        - cell:
+          - generic "50"
+        - cell "2,300 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Physio Mateo Costa 44 emea longevity People Management 52 · Analysis 51 2,200 cr/wk 12s Hire":
+        - cell "Physio":
+          - generic: Physio
+        - cell "Mateo Costa"
+        - cell "44"
+        - cell "emea"
+        - cell "longevity":
+          - generic: longevity
+        - cell "People Management 52 · Analysis 51"
+        - cell:
+          - generic "42"
+        - cell "2,200 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Emil Santos 47 pacific confidence Motivation 99 · Expertise 90 5,900 cr/wk 10s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Emil Santos"
+        - cell "47"
+        - cell "pacific"
+        - cell "confidence":
+          - generic: confidence
+        - cell "Motivation 99 · Expertise 90"
+        - cell:
+          - generic "90"
+        - cell "5,900 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Liam Costa 32 emea pressure Adaptability 99 · Expertise 93 6,200 cr/wk 2s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Liam Costa"
+        - cell "32"
+        - cell "emea"
+        - cell "pressure":
+          - generic: pressure
+        - cell "Adaptability 99 · Expertise 93"
+        - cell:
+          - generic "90"
+        - cell "6,200 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Ravi Santos 36 americas cohesion Expertise 93 · Adaptability 92 6,100 cr/wk 4s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Ravi Santos"
+        - cell "36"
+        - cell "americas"
+        - cell "cohesion":
+          - generic: cohesion
+        - cell "Expertise 93 · Adaptability 92"
+        - cell:
+          - generic "86"
+        - cell "6,100 cr/wk"
+        - cell "4s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Jisoo Takahashi 43 americas confidence Expertise 93 · Motivation 93 5,600 cr/wk 9s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Jisoo Takahashi"
+        - cell "43"
+        - cell "americas"
+        - cell "confidence":
+          - generic: confidence
+        - cell "Expertise 93 · Motivation 93"
+        - cell:
+          - generic "86"
+        - cell "5,600 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Jisoo Park 33 pacific cohesion Adaptability 89 · Tactical Knowledge 87 5,600 cr/wk 1s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Jisoo Park"
+        - cell "33"
+        - cell "pacific"
+        - cell "cohesion":
+          - generic: cohesion
+        - cell "Adaptability 89 · Tactical Knowledge 87"
+        - cell:
+          - generic "80"
+        - cell "5,600 cr/wk"
+        - cell "1s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Jonas Popov 55 americas confidence People Management 87 · Expertise 87 4,700 cr/wk 17s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Jonas Popov"
+        - cell "55"
+        - cell "americas"
+        - cell "confidence":
+          - generic: confidence
+        - cell "People Management 87 · Expertise 87"
+        - cell:
+          - generic "78"
+        - cell "4,700 cr/wk"
+        - cell "17s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Ravi Costa 39 americas confidence People Management 86 · Analysis 78 4,800 cr/wk 5s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Ravi Costa"
+        - cell "39"
+        - cell "americas"
+        - cell "confidence":
+          - generic: confidence
+        - cell "People Management 86 · Analysis 78"
+        - cell:
+          - generic "77"
+        - cell "4,800 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Hugo Reyes 52 emea pressure Motivation 80 · People Management 79 5,000 cr/wk 14s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Hugo Reyes"
+        - cell "52"
+        - cell "emea"
+        - cell "pressure":
+          - generic: pressure
+        - cell "Motivation 80 · People Management 79"
+        - cell:
+          - generic "77"
+        - cell "5,000 cr/wk"
+        - cell "14s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Ethan Nakamura 37 pacific confidence People Management 77 · Teaching 77 4,200 cr/wk 6s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Ethan Nakamura"
+        - cell "37"
+        - cell "pacific"
+        - cell "confidence":
+          - generic: confidence
+        - cell "People Management 77 · Teaching 77"
+        - cell:
+          - generic "72"
+        - cell "4,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Mateo Rossi 51 emea confidence People Management 74 · Motivation 64 3,200 cr/wk 12s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Mateo Rossi"
+        - cell "51"
+        - cell "emea"
+        - cell "confidence":
+          - generic: confidence
+        - cell "People Management 74 · Motivation 64"
+        - cell:
+          - generic "63"
+        - cell "3,200 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Jan Silva 51 pacific confidence Adaptability 69 · Motivation 65 3,900 cr/wk 12s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Jan Silva"
+        - cell "51"
+        - cell "pacific"
+        - cell "confidence":
+          - generic: confidence
+        - cell "Adaptability 69 · Motivation 65"
+        - cell:
+          - generic "60"
+        - cell "3,900 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Dmitri Weber 56 pacific pressure Motivation 66 · Analysis 65 3,500 cr/wk 16s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Dmitri Weber"
+        - cell "56"
+        - cell "pacific"
+        - cell "pressure":
+          - generic: pressure
+        - cell "Motivation 66 · Analysis 65"
+        - cell:
+          - generic "59"
+        - cell "3,500 cr/wk"
+        - cell "16s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Psychologist Ravi Nguyen 36 pacific confidence People Management 54 · Expertise 52 2,500 cr/wk 3s Hire":
+        - cell "Psychologist":
+          - generic: Psychologist
+        - cell "Ravi Nguyen"
+        - cell "36"
+        - cell "pacific"
+        - cell "confidence":
+          - generic: confidence
+        - cell "People Management 54 · Expertise 52"
+        - cell:
+          - generic "49"
+        - cell "2,500 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+  - heading "Your backroom — 3,900 cr/wk" [level=2]:
+    - text: Your backroom
+    - generic: — 3,900 cr/wk
+  - generic: Coach
+  - generic: vacant
+  - generic: training growth (extra on their specialty focus)
+  - generic: Analyst
+  - generic: slk
+  - button "Release"
+  - generic: OVR 73 · opponents · 3,900 cr/wk
+  - generic: +76% base scouting speed
+  - generic: deeper stat views (analytics tier, with the analytics suite)
+  - generic: Physio
+  - generic: vacant
+  - generic: weekly stamina recovery
+  - generic: Psychologist
+  - generic: vacant
+  - generic: confidence stability (shaken players recover faster)
+  - generic: Performance Coach
+  - generic: vacant
+  - generic: form upkeep between matches
+  - generic: Language Coach
+  - generic: vacant
+  - generic: weekly language fluency training
+  - heading "Analytics department" [level=2]
+  - generic: Tier
+  - generic: 2/3
+  - paragraph: round context (KAST, trades, weapons, eco/save splits)
+  - paragraph: "Next unlock: full splits (per-map, per-agent, trend charts)"
+- generic: World saved.
+- tooltip "Save Save your campaign":
+  - heading "Save" [level=4]
+  - generic: Save your campaign
+- button "Close profile": ✕
+- generic: S
+- generic: slk
+- generic: Analyst
+- generic "opponent breakdowns": opponents
+- generic: age 40
+- generic: emea
+- generic: Azure Vanta (your org)
+- text: · 3,900 cr/wk
+- generic: "73"
+- generic: Overall
+- generic: 5s
+- generic: Experience
+- generic: "0"
+- generic: Titles
+- heading "Attributes" [level=3]
+- generic "Professional command of this staff member's discipline.": Expertise
+- generic: "70"
+- generic "Understanding of systems, game plans, and the live meta.": Tactical Knowledge
+- generic: "80"
+- generic "Ability to diagnose opponents, players, and performance evidence.": Analysis
+- generic: "78"
+- generic "Ability to turn knowledge into repeatable player improvement.": Teaching
+- generic: "53"
+- generic "Trust, relationships, and individual handling.": People Management
+- generic: "67"
+- generic "Ability to set intensity and restore belief under pressure.": Motivation
+- generic: "60"
+- generic "Effectiveness outside a preferred method and during change.": Adaptability
+- generic: "67"
+- heading "What they do" [level=3]
+- generic: ▸ +76% base scouting speed
+- generic: ▸ deeper stat views (analytics tier, with the analytics suite)
+- heading "Style" [level=3]
+- generic: Data PuristAdds five points to analytics-department tier scoring.
+- generic: Talent SpotterMarket scouting progresses 8% faster.
+- heading "Career" [level=3]
+- generic: Analyst, Team Vitality (VCT 2026)
+- generic: "S1: analyst, Azure Vanta"

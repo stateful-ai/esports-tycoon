@@ -1,0 +1,9 @@
+{
+  "port": 8565,
+  "owned_listener_before": 14016,
+  "owned_launcher_before": 3064,
+  "ownership_verified_before_stop": true,
+  "owned_shutdown_performed": true,
+  "remaining_port_listeners": 0,
+  "unrelated_processes_touched": false
+}

@@ -1,0 +1,11 @@
+{
+  "listener_pid": 12252,
+  "host": "127.0.0.1",
+  "utc": "2026-10-11T16:52:49.0383191Z",
+  "launcher_pid": 29092,
+  "ownership_rechecked": true,
+  "listener_parent_pid": 29092,
+  "port": 8561,
+  "port_has_listener": false,
+  "stopped_owned_only": true
+}

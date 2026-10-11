@@ -38,6 +38,7 @@ from esports_sim.manager import (
     meta,
     narrative,
     preparation,
+    recovery,
     relationships,
     rival_managers,
     role_fit,
@@ -129,6 +130,7 @@ class WeekReport:
     # reads income_by/expenses_by for the manager actually being served.
     income_by: dict[str, int] = field(default_factory=dict)
     expenses_by: dict[str, int] = field(default_factory=dict)
+    facility_upkeep_by: dict[str, int] = field(default_factory=dict)
     user_income: int = 0
     user_expenses: int = 0
     notes: list[str] = field(default_factory=list)
@@ -224,6 +226,14 @@ def new_campaign(
     players = {pid: p.model_copy(deep=True) for pid, p in base_players.items()}
 
     used_names: set[str] = {t.name for t in teams.values()}
+    # One registry for the whole world, seeded with whatever a roster pack
+    # already brought, so generated players cannot collide with each other or
+    # with authored ones. 24 x 24 parts against 228 players makes duplicates
+    # the norm without it, not the exception.
+    taken_handles: set[str] = {p.handle for p in players.values()}
+    if pack is not None:
+        taken_handles.update(p.handle for p in pack.free_agents.values())
+        taken_handles.update(p.player.handle for p in pack.future_prospects.values())
     for region in regions:
         have = sum(
             1 for t in teams.values() if t.region == region and t.tier == 1
@@ -233,11 +243,12 @@ def new_campaign(
         )
         gen_teams, gen_players = generate_league_teams(
             rng, gd, n_teams=teams_per_region - have,
-            region=region, used_names=used_names,
+            region=region, used_names=used_names, taken_handles=taken_handles,
         )
         t2_teams, t2_players = generate_league_teams(
             rng, gd, n_teams=tier2_per_region - have2,
             region=region, used_names=used_names, tier=2,
+            taken_handles=taken_handles,
         )
         for t in gen_teams + t2_teams:
             teams[t.id] = t
@@ -274,7 +285,9 @@ def new_campaign(
             prospect.player,
             RngTree(seed).derive("campaign", "career-outcome", pid),
         )
-    fas = generate_free_agents(rng, gd, n=max(4, 18 - len(pack_fas)))
+    fas = generate_free_agents(
+        rng, gd, n=max(4, 18 - len(pack_fas)), taken_handles=taken_handles
+    )
     for p in fas:
         players[p.id] = p
     fas = pack_fas + fas
@@ -291,7 +304,9 @@ def new_campaign(
             len(t.player_ids) for t in teams.values() if t.tier == 1
         )
         need = fantasy_draft_mod.draft_class_size(n_t1, rostered_t1 + len(fas))
-        for p in fantasy_draft_mod.generate_draft_class(rng, gd, regions, need):
+        for p in fantasy_draft_mod.generate_draft_class(
+            rng, gd, regions, need, taken_handles=taken_handles,
+        ):
             players[p.id] = p
             draft_class_ids.append(p.id)
 
@@ -493,6 +508,33 @@ def dressed_for(
     key = f"{team_id}|{fixture.id}|{map_id}"
     primary = gs.map_lineups.get(key) or gs.teams[team_id].lineup_ids
     return _resolve_five(gs, team_id, primary, roster)
+
+
+def _planned_five(gs: GameState, team_id: str, fixture: Fixture) -> list[str]:
+    """Revalidate the one-fixture selection using the match's eligible pool."""
+    plan = gs.game_plans_by.get(team_id)
+    if plan is None or plan.fixture_id != fixture.id:
+        return []
+    eligible = set(series_management.eligible_pool(gs, team_id, fixture))
+    lineup = [pid for pid in plan.starter_ids if pid in eligible]
+    return lineup if len(lineup) == len(set(lineup)) == market.ROSTER_SIZE else []
+
+
+def projected_dressed_for(
+    gs: GameState, team_id: str, fixture: Fixture, map_id: str
+) -> list[str]:
+    """Read the current selection, including a valid unconsumed game plan.
+
+    Match simulation installs this plan only beneath explicit map overrides.
+    Project through the same dressed resolver without writing to the save.
+    """
+    planned = _planned_five(gs, team_id, fixture)
+    if not planned:
+        return dressed_for(gs, team_id, fixture, map_id)
+    lineups = dict(gs.map_lineups)
+    lineups.setdefault(f"{team_id}|{fixture.id}|{map_id}", planned)
+    projected = gs.model_copy(update={"map_lineups": lineups})
+    return dressed_for(projected, team_id, fixture, map_id)
 
 
 def _dressed_gamedata(
@@ -784,6 +826,11 @@ def advance_week(
     _apply_backroom_effects(gs)
     staff.record_week(gs, report)
 
+    # 2b". AI clubs buy condition back, so paid recovery is not a player-only
+    # lever. Fixed position in the tick and rng-free (see recovery.py), so
+    # adding it moves no downstream draw for a club that never qualifies.
+    recovery.ai_weekly_booking(gs)
+
     # 2b'. Bench minutes: players who did NOT dress a single map this week
     # (while the team played) scrim instead — a fraction of real reps,
     # fresher legs, and (for anyone good enough to start elsewhere) a
@@ -867,8 +914,13 @@ def advance_week(
         fx = gs.team_fixture(tid)
         won = bool(fx and fx.winner_id == tid)
         sponsor_delta = sponsors.settle_demands(gs, week_dressed)
-        sponsor_delta += sponsors.weekly_tick(gs, won)
+        settlement = sponsors.weekly_settlement(gs, won)
+        sponsor_delta += settlement.income
         report.income_by[tid] = report.income_by.get(tid, 0) + sponsor_delta
+        report.facility_upkeep_by[tid] = settlement.facility_upkeep
+        report.expenses_by[tid] = (
+            report.expenses_by.get(tid, 0) + settlement.facility_upkeep
+        )
         sponsors.maybe_offer(gs, week_rng)
         sponsors.maybe_demand(
             gs,
@@ -914,7 +966,11 @@ def advance_week(
 
     _cp.mark("market_scouting")
 
-    # 5. Phase transitions.
+    # 5. Phase transitions. The only balance mutations in this block are
+    # resolved prize payouts (Challengers, regional placement/playoffs,
+    # Masters and Champions). Capture the actual credits so reporting shares
+    # the payout truth without duplicating any prize ladder or paying again.
+    before_prizes = {tid: gs.teams[tid].balance for tid in sorted(gs.human_team_ids)}
     def veto_for(a: str, b: str) -> tuple[list[str], list[str]]:
         return veto_bo3(
             sorted(gd.maps),
@@ -1278,6 +1334,17 @@ def advance_week(
                 f"{champ.name} are world champions. Offseason next week."
             )
 
+    for tid, balance in before_prizes.items():
+        prize_income = gs.teams[tid].balance - balance
+        if prize_income:
+            report.income_by[tid] = report.income_by.get(tid, 0) + prize_income
+            report.notes.append(
+                f"{gs.teams[tid].name} received {prize_income:,} cr in tournament "
+                "prize income this week (included in reported income)."
+            )
+    # Prize payouts happen after the ordinary-finance mirror above.
+    report.user_income = report.income_by.get(primary, 0)
+
     _cp.mark("transitions")
 
     # 5b. Solvency: only AFTER every balance mutation for the week —
@@ -1567,9 +1634,20 @@ def _aggregate_stats(
 _META_DIALS = ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
 
 
-def _record_map_meta(gs: GameState, stats, tactics_by_team: dict[str, object]) -> None:
+def _record_map_meta(
+    gs: GameState, stats, tactics_by_team: dict[str, object], *, league_tier: int = 1
+) -> None:
     """Fold a completed map into the public, scouting-independent meta."""
     trend = gs.map_meta_stats.setdefault(stats.map_id, MapMetaStats())
+    scoped = gs.map_meta_stats_by_tier.setdefault(str(league_tier), {}).setdefault(
+        stats.map_id, MapMetaStats()
+    )
+    for target in (trend, scoped):
+        _fold_map_meta(target, stats, tactics_by_team)
+
+
+def _fold_map_meta(trend: MapMetaStats, stats, tactics_by_team: dict[str, object]) -> None:
+    """Same public aggregation for global and competition views; no RNG."""
     for tid in sorted(tactics_by_team):
         tactics = tactics_by_team[tid]
         trend.team_maps += 1
@@ -1965,9 +2043,8 @@ def _fixture_plans(
             halftime_talk=plan.halftime_talk,
             shouts=plan.shouts,
         )
-        eligible = set(series_management.eligible_pool(gs, tid, f))
-        lineup = [pid for pid in plan.starter_ids if pid in eligible]
-        if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
+        lineup = _planned_five(gs, tid, f)
+        if lineup:
             lineups[tid] = lineup
     return plans, lineups
 
@@ -2284,6 +2361,7 @@ def _sim_fixture(
                 )
                 for tid in (f.team_a, f.team_b)
             },
+            league_tier=f.tier,
         )
         review_bundles.append((stats, res.events, team_of))
         review_weapon_class = weapon_class_of
@@ -2864,6 +2942,8 @@ def _rookie_classes(
     per_region = 2 + max(0, n_retired) // (len(gs.league_regions) * 2)
     headliners: list[str] = []
     historical_debuts = historical_debuts or {}
+    taken_handles = {p.handle for p in gs.players.values()}
+    taken_handles.update(p.player.handle for p in gs.future_prospects.values())
     for region in gs.league_regions:
         for _ in range(max(0, per_region - historical_debuts.get(str(region), 0))):
             style, role = _FA_SLOTS[gs.fa_counter % len(_FA_SLOTS)]
@@ -2873,6 +2953,7 @@ def _rookie_classes(
             p = generate_player(
                 rng, pid, style, role, quality, gd,
                 region=region, age_lo=17, age_hi=20,
+                taken_handles=taken_handles,
             )
             p.contract_weeks_left = 0
             p.personality_tags = sorted({*p.personality_tags, "rookie"})
@@ -3176,6 +3257,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.player_agent_stats = {}
     gs.team_map_stats = {}
     gs.map_meta_stats = {}
+    gs.map_meta_stats_by_tier = {}
 
     # Earned traits unlock from settled career state (career_stats just rolled
     # up, season_start_ca still this season's baseline, age still the played-

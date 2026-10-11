@@ -43,7 +43,14 @@ PROFILE_INTERACTIONS = {f"profile/{kind}_{action}"
                         for action in ("open", "close")}
 HANDBOOK_INTERACTIONS = {"handbook/open", "handbook/close", "handbook/section_first_week",
                          "handbook/section_screens", "handbook/section_glossary"}
-INTERACTIONS = {"lobby/seed_change", "week/full_report_open", "market/player_search"} | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS
+INBOX_INTERACTIONS = {"inbox/item_open", "inbox/item_close"} | {
+    f"inbox/shortcut_{tab}" for tab in
+    ("dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company")
+}
+MATCHDAY_INTERACTIONS = {"matchday/briefing_open", "matchday/briefing_close"}
+STATS_COMPETITION_INTERACTIONS = {"stats/competition_top_flight", "stats/competition_challengers"}
+INTERACTIONS = ({"lobby/seed_change", "week/full_report_open", "market/player_search"}
+                | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS | INBOX_INTERACTIONS | MATCHDAY_INTERACTIONS | STATS_COMPETITION_INTERACTIONS)
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
@@ -151,9 +158,11 @@ def install_usage_routes(app, directory: Path, context, require_local_admin) -> 
 
     def endpoints():
         # Same buckets as the browser: actions keep their verb; dynamic ids never leave it.
+        # Retain the legacy inbox bucket and allow only the fixed read-state endpoint.
         return {"/".join(r.path.split("/")[:4 if r.path.startswith("/api/actions/") else 3])
                 for r in app.routes if hasattr(r, "path") and r.path.startswith("/api/")
-                and not r.path.startswith("/api/usage")}
+                and not r.path.startswith("/api/usage")} | {
+                    r.path for r in app.routes if getattr(r, "path", None) == "/api/inbox/read"}
 
     @app.post("/api/usage/events")
     async def ingest(request: Request):

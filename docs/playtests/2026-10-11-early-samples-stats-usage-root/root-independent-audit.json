@@ -1,0 +1,308 @@
+{
+  "at_utc": "2026-10-11T19:30:57.308071+00:00",
+  "head": "cde009e5221b5cd4f90af8d49d9395004a6c7e3d",
+  "tree": "addcdcebba03621eb11d95dda25187fb56eb25d8",
+  "base": "0194b426f9c141591959443f44e092ed873e5df4",
+  "included_PRs": [
+    427,
+    428,
+    430,
+    431
+  ],
+  "excluded_standing_scouting358_and_locked_veto381": true,
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "7K7GL",
+  "seed": 2071,
+  "saved_week": 4,
+  "saved_balance": 203015,
+  "tracked_files": 3567,
+  "source_files": 707,
+  "raw_Git_exact": 2392,
+  "CRLF_only": 1175,
+  "actual_raw_prepost_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_decisions": 6,
+  "new_accepted_decisions": 4,
+  "total_decisions": 10,
+  "decisions": [
+    {
+      "index": 6,
+      "csv_step": 8,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_dev_plan",
+        "params": {
+          "dev_focus": "rest",
+          "intensity": "normal",
+          "learning_language": "",
+          "player_id": "team_azure_vanta_p4"
+        }
+      }
+    },
+    {
+      "index": 7,
+      "csv_step": 8,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_dev_plan",
+        "params": {
+          "dev_focus": "rest",
+          "intensity": "light",
+          "learning_language": "",
+          "player_id": "team_azure_vanta_p4"
+        }
+      }
+    },
+    {
+      "index": 8,
+      "csv_step": 10,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "set_game_plan",
+        "params": {
+          "aggression": "",
+          "choice_encoding": "json-v1",
+          "eco_greed": "",
+          "fixture_id": "s1w3m0emt2",
+          "focus_target": "team_patagonia_sur_p1",
+          "map_control": "",
+          "n_dials": "0",
+          "one_match_lineup": "False",
+          "opponent": "team_patagonia_sur",
+          "pace": "",
+          "site_focus": "",
+          "starter_ids": "[]",
+          "team_talk": "focus",
+          "util_discipline": ""
+        }
+      }
+    },
+    {
+      "index": 9,
+      "csv_step": 11,
+      "record": {
+        "season": 1,
+        "week": 3,
+        "phase": "regular",
+        "manager_id": "mgr_team_azure_vanta",
+        "team_id": "team_azure_vanta",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "full_params_team_source_order_verified": true,
+  "prior_decision_prefix_exact": true,
+  "baseline_snapshot_records": 2,
+  "total_snapshot_records": 3,
+  "prior_snapshot_prefix_exact": true,
+  "save_before_sha256": "f7b8e3f9e1196e3633e1eaa660a185e701870fbb2cdb31991aafa809414d49dd",
+  "save_after_sha256": "d963d1e2fc2bc0018cc1db368584c78f39b45f65fcb7377cc44710ade012fa39",
+  "plan_consumed": true,
+  "Zephyrblade_rest_light_persisted": true,
+  "baseline_usage": 0,
+  "retained_usage": 71,
+  "world_events": 71,
+  "null_world_events": 0,
+  "private_page_sessions": 1,
+  "distinct_from_prior_play": true,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 15,
+    "visible_time": 37,
+    "interaction": 8,
+    "attempt": 5,
+    "result": 5
+  },
+  "request_pairs": [
+    {
+      "target": "/api/actions/dev_plan",
+      "csv_step": 8,
+      "status": 200,
+      "attempt_index": 26,
+      "result_index": 27
+    },
+    {
+      "target": "/api/actions/dev_plan",
+      "csv_step": 8,
+      "status": 200,
+      "attempt_index": 29,
+      "result_index": 30
+    },
+    {
+      "target": "/api/actions/gameplan",
+      "csv_step": 10,
+      "status": 200,
+      "attempt_index": 45,
+      "result_index": 46
+    },
+    {
+      "target": "/api/actions/advance",
+      "csv_step": 11,
+      "status": 200,
+      "attempt_index": 53,
+      "result_index": 55
+    },
+    {
+      "target": "/api/actions/save",
+      "csv_step": 14,
+      "status": 200,
+      "attempt_index": 69,
+      "result_index": 70
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 5,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T19:21:47.923883+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 7,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:22:02.923883+00:00",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 11,
+      "target": "stats/competition_challengers",
+      "received_at": "2026-10-11T19:22:17.924041+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 17,
+      "target": "stats/competition_top_flight",
+      "received_at": "2026-10-11T19:23:02.924845+00:00",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 40,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T19:25:02.923620+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 41,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:25:02.923620+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 66,
+      "target": "matchday/briefing_open",
+      "received_at": "2026-10-11T19:27:02.922543+00:00",
+      "csv_step_from_observed_UI_order": 13
+    },
+    {
+      "index": 68,
+      "target": "matchday/briefing_close",
+      "received_at": "2026-10-11T19:27:12.256461+00:00",
+      "csv_step_from_observed_UI_order": 14
+    }
+  ],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 3,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 9,
+      "target": "stats/leaders",
+      "csv_step_from_observed_UI_order": 3
+    },
+    {
+      "index": 15,
+      "target": "stats/meta",
+      "csv_step_from_observed_UI_order": 6
+    },
+    {
+      "index": 22,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 24,
+      "target": "club/development",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 32,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 34,
+      "target": "club/development",
+      "csv_step_from_observed_UI_order": 8
+    },
+    {
+      "index": 39,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 43,
+      "target": "tactics/gameplan",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 49,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 51,
+      "target": "tactics/gameplan",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 59,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 12
+    },
+    {
+      "index": 61,
+      "target": "club/development",
+      "csv_step_from_observed_UI_order": 12
+    },
+    {
+      "index": 65,
+      "target": "dashboard",
+      "csv_step_from_observed_UI_order": 13
+    }
+  ],
+  "three_actual_briefing_intervals_retained": true,
+  "two_actual_changed_Stats_competition_interactions_retained": true,
+  "no_extra_same_selection_or_default_render_competition_event_retained": true,
+  "no_session_end_retained": true,
+  "static_pre_end_separate_and_exact": true,
+  "owned_tab13_closed_user8421_untouched": true,
+  "owned8567_stopped_and_zero_listeners_observed": true,
+  "local_tests_launched": false,
+  "qualification": "Combined427/428/430/431 frozen candidate acceptance; positive two-map Early samples on both sides independently corroborated leaders, three-map next week no early label. Stats changed selections retained as two coarse targets, default/rerender/same-selection emit no extra retained target. Meta stays unchanged across tier selections and shows topflight clubs: new source-confirmed gap delegated. Four accepted decisions exact; Refocus UI serializes focus. Recovery pauses practice, retains match XP; 13-8win not proof focus caused victory. Batched receipts matched UI order, not precise click timestamps or full retention. No final session_end retained. Two source-bookkeeping expected-format assertions failed and were corrected from actual Git diff before gameplay, final proof succeeded; no test result invented."
+}

@@ -1,0 +1,13 @@
+{
+  "launcher_pid": 40072,
+  "stopped_owned_only": true,
+  "tree": "2c4e7ee31293a166e129afbb2f73f46f9892c4f0",
+  "head": "a2393e2f770ec5112f8bce3cc992f15b5fb19fb0",
+  "listener_pid": 37232,
+  "port_has_listener": false,
+  "ownership_rechecked": true,
+  "listener_parent_pid": 40072,
+  "utc": "2026-10-11T18:10:30.4947434Z",
+  "port": 8564,
+  "host": "127.0.0.1"
+}

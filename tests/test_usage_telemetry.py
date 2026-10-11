@@ -325,3 +325,117 @@ def test_market_and_overlay_events_share_one_valid_batch(client):
     assert all(report['events'][f'interaction:{target}'] == 1 for target in INTERACTIONS)
     assert report['attempts'] == report['paired_results'] == 1
     assert report['unmatched_attempts'] == report['orphan_results'] == 0
+
+
+def test_inbox_interactions_are_counts_without_decision_or_request_semantics(client, tmp_path):
+    import json
+    from esports_sim.web.usage_telemetry import INBOX_INTERACTIONS
+    targets = sorted(INBOX_INTERACTIONS)
+    assert client.post('/api/usage/events', json=payload(*[
+        {'kind': 'interaction', 'target': target} for target in targets])).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert report['events'] == {f'interaction:{target}': 1 for target in targets}
+    assert report['attempts'] == report['paired_results'] == 0
+    assert report['visible_ms'] == report['outcomes'] == {}
+    for line in (tmp_path / 'usage/usage.0.jsonl').read_text().splitlines():
+        assert set(json.loads(line)) == {'schema_version', 'session_id', 'received_at',
+                                         'world', 'team', 'season', 'week', 'kind', 'target'}
+
+
+@pytest.mark.parametrize('event', [
+    {'kind': 'interaction', 'target': 'inbox/item_open/secret'},
+    {'kind': 'interaction', 'target': 'inbox/shortcut_roster'},
+    {'kind': 'interaction', 'target': 'inbox/shortcut_private'},
+    *[{'kind': 'interaction', 'target': 'inbox/item_open', field: value}
+      for field, value in [('title', 'secret'), ('body', 'secret'), ('item_id', 'secret'),
+                           ('intent', 'secret'), ('request_id', 1), ('outcome', 'success'),
+                           ('duration_ms', 1)]],
+])
+def test_inbox_usage_rejects_private_payloads_and_request_semantics(client, event):
+    assert client.post('/api/usage/events', json=payload(event)).status_code == 422
+
+
+def test_inbox_actual_js_callbacks():
+    import shutil
+    import subprocess
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('Node unavailable')
+    subprocess.run([node, 'tests/inbox_usage_frontend_check.cjs'], check=True, capture_output=True)
+
+
+def test_matchday_actual_open_and_close_handlers():
+    import shutil
+    import subprocess
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('Node is required for briefing handler verification')
+    subprocess.run([node, 'tests/matchday_usage_frontend_check.cjs'],
+                   check=True, capture_output=True, text=True)
+
+
+def test_matchday_receipts_are_coarse_sidecar_counts(client):
+    from esports_sim.web.usage_telemetry import MATCHDAY_INTERACTIONS
+    targets = sorted(MATCHDAY_INTERACTIONS)
+    assert client.post('/api/usage/events', json=payload(*[
+        {'kind': 'interaction', 'target': target} for target in targets])).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert report['events'] == {f'interaction:{target}': 1 for target in targets}
+    assert report['attempts'] == report['paired_results'] == 0
+    assert report['visible_ms'] == report['outcomes'] == {}
+
+
+@pytest.mark.parametrize('event', [
+    {'kind': 'interaction', 'target': 'matchday/briefing_open/private-id'},
+    {'kind': 'interaction', 'target': 'matchday/unknown'},
+    *[{'kind': 'interaction', 'target': 'matchday/briefing_open', field: value}
+      for field, value in [('player_id', 'private'), ('seed', 2071), ('text', 'private'),
+                           ('params', {}), ('request_id', 1), ('duration_ms', 1),
+                           ('outcome', 'success')]],
+    {'kind': 'view', 'target': 'matchday/briefing_open'},
+])
+def test_matchday_rejects_private_payloads_and_other_semantics(client, event):
+    assert client.post('/api/usage/events', json=payload(event)).status_code == 422
+
+
+def test_stats_competition_actual_handler_and_client_queue():
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("Node unavailable")
+    subprocess.run([node, "tests/stats_competition_usage_check.cjs"],
+                   check=True, capture_output=True)
+
+
+def test_stats_competition_counts_preserve_other_usage_and_privacy(client, tmp_path):
+    import json
+    from esports_sim.web.usage_telemetry import INTERACTIONS
+    events = [{"kind": "interaction", "target": target} for target in sorted(INTERACTIONS)]
+    events += [{"kind": "view", "target": "stats/meta"},
+               {"kind": "interaction", "target": "stats/competition_challengers"}]
+    assert client.post("/api/usage/events", json=payload(*events)).json()["accepted"]
+    report = client.get("/api/usage/report").json()
+    assert report["events"]["interaction:stats/competition_top_flight"] == 1
+    assert report["events"]["interaction:stats/competition_challengers"] == 2
+    assert report["events"]["view:stats/meta"] == 1
+    assert all(report["events"][f"interaction:{target}"] >= 1 for target in INTERACTIONS)
+    assert report["attempts"] == report["paired_results"] == 0
+    for line in (tmp_path / "usage/usage.0.jsonl").read_text().splitlines():
+        assert set(json.loads(line)) == {"schema_version", "session_id", "received_at",
+                                         "world", "team", "season", "week", "kind", "target"}
+
+
+@pytest.mark.parametrize("event", [
+    {"kind": "interaction", "target": "stats/competition_3"},
+    {"kind": "interaction", "target": "stats/competition_challengers/private_team"},
+    {"kind": "view", "target": "stats/competition_top_flight"},
+    *[{"kind": "interaction", "target": "stats/competition_challengers", field: value}
+      for field, value in [("team_id", "private_team"), ("player_id", "private_player"),
+                           ("league_tier", 2), ("label", "Challengers"), ("query", "private"),
+                           ("request_id", 1), ("outcome", "success"), ("status", 200),
+                           ("duration_ms", 100)]],
+])
+def test_stats_competition_rejects_dynamic_targets_and_payloads(client, tmp_path, event):
+    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
+    assert not (tmp_path / "usage/usage.0.jsonl").exists()

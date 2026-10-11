@@ -1,0 +1,11 @@
+{
+  "owned_recovered_browser_closed": true,
+  "first_browser_kernel_reset": "browser handles lost; no sessionend retained for first page",
+  "own_port": 8557,
+  "server_pid": 32776,
+  "listener_count_after": 0,
+  "raw_git_blob_comparison_equal": false,
+  "checkout_filtered425_match": true,
+  "actual154_prepost_equal": true,
+  "scope_note": "Raw blob comparison false only because Windows checkout filters;425retrospective,154observed prepost"
+}

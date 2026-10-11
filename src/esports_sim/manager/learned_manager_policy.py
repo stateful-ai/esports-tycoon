@@ -30,6 +30,12 @@ PROFILE_KEYS = (
     "risk", "youth", "loyalty", "analytics", "investment", "experimentation"
 )
 ACTION_VOCAB = tuple(sorted(SUPPORTED_ACTIONS))
+# Actions a manager may sensibly repeat within one decision week (several
+# free agents, several live bids, several incoming offers). Everything else
+# is masked off after its first use to stop degenerate action loops.
+_REPEATABLE_ACTIONS = frozenset(
+    {"advance", "sign", "negotiate_offer", "bid", "transfer_offer"}
+)
 TACTIC_DIALS = (
     "aggression", "pace", "util_discipline", "eco_greed", "map_control"
 )
@@ -149,7 +155,9 @@ def _legal_mask(obs: dict[str, Any], vocab: tuple[str, ...]) -> np.ndarray:
     )
 
 
-def _sequence_masks(rows: list[dict[str, Any]]) -> np.ndarray:
+def _sequence_masks(
+    rows: list[dict[str, Any]], vocab: tuple[str, ...] = ACTION_VOCAB
+) -> np.ndarray:
     used_by: dict[tuple[str, int, int], set[str]] = {}
     masks = []
     for index, row in enumerate(rows):
@@ -160,9 +168,9 @@ def _sequence_masks(rows: list[dict[str, Any]]) -> np.ndarray:
             int(obs["week"]),
         )
         used = used_by.setdefault(key, set())
-        mask = _legal_mask(obs, ACTION_VOCAB)
-        for i, kind in enumerate(ACTION_VOCAB):
-            if kind in used and kind not in ("advance", "sign", "negotiate_offer"):
+        mask = _legal_mask(obs, vocab)
+        for i, kind in enumerate(vocab):
+            if kind in used and kind not in _REPEATABLE_ACTIONS:
                 mask[i] = False
         masks.append(mask)
         used.add(row["action"]["kind"])
@@ -183,12 +191,19 @@ _CATEGORICAL_SPECS: dict[str, tuple[str, str]] = {
     "sponsor_structure": ("sponsor_respond", "structure"),
     "dev_focus": ("set_dev_plan", "dev_focus"),
     "team_talk": ("set_game_plan", "team_talk"),
+    "assignment_role": ("assignment", "role"),
+    "assignment_playstyle": ("assignment", "playstyle"),
 }
 
 
 @dataclass
 class LearnedManagerModel:
     action_weights: np.ndarray
+    # The vocabulary this checkpoint's action head was trained against, in
+    # row order. Stored so a checkpoint saved before an ADDITIVE contract
+    # extension keeps loading: it plays the actions it knows and simply
+    # never emits newer kinds until retrained.
+    action_vocab: tuple[str, ...] = ACTION_VOCAB
     categorical_weights: dict[str, np.ndarray] = field(default_factory=dict)
     categorical_labels: dict[str, tuple[str, ...]] = field(default_factory=dict)
     tactic_weights: np.ndarray | None = None
@@ -227,6 +242,36 @@ class LearnedManagerModel:
             categorical_weights[head] = _fit_softmax(head_x, head_y, len(labels))
             categorical_labels[head] = labels
 
+        # False is a meaningful demonstration, not a missing categorical value.
+        # Ground the accept mask in the demonstrated offer's public legal row.
+        transfer_examples = []
+        for row in rows:
+            if row["action"]["kind"] != "transfer_offer":
+                continue
+            params = row["action"].get("params", {})
+            if type(params.get("accept")) is not bool:
+                continue
+            offers = row["observation"]["legal_actions"].get("transfer_offer", {}).get("offers", [])
+            offer = next((
+                offer for offer in offers
+                if offer["player_id"] == params.get("player_id")
+                and offer["to_team"] == params.get("to_team")
+            ), None)
+            if offer is None or (params["accept"] and not offer.get("can_accept", False)):
+                continue
+            transfer_examples.append((
+                conditioned_features(row["observation"]), int(params["accept"]),
+                [True, bool(offer.get("can_accept", False))],
+            ))
+        if transfer_examples:
+            categorical_labels["transfer_accept"] = ("false", "true")
+            categorical_weights["transfer_accept"] = _fit_softmax(
+                np.stack([x for x, _, _ in transfer_examples]),
+                np.asarray([label for _, label, _ in transfer_examples]),
+                2,
+                np.asarray([mask for _, _, mask in transfer_examples], dtype=bool),
+            )
+
         scout_examples = [
             (
                 conditioned_features(row["observation"]),
@@ -260,6 +305,7 @@ class LearnedManagerModel:
 
         model = cls(
             action_weights=action_weights,
+            action_vocab=ACTION_VOCAB,
             categorical_weights=categorical_weights,
             categorical_labels=categorical_labels,
             tactic_weights=tactic_weights,
@@ -304,6 +350,7 @@ class LearnedManagerModel:
         """Return an independent in-memory checkpoint copy."""
         return LearnedManagerModel(
             action_weights=self.action_weights.copy(),
+            action_vocab=tuple(self.action_vocab),
             categorical_weights={
                 key: value.copy() for key, value in self.categorical_weights.items()
             },
@@ -322,7 +369,9 @@ class LearnedManagerModel:
             "policy_version": POLICY_VERSION,
             "observation_version": OBSERVATION_VERSION,
             "encoder_version": ENCODER_VERSION,
-            "action_vocab": list(ACTION_VOCAB),
+            # The model's OWN vocabulary, not the module's: a fine-tuned old
+            # checkpoint must not be relabeled with rows it does not have.
+            "action_vocab": list(self.action_vocab),
             "profile_keys": list(PROFILE_KEYS),
             "action_weights": self.action_weights.tolist(),
             "categorical_weights": {
@@ -349,12 +398,52 @@ class LearnedManagerModel:
             raise ValueError("checkpoint observation version is incompatible")
         if payload["encoder_version"] != ENCODER_VERSION:
             raise ValueError("checkpoint encoder version is incompatible")
-        if tuple(payload["action_vocab"]) != ACTION_VOCAB:
+        # SUPPORTED_ACTIONS only ever grows; a checkpoint whose vocabulary is
+        # a subset of today's contract stays playable (it never emits the
+        # newer kinds). Preserve stored row order, but reject malformed or
+        # ambiguous vocabularies before inference can interpret the rows.
+        raw_vocab = payload.get("action_vocab")
+        if not isinstance(raw_vocab, list) or not all(isinstance(kind, str) for kind in raw_vocab):
             raise ValueError("checkpoint action vocabulary is incompatible")
+        vocab = tuple(raw_vocab)
+        if len(set(vocab)) != len(vocab):
+            raise ValueError("checkpoint action vocabulary contains duplicate actions")
+        unknown = sorted(set(vocab) - SUPPORTED_ACTIONS)
+        if not vocab or unknown or "advance" not in vocab:
+            raise ValueError(
+                "checkpoint action vocabulary is incompatible"
+                + (f" (unknown actions: {', '.join(unknown)})" if unknown else "")
+            )
         if tuple(payload.get("profile_keys", ())) != PROFILE_KEYS:
             raise ValueError("checkpoint manager-profile schema is incompatible")
+        # Derive feature width through the pinned encoder itself, rather than
+        # trusting a checkpoint or duplicating its feature-count arithmetic.
+        feature_count = conditioned_features({"features": {}}).size
+        try:
+            action_weights = np.asarray(payload.get("action_weights"), dtype=np.float64)
+        except (ValueError, TypeError) as exc:
+            raise ValueError("checkpoint action weights are incompatible") from exc
+        if action_weights.shape != (len(vocab), feature_count):
+            raise ValueError("checkpoint action weight shape is incompatible with vocabulary and encoder")
+        if not np.isfinite(action_weights).all():
+            raise ValueError("checkpoint action weights must be finite")
+        # This optional head is additive: legacy checkpoints omit it entirely.
+        transfer_weights = payload.get("categorical_weights", {}).get("transfer_accept")
+        transfer_labels = payload.get("categorical_labels", {}).get("transfer_accept")
+        if transfer_weights is not None or transfer_labels is not None:
+            try:
+                transfer_weights = np.asarray(transfer_weights, dtype=np.float64)
+            except (ValueError, TypeError) as exc:
+                raise ValueError("checkpoint transfer accept head is incompatible") from exc
+            if (
+                transfer_labels != ["false", "true"]
+                or transfer_weights.shape != (2, feature_count)
+                or not np.isfinite(transfer_weights).all()
+            ):
+                raise ValueError("checkpoint transfer accept head is incompatible")
         return cls(
-            action_weights=np.asarray(payload["action_weights"], dtype=np.float64),
+            action_weights=action_weights,
+            action_vocab=vocab,
             categorical_weights={
                 key: np.asarray(value, dtype=np.float64)
                 for key, value in payload.get("categorical_weights", {}).items()
@@ -385,14 +474,36 @@ def _candidate_rows(obs: dict[str, Any], kind: str) -> list[tuple[str, np.ndarra
     own = {row["id"]: row for row in obs.get("roster", [])}
     free = {row["player_id"]: row for row in obs.get("free_agents", [])}
     staff = {row["id"]: row for row in obs.get("staff_candidates", [])}
+    transfer = {
+        option["player_id"]: option for option in legal.get("options", [])
+    } if kind in ("bid", "buyout") else {}
+    scouted = {
+        row["player_id"]: row for row in (obs.get("opponent") or {}).get("players", [])
+    }
     ids: list[str] = []
-    if "player_ids" in legal:
+    if kind in ("bid", "buyout"):
+        ids = list(transfer)
+    elif "player_ids" in legal:
         ids = list(legal["player_ids"])
     elif "candidate_ids" in legal:
         ids = list(legal["candidate_ids"])
     rows: list[tuple[str, np.ndarray]] = []
-    for cid in ids:
-        if cid in own:
+    for cid in sorted(ids):
+        if cid in transfer:
+            option = transfer[cid]
+            row = scouted.get(cid, {})
+            # Only public mask terms and already-scouted observation rows.
+            # Keep the existing candidate width for older checkpoint heads.
+            values = [
+                float(row.get("perceived_quality", 0.0)) / 100.0,
+                float(row.get("age", 0.0)) / 40.0,
+                float(row.get("asking_salary", 0.0)) / 100_000.0,
+                float(option["ask" if kind == "bid" else "fee"]) / 1_000_000.0,
+                float(option.get("seller_human", False)),
+                float(row.get("progress", 0.0)),
+                0.0, 0.0, 0.0, 0.0,
+            ]
+        elif cid in own:
             row = own[cid]
             values = [
                 row["ca"] / 100.0, row["age"] / 40.0, row["salary"] / 100_000.0,
@@ -438,6 +549,11 @@ class LearnedManagerPolicy:
         self._used: dict[tuple[int, int], set[str]] = {}
         self.last_decision: dict[str, Any] = {}
 
+    @property
+    def vocab(self) -> tuple[str, ...]:
+        """The checkpoint's own action vocabulary (masks/probs row order)."""
+        return self.model.action_vocab
+
     def _profiled(self, obs: dict[str, Any]) -> dict[str, Any]:
         expected = self.profile.to_dict()
         if obs.get("manager_profile") == expected:
@@ -457,6 +573,9 @@ class LearnedManagerPolicy:
             return ""
         weight = self.model.candidate_weights.get(kind)
         if weight is None:
+            if kind in ("bid", "buyout"):
+                # Preserve the behavior of checkpoints predating these heads.
+                return obs["legal_actions"][kind]["options"][0]["player_id"]
             return max(rows, key=lambda item: (item[1][0], item[0]))[0]
         return max(rows, key=lambda item: (float(weight @ item[1]), item[0]))[0]
 
@@ -465,11 +584,11 @@ class LearnedManagerPolicy:
     ) -> tuple[dict[str, Any], np.ndarray, np.ndarray, np.ndarray]:
         obs = self._profiled(obs)
         x = conditioned_features(obs)
-        mask = _legal_mask(obs, ACTION_VOCAB)
+        mask = _legal_mask(obs, self.vocab)
         week = (int(obs["season"]), int(obs["week"]))
         used = self._used.get(week, set())
-        for i, kind in enumerate(ACTION_VOCAB):
-            if kind in used and kind not in ("advance", "sign", "negotiate_offer"):
+        for i, kind in enumerate(self.vocab):
+            if kind in used and kind not in _REPEATABLE_ACTIONS:
                 mask[i] = False
         logits = self.model.action_weights @ x
         probs = _softmax(logits / max(float(temperature), 1e-6), mask)
@@ -477,14 +596,14 @@ class LearnedManagerPolicy:
 
     def action_probabilities(self, obs: dict[str, Any]) -> dict[str, float]:
         _, _, _, probs = self._action_distribution(obs)
-        return {kind: round(float(probs[i]), 6) for i, kind in enumerate(ACTION_VOCAB)}
+        return {kind: round(float(probs[i]), 6) for i, kind in enumerate(self.vocab)}
 
     def choose_action(self, obs: dict[str, Any]) -> dict[str, Any]:
         obs, x, _, probs = self._action_distribution(obs)
         probabilities = {
-            kind: round(float(probs[i]), 6) for i, kind in enumerate(ACTION_VOCAB)
+            kind: round(float(probs[i]), 6) for i, kind in enumerate(self.vocab)
         }
-        kind = max(ACTION_VOCAB, key=lambda name: (probabilities[name], name))
+        kind = max(self.vocab, key=lambda name: (probabilities[name], name))
         week = (int(obs["season"]), int(obs["week"]))
         self._used.setdefault(week, set()).add(kind)
         action = self._build_action(obs, kind, x)
@@ -548,6 +667,16 @@ class LearnedManagerPolicy:
                 legal["options"][0],
             )
             params = {"facility": option["facility"]}
+        elif kind == "book_recovery":
+            from esports_sim.manager.recovery import TIER_IDS
+
+            options = legal.get("options", [])
+            if not legal.get("enabled") or not options:
+                raise ValueError("no legal recovery option is available")
+            tier = options[0].get("tier")
+            if not isinstance(tier, str) or tier not in TIER_IDS:
+                raise ValueError("legal recovery option has no tier")
+            params = {"tier": tier}
         elif kind == "sponsor_respond":
             structure = self._predict_head("sponsor_structure", x, "steady")
             accepts = [
@@ -614,6 +743,42 @@ class LearnedManagerPolicy:
                 "council_ids": players[1:3],
                 "principle": "balanced",
             }
+        elif kind in ("bid", "buyout"):
+            params = {"player_id": self._candidate(obs, kind)}
+        elif kind == "transfer_offer":
+            offer = legal["offers"][0]
+            can_accept = bool(offer.get("can_accept", False))
+            weights = self.model.categorical_weights.get("transfer_accept")
+            # Legacy checkpoints retain their deterministic executable-offer
+            # fallback. Learned checkpoints rank only grounded legal answers;
+            # decline remains legal even when acceptance cannot complete.
+            accept = can_accept if weights is None else bool(np.argmax(
+                _softmax(weights @ x, np.asarray([True, can_accept], dtype=bool))
+            ))
+            params = {
+                "player_id": offer["player_id"],
+                "to_team": offer["to_team"],
+                "accept": accept,
+            }
+        elif kind == "assignment":
+            pid = self._candidate(obs, kind) or legal["player_ids"][0]
+            row = next((r for r in obs.get("roster", []) if r["id"] == pid), None)
+            # Old checkpoints have no assignment heads; choose a legal change
+            # deterministically. New demonstrations train both parameter heads.
+            role_default = next(
+                (role for role in legal["roles"] if not row or role != row["role"]),
+                legal["roles"][0],
+            )
+            style_default = row["playstyle"] if row else legal["playstyles"][0]
+            role = self._predict_head("assignment_role", x, role_default)
+            style = self._predict_head("assignment_playstyle", x, style_default)
+            params = {
+                "player_id": pid,
+                "role": role if role in legal["roles"] else role_default,
+                "playstyle": style if style in legal["playstyles"] else style_default,
+            }
+        elif kind == "igl":
+            params = {"player_id": self._candidate(obs, kind) or legal["player_ids"][0]}
         elif kind == "culture_session":
             params = {"action": "reset"}
         elif kind == "set_delegation":
@@ -632,19 +797,20 @@ class LearnedManagerPolicy:
 
 
 def imitation_metrics(model: LearnedManagerModel, traces: Iterable[dict[str, Any]]) -> dict[str, float]:
+    vocab = model.action_vocab
     rows = [
         row for row in traces
-        if not row.get("invalid") and row.get("action", {}).get("kind") in ACTION_VOCAB
+        if not row.get("invalid") and row.get("action", {}).get("kind") in vocab
     ]
     if not rows:
         return {"examples": 0.0, "action_accuracy": 0.0, "legal_rate": 0.0}
     correct = 0
     legal = 0
-    masks = _sequence_masks(rows)
+    masks = _sequence_masks(rows, vocab)
     for row, mask in zip(rows, masks):
         obs = row["observation"]
         x = conditioned_features(obs)
-        prediction = ACTION_VOCAB[int(np.argmax(np.where(mask, model.action_weights @ x, -1e9)))]
+        prediction = vocab[int(np.argmax(np.where(mask, model.action_weights @ x, -1e9)))]
         correct += prediction == row["action"]["kind"]
         legal += bool(obs["legal_actions"].get(prediction, {}).get("enabled"))
     return {

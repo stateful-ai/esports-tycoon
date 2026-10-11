@@ -1,0 +1,128 @@
+{
+  "at_utc": "2026-10-11T15:19:40.214312+00:00",
+  "played_head": "8d6315303205e6ebefa425a9015fc5523ccef701",
+  "played_tree": "ebe858ac33b3adfda71fd081378f2f2513bb0fd3",
+  "original_rows": 13,
+  "columns": 21,
+  "original_shard_sha256": "90fdf91d4e4d427ee3b611d840ca0ea65aa9613ffbb11c8a8b69b6be75d6cfc2",
+  "original_manifest_sha256": "c0a5bb815830b40d1b40fd5c187caa896902786171250b9b02f80c122d1574ef",
+  "safe_files": 35,
+  "original_artifact_sha256": {
+    "academy-after-dom.txt": "c00c5f88015e4755d33ecafff49e3adb78b5a63fc9e12a9e4769697e00d00eb5",
+    "academy-after.png": "72be1666bc6fc0d91fe75948450d9a500b8be706f53bba8eb2ed899f00b93cc5",
+    "academy-before-dom.txt": "dd16ef81c3475a396b09bf25a40dae98d85d8836d968e463a1305c5ff9ce2294",
+    "academy-before.png": "93ba3395072f008d606151bc2a3ab50a7f0f69521289041ae6dddb0a14dd6b84",
+    "academy-uncovered-dom.txt": "eab4ce4b46773425347b451041db941ff8cb9e5d3355a13ed31ec2d270a78bc7",
+    "academy-uncovered.png": "5eb5df8723674b2a64c1e536f23a9fd70168a131694664b664b7f583f9a06e81",
+    "actions-before-analytics.csv": "dee0804f714d498f966f95764873e02211bb1c48e609fae3adf2a25ab31c8903",
+    "actions.csv": "90fdf91d4e4d427ee3b611d840ca0ea65aa9613ffbb11c8a8b69b6be75d6cfc2",
+    "advance-blocked-dom.txt": "dd4bcbed880b7ee20ec2de0f585b2283ee90cd6c4d636507e61b3df8bd4d0b08",
+    "advance-blocked.png": "86fdf6efa488f5dd6ec38037b367b2ccfdb39a6ee605c89e5fdb4313af76cf2c",
+    "annotation-scope.json": "152e7017e27d1df9ef2d82689d429725c8afd3d7f7a6e8b1401de5f817e59a6b",
+    "clinic-resolved-dom.txt": "c63cf9c4f8c2b19aa1fb12eb523e4a570dd80bb461a8e9cad3285d529e1d0afc",
+    "clinic-resolved.png": "25413602ade4c02e1753cab0bb0f881261c39269f403765177d6b290f65208c6",
+    "dashboard-before-dom.txt": "65b218ea8d853450460b44a9495a4d42df5a90b5459e400dbf6017e5149c3fc7",
+    "dashboard-before.png": "14568141b4d190404282af941f5953d9e94418a5f8abede9083a8145b5b9df82",
+    "development-before-dom.txt": "9ca4c03f823523dee94321e3df6c1e8e23702a766f58a5444a4a8fcc086e98af",
+    "final-profile-close.png": "c0d2f4882445273f1f6ef6f937aa9041dd0699a20e243d50888710448302ab15",
+    "flywheel-local.json": "99c99c694c376c60aa455972287838640e51cc9f8cb8fa383cfc2fde68e6c35c",
+    "ghost-plan-readback-dom.txt": "dd4bcbed880b7ee20ec2de0f585b2283ee90cd6c4d636507e61b3df8bd4d0b08",
+    "ghost-plan-readback.png": "3483d2283c4be871d8370b4c9b8569f1aca35ba3140544c8e3baf97968fedd29",
+    "ghost-profile-after-dom.txt": "7f1fff75d5d5640317b511c93138618b8dad44cf220cbb79f36a63ffead51e0d",
+    "ghost-profile-after.png": "2e3be717cb0055e2eebe50915324839968a71fd7f8fb44fb6a4af5d549576a4f",
+    "ghost-profile-before-dom.txt": "fe5e03f5b8bd5e189142a8e555a0b3d3add60f44deda5c76b019352d79b9e0a7",
+    "ghost-profile-before.png": "500959ca8c9b422536a46e73137f99892edfee5a61320c307268292d9b18e757",
+    "lobby-blocked-dom.txt": "9b44ce3b414d102b31a3231ce2399dbe70efa43ea7aa261614f3b64129092567",
+    "profile-close-settled.json": "e2fa9a3d4222518ea6246388d3af7aa155f1e1ebee612195e7cebfe053e983bf",
+    "public-responses.json": "127953b00b596e66bfd6892f6ebbd43af966bfd44a95d766aecd87c9cc5f4b4c",
+    "reconciliation.json": "1e405148cd43fc8aa846b6863b0969885024dd699b1e2f37529e1845cddb51cf",
+    "report.md": "0f71c80c3e19cbfd808c24770ba6c3f805dd13f79039a6fde54e2dd41e3e106d",
+    "shutdown-proof.json": "810e268dc09c2605343131920237fe7a2833807a8031d746eb80ed593c1dd9bc",
+    "source-after.json": "f0404ffc81d412ecfdef8689ceabfd62376d5d01ce677ecb2adacd35d9feff82",
+    "source-before.json": "f0404ffc81d412ecfdef8689ceabfd62376d5d01ce677ecb2adacd35d9feff82",
+    "weekly-report-dom.txt": "774ad7d8301bf1829636c97925a2e4fca939298c6f4e7761ba4222cfb804bc45",
+    "weekly-report.png": "3674a7d2ea7ad692377c8cf267225cf8d197e522b493dd81234931125e1493c8",
+    "remote-proof.json": "6d1025371246d25775b0e608a3d234293ed2befbb49c055b5f4e205f36a14851"
+  },
+  "source_prepost_raw_files": 425,
+  "source_prepost_equal": true,
+  "source_vs_git_windows_CRLF_qualified": true,
+  "CRLF_normalized_files": 0,
+  "annotation_diff_only_two_analytics_fields": true,
+  "original_outcome_counts": {
+    "blocked": 2,
+    "met": 10,
+    "partial": 1
+  },
+  "new_accepted_decisions": 3,
+  "matched_request_pairs": 5,
+  "unmatched_retained_attempts": 0,
+  "observed_pairs": [
+    {
+      "request_id": 13,
+      "target": "/api/actions/dev_plan",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 15,
+      "target": "/api/actions/advance",
+      "status": 409,
+      "outcome": "http_error"
+    },
+    {
+      "request_id": 22,
+      "target": "/api/actions/flavor_event",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 31,
+      "target": "/api/actions/advance",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 50,
+      "target": "/api/actions/save",
+      "status": 200,
+      "outcome": "success"
+    }
+  ],
+  "usage_events_all": 80,
+  "usage_events_world": 75,
+  "usage_kind_counts_all": {
+    "session_start": 4,
+    "view": 16,
+    "visible_time": 44,
+    "session_end": 1,
+    "interaction": 5,
+    "attempt": 5,
+    "result": 5
+  },
+  "usage_kind_counts_world": {
+    "visible_time": 41,
+    "session_end": 1,
+    "session_start": 3,
+    "view": 15,
+    "interaction": 5,
+    "attempt": 5,
+    "result": 5
+  },
+  "page_sessions_all": 5,
+  "raw_game_and_auth_excluded": true,
+  "root_visually_inspected_saved_screenshot": true,
+  "local_tests_launched": false,
+  "limits": "Retained best-effort usage, not a complete funnel. Original corrections retained. No tests, syntax checks, simulation, gates, or analytics commands executed.",
+  "new_decision_kinds": [
+    "set_dev_plan",
+    "flavor_choice",
+    "advance"
+  ],
+  "full135_decision_and30_snapshot_prefixes_exact": true,
+  "independent_public_clock": "S2 W9",
+  "two_sponsor_objectives_have_identical_display_and_no_identity": true,
+  "sponsor_objective_gap_PR": 415,
+  "original_corrections12_13_retained": true,
+  "root_duplicate_pending13_archived_without_csv_collision": true
+}

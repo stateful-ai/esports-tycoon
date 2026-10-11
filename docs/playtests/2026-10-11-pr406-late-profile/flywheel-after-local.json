@@ -1,0 +1,25 @@
+{
+  "status": "MCP flywheel unavailable; retained local findings; preplay inherited retained recent8 receipt",
+  "learnings": [
+    {
+      "topic": "Real late profile response cancellation",
+      "lesson": "Origin GET200 held after network completion, closed before release, remained hidden/inert/ariahidden with Loading body after release on exact406 head.",
+      "confidence": "high"
+    },
+    {
+      "topic": "Focus depends on opener affordance",
+      "lesson": "Pointer-only roster span yielded BODY focus after close; keyboard Career returned to Career. Exact406 does not provide411 native player buttons.",
+      "confidence": "high"
+    }
+  ],
+  "pain_points": [
+    {
+      "topic": "Selectors and observer endpoints need actual UI receipts",
+      "lesson": "Uppercase Club and exact Vortex-heading selectors failed; Save uses /api/actions/save. Preserve failed waits and independently verify observed content/request instead of retroactive success.",
+      "confidence": "high"
+    }
+  ],
+  "world": "26UHC",
+  "seed": 2038,
+  "source": "9d859741d80fb8a6fbb6d5802dfbac93fc195664"
+}

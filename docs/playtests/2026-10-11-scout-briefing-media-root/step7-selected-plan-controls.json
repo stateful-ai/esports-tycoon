@@ -1,0 +1,10 @@
+{
+  "refocus": {
+    "class": "btn btn-sm active",
+    "text": "Refocus (settle tilt and hubris alike)"
+  },
+  "book": {
+    "class": "tac-seg-btn on",
+    "text": "Book"
+  }
+}

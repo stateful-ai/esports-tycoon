@@ -1,0 +1,8 @@
+{
+  "pre_static_readiness_captured": "Initial readiness tool output before root browser play; all six static HTTP 200 raw bytes equal disk.",
+  "end_static_readiness_path": "end-safe-static-readiness-receipt.json",
+  "initial_receipt_path": "safe-static-readiness-receipt.json",
+  "initial_receipt_was_overwritten_by_identical_end_payload": true,
+  "receipt_contains_no_timestamp": true,
+  "note": "No separately timestamped pre-static file is claimed. Initial readiness was emitted in the tool transcript before root play; end checks emitted the same six asset hashes and lengths."
+}

@@ -1,0 +1,7 @@
+{
+  "source_count": 425,
+  "actual_source_raw_unchanged_from_initial_before": true,
+  "raw_git_difference_count": 395,
+  "all_normalized_equal_git": true,
+  "correction": "Initial source-before.json git_blob_sha256 came from git archive output, which applied CRLF export conversion. Corrected proof uses raw git cat-file blobs. Original raw source hashes and frozen source bytes remain unchanged. Original before artifact preserved; use corrected file for raw Git qualification."
+}

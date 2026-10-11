@@ -1,0 +1,464 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Azure Vanta
+  - generic: 148,800 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Market
+  - button "Players"
+  - button "Scouting"
+  - button "Staff"
+  - heading "Staff market — 198 free agents" [level=2]:
+    - text: Staff market
+    - generic: — 198 free agents
+  - paragraph: One shared pool — in a shared world, rival managers hire from the same market. Hiring replaces your current Coach / Analyst / Physio / Psychologist / Performance Coach / Language Coach in that role (they return to the pool). Click a name for the full profile.
+  - button "All"
+  - button "Coaches"
+  - button "Analysts"
+  - button "Physios"
+  - button "Psychologists"
+  - button "Performance coaches"
+  - button "Language coaches"
+  - generic: 🛠️ Filter staff candidates
+  - button "Show Filters ▾"
+  - table:
+    - rowgroup:
+      - row "Role Name Age Region Specialty Identity / strengths OVR Salary Exp":
+        - columnheader "Role"
+        - columnheader "Name"
+        - columnheader "Age"
+        - columnheader "Region"
+        - columnheader "Specialty"
+        - columnheader "Identity / strengths"
+        - columnheader "OVR"
+        - columnheader "Salary"
+        - columnheader "Exp"
+        - columnheader
+    - rowgroup:
+      - row "Analyst Andre Fischer 27 emea data Analysis 95 · Tactical Knowledge 93 5,900 cr/wk 3s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Andre Fischer"
+        - cell "27"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 95 · Tactical Knowledge 93"
+        - cell:
+          - generic "90"
+        - cell "5,900 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Beni 41 emea opponents Teaching 99 · Expertise 91 6,000 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Beni"
+        - cell "41"
+        - cell "emea"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Teaching 99 · Expertise 91"
+        - cell:
+          - generic "87"
+        - cell "6,000 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Bacon9 28 emea data Expertise 94 · Tactical Knowledge 91 5,700 cr/wk 8s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Bacon9"
+        - cell "28"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Expertise 94 · Tactical Knowledge 91"
+        - cell:
+          - generic "84"
+        - cell "5,700 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst r3thme 26 pacific market Motivation 99 · Analysis 90 6,400 cr/wk 9s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "r3thme"
+        - cell "26"
+        - cell "pacific"
+        - cell "market":
+          - generic: market
+        - cell "Motivation 99 · Analysis 90"
+        - cell:
+          - generic "83"
+        - cell "6,400 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Liam Tanaka 33 americas market Tactical Knowledge 95 · Analysis 87 5,200 cr/wk 6s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Liam Tanaka"
+        - cell "33"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Tactical Knowledge 95 · Analysis 87"
+        - cell:
+          - generic "82"
+        - cell "5,200 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Koyo 37 emea data Tactical Knowledge 90 · People Management 84 5,400 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Koyo"
+        - cell "37"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 90 · People Management 84"
+        - cell:
+          - generic "80"
+        - cell "5,400 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Jan Kowalski 26 pacific data Tactical Knowledge 86 · Adaptability 85 5,500 cr/wk 1s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Jan Kowalski"
+        - cell "26"
+        - cell "pacific"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 86 · Adaptability 85"
+        - cell:
+          - generic "80"
+        - cell "5,500 cr/wk"
+        - cell "1s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Flynn 33 emea data Analysis 85 · Expertise 82 5,700 cr/wk 9s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Flynn"
+        - cell "33"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 85 · Expertise 82"
+        - cell:
+          - generic "79"
+        - cell "5,700 cr/wk"
+        - cell "9s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Kai Moreau 26 americas data Analysis 87 · Motivation 84 5,100 cr/wk 3s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Kai Moreau"
+        - cell "26"
+        - cell "americas"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 87 · Motivation 84"
+        - cell:
+          - generic "78"
+        - cell "5,100 cr/wk"
+        - cell "3s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Marco Kim 37 emea data Tactical Knowledge 83 · Expertise 79 5,300 cr/wk 10s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Marco Kim"
+        - cell "37"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Tactical Knowledge 83 · Expertise 79"
+        - cell:
+          - generic "78"
+        - cell "5,300 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Yusuf Silva 28 pacific opponents Analysis 82 · Tactical Knowledge 79 3,900 cr/wk 5s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Yusuf Silva"
+        - cell "28"
+        - cell "pacific"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Analysis 82 · Tactical Knowledge 79"
+        - cell:
+          - generic "75"
+        - cell "3,900 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Fadeout 33 americas opponents Adaptability 88 · People Management 77 5,100 cr/wk 6s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Fadeout"
+        - cell "33"
+        - cell "americas"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Adaptability 88 · People Management 77"
+        - cell:
+          - generic "74"
+        - cell "5,100 cr/wk"
+        - cell "6s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst slk 40 emea opponents Tactical Knowledge 80 · Analysis 78 3,900 cr/wk 5s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "slk"
+        - cell "40"
+        - cell "emea"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Tactical Knowledge 80 · Analysis 78"
+        - cell:
+          - generic "73"
+        - cell "3,900 cr/wk"
+        - cell "5s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Tomas Chen 24 emea market Adaptability 80 · Analysis 78 4,300 cr/wk 0s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Tomas Chen"
+        - cell "24"
+        - cell "emea"
+        - cell "market":
+          - generic: market
+        - cell "Adaptability 80 · Analysis 78"
+        - cell:
+          - generic "72"
+        - cell "4,300 cr/wk"
+        - cell "0s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Nikolai Muller 26 americas market Adaptability 86 · People Management 79 4,800 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Nikolai Muller"
+        - cell "26"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Adaptability 86 · People Management 79"
+        - cell:
+          - generic "72"
+        - cell "4,800 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Dmitri Novak 42 americas market Expertise 79 · Tactical Knowledge 72 4,000 cr/wk 11s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Dmitri Novak"
+        - cell "42"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Expertise 79 · Tactical Knowledge 72"
+        - cell:
+          - generic "72"
+        - cell "4,000 cr/wk"
+        - cell "11s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Skye 44 pacific market Expertise 73 · People Management 71 4,700 cr/wk 2s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Skye"
+        - cell "44"
+        - cell "pacific"
+        - cell "market":
+          - generic: market
+        - cell "Expertise 73 · People Management 71"
+        - cell:
+          - generic "69"
+        - cell "4,700 cr/wk"
+        - cell "2s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst gya9 36 pacific opponents Analysis 77 · Motivation 65 4,400 cr/wk 8s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "gya9"
+        - cell "36"
+        - cell "pacific"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Analysis 77 · Motivation 65"
+        - cell:
+          - generic "68"
+        - cell "4,400 cr/wk"
+        - cell "8s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Kenta Vargas 32 americas data Analysis 74 · Adaptability 71 4,000 cr/wk 7s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Kenta Vargas"
+        - cell "32"
+        - cell "americas"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 74 · Adaptability 71"
+        - cell:
+          - generic "66"
+        - cell "4,000 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Leon Santos 41 americas opponents Tactical Knowledge 80 · People Management 72 3,800 cr/wk 10s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Leon Santos"
+        - cell "41"
+        - cell "americas"
+        - cell "opponents":
+          - generic: opponents
+        - cell "Tactical Knowledge 80 · People Management 72"
+        - cell:
+          - generic "61"
+        - cell "3,800 cr/wk"
+        - cell "10s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Liam Vargas 43 americas market Analysis 64 · Teaching 60 3,200 cr/wk 12s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Liam Vargas"
+        - cell "43"
+        - cell "americas"
+        - cell "market":
+          - generic: market
+        - cell "Analysis 64 · Teaching 60"
+        - cell:
+          - generic "55"
+        - cell "3,200 cr/wk"
+        - cell "12s"
+        - cell "Hire":
+          - button "Hire"
+      - row "Analyst Arthur Novak 32 emea data Analysis 69 · Motivation 58 3,100 cr/wk 7s Hire":
+        - cell "Analyst":
+          - generic: Analyst
+        - cell "Arthur Novak"
+        - cell "32"
+        - cell "emea"
+        - cell "data":
+          - generic: data
+        - cell "Analysis 69 · Motivation 58"
+        - cell:
+          - generic "54"
+        - cell "3,100 cr/wk"
+        - cell "7s"
+        - cell "Hire":
+          - button "Hire"
+  - heading "Your backroom — 0 cr/wk" [level=2]:
+    - text: Your backroom
+    - generic: — 0 cr/wk
+  - generic: Coach
+  - generic: vacant
+  - generic: training growth (extra on their specialty focus)
+  - generic: Analyst
+  - generic: vacant
+  - generic: scouting speed + stat depth
+  - generic: Physio
+  - generic: vacant
+  - generic: weekly stamina recovery
+  - generic: Psychologist
+  - generic: vacant
+  - generic: confidence stability (shaken players recover faster)
+  - generic: Performance Coach
+  - generic: vacant
+  - generic: form upkeep between matches
+  - generic: Language Coach
+  - generic: vacant
+  - generic: weekly language fluency training
+  - heading "Analytics department" [level=2]
+  - generic: Tier
+  - generic: 0/3
+  - paragraph: box scores only
+  - paragraph: "Next unlock: duel detail (FK/FD, HS%, ACS, clutches)"
+- tooltip:
+  - heading [level=4]: Market
+  - generic: Find players and staff who improve the club without breaking its finances or chemistry.
+  - generic: Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.
+- button "Close profile": ✕
+- generic: S
+- generic: slk
+- generic: Analyst
+- generic "opponent breakdowns": opponents
+- generic: age 40
+- generic: emea
+- generic: Free agent · 3,900 cr/wk
+- generic: "73"
+- generic: Overall
+- generic: 5s
+- generic: Experience
+- generic: "0"
+- generic: Titles
+- heading "Attributes" [level=3]
+- generic "Professional command of this staff member's discipline.": Expertise
+- generic: "70"
+- generic "Understanding of systems, game plans, and the live meta.": Tactical Knowledge
+- generic: "80"
+- generic "Ability to diagnose opponents, players, and performance evidence.": Analysis
+- generic: "78"
+- generic "Ability to turn knowledge into repeatable player improvement.": Teaching
+- generic: "53"
+- generic "Trust, relationships, and individual handling.": People Management
+- generic: "67"
+- generic "Ability to set intensity and restore belief under pressure.": Motivation
+- generic: "60"
+- generic "Effectiveness outside a preferred method and during change.": Adaptability
+- generic: "67"
+- heading "What they do" [level=3]
+- generic: ▸ +76% base scouting speed
+- generic: ▸ deeper stat views (analytics tier, with the analytics suite)
+- paragraph: Hire from the Market tab (31,200 cr banked to hire).
+- heading "Style" [level=3]
+- generic: Data PuristAdds five points to analytics-department tier scoring.
+- generic: Talent SpotterMarket scouting progresses 8% faster.
+- heading "Career" [level=3]
+- generic: Analyst, Team Vitality (VCT 2026)

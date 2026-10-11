@@ -7,13 +7,14 @@ import json
 import numpy as np
 import pytest
 
-from esports_sim.manager import career, sponsors, telemetry
+from esports_sim.manager import career, market, role_fit, sponsors, telemetry
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.decision_env import (
     HeadlessManagerEnv,
     InvalidManagerAction,
     manager_observation,
 )
+from esports_sim.manager.state import TransferOffer
 from esports_sim.manager.manager_policy import HeuristicManagerPolicy, generate_profile
 from esports_sim.manager.state import ManagerSeat
 
@@ -85,10 +86,16 @@ def test_observation_is_json_safe_visible_and_restores_acting_team(game_data):
 
     json.dumps(obs, sort_keys=True)
     assert gs.acting_team_id == tid
+    # The transfer-market/role kinds arrived ADDITIVELY: new legal_actions
+    # keys must not bump the observation version (consumers read known keys
+    # only; learned checkpoints carry their own action vocabulary).
     assert obs["observation_version"] == 8
+    for kind in ("bid", "buyout", "transfer_offer", "assignment", "igl"):
+        assert kind in obs["legal_actions"]
     assert obs["manager_profile"] == {"risk": 0.25}
     assert len(obs["roster"]) == 5
     assert "attributes" in obs["roster"][0]
+    assert "assignment_comfort" in obs["roster"][0]
     # Rival/market players expose scouting bands, never their hidden raw book.
     assert obs["free_agents"]
     assert "ca_stars" in obs["free_agents"][0]
@@ -170,6 +177,7 @@ def test_legal_masks_match_domain_rules(game_data):
         "facility_upgrade", "sponsor_respond", "sponsor_demand_respond",
         "set_game_plan", "talk",
         "negotiate_open", "accept_job",
+        "bid", "buyout", "transfer_offer", "assignment", "igl",
     ):
         assert kind in legal
 
@@ -220,6 +228,260 @@ def test_extended_manager_actions_use_shared_domain_rules(game_data):
         },
     })
     assert target not in gs.negotiations_by[tid]
+
+
+def test_bid_and_buyout_use_shared_market_rules(game_data):
+    gs = new_campaign(game_data, seed=709)
+    tid = gs.user_team_id
+    gs.teams[tid].balance = 5_000_000
+    env = HeadlessManagerEnv(gs, game_data)
+    legal = env.observe()["legal_actions"]
+
+    assert legal["bid"]["enabled"]
+    roster = set(gs.teams[tid].player_ids)
+    for option in legal["bid"]["options"]:
+        assert option["player_id"] not in roster
+        assert option["player_id"] in gs.teams[option["team_id"]].player_ids
+        wages = market.asking_salary(gs.players[option["player_id"]]) * 8
+        assert gs.teams[tid].balance >= option["ask"] + wages
+
+    option = legal["bid"]["options"][0]
+    before = gs.teams[tid].balance
+    result = env.step({"kind": "bid", "params": {"player_id": option["player_id"]}})
+    assert "joins" in result.message
+    assert option["player_id"] in gs.teams[tid].player_ids
+    assert gs.teams[tid].balance == before - option["ask"]
+
+    legal = env.observe()["legal_actions"]
+    assert legal["buyout"]["enabled"]
+    clause = legal["buyout"]["options"][0]
+    assert market.buyout_fee(gs, clause["player_id"]) == clause["fee"]
+    before = gs.teams[tid].balance
+    env.step({"kind": "buyout", "params": {"player_id": clause["player_id"]}})
+    assert clause["player_id"] in gs.teams[tid].player_ids
+    assert gs.teams[tid].balance == before - clause["fee"]
+
+    with pytest.raises(InvalidManagerAction):  # your own player is not biddable
+        env.step({"kind": "bid", "params": {"player_id": sorted(roster)[0]}})
+    with pytest.raises(InvalidManagerAction):
+        env.step({"kind": "buyout", "params": {"player_id": "nobody"}})
+    kinds = [a.kind for a in gs.action_log]
+    assert kinds.count("bid") == 1 and kinds.count("buyout") == 1
+
+
+def test_bid_on_human_seller_parks_on_their_desk(game_data):
+    """Agent-to-agent transfers: a bid on another SEAT's player becomes an
+    incoming transfer_offer only that seat can answer."""
+    gs = new_campaign(game_data, seed=712)
+    tid = gs.user_team_id
+    rival = next(t for t in sorted(gs.teams) if t != tid and gs.teams[t].tier == 1)
+    gs.human_team_ids.append(rival)
+    gs.teams[tid].balance = 5_000_000
+    env = HeadlessManagerEnv(gs, game_data, tid)
+
+    options = [
+        o for o in env.observe()["legal_actions"]["bid"]["options"]
+        if o["team_id"] == rival
+    ]
+    assert options and all(o["seller_human"] for o in options)
+    target = options[0]
+    result = env.step({"kind": "bid", "params": {"player_id": target["player_id"]}})
+    assert "bid sent" in result.message
+    assert target["player_id"] not in gs.teams[tid].player_ids
+
+    # The seller seat sees the live offer; the buyer's mask drops the
+    # player so the same bid cannot be double-placed.
+    seller_env = HeadlessManagerEnv(gs, game_data, rival)
+    offers = seller_env.observe()["legal_actions"]["transfer_offer"]["offers"]
+    assert [o["player_id"] for o in offers] == [target["player_id"]]
+    assert offers[0]["to_team"] == tid
+    assert target["player_id"] not in [
+        o["player_id"] for o in env.observe()["legal_actions"]["bid"]["options"]
+    ]
+
+    seller_before = gs.teams[rival].balance
+    seller_env.step({
+        "kind": "transfer_offer",
+        "params": {"player_id": target["player_id"], "accept": True},
+    })
+    assert target["player_id"] in gs.teams[tid].player_ids
+    assert gs.teams[rival].balance == seller_before + target["ask"]
+
+
+@pytest.mark.parametrize("seller_human", [False, True], ids=["ai-sale", "parked-human-bid"])
+@pytest.mark.parametrize("buyer_full", [False, True], ids=["room", "full"])
+def test_bid_mask_matches_parking_and_immediate_execution(game_data, seller_human, buyer_full):
+    gs = new_campaign(game_data, seed=712)
+    buyer = gs.user_team_id
+    gs.teams[buyer].balance = 5_000_000
+    env = HeadlessManagerEnv(gs, game_data, buyer)
+    # Pick an actually sellable AI target before changing the seller's seat.
+    target = env.observe()["legal_actions"]["bid"]["options"][0]
+    pid, seller = target["player_id"], target["team_id"]
+    if seller_human:
+        gs.human_team_ids.append(seller)
+    cap = market.roster_cap(gs, buyer)
+    while len(gs.teams[buyer].player_ids) < cap - int(not buyer_full):
+        gs.teams[buyer].player_ids.append(gs.free_agent_ids.pop())
+
+    before = gs.model_dump_json()
+    legal = env.observe()["legal_actions"]
+    assert gs.model_dump_json() == before
+    offered = {o["player_id"] for o in legal["bid"]["options"]}
+    assert (pid in offered) == (seller_human or not buyer_full)
+    if buyer_full:
+        assert not legal["buyout"]["enabled"]
+        assert all(o["seller_human"] for o in legal["bid"]["options"])
+        assert legal["bid"]["enabled"] == seller_human
+    if buyer_full and not seller_human:
+        with pytest.raises(InvalidManagerAction, match="roster is full"):
+            env.step({"kind": "bid", "params": {"player_id": pid}})
+        assert gs.model_dump_json() == before
+        return
+
+    buyer_balance = gs.teams[buyer].balance
+    seller_balance = gs.teams[seller].balance
+    result = env.step({"kind": "bid", "params": {"player_id": pid}})
+    assert gs.action_log[-1].kind == "bid"
+    if seller_human:
+        assert "bid sent" in result.message
+        assert pid in gs.teams[seller].player_ids
+        assert pid not in gs.teams[buyer].player_ids
+        assert gs.teams[buyer].balance == buyer_balance
+        assert gs.teams[seller].balance == seller_balance
+        assert pid not in {
+            o["player_id"] for o in env.observe()["legal_actions"]["bid"]["options"]
+        }
+        seller_env = HeadlessManagerEnv(gs, game_data, seller)
+        offer = seller_env.observe()["legal_actions"]["transfer_offer"]["offers"][0]
+        assert offer["player_id"] == pid and offer["to_team"] == buyer
+        assert offer["can_accept"] == (not buyer_full)
+        accept = {"kind": "transfer_offer", "params": {
+            "player_id": pid, "to_team": buyer, "accept": True,
+        }}
+        if buyer_full:
+            parked = gs.model_dump_json()
+            with pytest.raises(InvalidManagerAction, match="roster is full"):
+                seller_env.step(accept)
+            assert gs.model_dump_json() == parked
+            # Make room after parking: acceptance must recheck live capacity.
+            gs.free_agent_ids.append(gs.teams[buyer].player_ids.pop())
+            assert seller_env.observe()["legal_actions"]["transfer_offer"]["offers"][0]["can_accept"]
+        seller_env.step(accept)
+        assert not gs.transfer_offers
+    else:
+        assert "joins" in result.message
+        assert not gs.transfer_offers
+    assert pid in gs.teams[buyer].player_ids
+    assert pid not in gs.teams[seller].player_ids
+    assert len(gs.teams[buyer].player_ids) == cap
+    assert gs.teams[buyer].balance == buyer_balance - target["ask"]
+    assert gs.teams[seller].balance == seller_balance + target["ask"]
+
+
+def test_transfer_offer_answers_are_seller_scoped(game_data):
+    gs = new_campaign(game_data, seed=710)
+    tid = gs.user_team_id
+    rival = next(t for t in sorted(gs.teams) if t != tid and gs.teams[t].tier == 1)
+    gs.human_team_ids.append(rival)
+    buyer = next(
+        t for t in sorted(gs.teams)
+        if t not in (tid, rival) and gs.teams[t].tier == 1
+    )
+    gs.teams[buyer].balance = 5_000_000
+    mine = sorted(gs.teams[tid].player_ids)[0]
+    gs.transfer_offers.append(TransferOffer(
+        player_id=mine, from_team=tid, to_team=buyer,
+        fee=150_000, expires_week=gs.week + 2,
+    ))
+
+    env = HeadlessManagerEnv(gs, game_data, tid)
+    offers = env.observe()["legal_actions"]["transfer_offer"]
+    assert offers["enabled"]
+    assert offers["offers"][0]["player_id"] == mine
+    assert offers["offers"][0]["to_team"] == buyer
+    assert offers["offers"][0]["can_accept"]
+
+    # In a shared world a rival seat can never answer a bid on MY desk.
+    rival_env = HeadlessManagerEnv(gs, game_data, rival)
+    assert not rival_env.observe()["legal_actions"]["transfer_offer"]["enabled"]
+    with pytest.raises(InvalidManagerAction):
+        rival_env.step({
+            "kind": "transfer_offer", "params": {"player_id": mine, "accept": True},
+        })
+    assert len(gs.transfer_offers) == 1
+
+    before = gs.teams[tid].balance
+    env.step({
+        "kind": "transfer_offer",
+        "params": {"player_id": mine, "accept": True, "to_team": buyer},
+    })
+    assert mine in gs.teams[buyer].player_ids
+    assert mine not in gs.teams[tid].player_ids
+    assert gs.teams[tid].balance == before + 150_000
+    assert not gs.transfer_offers
+
+    other = sorted(gs.teams[tid].player_ids)[0]
+    gs.transfer_offers.append(TransferOffer(
+        player_id=other, from_team=tid, to_team=buyer,
+        fee=90_000, expires_week=gs.week + 2,
+    ))
+    declined = env.step({
+        "kind": "transfer_offer", "params": {"player_id": other, "accept": False},
+    })
+    assert "declined" in declined.message
+    assert not gs.transfer_offers
+    assert other in gs.teams[tid].player_ids
+
+
+def test_assignment_and_igl_manage_role_fit(game_data):
+    gs = new_campaign(game_data, seed=711)
+    tid = gs.user_team_id
+    env = HeadlessManagerEnv(gs, game_data)
+    legal = env.observe()["legal_actions"]
+
+    assert legal["assignment"]["enabled"] and legal["igl"]["enabled"]
+    assert set(legal["assignment"]["roles"]) == set(role_fit.ROLE_WEIGHTS)
+    assert set(legal["assignment"]["playstyles"]) == set(role_fit.STYLE_WEIGHTS)
+    assert legal["igl"]["current_igl"] == gs.teams[tid].captain_id
+    assert set(legal["igl"]["experience"]) == set(legal["igl"]["player_ids"])
+
+    pid = legal["assignment"]["player_ids"][0]
+    p = gs.players[pid]
+    role = "sentinel" if str(p.role) != "sentinel" else "duelist"
+    style = "anchor" if str(p.playstyle) != "anchor" else "entry"
+    moved = env.step({
+        "kind": "assignment",
+        "params": {"player_id": pid, "role": role, "playstyle": style},
+    })
+    assert (str(p.role), str(p.playstyle)) == (role, style)
+    assert role_fit.assignment_comfort(p) == role_fit.NEW_ASSIGNMENT_COMFORT
+    assert "comfort" in moved.message
+    again = env.step({
+        "kind": "assignment",
+        "params": {"player_id": pid, "role": role, "playstyle": style},
+    })
+    assert "no change" in again.message
+    with pytest.raises(InvalidManagerAction):
+        env.step({
+            "kind": "assignment",
+            "params": {"player_id": pid, "role": "coach", "playstyle": style},
+        })
+
+    caller = next(
+        c for c in legal["igl"]["player_ids"] if c != legal["igl"]["current_igl"]
+    )
+    named = env.step({"kind": "igl", "params": {"player_id": caller}})
+    assert gs.teams[tid].captain_id == caller
+    assert role_fit.igl_experience(gs.teams[tid], caller) == role_fit.NEW_IGL_EXPERIENCE
+    assert "calling experience" in named.message
+    assert env.observe()["legal_actions"]["igl"]["current_igl"] == caller
+    renamed = env.step({"kind": "igl", "params": {"player_id": caller}})
+    assert "no change" in renamed.message
+    with pytest.raises(InvalidManagerAction):
+        env.step({"kind": "igl", "params": {"player_id": "nobody"}})
+    kinds = [a.kind for a in gs.action_log]
+    assert "set_assignment" in kinds and "set_igl" in kinds
 
 
 def test_game_plan_talk_and_trace_capture(game_data):
@@ -299,6 +561,47 @@ def test_headless_env_rejects_invalid_actions(game_data):
         env.step({"kind": "set_tactics", "params": {"pace": 101}})
     with pytest.raises(InvalidManagerAction):
         env.step({"kind": "delete_club", "params": {}})
+
+
+@pytest.mark.parametrize("failure", ["funds", "roster", "clause", "ownership", "third-team"])
+def test_incoming_offer_mask_rechecks_completion_without_mutation(game_data, failure):
+    gs = new_campaign(game_data, seed=713)
+    seller = gs.user_team_id
+    buyer = next(t for t in sorted(gs.teams) if t != seller and gs.teams[t].tier == 1)
+    gs.human_team_ids.append(buyer)
+    pid = gs.teams[seller].player_ids[0]
+    gs.players[pid].no_transfer_clause = False
+    gs.teams[buyer].balance = 1_000_000
+    offer = TransferOffer(
+        player_id=pid, from_team=seller, to_team=buyer,
+        fee=100_000, expires_week=gs.week + 2,
+    )
+    gs.transfer_offers.append(offer)
+    env = HeadlessManagerEnv(gs, game_data, team_id=seller)
+    assert env.observe()["legal_actions"]["transfer_offer"]["offers"][0]["can_accept"]
+    if failure == "funds":
+        gs.teams[buyer].balance = 0
+    elif failure == "roster":
+        while len(gs.teams[buyer].player_ids) < market.ROSTER_MAX:
+            gs.teams[buyer].player_ids.append(gs.free_agent_ids.pop())
+    elif failure == "clause":
+        gs.players[pid].no_transfer_clause = True
+    else:
+        gs.teams[seller].player_ids.remove(pid)
+        if failure == "third-team":
+            third = next(t for t in sorted(gs.teams) if t not in (seller, buyer))
+            gs.teams[third].player_ids.append(pid)
+        else:
+            gs.free_agent_ids.append(pid)
+    before = gs.model_dump_json()
+    assert not env.observe()["legal_actions"]["transfer_offer"]["offers"][0]["can_accept"]
+    assert gs.model_dump_json() == before
+    with pytest.raises(InvalidManagerAction):
+        env.step({"kind": "transfer_offer", "params": {
+            "player_id": pid, "to_team": buyer, "accept": True,
+        }})
+    assert gs.model_dump_json() == before
+    assert offer in gs.transfer_offers
 
 
 def test_headless_rollout_is_deterministic(game_data):

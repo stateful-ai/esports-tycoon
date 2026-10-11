@@ -1,0 +1,242 @@
+{
+  "at_utc": "2026-10-11T19:08:40.322218+00:00",
+  "scope": "Finite 1249-row append above PR429; only existing curated observations and safe receipts, no feature fixes or new gameplay",
+  "branch": "codex/playtest-history-followup-1249",
+  "parent_head": "96edb2de265ae1c6f78262c1b42de1e73402ef9a",
+  "parent_tree": "9612b1a244f1a132317a08d96c3e75a8678913e7",
+  "observed_origin_main": "0194b426f9c141591959443f44e092ed873e5df4",
+  "observed_main_rows": 1044,
+  "canonical_csv": {
+    "old_rows": 1237,
+    "new_rows": 1249,
+    "sessions": 115,
+    "columns": 21,
+    "old_raw_prefix_exact": true,
+    "old_all_25977_fields_exact": true,
+    "duplicate_session_step_keys": 0,
+    "old_sha256": "5ef3997c2445fb1810a9504dd6470cb7a34bd67488845eaf3a4f64cf8f800054",
+    "sha256": "7d59c5440f090bd5dc6f94789852709c1ab7a649c96571d43b5403c3fb5d1218",
+    "bytes": 1845405
+  },
+  "new_rows": {
+    "count": 12,
+    "origin": "docs/playtests/2026-10-11-competition-briefing-root/actions.csv",
+    "all_252_fields_equal_canonical_suffix": true,
+    "session_ids": [
+      "2026-10-11-competition-briefing-root"
+    ]
+  },
+  "actual_played_head": "d04096e29491d6acb380d0ae1bf9b4771bd84f67",
+  "actual_played_tree": "37bd5bfb24c79baa93528da11ed0e4496a2cb038",
+  "actual_played_base": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "acceptance_scope": "Recorded combined427/428 historical candidate excludes395 and optional358; no latest-main or standalone430/431 runtime claim",
+  "recorded_session_coverage": {
+    "new_accepted_decisions": 2,
+    "complete_http200_pairs": 3,
+    "retained_usage_events": 56,
+    "briefing_open_close_pairs": 3,
+    "source": "docs/playtests/2026-10-11-competition-briefing-root/root-independent-audit.json",
+    "qualification": "Existing recorded audit, not rerun; Stats filter usage gap retained. Bounded capture does not prove attention/duration/full funnels/causal victory."
+  },
+  "source_inventory": [
+    {
+      "path": "docs/playtests/actions.csv",
+      "bytes": 1845405,
+      "sha256": "7d59c5440f090bd5dc6f94789852709c1ab7a649c96571d43b5403c3fb5d1218"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/actions.csv",
+      "bytes": 13742,
+      "sha256": "f3e652a9d3f578400b8ac0e0bafdeacdf2f3fe69c3671ca8eb78f1a6357f2b3f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/auth-recovery-safe.json",
+      "bytes": 500,
+      "sha256": "81bbe4f892f13cecfcfe20ff7cd8859fa02bd98d16b39e379927853cc530dc67"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/auth-restoration-safe-freeze-receipt.json",
+      "bytes": 830,
+      "sha256": "1337a4675540c3e817152213065d44a7981cfa911dd5cd9ee708af085dca9727"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/auth-restoration-safe-static-readiness-receipt.json",
+      "bytes": 1806,
+      "sha256": "fb808b8355a7e1c9ba1be339e0ee06c322eedb39f69970858834bdefcc2e681c"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/candidate-source-qualification.json",
+      "bytes": 1324,
+      "sha256": "1dda8b324b7cef72db1cbc06cffee064dcdc00447ba2afd9b63daaa49d25744f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/end-safe-freeze-receipt.json",
+      "bytes": 817,
+      "sha256": "6f59261cee7ac7bead5cbb21f16b0d9747cff7a9ea9effaa095f6ee5f1604521"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/end-safe-static-readiness-receipt.json",
+      "bytes": 1793,
+      "sha256": "0abb1b8519c0f4b23f63bdb3dbe6edb4e4394965c2c06940742b863610ef49ea"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/findings.json",
+      "bytes": 594,
+      "sha256": "10acc25c2047d905874b71de74ed7625cfe17d76c2a672d25191dd2640d6c85c"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/pre-safe-freeze-receipt.json",
+      "bytes": 817,
+      "sha256": "cf96b591a8760351c996016ea347f9cfe4a1347df1b0a5d37a457ff452d181de"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/pre-safe-static-readiness-receipt.json",
+      "bytes": 1793,
+      "sha256": "8d4ea9fea9aa4e93e81528c78716bfb4eb3b5304774ffaef653c865c7bf2b42e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/report.md",
+      "bytes": 5753,
+      "sha256": "ab84e9676ed8abf17ee835c4f488b8eeb4f3b580c98c84a60fba9e2d1fb95e5d"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/root-independent-audit.json",
+      "bytes": 6347,
+      "sha256": "6025bfb891e3ae3fe611dc2c83b58e9356e322bdf679a1cc83c3541775c4deb2"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/safe-shutdown-receipt.json",
+      "bytes": 132,
+      "sha256": "e615a0cf9791e603a72a894b929b125f56894f637b63647dbc84c5a064166c01"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step1-loaded-dom.txt",
+      "bytes": 488,
+      "sha256": "f378c0dff4e59744c658e67f30bdc93d3c2c073615366abbf2c9ebe13142d5ce"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step10-advance-initial-dom.txt",
+      "bytes": 31747,
+      "sha256": "0b8e5fba20f80bf9a597bb3fb066b3e488ae85db2ddf0eb29d4d0419e334e7cb"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step10-processing-dom.txt",
+      "bytes": 31906,
+      "sha256": "11f585a871b74f8644db8cadc2eedb8638a30ee1d94a11d670e4a5fad6c94665"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step11-week4-dashboard-dom.txt",
+      "bytes": 8054,
+      "sha256": "2960fd005595736d23414e96be200184821cf81d12b82950afa09bb120218a57"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step12-saved-dom.txt",
+      "bytes": 7809,
+      "sha256": "fbfed1779ceedaea43438308d1fc83c29bbb5987c98f07eedab2a33dd89a2099"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step12-saved.png",
+      "bytes": 75256,
+      "sha256": "b5270acbb80357033eb11f9c16f437fbf5c339a2d60c3a5c955972cb9d714af7"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step2-join-dom.txt",
+      "bytes": 846,
+      "sha256": "c728a21bd85e2928557b6ad3a3d289e1743ca2c9f94dde97ade04f2ffa7c92b3"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step2-join-teams-dom.txt",
+      "bytes": 6294,
+      "sha256": "52321059a5f04ab60f0197328cb476172417fc9586dc4ceb7b14cb9304ae1991"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step3-dashboard-dom.txt",
+      "bytes": 7595,
+      "sha256": "42724f539f97f63d964138907660ed3583d8657aed97afa86d1170c195f0b46e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step3-resume-dom.txt",
+      "bytes": 932,
+      "sha256": "329b231ed94d431f93e3db53283b8401f20a2f2735ec17d24b2eb55dd4938b76"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step4-full-table-dom.txt",
+      "bytes": 27231,
+      "sha256": "ea7ca6dfcc2c8a0a007e057cfccd24d2988a755eb6d09bef59eaf42fd75dbc0e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step5-briefing-dom.txt",
+      "bytes": 8862,
+      "sha256": "d6930614cb93d811b6e4eeb8d1a05c45e261e464215643d20f98801acf6719ea"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step5-closed-dom.txt",
+      "bytes": 7720,
+      "sha256": "14d7d19cdbad8bfd7da2d907d534b82d233ebe86da8dbb36a76de104dbbcb9b5"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step6-plan-dom.txt",
+      "bytes": 11404,
+      "sha256": "3daacb3420bb1f0a0ef4e9f8444d307cf3615cb1c335d3439ee1354eb7633c2a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step7-plan-locked-dom.txt",
+      "bytes": 11515,
+      "sha256": "13544b1ebad58951aab6f6f440bb5f202e0352d2eab02f0bb08278e93bb84dfb"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step8-dashboard-dom.txt",
+      "bytes": 7899,
+      "sha256": "9276c3e3d9d6d2a01e742dc977ab0f06cd4585abacf59968243c65a94caa7ffb"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step8-reopened-plan-dom.txt",
+      "bytes": 11464,
+      "sha256": "54cbd059f8de3932601e256b401c5aea13fa1ce23c3c8b597b4d9f18545536de"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step8-selected-plan-controls.json",
+      "bytes": 1338,
+      "sha256": "8ecc303b03c81b134eac1888bd6767b7dbef5a8a6edf2d1fa4b471a8e375a638"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step9-challengers-stats-dom.txt",
+      "bytes": 31501,
+      "sha256": "e0a9b655bf604d001980cd0bbfd16a0acd94fd13ac0702bada96b3a0d8bedc1f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-competition-briefing-root/step9-stats-dom.txt",
+      "bytes": 31602,
+      "sha256": "62bc1b14783572643b24f24eb7e5e72558d8952011a2ff5752cfd7a0c9191a29"
+    }
+  ],
+  "append_receipt": {
+    "source": "runs/playtests/append-competition-briefing-1249.json",
+    "published": "docs/playtests/2026-10-11-history-followup-1249/append-receipt.json",
+    "bytes": 515,
+    "sha256": "e8cf2ee45868f75e0960296e4a9b3c3ef67f6986c1a5f27b9300e339cbf1fead"
+  },
+  "private_omissions": [
+    "raw usage JSONL",
+    "full campaign saves",
+    "raw authentication companion or tokens",
+    "private page identifiers",
+    "transport harnesses",
+    "server logs"
+  ],
+  "parent_retention": {
+    "parent_files": 4325,
+    "retained_other_parent_blobs_and_modes": 4324,
+    "only_changed_parent_path": "docs/playtests/actions.csv",
+    "source_and_attributes_unchanged": true
+  },
+  "primary_index_sha256_before": "7cd99c440b1cb14cafc8748ca9278fec33d65ab7bba006a8f37d9243e6469d68",
+  "runtime": {
+    "root_model": "unknown (not exposed)",
+    "root_effort": "unknown (not exposed)",
+    "packaging_child_model": "gpt-6.1-sol",
+    "packaging_child_effort": "medium"
+  },
+  "validation": "Only file/hash/CSV/Git bookkeeping. All local tests, validators, syntax, simulations, gates, application reports and hooks skipped by user instruction. CI UNQUALIFIED.",
+  "git_bytes_policy": "Stage with core.autocrlf=false and compare postcommit raw Git blobs to every copied file. Existing parent files never restaged."
+}

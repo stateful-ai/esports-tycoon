@@ -1,0 +1,16 @@
+{
+  "git_before": "git-before.json",
+  "source_files": 425,
+  "launcher_owns_worker": true,
+  "source_identity_remaining_evidence": "root served-source and public metadata readback",
+  "worker_parent_pid": 12924,
+  "loopback_address": "127.0.0.1",
+  "worktree_source_selected_by_pythonpath": true,
+  "candidate_tree": "943144e41e8221ed47da19f8aec1247e191fb5ca",
+  "listener_pid": 22660,
+  "candidate_head": "27a2ea2f40aec80fed9ec57b04c7d8baf52f1ee9",
+  "source_before": "source-before.json",
+  "port": 8558,
+  "imported_package_file_not_independently_checked": true,
+  "launcher_pid": 12924
+}

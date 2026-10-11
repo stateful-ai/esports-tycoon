@@ -1,0 +1,192 @@
+{
+  "at_utc": "2026-10-11T18:38:27.333184+00:00",
+  "scope": "Finite 1237-row append stacked on reviewed PR426; no gameplay or feature fixes in this publication",
+  "branch": "codex/playtest-history-followup-1237",
+  "parent_head": "726d2bea086608adbc5dd2ec30bff9f2ec37e305",
+  "parent_tree": "637e429a5777a3f2adc81d83b6741768f2420778",
+  "observed_origin_main": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "observed_main_rows": 1044,
+  "canonical_csv": {
+    "old_rows": 1226,
+    "new_rows": 1237,
+    "sessions": 114,
+    "columns": 21,
+    "old_raw_prefix_exact": true,
+    "old_all_25746_fields_exact": true,
+    "duplicate_session_step_keys": 0,
+    "sha256": "5ef3997c2445fb1810a9504dd6470cb7a34bd67488845eaf3a4f64cf8f800054",
+    "bytes": 1831895
+  },
+  "new_rows": {
+    "count": 11,
+    "origin": "docs/playtests/2026-10-11-scout-briefing-media-root/actions.csv",
+    "all_231_fields_equal_canonical_suffix": true,
+    "session_ids": [
+      "2026-10-11-scout-briefing-media-root"
+    ]
+  },
+  "actual_played_head": "754f525ce5f13636034a951a43e6da7346953df9",
+  "actual_played_tree": "0b37a6329db0e7780d9a21bde7e320d2b70669d5",
+  "recorded_session_coverage": {
+    "new_accepted_decisions": 3,
+    "complete_http200_pairs": 4,
+    "retained_usage_events": 61,
+    "source": "docs/playtests/2026-10-11-scout-briefing-media-root/root-independent-audit.json",
+    "qualification": "Recorded existing audit; no application report rerun. Briefing interactions absent, no session_end, bounded usage does not prove funnels/attention/duration/causality."
+  },
+  "source_inventory": [
+    {
+      "path": "docs/playtests/actions.csv",
+      "bytes": 1831895,
+      "sha256": "5ef3997c2445fb1810a9504dd6470cb7a34bd67488845eaf3a4f64cf8f800054"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/actions.csv",
+      "bytes": 12608,
+      "sha256": "dcc97c9e1916dfbde73935fd1785727025c808e6ba946fcaa1c4cc7bfc8cef1a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/end-safe-freeze-receipt.json",
+      "bytes": 1398,
+      "sha256": "8ded2f155f7f7bd9f4da8bc56458f790b0fe508584af3e7c9c09607ec30afdce"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/end-safe-static-readiness-receipt.json",
+      "bytes": 1987,
+      "sha256": "24a025dcba66e474aebf08c83c59cf2fd896e2bf517b346b93a52999559996e9"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/findings.json",
+      "bytes": 741,
+      "sha256": "da53df5c4f28bd3eb4ab41a6c50a684eff2b6ed35c908ea538ef0d969cac7dda"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/pre-safe-freeze-receipt.json",
+      "bytes": 1329,
+      "sha256": "855e9614680c69c38c9b917ef46802c80cd59b226def56b0b25d2f1958bb4855"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/report.md",
+      "bytes": 6210,
+      "sha256": "1e56a8fa778d33c93e161a180428009ff6ab0ac67ba9c35173ee36b53e7b7f17"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/root-independent-audit.json",
+      "bytes": 7573,
+      "sha256": "0e392ad8341807895ed73063703ec7886488f65e706f67a15b64cdc3f8f0d379"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/safe-shutdown-receipt.json",
+      "bytes": 246,
+      "sha256": "e3ca06471a527f7b6e37e19008d21738030d8485a1d1309b898f6a5bc5e6454e"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/static-receipt-provenance-note.json",
+      "bytes": 593,
+      "sha256": "1444fcff54de3470115c402dc5be2bd2b71d5d90ec864666b659c5de8556826c"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step1-loaded-dom.txt",
+      "bytes": 6794,
+      "sha256": "e1dbec86e704f1c1315a97dcfac87a471ee16ef3f80eb1434642acf2961457a6"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step1-standing-briefing.png",
+      "bytes": 73497,
+      "sha256": "452b8511893781c98a16a85ce72d4c5231cc5e8877e655558ea1767a4d99edb0"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step10-full-table-dom.txt",
+      "bytes": 27433,
+      "sha256": "2b257177f7fe91a3b17ffe84493a3ea76894372869a5ee7e32de31e2a7c75e8f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step11-saved-dom.txt",
+      "bytes": 7401,
+      "sha256": "036350b30e2713c5ade71ff1aeacaad35ad4549f42a233732e7991266493eb33"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step11-saved.png",
+      "bytes": 74435,
+      "sha256": "ae34f12f08805205f4f1ede859bfc49a05b67fb1f164a73a801ef4dec97996f5"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step2-scouting-dom.txt",
+      "bytes": 3817,
+      "sha256": "ba5470aec1d3c8e5778a134370d227a92c133fe1c673bef1bfe172bae5a10bbc"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step3-matchday-dom.txt",
+      "bytes": 7833,
+      "sha256": "a320b41ae32e6d6a8e1615dbbe3f3c9ebfbd1712e2d5ccc975230141edda3f45"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step4-measured-response-dom.txt",
+      "bytes": 6594,
+      "sha256": "12a9dc203affcf6936cefbcd35bef0a27d38fd267f36a65bfdb6c4b9cc30c4b0"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step5-plan-controls-dom.txt",
+      "bytes": 11424,
+      "sha256": "1849d19276a472c42f11c01891bec057bdd366c3a6466e08b3fc90391ae2066f"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step6-plan-locked-dom.txt",
+      "bytes": 11535,
+      "sha256": "13b8e879425501133d8a35ba56a829f2f62bd6b00138a90f9038e91c8cb9180a"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step7-dashboard-readback-dom.txt",
+      "bytes": 6706,
+      "sha256": "12f44cf4f8e78059ef3100328c607b9cd0bcbeadbcbc30105fdf3cc329192ad0"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step7-reopened-plan-dom.txt",
+      "bytes": 11561,
+      "sha256": "30a02e68ab4ff14c48c94525a190981981d5b05d3a094a323efe9a6b0b5159c6"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step7-selected-plan-controls.json",
+      "bytes": 176,
+      "sha256": "35c2b392f6aaf29ee5dbb54d46d4397340d7b46341db20fc0cd820c4d78e5bea"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step8-weekly-recap-dom.txt",
+      "bytes": 11776,
+      "sha256": "9fe08fa0093dae468d5c5ac7b853d14769b2b306a6447e2cbd808d874d59953c"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step9-week3-dashboard-dom.txt",
+      "bytes": 7646,
+      "sha256": "b66a5fdb51b52bac5a02c4722457eb3323d0e8f7df005045b5ef9c54d2e4059b"
+    },
+    {
+      "path": "docs/playtests/2026-10-11-scout-briefing-media-root/step9-week3-scouting-dom.txt",
+      "bytes": 3956,
+      "sha256": "c300af4b922c002b704f2036cc382067c3fdafde8afd7f02d3113498b46cce9a"
+    }
+  ],
+  "append_receipt": {
+    "source": "runs/playtests/append-scout-media-1237.json",
+    "published": "docs/playtests/2026-10-11-history-followup-1237/append-receipt.json",
+    "bytes": 515,
+    "sha256": "3b04274bcc927e1a7d2db760f29c9859a3edb759f11e656e1a8aac3d262913dd"
+  },
+  "private_omissions": [
+    "raw usage JSONL",
+    "full campaign saves",
+    "authentication material",
+    "page session identifiers",
+    "transport harnesses"
+  ],
+  "parent_retention": "All parent blobs and modes except append-only actions.csv must remain identical. No attributes or source changes.",
+  "primary_index_sha256_before": "7cd99c440b1cb14cafc8748ca9278fec33d65ab7bba006a8f37d9243e6469d68",
+  "runtime": {
+    "root_model": "unknown (not exposed)",
+    "root_effort": "unknown (not exposed)",
+    "packaging_child_model": "gpt-6.1-sol",
+    "packaging_child_effort": "medium"
+  },
+  "validation": "Only file/hash/CSV/Git bookkeeping. User waived all local tests, validators, syntax checks, simulations, gates, application reports and hook execution. CI UNQUALIFIED.",
+  "git_bytes_policy": "Stage new files with core.autocrlf=false; compare all committed raw blobs to copied raw files after commit. Existing parent blobs retained without restaging."
+}

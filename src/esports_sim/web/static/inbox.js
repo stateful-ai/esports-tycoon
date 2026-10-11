@@ -75,15 +75,28 @@ async function inboxFetch() {
 
 async function inboxPost(body) {
   if (INBOX_MOCK) return { unread: Math.max(0, inboxUnread - (body.all ? inboxUnread : 1)) };
+  // Keep this transport silent while sharing coarse request receipts with api().
+  // Never pass the payload or an item id to usage telemetry.
+  let token, r;
+  try { token = window.Usage?.request("/api/inbox/read", true); } catch { /* best effort */ }
+  const recordResult = (outcome, status) => {
+    try { window.Usage?.result(token, outcome, status); } catch { /* best effort */ }
+  };
   try {
-    const r = await fetch("/api/inbox/read", {
+    r = await fetch("/api/inbox/read", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!r.ok) return null;
-    return await r.json();
+    if (!r.ok) {
+      recordResult("http_error", r.status);
+      return null;
+    }
+    const data = await r.json();
+    recordResult(data?.ok === false ? "rejected" : "success", r.status);
+    return data;
   } catch {
+    recordResult("transport_error", r?.status);
     return null;
   }
 }
@@ -135,13 +148,18 @@ const INBOX_TAB_ALIAS = {
   finances: ["company", "companyTab", "finances"],
   social: ["company", "companyTab", "brand"],
 };
+// Canonical destinations only; message content and item ids never enter usage.
+const INBOX_SHORTCUT_TABS = new Set([
+  "dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company",
+]);
 function inboxGoTab(tab) {
   const alias = INBOX_TAB_ALIAS[tab];
   const target = alias ? alias[0] : tab;
   const btn = document.querySelector(`#tabs [data-tab="${target}"]`);
-  if (!btn) return; // unknown tab: silent no-op, same as before
+  if (!btn || btn.disabled) return; // unavailable destination: silent no-op
   if (alias && typeof App !== "undefined") App[alias[1]] = alias[2];
   btn.click();
+  if (INBOX_SHORTCUT_TABS.has(target)) window.Usage?.interaction(`inbox/shortcut_${target}`);
 }
 
 // Quietly re-pull GameState into App.state after an inbox action resolves, so
@@ -296,12 +314,30 @@ async function inbox(v) {
     const all = selectedItems();
     const items = all.filter((it) => inboxFilter === "all" || it.category === inboxFilter);
     if (!items.length) {
-      const msg = all.length
-        ? "Nothing in this category."
-        : inboxSection === "actionable"
-          ? "Nothing needs your attention. New offers, contracts, and urgent talks will appear here."
-          : "No league updates yet. Advance the week to continue.";
-      listWrap.appendChild(el("p", "inbox-empty muted", msg));
+      if (all.length) {
+        listWrap.appendChild(el("p", "inbox-empty muted", "Nothing in this category."));
+      } else if (inboxSection === "actionable") {
+        // Actionable empty state: confirm the queue is clear, then point the
+        // manager at the next thing worth doing rather than a dead end.
+        const empty = el("div", "inbox-empty inbox-empty-guide");
+        empty.appendChild(el("p", "inbox-empty-title", "All clear — nothing needs a decision."));
+        empty.appendChild(el("p", "muted",
+          "New offers, contracts, and urgent talks will appear here. Meanwhile:"));
+        const next = el("div", "inbox-empty-links");
+        const mk = (label, fn) => {
+          const b = el("button", "btn btn-sm", label + " ▸");
+          b.onclick = fn;
+          next.appendChild(b);
+        };
+        mk("Prep this week's match", () => { App.tacticsTab = "gameplan"; inboxGoTab("tactics"); });
+        mk("Check the squad", () => { App.clubTab = "squad"; inboxGoTab("club"); });
+        mk("Scout a target", () => inboxGoTab("scouting"));
+        empty.appendChild(next);
+        listWrap.appendChild(empty);
+      } else {
+        listWrap.appendChild(el("p", "inbox-empty muted",
+          "No league updates yet. Advance the week to continue."));
+      }
       return;
     }
     // Items arrive newest-first; emit an "S1 - W6" header whenever the
@@ -375,6 +411,9 @@ async function inbox(v) {
     const row = el("div", "inbox-item" + (it.unread ? " unread" : ""));
 
     const rowHead = el("div", "inbox-row-head");
+    rowHead.setAttribute("role", "button");
+    rowHead.tabIndex = 0;
+    rowHead.setAttribute("aria-expanded", "false");
     const chip = el("span", `inbox-cat cat-${cat}`);
     chip.textContent = INBOX_CAT_LABEL[cat] || inboxLabel(cat);
     const title = el("span", "inbox-title");
@@ -386,6 +425,10 @@ async function inbox(v) {
     row.appendChild(rowHead);
 
     const body = el("div", "inbox-body collapsed");
+    // The collapse animation leaves descendants in the DOM. Keep its links
+    // and action buttons out of keyboard/accessibility navigation until open.
+    body.inert = true;
+    body.setAttribute("aria-hidden", "true");
     const text = el("div", "inbox-body-text");
     text.textContent = it.body || "";           // textContent preserves newlines
     body.appendChild(text);
@@ -405,11 +448,21 @@ async function inbox(v) {
       if (want === open) return;
       open = want;
       body.classList.toggle("collapsed", !open);
+      body.inert = !open;
+      body.setAttribute("aria-hidden", String(!open));
+      rowHead.setAttribute("aria-expanded", String(open));
       row.classList.toggle("open", open);
+      window.Usage?.interaction(open ? "inbox/item_open" : "inbox/item_close");
       // Expanding an unread item marks it read on the server.
       if (open) await markItemRead(it, row);
     };
     rowHead.onclick = () => setOpen(!open);
+    rowHead.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(!open);
+      }
+    };
     if (it.id != null) rowCtl.set(it.id, { row, openRow: () => setOpen(true) });
     return row;
   }

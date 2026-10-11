@@ -1,0 +1,283 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Phantom Core
+  - generic: 266,600 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - heading "League Feed" [level=2]
+  - button "Mark all as read"
+  - button "Actionable Items (2)"
+  - button "League Feed (4)" [active]
+  - button "All (4)"
+  - button "Transfers (1)"
+  - button "Development (2)"
+  - button "Matches (1)"
+  - generic: S1 - W1
+  - generic: Match
+  - generic: Lost 8-13 to Alpine Echo
+  - generic: W1
+  - generic: "Series 8-13 loss to Alpine Echo. Maps: bind. Top for you: Staticpulse (18 kills, 1.16 rating)."
+  - button "Open Standings"
+  - generic: Transfer
+  - generic: "Transfer wire: 7 moves this week"
+  - generic: W1
+  - generic: "Around the league: - Apex re-signs with Team Nexus. - Patagonia Sur release Hollowwire. - Saracen Guard release Zephyrwire. - Patagonia Sur sign Hollowlock. - Saracen Guard sign Grimbyte. - Bayou Kings release Hollowblade. - Bayou Kings sign Hollowsurge."
+  - button "Open Social"
+  - generic: Development
+  - generic: "Prep report: bind anti-exec book +0.8"
+  - generic: W1
+  - generic: "Scrim block resolved: bind anti-exec book +0.8. Prep edge vs Alpine Echo: +0.0. Note on Blitzzero: At age 17, this participant is a youth development option. Consider a focused development block and review progress afterwards. This is an age-based lead; the session did not measure individual performance or remaining ceiling. Use the scouting development report for guidance when coverage is sufficient."
+  - button "Open Tactics"
+  - generic: Development
+  - generic: Player development
+  - generic: W1
+  - generic: Zephyrbyte stays late every night this week, grinding.
+  - button "Open Roster"
+  - heading "This week's league feed" [level=2]
+  - generic: S1 - W1
+  - generic "Open item":
+    - generic: Transfer
+    - generic: "Transfer wire: 7 moves this week"
+  - generic "Open item":
+    - generic: Development
+    - generic: "Prep report: bind anti-exec book +0.8"
+  - generic "Open item":
+    - generic: Development
+    - generic: Player development
+  - generic "Open item":
+    - generic: Match
+    - generic: Lost 8-13 to Alpine Echo
+- tooltip:
+  - heading [level=4]: Inbox
+  - generic: Work through decisions and deadlines without losing them in league news.
+  - generic: Handle Actionable Items first; League Feed is context, not a to-do list.
+- button "Close profile": ✕
+- text: Blitzzero
+- generic: Rookie
+- generic: Sentinel
+- generic: Anchor
+- generic "nationality": SG
+- generic "spoken languages (fluency)": EN 92
+- generic: age 17
+- generic "social reach": 10.2K followers
+- generic "development plan": auto · normal
+- generic "View team":
+  - generic: Phantom Core
+- generic: 26w left · 3,300 cr/wk
+- generic: 70% streams · 40,000 cr release · 106,000 cr buyout · starter
+- button "Change role/style…"
+- button "Make IGL"
+- button "Scout development"
+- generic: "46"
+- generic: OVR
+- generic: ★
+- generic: 51–54
+- generic: Current ability
+- generic: 100 comfort
+- generic: 63–94
+- generic: Potential
+- generic: peak forecast
+- generic: "58"
+- generic: Form
+- generic: "54"
+- generic: Morale
+- generic: "68"
+- generic: Condition
+- generic: "47"
+- generic: Confidence
+- generic: drives duels & nerve
+- generic: 52,000 cr
+- generic: Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Attributes" [level=3]
+- generic: Aim Precision
+- text: "35"
+- generic "projected outcome range for this skill": →61–71.8
+- generic: Aim Reactivity
+- text: "36"
+- generic "projected outcome range for this skill": →61–71.8
+- generic: Clutch Factor
+- text: "42"
+- generic "projected outcome range for this skill": →60.5–71.2
+- generic: Comms Quality
+- text: "47"
+- generic "projected outcome range for this skill": →57.6–68.1
+- generic: Composure
+- text: "56"
+- generic "projected outcome range for this skill": →63–73.9
+- generic: Game Sense
+- text: "46"
+- generic "projected outcome range for this skill": →61.2–72
+- generic: Movement
+- text: "37"
+- generic "projected outcome range for this skill": →53.7–63.9
+- generic: Positioning
+- generic: "62"
+- generic: Tilt Resistance
+- text: "55"
+- generic "projected outcome range for this skill": →55–62.8
+- generic: Utility Usage
+- text: "48"
+- generic "projected outcome range for this skill": →56.1–66.5
+- heading "Traits" [level=3]
+- generic "glue": Team Player
+- heading "Agent pool" [level=3]
+- generic "Role & playstyle comfort grows as this player settles into an assignment; a fresh role/style resets it low.":
+  - generic: Role comfort
+  - generic: "100"
+- generic: Chamber
+- generic: "66"
+- generic: Killjoy
+- generic: "52"
+- generic: Cypher
+- generic: "40"
+- generic: Veto
+- generic: "39"
+- generic: Vyse
+- generic: "38"
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- generic: "0.25"
+- generic: Rating
+- generic: "0.20"
+- generic: K/D
+- generic: "0"
+- generic: "FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 1 matches · 3 / 15 / — K / D / A
+- generic: ACS by week
+- text: Kills &amp; deaths by week
+- text: K
+- text: D
+- img "Kills and deaths by week":
+  - 'generic "S1·W1: 3 kills"'
+  - 'generic "S1·W1: 15 deaths"'
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over recorded observations
+- text: CA
+- text: Conf
+- img "Ability and confidence over time":
+  - 'generic "S1·W0: CA 45.9 / conf 50"'
+  - 'generic "S1·W1: CA 46.3 / conf 47"'
+  - generic: "50"
+  - generic: "46"
+- paragraph: CA 45.9 to 46.3 · S1 W0 to S1 W1 · 1 elapsed week· 2 recorded observations
+- generic: Latest recorded week · S1 W1
+- paragraph: Tactical · Normal · 1 senior map this week · Struggling
+- generic "Game Sense +2.45 / Utility Usage +1.36": Practice +0.38 OVR
+- generic "Aim Precision +0.23 / Aim Reactivity +0.07 / Comms Quality +0.07 / Composure +0.03 / Game Sense +0.08": Senior matches +0.05 OVR
+- generic "No recorded skill gains from this source": Bench scrims 0.00 OVR
+- generic "No recorded skill gains from this source": Career events 0.00 OVR
+- generic "No recorded skill gains from this source": Badges 0.00 OVR
+- generic "Latest-week skill breakdown"
+- paragraph: No badge changes this week
+- paragraph: Poor match performances are slowing learning; useful practice still counts
+- paragraph: Tactical practice reinforces skills used in matches
+- generic: Season 1 skill growth · S1 W0 to S1 W1
+- generic: Game Sense this season
+- img "Game Sense trajectory this season":
+  - 'generic "S1·W0: 43.1"'
+  - 'generic "S1·W1: 45.6"'
+  - generic: "45.6"
+  - generic: "43.1"
+- button "Game Sense 46+2.5 ▲":
+  - generic: Game Sense
+  - text: "46"
+  - generic "change from S1 W0 to S1 W1": +2.5 ▲
+- button "Utility Usage 48+1.4 ▲":
+  - generic: Utility Usage
+  - text: "48"
+  - generic "change from S1 W0 to S1 W1": +1.4 ▲
+- button "Aim Precision 35+0.2 ▲":
+  - generic: Aim Precision
+  - text: "35"
+  - generic "change from S1 W0 to S1 W1": +0.2 ▲
+- button "Aim Reactivity 36+0.1 ▲":
+  - generic: Aim Reactivity
+  - text: "36"
+  - generic "change from S1 W0 to S1 W1": +0.1 ▲
+- button "Comms Quality 47+0.1 ▲":
+  - generic: Comms Quality
+  - text: "47"
+  - generic "change from S1 W0 to S1 W1": +0.1 ▲
+- button "Clutch Factor 420.0 —":
+  - generic: Clutch Factor
+  - text: "42"
+  - generic "change from S1 W0 to S1 W1": 0.0 —
+- button "Composure 560.0 —":
+  - generic: Composure
+  - text: "56"
+  - generic "change from S1 W0 to S1 W1": 0.0 —
+- button "Movement 370.0 —":
+  - generic: Movement
+  - text: "37"
+  - generic "change from S1 W0 to S1 W1": 0.0 —
+- heading "Relationships" [level=3]
+- generic "Neutral · strength 51":
+  - text: Wraithhawk
+  - generic: Neutral
+- generic "Neutral · strength 51":
+  - text: Staticpulse
+  - generic: Neutral
+- generic "Neutral · strength 50":
+  - text: Zephyrbyte
+  - generic: Neutral
+- generic "Neutral · strength 50":
+  - text: Pyrofade
+  - generic: Neutral
+- heading "Career" [level=3]
+- generic: "1"
+- generic: Seasons
+- generic: "1"
+- generic: Maps
+- generic: "3"
+- generic: Kills
+- generic: "0.20"
+- generic: K/D
+- generic: "0"
+- generic: Honours
+- generic: "0"
+- generic: MVPs
+- generic: "0"
+- generic: All-Star
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Pyrofade"
+  - option "Staticpulse"
+  - option "Zephyrbyte"
+  - option "Wraithhawk"

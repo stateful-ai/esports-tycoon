@@ -1,0 +1,56 @@
+{
+  "base_url": "http://127.0.0.1:8563",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "bytes": 12660,
+      "served_sha256": "89c6bb75d260a6336ea26e162cd61dc6f0feefadb1116749b3a0309e54653d15",
+      "disk_sha256": "89c6bb75d260a6336ea26e162cd61dc6f0feefadb1116749b3a0309e54653d15",
+      "raw_equal": true
+    },
+    {
+      "path": "/app.js",
+      "status": 200,
+      "bytes": 412906,
+      "served_sha256": "85d0fc4fe2c8841ad87f2592230c4a72221642fd488b52afd6acbc8e9ac69c45",
+      "disk_sha256": "85d0fc4fe2c8841ad87f2592230c4a72221642fd488b52afd6acbc8e9ac69c45",
+      "raw_equal": true
+    },
+    {
+      "path": "/draft.js",
+      "status": 200,
+      "bytes": 19466,
+      "served_sha256": "8538d420818e43113e87d73f40b9fa50d58e7a1a754e5d8ef9653f0942efb984",
+      "disk_sha256": "8538d420818e43113e87d73f40b9fa50d58e7a1a754e5d8ef9653f0942efb984",
+      "raw_equal": true
+    },
+    {
+      "path": "/profile.js",
+      "status": 200,
+      "bytes": 100936,
+      "served_sha256": "f4c4f924baf01c88dfe01db53e024a54ccaf7d2b4a914f58dc3ac23c68b10cab",
+      "disk_sha256": "f4c4f924baf01c88dfe01db53e024a54ccaf7d2b4a914f58dc3ac23c68b10cab",
+      "raw_equal": true
+    },
+    {
+      "path": "/inbox.js",
+      "status": 200,
+      "bytes": 22689,
+      "served_sha256": "e75f580eb5fa55042e19c4e37fd6851811dc8cbc973e221f510aeb497fabe083",
+      "disk_sha256": "e75f580eb5fa55042e19c4e37fd6851811dc8cbc973e221f510aeb497fabe083",
+      "raw_equal": true
+    },
+    {
+      "path": "/usage.js",
+      "status": 200,
+      "bytes": 4134,
+      "served_sha256": "b2879b5e30f10e76a4432f23e197576011a91573507eead9c9135af0fca2b714",
+      "disk_sha256": "b2879b5e30f10e76a4432f23e197576011a91573507eead9c9135af0fca2b714",
+      "raw_equal": true
+    }
+  ],
+  "world_created_by_support": false,
+  "browser_operated_by_support": false,
+  "note": "HTTP static readiness only; headers and cookies omitted"
+}

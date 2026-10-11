@@ -1,0 +1,153 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Phantom Core
+  - generic: 269,034 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Match
+  - generic: S1 · W2 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Match preparation" [level=2]
+  - paragraph: "Current squad condition: Pyrofade 77.6 · Staticpulse 84.2 · Zephyrbyte 57.5 · Wraithhawk 74.5 · Blitzzero 67.6."
+  - paragraph: "Next: Hokkaido Drift vs Phantom Core · week 2"
+  - generic: Sparring partner
+  - combobox "Sparring partner":
+    - option "Adriatic Sirens" [selected]
+    - option "Alpine Echo"
+    - option "Apex Syndicate"
+    - option "Baltic Meridian"
+    - option "Bayou Kings"
+    - option "Berlin Wolves"
+    - option "Busan Tempest"
+    - option "Cascadia Youth"
+    - option "Chao Phraya Owls"
+    - option "Coral Sea Drakes"
+    - option "Crimson Order"
+    - option "Gallic Storm"
+    - option "Ghostline"
+    - option "Harbour City Nine"
+    - option "Highlands Nine"
+    - option "Iron Pact"
+    - option "Jakarta Ravens"
+    - option "Kathmandu Apex"
+    - option "Kraken Unit"
+    - option "Lisbon Tide"
+    - option "Manila Monsoon"
+    - option "Mekong Vipers"
+    - option "Midnight Polders"
+    - option "Mumbai Meteors"
+    - option "Team Nexus"
+    - option "Nordic Frost"
+    - option "Nova Rift"
+    - option "Outback Sentinels"
+    - option "Patagonia Sur"
+    - option "Prairie Signal"
+    - option "Rust Belt Gaming"
+    - option "Sahara Compass"
+    - option "Saracen Guard"
+    - option "Seoul Dynasty Prime"
+    - option "Solar Flare"
+    - option "Taipei Circuit"
+    - option "Tokyo Drift Six"
+    - option "Team Vanguard"
+    - option "Volga Reign"
+    - option "Yucatan Ceibas"
+  - generic: Preparation map
+  - combobox "Preparation map":
+    - option "Lotus" [selected]
+  - generic: Session objective
+  - combobox "Session objective":
+    - option "Anti Exec" [selected]
+    - option "Retakes"
+    - option "Lineup Test"
+    - option "Mental Reset"
+  - generic: Session intensity
+  - combobox "Session intensity":
+    - option "Light" [selected]
+    - option "Normal"
+    - option "Intense"
+  - paragraph: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Book session"
+  - generic: Coach proposal
+  - generic: Anti Exec on Lotus
+  - paragraph: "Partner: Busan Tempest. Intensity: Normal."
+  - paragraph: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Accept coach plan"
+  - text: "Prep artifact: bind anti-exec book +0.8"
+  - generic: +0.0 edge
+  - text: Knowledge +0.75; stamina −1.5.
+  - paragraph: No bind sample exists for the opponent; the anti-exec read is provisional.
+  - generic: "Dev note: Team Phantom Core P3 — Wraithhawk has ~21 points of untapped ceiling; a targeted development focus would compound these reps."
+  - heading "Tournament six" [level=2]
+  - paragraph: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+  - 'checkbox "Pyrofade 19 · Promised squad role: Starter" [checked]'
+  - generic: Pyrofade
+  - generic: "19 · Promised squad role: Starter"
+  - 'checkbox "Staticpulse 18 · Promised squad role: Starter" [checked]'
+  - generic: Staticpulse
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Zephyrbyte 20 · Promised squad role: Starter" [checked]'
+  - generic: Zephyrbyte
+  - generic: "20 · Promised squad role: Starter"
+  - 'checkbox "Wraithhawk 18 · Promised squad role: Starter" [checked]'
+  - generic: Wraithhawk
+  - generic: "18 · Promised squad role: Starter"
+  - 'checkbox "Blitzzero 17 · Promised squad role: Starter" [checked]'
+  - generic: Blitzzero
+  - generic: "17 · Promised squad role: Starter"
+  - button "Submit roster"
+  - heading "Series plan" [level=2]
+  - paragraph: Set a between-map response that applies after map one when its condition is met.
+  - paragraph: No upcoming best-of-three is on the calendar.
+- generic: league · Season 1 · Week 1
+- generic: Phantom Core vs Alpine Echo
+- generic: Bind
+- generic: 15–13
+- generic: Victory
+- generic: League position
+- generic: 3rd of 6
+- button "Continue"
+- button "Full report"
+- generic: click anywhere to skip
+- tooltip:
+  - heading [level=4]: Match
+  - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+  - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.

@@ -1,0 +1,40 @@
+{
+  "main_tree": "c3416c0cf000fc7107a02cd9d63021506fad14e7",
+  "merge_parents": [
+    "5300d4707bfcfb316e5c1e6c91a3201b87d316a2",
+    "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b"
+  ],
+  "main_existing_paths_blob_identical": 3976,
+  "conflicts": [
+    ".gitattributes"
+  ],
+  "validation": "Source inspection and Git object provenance only. No local tests, syntax validators, sims, gates, application reports, hooks, or gameplay were executed under the explicit user waiver. All historical native/browser records remain historical and do not validate the integrated head.",
+  "main_existing_paths_retained": 3979,
+  "main_modified_paths": [
+    "M\t.gitattributes",
+    "M\tsrc/esports_sim/web/server.py",
+    "M\tsrc/esports_sim/web/static/app.js"
+  ],
+  "scoped_flavor_history_changed_paths": [],
+  "main_existing_path_count": 3979,
+  "added_paths": [
+    "A\tdocs/playtests/integration-pr370/source-and-history-qualification.json",
+    "A\tsrc/esports_sim/web/flavor_feedback.py",
+    "A\ttests/flavor_feedback_check.cjs",
+    "A\ttests/test_flavor_feedback.py"
+  ],
+  "resolution": "Union preserves main rules and served-title raw-evidence rule",
+  "main_head": "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b",
+  "canonical_history_blob": "7889c6d0636419f8866f5f146c0da62fbf7af3e5",
+  "before_tree": "2adba3d3a42c19ebe55f67e5f03e0c867b64a922",
+  "main_history_delta": [
+    "docs/playtests/integration-pr370/source-and-history-qualification.json"
+  ],
+  "deleted_paths": [],
+  "before_head": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2",
+  "findings": {
+    "canonical_rows": "Main includes original and served-title rows; canonical CSV unchanged",
+    "served_title": "5300d47 fix retained in app.js; stale world/team guard retained",
+    "new_source_findings": "No additional source defect found in scoped receipt extraction/rendering/handler after forward integration"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "receipt": [
+    {
+      "type": "request",
+      "utc": "2026-10-11T15:02:51.567Z",
+      "method": "POST",
+      "url": "http://127.0.0.1:8557/api/actions/save"
+    },
+    {
+      "type": "response",
+      "utc": "2026-10-11T15:02:51.608Z",
+      "status": 200,
+      "url": "http://127.0.0.1:8557/api/actions/save"
+    }
+  ],
+  "body": "not retained: observer watched wrong endpoint; actual request response recorded independently"
+}

@@ -1,0 +1,26 @@
+{
+  "available": false,
+  "inherited": "inherited-flywheel.json",
+  "learnings": [
+    {
+      "lesson": "Dated profile observations and latest-week attribution distinguish season comparison from recent training.",
+      "confidence": "high",
+      "world": "26UHC",
+      "seed": 2038,
+      "evidence": "ghost-profile-after-dom.txt"
+    },
+    {
+      "lesson": "Academy blocks promotion at minimum affiliate5 and adds deadline reasons afterW8; Nightsurge18 is already senior bench.",
+      "confidence": "high",
+      "world": "26UHC",
+      "seed": 2038,
+      "evidence": "academy-before-dom.txt; academy-after-dom.txt"
+    }
+  ],
+  "painPoint": {
+    "lesson": "Advance rejects unresolved clinic; go Dashboard resolve event then retry. Browser visibility assertions can misread opacity-hidden profile; use settled CSS and screenshot.",
+    "confidence": "high",
+    "world": "26UHC",
+    "seed": 2038
+  }
+}

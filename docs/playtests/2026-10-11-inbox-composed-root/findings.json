@@ -1,0 +1,9 @@
+{
+  "learn": [
+    "Coarse Inbox disclosure/shortcut events and silent read pairs are now retained separately from accepted decisions.",
+    "Batch received_at can lag a logged action; UI plus event order qualifies that mapping without rewriting times."
+  ],
+  "pain": "Usage retention remains best-effort, with no retained session_end in this session; counts do not establish complete funnels or attention.",
+  "external_flywheel": "Unavailable; inherited and local findings retained.",
+  "local_tests_launched": false
+}

@@ -1,0 +1,16 @@
+{
+  "baseline": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "source_sha256": "b362441bcfe77419cb7bd663f72add878e244a2ec4216002b770b8726c6e5d29",
+  "source_week": 10,
+  "complete_state_equal": true,
+  "event_logs_equal": true,
+  "complete_state_sha256": "c9218cc172e781425724aee3a2ff48db659b8abc35b1288a2ae86071867c8fb6",
+  "bank_before": 333406,
+  "bank_after": 395538,
+  "old_income": 109232,
+  "old_expenses": 47100,
+  "gross_income": 110732,
+  "expenses": 48600,
+  "facility_upkeep": 1500,
+  "net": 62132
+}

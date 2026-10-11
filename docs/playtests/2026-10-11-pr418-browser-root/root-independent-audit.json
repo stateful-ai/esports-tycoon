@@ -1,0 +1,81 @@
+{
+  "at_utc": "2026-10-11T16:35:00.630959+00:00",
+  "pr": 418,
+  "head": "da2207febaf8bf577e7c49650449cf54ab9a59cc",
+  "tree": "9fda35192a33e3b81d230e71e68c95aef4c7ad1a",
+  "world": "REWKH",
+  "seed": 2039,
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "actual_UI": "root supported CUA",
+  "frozen_files": 707,
+  "raw_prepost_hashes_unchanged": true,
+  "raw_git_exact_files": 287,
+  "exact_CRLF_only_files": 420,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_qualification": "Immediate actual new-world W1 baseline0actions/0snapshots privately frozen before advance; prefixes preserved.",
+  "saved_week": 2,
+  "accepted_decisions": 1,
+  "snapshot_records": 1,
+  "snapshot_manager_keys": 1,
+  "decision_matches": 1,
+  "decision_csv_steps": [
+    2
+  ],
+  "retained_usage_events": 37,
+  "retained_world_events": 33,
+  "retained_null_world_events": 4,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 4,
+    "attempt": 3,
+    "visible_time": 23,
+    "result": 3,
+    "interaction": 3
+  },
+  "request_pairs": [
+    {
+      "pair_index": 0,
+      "attempt_index": 2,
+      "result_index": 4,
+      "target": "/api/new",
+      "status": 200,
+      "csv_step": 1
+    },
+    {
+      "pair_index": 1,
+      "attempt_index": 14,
+      "result_index": 15,
+      "target": "/api/actions/advance",
+      "status": 200,
+      "csv_step": 2
+    },
+    {
+      "pair_index": 2,
+      "attempt_index": 35,
+      "result_index": 36,
+      "target": "/api/actions/save",
+      "status": 200,
+      "csv_step": 6
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 7,
+      "target": "handbook/open"
+    },
+    {
+      "index": 8,
+      "target": "handbook/section_first_week"
+    },
+    {
+      "index": 12,
+      "target": "handbook/close"
+    }
+  ],
+  "Inbox_disclosure_shortcut_interactions_missing": true,
+  "Inbox_silent_mark_read_request_pair_missing": true,
+  "local_tests_launched": false,
+  "caveat": "Bounded best-effort usage; no session_end retained; counts are not complete funnels/attention/duration. Same worldcode occurs in isolated builds/ports; never pool page sessions for pairing."
+}

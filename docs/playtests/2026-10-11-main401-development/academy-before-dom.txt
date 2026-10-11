@@ -1,0 +1,385 @@
+ESPORTSSIM
+Season 2 · Week 8 · Regular — Team Nexus
+2,441,133 cr
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX16
+MATCH2
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET1
+STATS
+COMPANY
+CLUB
+S2 · W8
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+Mid-split window
+
+Final roster moves close after week 8.
+
+ACADEMY
+LEVEL 1
+
+Affiliate: Kraken Unit.
+
+Affiliate: 5 players; first team: 8. Each must retain at least 5 players and can hold up to 10. Promotion needs spare affiliate depth and a first-team slot. An eligible first-team send-down can add affiliate depth; only players age 23 or younger can be sent down. Both moves require an open market window.
+
+Upgrade · 300,000 cr
+Grimpulse
+21 · Duelist · CA 50.9 / PA 62.8–88
+Promote
+
+Grimpulse: affiliate must retain at least 5 players
+
+Pyroecho
+18 · Initiator · CA 45.2 / PA 53.1–84.5
+Promote
+
+Pyroecho: affiliate must retain at least 5 players
+
+Nightecho
+20 · Sentinel · CA 50 / PA 56.5–79.1
+Promote
+
+Nightecho: affiliate must retain at least 5 players
+
+Voltflare
+23 · Duelist · CA 49.9 / PA 56–73.1
+Promote
+
+Voltflare: affiliate must retain at least 5 players
+
+Frostwire
+18 · Duelist · CA 44.2 / PA 42.3–70.7
+Promote
+
+Frostwire: affiliate must retain at least 5 players
+
+FIRST TEAM PATHWAYS
+
+Ghost
+20 · Starter
+Send down
+Nightsurge
+18 · Bench
+Send down
+Vortex
+23 · Starter
+Send down
+STAFF RESPONSIBILITIES
+
+Delegate repeatable work; staff return only exceptions and the prospect alerts you request.
+
+Delegate weekly training to coach
+Roster-aware focus; rests the squad when needed
+Renew core starters automatically
+salary band
+weeks left ≤
+Scout all
+Americas
+Emea
+Pacific
+China
+Duelist
+Controller
+Initiator
+Sentinel
+Flex
+age ≤
+alert
+All Matches
+Shortlist
+Tier1 Ready
+Save staff policies
+
+0 players match the current scouting rule · active assignment set.
+
+Last run: 0 renewals · 0 alerts · 0 exceptions.
+MEDIA TRUST
+
+Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.
+
+APEX 54
+ECHO 54
+HOLLOWLOCK 62
+FROSTDASH 50
+SLYBLADE 54
+GHOST 54
+NIGHTSURGE 50
+VORTEX 54
+Defend Player · The manager stands between the player and the criticism.
+Derby Expectations · The manager backs the group without dismissing the rival.
+The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight.
+CULTURE & LEADERSHIP
+OVERALL 59
+COHESION 53.1
+LEADERSHIP 71.3
+STABILITY 51.2
+Apex · 74.5
+Echo · 63.5
+Hollowlock · 59.1
+Frostdash · 54.7
+Slyblade · 64
+Ghost · 64.1
+Nightsurge · 57.7
+Vortex · 61.3
+Apex · 74.5
+Echo · 63.5
+Hollowlock · 59.1
+Frostdash · 54.7
+Slyblade · 64
+Ghost · 64.1
+Nightsurge · 57.7
+Vortex · 61.3
+Apex · 74.5
+Echo · 63.5
+Hollowlock · 59.1
+Frostdash · 54.7
+Slyblade · 64
+Ghost · 64.1
+Nightsurge · 57.7
+Vortex · 61.3
+Balanced
+Accountability
+Player Led
+Development
+Set leadership group
+
+CULTURE SESSION
+
+Accountability
+Player Led
+Reset
+Welcome
+
+CULTURE SESSION
+
+TEAM IDENTITY
+UNCOMMITTED
+
+A committed identity is a promise the locker room holds you to. Choices that betray it cost trust, chemistry and morale; choices that honor it deepen conviction.
+
+Commit to Balanced to make it a stated identity. "Balanced" stays uncommitted.
+
+Commit to this identity
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.
+✕
+GHOSTROOKIE
+INITIATOR
+LURKER
+AR
+ES 90 · EN 88 · PT 31
+age 20
+243.8K FOLLOWERS
+🎥 BALANCED · 974 CR/WK
+MENTOR: APEX (0%)
+130W AT CLUB
+MECHANICAL · LIGHT
+Team Nexus
+15w left · 4,500 cr/wk
+70% streams · 54,000 cr release · 1,257,000 cr buyout · starter
+Rein in streaming…
+Change role/style…
+Make IGL
+Scout development
+79
+OVR
+★★★½
+80–83
+CURRENT ABILITY
+100 comfort
+86–99
+POTENTIAL
+peak forecast
+51
+FORM
+70
+MORALE
+26
+CONDITION
+52
+CONFIDENCE
+drives duels & nerve
+292,000 cr
+VALUE
+DEVELOPMENT REPORT
+
+Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+
+BADGES
+ CLUTCH MASTER
+ CHOKER
+ATTRIBUTES
+Aim Precision
+83 →83.2–91.4
+Aim Reactivity
+83 →85.3–95
+Clutch Factor
+81 →80.8–88.7
+Comms Quality
+62 →83.4–93.1
+Composure
+76 →77.2–86.7
+Game Sense
+86 →86–92.4
+Movement
+82 →83.3–93
+Positioning
+84 →84.3–90.4
+Tilt Resistance
+72 →86.6–96.4
+Utility Usage
+84 →83.8–90.8
+TRAITS
+INDEPENDENT
+ROOKIE
+UNDERRATED
+AGENT POOL
+Role Comfort
+100
+Sova
+86
+KAY/O
+72
+Fade
+69
+Gekko
+69
+Skye
+68
+SHOW ALL (29)
+SEASON — ANALYTICS
+0.84
+RATING
+0.92
+K/D
+11
+FK : FD
+
+Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+
+7 matches · 80 / 87 / — K / D / A
+
+ACS BY WEEK
+KILLS &AMP; DEATHS BY WEEK
+K
+D
+DEVELOPMENT
+ABILITY &AMP; CONFIDENCE OVER RECORDED OBSERVATIONS
+CA
+CONF
+79
+50
+
+CA 75.5 to 79.3 · S1 W0 to S2 W7· 31 recorded observations
+
+LATEST RECORDED WEEK · S2 W7
+
+Mechanical · Light · 1 senior map this week · Struggling
+
+PRACTICE +0.02 OVR
+SENIOR MATCHES +0.01 OVR
+BENCH SCRIMS 0.00 OVR
+CAREER EVENTS 0.00 OVR
+BADGES 0.00 OVR
+Latest-week skill breakdown
+
+No badge changes this week
+
+Poor match performances are slowing learning; useful practice still counts
+
+Mechanical practice reinforces skills used in matches
+
+Tired legs are reducing practice quality; ease intensity or rest
+
+Streaming is taking time away from practice
+
+Coaching and club support are improving practice
+
+SEASON 2 SKILL GROWTH · S2 W0 TO S2 W7
+MOVEMENT THIS SEASON
+81.8
+79.7
+Movement
+82+2.1 ▲
+Aim Precision
+83+1.5 ▲
+Aim Reactivity
+83+1.2 ▲
+Composure
+76+0.4 ▲
+Comms Quality
+62+0.3 ▲
+Game Sense
+86+0.2 ▲
+Clutch Factor
+81+0.1 ▲
+Positioning
+84+0.1 ▲
+RELATIONSHIPS
+Slyblade
+NEUTRAL
+Vortex
+NEUTRAL
+Apex
+NEUTRAL
+Hollowlock
+NEUTRAL
+Echo
+NEUTRAL
+Frostdash
+NEUTRAL
+Nightsurge
+NEUTRAL
+CAREER
+2
+SEASONS
+28
+MAPS
+344
+KILLS
+0.96
+K/D
+0
+HONOURS
+0
+MVPS
+0
+ALL-STAR
+TIMELINE
+S1
+Ghost is saddled with the Choker badge.
+Ghost earns the Clutch Master badge.
+MEMORIES
+S1: Ghost earns the Clutch Master badge.
+S1: Ghost is saddled with the Choker badge.
+COMPARE
+compare with a teammate…
+Apex
+Vortex
+Slyblade
+Echo
+Hollowlock
+Nightsurge
+Frostdash
