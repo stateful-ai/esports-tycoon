@@ -643,6 +643,17 @@ function setupLobby(lob) {
   let fantasyDraft = false;
   let pickRevision = 0;
   let seedTimer = null;
+  let seedEditPending = false;
+  let reportedSeedValue = $("#ng-seed").value;
+  const recordSeedEdit = () => {
+    if (generation !== lobbyGeneration || !seedEditPending) return;
+    seedEditPending = false;
+    const value = $("#ng-seed").value;
+    if (value === reportedSeedValue) return;
+    reportedSeedValue = value;
+    // Coarse usage only: never send the seed or one event per keystroke.
+    window.Usage?.interaction("lobby/seed_change");
+  };
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
   const renderScenarios = () => {
@@ -759,6 +770,7 @@ function setupLobby(lob) {
   const renderPick = () => {
     clearTimeout(seedTimer);
     if (generation !== lobbyGeneration) return;
+    recordSeedEdit();
     const revision = ++pickRevision;
     const seed = lobbySeed();
     const pack = world;
@@ -834,15 +846,18 @@ function setupLobby(lob) {
   };
   // Assign properties so re-entering the lobby replaces old handlers.
   $("#ng-seed").oninput = () => {
+    seedEditPending = true;
     ++pickRevision;
     clearTimeout(seedTimer);
     $("#ng-teams").innerHTML = '<span role="status" class="muted">Updating organisations…</span>';
     seedTimer = setTimeout(renderPick, 200);
   };
   $("#ng-seed").onchange = () => {
-    window.Usage?.interaction("lobby/seed_change");
+    seedEditPending = true;
     renderPick();
   };
+  // Blur can settle an input edit even when no change event reaches us.
+  $("#ng-seed").onblur = recordSeedEdit;
   const showCreate = (shared) => {
     shared_ = shared;
     create.classList.remove("hidden");
@@ -863,6 +878,7 @@ function setupLobby(lob) {
   $("#mode-solo").onclick = () => { setActiveMode($("#mode-solo")); showCreate(false); };
   $("#mode-shared").onclick = () => { setActiveMode($("#mode-shared")); showCreate(true); };
   $("#mode-join").onclick = () => {
+    recordSeedEdit();
     ++pickRevision;
     clearTimeout(seedTimer);
     setActiveMode($("#mode-join"));
