@@ -67,7 +67,7 @@
     }
   ],
   "all21columns_preserved": true,
-  "candidate_docs_raw_andGit_preserved": 1865,
+  "candidate_docs_raw_andGit_preserved": 1864,
   "actual_main_docs_blobs_preserved_except_two_explicit_paths": 924,
   "attribute_control_exception": {
     "path": "docs/playtests/.gitattributes",
@@ -92,7 +92,14 @@
       "2026-10-11-*/** -text",
       "gap37-between-map-debrief/** -text"
     ],
-    "root_gitattributes_equals_main": true
+    "root_gitattributes_equals_main": true,
+    "report_only_seventh_rule": "2026-10-11-reviewed-history-and-analytics.md -text",
+    "additional_rule_authority": "Root explicitly authorized one seventh narrow rule for exact original report path/raw bytes and correct relative-link rendering",
+    "original_candidate_six_rule_raw_sha256": "4ec6286e120d9670d1cb4955abe58de840dcf63396089521fc3aeca8c190b732",
+    "current_control_raw_sha256": "2ccb6d66a20f3ca5035d650df575b1dd47bba1314f61940d8688cbb8e18c06a1",
+    "current_control_raw_bytes": 379,
+    "current_control_Git_sha256": "b13b07f7e3f9c6632383a12cd401ed52e1b2e2df441b6d4782b05d37921e8d6e",
+    "exact_old_candidate_raw_prefix_retained": true
   },
   "all_nonplaytest_index_Git_equals_actualmain": true,
   "current_source_manifest_count": 618,
@@ -3473,5 +3480,27 @@
   ],
   "new_local_tests_gates_gameplay_or_archived_helpers": false,
   "current_headCI_success_claim": false,
-  "private_inputs_added": false
+  "private_inputs_added": false,
+  "original_root_final_report_mapping": {
+    "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-reviewed-history-and-analytics.md",
+    "original_repository_relative_path": "docs/playtests/2026-10-11-reviewed-history-and-analytics.md",
+    "published_path": "docs/playtests/2026-10-11-reviewed-history-and-analytics.md",
+    "sha256": "5726d96056280f7b6cf5a7a9c43d9d209bfde72cef51af308306613e7383215c",
+    "byte_count": 5912,
+    "original_bytes_unchanged": true,
+    "qualification": "Timestamped report, not a gameplay observation. Exact original repository path preserves relative links; seventh narrow -text rule protects original raw bytes."
+  },
+  "root_report_counts_readonly_verified": {
+    "rows": 994,
+    "sessions": 87,
+    "analytics_counts": {
+      "not_instrumented": 348,
+      "recorded": 590,
+      "missing": 1,
+      "unverified": 50,
+      "": 5
+    },
+    "qualification": "Existing CSV labels, not complete funnels or independent new gameplay. Historical merged-count/current-PR statements remain root timestamped report content."
+  },
+  "candidate_attribute_control_six_rule_prefix_retained": true
 }
