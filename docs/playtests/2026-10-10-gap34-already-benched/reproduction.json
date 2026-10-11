@@ -1,0 +1,11 @@
+{
+  "save_sha256": "999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+  "before": [
+    "Hollowlock is off-colour \u2014 consider a bench or agent swap on the Roster screen."
+  ],
+  "after": [
+    "Hollowlock was off-colour and is already out of the next fixture's selected five \u2014 review their training and agent fit before their next appearance on the Roster screen."
+  ],
+  "historical_breaking_unchanged": true,
+  "state_unchanged": true
+}
