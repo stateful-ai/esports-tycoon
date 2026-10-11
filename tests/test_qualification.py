@@ -21,14 +21,14 @@ def statuses(gs):
     return qualification_statuses(gs, str(gs.teams["0"].region))
 
 
-def test_final_week_clinched_fixture_has_seeding_stakes_and_is_pure():
+def test_final_week_clinched_fixture_has_record_stakes_and_is_pure():
     gs = league()
     before = gs.model_dump_json()
     expected = {str(i): "secured" if i < 4 else "eliminated" for i in range(8)}
     assert statuses(gs) == expected
     preview = match_preview(gs, gs.fixtures[0], "1", named_subject=True)
     assert preview == ["Team 1 have already secured a top-four playoff berth; "
-                       "this match counts toward the final league order and playoff seeding."]
+                       "this match still counts toward the final league record."]
     assert match_preview(gs, gs.fixtures[0], "1", named_subject=True) == preview
     assert statuses(gs) == expected
     assert gs.model_dump_json() == before
@@ -115,3 +115,17 @@ def test_web_elimination_badges_share_preview_bounds():
     assert _eliminated_teams(gs, str(gs.teams["0"].region)) == {
         tid for tid, status in statuses(gs).items() if status == "eliminated"
     }
+
+@pytest.mark.parametrize("named_subject", [False, True])
+def test_clinched_first_seed_preview_claims_only_league_record_stakes(named_subject):
+    gs = league((13, 10, 9, 7, 4, 3, 3, 3))
+    before = gs.model_dump_json()
+    assert statuses(gs)["0"] == "secured"
+    # One remaining match cannot let the nearest rival reach the leader.
+    subject = "Team 0" if named_subject else "They"
+    preview = match_preview(gs, gs.fixtures[0], "0", named_subject=named_subject)
+    assert preview == [f"{subject} have already secured a top-four playoff berth; "
+                       "this match still counts toward the final league record."]
+    assert not any("seeding" in line or "final league order" in line for line in preview)
+    assert match_preview(gs, gs.fixtures[0], "0", named_subject=named_subject) == preview
+    assert gs.model_dump_json() == before

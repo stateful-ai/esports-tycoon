@@ -245,7 +245,7 @@ def match_preview(
         status = qualification_statuses(gs, region)[team_id]
         if status == "secured":
             bits.append(f"{subject} have already secured a top-four playoff berth; "
-                        "this match counts toward the final league order and playoff seeding.")
+                        "this match still counts toward the final league record.")
         elif status == "eliminated":
             bits.append(f"{subject} can no longer reach the top-four playoff places; "
                         "this match still counts toward the final league record.")
