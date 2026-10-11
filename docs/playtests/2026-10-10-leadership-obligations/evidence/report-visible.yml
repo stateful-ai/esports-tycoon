@@ -1,0 +1,141 @@
+- generic [ref=e3200]:
+  - heading "Season 1 · Week 9 results" [level=1] [ref=e3201]
+  - generic [ref=e3202]:
+    - generic [ref=e3203]:
+      - generic [ref=e3204]: league
+      - generic [ref=e3205]: Baltic Meridian vs Saracen Guard
+      - generic [ref=e3206]: 0–13
+      - button "▶ Split" [ref=e3207] [cursor=pointer]
+    - generic [ref=e3208]:
+      - generic [ref=e3209]: league
+      - generic [ref=e3210]: Azure Vanta vs Kraken Unit
+      - generic [ref=e3211]: 13–5
+    - generic [ref=e3212]:
+      - generic [ref=e3213]: league
+      - generic [ref=e3214]: Adriatic Sirens vs Prairie Signal
+      - generic [ref=e3215]: 13–3
+      - button "▶ Split" [ref=e3216] [cursor=pointer]
+    - generic [ref=e3217]:
+      - generic [ref=e3218]: league
+      - generic [ref=e3219]: Anatolia Forge vs Berlin Wolves
+      - generic [ref=e3220]: 13–5
+    - generic [ref=e3221]:
+      - generic [ref=e3222]: league
+      - generic [ref=e3223]: Alpine Echo vs Seoul Dynasty Prime
+      - generic [ref=e3224]: 8–13
+      - button "▶ Split" [ref=e3225] [cursor=pointer]
+    - generic [ref=e3226]:
+      - generic [ref=e3227]: league
+      - generic [ref=e3228]: Busan Tempest vs Highlands Nine
+      - generic [ref=e3229]: 13–4
+    - generic [ref=e3230]:
+      - generic [ref=e3231]: league
+      - generic [ref=e3232]: Team Vanguard vs Sahara Compass
+      - generic [ref=e3233]: 13–6
+      - button "▶ Ascent" [ref=e3234] [cursor=pointer]
+    - generic [ref=e3235]:
+      - generic [ref=e3236]: league
+      - generic [ref=e3237]: Patagonia Sur vs Gallic Storm
+      - generic [ref=e3238]: 11–13
+    - generic [ref=e3239]:
+      - generic [ref=e3240]: league
+      - generic [ref=e3241]: Tokyo Drift Six vs Midnight Polders
+      - generic [ref=e3242]: 13–3
+      - button "▶ Ascent" [ref=e3243] [cursor=pointer]
+    - generic [ref=e3244]:
+      - generic [ref=e3245]: league
+      - generic [ref=e3246]: Hokkaido Drift vs Apex Syndicate
+      - generic [ref=e3247]: 11–13
+    - generic [ref=e3248]:
+      - generic [ref=e3249]: league
+      - generic [ref=e3250]: Solar Flare vs Outback Sentinels
+      - generic [ref=e3251]: 13–2
+      - button "▶ Ascent" [ref=e3252] [cursor=pointer]
+    - generic [ref=e3253]:
+      - generic [ref=e3254]: league
+      - generic [ref=e3255]: Lisbon Tide vs Cascadia Youth
+      - generic [ref=e3256]: 13–2
+    - generic [ref=e3257]:
+      - generic [ref=e3258]: league
+      - generic [ref=e3259]: Kathmandu Apex vs Rust Belt Gaming
+      - generic [ref=e3260]: 3–13
+      - button "▶ Bind" [ref=e3261] [cursor=pointer]
+    - generic [ref=e3262]:
+      - generic [ref=e3263]: league
+      - generic [ref=e3264]: Taipei Circuit vs Volga Reign
+      - generic [ref=e3265]: 14–12
+    - generic [ref=e3266]:
+      - generic [ref=e3267]: league
+      - generic [ref=e3268]: Bayou Kings vs Meridian Cross
+      - generic [ref=e3269]: 6–13
+      - button "▶ Bind" [ref=e3270] [cursor=pointer]
+    - generic [ref=e3271]:
+      - generic [ref=e3272]: league
+      - generic [ref=e3273]: Mekong Vipers vs Phantom Core
+      - generic [ref=e3274]: 6–13
+    - generic [ref=e3275]:
+      - generic [ref=e3276]: league
+      - generic [ref=e3277]: Coral Sea Drakes vs Iron Pact
+      - generic [ref=e3278]: 13–6
+      - button "▶ Bind" [ref=e3279] [cursor=pointer]
+    - generic [ref=e3280]:
+      - generic [ref=e3281]: league
+      - generic [ref=e3282]: Nova Rift vs Yucatan Ceibas
+      - generic [ref=e3283]: 13–5
+    - generic [ref=e3284]:
+      - generic [ref=e3285]: league
+      - generic [ref=e3286]: Team Nexus vs Nordic Frost
+      - generic [ref=e3288]: 13–4
+      - button "▶ Haven" [ref=e3289] [cursor=pointer]
+    - generic [ref=e3290]:
+      - generic [ref=e3291]: league
+      - generic [ref=e3292]: Chao Phraya Owls vs Crimson Order
+      - generic [ref=e3293]: 7–13
+      - button "▶ Haven" [ref=e3294] [cursor=pointer]
+    - generic [ref=e3295]:
+      - generic [ref=e3296]: league
+      - generic [ref=e3297]: Ghostline vs Harbour City Nine
+      - generic [ref=e3298]: 5–13
+      - button "▶ Haven" [ref=e3299] [cursor=pointer]
+    - paragraph [ref=e3300]: income 68,642 cr · expenses 47,100 cr
+    - generic [ref=e3301]:
+      - heading "Squad development · Season 1 · Week 9" [level=2] [ref=e3302]
+      - paragraph [ref=e3303]: Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+      - generic [ref=e3304]:
+        - generic [ref=e3305]: Apex
+        - text: OVR 78.3 → 78.3 (0.0)
+        - generic [ref=e3306]: Rest / Light · 1 map
+        - generic [ref=e3307]: Matches +0.01 OVR · Aim Precision +0.04 · Aim Reactivity +0.02
+        - generic [ref=e3308]: "Individual recovery: practice paused, match experience retained"
+      - generic [ref=e3309]:
+        - generic [ref=e3310]: Vortex
+        - text: OVR 74.7 → 74.7 (0.0)
+        - generic [ref=e3311]: Rest / Normal · 1 map
+        - generic [ref=e3312]: Matches +0.02 OVR · Comms Quality +0.13 · Composure +0.01 · Game Sense +0.03 · Positioning +0.01 · Utility Usage +0.05
+        - generic [ref=e3313]: "Individual recovery: practice paused, match experience retained"
+      - generic [ref=e3314]:
+        - generic [ref=e3315]: Ghost
+        - text: OVR 76.5 → 76.5 (0.0)
+        - generic [ref=e3316]: Rest / Light · 1 map
+        - generic [ref=e3317]: Matches +0.03 OVR · Aim Precision +0.13 · Aim Reactivity +0.06 · Comms Quality +0.06 · Composure +0.01 · Game Sense +0.01 · Positioning +0.02 · Utility Usage +0.01
+        - generic [ref=e3318]: "Individual recovery: practice paused, match experience retained"
+      - generic [ref=e3319]:
+        - generic [ref=e3320]: Slyblade
+        - text: OVR 72.3 → 72.3 (0.0)
+        - generic [ref=e3321]: Rest / Normal · 1 map
+        - generic [ref=e3322]: No measured skill gains
+        - generic [ref=e3323]: "Individual recovery: practice paused, match experience retained"
+      - generic [ref=e3324]:
+        - generic [ref=e3325]: Echo
+        - text: OVR 76.0 → 76.0 (0.0)
+        - generic [ref=e3326]: Rest / Light · 1 map
+        - generic [ref=e3327]: No measured skill gains
+        - generic [ref=e3328]: "Individual recovery: practice paused, match experience retained"
+      - generic [ref=e3329]:
+        - generic [ref=e3330]: Hollowlock
+        - text: OVR 63.1 → 63.1 (0.0)
+        - generic [ref=e3331]: Tactical / Normal · 0 maps
+        - generic [ref=e3332]: Practice +0.01 OVR · Positioning +0.07
+        - generic [ref=e3333]: Tired legs are reducing practice quality; ease intensity or rest
+        - generic [ref=e3334]: Coaching and club support are improving practice
+  - button "Continue" [ref=e3335] [cursor=pointer]

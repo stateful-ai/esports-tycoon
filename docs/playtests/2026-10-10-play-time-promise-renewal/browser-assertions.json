@@ -1,0 +1,14 @@
+{
+  "renewed_roster_profile_equal": true,
+  "renewed_original_state_preserved": true,
+  "renewed_count": 5,
+  "renewed_requirement": 3,
+  "renewed_evaluations_left": 4,
+  "both_choices_cleared_pending_event": true,
+  "natural_profile_5_required_5_earned_next_kept": true,
+  "natural_roster_api_readback": "Failed 404 from incomplete /api/roster URL; actual Locker Room DOM verified independently.",
+  "screenshots_visually_inspected": [
+    "renewed-fixed.png",
+    "natural-fixed.png"
+  ]
+}

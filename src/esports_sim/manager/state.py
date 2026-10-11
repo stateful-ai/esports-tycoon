@@ -547,7 +547,7 @@ def _migrate_v35_to_v36(data: dict) -> dict:
 
 
 def _migrate_v36_to_v37(data: dict) -> dict:
-    """v37 measures MEDIA phases. Defaults deliberately leave old phases unknown."""
+    """MEDIA phases default unknown; badge evidence defaults empty and untracked."""
     return data
 
 

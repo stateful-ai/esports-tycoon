@@ -1,0 +1,12 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A7B401340FC2AFF6F647BEF852F5C9B3A84868502E6A8FA98E053E45E8A938AF",
+    "Path": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\src\\esports_sim\\manager\\preparation.py"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BD669F5CAF75D15B8294493BAF0E6E148418B91FAC3AC89F6049A23933F326BD",
+    "Path": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\tests\\test_preparation.py"
+  }
+]

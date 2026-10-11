@@ -1,0 +1,32 @@
+{
+  "both_public_serializations_equal": true,
+  "both_real_DOM_renders_contain_all_server_labels": true,
+  "both_real_DOM_progress_bars_100_percent": true,
+  "w9_echo_assessment": {
+    "window_weeks": 8,
+    "target_percent": 60,
+    "required_dressed_weeks": 5,
+    "dressed_weeks": 5,
+    "dressed_percent": 62.5,
+    "additional_dressed_weeks_needed": 0,
+    "evaluations_left": 1,
+    "fulfillment_percent": 100,
+    "next_dressed_status": "kept",
+    "next_not_dressed_status": "kept",
+    "target_label": "Target: 60% of 8 window weeks, rounded up = 5 dressed weeks.",
+    "progress_label": "Progress: 5/8 window weeks dressed (62.5%). 0 more needed to reach 5.",
+    "deadline_label": "Deadline: at the next weekly evaluation.",
+    "counting_label": "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.",
+    "next_evaluation_label": "Next evaluation: if dressed, 6/5 required weeks (promise kept); if not dressed, 5/5 (promise kept)."
+  },
+  "w10_echo_kept_with_no_added_credit": true,
+  "w10_echo_profile_has_no_active_promise": true,
+  "locker_room_DOM": {
+    "text": "Target: 60% of 8 window weeks, rounded up = 5 dressed weeks.\n\nProgress: 5/8 window weeks dressed (62.5%). 0 more needed to reach 5.\n\nDeadline: at the next weekly evaluation.\n\nNext evaluation: if dressed, 6/5 required weeks (promise kept); if not dressed, 5/5 (promise kept).\n\nEach weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.",
+    "html": "<div class=\"card ws-4\" style=\"padding: 10px; background: var(--es-color-bg-alt, #0b0e14); border: 1px solid var(--es-color-border, #1f2a3d); border-radius: 4px;\"><div><strong><span class=\"plink \" data-pid=\"echo\">Echo</span></strong>: <span style=\"font-size:0.85em; color:var(--es-color-accent, #00f0ff);\">Play Time</span></div><div class=\"promise-assessment\" style=\"font-size:0.9em; margin:6px 0;\"><p>Target: 60% of 8 window weeks, rounded up = 5 dressed weeks.</p><p>Progress: 5/8 window weeks dressed (62.5%). 0 more needed to reach 5.</p><p>Deadline: at the next weekly evaluation.</p><p>Next evaluation: if dressed, 6/5 required weeks (promise kept); if not dressed, 5/5 (promise kept).</p><p class=\"muted\">Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.</p></div><div class=\"muted\">Progress toward dressed-week requirement</div><div class=\"pf-hbar\" style=\"height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;\"><i style=\"display:block; height:100%; width:100%; background:var(--es-color-accent, #00f0ff); border-radius:3px;\"></i></div></div>"
+  },
+  "profile_DOM": {
+    "text": "Target: 60% of 8 window weeks, rounded up = 5 dressed weeks.\n\nProgress: 5/8 window weeks dressed (62.5%). 0 more needed to reach 5.\n\nDeadline: at the next weekly evaluation.\n\nNext evaluation: if dressed, 6/5 required weeks (promise kept); if not dressed, 5/5 (promise kept).\n\nEach weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.",
+    "html": "<div class=\"pf-promise-item\"><div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;\"><strong>Play Time</strong></div><div class=\"promise-assessment\" style=\"font-size: 0.9em; margin-bottom: 4px;\"><p>Target: 60% of 8 window weeks, rounded up = 5 dressed weeks.</p><p>Progress: 5/8 window weeks dressed (62.5%). 0 more needed to reach 5.</p><p>Deadline: at the next weekly evaluation.</p><p>Next evaluation: if dressed, 6/5 required weeks (promise kept); if not dressed, 5/5 (promise kept).</p><p class=\"muted\">Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time.</p></div><div class=\"muted\">Progress toward dressed-week requirement</div><div class=\"pf-hbar\" style=\"height: 6px; background: var(--es-color-bg-alt, #151b26); border-radius: 3px; overflow: hidden;\"><i style=\"display: block; height: 100%; width: 100%; --target-width: 100%; background: var(--es-color-accent, #00f0ff); border-radius: 3px;\"></i></div></div>"
+  }
+}

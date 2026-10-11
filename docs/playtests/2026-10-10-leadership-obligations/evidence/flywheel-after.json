@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0122",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Promise needs units and an evaluation window",
+    "problem": "Echo displayed Target60/Dressed5weeks/1weekleft without targetunits or denominator",
+    "solution": "Compare LockerRoom, playerprofile and handbook; save Echo as starter, resolve onefixture and read history",
+    "lesson": "Echo promise becamekept after W9, but outcome alone did not explain the evaluation threshold. Gap22 assigned separate agent for server-computed player-visible assessment",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0123",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Verify lineup intent separately from coarse decision telemetry",
+    "problem": "Current build records accepted set_lineup but not exact selected player IDs",
+    "solution": "Read public currentfive immediately and after reload, then reconcile savedlineup and accepted actionprefix",
+    "lesson": "Echo starter/Hollowlockbench persisted and report showed1/0maps; exact-choice telemetry remains already-assigned PR361, not a duplicate gap",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0124",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Observe active subtab, request routes and modal state before automation",
+    "problem": "Retained LockerRoom, flavor_event route and open report invalidated assumed row/response/navigation targets",
+    "solution": "Preserve observer timeouts, retrieve actual network response and resnapshot controls; close report with Continue",
+    "lesson": "Tooling failures are not game HTTP rejections; actual four requests paired200, and no mutation was repeated after response timeout",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  }
+]

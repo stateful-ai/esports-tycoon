@@ -1,0 +1,7 @@
+39. [POST] http://127.0.0.1:8485/api/actions/sponsor => [200] OK
+51. [POST] http://127.0.0.1:8485/api/actions/facility_upgrade => [200] OK
+68. [POST] http://127.0.0.1:8485/api/actions/flavor_event => [200] OK
+80. [POST] http://127.0.0.1:8485/api/actions/advance => [200] OK
+118. [POST] http://127.0.0.1:8485/api/actions/save => [200] OK
+
+Note: 54 static requests not shown, run with "static" option to see them.

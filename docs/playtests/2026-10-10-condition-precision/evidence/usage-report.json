@@ -1,0 +1,42 @@
+{
+  "attempts": 2,
+  "events": {
+    "attempt:/api/actions/save": 2,
+    "result:/api/actions/save": 2,
+    "session_end:": 1,
+    "session_start:": 3,
+    "view:dashboard": 2,
+    "view:lobby": 3,
+    "view:tactics/prep": 2,
+    "view:tactics/strategy": 2,
+    "visible_time:dashboard": 2,
+    "visible_time:lobby": 7,
+    "visible_time:tactics/prep": 5,
+    "visible_time:tactics/strategy": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "29667f78c3e913a77083fa674d196aa4": 0,
+    "5001be1b6a8afa2fb3645007cf1ff88e": 45038,
+    "f0309246d356a3e2818813b53f652a6c": 59973,
+    "fe3bf569dc541d2efa248479dfa8e050": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/save:success": 2
+  },
+  "paired_results": 2,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 5323,
+    "lobby": 75041,
+    "tactics/prep": 64943,
+    "tactics/strategy": 6127
+  },
+  "world_events": {
+    "26UHC": 27,
+    "lobby": 6
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-10T18:47:03.626232+00:00",
+  "rows_before": 664,
+  "rows_after": 665,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "67249f2d290d09a1afa5b5794a39c19cd7b30f604995cbeeefa64bf88ecfc69e",
+  "sha256_after": "d06a9679bdd4cdaf402a909bcb966a171ac44f3784803d06b4c874909c07ca46",
+  "sources": [
+    {
+      "path": "runs\\playtests\\flavor-history-correction\\actions.csv",
+      "rows": 1,
+      "sha256": "df3403ea60caabbbb3ec8701bb98ac65f6a145f6660792a7ae4f61082b41817e"
+    }
+  ],
+  "publication": "Primary working tree only; history PR362 remains at its reviewed 597-row head"
+}

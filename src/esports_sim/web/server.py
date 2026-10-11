@@ -796,14 +796,14 @@ def _badge_views(p: Player) -> list[dict]:
         bid = pb.id
         ability_parts = [
             f"{float(delta):+g} {humanize_identifier(attr)}"
-            for attr, delta in sorted((b.get("ca") or {}).items())
+            for attr, delta in sorted(pb.applied.items())
         ]
         impact = (
-            "While held: " + ", ".join(ability_parts) + "."
-            if ability_parts else "This badge has no temporary attribute effect."
+            "Applied when earned (while held): " + ", ".join(ability_parts) + "."
+            if ability_parts else "No temporary attribute change recorded when earned."
         )
-        if float(b.get("pa", 0.0)) > 0:
-            impact += f" Earning it permanently raised potential by {float(b['pa']):g}."
+        if pb.pa_applied > 0:
+            impact += f" Earning it permanently raised potential by {pb.pa_applied:g}."
         decay_seasons = int(b.get("decay_seasons", 0))
         decay = (
             f"It can fade after {decay_seasons} season"
@@ -7397,7 +7397,8 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Advance Week again.",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
@@ -7521,7 +7522,8 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Sim Ahead again.",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(

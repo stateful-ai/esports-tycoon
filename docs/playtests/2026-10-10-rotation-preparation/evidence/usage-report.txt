@@ -1,0 +1,65 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/lineup": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 1,
+    "interaction:week/full_report_open": 1,
+    "replay:close": 1,
+    "replay:open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/lineup": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 3,
+    "view:club/squad": 1,
+    "view:dashboard": 3,
+    "view:lobby": 3,
+    "view:replay": 1,
+    "view:tactics/gameplan": 2,
+    "view:tactics/prep": 2,
+    "view:tactics/strategy": 2,
+    "visible_time:club/squad": 25,
+    "visible_time:dashboard": 16,
+    "visible_time:lobby": 16,
+    "visible_time:replay": 5,
+    "visible_time:tactics/gameplan": 23,
+    "visible_time:tactics/prep": 14,
+    "visible_time:tactics/strategy": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "6742b2fcf435e16d3a0ad98aafe1914a": 887405,
+    "8a237497359dfee8abd14c2b2517fe69": 194998,
+    "a46e8ba846bc82389a420fd781b30f16": 210001
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/lineup:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 5,
+  "retention_bytes": 8388608,
+  "sessions": 3,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/squad": 358744,
+    "dashboard": 209558,
+    "lobby": 210413,
+    "replay": 71380,
+    "tactics/gameplan": 298577,
+    "tactics/prep": 184009,
+    "tactics/strategy": 4739
+  },
+  "world_events": {
+    "26UHC": 116,
+    "lobby": 16
+  }
+}

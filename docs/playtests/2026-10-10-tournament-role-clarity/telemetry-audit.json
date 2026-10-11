@@ -1,0 +1,69 @@
+{
+  "baseline_accepted_count": 36,
+  "saved_accepted_count": 37,
+  "exact_prefix_preserved": true,
+  "csv_decision_attempts": 1,
+  "matched_accepted_decisions": 1,
+  "decision_coverage_percent": 100,
+  "accepted_index": 36,
+  "accepted_record": {
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "False",
+      "default_five": "True",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  "usage_event_count": 27,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 11,
+    "visible_time": 10,
+    "attempt": 2,
+    "result": 2
+  },
+  "usage_page_sessions": [
+    "e87ebd38f69324b5c17b02554d78f952",
+    "f7f74c1b7522401f617cbb3ba807985e"
+  ],
+  "paired_requests": [
+    {
+      "session_id": "e87ebd38f69324b5c17b02554d78f952",
+      "request_id": 13,
+      "target": "/api/actions/lineup",
+      "result": "success",
+      "status": 200
+    },
+    {
+      "session_id": "f7f74c1b7522401f617cbb3ba807985e",
+      "request_id": 15,
+      "target": "/api/actions/save",
+      "result": "success",
+      "status": 200
+    }
+  ],
+  "usage_targets": [
+    "",
+    "/api/actions/lineup",
+    "/api/actions/save",
+    "club/squad",
+    "dashboard",
+    "lobby",
+    "tactics/prep",
+    "tactics/strategy"
+  ],
+  "gaps": [
+    "Set_lineup telemetry has coarse flags without player IDs; exact membership proven by independent public roster readback.",
+    "Successful reads are not emitted as request events; navigation views retained.",
+    "The incorrect direct /api/roster read returned 404 outside the app api wrapper, with no browser usage event.",
+    "Initial short browser contexts closed before telemetry flush, so retained usage cannot prove complete navigation coverage."
+  ]
+}

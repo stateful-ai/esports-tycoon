@@ -1,0 +1,148 @@
+[
+  {
+    "id": "esports-playtest-0112",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Forecast bench advice sounded like observed performance",
+    "problem": "Mental reset said Echo pushed starters although candidate was selected by map mastery and Echo playedzero maps",
+    "solution": "Preserve current report and isolate deterministic wording/provenance gap20",
+    "lesson": "A candidate ranking should be described as projected advice, not a measured scrim performance",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0111",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate promised role from selected match five",
+    "problem": "Tournament six called Echo Starter and Hollowlock Bench opposite the saved five",
+    "solution": "Inspect registration.role versus public starters and fixture roster; preserve both contracts",
+    "lesson": "Contractual roster_role is not current selection; visible labels need to explain the distinction",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0110",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Recovery rotation survived a defeat",
+    "problem": "Bench choice needed public outcome evidence beyond a saved flag",
+    "solution": "Bench Echo32.5, start Ghost49.5, keep Rest/Light, choose mental-reset/light1.5; read FullReport and replay",
+    "lesson": "Echo zero maps recovered to55 and Ghost one map rose to59 after9-13defeat; this verifies rotation and recovery, not win causality",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0109",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Accessible name selectors can miss decorated controls",
+    "problem": "Integrated preparation browser acceptance",
+    "solution": "Match and Save exact role names timed out without requests. Retain failed attempts then recover with actual rendered tab and Save ids.",
+    "lesson": "Match and Save exact role names timed out without requests. Retain failed attempts then recover with actual rendered tab and Save ids.",
+    "confidence": "high",
+    "source": "Browser8469 copied26UHC seed2038 S1W5 base042d86d resolved gap16; 2026-10-10-preparation-retention-integration",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "integration"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0108",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Future fixture response boundary",
+    "problem": "Integrated preparation browser acceptance",
+    "solution": "A synthetic future fixture id in the public response atomically leaves defaults; removing the override restores the true saved current fixture choices.",
+    "lesson": "A synthetic future fixture id in the public response atomically leaves defaults; removing the override restores the true saved current fixture choices.",
+    "confidence": "high",
+    "source": "Browser8469 copied26UHC seed2038 S1W5 base042d86d resolved gap16; 2026-10-10-preparation-retention-integration",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "integration"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0107",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation retention and preview share render order",
+    "problem": "Integrated preparation browser acceptance",
+    "solution": "Hydrate all valid current-fixture controls before evaluating the server-provided intensity cost. Browser confirmed Normal4 Intense7.5 and Save reload consistency.",
+    "lesson": "Hydrate all valid current-fixture controls before evaluating the server-provided intensity cost. Browser confirmed Normal4 Intense7.5 and Save reload consistency.",
+    "confidence": "high",
+    "source": "Browser8469 copied26UHC seed2038 S1W5 base042d86d resolved gap16; 2026-10-10-preparation-retention-integration",
+    "code": "26UHC",
+    "tags": [
+      "preparation",
+      "retention",
+      "integration"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0106",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Read-only review usage not retained",
+    "problem": "New browser correction generated no additional retained usage records",
+    "solution": "Preserve step10 intent/screens/public readback and mark usage unverified",
+    "lesson": "No retained usage cannot prove an absent player attempt",
+    "confidence": "medium",
+    "source": "PR358 review browser8466 copied26UHC seed2038 S1W5; session step10; report.md correction",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14",
+      "review"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0105",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Unrounded threshold at scouting boundary",
+    "problem": "Rounded49.9% depth becomes50% displayed",
+    "solution": "Evaluate readiness on raw progress; display rounding stays cosmetic",
+    "lesson": "A displayed rounded percentage must not grant an unlock",
+    "confidence": "medium",
+    "source": "PR358 review browser8466 copied26UHC seed2038 S1W5; session step10; report.md correction",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14",
+      "review"
+    ],
+    "kind": "learning"
+  }
+]

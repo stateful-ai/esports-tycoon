@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-10T20:38:06.978101+00:00",
+  "rows_before": 698,
+  "rows_after": 699,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "c5c96567ecd0f2e3002b778599d83eec06ba797a48aba73afbe5fa9ef5077a9b",
+  "sha256_after": "38c490a9e88b4d9f2c07b611094dc0c95fa82d08e26d2f89320e134f3d06e199",
+  "sources": [
+    {
+      "path": "C:\\Users\\aidan\\.codex\\worktrees\\playtest-history-evidence-recovery\\ESports Simulator\\docs\\playtests\\2026-10-10-history-evidence-recovery\\actions.csv",
+      "rows": 1,
+      "sha256": "81d435dcaed1ef14ecc94e939f6bfa8477945c3defdf632456a56dfb547cfcfc"
+    }
+  ],
+  "publication": "Primary working tree only; append requires a separately reviewed history publication. Previously merged PR362 preserves its original 597-row snapshot."
+}

@@ -1,0 +1,138 @@
+ESPORTSSIM
+Season 1 · Week 9 · Regular — Team Nexus
+451,764 cr
+CODE 26UHC ⧉ · 0/1 READY
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX15
+MATCH2
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W9 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 85.5 · Echo 77.5 · Hollowlock 41.4 · Slyblade 84.4 · Ghost 68.5 · Vortex 100.
+
+Next: Team Nexus vs Nordic Frost · week 9
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Saracen Guard
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Haven
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+COACH PROPOSAL
+Anti Exec on Haven
+
+Partner: Bayou Kings. Intensity: Normal.
+
+Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Accept coach plan
+Prep artifact: Methodology +0.7 +0.0 EDGE Knowledge +0.67; stamina −1.5.
+
+Squad morale entered at 88.8/100; the group reset with a lighter load.
+
+Dev note: Echo — Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation.
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Hollowlock
+26 · Bench
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.

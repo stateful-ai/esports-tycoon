@@ -1,0 +1,29 @@
+{
+  "sessions": 5,
+  "events": {
+    "session_end:": 1,
+    "session_start:": 5,
+    "view:lobby": 5,
+    "visible_time:lobby": 27
+  },
+  "visible_ms": {
+    "lobby": 400911
+  },
+  "outcomes": {},
+  "attempts": 0,
+  "paired_results": 0,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "world_events": {
+    "lobby": 38
+  },
+  "observed_session_span_ms": {
+    "05bf2381fe8b02b5aee199bdfb426c7c": 15001,
+    "8f84605b1716ecf2878e6b0b5eea765f": 15001,
+    "c7e003e76d23617dbdb5a2cbeaf09c56": 40820,
+    "fad30dfbc14af2a272c91f2188874167": 255002,
+    "ff0d51e2f82308a4d64ca998c51c87de": 15012
+  },
+  "malformed_lines": 0,
+  "retention_bytes": 8388608
+}

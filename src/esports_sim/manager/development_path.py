@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import numpy as np
 
+from esports_sim.schemas.badges import BADGES
+
 from esports_sim.manager import development
 from esports_sim.schemas import Player
 from esports_sim.schemas.player import DevelopmentWeek
@@ -24,7 +26,7 @@ EVENT_COOLDOWN = 6
 def begin_week(gs) -> None:
     for pid in sorted(gs.players):
         p = gs.players[pid]
-        p.development_progress.latest = DevelopmentWeek(season=gs.season, week=gs.week)
+        p.development_progress.latest = DevelopmentWeek(season=gs.season, week=gs.week, badge_tracking=True)
 
 
 def record_gains(p: Player, source: str, before: dict[str, float]) -> None:
@@ -156,10 +158,15 @@ def report_view(p: Player) -> dict | None:
     sources = {
         key: {"overall_gain": round(sum(getattr(week, key).values()) / n_attrs, 2),
               "skills": dict(sorted(getattr(week, key).items()))}
-        for key in ("practice_gains", "match_gains", "scrim_gains", "event_gains")
+        for key in ("practice_gains", "match_gains", "scrim_gains", "event_gains", "badge_gains")
     }
     momentum = p.development_progress.momentum
     return {"season": week.season, "week": week.week, "focus": week.focus,
             "intensity": week.intensity, "maps": week.maps,
             "trend": "thriving" if momentum >= 0.2 else "struggling" if momentum <= -0.2 else "settling",
+            "badge_tracking": week.badge_tracking,
+            "badge_events": [dict(event.model_dump(), name=BADGES.get(
+                    event.badge, {}).get("name", event.badge),
+                overall_gain=round(sum(event.skills.values()) / n_attrs, 2))
+                for event in week.badge_events],
             "sources": sources, "factors": list(week.factors), "career_event": week.career_event}

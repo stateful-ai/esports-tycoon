@@ -1,0 +1,6 @@
+{
+  "exit_code": 0,
+  "source_unchanged": true,
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "command": "-m pytest -q -n2"
+}

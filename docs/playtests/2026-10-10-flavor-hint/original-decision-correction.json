@@ -1,0 +1,50 @@
+{
+  "audited_at_utc": "2026-10-10T18:41:51.390648+00:00",
+  "correction_of": "Recovered original session2026-10-08-flavor-hint steps6/7 still have historical unverified annotations; this audit independently verifies their saved decisions without editing them.",
+  "source_before_save": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator\\runs\\playtests\\2026-10-08-flavor-hint\\save-before.json",
+  "source_after_save": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator\\runs\\playtests\\2026-10-08-flavor-hint\\saves\\campaign_f2977bf6e97d789a.json",
+  "before_save_sha256": "40d4f3d782a74a980c0c0cce65b68f34f2f87ed6991001cf046f60d1003ca5f3",
+  "after_save_sha256": "fe19e5c8af41eb69438f775258e2a872b4f96f7baf40eb27bd0e87e96ce938f0",
+  "historical_csv": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator\\docs\\playtests\\2026-10-08-flavor-hint\\recovered-actions.csv",
+  "historical_csv_sha256": "931cd3cf54f83eb729322a0f9cfa3dc8aaf8e8c101604f60860c338fa0e83956",
+  "historical_csv_unchanged": true,
+  "original_steps": [
+    6,
+    7
+  ],
+  "verified_decisions": [
+    {
+      "index": 27,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "let_loose",
+        "event_id": "39e83f39373aa3ea"
+      },
+      "source": "web"
+    },
+    {
+      "index": 28,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "before_action_count": 27,
+  "after_action_count": 29,
+  "action_prefix_unchanged": true,
+  "before_snapshots": 5,
+  "after_snapshots": 6,
+  "snapshot_prefix_unchanged": true,
+  "decision_coverage": "2/2 accepted original decisions",
+  "limits": "Offline audit emits no new campaign decision or browser usage. Original steps1-5 remain lost. No old test subprocess exit status inferred."
+}
