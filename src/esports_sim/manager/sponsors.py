@@ -263,7 +263,7 @@ def _offer_scale(gs: GameState, slot: str, brand: str) -> float:
 
 def _slot_unlocked(gs: GameState, slot: str) -> bool:
     need = SLOT_CONFIG[slot]["unlock"]
-    return gs.facilities.get("marketing_office", 0) >= need
+    return gs.facilities_by.get(gs.acting_team_id, {}).get("marketing_office", 0) >= need
 
 
 def _slot_signable(gs: GameState, slot: str) -> bool:

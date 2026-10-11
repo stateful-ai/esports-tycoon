@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:18:15.563472+00:00",
+  "exit_code": 1,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-roster-recovery",
+    "run-code",
+    "async (page) => { const response=page.waitForResponse(r=>r.url().endsWith(\"/api/advance\")&&r.request().method()===\"POST\",{timeout:240000}); await page.getByRole(\"button\",{name:\"Advance Week \u25b8\",exact:true}).click(); const r=await response; return {status:r.status,body:await r.json()}; }"
+  ],
+  "stdout_bytes": 296,
+  "stderr_bytes": 0
+}

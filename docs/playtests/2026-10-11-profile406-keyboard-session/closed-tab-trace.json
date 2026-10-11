@@ -1,0 +1,411 @@
+{
+  "background": {
+    "active": "<button data-tab=\"company\" class=\"tab active\" data-tooltip=\"&lt;h4&gt;Company&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;Keep the club solvent while growing sponsors, supporters, reach, and public sentiment.&lt;/div&gt;&lt;div class='tooltip-sub'&gt;Check weekly net cash flow before accepting costs, then review sponsor demands and brand momentum.&lt;/div&gt;\" aria-describedby=\"es-tooltip\">Company</button>",
+    "profile": {
+      "inert": true,
+      "ariaHidden": "true"
+    }
+  },
+  "closedTrace": [
+    {
+      "tag": "BUTTON",
+      "text": "Finances",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BODY",
+      "text": "\n\n\n  \n    ESPORTSSIM\n    Season 2 · Week 6 · Regular  —  Team Nex",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Save",
+      "inProfile": false
+    },
+    {
+      "tag": "SELECT",
+      "text": "\n      Autosave off\n      Every week\n      Every 2 weeks\n      Ev",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Campaigns",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Advance Week ▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Sim ahead ▸▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🛠️",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🔇",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Guide",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Dashboard1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Inbox13",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Match2",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Club",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Season",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Market1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Stats",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Company",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Finances",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Squad",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BODY",
+      "text": "\n\n\n  \n    ESPORTSSIM\n    Season 2 · Week 6 · Regular  —  Team Nex",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Save",
+      "inProfile": false
+    },
+    {
+      "tag": "SELECT",
+      "text": "\n      Autosave off\n      Every week\n      Every 2 weeks\n      Ev",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Campaigns",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Advance Week ▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Sim ahead ▸▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🛠️",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🔇",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Guide",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Dashboard1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Inbox13",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Match2",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Club",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Season",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Market1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Stats",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Company",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Finances",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Squad",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BODY",
+      "text": "\n\n\n  \n    ESPORTSSIM\n    Season 2 · Week 6 · Regular  —  Team Nex",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Save",
+      "inProfile": false
+    },
+    {
+      "tag": "SELECT",
+      "text": "\n      Autosave off\n      Every week\n      Every 2 weeks\n      Ev",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Campaigns",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Advance Week ▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Sim ahead ▸▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🛠️",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🔇",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Guide",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Dashboard1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Inbox13",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Match2",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Club",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Season",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Market1",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Stats",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Company",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Finances",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Brand",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Squad",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "→ Facilities",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Save",
+      "inProfile": false
+    },
+    {
+      "tag": "SELECT",
+      "text": "\n      Autosave off\n      Every week\n      Every 2 weeks\n      Ev",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Campaigns",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Advance Week ▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Sim ahead ▸▸",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🛠️",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "🔇",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Guide",
+      "inProfile": false
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Dashboard1",
+      "inProfile": false
+    }
+  ]
+}

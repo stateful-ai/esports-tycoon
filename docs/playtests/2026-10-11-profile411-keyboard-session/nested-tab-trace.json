@@ -1,0 +1,114 @@
+[
+  {
+    "text": "Rein in streaming…",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Change role/style…",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Make IGL",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Scout development",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": " Aim Demon",
+    "tag": "SPAN",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": " Clutch Master",
+    "tag": "SPAN",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Show all (29)",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Tilt Resistance52+2.1 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Composure74+0.4 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Comms Quality59+0.3 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Game Sense73+0.1 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Utility Usage60+0.1 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Clutch Factor92+0.1 ▲",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Aim Precision980.0 —",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "Aim Reactivity940.0 —",
+    "tag": "DIV",
+    "pid": null,
+    "type": null,
+    "inProfile": true
+  },
+  {
+    "text": "GhostNeutral",
+    "tag": "BUTTON",
+    "pid": "ghost",
+    "type": "button",
+    "inProfile": true
+  }
+]

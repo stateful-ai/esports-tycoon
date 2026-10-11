@@ -1,0 +1,128 @@
+{
+  "tested_code_head": "bbcab656e0d1d678f17f0ad1129ab4aea7564391",
+  "historical_acceptance": "../2026-10-11-gap40-rollover and ../2026-10-11-gap40-shared-ready remain unchanged",
+  "limits": "No credentials/bootstrap registry, launcher scripts or full save published. The one503 was injected through browser routing; server itself remained healthy. Local pytest and expensive gates remain unrun.",
+  "receipts": {
+    "actions.csv": {
+      "bytes": 4108,
+      "sha256": "eb40827d907d40fdf8041d6e5ca36b0ddce45d80acc0e5d1f94c4503ec5312b9"
+    },
+    "evidence/01-join-readback.json": {
+      "bytes": 15217,
+      "sha256": "8a1e5def47fd6fde36f90a9b6718488bbe8a094542e2547a1bf22814fa3f6368"
+    },
+    "evidence/01-offseason.png": {
+      "bytes": 285337,
+      "sha256": "9efcf1022b539b46818a5f4dd5e05163d13ed604cff5010031ff6c1f7b357516"
+    },
+    "evidence/01-primary-state.json": {
+      "bytes": 15093,
+      "sha256": "0007ffd077c25f0ff0ed45797a2a6c2200ec11728b175f000b9dd9648a72e935"
+    },
+    "evidence/01-public-choices.json": {
+      "bytes": 37065,
+      "sha256": "67fc53618184a9319fc8f01d9f88905e8962024544b7f922fd9f8b7f1cf45643"
+    },
+    "evidence/02-ready-response.json": {
+      "bytes": 111,
+      "sha256": "a8d5e99943e302bb24e57ede9f263770ca3c9e7fd01d8f48b361274220181980"
+    },
+    "evidence/02-ready-state.json": {
+      "bytes": 15241,
+      "sha256": "aee5c3da69c46c0263490c17d3d5f433357d09af81b61f6f5d244f2b3cce09b7"
+    },
+    "evidence/03-injected-fault.json": {
+      "bytes": 172,
+      "sha256": "6eb8903b1bb12639616d8709d80361aee976e049020c6382608d87a84f27d65a"
+    },
+    "evidence/03-retry.png": {
+      "bytes": 301213,
+      "sha256": "eb7d857615ca9eebc78c333c58803d360d7055e0d32d25993d3bb643c0db1442"
+    },
+    "evidence/03-server-readback.json": {
+      "bytes": 15241,
+      "sha256": "aee5c3da69c46c0263490c17d3d5f433357d09af81b61f6f5d244f2b3cce09b7"
+    },
+    "evidence/04-response.json": {
+      "bytes": 6540,
+      "sha256": "3258c579daa2abb058250a5520e93b5abfe5903d36fcb688e7dab8d691493f02"
+    },
+    "evidence/04-server-state.json": {
+      "bytes": 13798,
+      "sha256": "270db384b9dcbf2d95ea13d3145eed4eee4026527d58ef99f7f7522c04dfc6ef"
+    },
+    "evidence/05-browser-requests.json": {
+      "bytes": 4610,
+      "sha256": "70c6669a85dbc80102df02961815c47f0c27d29a1f3a27de54552b6be690f83c"
+    },
+    "evidence/05-reconnected.png": {
+      "bytes": 254710,
+      "sha256": "501864f3e7eaa2f6d85b56b3b02302aa402909e51ebaa3eed08357e9248f20dd"
+    },
+    "evidence/05-retry-readback.json": {
+      "bytes": 13798,
+      "sha256": "270db384b9dcbf2d95ea13d3145eed4eee4026527d58ef99f7f7522c04dfc6ef"
+    },
+    "evidence/06-save.json": {
+      "bytes": 48,
+      "sha256": "4901a3e982eb8be471408125dcd65f76fe1d6e70bcc5df1bfc138666ac430668"
+    },
+    "evidence/audit.json": {
+      "bytes": 10009,
+      "sha256": "6a80328e0afeb2aa19013aa4b05a1844c84b528298fe3f25c318e1b1c6a6f0b6"
+    },
+    "evidence/flywheel-after.json": {
+      "bytes": 2200,
+      "sha256": "eff7ac454ece52572b7a1521b234a4ca547704118738c2446087694a5edc12c0"
+    },
+    "evidence/flywheel-before.json": {
+      "bytes": 3810,
+      "sha256": "b46b4eb8e53ea1ef7bff4c040a6d6373c999c57885d777a87e14619b21fcca60"
+    },
+    "evidence/freeze-after.json": {
+      "bytes": 240746,
+      "sha256": "de13ce6ce160687a534b0d9d6004189f1cd331f8f2c283db56200eb2c164b295"
+    },
+    "evidence/freeze-before.json": {
+      "bytes": 240746,
+      "sha256": "de13ce6ce160687a534b0d9d6004189f1cd331f8f2c283db56200eb2c164b295"
+    },
+    "evidence/indexed-decisions.json": {
+      "bytes": 571,
+      "sha256": "0edeb5ee3905e7e02589891d63b9d02a6b09e52627946620061152d0911c55ce"
+    },
+    "evidence/tested-git-blobs.json": {
+      "bytes": 307889,
+      "sha256": "80977a691717b1d3e31da560fbef4288e4d57be624fc1d1846b163dd3b11f555"
+    },
+    "evidence/usage-summary.json": {
+      "bytes": 1909,
+      "sha256": "6dfe9159c09b38bdc53adddba8e1a240009331a14e8bcc0e13001991ad674275"
+    },
+    "evidence/usage-world.jsonl": {
+      "bytes": 6285,
+      "sha256": "d6c2404a6b43f6a1b110caad4b4b62dc2f1a6c0a2123978ab7734728263efb40"
+    },
+    "evidence/telemetry-report.txt": {
+      "bytes": 2090,
+      "sha256": "f468a41f04259e3ec40af3921cbf6f58ae76d6dee478f89e14b7a52d5def2768"
+    },
+    "evidence/usage-report.json": {
+      "bytes": 288,
+      "sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056"
+    },
+    "evidence/actions-before-status-annotation.csv": {
+      "bytes": 4031,
+      "sha256": "0a53f2768a2421fec6e80850fb7e263b489b21c9307f4dec7fb53e0ad2d6a849"
+    }
+  },
+  "annotation_correction": {
+    "step": 3,
+    "fields": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "reason": "Fresh usage reconciliation observed failed state request13/result503 hook",
+    "first19_fields_and_other_rows_unchanged": true
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "audited_at_utc": "2026-10-10T22:42:43.334976+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "actual_seed": 2038,
+  "baseline_actions": 63,
+  "final_actions": 65,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 2,
+    "accepted": 2
+  },
+  "chosen_ids": [
+    "fa_0",
+    "apex",
+    "echo",
+    "fa_13",
+    "vortex"
+  ],
+  "standing_five_unchanged": true,
+  "plan_consumed": true,
+  "snapshot_prefix_unchanged": true,
+  "manager_streams": 1,
+  "snapshots_before_after": [
+    13,
+    14
+  ],
+  "bank_before_after": [
+    608307,
+    741367
+  ],
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+  "usage_events_at_audit": 93,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 12,
+    "visible_time": 65,
+    "session_end": 2,
+    "attempt": 4,
+    "result": 4,
+    "interaction": 1,
+    "replay": 2
+  },
+  "usage_target_counts": {
+    "view": {
+      "lobby": 3,
+      "dashboard": 2,
+      "tactics/gameplan": 1,
+      "season/league": 1,
+      "season/fixtures": 2,
+      "replay": 1,
+      "club/squad": 1,
+      "company/finances": 1
+    },
+    "interaction": {
+      "week/full_report_open": 1
+    },
+    "replay": {
+      "open": 1,
+      "close": 1
+    }
+  },
+  "request_pairs": 4,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 18464,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 36228,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8496",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 34884,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8496",
+        "--no-browser"
+      ]
+    }
+  ],
+  "gaps": {
+    "30": "Already secured qualification described as tightening top-four berth",
+    "31": "70000 regional placement award omitted from completed-week income",
+    "existing373": "100upkeep omission remains separately owned"
+  },
+  "limits": "Retained best-effort visibility is not attention or complete funnels; full report and finance comparison lack dedicated overlay capture on main64. Source audit explains prize without asserting projected current-week values are historical income. Advance result carriesW15; accepted actionW14. Replay confirms participants but does not prove rotation caused result. Row7seed2026 is metadata mistake; preserved and correction row required."
+}

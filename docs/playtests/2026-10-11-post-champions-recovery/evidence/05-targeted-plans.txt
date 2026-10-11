@@ -1,0 +1,6 @@
+### Result
+{"statuses":[200,200]}
+### Ran Playwright code
+```js
+await (async page => { const sly = page.getByRole('row').filter({has:page.getByRole('cell',{name:/^Slyblade/})}).first(); const first = page.waitForResponse(r => r.url().endsWith('/api/actions/dev_plan') && r.request().method()==='POST'); await sly.getByRole('combobox').first().selectOption('auto'); const a = await first; const hollow = page.getByRole('row').filter({has:page.getByRole('cell',{name:/^Hollowlock/})}).first(); const second = page.waitForResponse(r => r.url().endsWith('/api/actions/dev_plan') && r.request().method()==='POST'); await hollow.getByRole('combobox').first().selectOption('rest'); const b = await second; return {statuses:[a.status(),b.status()]}; })(page);
+```

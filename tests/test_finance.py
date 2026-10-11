@@ -395,6 +395,77 @@ def test_cash_projection_matches_breakdown_first_week(campaign: GameState) -> No
     assert rows[-1]["balance"] >= campaign.teams[team_id].balance
 
 
+def test_all_sponsor_slots_run_rate_matches_projection_without_mutating_save(campaign: GameState) -> None:
+    campaign.standings[campaign.user_team_id] = TeamRecord(wins=3, losses=1)
+    campaign.sponsor_slots = {
+        slot: SponsorDeal(
+            name=f"Brand-{slot}", kind="performance", weekly=1_000 * (index + 1),
+            per_win=400, weeks_left=1 if slot == "stream" else 2,
+        )
+        for index, slot in enumerate(sponsors.SLOT_ORDER)
+    }
+    before = campaign.model_dump_json()
+    breakdown = economy.weekly_breakdown(campaign, staff_cost=500)
+    projection = economy.cash_projection(campaign, staff_cost=500, weeks=3)
+    assert list(breakdown["sponsors_by_slot"]) == list(sponsors.SLOT_ORDER)
+    assert breakdown["sponsors_by_slot"] == {
+        slot: 1_000 * (index + 1) + 300
+        for index, slot in enumerate(sponsors.SLOT_ORDER)
+    }
+    assert breakdown["sponsors_total"] == breakdown["sponsors_base"] + 16_500
+    assert projection[0]["net"] == breakdown["net"]
+    assert projection[1]["net"] == breakdown["net"] - 4_300
+    assert projection[2]["net"] == breakdown["net"] - 16_500
+    assert campaign.model_dump_json() == before
+
+
+def test_run_rate_includes_empty_slots_and_excludes_expired_deals(campaign: GameState) -> None:
+    campaign.sponsor_slots = {
+        "apparel": SponsorDeal(name="Expired", kind="steady", weekly=8_000, weeks_left=0),
+    }
+    breakdown = economy.weekly_breakdown(campaign)
+    assert breakdown["sponsors_by_slot"] == dict.fromkeys(sponsors.SLOT_ORDER, 0)
+    assert economy.cash_projection(campaign, weeks=1)[0]["net"] == breakdown["net"]
+
+
+@pytest.mark.parametrize("reader", [economy.weekly_breakdown, economy.cash_projection])
+@pytest.mark.parametrize("owned", [None, {"training_center": 2}])
+def test_finance_readers_preserve_sparse_team_maps(campaign: GameState, reader, owned) -> None:
+    team_id = campaign.acting_team_id
+    # Another club's upkeep must not leak into this manager's projection.
+    campaign.facilities_by = {"other_team": {"training_center": 3}}
+    if owned is not None:
+        campaign.facilities_by[team_id] = owned
+    campaign.sponsor_slots_by = {}
+    before = campaign.model_dump_json()
+
+    result = reader(campaign)
+
+    assert campaign.model_dump_json() == before
+    expected_upkeep = economy.facility_weekly_upkeep(owned or {})
+    if reader is economy.weekly_breakdown:
+        assert result["facility_upkeep"] == expected_upkeep
+        assert result["sponsors_by_slot"] == dict.fromkeys(sponsors.SLOT_ORDER, 0)
+    else:
+        team = campaign.teams[team_id]
+        roster = campaign.roster(team_id)
+        merch, tickets = economy.merch_ticket_income(team)
+        expected_net = (
+            economy.weekly_sponsor_income(team) + merch + tickets
+            + economy.roster_stream_income(roster)
+            - sum(p.salary for p in roster) - expected_upkeep
+        )
+        assert result[0]["net"] == expected_net
+
+
+def test_slot_unlock_read_preserves_absent_facilities(campaign: GameState) -> None:
+    campaign.facilities_by = {}
+    before = campaign.model_dump_json()
+    assert sponsors._slot_unlocked(campaign, "title")
+    assert not sponsors._slot_unlocked(campaign, "stream")
+    assert campaign.model_dump_json() == before
+
+
 # ---------------------------------------------------------------------------
 # apply_weekly_finance stays backward compatible + adds revenue depth
 

@@ -1,0 +1,13 @@
+### Browser `season2-preparation` opened with pid 20584.
+### Ran Playwright code
+```js
+await page.goto('http://127.0.0.1:8537/');
+```
+### Page
+- Page URL: http://127.0.0.1:8537/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T07-48-00-214Z.yml)
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T07-47-59-765Z.log#L1

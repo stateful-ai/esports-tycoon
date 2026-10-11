@@ -1,0 +1,151 @@
+[
+  {
+    "id": "esports-playtest-0248",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Expected flat wording caused one browser locator timeout",
+    "problem": "Scroll target expected No measurable CA change, absent for Hollowlock cumulative regression.",
+    "solution": "Preserved30s timeout in step5 and added step6 correction using observed season skill text; did not repeat failed locator.",
+    "lesson": "Use observed wording and screenshots for browser navigation; source expectations cannot establish actual visual acceptance.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0247",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Measured season skill flatness differs from cumulative regression",
+    "problem": "A flat-player expectation overstated Hollowlock cumulative history.",
+    "solution": "Hollowlock shows CA63.0 to62.8 S1W5 toS2W4 across23 observations; season skills S2W0 toS2W4 are measurably flat.",
+    "lesson": "Interpret each dated scope independently and preserve corrections; unchanged save120 actions27 snapshots bounds this read-only session.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0246",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Corrected profile first observation and weekly growth coexist",
+    "problem": "One snapshot previously implied a measured flat interval.",
+    "solution": "Nightsurge visibly shows first observation S2W4, no earlier comparison; latest practice+0.31 bench+0.01 badges0.00 remain visible.",
+    "lesson": "First-observation availability and latest-week sources are separate truths; three season matches are separate from zero latest-week senior maps.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0245",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Hidden overlay remains in browser accessibility queries",
+    "problem": "ARIA snapshot and Playwright isVisible include profile DOM after Close, despite opacity0 and pointer-events none.",
+    "solution": "Retain blocked targeting attempt; independently inspect overlay hidden class/computed CSS and append correction. No force-click or duplicate Save.",
+    "lesson": "DOM accessibility output alone can misclassify opacity-hidden overlays as visible; confirm pointer/opacity state before inferring failed close.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "browser",
+      "harness",
+      "visibility"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0244",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Bench recovery depends on actual send-down age",
+    "problem": "Only bench Hollowlock is27 and academy send-down limit23.",
+    "solution": "Inspect visible server candidates Ghost20 starter and Vortex23 starter, retain original five instead of inventing eligible bench recovery.",
+    "lesson": "Explanation is verified; successful recovery is unverified when the current bench has no eligible player. Log the blocked player goal separately.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "academy",
+      "roster",
+      "blocked"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0243",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Promotion blocker explained before request",
+    "problem": "Five-player affiliate cannot lose a prospect.",
+    "solution": "Club Operations renders server-derived disabled Promote and visible exact minimum-depth reason plus current roster counts.",
+    "lesson": "On fixed397 head679, all five prospects were disabled before any academy_move request; shared constraints remain intact.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "academy",
+      "availability",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0242",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Player profile still frames one observation as a time comparison",
+    "problem": "Nightsurge profile says CA52.2 to52.2 over1weeks despite no earlier observation",
+    "solution": "Keep separate profile gap for new ownership; do not expand398; advance409 prevents second-point play evidence",
+    "lesson": "A corrected Club report does not establish parity in the independent player profile.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\first-development-baseline-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-development-first-observation-398\\report.md; seed2038 world26UHC head7bee7d7",
+    "code": "",
+    "tags": [
+      "development",
+      "browser",
+      "first-observation",
+      "pr398"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0241",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Compared roster coverage excludes first observations",
+    "problem": "Squad steady count and averages can hide missing baselines",
+    "solution": "Actual7-player report shows6 compared,3 grown,3 steady,1 first observation; saved120/27 prefixes unchanged",
+    "lesson": "Publish comparison coverage and independently preserve saved decision/history prefixes.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\first-development-baseline-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-development-first-observation-398\\report.md; seed2038 world26UHC head7bee7d7",
+    "code": "",
+    "tags": [
+      "development",
+      "browser",
+      "first-observation",
+      "pr398"
+    ],
+    "kind": "learning"
+  }
+]

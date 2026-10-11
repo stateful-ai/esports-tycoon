@@ -1,0 +1,731 @@
+{
+  "market_window": {
+    "open": false,
+    "kind": "roster_lock",
+    "label": "Tournament lock",
+    "detail": "Playoff rosters are frozen until the offseason."
+  },
+  "academy": {
+    "parent_id": "team_nexus",
+    "parent_name": "Team Nexus",
+    "affiliate_id": "team_kraken_unit",
+    "affiliate_name": "Kraken Unit",
+    "level": 1,
+    "roster": [
+      {
+        "id": "team_kraken_unit_p0",
+        "handle": "Nightsurge",
+        "age": 17,
+        "role": "controller",
+        "roster_role": "starter",
+        "ability": 50.1,
+        "potential_band": [
+          64.5,
+          99.0
+        ],
+        "maps": 10,
+        "rating": 0.86,
+        "owned": true
+      },
+      {
+        "id": "team_kraken_unit_p1",
+        "handle": "Grimpulse",
+        "age": 20,
+        "role": "duelist",
+        "roster_role": "starter",
+        "ability": 48.4,
+        "potential_band": [
+          62.8,
+          90.7
+        ],
+        "maps": 10,
+        "rating": 0.8,
+        "owned": true
+      },
+      {
+        "id": "team_kraken_unit_p3",
+        "handle": "Pyroecho",
+        "age": 17,
+        "role": "initiator",
+        "roster_role": "starter",
+        "ability": 43.3,
+        "potential_band": [
+          53.1,
+          84.5
+        ],
+        "maps": 10,
+        "rating": 0.72,
+        "owned": true
+      },
+      {
+        "id": "team_kraken_unit_p4",
+        "handle": "Nightecho",
+        "age": 19,
+        "role": "sentinel",
+        "roster_role": "starter",
+        "ability": 48.7,
+        "potential_band": [
+          56.5,
+          81.4
+        ],
+        "maps": 10,
+        "rating": 0.71,
+        "owned": true
+      },
+      {
+        "id": "team_kraken_unit_p2",
+        "handle": "Voltflare",
+        "age": 22,
+        "role": "duelist",
+        "roster_role": "starter",
+        "ability": 49.2,
+        "potential_band": [
+          56.0,
+          75.1
+        ],
+        "maps": 10,
+        "rating": 1.23,
+        "owned": true
+      }
+    ],
+    "reports": [
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 11,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 12,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 13,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 14,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 15,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 16,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 17,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      },
+      {
+        "kind": "weekly",
+        "season": 1,
+        "week": 18,
+        "parent_id": "team_nexus",
+        "affiliate_id": "team_kraken_unit",
+        "level": 1,
+        "series": 0,
+        "wins": 0,
+        "players_used": 0,
+        "gains": {}
+      }
+    ],
+    "next_upgrade_cost": 300000
+  },
+  "preparation": {
+    "current": null,
+    "last": {
+      "plan_id": "82d995be264afa5a",
+      "team_id": "team_nexus",
+      "fixture_id": "s1amfinal",
+      "opponent_id": "team_vanguard",
+      "partner_id": "team_adriatic_sirens",
+      "map_id": "haven",
+      "objective": "anti_exec",
+      "intensity": "light",
+      "season": 1,
+      "week": 16,
+      "status": "completed",
+      "finding_code": "opponent_attack_pressure",
+      "finding": "The opponent has won 85.7% of recorded attack rounds on haven.",
+      "evidence": {
+        "own_map_samples": 1,
+        "opponent_map_samples": 2,
+        "partner_map_samples": 4,
+        "own_attack_win_pct": 66.7,
+        "own_defense_win_pct": 100.0,
+        "opponent_attack_win_pct": 85.7,
+        "opponent_defense_win_pct": 83.3,
+        "partner_map_win_pct": 75.0,
+        "scouting_confidence": 0.5,
+        "average_stamina": 90.0,
+        "average_morale": 96.8,
+        "rotation_candidate_id": "fa_0"
+      },
+      "participant_ids": [
+        "apex",
+        "echo",
+        "fa_0",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ],
+      "knowledge_key": "antistrat:team_vanguard",
+      "knowledge_gain": 1.1,
+      "stamina_cost": 1.5,
+      "morale_delta": 0.2,
+      "chemistry_delta": 0.2,
+      "artifact_label": "haven anti-exec book +1.1",
+      "prep_edge_contribution": 0.0044,
+      "dev_suggestion_player_id": "fa_0",
+      "dev_suggestion": "Hollowlock pushed the starters on haven; a focused development block could make that rotation real."
+    },
+    "proposal": null,
+    "condition_costs": {
+      "light": 1.5,
+      "normal": 4.0,
+      "intense": 7.5
+    },
+    "participants": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "condition": 93.5
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "condition": 93.5
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "condition": 100.0
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "condition": 93.5
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "condition": 70.5
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "condition": 93.5
+      }
+    ],
+    "fixture": null,
+    "opponent_id": null,
+    "maps": [],
+    "partners": [
+      {
+        "id": "team_adriatic_sirens",
+        "name": "Adriatic Sirens"
+      },
+      {
+        "id": "team_alpine_echo",
+        "name": "Alpine Echo"
+      },
+      {
+        "id": "team_anatolia_forge",
+        "name": "Anatolia Forge"
+      },
+      {
+        "id": "team_apex_syndicate",
+        "name": "Apex Syndicate"
+      },
+      {
+        "id": "team_azure_vanta",
+        "name": "Azure Vanta"
+      },
+      {
+        "id": "team_baltic_meridian",
+        "name": "Baltic Meridian"
+      },
+      {
+        "id": "team_bayou_kings",
+        "name": "Bayou Kings"
+      },
+      {
+        "id": "team_berlin_wolves",
+        "name": "Berlin Wolves"
+      },
+      {
+        "id": "team_busan_tempest",
+        "name": "Busan Tempest"
+      },
+      {
+        "id": "team_cascadia_youth",
+        "name": "Cascadia Youth"
+      },
+      {
+        "id": "team_chao_phraya_owls",
+        "name": "Chao Phraya Owls"
+      },
+      {
+        "id": "team_coral_sea_drakes",
+        "name": "Coral Sea Drakes"
+      },
+      {
+        "id": "team_crimson_order",
+        "name": "Crimson Order"
+      },
+      {
+        "id": "team_gallic_storm",
+        "name": "Gallic Storm"
+      },
+      {
+        "id": "team_ghostline",
+        "name": "Ghostline"
+      },
+      {
+        "id": "team_harbour_city_nine",
+        "name": "Harbour City Nine"
+      },
+      {
+        "id": "team_highlands_nine",
+        "name": "Highlands Nine"
+      },
+      {
+        "id": "team_hokkaido_drift",
+        "name": "Hokkaido Drift"
+      },
+      {
+        "id": "team_iron_pact",
+        "name": "Iron Pact"
+      },
+      {
+        "id": "team_kathmandu_apex",
+        "name": "Kathmandu Apex"
+      },
+      {
+        "id": "team_kraken_unit",
+        "name": "Kraken Unit"
+      },
+      {
+        "id": "team_lisbon_tide",
+        "name": "Lisbon Tide"
+      },
+      {
+        "id": "team_mekong_vipers",
+        "name": "Mekong Vipers"
+      },
+      {
+        "id": "team_meridian_cross",
+        "name": "Meridian Cross"
+      },
+      {
+        "id": "team_midnight_polders",
+        "name": "Midnight Polders"
+      },
+      {
+        "id": "team_nordic_frost",
+        "name": "Nordic Frost"
+      },
+      {
+        "id": "team_nova_rift",
+        "name": "Nova Rift"
+      },
+      {
+        "id": "team_outback_sentinels",
+        "name": "Outback Sentinels"
+      },
+      {
+        "id": "team_patagonia_sur",
+        "name": "Patagonia Sur"
+      },
+      {
+        "id": "team_phantom_core",
+        "name": "Phantom Core"
+      },
+      {
+        "id": "team_prairie_signal",
+        "name": "Prairie Signal"
+      },
+      {
+        "id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming"
+      },
+      {
+        "id": "team_sahara_compass",
+        "name": "Sahara Compass"
+      },
+      {
+        "id": "team_saracen_guard",
+        "name": "Saracen Guard"
+      },
+      {
+        "id": "team_seoul_dynasty_prime",
+        "name": "Seoul Dynasty Prime"
+      },
+      {
+        "id": "team_solar_flare",
+        "name": "Solar Flare"
+      },
+      {
+        "id": "team_taipei_circuit",
+        "name": "Taipei Circuit"
+      },
+      {
+        "id": "team_tokyo_drift_six",
+        "name": "Tokyo Drift Six"
+      },
+      {
+        "id": "team_vanguard",
+        "name": "Team Vanguard"
+      },
+      {
+        "id": "team_volga_reign",
+        "name": "Volga Reign"
+      },
+      {
+        "id": "team_yucatan_ceibas",
+        "name": "Yucatan Ceibas"
+      }
+    ],
+    "objectives": [
+      "anti_exec",
+      "retakes",
+      "lineup_test",
+      "mental_reset"
+    ],
+    "intensities": [
+      "light",
+      "normal",
+      "intense"
+    ]
+  },
+  "registration": {
+    "player_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "locked": true,
+    "limit": 6,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "role": "starter"
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "role": "starter"
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 26,
+        "role": "bench"
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 28,
+        "role": "starter"
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "role": "starter"
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "role": "starter"
+      }
+    ]
+  },
+  "series": {
+    "fixture": null,
+    "directive": null,
+    "triggers": [
+      "trailing",
+      "after_loss",
+      "always"
+    ],
+    "responses": [
+      "steady",
+      "press",
+      "stabilize",
+      "reset"
+    ],
+    "starter_ids": [],
+    "bench_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ]
+  },
+  "culture": {
+    "team_id": "team_nexus",
+    "captain_id": "apex",
+    "council_ids": [
+      "echo",
+      "ghost"
+    ],
+    "principle": "balanced",
+    "cohesion": 55.9,
+    "leadership": 70.9,
+    "stability": 46.6,
+    "principle_fit": 50.0,
+    "overall": 58.8,
+    "flags": [],
+    "commitment": {
+      "principle": "balanced",
+      "conviction": 50.0,
+      "committed": false
+    },
+    "recent_violations": [],
+    "identity_betrayed": false,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "tenure_weeks": 36,
+        "leadership": 74.2
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "tenure_weeks": 17,
+        "leadership": 63.0
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 26,
+        "tenure_weeks": 14,
+        "leadership": 58.7
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 28,
+        "tenure_weeks": 18,
+        "leadership": 63.7
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "tenure_weeks": 119,
+        "leadership": 63.4
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "tenure_weeks": 112,
+        "leadership": 60.6
+      }
+    ]
+  },
+  "principles": [
+    "balanced",
+    "accountability",
+    "player_led",
+    "development"
+  ],
+  "culture_sessions": {
+    "available_actions": [
+      "accountability",
+      "player_led",
+      "reset",
+      "welcome"
+    ],
+    "welcome_player_ids": [
+      "echo",
+      "fa_0",
+      "fa_13"
+    ],
+    "cooldown_weeks": 0
+  },
+  "delegation": {
+    "policy": {
+      "auto_training": false,
+      "auto_renew_core": false,
+      "renewal_salary_min": 800,
+      "renewal_salary_max": 8000,
+      "renewal_trigger_weeks": 8,
+      "auto_scout": false,
+      "scout_region": "pacific",
+      "scout_roles": [
+        "initiator"
+      ],
+      "scout_max_age": 21,
+      "alert_level": "tier1_ready"
+    },
+    "regions": [
+      "americas",
+      "emea",
+      "pacific",
+      "china"
+    ],
+    "roles": [
+      "duelist",
+      "controller",
+      "initiator",
+      "sentinel",
+      "flex"
+    ],
+    "alert_levels": [
+      "all_matches",
+      "shortlist",
+      "tier1_ready"
+    ],
+    "matching_count": 0,
+    "active_scout_player_id": "slice",
+    "latest_report": {
+      "season": 1,
+      "week": 18,
+      "renewed_player_ids": [],
+      "scout_player_id": "",
+      "alerts": [],
+      "exceptions": []
+    }
+  },
+  "media": {
+    "pending": null,
+    "commitment": null,
+    "history": [
+      {
+        "event_id": "841e9532e560ba1e",
+        "season": 1,
+        "week": 8,
+        "team_id": "team_nexus",
+        "type_id": "defend_player",
+        "choice_id": "defend_publicly",
+        "player_id": "fa_0",
+        "fixture_id": "",
+        "summary": "The manager stands between the player and the criticism.",
+        "sentiment_delta": 3.0,
+        "sponsor_delta": 0.0,
+        "trust_delta": 8.0,
+        "settlement": ""
+      },
+      {
+        "event_id": "d2c6ee7fa625f074",
+        "season": 1,
+        "week": 16,
+        "team_id": "team_nexus",
+        "type_id": "derby_expectations",
+        "choice_id": "respect_rival",
+        "player_id": "",
+        "fixture_id": "s1amfinal",
+        "summary": "The manager backs the group without dismissing the rival.",
+        "sentiment_delta": 0.0,
+        "sponsor_delta": 0.0,
+        "trust_delta": 4.0,
+        "settlement": "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight."
+      }
+    ],
+    "player_trust": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "trust": 54.0
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "trust": 54.0
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "trust": 62.0
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "trust": 54.0
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "trust": 54.0
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "trust": 54.0
+      }
+    ],
+    "cooldown_weeks": 3
+  }
+}

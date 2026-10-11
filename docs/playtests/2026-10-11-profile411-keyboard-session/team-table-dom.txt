@@ -1,0 +1,105 @@
+- button "Back to previous profile": ← Back
+- button "Close profile": ✕
+- text: "Team Nexus AMERICAS · 1 Balanced 2–4 · #6 · -15 rd · L3"
+- button "View roster ▸"
+- heading "Manager" [level=3]
+- paragraph: NXS manager Showman
+- paragraph: In charge since S1 (season 2)
+- heading "Round-win split" [level=3]
+- text: ATK 43% 44% DEF
+- heading "Map winrate" [level=3]
+- text: Ascent 1–0 100% Bind 1–3 25% Lotus 0–1 0%
+- heading "Roster" [level=3]
+- table:
+  - rowgroup:
+    - row "Player Role Maps K/D ACS":
+      - columnheader "Player"
+      - columnheader "Role"
+      - columnheader "Maps"
+      - columnheader "K/D"
+      - columnheader "ACS"
+  - rowgroup:
+    - row "Vortex Duelist 6 1.30 —":
+      - cell "Vortex":
+        - button "Vortex"
+      - cell "Duelist"
+      - cell "6"
+      - cell "1.30"
+      - cell "—"
+    - row "Slyblade Duelist 6 1.33 —":
+      - cell "Slyblade":
+        - button "Slyblade"
+      - cell "Duelist"
+      - cell "6"
+      - cell "1.33"
+      - cell "—"
+    - row "Ghost Initiator 6 1.01 —":
+      - cell "Ghost":
+        - button "Ghost"
+      - cell "Initiator"
+      - cell "6"
+      - cell "1.01"
+      - cell "—"
+    - row "Apex Controller 5 0.74 —":
+      - cell "Apex":
+        - button "Apex"
+      - cell "Controller"
+      - cell "5"
+      - cell "0.74"
+      - cell "—"
+    - row "Hollowlock Controller 1 0.67 —":
+      - cell "Hollowlock":
+        - button "Hollowlock"
+      - cell "Controller"
+      - cell "1"
+      - cell "0.67"
+      - cell "—"
+    - row "Echo Sentinel 6 0.71 —":
+      - cell "Echo":
+        - button "Echo"
+      - cell "Sentinel"
+      - cell "6"
+      - cell "0.71"
+      - cell "—"
+    - row "Nightsurge Controller 3 0.30 —":
+      - cell "Nightsurge":
+        - button "Nightsurge"
+      - cell "Controller"
+      - cell "3"
+      - cell "0.30"
+      - cell "—"
+    - row "Frostdash Controller 0 — —":
+      - cell "Frostdash":
+        - button "Frostdash"
+      - cell "Controller"
+      - cell "0"
+      - cell "—"
+      - cell "—"
+- heading "Form" [level=3]
+- text: L W W L L L
+- heading "Squad chemistry · cohesion 53" [level=3]
+- text: a settled, unremarkable dressing room
+- heading "Development" [level=3]
+- button "Ghost"
+- text: 20y · CA 79 · peak 86–99 · support +0.9 86% —
+- button "Apex"
+- text: 27y · CA 79 · peak 80–87 · support +0.7 · 🎓83 95% —
+- button "Nightsurge"
+- text: 18y · CA 53 · peak 65–99 · support +2.5 64% ▲
+- button "Slyblade"
+- text: 29y · CA 73 · peak 74–87 · support +1.6 · 🎓72 91% —
+- button "Vortex"
+- text: 23y · CA 77 · peak 68–85 · support +1.5 100% ◆
+- button "Echo"
+- text: 24y · CA 75 · peak 66–80 · support +0.9 100% ◆
+- button "Hollowlock"
+- text: 27y · CA 63 · peak 55–66 100% ◆
+- button "Frostdash"
+- text: 29y · CA 51 · peak 41–51 100% ◆
+- heading "Squad strength" [level=3]
+- text: Aim & mechanics 75.5 Tactical IQ 74.4 Mentals 72.4 Teamplay 66.7
+- heading "Agent pool" [level=3]
+- text: Yoru 2x·96 Jett 4x·96 Omen 2x·94 Killjoy 2x·93 Sage 2x·90 Sova 3x·86 Raze 2x·83 Harbor 2x·77 Astra 2x·75 Brimstone 2x·73
+- heading "Playbook &amp; knowledge" [level=3]
+- paragraph: Methodology 9.1 — training-ground know-how that survives roster churn
+- text: Map playbooks Lotus10.6 Ascent10.0 Bind8.8 Haven3.3 Split2.5 Anti-strat books Nordic Frost7.0 Team Vanguard6.9 Rust Belt Gaming6.6 Saracen Guard5.7 Baltic Meridian5.4

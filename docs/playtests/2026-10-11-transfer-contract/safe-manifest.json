@@ -1,0 +1,122 @@
+{
+  "allowlist": {
+    "actions.csv": {
+      "bytes": 8438,
+      "sha256": "774bb0c316af4a6f3ed15828f96993386353988e6a75725d5835bcb8f2724cfb"
+    },
+    "report.md": {
+      "bytes": 4962,
+      "sha256": "b3ca82d7872bf9b133d8c33be0c8138aa84639dafd8f5c00879bd10d52fc8b38"
+    },
+    "reconciliation.json": {
+      "bytes": 3922,
+      "sha256": "c8970098ad3980bcbd65de8d4d9ada0502e12f63d64cdc55721bdb9db8b3337b"
+    },
+    "source-before.json": {
+      "bytes": 95623,
+      "sha256": "9324c9b8f3f9f568351385dc254d18699d8d9860661cbe17685e21928cd1e455"
+    },
+    "source-after.json": {
+      "bytes": 95623,
+      "sha256": "9324c9b8f3f9f568351385dc254d18699d8d9860661cbe17685e21928cd1e455"
+    },
+    "shutdown.json": {
+      "bytes": 75,
+      "sha256": "dfd7b3596d9501f68e9a156bec0ca460ba5ac89b9bb930ebf7eaefa7fb0a303e"
+    },
+    "stale-screen.png": {
+      "bytes": 277818,
+      "sha256": "98fbcaea43a02ee6ffb2dfff8e024b9e7a5cdcb22a7234f67ead47f75c9da160"
+    },
+    "fresh-screen.png": {
+      "bytes": 188832,
+      "sha256": "8db1c2627effb619b8d836fdf23f98b57ee80c54bdb05bd32980b33c096bb664"
+    },
+    "step1.txt": {
+      "bytes": 3902,
+      "sha256": "5afa065721edccdf39a700a8bb04eb4aa1390baaf4107b55b29a0f7e05b647d9"
+    },
+    "step2.txt": {
+      "bytes": 106,
+      "sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249"
+    },
+    "check2.txt": {
+      "bytes": 24687,
+      "sha256": "9c79f1940ddbb6c47d6f4ddc7c00e9eefffae5f363cda5bc4827f3e47b25d206"
+    },
+    "step3.txt": {
+      "bytes": 106,
+      "sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249"
+    },
+    "check3.txt": {
+      "bytes": 25749,
+      "sha256": "010a88018e4267debb67faaa94b75061b9d3c306b66f225b96961fb4a97ab3ac"
+    },
+    "step4.txt": {
+      "bytes": 106,
+      "sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249"
+    },
+    "check4.txt": {
+      "bytes": 7143,
+      "sha256": "6fd4214fd6eae8b83851619df7b983036dc9a65deea494dd8e9c48f5b6d83336"
+    },
+    "step5.txt": {
+      "bytes": 2020,
+      "sha256": "85e1006b9b1669381fc5219fcd03c5027f2cb2e5aa9cb19c416324cce18650eb"
+    },
+    "step6.txt": {
+      "bytes": 1436,
+      "sha256": "2503ff3bc55a5d5d6e21155688695819a1bf8458349625236550fad9571a4215"
+    },
+    "check6.txt": {
+      "bytes": 49936,
+      "sha256": "b9391833a44647647852adb5bba5f24a9cfa01f6920a275aa8153a1f7d8015f6"
+    },
+    "step7.txt": {
+      "bytes": 3752,
+      "sha256": "b69c8f45883955fa2c50e9e82c1d751101b6d75343a5686e359c5efdd22dad9c"
+    },
+    "reopen7.txt": {
+      "bytes": 12257,
+      "sha256": "6bc630b706bda92a1597dd56ae9854ff0c0efbbf3eed706768101f4947bc7ad2"
+    },
+    "step8.txt": {
+      "bytes": 296,
+      "sha256": "300ee78af298f8c398b688b2cbc18436130bb6eee21b2733e5869f6013d6da36"
+    },
+    "recover8.txt": {
+      "bytes": 106,
+      "sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249"
+    },
+    "save-readback.txt": {
+      "bytes": 4740,
+      "sha256": "8cc0ade754661b0cb6212af2bcc57bc99b920e964f052593a889b0415cc46c0e"
+    },
+    "usage-end.jsonl": {
+      "bytes": 9489,
+      "sha256": "bb8028ebf0616b323c0911e5c8b651ae8f5dd0d3003e7c2b90067509fcc93576"
+    },
+    "flywheel-before.json": {
+      "bytes": 7263,
+      "sha256": "3bb7126c4eddf700b7c8630694a58d9d016b3d71166cb33b7ef9fb4ec21f37dc"
+    },
+    "flywheel-after.json": {
+      "bytes": 3020,
+      "sha256": "431879cfef2ba93df5ed3b007acc636ddef58d5047ef8ba42c6b068e9a2f6a86"
+    },
+    "dirty-row9-metadata.json": {
+      "bytes": 1035,
+      "sha256": "c34b59c00763a14a2904f719969705fb0b6fb7cc233c297e0e44c77e138ab8fb"
+    }
+  },
+  "excluded": [
+    "save-before.json",
+    "save-after.json",
+    "saves/",
+    "server-running.json",
+    "privatehelpers"
+  ],
+  "rows": 10,
+  "csv_sha256": "774bb0c316af4a6f3ed15828f96993386353988e6a75725d5835bcb8f2724cfb",
+  "original_nine_rows_prefix_sha256": "47a343930923ac832f940a8d9d3f26b8263350b20486e1731fda844e4178ef0e"
+}

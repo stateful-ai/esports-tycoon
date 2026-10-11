@@ -1,0 +1,453 @@
+{
+  "fixture": {
+    "id": "s1msf0",
+    "week": 18,
+    "stage": "masters_sf",
+    "bracket": "masters",
+    "tier": 1,
+    "best_of": 3,
+    "team_a": "team_vanguard",
+    "team_b": "team_nexus",
+    "maps": [
+      "haven",
+      "ascent",
+      "lotus"
+    ],
+    "veto": [
+      "VGD ban split",
+      "NXS ban bind",
+      "VGD pick haven",
+      "NXS pick ascent",
+      "decider lotus"
+    ],
+    "played": true,
+    "results": [
+      {
+        "map_id": "haven",
+        "seed": 8633839949121621125,
+        "score_a": 19,
+        "score_b": 17,
+        "winner_id": "team_vanguard",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 22,
+            "deaths": 26,
+            "rating": 0.93
+          },
+          {
+            "player_id": "echo",
+            "kills": 19,
+            "deaths": 23,
+            "rating": 0.75
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 19,
+            "deaths": 31,
+            "rating": 0.66
+          },
+          {
+            "player_id": "ghost",
+            "kills": 20,
+            "deaths": 26,
+            "rating": 0.74
+          },
+          {
+            "player_id": "pulse",
+            "kills": 28,
+            "deaths": 29,
+            "rating": 1.01
+          },
+          {
+            "player_id": "shade",
+            "kills": 21,
+            "deaths": 30,
+            "rating": 0.75
+          },
+          {
+            "player_id": "slice",
+            "kills": 38,
+            "deaths": 19,
+            "rating": 1.38
+          },
+          {
+            "player_id": "vortex",
+            "kills": 43,
+            "deaths": 20,
+            "rating": 1.53
+          },
+          {
+            "player_id": "warden",
+            "kills": 22,
+            "deaths": 23,
+            "rating": 0.85
+          },
+          {
+            "player_id": "zenith",
+            "kills": 17,
+            "deaths": 22,
+            "rating": 0.77
+          }
+        ]
+      },
+      {
+        "map_id": "ascent",
+        "seed": 9721637188754719888,
+        "score_a": 12,
+        "score_b": 14,
+        "winner_id": "team_nexus",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 23,
+            "deaths": 20,
+            "rating": 1.21
+          },
+          {
+            "player_id": "echo",
+            "kills": 11,
+            "deaths": 20,
+            "rating": 0.57
+          },
+          {
+            "player_id": "fa_0",
+            "kills": 14,
+            "deaths": 18,
+            "rating": 0.73
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 23,
+            "deaths": 19,
+            "rating": 1.09
+          },
+          {
+            "player_id": "pulse",
+            "kills": 21,
+            "deaths": 21,
+            "rating": 0.99
+          },
+          {
+            "player_id": "shade",
+            "kills": 8,
+            "deaths": 18,
+            "rating": 0.47
+          },
+          {
+            "player_id": "slice",
+            "kills": 32,
+            "deaths": 18,
+            "rating": 1.59
+          },
+          {
+            "player_id": "vortex",
+            "kills": 22,
+            "deaths": 21,
+            "rating": 1.11
+          },
+          {
+            "player_id": "warden",
+            "kills": 20,
+            "deaths": 19,
+            "rating": 0.92
+          },
+          {
+            "player_id": "zenith",
+            "kills": 17,
+            "deaths": 17,
+            "rating": 0.94
+          }
+        ]
+      },
+      {
+        "map_id": "lotus",
+        "seed": 4568907741035379544,
+        "score_a": 13,
+        "score_b": 6,
+        "winner_id": "team_vanguard",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 12,
+            "deaths": 15,
+            "rating": 0.83
+          },
+          {
+            "player_id": "echo",
+            "kills": 9,
+            "deaths": 15,
+            "rating": 0.66
+          },
+          {
+            "player_id": "fa_0",
+            "kills": 4,
+            "deaths": 14,
+            "rating": 0.36
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 15,
+            "deaths": 13,
+            "rating": 1.0
+          },
+          {
+            "player_id": "pulse",
+            "kills": 23,
+            "deaths": 9,
+            "rating": 1.61
+          },
+          {
+            "player_id": "shade",
+            "kills": 6,
+            "deaths": 12,
+            "rating": 0.49
+          },
+          {
+            "player_id": "slice",
+            "kills": 21,
+            "deaths": 12,
+            "rating": 1.39
+          },
+          {
+            "player_id": "vortex",
+            "kills": 14,
+            "deaths": 17,
+            "rating": 0.96
+          },
+          {
+            "player_id": "warden",
+            "kills": 14,
+            "deaths": 10,
+            "rating": 1.05
+          },
+          {
+            "player_id": "zenith",
+            "kills": 10,
+            "deaths": 11,
+            "rating": 0.86
+          }
+        ]
+      }
+    ],
+    "winner_id": "team_vanguard",
+    "series_notes": [
+      "NXS: Hollowlock replaces Ghost after map 1.",
+      "NXS: stabilize response after map 1."
+    ]
+  },
+  "condition": {
+    "ghost": [
+      59.5,
+      70.5
+    ],
+    "fa_0": [
+      97.0,
+      100.0
+    ]
+  },
+  "scout_deep": [
+    0,
+    0.29
+  ],
+  "scout_broad": 0.5,
+  "review": {
+    "fixture_id": "s1msf0",
+    "season": 1,
+    "week": 18,
+    "team_id": "team_nexus",
+    "opp_id": "team_vanguard",
+    "won": false,
+    "best_of": 3,
+    "your_maps": 1,
+    "their_maps": 2,
+    "your_rounds": 37,
+    "their_rounds": 44,
+    "potm_id": "slice",
+    "contested": true,
+    "working": [
+      {
+        "code": "xde_clutch",
+        "category": "player",
+        "tone": "good",
+        "min_tier": 1,
+        "value": 3.2224,
+        "num": 39,
+        "den": 36,
+        "weight": 5.8003,
+        "player_id": "fa_13",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "player_std",
+        "category": "player",
+        "tone": "good",
+        "min_tier": 0,
+        "value": 1.2,
+        "num": 0,
+        "den": 0,
+        "weight": 0.36,
+        "player_id": "vortex",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "clutch",
+        "category": "clutch",
+        "tone": "good",
+        "min_tier": 1,
+        "value": 0.3091,
+        "num": 17,
+        "den": 55,
+        "weight": 0.3055,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "retake",
+        "category": "retake",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.4186,
+        "num": 18,
+        "den": 43,
+        "weight": 0.2192,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "utility",
+        "category": "utility",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.0183,
+        "num": 8,
+        "den": 438,
+        "weight": 0.0183,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "comms",
+        "category": "comms",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.0,
+        "num": 0,
+        "den": 81,
+        "weight": 0.0,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      }
+    ],
+    "breaking": [
+      {
+        "code": "xde_struggle",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -3.3306,
+        "num": 25,
+        "den": 28,
+        "weight": 5.9951,
+        "player_id": "echo",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "xde_struggle",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -1.7102,
+        "num": 36,
+        "den": 38,
+        "weight": 3.0784,
+        "player_id": "apex",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 0,
+        "value": 0.545,
+        "num": 0,
+        "den": 0,
+        "weight": 0.819,
+        "player_id": "fa_0",
+        "lever_code": "player_form",
+        "site": ""
+      },
+      {
+        "code": "acs_gap",
+        "category": "acs",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -17.321,
+        "num": 189,
+        "den": 207,
+        "weight": 0.3464,
+        "player_id": "",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "min_tier": 0,
+        "value": 0.4186,
+        "num": 18,
+        "den": 43,
+        "weight": 0.2442,
+        "player_id": "",
+        "lever_code": "def_setups",
+        "site": ""
+      },
+      {
+        "code": "retake_site",
+        "category": "retake",
+        "tone": "bad",
+        "min_tier": 2,
+        "value": 0.2308,
+        "num": 3,
+        "den": 13,
+        "weight": 0.025,
+        "player_id": "",
+        "lever_code": "retake_site",
+        "site": "C"
+      }
+    ],
+    "calls": {
+      "plan_set": true,
+      "dials": {},
+      "base_dials": {},
+      "site_focus": "",
+      "focus_target": "slice",
+      "team_talk": "",
+      "talk_avg_delta": 0.0,
+      "lineup_override": false,
+      "picked": [
+        "fa_0"
+      ],
+      "benched": [],
+      "picked_ratings": {
+        "fa_0": 0.54
+      },
+      "prep_edge": 1.042,
+      "prepped_maps_played": [
+        "haven",
+        "ascent",
+        "lotus"
+      ],
+      "prepped_maps_missed": []
+    }
+  }
+}

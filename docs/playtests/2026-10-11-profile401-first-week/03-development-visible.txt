@@ -1,0 +1,6 @@
+### Result
+[{"text":"LATEST RECORDED WEEK · S2 W4\n\nTactical · Light · 0 senior maps this week · Struggling\n\nPRACTICE +0.31 OVR\nSENIOR MATCHES 0.00 OVR\nBENCH SCRIMS +0.01 OVR\nCAREER EVENTS 0.00 OVR\nBADGES 0.00 OVR\nLatest-week skill breakdown\n\nNo badge changes this week\n\nPoor match performances are slowing learning; useful practice still counts\n\nTired legs are reducing practice quality; ease intensity or rest\n\nMentorship is accelerating practice\n\nCoaching and club support are improving practice","rect":{"x":205.5,"y":1095.953125,"width":828,"height":222.5625}},{"text":"SEASON 2 SKILL GROWTH\n\nFirst skill observation · S2 W4 — no earlier skill comparison.","rect":{"x":205.5,"y":1330.515625,"width":828,"height":34.4375}}]
+### Ran Playwright code
+```js
+await (async page => { await page.getByRole("heading",{name:"Development",exact:true}).scrollIntoViewIfNeeded(); return await page.locator(".pf-growth").evaluateAll(es=>es.map(e=>({text:e.innerText,rect:{x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height}}))); })(page);
+```

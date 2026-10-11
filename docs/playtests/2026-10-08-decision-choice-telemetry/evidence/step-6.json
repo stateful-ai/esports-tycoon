@@ -1,0 +1,1526 @@
+{
+  "step": 6,
+  "result": "met",
+  "observation": {
+    "response": {
+      "ok": true,
+      "message": "Lineup saved.",
+      "lineup": {
+        "players": [
+          {
+            "id": "apex",
+            "handle": "Apex",
+            "role": "controller",
+            "playstyle": "igl",
+            "options": [
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 92,
+                "edge": 1.69
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 75,
+                "edge": 1.02
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 73,
+                "edge": 0.93
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 70,
+                "edge": 0.79
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 69,
+                "edge": 0.74
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 69,
+                "edge": 0.77
+              },
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 68,
+                "edge": 0.71
+              },
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 65,
+                "edge": 0.6
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 59,
+                "edge": 0.34
+              },
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 59,
+                "edge": 0.37
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 58,
+                "edge": 0.33
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 57,
+                "edge": 0.27
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 57,
+                "edge": 0.27
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 57,
+                "edge": 0.29
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 56,
+                "edge": 0.22
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 55,
+                "edge": 0.18
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 54,
+                "edge": 0.17
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 54,
+                "edge": 0.15
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 53,
+                "edge": 0.1
+              }
+            ],
+            "assigned": null,
+            "auto_id": "omen",
+            "auto_name": "Omen",
+            "resolved_id": "omen",
+            "resolved_name": "Omen"
+          },
+          {
+            "id": "vortex",
+            "handle": "Vortex",
+            "role": "duelist",
+            "playstyle": "awper",
+            "options": [
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 94,
+                "edge": 1.77
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 68,
+                "edge": 0.72
+              },
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 68,
+                "edge": 0.74
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 67,
+                "edge": 0.68
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 66,
+                "edge": 0.62
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 62,
+                "edge": 0.48
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 62,
+                "edge": 0.5
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 62,
+                "edge": 0.48
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.38
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 58,
+                "edge": 0.31
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 58,
+                "edge": 0.34
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 58,
+                "edge": 0.3
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 56,
+                "edge": 0.23
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 55,
+                "edge": 0.21
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 52,
+                "edge": 0.09
+              },
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 52,
+                "edge": 0.08
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 52,
+                "edge": 0.06
+              },
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 51,
+                "edge": 0.02
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 50,
+                "edge": 0.02
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 50,
+                "edge": 0.02
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 49,
+                "edge": -0.03
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 49,
+                "edge": -0.04
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 48,
+                "edge": -0.08
+              },
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 1,
+                "edge": -1.97
+              }
+            ],
+            "assigned": null,
+            "auto_id": "jett",
+            "auto_name": "Jett",
+            "resolved_id": "jett",
+            "resolved_name": "Jett"
+          },
+          {
+            "id": "ghost",
+            "handle": "Ghost",
+            "role": "initiator",
+            "playstyle": "lurker",
+            "options": [
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 83,
+                "edge": 1.31
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 72,
+                "edge": 0.88
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 68,
+                "edge": 0.74
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 68,
+                "edge": 0.74
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 68,
+                "edge": 0.7
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 65,
+                "edge": 0.61
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 62,
+                "edge": 0.5
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 60,
+                "edge": 0.38
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.38
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 59,
+                "edge": 0.37
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 58,
+                "edge": 0.34
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 58,
+                "edge": 0.32
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 55,
+                "edge": 0.18
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 55,
+                "edge": 0.22
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 54,
+                "edge": 0.14
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 54,
+                "edge": 0.14
+              },
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 53,
+                "edge": 0.13
+              },
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 53,
+                "edge": 0.12
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 52,
+                "edge": 0.07
+              },
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 52,
+                "edge": 0.09
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 52,
+                "edge": 0.1
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 51,
+                "edge": 0.04
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 50,
+                "edge": 0.02
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 49,
+                "edge": -0.02
+              },
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 4,
+                "edge": -1.84
+              },
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 2,
+                "edge": -1.91
+              }
+            ],
+            "assigned": null,
+            "auto_id": "sova",
+            "auto_name": "Sova",
+            "resolved_id": "sova",
+            "resolved_name": "Sova"
+          },
+          {
+            "id": "fa_13",
+            "handle": "Slyblade",
+            "role": "duelist",
+            "playstyle": "entry",
+            "options": [
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 95,
+                "edge": 1.81
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 90,
+                "edge": 1.59
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 83,
+                "edge": 1.32
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 68,
+                "edge": 0.72
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 68,
+                "edge": 0.7
+              },
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 62,
+                "edge": 0.46
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 61,
+                "edge": 0.42
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 59,
+                "edge": 0.35
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 59,
+                "edge": 0.35
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 59,
+                "edge": 0.36
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 58,
+                "edge": 0.3
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 57,
+                "edge": 0.28
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 56,
+                "edge": 0.23
+              },
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 56,
+                "edge": 0.22
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 54,
+                "edge": 0.14
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 53,
+                "edge": 0.12
+              },
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 53,
+                "edge": 0.11
+              },
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 52,
+                "edge": 0.1
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 52,
+                "edge": 0.06
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 51,
+                "edge": 0.04
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 51,
+                "edge": 0.02
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 51,
+                "edge": 0.04
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 50,
+                "edge": 0.02
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 50,
+                "edge": 0.01
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 48,
+                "edge": -0.08
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 47,
+                "edge": -0.14
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 45,
+                "edge": -0.22
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 44,
+                "edge": -0.22
+              },
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 40,
+                "edge": -0.39
+              }
+            ],
+            "assigned": null,
+            "auto_id": "yoru",
+            "auto_name": "Yoru",
+            "resolved_id": "yoru",
+            "resolved_name": "Yoru"
+          },
+          {
+            "id": "echo",
+            "handle": "Echo",
+            "role": "sentinel",
+            "playstyle": "anchor",
+            "options": [
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 90,
+                "edge": 1.62
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 73,
+                "edge": 0.91
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 71,
+                "edge": 0.83
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 70,
+                "edge": 0.8
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 68,
+                "edge": 0.72
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 65,
+                "edge": 0.59
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 62,
+                "edge": 0.47
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 60,
+                "edge": 0.4
+              },
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 59,
+                "edge": 0.35
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 58,
+                "edge": 0.33
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 57,
+                "edge": 0.26
+              },
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 57,
+                "edge": 0.28
+              },
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 56,
+                "edge": 0.25
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 53,
+                "edge": 0.13
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 53,
+                "edge": 0.12
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 53,
+                "edge": 0.11
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 52,
+                "edge": 0.06
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 52,
+                "edge": 0.09
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 52,
+                "edge": 0.08
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 51,
+                "edge": 0.06
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 51,
+                "edge": 0.03
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 50,
+                "edge": 0.02
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 49,
+                "edge": -0.05
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 49,
+                "edge": -0.04
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 8,
+                "edge": -1.7
+              }
+            ],
+            "assigned": null,
+            "auto_id": "killjoy",
+            "auto_name": "Killjoy",
+            "resolved_id": "killjoy",
+            "resolved_name": "Killjoy"
+          },
+          {
+            "id": "fa_0",
+            "handle": "Hollowlock",
+            "role": "controller",
+            "playstyle": "igl",
+            "options": [
+              {
+                "id": "harbor",
+                "name": "Harbor",
+                "role": "controller",
+                "mastery": 73,
+                "edge": 0.91
+              },
+              {
+                "id": "jett",
+                "name": "Jett",
+                "role": "duelist",
+                "mastery": 73,
+                "edge": 0.92
+              },
+              {
+                "id": "clove",
+                "name": "Clove",
+                "role": "controller",
+                "mastery": 71,
+                "edge": 0.83
+              },
+              {
+                "id": "veto",
+                "name": "Veto",
+                "role": "sentinel",
+                "mastery": 56,
+                "edge": 0.23
+              },
+              {
+                "id": "astra",
+                "name": "Astra",
+                "role": "controller",
+                "mastery": 54,
+                "edge": 0.18
+              },
+              {
+                "id": "brimstone",
+                "name": "Brimstone",
+                "role": "controller",
+                "mastery": 54,
+                "edge": 0.16
+              },
+              {
+                "id": "viper",
+                "name": "Viper",
+                "role": "controller",
+                "mastery": 52,
+                "edge": 0.09
+              },
+              {
+                "id": "kayo",
+                "name": "KAY/O",
+                "role": "initiator",
+                "mastery": 50,
+                "edge": 0.01
+              },
+              {
+                "id": "reyna",
+                "name": "Reyna",
+                "role": "duelist",
+                "mastery": 50,
+                "edge": -0.02
+              },
+              {
+                "id": "omen",
+                "name": "Omen",
+                "role": "controller",
+                "mastery": 49,
+                "edge": -0.04
+              },
+              {
+                "id": "gekko",
+                "name": "Gekko",
+                "role": "initiator",
+                "mastery": 47,
+                "edge": -0.14
+              },
+              {
+                "id": "miks",
+                "name": "Miks",
+                "role": "controller",
+                "mastery": 47,
+                "edge": -0.13
+              },
+              {
+                "id": "skye",
+                "name": "Skye",
+                "role": "initiator",
+                "mastery": 47,
+                "edge": -0.13
+              },
+              {
+                "id": "iso",
+                "name": "Iso",
+                "role": "duelist",
+                "mastery": 46,
+                "edge": -0.14
+              },
+              {
+                "id": "deadlock",
+                "name": "Deadlock",
+                "role": "sentinel",
+                "mastery": 43,
+                "edge": -0.27
+              },
+              {
+                "id": "fade",
+                "name": "Fade",
+                "role": "initiator",
+                "mastery": 43,
+                "edge": -0.26
+              },
+              {
+                "id": "phoenix",
+                "name": "Phoenix",
+                "role": "duelist",
+                "mastery": 40,
+                "edge": -0.42
+              },
+              {
+                "id": "raze",
+                "name": "Raze",
+                "role": "duelist",
+                "mastery": 40,
+                "edge": -0.41
+              },
+              {
+                "id": "neon",
+                "name": "Neon",
+                "role": "duelist",
+                "mastery": 39,
+                "edge": -0.43
+              },
+              {
+                "id": "sova",
+                "name": "Sova",
+                "role": "initiator",
+                "mastery": 39,
+                "edge": -0.45
+              },
+              {
+                "id": "waylay",
+                "name": "Waylay",
+                "role": "duelist",
+                "mastery": 39,
+                "edge": -0.43
+              },
+              {
+                "id": "yoru",
+                "name": "Yoru",
+                "role": "duelist",
+                "mastery": 38,
+                "edge": -0.49
+              },
+              {
+                "id": "chamber",
+                "name": "Chamber",
+                "role": "sentinel",
+                "mastery": 37,
+                "edge": -0.51
+              },
+              {
+                "id": "breach",
+                "name": "Breach",
+                "role": "initiator",
+                "mastery": 36,
+                "edge": -0.57
+              },
+              {
+                "id": "tejo",
+                "name": "Tejo",
+                "role": "initiator",
+                "mastery": 35,
+                "edge": -0.61
+              },
+              {
+                "id": "killjoy",
+                "name": "Killjoy",
+                "role": "sentinel",
+                "mastery": 32,
+                "edge": -0.71
+              },
+              {
+                "id": "sage",
+                "name": "Sage",
+                "role": "sentinel",
+                "mastery": 27,
+                "edge": -0.9
+              },
+              {
+                "id": "vyse",
+                "name": "Vyse",
+                "role": "sentinel",
+                "mastery": 7,
+                "edge": -1.71
+              },
+              {
+                "id": "cypher",
+                "name": "Cypher",
+                "role": "sentinel",
+                "mastery": 5,
+                "edge": -1.78
+              }
+            ],
+            "assigned": "harbor",
+            "auto_id": "jett",
+            "auto_name": "Jett",
+            "resolved_id": "harbor",
+            "resolved_name": "Harbor"
+          }
+        ]
+      }
+    },
+    "hollowlock": {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "role": "controller",
+      "playstyle": "igl",
+      "options": [
+        {
+          "id": "harbor",
+          "name": "Harbor",
+          "role": "controller",
+          "mastery": 73,
+          "edge": 0.91
+        },
+        {
+          "id": "jett",
+          "name": "Jett",
+          "role": "duelist",
+          "mastery": 73,
+          "edge": 0.92
+        },
+        {
+          "id": "clove",
+          "name": "Clove",
+          "role": "controller",
+          "mastery": 71,
+          "edge": 0.83
+        },
+        {
+          "id": "veto",
+          "name": "Veto",
+          "role": "sentinel",
+          "mastery": 56,
+          "edge": 0.23
+        },
+        {
+          "id": "astra",
+          "name": "Astra",
+          "role": "controller",
+          "mastery": 54,
+          "edge": 0.18
+        },
+        {
+          "id": "brimstone",
+          "name": "Brimstone",
+          "role": "controller",
+          "mastery": 54,
+          "edge": 0.16
+        },
+        {
+          "id": "viper",
+          "name": "Viper",
+          "role": "controller",
+          "mastery": 52,
+          "edge": 0.09
+        },
+        {
+          "id": "kayo",
+          "name": "KAY/O",
+          "role": "initiator",
+          "mastery": 50,
+          "edge": 0.01
+        },
+        {
+          "id": "reyna",
+          "name": "Reyna",
+          "role": "duelist",
+          "mastery": 50,
+          "edge": -0.02
+        },
+        {
+          "id": "omen",
+          "name": "Omen",
+          "role": "controller",
+          "mastery": 49,
+          "edge": -0.04
+        },
+        {
+          "id": "gekko",
+          "name": "Gekko",
+          "role": "initiator",
+          "mastery": 47,
+          "edge": -0.14
+        },
+        {
+          "id": "miks",
+          "name": "Miks",
+          "role": "controller",
+          "mastery": 47,
+          "edge": -0.13
+        },
+        {
+          "id": "skye",
+          "name": "Skye",
+          "role": "initiator",
+          "mastery": 47,
+          "edge": -0.13
+        },
+        {
+          "id": "iso",
+          "name": "Iso",
+          "role": "duelist",
+          "mastery": 46,
+          "edge": -0.14
+        },
+        {
+          "id": "deadlock",
+          "name": "Deadlock",
+          "role": "sentinel",
+          "mastery": 43,
+          "edge": -0.27
+        },
+        {
+          "id": "fade",
+          "name": "Fade",
+          "role": "initiator",
+          "mastery": 43,
+          "edge": -0.26
+        },
+        {
+          "id": "phoenix",
+          "name": "Phoenix",
+          "role": "duelist",
+          "mastery": 40,
+          "edge": -0.42
+        },
+        {
+          "id": "raze",
+          "name": "Raze",
+          "role": "duelist",
+          "mastery": 40,
+          "edge": -0.41
+        },
+        {
+          "id": "neon",
+          "name": "Neon",
+          "role": "duelist",
+          "mastery": 39,
+          "edge": -0.43
+        },
+        {
+          "id": "sova",
+          "name": "Sova",
+          "role": "initiator",
+          "mastery": 39,
+          "edge": -0.45
+        },
+        {
+          "id": "waylay",
+          "name": "Waylay",
+          "role": "duelist",
+          "mastery": 39,
+          "edge": -0.43
+        },
+        {
+          "id": "yoru",
+          "name": "Yoru",
+          "role": "duelist",
+          "mastery": 38,
+          "edge": -0.49
+        },
+        {
+          "id": "chamber",
+          "name": "Chamber",
+          "role": "sentinel",
+          "mastery": 37,
+          "edge": -0.51
+        },
+        {
+          "id": "breach",
+          "name": "Breach",
+          "role": "initiator",
+          "mastery": 36,
+          "edge": -0.57
+        },
+        {
+          "id": "tejo",
+          "name": "Tejo",
+          "role": "initiator",
+          "mastery": 35,
+          "edge": -0.61
+        },
+        {
+          "id": "killjoy",
+          "name": "Killjoy",
+          "role": "sentinel",
+          "mastery": 32,
+          "edge": -0.71
+        },
+        {
+          "id": "sage",
+          "name": "Sage",
+          "role": "sentinel",
+          "mastery": 27,
+          "edge": -0.9
+        },
+        {
+          "id": "vyse",
+          "name": "Vyse",
+          "role": "sentinel",
+          "mastery": 7,
+          "edge": -1.71
+        },
+        {
+          "id": "cypher",
+          "name": "Cypher",
+          "role": "sentinel",
+          "mastery": 5,
+          "edge": -1.78
+        }
+      ],
+      "assigned": "harbor",
+      "auto_id": "jett",
+      "auto_name": "Jett",
+      "resolved_id": "harbor",
+      "resolved_name": "Harbor"
+    }
+  }
+}

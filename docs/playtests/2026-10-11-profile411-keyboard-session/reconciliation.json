@@ -1,0 +1,77 @@
+{
+  "baselineHash": "c14f5a35f054e0b612fd5162016f33d256e917b246752065a7f9bc1bde287db8",
+  "finalHash": "c14f5a35f054e0b612fd5162016f33d256e917b246752065a7f9bc1bde287db8",
+  "fullDecisionEqual": true,
+  "beforeDecisions": 133,
+  "afterDecisions": 133,
+  "beforeSnaps": 29,
+  "afterSnaps": 29,
+  "fullSnapsEqual": true,
+  "sourceFreezeEqual": true,
+  "time": {
+    "seed": 2038,
+    "season": 2,
+    "week": 7
+  },
+  "usage": {
+    "retained": 42,
+    "byKind": {
+      "session_start": 1,
+      "view": 9,
+      "visible_time": 29,
+      "attempt": 1,
+      "result": 1,
+      "session_end": 1
+    },
+    "bySession": {
+      "4d1b221718dc601278b721834b14cb30": 42
+    },
+    "attempts": 1,
+    "results": 1,
+    "matched": 1,
+    "profileEvents": [],
+    "views": [
+      "lobby",
+      "dashboard",
+      "club/squad",
+      "company/finances",
+      "tactics/strategy",
+      "tactics/prep",
+      "market/players",
+      "company/finances",
+      "market/players"
+    ],
+    "save": [
+      {
+        "schema_version": 1,
+        "session_id": "4d1b221718dc601278b721834b14cb30",
+        "received_at": "2026-10-11T13:37:06.605334+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 7,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 24
+      },
+      {
+        "schema_version": 1,
+        "session_id": "4d1b221718dc601278b721834b14cb30",
+        "received_at": "2026-10-11T13:37:06.605334+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 7,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 24,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 37
+      }
+    ]
+  },
+  "requestCount": 59,
+  "profileGetCount": 10,
+  "sourceFreezeHash": "ac655a6e216f7a5a691fd5cc0af77ea783705d77c152baf1b3cd8321f624b6f2"
+}

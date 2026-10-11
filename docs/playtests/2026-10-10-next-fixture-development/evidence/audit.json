@@ -1,0 +1,84 @@
+{
+  "audited_at_utc": "2026-10-10T21:57:50.168683+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "baseline_actions": 58,
+  "final_actions": 60,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 2,
+    "accepted": 2
+  },
+  "snapshot_prefix_unchanged": true,
+  "snapshots_before_after": [
+    11,
+    12
+  ],
+  "bank_before_after": [
+    482260,
+    544898
+  ],
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "03cbe1eddec3655116f67b06923aacf0124ab9718c643e2f9925bdec4b51122a",
+  "usage_events_at_audit": 106,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 11,
+    "visible_time": 83,
+    "session_end": 2,
+    "attempt": 3,
+    "result": 3,
+    "interaction": 1
+  },
+  "request_pairs": 3,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "request_targets": [
+    "/api/actions/dev_plan",
+    "/api/actions/advance",
+    "/api/actions/save"
+  ],
+  "request_ids": [
+    15,
+    17,
+    22
+  ],
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 41216,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 20752,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8494",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 17344,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8494",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Only this controlled session:2 accepted decisions and3 paired successful UI requests, including Save outside decision vocabulary. Navigation visibility is bounded best-effort receipt, not attention, overlay dwell or full funnels. Initial fresh lobby occupied-team block, shortened-DOM false concern, shell quoting/defaultencoding and stable-ID audit errors remain in CSV. No new confirmed gap or causal win claim."
+}

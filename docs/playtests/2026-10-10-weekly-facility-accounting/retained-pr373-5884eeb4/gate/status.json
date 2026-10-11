@@ -1,0 +1,21 @@
+{
+  "status": "complete",
+  "started": "2026-10-10T19:37:40.909118+00:00",
+  "head": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "diff_sha256": "2d41ac1a2e2f6c97a73ac4438415de16b93a20a081b70e92bb1286e1bd2e9966",
+  "writer_pid": 11276,
+  "pytest_pid": 3496,
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n2"
+  ],
+  "imported_package": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\src\\esports_sim\\__init__.py",
+  "source_file_count": 610,
+  "finished": "2026-10-10T21:41:54.071475+00:00",
+  "pytest_exit_code": 0,
+  "source_freeze_equal": true,
+  "changed_files": []
+}

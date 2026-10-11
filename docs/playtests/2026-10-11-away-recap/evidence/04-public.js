@@ -1,0 +1,1 @@
+async page => ({visible:await page.locator('body').innerText(),state:await page.evaluate(async()=>await(await fetch('/api/state')).json()),report:await page.evaluate(async()=>await(await fetch('/api/report')).json()),usage:await page.evaluate(async()=>await(await fetch('/api/usage/report')).json())})

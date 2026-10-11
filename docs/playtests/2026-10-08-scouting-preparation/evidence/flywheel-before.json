@@ -1,0 +1,161 @@
+[
+  {
+    "id": "esports-playtest-0073",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Badge gains lack weekly source attribution",
+    "problem": "Echo+0.5OVR/ClutchMaster appears beside No measured skill gains in Fullreport",
+    "solution": "Retained publicbadge exact+3/+2effects, chartdelta and contradictoryreport; delegated gap12 to isolated6.1-sol/medium agent",
+    "lesson": "All ability-moving sources including reversible badges need signed measured attribution; preserve genericstatmechanics while fixingexplanations",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0072",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Fixture plan and individual recovery need outcome readback",
+    "problem": "Preparation edge and lightconditioncost can be mistaken for a guaranteedwin or netrecovery",
+    "solution": "Neutralone-fixture planconsumed;13-10Bind observed, Apexstaminafell53to43 despiteLight, VortexRestrose54to65",
+    "lesson": "Server-owned plans and observed outcomes are distinct; inspect actual condition and explicit planconsumption",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0071",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Mentor assignment is visible and quantitatively captured",
+    "problem": "Need verify a selected veteran mentor persists and appears in observed development",
+    "solution": "Renewed Apex, assigned Ghost through legal selector, read public persisted mentor then weekly mentorshipfactor; ledger mentor plus requestpair reconcile",
+    "lesson": "Separate accepted mentorship, roundedprogress and weekly factors; oneweek cannot isolate causal growth",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0070",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Read actual state before completing an observation",
+    "problem": "Incomplete cloned-save fixture opened lobby and root prematurely marked expected Dashboard behavior met",
+    "solution": "Retained unsupported row and failed screenshots, added explicit diagnosis/recovery observations and copied identified companion files without exposing credentials",
+    "lesson": "Do not finish a CSV row from expected tool behavior; inspect result before judgment and preserve later corrections rather than rewriting evidence",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0069",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Resolved weekly development and bounded usage agree in integration",
+    "problem": "Players need visible reasons for growth and analytics needs separate usage evidence",
+    "solution": "Full S1W2 report matches five report-time players and Vortex Rest/match/career attribution; three decisions and two bounded control receipts reconcile separately",
+    "lesson": "Attribute actual outcomes to server-resolved sources and distinguish search/report initiation counts from accepted decisions and causal claims",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0068",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current roster eligibility follows departure and return",
+    "problem": "Historical player advice could point at an unavailable roster member",
+    "solution": "Preserved Echo0.72 finding with departure explanation, re-signed actual terms and verified advice returns while short-squad blocker clears",
+    "lesson": "Historical findings stay intact while current membership gates actionable controls; native release cancellation adds neither decision nor HTTP request",
+    "confidence": "medium",
+    "source": "Combined-ten browser8458 world26UHC seed2038 S1W2-W3; docs/playtests/2026-10-08-ten-gap-validation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "roster",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0067",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Automatic guide blocked an Advance attempt",
+    "problem": "First-week handbook intercepted the intended Advance click",
+    "solution": "Retained blocked pre-action log and closed guide before recovery",
+    "lesson": "Do not infer an action request from a blocked click; distinguish UI recovery from accepted decisions",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0066",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Review dedup after membership filtering",
+    "problem": "A departed finding can occupy the single player_form recommendation",
+    "solution": "Regression covers current teammate after departed finding and second human manager",
+    "lesson": "Filter unavailable advice before deduplicating so current teammates remain actionable",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "learning"
+  }
+]

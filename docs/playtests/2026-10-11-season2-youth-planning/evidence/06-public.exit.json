@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:49:48.106586+00:00",
+  "exit_code": 1,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {\n  const get = async path => { const response = await page.request.get(path); if (!response.ok()) throw new Error(`${path}: ${response.status()}`); return response.json(); };\n  const state = await get('/api/state');\n  return { state: {season:state.season,week:state.week,phase:state.phase,user_team:state.user_team,save:state.save}, club:await get('/api/club'), roster:await get('/api/roster/team_nexus') };\n}\n"
+  ],
+  "stdout_bytes": 44,
+  "stderr_bytes": 0
+}

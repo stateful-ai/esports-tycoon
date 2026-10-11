@@ -1,0 +1,2098 @@
+{
+  "previouscandidate": {
+    "commit": "685d78b19386fdfb4d59530f35f822c073b4be9d",
+    "delta_paths": 8,
+    "paths": [
+      {
+        "status": "M",
+        "path": ".gitattributes"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/current-main-source-and-attributes-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/dated-integration-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-unused-map-book.md"
+      },
+      {
+        "status": "M",
+        "path": "src/esports_sim/web/server.py"
+      },
+      {
+        "status": "M",
+        "path": "src/esports_sim/web/static/app.js"
+      },
+      {
+        "status": "M",
+        "path": "tests/test_match_review.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/current-main-path-inventory.json"
+      }
+    ]
+  },
+  "currentmain": {
+    "commit": "df9b105f7f79fa54357c677e835cf965cf2235cb",
+    "delta_paths": 513,
+    "paths": [
+      {
+        "status": "M",
+        "path": ".gitattributes"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/baseline-import-correction.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/01-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/01-operations.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/02-pathway-controls.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/03-nightsurge-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-independent-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-save-recovery.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-squad-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/05-close-overlay.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/05-overlay-dom-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/06-final-receipt.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/public-readback.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/requests-results.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/usage-baseline/usage.0.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/usage-end/usage.0.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/flywheel-recorded.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/git-and-save-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/harness-corrections.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/owned-server-pid.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/publication-manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/server-err.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/server-out.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/shutdown.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/source-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-academy-availability-fixed-head/source-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.meta.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/console-2026-10-11T10-21-00-612Z.log"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-01-049Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-04-563Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-47-855Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-54-994Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-22-34-700Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-07-518Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-09-598Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-34-302Z.yml"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/development-report.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/flywheel-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/identity-restoration.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/import-baseline-correction.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/import-baseline.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/saved-reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/server-close-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/source-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/source-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-after/usage.0.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-before/usage.0.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-development-first-observation-398/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-fixed-head-sessions-and-analytics.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/artifact-index.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/dated-consolidation-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv-receipts.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1003.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1016.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1028.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-765.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-994.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-994-8e31/current-main-path-inventory.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-994-8e31/current-main-source-and-prefix-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-994-8e31/dated-integration-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/current-main-source-and-attributes-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/dated-integration-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/original-root-audit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/path-inventory.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/publication-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/source-git-receipt.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/HANDOFF.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/artifact-index.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/dated-ci-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/historical-source/src/esports_sim/web/server.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/historical-source/src/esports_sim/web/static/profile.js"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/index-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/original-reviewed-append.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/publication-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1003/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/HANDOFF.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/artifact-index.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/dated-source-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/manager/academy.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/server.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/static/app.js"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/static/profile.js"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/index-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/original-reviewed-append.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/publication-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1016/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/HANDOFF.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/artifact-index.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/dated-source-qualification.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/original-root-audit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/publication-proof.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-followup-1028/source-git-receipt.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/console-initial.log"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/development-w6.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/flywheel-after-local.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/harness-failures.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/new-decisions.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/profile-ghost.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/profile-team_kraken_unit_p0.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/public-report.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/public-roster.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/public-state.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/publication-manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/server-stop-receipt.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/campaign.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/decision_env.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/mentorship.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/campaign.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/decision_env.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/mentorship.py"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-freeze-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/source-freeze-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentor400-week-progress/usage-events.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-mentorship-profile-supplemental-and-analytics.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/01-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/02-public-dom.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/02-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/03-development-visible.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/03-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/04-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/04-scroll.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/04-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/05-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/05-scroll.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/05-snapshot.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/06-correction-scroll.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/07-browser-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/07-console.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/07-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/07-wire.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/cleanup.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/evidence-allowlist.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/flywheel-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/hollowlock-measured-flat.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/hollowlock-season-skills-flat.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-expanded-visible.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-first-observation.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-skill-breakdown.png"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/public-readbacks.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/server-running.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/source-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/source-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/usage-baseline.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/usage-end.raw.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-profile401-first-week/wire-events.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/artifact-hashes.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-club.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard-loading.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard-loading.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard-loading.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-dashboard.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-roster.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-roster.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/01-roster.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-hollow-profile.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-hollow-profile.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-hollow-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-profile.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-profile.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/02-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-close-profile.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-close-profile.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-close-profile.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development-controls.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development-controls.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development-controls.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-development.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-public-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-public-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-public-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-roster-public.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-roster-public.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/03-roster-public.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-rest-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-rest-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-rest-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-vortex-rest.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-vortex-rest.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/04-vortex-rest.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-advance.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-advance.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-advance.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-week4-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-week4-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/05-week4-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/06-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-click.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-click.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-click.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-controls.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-controls.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-save-controls.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-saved-public.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-saved-public.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/07-saved-public.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-continue-reveal.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-continue-reveal.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-continue-reveal.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save-final.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save-final.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save-final.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/08-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/09-stream-public.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/09-stream-public.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/09-stream-public.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/actions-before-final-analytics.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/browser-close.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/browser-close.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/browser-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/cleanup.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/flywheel-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/saved-decisions.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/source-manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/evidence/usage.raw.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-roster-recovery/report.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/artifact-hashes.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.exit.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.stderr.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.txt"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/actions-before-final-analytics.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/cleanup.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/flywheel-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/flywheel-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/reconciliation.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/save-after.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/save-before.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/saved-decisions.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/setup-correction.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/source-manifest.json"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/usage.raw.jsonl"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-season2-youth-planning/report.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/playtests/actions.csv"
+      },
+      {
+        "status": "A",
+        "path": "docs/playtests/2026-10-11-history-consolidated-1044/integration-main-df9b105f/current-main-path-inventory.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+src/esports_sim/manager/campaign.py
+2037:             "util_discipline": min(100.0, tactics.util_discipline + 10.0),
+2038:         }
+2039:     return TeamMatchPlan(
+2040:         tactics=tactics.model_copy(update=update) if update else base.tactics,
+2041:         focus_target=base.focus_target,
+2042:         prep_edge=base.prep_edge,
+2043:         counter_edge=base.counter_edge,
+2044:         coach=base.coach,
+2045:     )

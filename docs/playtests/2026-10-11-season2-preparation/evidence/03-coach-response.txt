@@ -1,0 +1,6 @@
+### Result
+{"url":"http://127.0.0.1:8537/api/actions/preparation","status":200,"request":{"accept":true},"body":{"ok":true,"message":"Preparation session booked."}}
+### Ran Playwright code
+```js
+await (async page => { const response=page.waitForResponse(r=>r.url().includes('/api/actions/')&&r.request().method()==='POST'); await page.getByRole('button',{name:'Accept coach plan',exact:true}).click(); const r=await response; return {url:r.url(),status:r.status(),request:r.request().postDataJSON(),body:await r.json()}; })(page);
+```

@@ -1,0 +1,166 @@
+{
+  "audited_at_utc": "2026-10-10T20:28:07.787125+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "baseline_actions": 50,
+  "final_actions": 55,
+  "prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 5,
+    "attempted": 5
+  },
+  "exact_lineup_player_ids": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "exact_game_plan": {
+    "aggression": "",
+    "choice_encoding": "json-v1",
+    "eco_greed": "",
+    "fixture_id": "s1w11m2am",
+    "focus_target": "",
+    "map_control": "30.0",
+    "n_dials": "1",
+    "one_match_lineup": "False",
+    "opponent": "team_saracen_guard",
+    "pace": "",
+    "site_focus": "",
+    "starter_ids": "[]",
+    "team_talk": "",
+    "util_discipline": ""
+  },
+  "snapshot_counts_before": {
+    "mgr_team_nexus": 10
+  },
+  "snapshot_counts_after": {
+    "mgr_team_nexus": 11
+  },
+  "snapshot_prefix_unchanged": true,
+  "saved_demand": {
+    "id": "0981f9afb97a945c",
+    "brand": "Streamforge",
+    "slot": "jersey",
+    "kind": "field_rookie",
+    "fixture_id": "s1w11m2am",
+    "opponent_id": "team_saracen_guard",
+    "player_id": "ghost",
+    "issued_season": 1,
+    "issued_week": 10,
+    "deadline_week": 11,
+    "reward": 20200,
+    "penalty": 10100,
+    "status": "met",
+    "resolved_season": 1,
+    "resolved_week": 11
+  },
+  "relation_before": 52,
+  "relation_after": 57,
+  "bank_before": 395538,
+  "bank_after": 482260,
+  "shoot_income": 3500,
+  "weekly_net": 83222,
+  "reported_weekly_income": 130322,
+  "reported_weekly_expense": 47100,
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "43525a9dd3b7b45ce88333c7849d4c2069a0bdcfd5ce462ef5e16267c8946fb3",
+  "report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "usage_events": 92,
+  "usage_kind_counts": {
+    "session_start": 4,
+    "view": 17,
+    "visible_time": 55,
+    "session_end": 3,
+    "attempt": 6,
+    "result": 6,
+    "interaction": 1
+  },
+  "page_session_ids": [
+    "13fe5a5a29fa2298d0ade5c79e66b7a3",
+    "5e241e5cbf9a580890ecaed4fd13c588",
+    "af48d7d26e2e17b1b30ada6c76c938f2",
+    "f9b959a1b56507817cab6707e1dc6537"
+  ],
+  "paired_requests": 6,
+  "usage_request_pairs": [
+    {
+      "session_id": "5e241e5cbf9a580890ecaed4fd13c588",
+      "request_id": 11,
+      "target": "/api/actions/sponsor_demand"
+    },
+    {
+      "session_id": "5e241e5cbf9a580890ecaed4fd13c588",
+      "request_id": 18,
+      "target": "/api/actions/lineup"
+    },
+    {
+      "session_id": "af48d7d26e2e17b1b30ada6c76c938f2",
+      "request_id": 18,
+      "target": "/api/actions/gameplan"
+    },
+    {
+      "session_id": "af48d7d26e2e17b1b30ada6c76c938f2",
+      "request_id": 27,
+      "target": "/api/actions/flavor_event"
+    },
+    {
+      "session_id": "af48d7d26e2e17b1b30ada6c76c938f2",
+      "request_id": 36,
+      "target": "/api/actions/advance"
+    },
+    {
+      "session_id": "af48d7d26e2e17b1b30ada6c76c938f2",
+      "request_id": 52,
+      "target": "/api/actions/save"
+    }
+  ],
+  "mcp_network_observer_indices": [
+    43,
+    98,
+    161,
+    179,
+    190,
+    215
+  ],
+  "unmatched_attempts": [],
+  "orphan_results": [],
+  "server_family_stopped": [
+    {
+      "pid": 12120,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 23296,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8489",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 41036,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8489",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Retained bounded best-effort usage does not establish complete duration/attention. Profile/row expansion is outside current telemetry; overlay agent covers it. Missing browser-observer response bodies after reload are not synthesized; public UI and saved state independently verify the result. UTF8 failure13 and timing correction8 are preserved. Historical upkeep classification and sentence spacing repeat existing gaps25/26."
+}

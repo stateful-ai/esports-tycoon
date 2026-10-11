@@ -1,0 +1,65 @@
+[
+  {
+    "id": "esports-playtest-0071",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Mentor assignment is visible and quantitatively captured",
+    "problem": "Need verify a selected veteran mentor persists and appears in observed development",
+    "solution": "Renewed Apex, assigned Ghost through legal selector, read public persisted mentor then weekly mentorshipfactor; ledger mentor plus requestpair reconcile",
+    "lesson": "Separate accepted mentorship, roundedprogress and weekly factors; oneweek cannot isolate causal growth",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0072",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Fixture plan and individual recovery need outcome readback",
+    "problem": "Preparation edge and lightconditioncost can be mistaken for a guaranteedwin or netrecovery",
+    "solution": "Neutralone-fixture planconsumed;13-10Bind observed, Apexstaminafell53to43 despiteLight, VortexRestrose54to65",
+    "lesson": "Server-owned plans and observed outcomes are distinct; inspect actual condition and explicit planconsumption",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0073",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Badge gains lack weekly source attribution",
+    "problem": "Echo+0.5OVR/ClutchMaster appears beside No measured skill gains in Fullreport",
+    "solution": "Retained publicbadge exact+3/+2effects, chartdelta and contradictoryreport; delegated gap12 to isolated6.1-sol/medium agent",
+    "lesson": "All ability-moving sources including reversible badges need signed measured attribution; preserve genericstatmechanics while fixingexplanations",
+    "confidence": "medium",
+    "source": "Browser8461 world26UHC seed2038 S1W3-W4 docs/playtests/2026-10-08-next-fixture-preparation/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "mentorship",
+      "contract",
+      "preparation",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-11T11:03:01.281378+00:00",
+  "head": "806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca",
+  "pid": 32432,
+  "port": 8535,
+  "package_path": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "source_count": 425,
+  "fixture_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+  "actions": 120,
+  "snaps": 27,
+  "season": 2,
+  "week": 5
+}

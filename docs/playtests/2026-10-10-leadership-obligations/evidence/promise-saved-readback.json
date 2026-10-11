@@ -1,0 +1,61 @@
+{
+  "before_echo": {
+    "id": "b5649cf9c88b809b",
+    "team_id": "team_nexus",
+    "player_id": "echo",
+    "promise_type": "play_time",
+    "target_value": 60,
+    "weeks_left": 1,
+    "created_week": 2,
+    "created_season": 1,
+    "status": "active",
+    "dressed_count": 5,
+    "initial_duration": 8,
+    "source": "negotiation"
+  },
+  "after_echo": {
+    "id": "b5649cf9c88b809b",
+    "team_id": "team_nexus",
+    "player_id": "echo",
+    "promise_type": "play_time",
+    "target_value": 60,
+    "weeks_left": 4,
+    "created_week": 2,
+    "created_season": 1,
+    "status": "kept",
+    "dressed_count": 6,
+    "initial_duration": 8,
+    "source": "negotiation"
+  },
+  "remaining_active": [
+    {
+      "id": "b7021a0bdeb4a165",
+      "team_id": "team_nexus",
+      "player_id": "apex",
+      "promise_type": "play_time",
+      "target_value": 60,
+      "weeks_left": 1,
+      "created_week": 3,
+      "created_season": 1,
+      "status": "active",
+      "dressed_count": 6,
+      "initial_duration": 8,
+      "source": "negotiation"
+    },
+    {
+      "id": "db2aed3e1f15cb91",
+      "team_id": "team_nexus",
+      "player_id": "vortex",
+      "promise_type": "play_time",
+      "target_value": 60,
+      "weeks_left": 4,
+      "created_week": 6,
+      "created_season": 1,
+      "status": "active",
+      "dressed_count": 4,
+      "initial_duration": 8,
+      "source": "negotiation"
+    }
+  ],
+  "limit": "Observed progression and resolved status; no counterfactual claim that this extra appearance was required to keep it"
+}

@@ -1,0 +1,36 @@
+{
+  "base_commit": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "combined_tree": "32781d270361e25297897d1427d088cdd6de4c9b",
+  "source_sha256": {
+    "src/esports_sim/manager/market.py": "1591b69d499c7e4dfcb6d4a7c0578f5d922279336f73fdaf4eb9f3d7887752ac",
+    "src/esports_sim/schemas/team.py": "350556ffd522096b1300e77346627876a6c57122273d0fb62ed9860d7e34ee47",
+    "src/esports_sim/web/server.py": "28d6ecfd2fa40e743742b2143edfd510e56b59a30d1e10093abab389d28d943b",
+    "src/esports_sim/web/static/app.js": "4a76819a8f36b230a207f334a84ef839bc2b31839bbdf2eb25e74ddce14ed13d",
+    "src/esports_sim/web/static/usage.js": "b352740becd245fcc727594d1ce9a66bd6c4bdfe45bc4239dfc6b2b97ca8e0a1",
+    "src/esports_sim/web/usage_telemetry.py": "5983ba3892d240ee34001550ee1c7c70f77f80dcf217bf3d0c270e4fcd0801c5",
+    "tests/development_feedback_check.cjs": "ec979b4cea3d64dfa93ee21ede6e5e657839e69e5e1fb5e5bad3190e63f21f85",
+    "tests/test_development_feedback_frontend.py": "c6abbf7518f8adb371d2b6c90f20ed8b60de71b3a7eff1c6991768c211ea94ed",
+    "tests/test_release_cost.py": "bde99cf4b46d138613b0348470e3bb5cac9ec2487aafa52ad24cc3b9cd19a0f9",
+    "tests/test_usage_telemetry.py": "41eca126af06dae0953a1da247ed47039cbddb3cadbf5f20cc645e06429ccc23",
+    "tests/test_web_replay_identity.py": "22fd4596e90a87cc057d948757698fcafaba02f469ec34042bb626df996761e7",
+    "tests/usage_frontend_check.cjs": "74bd8c56641919b4b3c42dc87ff1ab1d55196aaab07c09608867061c5dd9a5eb"
+  },
+  "source_patch_sha256": "2de7af6a32b1b61c6481038543515237ae6723d81cede09eff536d79425a6133",
+  "three_way_application": "clean",
+  "syntax_and_five_hooks": "passed",
+  "full_gate": "individual full suites and final main CI still required",
+  "working_file_sha256": {
+    "src/esports_sim/manager/market.py": "9be7b35aa559bfcdbc8fdd4f7afe9b57f098036d3e9cadfe0e8f7b1703cdd7b9",
+    "src/esports_sim/schemas/team.py": "88b22e604c703a6c688a7b82fbbcb05da7f845b65349d3831236886d6c7c4b5a",
+    "src/esports_sim/web/server.py": "0bfc875c343eb1122104f31ed7f367e1a882d09e7bf732c7dfc63bb722e774c8",
+    "src/esports_sim/web/static/app.js": "99a111f3581846fc8f89f292b6e1e5b780135cd3d8282f56aff1b8bad61556d0",
+    "src/esports_sim/web/static/usage.js": "b298ee7d95004bd8ab6b9e5a90b0e2c7b0bc7746b8a095e9fd6ebd0a45af356b",
+    "src/esports_sim/web/usage_telemetry.py": "425782fd9967a578b928991130c0409f7141084f9adec457ad54850e87090711",
+    "tests/development_feedback_check.cjs": "57ea2c36bfa8df0615b65546c12dc265ec66b44d40037874865dc9113b56a4a8",
+    "tests/test_development_feedback_frontend.py": "e0d993869be54359e63d31f2c7358ca2413d378cf0a30ecb494d37b648c68152",
+    "tests/test_release_cost.py": "0d5214a9eb6a385fcd4c8c6cd7101740b0da25e957737cb72b6117d180cfe322",
+    "tests/test_usage_telemetry.py": "5f8409358dbd2ac1daaf239c0376565c7fb83862a492e0d95ed799d1f1ad63f2",
+    "tests/test_web_replay_identity.py": "eba73dc01c410b45ecd00cc4ab4b50b296797582a4e14f32fa5ed1de9c6aabbf",
+    "tests/usage_frontend_check.cjs": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "session": "2026-10-11-academy-availability-fixed-head",
+  "head": "679fdb313cc8004fb0a34db271ff62c736cbf099",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "surface": "browser",
+  "port": 8538,
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 2,
+  "week": 4,
+  "baseline_actions": 112,
+  "baseline_snapshots": 1,
+  "baseline_sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+  "frozen_source_files": 524,
+  "parent_source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\save-before.json",
+  "baseline_correction": "Imported baseline, not fresh world; original parent initial count correction retained at 112 decisions and 26 snapshots. No new accepted decisions inferred from parent failed promotion.",
+  "cua_harness": "Chrome unavailable; CUA inventory empty before session. Dedicated browser isolation pending.",
+  "flywheel": "No flywheel tool exposed; inherited parent report and will retain two learnings and one pain locally."
+}

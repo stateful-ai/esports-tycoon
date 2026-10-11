@@ -1,0 +1,154 @@
+[
+  {
+    "id": "esports-playtest-0127",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Expose upkeep as a weekly expense",
+    "problem": "Real settlement hides1500 facility upkeep in reported income, while live Finance shows it as expense",
+    "solution": "Compare observed bank/report/live breakdown; inspect settlement code after choices and delegate gross classification fix",
+    "lesson": "Net cash is correct; reported gross income/expense is misleading, not an unpaid upkeep defect. Gap25 preserves mechanics; gap26 separately fixes actual visible Ghostagainst spacing",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0126",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Facility requirements must use the visible department name",
+    "problem": "Finance locks and upgrade News call Media Department Marketing Office",
+    "solution": "Match the displayed Stream-unlock benefit, build150000, and read back level/upkeep and newly open slot",
+    "lesson": "The correct department unlocked Stream but naming friction is real; gap24 delegated without changing internal keys",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0125",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Sponsor packages visibly change run rate before settlement",
+    "problem": "Need reliable recurring income before an offer expires",
+    "solution": "Choose steady41300 and verify active37-week contract, unchanged bank and net21734->63034; after one tick verify36weeks",
+    "lesson": "The same visible package persists through Save/reload; future win/objective income is not guaranteed",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0124",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Observe active subtab, request routes and modal state before automation",
+    "problem": "Retained LockerRoom, flavor_event route and open report invalidated assumed row/response/navigation targets",
+    "solution": "Preserve observer timeouts, retrieve actual network response and resnapshot controls; close report with Continue",
+    "lesson": "Tooling failures are not game HTTP rejections; actual four requests paired200, and no mutation was repeated after response timeout",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0123",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Verify lineup intent separately from coarse decision telemetry",
+    "problem": "Current build records accepted set_lineup but not exact selected player IDs",
+    "solution": "Read public currentfive immediately and after reload, then reconcile savedlineup and accepted actionprefix",
+    "lesson": "Echo starter/Hollowlockbench persisted and report showed1/0maps; exact-choice telemetry remains already-assigned PR361, not a duplicate gap",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0122",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Promise needs units and an evaluation window",
+    "problem": "Echo displayed Target60/Dressed5weeks/1weekleft without targetunits or denominator",
+    "solution": "Compare LockerRoom, playerprofile and handbook; save Echo as starter, resolve onefixture and read history",
+    "lesson": "Echo promise becamekept after W9, but outcome alone did not explain the evaluation threshold. Gap22 assigned separate agent for server-computed player-visible assessment",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0121",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Save action needs current dirty-label selector",
+    "problem": "Exact Save locator missed actual Save-dot; response observer timedout",
+    "solution": "Preserve blocked/unproven attempt, resnapshot observed #save-btn, capture actualHTTP200 and independent saved ledger",
+    "lesson": "Save-dot is a distinct exact name; a tooling timeout is not proof a game request was rejected or even sent",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0120",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate settled cash, live run rate and forecast",
+    "problem": "A signed contract changes recurring income while weekly world factors also change",
+    "solution": "Sign jersey steady10100/24weeks, advanceonce, read report income67874/expenses47100 and bank461864",
+    "lesson": "Settled net20774 matched bankdelta; preweek forecast20150 and postweeklive20933 were different. Contract persisted23weeks; no separate settled sponsor payment row exposed",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "learning"
+  }
+]

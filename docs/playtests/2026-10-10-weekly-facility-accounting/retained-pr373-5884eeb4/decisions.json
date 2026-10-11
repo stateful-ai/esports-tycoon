@@ -1,0 +1,58 @@
+[
+  {
+    "index": 46,
+    "season": 1,
+    "week": 10,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "facility_upgrade",
+    "params": {
+      "cost": "150000",
+      "facility": "marketing_office",
+      "level": "1"
+    },
+    "source": "web"
+  },
+  {
+    "index": 47,
+    "season": 1,
+    "week": 10,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "measured",
+      "event_id": "7487538f6944b101"
+    },
+    "source": "web"
+  },
+  {
+    "index": 48,
+    "season": 1,
+    "week": 10,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "sponsor_respond",
+    "params": {
+      "accept": "True",
+      "brand": "Polar Compute",
+      "slot": "title",
+      "structure": "steady"
+    },
+    "source": "web"
+  },
+  {
+    "index": 49,
+    "season": 1,
+    "week": 10,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

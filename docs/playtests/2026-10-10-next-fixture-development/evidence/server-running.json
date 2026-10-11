@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-10T21:38:59.091320+00:00",
+  "pid": 17344,
+  "port": 8494,
+  "cwd": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-next-fixture-development",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "esports_sim",
+    "--web",
+    "--port",
+    "8494",
+    "--no-browser"
+  ],
+  "package_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\src\\esports_sim\\__init__.py",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "source_paths": 545,
+  "fixture_source": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-rookie-clinic\\saves",
+  "fixture_sha256": "e9e1fa8a17412d1f54931e851291b98d2f727adb3c9ff14923b8e88b856f3a36",
+  "usage_baseline": []
+}

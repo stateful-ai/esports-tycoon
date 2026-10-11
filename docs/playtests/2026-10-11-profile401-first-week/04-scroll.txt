@@ -1,0 +1,6 @@
+### Result
+["LATEST RECORDED WEEK · S2 W4\n\nTactical · Light · 0 senior maps this week · Struggling\n\nPRACTICE +0.31 OVR\nSENIOR MATCHES 0.00 OVR\nBENCH SCRIMS +0.01 OVR\nCAREER EVENTS 0.00 OVR\nBADGES 0.00 OVR\nLatest-week skill breakdown\n\nPractice: Game Sense +0.67 / Positioning +0.85 / Utility Usage +1.56\n\nBench scrims: Game Sense +0.03 / Positioning +0.03\n\nNo badge changes this week\n\nPoor match performances are slowing learning; useful practice still counts\n\nTired legs are reducing practice quality; ease intensity or rest\n\nMentorship is accelerating practice\n\nCoaching and club support are improving practice","SEASON 2 SKILL GROWTH\n\nFirst skill observation · S2 W4 — no earlier skill comparison."]
+### Ran Playwright code
+```js
+await (async page => { await page.getByText("Bench scrims: Game Sense +0.03 / Positioning +0.03",{exact:true}).scrollIntoViewIfNeeded(); return await page.locator(".pf-growth").allInnerTexts(); })(page);
+```
