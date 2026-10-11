@@ -1706,7 +1706,8 @@ async function openMatchday() {
       box.appendChild(el("span", "es-star",
         plink(d.player_id, d.handle) +
         `<span class="pill">${esc(humanize(d.role))}</span>` +
-        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} maps</span>`));
+        `<span class="mono muted">${d.rating.toFixed(2)} · ${d.maps} ${d.maps === 1 ? "map" : "maps"}</span>` +
+        (d.sample_note ? `<span class="muted">${esc(d.sample_note)}</span>` : "")));
     }
     return box;
   };
