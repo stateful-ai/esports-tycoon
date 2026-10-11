@@ -925,7 +925,11 @@ async function refresh() {
 function updateAdvanceTransition(s) {
   const transition = s?.advance_transition;
   const btn = $("#advance-btn"), notice = $("#advance-notice");
-  if (!mpPolling) btn.textContent = `${transition?.label || "Advance Week"} ▸`;
+  // The ready response refreshes state before polling starts. Server readiness
+  // must preserve Waiting during that interval as well as during polling.
+  btn.textContent = s?.multiplayer?.you_ready || mpPolling
+    ? "Waiting… ⏳"
+    : `${transition?.label || "Advance Week"} ▸`;
   notice.textContent = transition?.notice || "";
   notice.classList.toggle("hidden", !transition?.notice);
   if (transition?.notice) btn.setAttribute("aria-describedby", "advance-notice");
