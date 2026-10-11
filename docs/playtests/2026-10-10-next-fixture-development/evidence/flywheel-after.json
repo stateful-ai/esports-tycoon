@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0140",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Practice and match gains remain visible after defeat",
+    "problem": "Judge young-player development without assuming that winning is necessary",
+    "solution": "Advance one week and read separate practice and match source attribution before and after Save",
+    "lesson": "The loss9-13 coexists with Ghost practice+0.30 and matches+0.04OVR; report separately marks mentorship support and struggling form. This is observed attribution, not a counterfactual estimate",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0141",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Resting bench players preserve recovery semantics",
+    "problem": "Check that zero minutes and zero skill gains are explained",
+    "solution": "Choose individual rest for Hollowlock and inspect weekly report and saved decision fa_0",
+    "lesson": "Rest/normal zero maps has no measured skill gains and a recovery explanation; UI nickname must map to stable player ID fa_0 in audit",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0142",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Shortened snapshots can create false missing-player findings",
+    "problem": "Root misread a tail and initially claimed Ghost missing from agent-lock controls",
+    "solution": "Keep initial error rows, append full-DOM and public-response corrections, and require complete evidence before assigning a gap",
+    "lesson": "Ghost was always present; full roster locks differ from standing-five selection. Windows quoting/defaultencoding and display-name versus stable-ID audit failures are harness errors, not game failures",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

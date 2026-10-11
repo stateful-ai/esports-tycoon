@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-next-fixture-development",
+  "step": 9,
+  "started_at_utc": "2026-10-10T21:56:36.892+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "audit",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W13",
+  "intent": "Quantify tracking coverage for this recovery and development session without counting navigation as accepted decisions",
+  "action": "Compare saved decision prefix, UI request pairs, public readbacks, source freeze and fixture hashes; run telemetry reports and close owned test surfaces",
+  "expected_outcome": "Two accepted operations are matched, Save has a separate request/result pair, old history and the original fixture stay unchanged, and any missing usage is reported explicitly",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

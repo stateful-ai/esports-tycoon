@@ -1,0 +1,75 @@
+{
+  "baseline_action_count": 43,
+  "end_action_count": 44,
+  "prefix_unchanged": true,
+  "new_action": {
+    "season": 1,
+    "week": 9,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "promise_respond",
+    "params": {
+      "kind": "bench_minutes",
+      "player_id": "apex",
+      "promise_type": "play_time",
+      "source": "talk"
+    },
+    "source": "web"
+  },
+  "matched_decisions": 1,
+  "expected_accepted_decisions": 1,
+  "decision_coverage_percent": 100,
+  "snapshots_before": {
+    "mgr_team_nexus": 8
+  },
+  "snapshots_after": {
+    "mgr_team_nexus": 8
+  },
+  "usage_events": 50,
+  "usage_kinds": {
+    "session_start": 3,
+    "view": 9,
+    "visible_time": 34,
+    "session_end": 2,
+    "attempt": 1,
+    "result": 1
+  },
+  "complete_request_pairs": 1,
+  "request_pairs": [
+    {
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "81a37a8be60b9ec8d6694aee35388d45",
+        "received_at": "2026-10-10T21:16:28.059408+00:00",
+        "world": "LGE22",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 17
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "81a37a8be60b9ec8d6694aee35388d45",
+        "received_at": "2026-10-10T21:16:28.059408+00:00",
+        "world": "LGE22",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 17,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 178
+      }
+    }
+  ],
+  "limitations": [
+    "Supported direct HTTP renewal has no frontend pair.",
+    "No gameplay advance; controlled credits are fixture inputs.",
+    "Profile-open has no distinct usage view."
+  ]
+}

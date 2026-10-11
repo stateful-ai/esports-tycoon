@@ -1,0 +1,34 @@
+{
+  "verified_at_utc": "2026-10-11T01:26:33.743150+00:00",
+  "merged_baseline": "ff121bec8444987d8819d0e1c857b86d0937b015",
+  "pr374_merge_confirmed_at": "2026-10-11T01:24:45Z",
+  "publication_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "publication_rows": 765,
+  "unique_keys": 765,
+  "prior724_exact_byte_prefix": true,
+  "old203_raw_and_index_blob_bytes_exact": true,
+  "new103_raw_and_index_blob_bytes_exact": true,
+  "same612_raw_runtime_hashes": true,
+  "source_git_tree_equals_tested64": true,
+  "prior_native_full_result": {
+    "command": [
+      "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-n",
+      "2"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-10T19:55:54.718860+00:00",
+    "finished_at": "2026-10-10T21:56:41.938594+00:00",
+    "import_path": "C:\\Users\\aidan\\.codex\\worktrees\\playtest-history-evidence-recovery\\ESports Simulator\\src\\esports_sim\\__init__.py",
+    "source_files": 612,
+    "source_unchanged": true,
+    "changed_files": [],
+    "base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6"
+  },
+  "local_tests_launched": false,
+  "all_reviewed_shards_21columns_exact": true,
+  "staged_docs_only": true
+}

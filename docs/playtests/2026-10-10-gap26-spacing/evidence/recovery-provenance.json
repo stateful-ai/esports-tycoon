@@ -1,0 +1,88 @@
+{
+  "recovered_at_utc": "2026-10-11T01:56:04.356188+00:00",
+  "finding_id": 4239880354,
+  "recovered_from_worktree": "C:\\Users\\aidan\\.codex\\worktrees\\sponsor-demand-spacing",
+  "source_worktree_head": "d3632e3d7f29db2357b91f4bf1fda10a49d2a8ee",
+  "original_artifacts_unchanged": true,
+  "mappings": [
+    {
+      "original_relative_path": "runs/playtests/gap26/reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/reconciliation.json",
+      "sha256": "376fa7755b37f9c83dc30c18099de9883799772728833f99802cbcd73ef34f30",
+      "byte_count": 1424,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/browser-result.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/browser-result.json",
+      "sha256": "e226cc350d55f07db4b644b0251d09f04f1bd0298267f2202d4b131725244f37",
+      "byte_count": 352,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/sponsor-demand.png",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/sponsor-demand.png",
+      "sha256": "0d2fe41b4a9f5e750e5cc4da1c5ab0f91d1d4aa13776f1cfc22604120ca1220b",
+      "byte_count": 2383,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/sibling-result.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/sibling-result.json",
+      "sha256": "57998f95c062a80d1121c35fa7a274832d2beda5a350139f3f0f5300e2c45956",
+      "byte_count": 163,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/gate-receipt.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/gate-receipt.json",
+      "sha256": "27079c0b62dfd9b62eeded94711a56124f327f2e6994ba0442b3b83d0abe2437",
+      "byte_count": 295,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/full-pytest.log",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/full-pytest.log",
+      "sha256": "cc11071089d07e654ce268d09dabd1ddeee47657425b8a972da3ffab2b2b1b71",
+      "byte_count": 1768,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/gate-source-before.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/gate-source-before.json",
+      "sha256": "cd5375cf4eadbc0d5a596786ca05d89ec09062d247ee881cb13d2f525fbe59b0",
+      "byte_count": 62708,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "runs/playtests/gap26/gate-source-after.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/gate-source-after.json",
+      "sha256": "cd5375cf4eadbc0d5a596786ca05d89ec09062d247ee881cb13d2f525fbe59b0",
+      "byte_count": 62708,
+      "exact_source_bytes": true
+    },
+    {
+      "original_relative_path": "saves/usage/usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/usage.0.jsonl",
+      "sha256": "6f686615741b633117bc1114b3cd4981aa7694c9db3d9e597a43a772ecbdf626",
+      "byte_count": 3636,
+      "exact_source_bytes": true
+    }
+  ],
+  "sanitization_review": "Original summaries contain only gameplay/rendering facts, aggregate reconciliation and source hashes. Cropped screenshot visually inspected: only Play Ghost against Saracen Guard. Raw usage has closed telemetry envelope only; no cookie/SID/credentials/private payload. No original artifacts redacted or rewritten.",
+  "retained_usage_recount": {
+    "events": 16,
+    "counts_match_original_reconciliation": true
+  },
+  "historical_gate544_before_after_equal": true,
+  "archived_historical_test_not_rerun": true,
+  "current612_runtime_raw_and_source_git_tree_unchanged": true,
+  "canonical765_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "canonical_observation_fields_unchanged": true,
+  "local_tests_launched": false,
+  "limits": [
+    "Profile clicks are original recorded DOM results, not independently instrumented usage events.",
+    "Original navigation coverage remains bounded; retained16events are not a complete funnel.",
+    "Historical gate receipt is recovered evidence of the prior run, not a new local gate."
+  ]
+}

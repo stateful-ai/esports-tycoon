@@ -1,0 +1,220 @@
+### Page
+- Page URL: http://127.0.0.1:8494/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Snapshot
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]: ESPORTSSIM
+      - button "Advance Week ▸" [ref=e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=e6] [cursor=pointer]
+      - button "🛠️" [ref=e7] [cursor=pointer]
+      - button "🔇" [ref=e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=e9] [cursor=pointer]: Guide
+    - navigation [ref=e10]:
+      - generic "Weekly" [ref=e11]:
+        - button "Dashboard" [ref=e13] [cursor=pointer]
+        - button "Inbox" [ref=e14] [cursor=pointer]
+        - button "Match" [ref=e15] [cursor=pointer]
+      - generic "Org" [ref=e16]:
+        - button "Club" [ref=e18] [cursor=pointer]
+        - button "Facilities" [ref=e19] [cursor=pointer]
+        - button "Season" [ref=e20] [cursor=pointer]
+        - button "Market" [ref=e21] [cursor=pointer]
+        - button "Stats" [ref=e22] [cursor=pointer]
+        - button "Company" [ref=e23] [cursor=pointer]
+    - main [ref=e24]
+  - generic [ref=e26]:
+    - heading "Play" [level=1] [ref=e27]
+    - generic [ref=e28]:
+      - button "New campaign" [ref=e29] [cursor=pointer]
+      - button "Create shared campaign" [ref=e30] [cursor=pointer]
+      - button "Join campaign" [ref=e31] [cursor=pointer]
+      - link "Roster Studio" [ref=e32] [cursor=pointer]:
+        - /url: /roster-studio.html
+      - link "Map Studio" [ref=e33] [cursor=pointer]:
+        - /url: /map-studio.html
+    - generic [ref=e150]:
+      - paragraph [ref=e151]: Enter the 5-character code your host shared, then pick a free team.
+      - generic [ref=e152]:
+        - generic [ref=e153]:
+          - text: Code
+          - textbox "Code" [ref=e154]: 26UHC
+        - button "Show teams ▸" [active] [ref=e155] [cursor=pointer]
+      - generic [ref=e156]:
+        - generic [ref=e157]: AMERICAS
+        - button "Azure Vanta AZV rep 56.7 · 472,369 cr" [ref=e158] [cursor=pointer]:
+          - text: Azure Vanta
+          - generic [ref=e159]: AZV
+          - text: rep 56.7 · 472,369 cr
+        - button "Baltic Meridian BLM rep 76.1 · 964,608 cr" [ref=e160] [cursor=pointer]:
+          - text: Baltic Meridian
+          - generic [ref=e161]: BLM
+          - text: rep 76.1 · 964,608 cr
+        - button "Gallic Storm GST rep 37.6 · 355,047 cr" [ref=e162] [cursor=pointer]:
+          - text: Gallic Storm
+          - generic [ref=e163]: GST
+          - text: rep 37.6 · 355,047 cr
+        - button "Kathmandu Apex KTA rep 70.2 · 1,054,261 cr" [ref=e164] [cursor=pointer]:
+          - text: Kathmandu Apex
+          - generic [ref=e165]: KTA
+          - text: rep 70.2 · 1,054,261 cr
+        - button "Kraken Unit KRK rep 59.8 · 495,511 cr" [ref=e166] [cursor=pointer]:
+          - text: Kraken Unit
+          - generic [ref=e167]: KRK
+          - text: rep 59.8 · 495,511 cr
+        - button "Team Nexus NXS taken rep 65.5 · 482,260 cr" [disabled] [ref=e168]:
+          - text: Team Nexus
+          - generic [ref=e169]: NXS
+          - generic [ref=e170]: taken
+          - text: rep 65.5 · 482,260 cr
+        - button "Nordic Frost NFR rep 57.1 · 806,668 cr" [ref=e171] [cursor=pointer]:
+          - text: Nordic Frost
+          - generic [ref=e172]: NFR
+          - text: rep 57.1 · 806,668 cr
+        - button "Patagonia Sur PSU rep 49.9 · 361,103 cr" [ref=e173] [cursor=pointer]:
+          - text: Patagonia Sur
+          - generic [ref=e174]: PSU
+          - text: rep 49.9 · 361,103 cr
+        - button "Rust Belt Gaming RBG rep 67.5 · 784,402 cr" [ref=e175] [cursor=pointer]:
+          - text: Rust Belt Gaming
+          - generic [ref=e176]: RBG
+          - text: rep 67.5 · 784,402 cr
+        - button "Sahara Compass SHC rep 56.1 · 664,152 cr" [ref=e177] [cursor=pointer]:
+          - text: Sahara Compass
+          - generic [ref=e178]: SHC
+          - text: rep 56.1 · 664,152 cr
+        - button "Saracen Guard SRG rep 82.3 · 1,088,676 cr" [ref=e179] [cursor=pointer]:
+          - text: Saracen Guard
+          - generic [ref=e180]: SRG
+          - text: rep 82.3 · 1,088,676 cr
+        - button "Taipei Circuit TPC rep 66.8 · 499,446 cr" [ref=e181] [cursor=pointer]:
+          - text: Taipei Circuit
+          - generic [ref=e182]: TPC
+          - text: rep 66.8 · 499,446 cr
+        - button "Team Vanguard VGD rep 84.5 · 1,285,400 cr" [ref=e183] [cursor=pointer]:
+          - text: Team Vanguard
+          - generic [ref=e184]: VGD
+          - text: rep 84.5 · 1,285,400 cr
+        - button "Volga Reign VLG rep 53.1 · 364,537 cr" [ref=e185] [cursor=pointer]:
+          - text: Volga Reign
+          - generic [ref=e186]: VLG
+          - text: rep 53.1 · 364,537 cr
+        - generic [ref=e187]: EMEA
+        - button "Adriatic Sirens ADS rep 69.6 · 917,333 cr" [ref=e188] [cursor=pointer]:
+          - text: Adriatic Sirens
+          - generic [ref=e189]: ADS
+          - text: rep 69.6 · 917,333 cr
+        - button "Anatolia Forge ANF rep 52.8 · 363,851 cr" [ref=e190] [cursor=pointer]:
+          - text: Anatolia Forge
+          - generic [ref=e191]: ANF
+          - text: rep 52.8 · 363,851 cr
+        - button "Apex Syndicate APX rep 64 · 373,634 cr" [ref=e192] [cursor=pointer]:
+          - text: Apex Syndicate
+          - generic [ref=e193]: APX
+          - text: rep 64 · 373,634 cr
+        - button "Bayou Kings BYK rep 65.1 · 1,610,190 cr" [ref=e194] [cursor=pointer]:
+          - text: Bayou Kings
+          - generic [ref=e195]: BYK
+          - text: rep 65.1 · 1,610,190 cr
+        - button "Berlin Wolves BWV rep 45.1 · 343,952 cr" [ref=e196] [cursor=pointer]:
+          - text: Berlin Wolves
+          - generic [ref=e197]: BWV
+          - text: rep 45.1 · 343,952 cr
+        - button "Chao Phraya Owls CPO rep 55 · 1,030,635 cr" [ref=e198] [cursor=pointer]:
+          - text: Chao Phraya Owls
+          - generic [ref=e199]: CPO
+          - text: rep 55 · 1,030,635 cr
+        - button "Crimson Order CRO rep 69 · 462,860 cr" [ref=e200] [cursor=pointer]:
+          - text: Crimson Order
+          - generic [ref=e201]: CRO
+          - text: rep 69 · 462,860 cr
+        - button "Hokkaido Drift HKD rep 50.6 · 386,917 cr" [ref=e202] [cursor=pointer]:
+          - text: Hokkaido Drift
+          - generic [ref=e203]: HKD
+          - text: rep 50.6 · 386,917 cr
+        - button "Mekong Vipers MKV rep 67.9 · 592,481 cr" [ref=e204] [cursor=pointer]:
+          - text: Mekong Vipers
+          - generic [ref=e205]: MKV
+          - text: rep 67.9 · 592,481 cr
+        - button "Meridian Cross MRC rep 71.3 · 715,483 cr" [ref=e206] [cursor=pointer]:
+          - text: Meridian Cross
+          - generic [ref=e207]: MRC
+          - text: rep 71.3 · 715,483 cr
+        - button "Midnight Polders MDP rep 55.1 · 743,796 cr" [ref=e208] [cursor=pointer]:
+          - text: Midnight Polders
+          - generic [ref=e209]: MDP
+          - text: rep 55.1 · 743,796 cr
+        - button "Phantom Core PHC rep 53 · 418,295 cr" [ref=e210] [cursor=pointer]:
+          - text: Phantom Core
+          - generic [ref=e211]: PHC
+          - text: rep 53 · 418,295 cr
+        - button "Prairie Signal PRS rep 67.6 · 1,071,955 cr" [ref=e212] [cursor=pointer]:
+          - text: Prairie Signal
+          - generic [ref=e213]: PRS
+          - text: rep 67.6 · 1,071,955 cr
+        - button "Tokyo Drift Six TD6 rep 74.3 · 986,916 cr" [ref=e214] [cursor=pointer]:
+          - text: Tokyo Drift Six
+          - generic [ref=e215]: TD6
+          - text: rep 74.3 · 986,916 cr
+        - generic [ref=e216]: PACIFIC
+        - button "Alpine Echo ALE rep 74.6 · 916,345 cr" [ref=e217] [cursor=pointer]:
+          - text: Alpine Echo
+          - generic [ref=e218]: ALE
+          - text: rep 74.6 · 916,345 cr
+        - button "Busan Tempest BST rep 56.6 · 407,555 cr" [ref=e219] [cursor=pointer]:
+          - text: Busan Tempest
+          - generic [ref=e220]: BST
+          - text: rep 56.6 · 407,555 cr
+        - button "Cascadia Youth CSY rep 57.3 · 447,399 cr" [ref=e221] [cursor=pointer]:
+          - text: Cascadia Youth
+          - generic [ref=e222]: CSY
+          - text: rep 57.3 · 447,399 cr
+        - button "Coral Sea Drakes CSD rep 73.4 · 1,224,074 cr" [ref=e223] [cursor=pointer]:
+          - text: Coral Sea Drakes
+          - generic [ref=e224]: CSD
+          - text: rep 73.4 · 1,224,074 cr
+        - button "Ghostline GHL rep 64.2 · 893,301 cr" [ref=e225] [cursor=pointer]:
+          - text: Ghostline
+          - generic [ref=e226]: GHL
+          - text: rep 64.2 · 893,301 cr
+        - button "Harbour City Nine HC9 rep 66.9 · 1,022,203 cr" [ref=e227] [cursor=pointer]:
+          - text: Harbour City Nine
+          - generic [ref=e228]: HC9
+          - text: rep 66.9 · 1,022,203 cr
+        - button "Highlands Nine HL9 rep 44.3 · 326,213 cr" [ref=e229] [cursor=pointer]:
+          - text: Highlands Nine
+          - generic [ref=e230]: HL9
+          - text: rep 44.3 · 326,213 cr
+        - button "Iron Pact IRP rep 61.7 · 635,644 cr" [ref=e231] [cursor=pointer]:
+          - text: Iron Pact
+          - generic [ref=e232]: IRP
+          - text: rep 61.7 · 635,644 cr
+        - button "Lisbon Tide LTD rep 73.3 · 820,342 cr" [ref=e233] [cursor=pointer]:
+          - text: Lisbon Tide
+          - generic [ref=e234]: LTD
+          - text: rep 73.3 · 820,342 cr
+        - button "Nova Rift NVR rep 61.6 · 506,802 cr" [ref=e235] [cursor=pointer]:
+          - text: Nova Rift
+          - generic [ref=e236]: NVR
+          - text: rep 61.6 · 506,802 cr
+        - button "Outback Sentinels OBS rep 56.9 · 1,032,994 cr" [ref=e237] [cursor=pointer]:
+          - text: Outback Sentinels
+          - generic [ref=e238]: OBS
+          - text: rep 56.9 · 1,032,994 cr
+        - button "Seoul Dynasty Prime SDP rep 66.8 · 1,056,533 cr" [ref=e239] [cursor=pointer]:
+          - text: Seoul Dynasty Prime
+          - generic [ref=e240]: SDP
+          - text: rep 66.8 · 1,056,533 cr
+        - button "Solar Flare SOL rep 90.5 · 999,461 cr" [ref=e241] [cursor=pointer]:
+          - text: Solar Flare
+          - generic [ref=e242]: SOL
+          - text: rep 90.5 · 999,461 cr
+        - button "Yucatan Ceibas YCB rep 41.2 · 356,294 cr" [ref=e243] [cursor=pointer]:
+          - text: Yucatan Ceibas
+          - generic [ref=e244]: YCB
+          - text: rep 41.2 · 356,294 cr
+  - tooltip [aria-hidden]
+```

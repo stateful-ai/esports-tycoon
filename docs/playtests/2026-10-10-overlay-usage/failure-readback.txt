@@ -1,0 +1,6 @@
+### Result
+"◌\n\nPROFILE UNAVAILABLE\n\nThis profile can't be loaded right now."
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const original=window.fetch; const id=[...document.querySelectorAll("main [data-pid]")].find(e=>e.textContent.trim()==="Echo").dataset.pid;window.fetch=(url,...args)=>String(url).includes("/profile")?Promise.resolve(new Response("unavailable",{status:503})):original(url,...args);try {await window.openPlayerProfile(id);const text=document.getElementById("profile-body").innerText;window.closeProfile();await window.Usage.boundary();return text;}finally{window.fetch=original;}}');
+```
