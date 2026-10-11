@@ -26,3 +26,21 @@ request22 and its HTTP200 result, while `08-reloaded.txt`, `08-state.json` and
 The original saved-state audit additionally reports the persisted action-prefix
 and snapshot reconciliation. These separate evidence sources support the Save
 outcome and retained state; none establishes the missing response body's content.
+
+## Lineup-audit capture qualification
+
+PR377 finding4240465394 identified the absent native helper and earlier DOM
+inputs. The original helper is now retained as
+`evidence/verify-next-fixture-lineup.py`, with both original21:46 DOM snapshots.
+The roster/tactics responses it reads were already retained byte-identically.
+`evidence/lineup-audit-recovery-provenance.json` maps the exact original paths
+to these tracked artifacts and their raw hashes. The helper is an archival
+script with its original absolute paths; it was not changed or rerun.
+
+No independent original stdout or exit-status receipt was found in the searched
+retained runs. Step5's historical successful-native-audit observation remains
+unchanged, but its **execution evidence is unverified**. The retained script,
+DOM and public responses allow inspection of the stated assertions; they do
+not prove the original execution completed. No output has been reconstructed
+from the helper's print statement or presented as captured output. The earlier
+failure and subsequent correction observations remain intact.

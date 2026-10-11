@@ -68,3 +68,10 @@ with raw-path/hash mapping in cold-reload-recovery-provenance.json. The controll
 saved/public Apex promise basis8/earned5/left6 and public required5 were checked
 against those original bytes. Canonical765/manifests unchanged; no replay or
 local tests. Review all current inline findings and both new-head CI again.
+
+Lineup helper finding4240465394: original saved helper and two earlier DOM
+snapshots recovered with exact path/hash provenance. Its existing roster/tactics
+inputs are byte-identical to originals. No original stdout/exit receipt found in
+searched runs: original step5 execution evidence is explicitly unverified; no
+output replay/reconstruction or local tests. finite-reference-audit.json maps
+all finite41-row evidence references; the historical raw rows remain unchanged.

@@ -59,3 +59,13 @@ retain initial_duration8, credits5 and six evaluations; the public assessment
 requires5 credits. This controlled-fixture verification does not replay a game
 or establish natural appearances. Canonical765 bytes, historical observation
 fields and original manifests remain unchanged; no local tests were launched.
+
+Finding4240465394 is addressed by retaining the original lineup-audit helper,
+its two earlier DOM snapshots and explicit paths to its existing public inputs.
+The original stdout/exit-status receipt was not found; its execution claim is
+effectively unverified, with no reconstructed or rerun output. The helper for
+the historical blocked gap26 attempt is also retained without embedded auth
+values. `finite-reference-audit.json` audits every evidence reference in the
+finite41-row publication slice, mapping old run paths and bare filenames to
+current tracked artifacts and recording the execution qualification separately.
+The canonical765 observations and earlier reports are preserved as byte prefixes.
