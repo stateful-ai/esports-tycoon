@@ -2152,13 +2152,25 @@ def _advance_transition(gs: GameState) -> dict:
     if gs.phase == "offseason":
         return {
             "label": f"Start Season {gs.season + 1}",
+            "loading_title": f"Season {gs.season + 1} transition",
+            "loading_detail": (
+                f"Completing the offseason and preparing Season {gs.season + 1}, Week 1. "
+                "Ordinary weekly training, sponsor income and payroll do not run."
+            ),
             "notice": (
                 f"Next advance completes the offseason and starts Season {gs.season + 1}, "
                 "Week 1. Season-end changes resolve; ordinary weekly training, "
                 "sponsor income and payroll do not run on this transition."
             ),
         }
-    return {"label": "Advance Week", "notice": ""}
+    return {
+        "label": "Advance Week", "notice": "",
+        "loading_title": "Advancing week",
+        "loading_detail": (
+            "Resolving fixtures across the league, then settling training, "
+            "scouting, and finances."
+        ),
+    }
 
 
 @app.get("/api/state")

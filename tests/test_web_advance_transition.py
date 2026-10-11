@@ -20,10 +20,15 @@ def test_state_exposes_next_transition_without_mutating_campaign(game_data, phas
         transition = server.state()["advance_transition"]
         if phase == "offseason":
             assert transition["label"] == "Start Season 4"
+            assert transition["loading_title"] == "Season 4 transition"
+            assert "weekly training, sponsor income and payroll do not run" in transition["loading_detail"]
             assert "Season 4, Week 1" in transition["notice"]
             assert "weekly training, sponsor income and payroll do not run" in transition["notice"]
         else:
-            assert transition == {"label": "Advance Week", "notice": ""}
+            assert transition["label"] == "Advance Week"
+            assert transition["notice"] == ""
+            assert transition["loading_title"] == "Advancing week"
+            assert "settling training" in transition["loading_detail"]
         assert gs.model_dump_json() == before
     finally:
         server._ctx.reset(token)

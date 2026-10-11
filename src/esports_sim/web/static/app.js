@@ -8152,12 +8152,12 @@ let mpPolling = false;
 let mpPollingRetry = false;
 let weekLoadingTimer = null;
 
-function showWeekLoading({ simAhead = false } = {}) {
+function showWeekLoading({ simAhead = false, transition = App.state?.advance_transition } = {}) {
   const overlay = $("#week-loading");
-  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : "Advancing week";
+  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : (transition?.loading_title || "Advancing week");
   $("#week-loading-detail").textContent = simAhead
     ? "Running up to four full league weeks. The sim will stop as soon as something needs you."
-    : "Resolving fixtures across the league, then settling training, scouting, and finances.";
+    : (transition?.loading_detail || "Resolving the campaign transition.");
   const started = performance.now();
   $("#week-loading-time").textContent = "0s";
   overlay.classList.remove("hidden");
@@ -8241,6 +8241,7 @@ $("#simahead-btn").onclick = async () => {
 // week actually advances, then drop the waiting player into the new week.
 function pollForAdvance(prevWeek) {
   if (mpPolling) return;
+  const prevSeason = App.state?.season;
   mpPolling = true;
   mpPollingRetry = false;
   const tick = async () => {
@@ -8257,7 +8258,7 @@ function pollForAdvance(prevWeek) {
     }
     App.state = s;
     updateMpChip(s.multiplayer);
-    if (s.week !== prevWeek) {
+    if (s.week !== prevWeek || s.season !== prevSeason) {
       mpPolling = false;
       updateAdvanceTransition(s);
       $("#advance-btn").disabled = false;
@@ -8274,6 +8275,16 @@ function pollForAdvance(prevWeek) {
         toast(`Week ${s.week} — everyone advanced.`);
       }
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+      return;
+    }
+    if (!s.multiplayer?.you_ready) {
+      // Readiness is transient server state and may clear on restart. The
+      // unchanged calendar means this is cancellation, not a completed tick.
+      mpPolling = false;
+      updateAdvanceTransition(s);
+      $("#advance-btn").disabled = false;
+      await refresh();
+      toast("Your ready status was cleared. Review the campaign, then advance when ready.");
       return;
     }
     setTimeout(tick, 2500);
