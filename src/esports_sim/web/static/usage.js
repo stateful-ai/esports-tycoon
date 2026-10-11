@@ -64,7 +64,10 @@
     ...["player", "team", "staff", "manager"].flatMap(kind =>
       ["open", "close"].map(action => `profile/${kind}_${action}`)),
     "handbook/open", "handbook/close", "handbook/section_first_week",
-    "handbook/section_screens", "handbook/section_glossary"]);
+    "handbook/section_screens", "handbook/section_glossary",
+    "inbox/item_open", "inbox/item_close",
+    ...["dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company"]
+      .map(tab => `inbox/shortcut_${tab}`)]);
   function interaction(target) {
     if (interactions.has(target)) emit({kind: "interaction", target});
   }

@@ -135,13 +135,18 @@ const INBOX_TAB_ALIAS = {
   finances: ["company", "companyTab", "finances"],
   social: ["company", "companyTab", "brand"],
 };
+// Canonical destinations only; message content and item ids never enter usage.
+const INBOX_SHORTCUT_TABS = new Set([
+  "dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company",
+]);
 function inboxGoTab(tab) {
   const alias = INBOX_TAB_ALIAS[tab];
   const target = alias ? alias[0] : tab;
   const btn = document.querySelector(`#tabs [data-tab="${target}"]`);
-  if (!btn) return; // unknown tab: silent no-op, same as before
+  if (!btn || btn.disabled) return; // unavailable destination: silent no-op
   if (alias && typeof App !== "undefined") App[alias[1]] = alias[2];
   btn.click();
+  if (INBOX_SHORTCUT_TABS.has(target)) window.Usage?.interaction(`inbox/shortcut_${target}`);
 }
 
 // Quietly re-pull GameState into App.state after an inbox action resolves, so
@@ -406,6 +411,7 @@ async function inbox(v) {
       open = want;
       body.classList.toggle("collapsed", !open);
       row.classList.toggle("open", open);
+      window.Usage?.interaction(open ? "inbox/item_open" : "inbox/item_close");
       // Expanding an unread item marks it read on the server.
       if (open) await markItemRead(it, row);
     };
