@@ -7,6 +7,7 @@ from esports_sim.manager import media_events, new_campaign
 from esports_sim.manager.campaign import WeekReport
 from esports_sim.manager.state import GameState, MediaChoice, MediaEvent, SponsorDeal, SCHEMA_VERSION
 import esports_sim.web.server as server_mod
+import esports_sim.manager.state as state_mod
 
 
 @pytest.fixture
@@ -176,28 +177,46 @@ def test_choice_triggered_culture_trust_is_measured_separately(campaign, initial
     assert "older record" in media_events.culture_trust_feedback(old)
 
 
-def test_old_record_unknown_immediate_new_settlement_and_roundtrip(campaign, tmp_path):
+@pytest.mark.parametrize("saved_version", [36, 37])
+def test_old_record_unknown_immediate_new_settlement_and_roundtrip(campaign, tmp_path, saved_version):
     tid, fixture = queue(campaign)
     media_events.resolve(campaign, tid, "respect_rival")
     raw = json.loads(campaign.model_dump_json())
-    raw["schema_version"] = 36
+    raw["schema_version"] = saved_version
     raw["media_history_by"][tid][0].pop("immediate_effects")
     raw["media_history_by"][tid][0].pop("settlement_effects")
+    raw["media_history_by"][tid][0].pop("culture_trust_effects")
     path = tmp_path / "old.json"
     path.write_text(json.dumps(raw), encoding="utf-8")
     loaded = GameState.load(path)
     assert loaded.schema_version == SCHEMA_VERSION
     row = loaded.media_history_by[tid][0]
     assert row.immediate_effects is None
+    assert row.culture_trust_effects is None
     fixture = next(f for f in loaded.fixtures if f.id == fixture.id)
     settle(loaded, fixture)
     feedback = " ".join(media_events.decision_feedback(row))
     assert "older record" in feedback and "Cumulative MEDIA contribution unavailable" in feedback
     assert row.settlement_effects.sentiment.delta == -1
     loaded.save(path)
+    assert json.loads(path.read_text(encoding="utf-8"))["schema_version"] == 38
     assert GameState.load(path).model_dump_json() == loaded.model_dump_json()
     row.settlement_effects = None
     assert "Result settlement MEDIA effect: measured changes unavailable" in " ".join(media_events.decision_feedback(row))
+
+
+def test_media_save_stamped_v38_and_rejected_by_v37_loader(campaign, tmp_path, monkeypatch):
+    tid, _ = queue(campaign)
+    media_events.resolve(campaign, tid, "respect_rival")
+    path = tmp_path / "media-v38.json"
+    campaign.save(path)
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    assert raw["schema_version"] == 38
+    assert raw["media_history_by"][tid][0]["immediate_effects"] is not None
+    # The released v37 loader has this same pre-validation version guard.
+    monkeypatch.setattr(state_mod, "SCHEMA_VERSION", 37)
+    with pytest.raises(ValueError, match="save is schema v38.*up to v37"):
+        GameState.load(path)
 
 
 def test_web_measured_feedback_and_pure_deterministic_view(campaign, game_data):

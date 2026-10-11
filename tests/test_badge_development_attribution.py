@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pytest
 from esports_sim.manager import badges, development_path, new_campaign
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import GameState, SCHEMA_VERSION
 from esports_sim.schemas.badges import BADGES
 from esports_sim.web import server
 
@@ -52,7 +52,7 @@ def test_no_badge_and_legacy_save_do_not_invent_provenance(game_data, tmp_path):
     path = tmp_path / "old.json"
     path.write_text(json.dumps(data), encoding="utf-8")
     loaded = GameState.load(path)
-    assert loaded.schema_version == 37
+    assert loaded.schema_version == SCHEMA_VERSION
     assert development_path.report_view(loaded.players[p.id])["badge_tracking"] is False
     loaded.save(path)
     assert GameState.load(path).model_dump_json() == loaded.model_dump_json()
