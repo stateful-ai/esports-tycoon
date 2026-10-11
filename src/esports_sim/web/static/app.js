@@ -2424,8 +2424,9 @@ async function dashboard(v) {
   // its own ledger rendering.
   {
     const yc = lmr && lmr.contested ? lmr.your_calls : null;
+    const seriesNotes = lmr && lmr.contested ? (lmr.series_notes || []) : [];
     const ledger = s.decision_ledger || [];
-    if (yc || ledger.length) {
+    if (yc || seriesNotes.length || ledger.length) {
       const card = el("div", "card");
       card.appendChild(el("h2", "", "Your calls"));
       if (yc) {
@@ -2472,9 +2473,18 @@ async function dashboard(v) {
           if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
-          card.appendChild(el("span", "es-scout-lab muted", "Last match"));
+          card.appendChild(el("span", "es-scout-lab muted", "Last match · Initial plan"));
           card.appendChild(yl);
         }
+      }
+      if (seriesNotes.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "Last match · Series notes"));
+        card.appendChild(el("p", "muted", "Recorded calls for both teams, including applied between-map responses."));
+        const notes = el("div", "es-review-calls");
+        for (const note of seriesNotes) {
+          notes.appendChild(el("div", "es-review-call", `${esc(note)}`));
+        }
+        card.appendChild(notes);
       }
       if (ledger.length) {
         card.appendChild(el("span", "es-scout-lab muted", "Decisions settled"));
