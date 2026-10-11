@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import Any, Iterable, Literal, Mapping
 
 from esports_sim.manager import career, flavor_events, market, media_events, telemetry
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
@@ -49,6 +49,7 @@ from esports_sim.schemas import Event
 
 __all__ = [
     "AGENT_PLAY_VERSION",
+    "AdvanceSource",
     "OBSERVATION_VERSION",
     "SUPPORTED_ACTIONS",
     "TITLE_KINDS",
@@ -68,6 +69,7 @@ __all__ = [
 ]
 
 AGENT_PLAY_VERSION = 1
+AdvanceSource = Literal["web", "cli", "agent"]
 
 # Chronicle kinds that count as titles, in objective order (the season-capping
 # Champions bracket is the top prize agents play for).
@@ -191,7 +193,8 @@ def tick_shared_week(
     ready: set[str],
     *,
     events_out: dict[str, list[list[Event]]] | None = None,
-    source: str = "agent",
+    source: AdvanceSource = "agent",
+    sources_by_team: Mapping[str, AdvanceSource] | None = None,
 ) -> WeekTick:
     """Advance the shared world exactly once, after every seat has voted.
 
@@ -201,7 +204,8 @@ def tick_shared_week(
     seat's advance decision, run ``advance_week`` once, and build a per-seat
     digest (reward components, match results, standings movement) so every
     agent learns what the week did to THEM regardless of which request
-    triggered the tick."""
+    triggered the tick. Mixed surfaces supply each seat's accepted vote source;
+    ``source`` remains the default for single-surface in-process callers."""
     humans = sorted(gs.human_team_ids)
     if set(humans) - set(ready):
         raise ValueError("tick_shared_week called before every seat was ready")
@@ -219,7 +223,10 @@ def tick_shared_week(
     # Each seat's ready-up is its own recorded decision (the advance is the
     # RL episode's step boundary) — same ordering as the web endpoint.
     for t in humans:
-        telemetry.record_action(gs, "advance", team_id=t, source=source)
+        seat_source = (
+            sources_by_team.get(t, source) if sources_by_team is not None else source
+        )
+        telemetry.record_action(gs, "advance", team_id=t, source=seat_source)
     features_before = {t: telemetry.state_features(gs, t) for t in humans}
     positions_before = {t: _region_position(gs, t) for t in humans}
 

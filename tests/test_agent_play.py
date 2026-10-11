@@ -207,6 +207,9 @@ def test_last_vote_ticks_once_and_every_seat_gets_a_digest(game_data):
     assert world.gs.week == 2
     assert world.tick_seq == 1
     assert world.ready == set()
+    advances = [row for row in world.gs.action_log if row.kind == "advance"]
+    assert [row.team_id for row in advances] == [a, b]
+    assert all(row.source == "agent" for row in advances)
     assert r["tick"] is world.last_tick[b]
     for tid in (a, b):
         digest = world.last_tick[tid]
@@ -317,6 +320,38 @@ def test_rejected_ready_roster_keeps_previous_replays(game_data, monkeypatch):
     assert world.ready == {b}
     assert world.tick_seq == 0
     assert world.gs.week == 1
+
+
+def test_mixed_tick_provenance_is_deterministic_and_precedes_rollover(game_data, monkeypatch):
+    from esports_sim.manager import agent_play
+    from esports_sim.manager.campaign import WeekReport
+
+    def rollover(gs, gd, *, events_out=None):
+        report = WeekReport(season=gs.season, week=gs.week, phase=gs.phase)
+        gs.season += 1
+        gs.week = 1
+        return report
+
+    monkeypatch.setattr(agent_play, "advance_week", rollover)
+    saves = []
+    for reverse_mapping in (False, True):
+        world = AgentWorld.create(game_data, seed=911, n_teams=2)
+        a, b = world.team_ids
+        world.gs.week = 52
+        before = (world.gs.season, world.gs.week, world.gs.phase)
+        pairs = [(a, "web"), (b, "agent")]
+        if reverse_mapping:
+            pairs.reverse()
+        tick = agent_play.tick_shared_week(
+            world.gs, game_data, {a, b}, sources_by_team=dict(pairs)
+        )
+        advances = [row for row in world.gs.action_log if row.kind == "advance"]
+        assert [(row.team_id, row.source) for row in advances] == [(a, "web"), (b, "agent")]
+        assert all((row.season, row.week, row.phase) == before for row in advances)
+        assert tick.season == before[0] and tick.week == before[1]
+        assert world.gs.season == before[0] + 1 and world.gs.week == 1
+        saves.append(world.gs.model_dump_json())
+    assert saves[0] == saves[1]
 
 
 def test_objective_counts_titles_and_sees_rival_trophy_cases(game_data):
