@@ -1452,14 +1452,9 @@ async function clubOps(v, sub) {
       const activeGrid = el("div", "row", null);
       activeGrid.style.cssText = "display:flex; flex-wrap:wrap; gap:12px;";
       for (const prom of active) {
-        const duration = prom.initial_duration || 1;
-        const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+        const assessment = prom.play_time_assessment;
+        const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
         const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
-        
-        let progressInfo = "";
-        if (prom.promise_type === "play_time") {
-          progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-        }
         
         const card = el("div", "card ws-4", null);
         card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
@@ -1467,10 +1462,14 @@ async function clubOps(v, sub) {
           `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
           `<span style="font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${esc(humanize(prom.promise_type))}</span>` +
         `</div>` +
-        `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
-        `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
-          `<span>Progress</span><span>${prom.weeks_left} weeks left</span>` +
-        `</div>` +
+        (assessment ?
+          `<div class="promise-assessment" style="font-size:0.9em; margin:6px 0;">` +
+            `<p>${esc(assessment.target_label)}</p><p>${esc(assessment.progress_label)}</p>` +
+            `<p>${esc(assessment.deadline_label)}</p><p>${esc(assessment.next_evaluation_label)}</p>` +
+            `<p class="muted">${esc(assessment.counting_label)}</p></div>` :
+          `<div style="font-size:0.9em; margin:6px 0;">Target: ${esc(prom.target_value ?? "N/A")}</div>` +
+          `<div class="muted">${prom.weeks_left} weeks left</div>`) +
+        `<div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>` +
         `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;">` +
           `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
         `</div>`;

@@ -1204,19 +1204,22 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Active Promises</h3>
           <div class="pf-promises-container">
             ${promList.map((prom, idx) => {
-              const duration = prom.initial_duration || 1;
-              const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
-              let progressInfo = "";
-              if (prom.promise_type === "play_time") {
-                progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-              }
+              const assessment = prom.play_time_assessment;
+              const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
               return html`
                 <div key=${idx} class="pf-promise-item">
                   <div style=${{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                     <strong>${humanize(prom.promise_type)}</strong>
-                    <span class="muted">${prom.weeks_left} weeks left</span>
+                    ${!assessment && html`<span class="muted">${prom.weeks_left} weeks left</span>`}
                   </div>
-                  <div style=${{ fontSize: "0.9em", marginBottom: "4px" }}>Target: ${prom.target_value || "N/A"}${progressInfo}</div>
+                  ${assessment ? html`
+                    <div class="promise-assessment" style=${{ fontSize: "0.9em", marginBottom: "4px" }}>
+                      <p>${assessment.target_label}</p><p>${assessment.progress_label}</p>
+                      <p>${assessment.deadline_label}</p><p>${assessment.next_evaluation_label}</p>
+                      <p class="muted">${assessment.counting_label}</p>
+                    </div>
+                  ` : html`<div>Target: ${prom.target_value ?? "N/A"}</div>`}
+                  <div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>
                   <div class="pf-hbar" style=${{ height: "6px", background: "var(--es-color-bg-alt, #151b26)", borderRadius: "3px", overflow: "hidden" }}>
                     <i style=${{ display: "block", height: "100%", width: `${pct}%`, '--target-width': `${pct}%`, background: "var(--es-color-accent, #00f0ff)", borderRadius: "3px" }}></i>
                   </div>

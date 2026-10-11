@@ -1,0 +1,57 @@
+{
+  "before_sha256": "3d14d7c657496b5fb8545b02dd177335fedee6a6e7925dbffe680a5621653167",
+  "after_sha256": "fc5ae6e4dfe74f31e422b7dacabbba0b7c1d86b111d35b9501002eb3e387bf2f",
+  "protected_columns_equal": [
+    "session_id",
+    "step",
+    "started_at_utc",
+    "finished_at_utc",
+    "commit",
+    "working_tree_dirty",
+    "game_version",
+    "model",
+    "effort",
+    "surface",
+    "world_code",
+    "seed",
+    "game_time",
+    "intent",
+    "action",
+    "expected_outcome",
+    "actual_outcome",
+    "result",
+    "evidence"
+  ],
+  "only_changed_step": 4,
+  "raw_save_pair": {
+    "attempt": {
+      "schema_version": 1,
+      "session_id": "81a37a8be60b9ec8d6694aee35388d45",
+      "received_at": "2026-10-10T21:16:28.059408+00:00",
+      "world": "LGE22",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 9,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 17
+    },
+    "result": {
+      "schema_version": 1,
+      "session_id": "81a37a8be60b9ec8d6694aee35388d45",
+      "received_at": "2026-10-10T21:16:28.059408+00:00",
+      "world": "LGE22",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 9,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 17,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 178
+    }
+  },
+  "source_freeze_matches": 545,
+  "own_canonical_unchanged_from_HEAD": true
+}
