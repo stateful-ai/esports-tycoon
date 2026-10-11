@@ -23,12 +23,15 @@ not fabricate a playtest row or alter historical observations.
 The renderer uses existing public standings tags by team ID, includes both
 tiers, and falls back to the full name when legacy payloads lack a tag.
 Row/column headers expose full names and table scopes; row profile links
-retain their existing data-tid route and expose full-name titles and labels.
+use the shared `tlink` helper, retain its existing data-tid route and element
+semantics, and receive full-name titles and labels on the generated DOM
+element. This also preserves shared changes to native profile-link buttons.
 The existing matrix row order, cell order, and series results remain in place.
 
 Regression coverage was authored for duplicate name prefixes, ID-based tag
 lookup, both tiers, legacy fallback, matrix order/results, profile identity,
-and HTML escaping. All local tests, syntax validators, simulations, gates,
+HTML escaping, shared-helper use, and native-button decoration compatibility.
+All local tests, syntax validators, simulations, gates,
 and analytics-report commands were skipped under the user's explicit
 instruction. No runtime pass is claimed. Post-fix browser acceptance and
 telemetry reconciliation remain for the parent's continued session.

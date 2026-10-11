@@ -4724,9 +4724,15 @@ function seasonLeague(ws, data, league, power) {
         return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
       }).join("");
       const tm = mx.teams[i];
-      tb.appendChild(el("tr", "",
+      const tr = el("tr", "",
         `<th class="es-h2hm-row" scope="row" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">` +
-        `<span class="tlink" data-tid="${esc(row.team_id)}" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">${esc(label(tm))}</span></th>${cells}`));
+        `${tlink(row.team_id, label(tm))}</th>${cells}`);
+      const link = tr.querySelector("[data-tid]");
+      if (link) {
+        link.setAttribute("title", tm.name);
+        link.setAttribute("aria-label", tm.name);
+      }
+      tb.appendChild(tr);
     });
     t.appendChild(tb);
     wrap.appendChild(t);
