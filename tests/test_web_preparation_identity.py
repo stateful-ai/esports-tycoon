@@ -131,7 +131,7 @@ console.log(JSON.stringify([
 ]));
 """
     labels = json.loads(subprocess.check_output([node, "-e", script], text=True))
-    assert labels[0] == '<span class="plink " data-pid="team_phantom_core_p3">Wraithhawk</span> — '
-    assert labels[1] == '<span class="plink " data-pid="p&quot;&lt;&amp;">Wraith &amp; &quot;Hawk&quot; &lt;x&gt;</span> — '
+    assert labels[0] == '<button type="button" class="plink " data-pid="team_phantom_core_p3">Wraithhawk</button> — '
+    assert labels[1] == '<button type="button" class="plink " data-pid="p&quot;&lt;&amp;">Wraith &amp; &quot;Hawk&quot; &lt;x&gt;</button> — '
     assert labels[2:] == ["Former player — ", ""]
     assert "${preparationDevPlayerLabel(pr.last)}${esc(pr.last.dev_suggestion)}" in source
