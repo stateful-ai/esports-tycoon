@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-11T09:24:09.864772+00:00",
+  "old_rows": 994,
+  "new_rows": 1003,
+  "old_sha256": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631",
+  "new_sha256": "33c7b39e80f3cc1d00355f01ba607ae4b9796cfc6f7f627811be07f87c328020",
+  "raw_prefix_preserved": true,
+  "all21_columns_exact": true,
+  "appended_session": "2026-10-11-season2-roster-recovery",
+  "rows": 9,
+  "primary_only": true,
+  "remote_publication_pending": true,
+  "finite394_unchanged": true,
+  "flywheel": [
+    "esports-playtest-0234",
+    "esports-playtest-0235",
+    "esports-playtest-0236"
+  ]
+}

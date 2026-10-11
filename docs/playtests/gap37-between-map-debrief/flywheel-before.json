@@ -1,0 +1,128 @@
+{
+  "search": [
+    {
+      "id": "esports-playtest-0188",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Unplayed map books can still contribute to fixture-wide preparation",
+      "problem": "The initial wording proposal called an unplayed scheduled book unused",
+      "solution": "Read prep_bonus,fixture plan construction and the per-map retained edge; appended step10 correction and returnedPR383 for factual wording",
+      "lesson": "Stored books are averaged across all scheduled maps before the series. Say stored book/map not played; never infer unused or no contribution from maps_missed. The full prep edge also includes scout and coach terms.",
+      "confidence": "high",
+      "source": "2026-10-11-champions-quarterfinal correction10; world26UHC seed2038; recordedafter sourceaudit 2026-10-11T06:11:14.337339+00:00",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0171",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Unavailable series selections remain explicit",
+      "problem": "Changed legal options can silently replace saved intent",
+      "solution": "Retain unavailable saved options and disable Save until explicit legal choices",
+      "lesson": "Controlled browser response showed unavailable names; one clear remains disabled, both No substitution enabled; stale card uses defaults",
+      "confidence": "high",
+      "source": "gap35-series-card browser8517 world26UHC seed2038 S1W18 base64ee15f dirty; docs/playtests/2026-10-10-gap35-series-card/audit.json",
+      "code": "26UHC",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0170",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Series-card saved intent is readable and editable",
+      "problem": "Fresh Prep reset saved fields while save already held directive",
+      "solution": "Restore same-fixture fields and named substitution summary",
+      "lesson": "Browser unchanged Save and revisit preserve after_loss/stabilize/Hollowlock in Ghost out; only one explicit accepted directive appended to78prefix",
+      "confidence": "high",
+      "source": "gap35-series-card browser8517 world26UHC seed2038 S1W18 base64ee15f dirty; docs/playtests/2026-10-10-gap35-series-card/audit.json",
+      "code": "26UHC",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0169",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Series-card editor must reflect saved substitution",
+      "problem": "Revisit saved conditional card without accidentally overwriting it",
+      "solution": "Save AfterLoss/Stabilize/fa_0in/ghostout, compare fresh Prep form with public exactdirective",
+      "lesson": "Save correct; form resetsTrailing/Steady/no substitutes, current summary omits pair. Confirmed gap35 explicit6.1-sol/medium owner has immutable preAdvance e8c864a4... fixture. Actual match substitution stillworks; editor feedback is separate.",
+      "confidence": "high",
+      "source": "2026-10-10-masters-semi main64ee15f browser8516 world26UHC seed2038 W18-W19",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "series-card",
+        "scouting",
+        "telemetry"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0168",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Effective scouting depth can mask early deep-dive progress",
+      "problem": "Slice still displays50percent after assignment and Advance",
+      "solution": "Compare public effective depth with saved per-player work after completing decisions",
+      "lesson": "Individual player:slice progresses0->0.29; broadVanguard0.50 remains effectivefloor. UI50percent alone cannot establish stalled scouting. Standing upcoming lane alreadyVanguard despite Dashboard warning; existingPR358 owns warning.",
+      "confidence": "high",
+      "source": "2026-10-10-masters-semi main64ee15f browser8516 world26UHC seed2038 W18-W19",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "series-card",
+        "scouting",
+        "telemetry"
+      ],
+      "kind": "learning"
+    }
+  ],
+  "recent": [
+    {
+      "id": "esports-playtest-0191",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Transport vanished between acceptance turns",
+      "problem": "CUA inventory became empty when continuing evidence publication",
+      "solution": "Used explicitly authorized named Playwright CLI session on owned8524",
+      "lesson": "Preserve original candidate receipts and fresh corrected observations separately; no authentication or session registry values need publication.",
+      "confidence": "high",
+      "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+      "code": "",
+      "tags": [],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0190",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Corrected stored-book attribution verified separately",
+      "problem": "Confirm postreview copy while preserving original intent history",
+      "solution": "Fresh browser Dashboard, independent Prep, Save and byte comparison",
+      "lesson": "Corrected wording retains Preparation prefix and stored-book played status; Ascent session artifact and complete85decision save remain unchanged.",
+      "confidence": "high",
+      "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0189",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Unplayed books can contribute to full preparation",
+      "problem": "Initial unused-book wording implied no contribution",
+      "solution": "Reviewed fixture plan and prep bonus before correcting copy",
+      "lesson": "All scheduled map books are averaged into one edge shared by the played maps; describe map played status without causal use claims.",
+      "confidence": "high",
+      "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    }
+  ]
+}

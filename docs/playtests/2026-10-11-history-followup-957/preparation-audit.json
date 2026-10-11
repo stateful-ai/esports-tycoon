@@ -1,0 +1,564 @@
+{
+  "prepared_at_utc": "2026-10-11T07:49:24.384374+00:00",
+  "reviewed_parent_PR390_head": "4c534eb4d3d5698746680e14cbee78f22cd3c536",
+  "canonical_rows": 957,
+  "unique_keys": 957,
+  "sha256": "03ce93cc384758de6ce74b0ffacbd1444b63cfb07ca6b99305e525841ef399a9",
+  "parent938_sha256": "58b4200b04c66b0ad005a50aee5c35d6eda43ea9412ad76ddf90c43c56e7a635",
+  "exact938_raw_prefix": true,
+  "new_rows": 19,
+  "raw_boundary_physical_lines": 2518,
+  "primary_observed_sha256": "03ce93cc384758de6ce74b0ffacbd1444b63cfb07ca6b99305e525841ef399a9",
+  "primary_observed_rows": 957,
+  "sessions": {
+    "2026-10-11-season2-opener": 7,
+    "2026-10-11-gap40-rollover": 6,
+    "2026-10-11-gap40-shared-ready": 6
+  },
+  "original_artifact_mapping": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\actions.csv",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/actions.csv",
+      "sha256": "864fb837e1320b87c205bb34bf000e3dfdf8701b01cfc290cd8ddd20f68ec8da",
+      "byte_count": 6685
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\artifact-hashes.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/artifact-hashes.json",
+      "sha256": "6f7d64f4952c0f681fc8559ebef8b495153d96dae65c7000d6c2c2f4a11e3d2b",
+      "byte_count": 3483
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\report.md",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/report.md",
+      "sha256": "9ea9fbb37dce83ffd1f1df4ef0fc4c124089e9605bca26f2fff5fd631a8da4d2",
+      "byte_count": 1455
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\01-dashboard-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/01-dashboard-public.txt",
+      "sha256": "c3ccc928d93f03b48e44a4b08ceb09a5d2109e08a02c4c1e197a240ba7f31eea",
+      "byte_count": 38734
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\01-match-loading.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/01-match-loading.txt",
+      "sha256": "ac353e8e9a8a2f8f249a5c9936c1072ac737bba6262287c3cba7ffd531438479",
+      "byte_count": 158
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\01-match.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/01-match.txt",
+      "sha256": "2afcb62b42ed522018dcdb99bb7da1f94a6db28b50360cdcbce7ae6c25c2af36",
+      "byte_count": 4269
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\02-match-loading.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/02-match-loading.txt",
+      "sha256": "07423935c7956eef5b9ce2bff1f7c5ea09adbe9c6cf6054f434e2aa5aaa95fa4",
+      "byte_count": 4440
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\02-match.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/02-match.txt",
+      "sha256": "3d3c741194183ff693a039d7cf3be127bb080153bfafdc5916bea1b3d37cf0a2",
+      "byte_count": 5021
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\03-measured-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/03-measured-readback.txt",
+      "sha256": "e8abb32b079c8964c4dea961955c4b84a85911d3c5698e136fe7f24bfa148a4e",
+      "byte_count": 38090
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\03-measured-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/03-measured-response.txt",
+      "sha256": "70372a5183eb2301b85d818c465b12bbbe74899228e1d7d0baabb6ba80ba060b",
+      "byte_count": 108
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\04-plan-loaded.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/04-plan-loaded.txt",
+      "sha256": "0fbcbeaa7f08c937491330fb83ec7e75ffbbdf07c3180effcada4baf42c54cc5",
+      "byte_count": 4429
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\04-plan.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/04-plan.txt",
+      "sha256": "6a04861b685922af00b3600b30b9e10a8f290379992aaa3dd467939f8c1a69eb",
+      "byte_count": 679
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\05-plan-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/05-plan-readback.txt",
+      "sha256": "1fbae0ff1901d7717d7fad9204439ada2b86129be43b88c4523be35160f73594",
+      "byte_count": 16167
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\05-plan-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/05-plan-response.txt",
+      "sha256": "08d36089a6fc8aa07a451832766c0333c0a01b13d45d29becbc1eaec14e993a3",
+      "byte_count": 691
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\06-advance-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/06-advance-response.txt",
+      "sha256": "e4f279b6b0969b6156d6c2bbd470e1a3786cba47ec0ad4329cd60047ce7b3ec8",
+      "byte_count": 33573
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\06-opener-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/06-opener-readback.txt",
+      "sha256": "b0afc3c123efa8374d43778c74867b871df178a57c216742a0219e2793164c0d",
+      "byte_count": 49705
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\07-pre-save-controls.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/07-pre-save-controls.txt",
+      "sha256": "d9db8c730b4dc7231732fc880ed19e6a9e1113deb7a1a5c4a17a83f7b08c5290",
+      "byte_count": 5448
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\07-save-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/07-save-response.txt",
+      "sha256": "0df2f8dd1283b0146f7b180fcb3ecffdbe2274d6bfa4220219db059f41364200",
+      "byte_count": 453
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\07-saved-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/07-saved-public.txt",
+      "sha256": "9d69b2e2af4ec6e8c11877fd3d83781076e929c8d071341cd244473dd826f64d",
+      "byte_count": 45294
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\actions-before-analytics.csv",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/actions-before-analytics.csv",
+      "sha256": "1abc1465a769026947652db7bcfa3ec51a406b48b33c033cbb47360730f497fc",
+      "byte_count": 6362
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\browser-close.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/browser-close.txt",
+      "sha256": "95fdc0eb6abc7af3583c3a623c2d7ce121d730b7d1e6be85c2e063fad805170f",
+      "byte_count": 33
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\cleanup.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/cleanup.json",
+      "sha256": "5b407fa0a497b5449e63dabb299a82040edb1398696c808384ac56a2c1976db9",
+      "byte_count": 175
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\decision-report.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/decision-report.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_count": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\decision-report.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/decision-report.txt",
+      "sha256": "849c0c2cfd5f5e14b9b8a844ae4e6e452e8354ad177e46d77d07b9a4ccea6078",
+      "byte_count": 2226
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/flywheel-after.json",
+      "sha256": "aa36d871f2cf508b91ab7ea3f2082e103645538b6b17d2e055153902091f5a1b",
+      "byte_count": 2183
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/flywheel-before.json",
+      "sha256": "a037ec31c695ea64b5477ce8286fbc1437d3bce85f7863f4172afcea75090e33",
+      "byte_count": 5626
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\reconciliation.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/reconciliation.json",
+      "sha256": "0dc90a5e52f851ddc0bead191d5bb5bdf416b01738d36d7275f6ffb11ad9e7af",
+      "byte_count": 3202
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\report-command-exits.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/report-command-exits.json",
+      "sha256": "2f6d371ff087d5dbb325ef9549bced25a7f079db02c06108a93550cff83c655e",
+      "byte_count": 46
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\save-after.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/save-after.json",
+      "sha256": "b5fb5bccea5e89a0741aa9e762bfffc93f82969695cd81f05203ed2c880e54f2",
+      "byte_count": 4335636
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\save-before.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/save-before.json",
+      "sha256": "68d1cb1ff58813416eb23c92caf94d1c8046e7286e111fa4682155ad7e778663",
+      "byte_count": 3519781
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\saved-decisions.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/saved-decisions.json",
+      "sha256": "e8bdc88dce58c55ce22d0197db9d81edf81f7f9c0ea12c51de7d4f1f4a231ce5",
+      "byte_count": 1155
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/source-manifest.json",
+      "sha256": "44928b62433cdc6725b84b5c5630aaa0e933ba69dc6010bcdf5a38b8beee19ea",
+      "byte_count": 72887
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\usage-report.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/usage-report.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_count": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\usage-report.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/usage-report.txt",
+      "sha256": "4780689253659036b37f160279e1887dfbe47e9261ca433d0170085683a15f4a",
+      "byte_count": 1216
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-opener\\evidence\\usage.raw.jsonl",
+      "published_path": "docs/playtests/2026-10-11-season2-opener/evidence/usage.raw.jsonl",
+      "sha256": "5e96d69ecf2c0da47bb51f83c4a7cb0e1a889e185e9533ac927fd75ae6175142",
+      "byte_count": 14115
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\actions.csv",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/actions.csv",
+      "sha256": "a3c62be9f2d26e85dfa4b6c3f652039d1ac282c2f5712538ab7fccc95f72b928",
+      "byte_count": 4364
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\manifest.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/manifest.json",
+      "sha256": "961e17aeeddcadf5ef9412ab485fc55b36df420b341f0cdf0a5be57a32a55c80",
+      "byte_count": 4063
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\raw-byte-proof.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/raw-byte-proof.json",
+      "sha256": "80e2e8efcb86c83de8aaccf6de1cdd2d30ae9bfd3a47fe9eb2d176df1f182167",
+      "byte_count": 5103
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\REPORT.md",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/REPORT.md",
+      "sha256": "5a296cba44660b9804981945ead941a369da28ae74de708b161386b1f430fcf1",
+      "byte_count": 4831
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\01-offseason.png",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/01-offseason.png",
+      "sha256": "885390f41984f0e84483e627c91631d0fc94e74570d43c117f3f7c95bb9b2c67",
+      "byte_count": 284056
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\01-state.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/01-state.json",
+      "sha256": "62b309c70631ae1748bc3b31e34ee010b77672869920c22ddf17920ef60662f3",
+      "byte_count": 15091
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\02-readback.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-readback.json",
+      "sha256": "11baf9c8193bf866ea9af39d0ee1a254cbfee395307ed54a732989abbde82a73",
+      "byte_count": 23837
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\02-response.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-response.json",
+      "sha256": "892eec66c32a4a9e824c52bc5cbd6b21aca32556a7b91378a126016de7062b38",
+      "byte_count": 7849
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\02-rollover.png",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-rollover.png",
+      "sha256": "f688fcf7c4d01f3b4b31a8c96b62937acf9826d1cf34e1c98dfea96669a26446",
+      "byte_count": 252218
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\05-save-response.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/05-save-response.json",
+      "sha256": "6fcc8a6cbbec0e6957d06ed678450a61fc5b952311f93eaeee10326e50880f79",
+      "byte_count": 39
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\05-state.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/05-state.json",
+      "sha256": "7a7954dcf521ce1c80f220d3cd75fadff5ab345f78755a79458439d8ddac7ce3",
+      "byte_count": 13672
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\actions-before-analytics-correction.csv",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/actions-before-analytics-correction.csv",
+      "sha256": "24255d6bf100312846a58efe299502bea3445c7c872f121174cc5ada78994277",
+      "byte_count": 4273
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\audit.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/audit.json",
+      "sha256": "3fae430c26016d543c5b900ae7dc6d8b41584abebdd02dbe002036e5b50fa233",
+      "byte_count": 14074
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\commit-qualification.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/commit-qualification.json",
+      "sha256": "02174884f22474c0c7039a6be406e6679e16e39186c6daaa2906a07aa66ac11c",
+      "byte_count": 229
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\flywheel-after-recent.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/flywheel-after-recent.json",
+      "sha256": "80f1777b522356f924fd3f76f79a023e1b5faab03edb12dcd510e5e11d3bfe11",
+      "byte_count": 4396
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\flywheel-after-record.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/flywheel-after-record.json",
+      "sha256": "44b75cabd283ed0eec8e23528620506ea59eaf2ac9b69f4d122b97311839286d",
+      "byte_count": 2411
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\freeze-after.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/freeze-after.json",
+      "sha256": "d09db2212fd54c04d681c38baa105401c04a96016ecde3c95d91d75f22bbf3e6",
+      "byte_count": 233054
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\freeze-before.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/freeze-before.json",
+      "sha256": "d09db2212fd54c04d681c38baa105401c04a96016ecde3c95d91d75f22bbf3e6",
+      "byte_count": 233054
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\runtime-metadata-correction.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/runtime-metadata-correction.json",
+      "sha256": "3d2f3bbf17cf18950dfbcdafd35514750760027056c099a348d518be4f23d73c",
+      "byte_count": 425
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/telemetry-report.txt",
+      "sha256": "e9fafce1c2c59d6eab99ee2f4e2bec6559906f916f5468d00aec8a54a0df9a8e",
+      "byte_count": 2226
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\tested-git-blobs.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/tested-git-blobs.json",
+      "sha256": "a17613c4723f5851367ddbe1d3543a0a829a070422b2bace1a33a85650e68722",
+      "byte_count": 299821
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\usage-report.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/usage-report.json",
+      "sha256": "2132eb25ae63be85a84fb86f856b2eb5df7b6c54556e775091fcef1665ea9d32",
+      "byte_count": 824
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-rollover\\evidence\\visible-body.txt",
+      "published_path": "docs/playtests/2026-10-11-gap40-rollover/evidence/visible-body.txt",
+      "sha256": "c6729cb0084a7f1c2f74d2b5df48bcbcd36cb10cb96d27fd67878137a464b8d2",
+      "byte_count": 3063
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\actions.csv",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/actions.csv",
+      "sha256": "338ef7cca11a79b268637688315038d2e60c14d524681d4fdaf42f08ca6d0e33",
+      "byte_count": 4145
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\manifest.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/manifest.json",
+      "sha256": "ebe8336cb85a3cad4520f17d849c9633db26c47beaecd4ea0ca3a25737cf8c0d",
+      "byte_count": 4315
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\raw-byte-proof.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/raw-byte-proof.json",
+      "sha256": "5ce7e0b3b2293a0d40dbc74edd8c56eeb253fce177312e6f0cb56fc8ac6841b9",
+      "byte_count": 6546
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\REPORT.md",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/REPORT.md",
+      "sha256": "9910ceedc18e04dba23326e5d6b164d124f5e99e58c56fe6e40712a1eb2a9a41",
+      "byte_count": 3863
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\01-offseason.png",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/01-offseason.png",
+      "sha256": "78648f447b913fd356f2a5de8fbfb8b505df2884864530d601691e91769571aa",
+      "byte_count": 285323
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\01-state.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/01-state.json",
+      "sha256": "2b782b3000a378f29807248825c4a4bde1639484a5c842f13763ae151af7748b",
+      "byte_count": 15093
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\02-join.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/02-join.json",
+      "sha256": "0113a24efbf5b7f9a780103b3a557d4f86628ddb8bbea419c8ab771217d7a5a2",
+      "byte_count": 97
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\02-public-choices.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/02-public-choices.json",
+      "sha256": "0baa5d58c8bfb8eef1371d8b07268a49664b5511553a90132b2552f02c2d8733",
+      "byte_count": 37065
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\02-readback.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/02-readback.json",
+      "sha256": "9bd13a93a12260b34ed4836b19295755e6a292e5f34cfef20bc7183f1147a890",
+      "byte_count": 15217
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\04-label-observations.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/04-label-observations.json",
+      "sha256": "588f12f15a8dca217418e835265c6299a20bdf5b57894c976e99870e3da508a4",
+      "byte_count": 288
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\04-ready-before.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/04-ready-before.json",
+      "sha256": "d2f6938d8c567859d7f30fb5021175a87968fff8561440321fdf2fa0a8a18142",
+      "byte_count": 15241
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\04-ready-readback.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/04-ready-readback.json",
+      "sha256": "d2f6938d8c567859d7f30fb5021175a87968fff8561440321fdf2fa0a8a18142",
+      "byte_count": 15241
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\04-ready-response.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/04-ready-response.json",
+      "sha256": "a8d5e99943e302bb24e57ede9f263770ca3c9e7fd01d8f48b361274220181980",
+      "byte_count": 111
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\04-waiting.png",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/04-waiting.png",
+      "sha256": "3508a9ef3c26bdbc23bffb6070be76d8edfd159b34e89fde5e7063334b47ffa8",
+      "byte_count": 292403
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\05-readback.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/05-readback.json",
+      "sha256": "8cc9d8db8b4a696cf5d5397162e279a6984942d493609f3b50f6cbb42053b97f",
+      "byte_count": 13798
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\05-regular.png",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/05-regular.png",
+      "sha256": "328f61473cc59f439a89c4dd1345c12e953d4d7e3642e49fcc75c4468304f5dc",
+      "byte_count": 262063
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\05-response.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/05-response.json",
+      "sha256": "3258c579daa2abb058250a5520e93b5abfe5903d36fcb688e7dab8d691493f02",
+      "byte_count": 6540
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\06-save.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/06-save.json",
+      "sha256": "4901a3e982eb8be471408125dcd65f76fe1d6e70bcc5df1bfc138666ac430668",
+      "byte_count": 48
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\audit.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/audit.json",
+      "sha256": "fcc8fea9144dc675569f1adce2f4450051930d010cd8923b016f2281e46b9dc3",
+      "byte_count": 13483
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/flywheel-after.json",
+      "sha256": "10370f4315f89671e5ff795f64f8598775f41aecd5b679aac61d5fcae0e6f2b9",
+      "byte_count": 2247
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/flywheel-before.json",
+      "sha256": "45ea4ada19259578307cb3419c446e02fdb73cf199d047d7f91771b0507a956a",
+      "byte_count": 3775
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\freeze-after.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/freeze-after.json",
+      "sha256": "dd9bd12671868cbd257710770a5985a76095892d1c4859815fcfa0e33e81bd93",
+      "byte_count": 236491
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\freeze-before.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/freeze-before.json",
+      "sha256": "dd9bd12671868cbd257710770a5985a76095892d1c4859815fcfa0e33e81bd93",
+      "byte_count": 236491
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\indexed-decisions.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/indexed-decisions.json",
+      "sha256": "0edeb5ee3905e7e02589891d63b9d02a6b09e52627946620061152d0911c55ce",
+      "byte_count": 571
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/telemetry-report.txt",
+      "sha256": "f468a41f04259e3ec40af3921cbf6f58ae76d6dee478f89e14b7a52d5def2768",
+      "byte_count": 2090
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\tested-git-blobs.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/tested-git-blobs.json",
+      "sha256": "8bae5c0b5d5536d5b2ee88913c305357be4498850d8a01e44e51869699e63aee",
+      "byte_count": 303431
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\usage-report.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/usage-report.json",
+      "sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056",
+      "byte_count": 288
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\usage-summary.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/usage-summary.json",
+      "sha256": "de856268104af801b9aaf0c06d4bbc015c4d901806f7262dd15a32792a1cb35d",
+      "byte_count": 1868
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-gap40-shared-ready\\evidence\\usage-world.jsonl",
+      "published_path": "docs/playtests/2026-10-11-gap40-shared-ready/evidence/usage-world.jsonl",
+      "sha256": "e99488c2636bab2ad12fb1432f71489f2fe6f9ffafa62aaf357c6ac705291c0a",
+      "byte_count": 8793
+    }
+  ],
+  "session_shard_checks": {
+    "2026-10-11-season2-opener": {
+      "rows": 7,
+      "sha256": "864fb837e1320b87c205bb34bf000e3dfdf8701b01cfc290cd8ddd20f68ec8da",
+      "all21_columns_exact": true
+    },
+    "2026-10-11-gap40-rollover": {
+      "rows": 6,
+      "sha256": "a3c62be9f2d26e85dfa4b6c3f652039d1ac282c2f5712538ab7fccc95f72b928",
+      "all21_columns_exact": true
+    },
+    "2026-10-11-gap40-shared-ready": {
+      "rows": 6,
+      "sha256": "338ef7cca11a79b268637688315038d2e60c14d524681d4fdaf42f08ca6d0e33",
+      "all21_columns_exact": true
+    }
+  },
+  "source612_raw_unchanged": true,
+  "source_Git_tree_equal_tested64": true,
+  "local_tests_or_acceptance_helpers_or_gameplay": false,
+  "publication_order": "Actual765 then808 then885 then938 then957 merges; retarget only on root direction",
+  "inherited_CI_success": false
+}

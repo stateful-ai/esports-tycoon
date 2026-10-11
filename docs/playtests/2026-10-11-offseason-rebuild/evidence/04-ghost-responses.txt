@@ -1,0 +1,6 @@
+### Result
+[{"status":200,"request":{"player_id":"ghost","dev_focus":"mechanical"},"body":{"ok":true,"message":"Ghost: mechanical focus, normal intensity"}},{"status":200,"request":{"player_id":"ghost","training_intensity":"light"},"body":{"ok":true,"message":"Ghost: mechanical focus, light intensity"}}]
+### Ran Playwright code
+```js
+await (async page => { await page.getByRole('button',{name:'Club',exact:true}).click(); await page.getByRole('button',{name:'Development',exact:true}).click(); const out=[]; for (const [field,value] of [['focus','mechanical'],['intensity','light']]) { const row=page.getByRole('row').filter({has:page.getByRole('cell',{name:/^Ghost/})}).filter({has:page.locator('select[data-act=focus]')}); await row.waitFor(); if(await row.count()!==1)throw Error('Ghost editable identity not unique'); const control=row.locator('select[data-act='+field+']'); if(await control.count()!==1)throw Error('Control not unique'); const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/dev_plan')&&r.request().method()==='POST'&&r.request().postDataJSON().player_id==='ghost'); await control.selectOption(value); const r=await response; out.push({status:r.status(),request:r.request().postDataJSON(),body:await r.json()}); await row.locator('select[data-act='+field+']').waitFor(); } return out; })(page);
+```

@@ -1,0 +1,59 @@
+{
+  "recorded_at_utc": "2026-10-11T07:20:00.365582+00:00",
+  "entries": [
+    {
+      "id": "esports-playtest-0204",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Offseason advance is a season boundary",
+      "problem": "Advance Week suggested an ordinary training/payroll tick at S1W23 offseason",
+      "solution": "Expose Start Season2 and a server-derived notice before advancing",
+      "lesson": "Copied-save browser action immediately reached S2W1 regular with report income0 expenses0; expectations should describe that boundary",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; gap40 own session 2026-10-11-gap40-rollover; seed2038 world26UHC copied save; tested6f8a114",
+      "code": "",
+      "tags": [
+        "gap40",
+        "offseason",
+        "browser"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0205",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Server-authored transition copy survives rollover",
+      "problem": "Client wording can become stale after a phase change",
+      "solution": "Render advance_transition from public state on refresh",
+      "lesson": "Public readback after advance restored Advance Week and hid the notice without changing simulation rules",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; gap40 own session 2026-10-11-gap40-rollover; seed2038 world26UHC copied save; tested6f8a114",
+      "code": "",
+      "tags": [
+        "gap40",
+        "offseason",
+        "browser"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0206",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Report overlay blocks immediate Save",
+      "problem": "Post-rollover report intercepted the Save click",
+      "solution": "Preserve blocked attempt and reopen career before explicit Save",
+      "lesson": "A blocked UI click emitted no Save request; recovery Save POST200 persisted the same single advance decision",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; gap40 own session 2026-10-11-gap40-rollover; seed2038 world26UHC copied save; tested6f8a114",
+      "code": "",
+      "tags": [
+        "gap40",
+        "offseason",
+        "browser"
+      ],
+      "kind": "pain-point"
+    }
+  ]
+}

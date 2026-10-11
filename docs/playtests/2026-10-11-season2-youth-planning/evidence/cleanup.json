@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:58:33.4040760Z",
+  "local_tests_launched": false,
+  "user8421_untouched": true,
+  "browser_closed": true,
+  "owned_pids": [
+    456,
+    36128
+  ],
+  "verified_commands": [
+    "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8537 --no-browser",
+    "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8537 --no-browser"
+  ],
+  "port_absent": true
+}

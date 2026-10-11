@@ -1,0 +1,84 @@
+### Result
+{
+  "series": {
+    "fixture": {
+      "id": "s1msf0",
+      "week": 18,
+      "stage": "masters_sf",
+      "best_of": 3,
+      "team_a": "team_vanguard",
+      "team_b": "team_nexus",
+      "team_a_name": "Team Vanguard",
+      "team_b_name": "Team Nexus",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "haven",
+        "ascent",
+        "lotus"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp",
+        "ascent": "/assets/maps/ascent.webp",
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [
+        "VGD ban split",
+        "NXS ban bind",
+        "VGD pick haven",
+        "NXS pick ascent",
+        "decider lotus"
+      ],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": []
+    },
+    "directive": {
+      "fixture_id": "s1msf0",
+      "trigger": "after_loss",
+      "response": "stabilize",
+      "substitute_in": "fa_0",
+      "substitute_out": "ghost"
+    },
+    "substitute_handles": {
+      "fa_0": "Hollowlock",
+      "ghost": "Ghost"
+    },
+    "triggers": [
+      "trailing",
+      "after_loss",
+      "always"
+    ],
+    "responses": [
+      "steady",
+      "press",
+      "stabilize",
+      "reset"
+    ],
+    "starter_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo"
+    ],
+    "bench_ids": [
+      "fa_0"
+    ]
+  }
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => ({series:(await (await fetch(\'/api/club\')).json()).series, lineup:(await (await fetch(\'/api/roster\')).json()).effective_lineup_ids})');
+```
+### Page
+- Page URL: http://127.0.0.1:8517/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T00-06-31-335Z.log#L2

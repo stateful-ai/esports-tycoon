@@ -1,0 +1,2575 @@
+{
+  "at_utc": "2026-10-11T08:13:56.792280+00:00",
+  "pr": 371,
+  "authoritative_main": "300462da2ae10a55c6106918c9de209638f85406",
+  "original_reviewed_head": "80aca637029dd0af578017af38a3a9efe2411e1e",
+  "source_feature_paths_unchanged": [
+    "src/esports_sim/manager/economy.py",
+    "src/esports_sim/manager/facilities.py",
+    "src/esports_sim/web/server.py",
+    "tests/test_web_sponsor_facility_labels.py"
+  ],
+  "conflicts": [
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/actions.csv",
+      "original_feature_sha256": "27946650dc3faa446bedb06ef343f0fb56bffa32a29584f8df2448396dbec54e",
+      "main_raw_sha256": "e977bdeb67d649e7fde011042fd43d0464acb118835380fa0c32522cace6c411",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "original_feature_sha256": "4ee471c381c7a4095f5ff9fc4c9c20a9ffd8cbdce374428ce2f224fd0fa85159",
+      "main_raw_sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/current-freeze-verification.json",
+      "original_feature_sha256": "ff32f8493fdc14eb59453c7f8224e4bd6b9faaa68cf42832242138f652803d36",
+      "main_raw_sha256": "adce268f5a8a4896d697fde70ffac8247556525fb2943b98e198d0be0eef745d",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/equivalence.json",
+      "original_feature_sha256": "0c0d11edbdbaa7dd13eface9761756bd6bed2031b216fd620e61b66e38f68fa8",
+      "main_raw_sha256": "cb9a3afd97fa88b87d73d1e43afea75be8c7fd9f57f4d1b9479610f533650eb4",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/freeze-post.json",
+      "original_feature_sha256": "615e237f11b68b27014305e1ea5960bd562991b9425b95e45f0a7f8a7945ed4a",
+      "main_raw_sha256": "906e1660c9207143846da1d28d7c6f9dfc681b4f2bac312757ce69a0cb2cdc11",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/freeze-pre.json",
+      "original_feature_sha256": "615e237f11b68b27014305e1ea5960bd562991b9425b95e45f0a7f8a7945ed4a",
+      "main_raw_sha256": "906e1660c9207143846da1d28d7c6f9dfc681b4f2bac312757ce69a0cb2cdc11",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/full-pytest.log",
+      "original_feature_sha256": "1a3b2df33b22bc998951ba6b7a0dabe66937dd9b1a4ce9d8ad882271f894ca2f",
+      "main_raw_sha256": "4325f224e8f06fbc2079d9d7c5a3c9103b2e46edf91870cecae7d5a8ebb4744c",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/native-proof.json",
+      "original_feature_sha256": "a841f81423477caa75aa268cee4d6b36f4b89be7db51db5fbd036f509b4e9c5e",
+      "main_raw_sha256": "221b5c78f87084adfb900074522079bd089692f717c76bd904847e92fa50a9a3",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "original_feature_sha256": "44326fd222a39fb23fbfbfd498d27afe8707d7ae000e100068685222a1e598c8",
+      "main_raw_sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/telemetry-report.txt",
+      "original_feature_sha256": "fcae4852f7bd5a004ff6e8aa7b4e5382f24c153d5914e9ac6af695eb52780eef",
+      "main_raw_sha256": "6bc55659ac8e350fe56fac2901555d47f771792ce3fe9c2be1458ae861a24ffd",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "original_feature_sha256": "3da19688bb4e3a8e2c4c9f3bfe3a23feb59795ef8e55ebf3aa105b46d660335d",
+      "main_raw_sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    },
+    {
+      "path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-report.json",
+      "original_feature_sha256": "e5f30f5bf1db69814fe72a028e85eeb1941ad37e86f7c345cc7ea54dabc8a7b2",
+      "main_raw_sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056",
+      "newline_equivalent": true,
+      "selected_authoritative_raw_main": true
+    }
+  ],
+  "all_published_playtest_blobs_exact": 926,
+  "canonical_rows": 765,
+  "canonical_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "current_source_sha256": {
+    "data/agents.yaml": {
+      "git_sha256": "807fb4e84ce43041206d8fe61a65233742740ebc05a3f1893820586d155ac04e",
+      "raw_sha256": "3f832127da40dc0ea8f261e1d0037fcf8b8a3067c303f99a5243c394a111e1e1"
+    },
+    "data/attributes.yaml": {
+      "git_sha256": "f6780828b2b596b7e1979cf38539be1915394ffebf095e1895d2569cdfcf3c0b",
+      "raw_sha256": "e584bc0a484a35eab263007a1cef5e3b1da3ae4ea7da75d4a578f6ce296a117f"
+    },
+    "data/maps/ascent.yaml": {
+      "git_sha256": "b0d987187fb4f041ffe7da193903eb076fa4b5bdcc4cb7d975bbc94f85c4a3d1",
+      "raw_sha256": "d4e082729d648b4b7c8c60de59d1fdd4b9d711c2fb7280c2b67453953d24409b"
+    },
+    "data/maps/bind.yaml": {
+      "git_sha256": "e4f465fd729d08bec7ed239cc126b23923b96938bba1d7d862129fd763bba32b",
+      "raw_sha256": "cefba86c1e5246277646ad1ee3f8ae9422d553b17055aa013df76054f7ea83a8"
+    },
+    "data/maps/geometry/ascent.yaml": {
+      "git_sha256": "cf801bf5a9a34fea7ed03c8f8f87ffea1957679946a853151cccbda579f0cf82",
+      "raw_sha256": "6042039d5ae964aa6444c4ba3666d51d794b29b5d7d27d7418e678871f14a389"
+    },
+    "data/maps/geometry/bind.yaml": {
+      "git_sha256": "8b407964f8355d0151dbdf6464ea2d5e154138718add82f13da377950285cd5d",
+      "raw_sha256": "69631ef293fdc26f8d66debc380d7814044df2a49f5be6d994150b90a58b4c18"
+    },
+    "data/maps/geometry/haven.yaml": {
+      "git_sha256": "70e55d44e02583dcd6c87ac20baa49a4c52081d5d9ef7eebb0f9e44e76446fcd",
+      "raw_sha256": "0fbf69478fcd3361fa9d3b9b1ecdd3fd5681b8b5e9942a83e2440387a81560b6"
+    },
+    "data/maps/geometry/lotus.yaml": {
+      "git_sha256": "1efa70d3c08bb7f1a0f608cbe53989c474d5a6099b9e067d7f9ae5d6aa4453ee",
+      "raw_sha256": "fc98a8b7b055519ff188e4f3e7fca47d9caf2ec796a76daddfd2630a4f33099c"
+    },
+    "data/maps/geometry/split.yaml": {
+      "git_sha256": "f4c8274ac100bc452dfc0d9cfbacba9e583d7c337e88cc00c1b23381667a834c",
+      "raw_sha256": "5aca6b13fdd22a21e3c9687cb7bb3dd52d68372fb6c3adbb946c5c9cbbbdb937"
+    },
+    "data/maps/haven.yaml": {
+      "git_sha256": "248c3d5e1ee721a7739023e6e62b841e75f3a762c31906508c8d284f1ef0fc1c",
+      "raw_sha256": "10000ea3b76c901e2e84fc9ff28fe59fa47c2c1a561b13ed6f2c9ea7c0725c6d"
+    },
+    "data/maps/lotus.yaml": {
+      "git_sha256": "24c0d87c27e0678298868cd7f926509759b6ac3cfd8f7740a3e2c799f8530d55",
+      "raw_sha256": "695140e0b5667f19fa966178a929dab6691dfd49b4a2eebcfe404787b1f87fda"
+    },
+    "data/maps/split.yaml": {
+      "git_sha256": "360760219b0f76b508d558a68d179a9f278febf2f35e83dbf890a8bfa66eaaf3",
+      "raw_sha256": "a865c4a1cf87650d3196c5b5ff17a478caed643f2bdfe4dc31fe441cc2b5dc9c"
+    },
+    "data/maps/studio/abyss-layout-v2.yaml": {
+      "git_sha256": "4f2271cd99fec0172a42b1dd3550f1fab9f1c29ae746df0fda05424613ff9084",
+      "raw_sha256": "6262dd3d4a33815ab65d64c269893d8a390d43aba5b5df1ed3fff66eb1b16f0c"
+    },
+    "data/maps/studio/ascent-layout-v2.yaml": {
+      "git_sha256": "a5eff3aa0d1591735ebd53b398355de7f25ca090cde0fd33e67c02eea653c0d2",
+      "raw_sha256": "babd31423e6ffcbdcbfb242463a8bedda78c38471eaa7b2cafd156d9f8af1358"
+    },
+    "data/maps/studio/bind-layout-v2.yaml": {
+      "git_sha256": "d35d328b1c750cc819ea4edf117b7b390433f8058c479324cf6e8aa7b3e6b40d",
+      "raw_sha256": "3ff702880a5e0b62350a4e45f5415d58e3ca4599ec46a122e2cd049c1641dd59"
+    },
+    "data/maps/studio/breeze-layout-v2.yaml": {
+      "git_sha256": "fa0bb2bbf54c2c1e8aaa489c2d9a911ad2dc83beef81bf21fcd4ab587c1582d3",
+      "raw_sha256": "b680c9309e0e2274856e0b8d7067aa88d43655d52ba247c7ed22a841c84e9d94"
+    },
+    "data/maps/studio/corrode-layout-v2.yaml": {
+      "git_sha256": "a8ba6a8182a968c4326e4f07017bf175cd60d53d938477bfa9fd46bc0eacf90b",
+      "raw_sha256": "923a4fc2d59aabfb5a0e7c4cdbe2e3fcb370f1497e920f394c1aeb5a66a06909"
+    },
+    "data/maps/studio/fracture-layout-v2.yaml": {
+      "git_sha256": "de7d02cea64409f14ed87d5b8053daf74af8edd87917511b1523158c73cd227b",
+      "raw_sha256": "9fec9b41855866698e2084a1f9cf600875ab694897740b7a2e3f0df8e551817c"
+    },
+    "data/maps/studio/haven-layout-v2.yaml": {
+      "git_sha256": "fdb3af74db22eb3763892891fb5c65fbcfd82ebe7e588d10b0665c16ec5e3a8a",
+      "raw_sha256": "3583e12a9a58454949585e108f79664a7c43222ed4c4325bd7f915a566c3055c"
+    },
+    "data/maps/studio/lotus-layout-v2.yaml": {
+      "git_sha256": "c8c377f9252126dbb92eeb3cff47aa9a37ffd1d6ac511428a2d6bd70e1f80fd3",
+      "raw_sha256": "b6f832b893b0e5d8d5f11db63b29a89fb860ebce1ff546f0c2a714e7d8fc0153"
+    },
+    "data/maps/studio/pearl-layout-v2.yaml": {
+      "git_sha256": "c46ee314af1bc2709b29f56b87a75e20bcaeb79d39847f76aaaae2ef5ff94ffc",
+      "raw_sha256": "d5939c6f7b7c7ccad666f665c44be6fd9ad5cdb2974a69fbb7eed82b4eca51e4"
+    },
+    "data/maps/studio/split-layout-v2.yaml": {
+      "git_sha256": "7998c6440e8803cbfca9f9d72899fa73485a911eb508bb5e2dab9b85d2c3057d",
+      "raw_sha256": "28a0efb530172679ea83f5a6c6ec06682d3a8a44c0e121d39662870bba72ea2b"
+    },
+    "data/maps/studio/sunset-layout-v2.yaml": {
+      "git_sha256": "20583b933e9367d63d3655d38d46c85a10bddd25fab5574df7644b68be167e8e",
+      "raw_sha256": "400acdd4ae62042472413cd583b27d6b17731693d00cfa9053cc5018fa46690f"
+    },
+    "data/research/vct-2021/observations.json": {
+      "git_sha256": "9cf68c672861295299fdd4e399786ac73e123fd3c610d5dcfe89f693345101d0",
+      "raw_sha256": "270ca7c2d9d4ac8dceaecdd9dcb9d42d0ef1d717b39defe37186f48a90970292"
+    },
+    "data/research/vct-2026/collection_issues.csv": {
+      "git_sha256": "fbe9b7444cad615cb17b890729c82c13068956bfad64c7e0a5960ad6654a751a",
+      "raw_sha256": "b20ca1dad638030f5db05384d97254e5fdff914395a5772e7394f6215841ecf5"
+    },
+    "data/research/vct-2026/event_manifest.json": {
+      "git_sha256": "4d2338b638973e0ce16e566a0ecb613430f993ca81983be72e60769e98c0adcb",
+      "raw_sha256": "cce26b7dd1c31f2e3d9d6eacba100add4aec2575910aff565caa59ac7f4863ff"
+    },
+    "data/research/vct-2026/event_quality_signals.csv": {
+      "git_sha256": "2425f91e7aa6aa34304043838c8847ed0515840acb01f9de22663f024b2862c9",
+      "raw_sha256": "f1c302c81a10481797c5255cb2eba53bf685e8788683e8eebc481265d851f93c"
+    },
+    "data/research/vct-2026/events.csv": {
+      "git_sha256": "612264173d194c7b42b768914401a2d8ed0601246f3f93179951a4d3776a6248",
+      "raw_sha256": "8a6f3a69c1e2404312d8727e96e8b8863e06671e1e1a662e41919d355d5547fb"
+    },
+    "data/research/vct-2026/experimental_lineup_war.csv": {
+      "git_sha256": "c931a5ad489a8416d0abb21f75a71df0a5b8f26919e2155e331a3baf1f2cf64f",
+      "raw_sha256": "f293e14532f4955e9c407fe3b5f97d4327db7e05991c2b5ff897283dcdf2b73b"
+    },
+    "data/research/vct-2026/free_agent_review.csv": {
+      "git_sha256": "a152df6effc40e3aef0a78980db9c3cc8c82a673fb7aa487858f0f2737cfa9e5",
+      "raw_sha256": "c5caac2ca866cffd5e002dfdafcbd3d5340dab7df7fac1e981a04e1dce2a4526"
+    },
+    "data/research/vct-2026/manual_audit/README.md": {
+      "git_sha256": "7cfb1ca603da18e7cc9c9d546dfec8f8821a6079ff9994b5e73963fc10ad4753",
+      "raw_sha256": "1656623ee697175fdbd9c7af525c9c85c0a14a09f1ae7a4f72ba321ab4de2a10"
+    },
+    "data/research/vct-2026/manual_audit/checks.csv": {
+      "git_sha256": "1b364e7651d48dfa21769923f490ccc62ed0341575c2f4aab25f88728a02ad02",
+      "raw_sha256": "68baa7431e204d88000e54a48b6f37951ffb084a9a63802b0f58e5115e2abc3f"
+    },
+    "data/research/vct-2026/manual_audit/observations.json": {
+      "git_sha256": "285f7498b8a5b37a489c70171f28f4848ecd259e4aba084b1e720b15c2792c8b",
+      "raw_sha256": "8d4317dfd66c07309a97ac0c19787fec63de3648505bf022543f0c1ed78650aa"
+    },
+    "data/research/vct-2026/manual_audit/result.json": {
+      "git_sha256": "26b1f84116fd564f8252126babff57576efc3b373311e8531a50cf360e5acdd2",
+      "raw_sha256": "c2efc22b0e0d8442f4e6b494dc5f436897d9a5f201efe70681f07a97bb52dbed"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-china-event-nephh.png": {
+      "git_sha256": "0bf4e062d7c7d766c71386c39f916947feb8dc436ff09ed5edfd85174bd174aa",
+      "raw_sha256": "0bf4e062d7c7d766c71386c39f916947feb8dc436ff09ed5edfd85174bd174aa"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-china-event-slowly.png": {
+      "git_sha256": "c08f85381eb78320fcc9a3b259dd883320919c135a4c63c07fb7cfc2cb3a0259",
+      "raw_sha256": "c08f85381eb78320fcc9a3b259dd883320919c135a4c63c07fb7cfc2cb3a0259"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-china-pearl-stats.png": {
+      "git_sha256": "d21fd8b53b45c9d5c951aebe4526041964f24c2ab5267f1cdcbdf3442db154d5",
+      "raw_sha256": "d21fd8b53b45c9d5c951aebe4526041964f24c2ab5267f1cdcbdf3442db154d5"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-china-stats.png": {
+      "git_sha256": "f59cd59f4751d2b57027c8c1124cbabf514f4cd2b9244a68e90103ab7ef1600c",
+      "raw_sha256": "f59cd59f4751d2b57027c8c1124cbabf514f4cd2b9244a68e90103ab7ef1600c"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-event-stats-stats.png": {
+      "git_sha256": "af42cc857e931b7560901e3efff73bbeb74b15b0ed4413395ec82b02d489b61d",
+      "raw_sha256": "af42cc857e931b7560901e3efff73bbeb74b15b0ed4413395ec82b02d489b61d"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-fns-profile-top.png": {
+      "git_sha256": "97f2a7f8a8587dbf68dacb76eff3b5b67375c512a986e3297daf4a88de07af76",
+      "raw_sha256": "97f2a7f8a8587dbf68dacb76eff3b5b67375c512a986e3297daf4a88de07af76"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-marved-profile-top.png": {
+      "git_sha256": "15689ea1996efabda3e9f2b168ece4bc46891318808bd2d5aedb96b9a3c506bd",
+      "raw_sha256": "15689ea1996efabda3e9f2b168ece4bc46891318808bd2d5aedb96b9a3c506bd"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-missing-stats-stats.png": {
+      "git_sha256": "a27fb3f2e9e528cf640b6b2cdb9583f87c287e616362c81684ac4bd5c8812ac1",
+      "raw_sha256": "a27fb3f2e9e528cf640b6b2cdb9583f87c287e616362c81684ac4bd5c8812ac1"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-na-tier2-stats.png": {
+      "git_sha256": "a0c35444041001f1e29a9f0d0988ab9b7f41cf9a50ae88873dd7b0c58b09a6c0",
+      "raw_sha256": "a0c35444041001f1e29a9f0d0988ab9b7f41cf9a50ae88873dd7b0c58b09a6c0"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-overtime-stats.png": {
+      "git_sha256": "259e41b7ec35f46b1b164ef0aba7d51893e176f03f38a50a21fadd1efaa99fad",
+      "raw_sha256": "259e41b7ec35f46b1b164ef0aba7d51893e176f03f38a50a21fadd1efaa99fad"
+    },
+    "data/research/vct-2026/manual_audit/screenshots/audit-santiago-stats.png": {
+      "git_sha256": "3a46ff6c2ea28f301a1b51c4a094ebf2e621f11622bd1d10d0f2af64a2064030",
+      "raw_sha256": "3a46ff6c2ea28f301a1b51c4a094ebf2e621f11622bd1d10d0f2af64a2064030"
+    },
+    "data/research/vct-2026/map_model_eligibility.csv": {
+      "git_sha256": "d6ac6b17d33285b979687aa6174784f188169e9861bdfc7c122d2764a145bb43",
+      "raw_sha256": "6aa8c313fff4b9a5b8f9773560809fb9bc926c5f88b30ab4640ea9f2dbfa8282"
+    },
+    "data/research/vct-2026/map_outcomes.csv": {
+      "git_sha256": "719a6f0b6b105291bf82826d8145092948778f065242ab445424df95358a1045",
+      "raw_sha256": "ee4c6267c1b172c9d964a3f8fe1b5c001b700f32997cb8e79f6e5347afab98bf"
+    },
+    "data/research/vct-2026/model_evaluation.json": {
+      "git_sha256": "ce22203f6d9353a7c360b87a1d9276ef1390f70ec0ee902c2145257e18f6d378",
+      "raw_sha256": "73ad9aa10818a0bc7f607239be6c0db8c005c5441fff1c9d7d08c35104cf5856"
+    },
+    "data/research/vct-2026/player_event_stats.csv": {
+      "git_sha256": "5cba7fd05c26dd2c2f1b03f4ee1eb35ea324b50478aded41dce4f5e4acc40286",
+      "raw_sha256": "faccde287d1f65eb1ff07a488a4cebe9d92eb0166b15de42d6dce3d2146b6102"
+    },
+    "data/research/vct-2026/player_map_stats.csv": {
+      "git_sha256": "9c369afe5bc2df66462965f20b3718b1fe88a1aa89db7295833cb19b9b61d22f",
+      "raw_sha256": "fce097cb8dbd0cea7b5b00d31ab6d5a4b2530decc50817dc1a1d1dea424f28da"
+    },
+    "data/research/vct-2026/player_profiles.csv": {
+      "git_sha256": "3aaab66f7eafc0b174508fe8103afaa1c1376b41ec1098df5760ab4b20820819",
+      "raw_sha256": "9371dead3f6a9438f1e039ee4cb27c7b63b0624f15ed6bde7fef9e826b258d81"
+    },
+    "data/research/vct-2026/profile_candidates.json": {
+      "git_sha256": "8ca83b4289434c579b8b0d70a25a08cc8f0bd73ee6d95c898a4dfafb9830cb34",
+      "raw_sha256": "a7dc16a8b5ca151fb6e8a89f828a31e7a9da56c38455e419f98819693a7e8638"
+    },
+    "data/research/vct-2026/quality_recommendations.csv": {
+      "git_sha256": "87139556b759af277ddfc4035cfce9df94533f1e5537607cbe93c0edba8aaf54",
+      "raw_sha256": "b6781997f025997fcd2c4f56632aafa0cb6863f4d9ec6fff26081086d47755d7"
+    },
+    "data/research/vct-2026/reproduction.json": {
+      "git_sha256": "1f8b10389d196873c90cc5a6a730ae5243a0599aa8f2bd8b08cec683a9e68098",
+      "raw_sha256": "8750563d18daaf78baa4fd553f9c4f34ec497b07b3b8882016dcae982d8c334c"
+    },
+    "data/research/vct-2026/research_summary.json": {
+      "git_sha256": "a88f5661e3adfe5808b37b4dcbce331109f1d96ceafa328b2b33745f6bd694bb",
+      "raw_sha256": "16151846a5543f25ea355059e50ab6306680fc434aed7e493361fd64a00ba23b"
+    },
+    "data/research/vct-2026/roster_crosswalk.csv": {
+      "git_sha256": "5dd3ca0aa0d8e6083f1e46ba631e59b0adf5752f6301e8c02649a0bd820e8f7a",
+      "raw_sha256": "61beb73f8c09ec76ff4ec972ecb36b76ff48752824127187a89f70bb9d6b4ce4"
+    },
+    "data/research/vct-2026/sources.csv": {
+      "git_sha256": "9de0819b97203764541abdd685228710f7f5238f39e0518014d627b27b8a1d63",
+      "raw_sha256": "2957f321284233381787480f2d5782050f844791c6fdb54e93fb4f3b2b8cd177"
+    },
+    "data/research/vct-2026/unmapped_player_shortlist.csv": {
+      "git_sha256": "865a5a7034dda72887ca2ee674e2a8536287659a1e1ec38df693012be5d1a479",
+      "raw_sha256": "e70440b5d9004054a7de29a38a68bb374af978afda5ccf86fae400dcb137c7fe"
+    },
+    "data/research/vct-2026/validation.json": {
+      "git_sha256": "6b52561480c184f152531a8c9d1e211d0d7e5585280250ab38fae85d5d417e4c",
+      "raw_sha256": "e6f59f331ad6c2676c4918db70eafca91cf5cecc519aaaf4ad8497ff747f1be2"
+    },
+    "data/research/vct-2026/verification.json": {
+      "git_sha256": "79d097fa838a0e4491b1282b5a9e34be43ce1a561b305a9029e7679f05e71635",
+      "raw_sha256": "52fe11c8f0d2d3fa40a77a90a578ee1d6ccfe5001bf9f21ea9fde3530805091f"
+    },
+    "data/research/vct-history/observations.json": {
+      "git_sha256": "00ed5570f956eaee6eefebabe9740f4a21d468f433683bb359ed4e75878a2b84",
+      "raw_sha256": "46ec25c00029435e43cd2f15ec1658dd3c112ab8c3a2e77b4f576c464de8c960"
+    },
+    "data/research/war-history/agent_role_reference.csv": {
+      "git_sha256": "3b431103d523840ea6ddc1d1d79f0f05ac3bf63d9d669dbc3d500bef01573e02",
+      "raw_sha256": "c06c2508bc4c82ee7e7e5bae14c7bd3dd2f43589f137263f989e3e41f6f831d7"
+    },
+    "data/research/war-history/collection_checkpoint.json": {
+      "git_sha256": "c4c9fc60218c9732a8686deec74f0dc188d6de599afc32e5e1f525451953a0e3",
+      "raw_sha256": "0309be383ae61772c03415c19fbfa27236c3710a1df83c6edf8640d3f576b3eb"
+    },
+    "data/research/war-history/collection_issues.csv": {
+      "git_sha256": "03adbd755f40cda8fd3def3f2df907072dc78c1be767ef286072708c9d1bc9fb",
+      "raw_sha256": "db0a0985bfcd0e7675e2d75c8576d1f9099d886f80b3927a2ef3ea0cfc647993"
+    },
+    "data/research/war-history/collection_receipt.json": {
+      "git_sha256": "b803baa219a260652d6492f789c46a66d21bfe2a3ad5693c748c840202e311ff",
+      "raw_sha256": "1f387f83fb687a9b41503393c06227f0067d0f320768b93dc4bad59a9125fcc9"
+    },
+    "data/research/war-history/collection_resumes.json": {
+      "git_sha256": "da37761c7f3dcb90e547ae12a45bd3d3d1853dcfe2071f8f718e1eb2c56fd158",
+      "raw_sha256": "214b7cfd6491c12835c6da8cdb54834443d8e11fe6027eeb50834b93508c3721"
+    },
+    "data/research/war-history/context_validation.json": {
+      "git_sha256": "b81226a1b8a38b9f02207996355ffbc29d214740b687db8afb2f299f1f1cc8b2",
+      "raw_sha256": "e6f6e667ad784abf8297b28237c4829672347a9d0f36e6c905c4731ac4fda710"
+    },
+    "data/research/war-history/economy_model_eligibility.csv": {
+      "git_sha256": "79b21c90fed7178738c2161a0214584824e377a9bb34c0e7cfcf878e570e7b57",
+      "raw_sha256": "0e01333d7ad69add62b4a7184a0342935d9b4a77dad070cd1c931e2a73c2043d"
+    },
+    "data/research/war-history/event_manifest.json": {
+      "git_sha256": "ed8f6791903c6a2e6dc487d09813c67e212de8ac7caf31d9852b12cc83953b19",
+      "raw_sha256": "7810ebc384d588cbee380ad6643c43b7b77677081ba7dff4de65a5eb3bdb9c9a"
+    },
+    "data/research/war-history/events.csv": {
+      "git_sha256": "d24a5a083cb838cd3fae5fd415106897fc9c6f112963044d7716040603da9d1c",
+      "raw_sha256": "40708779f3c0e94741ca9bd122027c427f4ade01cb5de9feb006a5d4869aae14"
+    },
+    "data/research/war-history/experimental_historical_war.csv": {
+      "git_sha256": "1f01fd5eb6d719d909ebe5289cbf31d5351fc9e9f2bb59cf631d9409c4a1b6cc",
+      "raw_sha256": "a2eb3165c885a5ef5d7cdf2e6a4700ef061665f8898b90e2ea42e544fdca6c00"
+    },
+    "data/research/war-history/heldout_map_predictions.csv": {
+      "git_sha256": "c85f170c91ae92ce549747950e94b2477fb89e27aba717d61bb7cbd2fda45c54",
+      "raw_sha256": "e243f4588b5cf4228a884975ccab1676ae77c914f231a35869a29f03b324f60e"
+    },
+    "data/research/war-history/manual_audit/README.md": {
+      "git_sha256": "909149737a017ed16570ca86ae2f14a572a0413da8e8fdeef7935b2901237e3b",
+      "raw_sha256": "8c54f88cd944f33eebca65879b5be50500e7593e34e2163bb51ef2d1bbc34a0d"
+    },
+    "data/research/war-history/manual_audit/checks.csv": {
+      "git_sha256": "9d22d0e682cc1b21c5438ef2b5138990c9063dbc73d94b014a67bf928e43ff2a",
+      "raw_sha256": "11a149350a0d6cd14ee4b13239627fb03906ee11968b309783fbaad717e4d8d8"
+    },
+    "data/research/war-history/manual_audit/historical_browser_visible_text.txt": {
+      "git_sha256": "2a9fb67a2b29b842788320298e0aaa52c46b25c551fca9395e32289faec69155",
+      "raw_sha256": "abb11b86470f85a194b4f65ef4e666efd97e871140fab1a2b05ab0befab785f1"
+    },
+    "data/research/war-history/manual_audit/loadout_title_inspection.json": {
+      "git_sha256": "b0a68749bc43bde684c4752590e3117b82ca57d3946ce6e08bd55976f5ff79f4",
+      "raw_sha256": "b7b9c3b1065edaae66e74095d8932f1708c7b3ddd721ba1749f4dadc3b8d2949"
+    },
+    "data/research/war-history/manual_audit/observations.json": {
+      "git_sha256": "c2eaf28650f8dbafda1d5f1dd53ca3bc3e3af373443e22ec81dccd829c27da60",
+      "raw_sha256": "8351069764fbe9324cbae8db90be3d18ae3888aade863954d9784d810d394356"
+    },
+    "data/research/war-history/manual_audit/result.json": {
+      "git_sha256": "c7297c2133e7c2d59071e06c7fee6c711fb25da2b8be679a4a7922e6d6c6a7b0",
+      "raw_sha256": "785f37951dd4543f0c00fa7c64452119edd6174dc388811aea2a2d355d77c0f1"
+    },
+    "data/research/war-history/manual_audit/screenshots/2024-header.png": {
+      "git_sha256": "c7a565f4e49e37a2fa72e129370aae8b32c107f0809ac14f5410ff81a9a9d613",
+      "raw_sha256": "c7a565f4e49e37a2fa72e129370aae8b32c107f0809ac14f5410ff81a9a9d613"
+    },
+    "data/research/war-history/manual_audit/screenshots/2024-stats.png": {
+      "git_sha256": "374b1bd0cef4daac66d39a94aee70d2813b826501153e59a268a94ca7469336b",
+      "raw_sha256": "374b1bd0cef4daac66d39a94aee70d2813b826501153e59a268a94ca7469336b"
+    },
+    "data/research/war-history/manual_audit/screenshots/2025-header.png": {
+      "git_sha256": "700c524de0bf18b48858ca446ff1e1afda7280ede2b60ffa700c961baaaddaf6",
+      "raw_sha256": "700c524de0bf18b48858ca446ff1e1afda7280ede2b60ffa700c961baaaddaf6"
+    },
+    "data/research/war-history/manual_audit/screenshots/2025-stats.png": {
+      "git_sha256": "099657640ea358d6dfff56b82a4faf32a5bf7b26669ab087b53efa31f2e8eba8",
+      "raw_sha256": "099657640ea358d6dfff56b82a4faf32a5bf7b26669ab087b53efa31f2e8eba8"
+    },
+    "data/research/war-history/manual_audit/screenshots/academy-performance-stats.png": {
+      "git_sha256": "16d6f0d5915ead4e3dad480b728ecfb29cc87fce40a35856d339408644a8ddee",
+      "raw_sha256": "16d6f0d5915ead4e3dad480b728ecfb29cc87fce40a35856d339408644a8ddee"
+    },
+    "data/research/war-history/manual_audit/screenshots/attack-stats.png": {
+      "git_sha256": "f50dc2c2379943e3ea7422cdcd24baee400ec8861d2a79027ac129dc491d3f29",
+      "raw_sha256": "f50dc2c2379943e3ea7422cdcd24baee400ec8861d2a79027ac129dc491d3f29"
+    },
+    "data/research/war-history/manual_audit/screenshots/champ-economy-stats.png": {
+      "git_sha256": "8c1f24f7b8fac63f3a89f061c69e20e3aa0647496db2eb363cd24c173308974c",
+      "raw_sha256": "8c1f24f7b8fac63f3a89f061c69e20e3aa0647496db2eb363cd24c173308974c"
+    },
+    "data/research/war-history/manual_audit/screenshots/champ-economy-top.png": {
+      "git_sha256": "7ee40bd9df86310d6985379218fb57556e6e03f2e57148685adc1e7824432049",
+      "raw_sha256": "7ee40bd9df86310d6985379218fb57556e6e03f2e57148685adc1e7824432049"
+    },
+    "data/research/war-history/manual_audit/screenshots/champ-overview-header.png": {
+      "git_sha256": "667d3af28728c5d45c69bdd679cdef4a81ec4a045c81758155ade28533f4789a",
+      "raw_sha256": "667d3af28728c5d45c69bdd679cdef4a81ec4a045c81758155ade28533f4789a"
+    },
+    "data/research/war-history/manual_audit/screenshots/champ-overview-stats.png": {
+      "git_sha256": "f5c0af6449b0895fa5d59c04e1e99c0244ecc6df7401dee87d99e75e57407fa0",
+      "raw_sha256": "f5c0af6449b0895fa5d59c04e1e99c0244ecc6df7401dee87d99e75e57407fa0"
+    },
+    "data/research/war-history/manual_audit/screenshots/composite-stats.png": {
+      "git_sha256": "434eaaf59f790a220d2f58f8b341567edddac2344f457494b00b088901ac60ae",
+      "raw_sha256": "434eaaf59f790a220d2f58f8b341567edddac2344f457494b00b088901ac60ae"
+    },
+    "data/research/war-history/manual_audit/screenshots/defense-stats.png": {
+      "git_sha256": "3db80042cf6b37c4523654790cff232e15ac764eb6d9df5398975f66bb4ab31d",
+      "raw_sha256": "3db80042cf6b37c4523654790cff232e15ac764eb6d9df5398975f66bb4ab31d"
+    },
+    "data/research/war-history/manual_audit/screenshots/forfeit-header.png": {
+      "git_sha256": "c50db502da3e8c1e697e651d26278280cc28c7ed81976f09bf8ca64c777324e7",
+      "raw_sha256": "c50db502da3e8c1e697e651d26278280cc28c7ed81976f09bf8ca64c777324e7"
+    },
+    "data/research/war-history/manual_audit/screenshots/forfeit-stats.png": {
+      "git_sha256": "8b914dff90332a2756e0b6ee3608526d68113a6a1cf2725801f4398f7866ad6a",
+      "raw_sha256": "8b914dff90332a2756e0b6ee3608526d68113a6a1cf2725801f4398f7866ad6a"
+    },
+    "data/research/war-history/manual_audit/screenshots/negative-econ-stats.png": {
+      "git_sha256": "0a2f55e64df90a11f07a916745b2ee4a6a2bd014722750a4a60e1ac0b9bf7ce2",
+      "raw_sha256": "0a2f55e64df90a11f07a916745b2ee4a6a2bd014722750a4a60e1ac0b9bf7ce2"
+    },
+    "data/research/war-history/manual_audit/screenshots/overtime-stats.png": {
+      "git_sha256": "0f94095bdee3a5811ca488c4e31c2dbba8d074c5d7ff155fc49fc5d61d5f253d",
+      "raw_sha256": "0f94095bdee3a5811ca488c4e31c2dbba8d074c5d7ff155fc49fc5d61d5f253d"
+    },
+    "data/research/war-history/manual_audit/screenshots/pacific-performance-stats.png": {
+      "git_sha256": "cf1b0c452046d171755691c0e84aa3445e361761c00a71a140a89da75399d9a5",
+      "raw_sha256": "cf1b0c452046d171755691c0e84aa3445e361761c00a71a140a89da75399d9a5"
+    },
+    "data/research/war-history/manual_audit/screenshots/pacific-performance-top.png": {
+      "git_sha256": "688c0cca396eeff03bedce2e83e3db646b72dfead018558edbe3e2ce4b563e2b",
+      "raw_sha256": "688c0cca396eeff03bedce2e83e3db646b72dfead018558edbe3e2ce4b563e2b"
+    },
+    "data/research/war-history/map_context.csv": {
+      "git_sha256": "ec8af3105073fb41ab2325a47dd81f6a89849f6a51a1a2f086fd0078ada5929a",
+      "raw_sha256": "e43ffbcc3f0bca96ba1875e091e3dae922424b87556d7638501ebe7fba1691b0"
+    },
+    "data/research/war-history/map_model_eligibility.csv": {
+      "git_sha256": "85e783062ff45aa6bd1898761706831342e5deab3f13dc44a7e5205292fa60f3",
+      "raw_sha256": "79ed0d2e8a34bd86ff11722c3055aaf3828fc737c81cdc7f7a030474fd7916e0"
+    },
+    "data/research/war-history/map_outcomes.csv": {
+      "git_sha256": "71c88aec18c3da9c0066261f7d1d93bf51153f93f38aae35327561d129ceb12e",
+      "raw_sha256": "80d9c096b95abd95fa1f2ef4c1efa65a2e8065dd5040fbbf6e713005a8495dcb"
+    },
+    "data/research/war-history/model_evaluation.json": {
+      "git_sha256": "1bb9fb10a4ec11446ee9a24200585aa0e08f970d5c607b9fad37609a36c968ff",
+      "raw_sha256": "3459fec7742d080adc16e04adfba8d2347bf8680a4b06e3a76eb30c90168a488"
+    },
+    "data/research/war-history/observed_lineup_changes.csv": {
+      "git_sha256": "09af099a5ee6ab2fd367c7471652116e77f5dd82b4a86af1afcf61e4cee2d234",
+      "raw_sha256": "3ea7ee9510c31ac609343c998dc91b06546f0aa9939afd9fc25b3780fea532c1"
+    },
+    "data/research/war-history/observed_player_team_changes.csv": {
+      "git_sha256": "4170c847ca0ee1c612f1994eeae4e1117e11d5fe83d37e627ffc9a2a6a901c48",
+      "raw_sha256": "5f66389a2f256b9c3cba994a456073a79514878c48bf2339f75faf7bb472ed5c"
+    },
+    "data/research/war-history/performance_identity_review.csv": {
+      "git_sha256": "8de1fd47fcb783eff45c8e5653508e2bb3823b2b72b0d148eff2859592aba90e",
+      "raw_sha256": "cff227f4f79e0752b56b4c3dc5a46de9eabbe8c4188450f191d98779c7625cf5"
+    },
+    "data/research/war-history/performance_issue_resolution.csv": {
+      "git_sha256": "f0a9bab7f25ab82153960f16e899c32b28a03a446b031a8a0e1f6dfbeb39804f",
+      "raw_sha256": "44385690661754bbced3221dcd5580f07d7c72b9008b174cb4ac121322559f6f"
+    },
+    "data/research/war-history/performance_repair_receipt.json": {
+      "git_sha256": "ba26fde09a3ee12acaf9d19158ead5688c24c1bc3a0e134aa0899ce186861b02",
+      "raw_sha256": "2dbc393b46e8636414a121c0305c8007dbfdd4d7ec0da874b9a0df66b164ba98"
+    },
+    "data/research/war-history/performance_value_review.csv": {
+      "git_sha256": "1997cfda7eeb978e06eaff04adb6465eb200928eeabf9db37b8df1ac22d94287",
+      "raw_sha256": "bae036b37e9cdaac70f9ba73e4be58e25c52abf80729cdfe7b2de4521436ef4e"
+    },
+    "data/research/war-history/player_event_stats.csv": {
+      "git_sha256": "a69a839b4abb4a516393cb8bcc0164f2ba761ab3ce9cc5c8f5c18106e2bc22b1",
+      "raw_sha256": "e25873e65f2a5c4deebeb0f4f521e0fa5d877b822e740d63b9fc04bd9d489d5e"
+    },
+    "data/research/war-history/player_map_performance.csv": {
+      "git_sha256": "23d70327b4a63c831779b9188684122b16deb6fbb1eec4f066664462d2af558b",
+      "raw_sha256": "5d741d19c458243316d7e03d96eb1d43385f2723aef9aad80146670d75545d86"
+    },
+    "data/research/war-history/player_map_side_stats.csv": {
+      "git_sha256": "c461743f3608d29f5a77821ed24107c88ff111652dac84db3c4d83fbb51468d4",
+      "raw_sha256": "c7d56856586a13659dcef45f5abe374dd1b43bbf834b4dd67d0a820c793e7a68"
+    },
+    "data/research/war-history/player_map_stats.csv": {
+      "git_sha256": "1150b599c7b3250069026fbb818832cca20e7584fa751efb73d6912a4012306d",
+      "raw_sha256": "2486f0fad42f714d704a04e311d7b12499cc31644a679a3a9e9349d91a0c242c"
+    },
+    "data/research/war-history/profile_team_history.csv": {
+      "git_sha256": "2a59bb3888d285e384b18911923cfbbe1197d5a036ef25f4a25b8a8fd45f563c",
+      "raw_sha256": "3da822184561dfa0711bcf3ac0b3543e1a603f22bd5774e67549c93663aacbef"
+    },
+    "data/research/war-history/reference/valorant-agent-source.json": {
+      "git_sha256": "79a3739431c8f5803976c72caf65052b0ace34321ee946da48b95430bf80a1c2",
+      "raw_sha256": "65f291ee9be4b18075db6998000b661d1cf9b9229557888dd7441652837ac32b"
+    },
+    "data/research/war-history/reference/valorant-agents.json.gz": {
+      "git_sha256": "c7db111d6e6c56ab344df4cb487dbdf6a61c7975500030c02385844222d23ffd",
+      "raw_sha256": "c7db111d6e6c56ab344df4cb487dbdf6a61c7975500030c02385844222d23ffd"
+    },
+    "data/research/war-history/replacement_pool_review.csv": {
+      "git_sha256": "5fe42223e29047af0a1dd90c519db36b5cb6bc74886b2a657aa316a78c0d7c35",
+      "raw_sha256": "3a559b26e3d0e78e7a23b025b46b35c8d976728f3f63dab051f11dcfa1159c03"
+    },
+    "data/research/war-history/research_summary.json": {
+      "git_sha256": "a572b7e93c6dff44734f962ad4c135167379628ddc213963d4f7e9aeeccffe8f",
+      "raw_sha256": "45bc9c8c1a2c3bd005a5016995ac5a2742176a1aa92110ce28c53b2400c33fe3"
+    },
+    "data/research/war-history/roster_evidence_sources.csv": {
+      "git_sha256": "ca00a0601698e817b735d99150ee305ad64d2905f56e4eec49b53900100a74d4",
+      "raw_sha256": "69336449d09ec63985cfcddcc33b07f0fa638677027fbf7a7e26320456296cd1"
+    },
+    "data/research/war-history/roster_evidence_summary.json": {
+      "git_sha256": "87e1d96092da3214fe931ff1679aa517cfc9e12ac021570fe2b6e77ccac50721",
+      "raw_sha256": "9218ff65ea4dfb38caa72946460ad7680d58bf88af4bafa7f6a44e70f431b39f"
+    },
+    "data/research/war-history/roster_news_index.csv": {
+      "git_sha256": "067af18b301c95f023ce797796cd05f310d9fe52f321dbb9001fc0dd9d45647b",
+      "raw_sha256": "eb47cadcfefb56951e8ebcff38730dfefdae6f7631d2bb366338b39fc14ea53e"
+    },
+    "data/research/war-history/round_economy.csv": {
+      "git_sha256": "dbed06bb2c6c2a67305e7a8dca11783e266a270613368eb9b4b16e7aa32b1bcf",
+      "raw_sha256": "fd5587e66f634f54177ec55a3d8a35c72cecad315e4388ec6e7b55ef0192087a"
+    },
+    "data/research/war-history/round_model_eligibility.csv": {
+      "git_sha256": "6fc9806d582d5b1fdbaac56eea8436594b2e4a27264a87d931dfcc3e4ad03bd0",
+      "raw_sha256": "79da59a131980222e12f9668cd13b8f00787f04e38a6f502878b723d587dffc1"
+    },
+    "data/research/war-history/round_outcomes.csv": {
+      "git_sha256": "a9c720749680ac77e08dde3f25be7bc5af32f01bb8f1f7d411acb69b312853a7",
+      "raw_sha256": "fc55259e1a755b4a268fde8904a25a61b3262c375a4d0304062a2893dceadcaf"
+    },
+    "data/research/war-history/side_stats_receipt.json": {
+      "git_sha256": "6a891f74bed9c774994fdfe2ce34b3b936964043371962f07c58f6e2bbd1453e",
+      "raw_sha256": "2eedff6d085f4aacc6f79d00a9143af7ac1cf9f320608a8be22e968619e2009c"
+    },
+    "data/research/war-history/sources.csv": {
+      "git_sha256": "402b0c58a4b0a342c9f42833fb545494439960adefa9eeed183461ece7961781",
+      "raw_sha256": "b2c11c1d85ad000fc274d142b1e360bdc4e8ef95e4adda3a8ff5d3f439625b42"
+    },
+    "data/research/war-history/tab_coverage.csv": {
+      "git_sha256": "718f886ec4e47ff1903dcc7d48a092cb2d511db40e3686631323750a62362222",
+      "raw_sha256": "920eaf6d9494f1303a052289806b2d3b74e56e8e7f7de9ebab8c18891352e09a"
+    },
+    "data/research/war-history/team_map_lineups.csv": {
+      "git_sha256": "d51dfe3fb215437ba910850d954f9564c60acf52d3e2e662bb6da226992ebc1e",
+      "raw_sha256": "87d57c39868ebe065ef4eeda52d50a889294b85b9579ee43b0fbb29be02e8cad"
+    },
+    "data/research/war-history/validation.json": {
+      "git_sha256": "b413b2d5057b22ecc33c6582e4ddde1fa4d8e283aacc2ae42b7061e1a84a7d81",
+      "raw_sha256": "4de284a6cb84f93dad7976e6291259ef14b342e8e17717bd4f5dfc4503049295"
+    },
+    "data/research/war-history/verification.json": {
+      "git_sha256": "fd8772cf6874f7f551ccdabab7d008f4ec6efb220cc87a9418f73fa5ac3b6026",
+      "raw_sha256": "5f4010f029e9fbea43484c57ce2c361ee5e54c965175373c659dfda30e1527fe"
+    },
+    "data/rosters/vct-2021/NOTES.md": {
+      "git_sha256": "37d09367c9263361d67357a869114f3e02b7ae74e1f2d383688f7f8051709508",
+      "raw_sha256": "faba24bf8379dbd453b617899ef894c9d468a3702b01f8f9ac8d1aafaf7cceb6"
+    },
+    "data/rosters/vct-2021/free_agents.yaml": {
+      "git_sha256": "6b3f922487b5d7a288e0da6de57281798f1f52fb883697f97175dd3440f6009d",
+      "raw_sha256": "9c81ca3f6b85721bd1b5aaed9993d68b6861e0ae2944af811e3dae4aab5d9204"
+    },
+    "data/rosters/vct-2021/future_prospects.yaml": {
+      "git_sha256": "97a6424ddb8f8ba3311b67153b4a7a0400006a2cd8d1af3789dff7cff9cf4e2b",
+      "raw_sha256": "498c84aad5d7838a77199ecdb8d61fcfcd8aa77a8c68c4850b0e248ce8c03ab9"
+    },
+    "data/rosters/vct-2021/pack.yaml": {
+      "git_sha256": "2548d1252c189b46508992a23056dfe9aaa6d7f25c1c1ef83eb263868753c109",
+      "raw_sha256": "0f1c0af8d3c293a2aa73f062be7224cd8a86a1c299aa24ff93b710c1e91fd3d8"
+    },
+    "data/rosters/vct-2021/src/americas.yaml": {
+      "git_sha256": "e11c901c98953e8bcc146ea8f76c6944a3e399e58ef84768fab61a8fe7c3e4cc",
+      "raw_sha256": "4c6797e33ce566b3d32617951bacba3ba020dc60be11fd170c9cf6e50a53b550"
+    },
+    "data/rosters/vct-2021/src/career_profiles.yaml": {
+      "git_sha256": "c99bae011cdd176c7cc22c54907524bf8d0c5154bb485824b804cc1c58d3d096",
+      "raw_sha256": "64a3440da69a87cc5c2988ee934a7bc276932870baf9a1c896e272d54bce98b7"
+    },
+    "data/rosters/vct-2021/src/emea.yaml": {
+      "git_sha256": "7e6ee2ee59959c37eec28c5dfc9cb8e060df6aac534ef5239ff2f81c73f066f9",
+      "raw_sha256": "e4eac33718385ceb8e938aaace7913aa0fc0f4ad31aadeb8e679714bf7efc8cf"
+    },
+    "data/rosters/vct-2021/src/free_agents.yaml": {
+      "git_sha256": "9cd0a340045d73054ea90eec8c0eb4846b393ddc9140c66ed80d07f0e26d9d93",
+      "raw_sha256": "6f6e0c340428c8357806f4abeaf99aec2a855142902566b2ba5bd6ef632e6a67"
+    },
+    "data/rosters/vct-2021/src/future_2026_backfill_free_agents.yaml": {
+      "git_sha256": "72372b363a862c3acd9fb6e7ee5d42032d5c27cb657a845f87de016c63e03855",
+      "raw_sha256": "44d790af8eed371304b7900487ca0764f30981c5e18753bdd2d25a4b1e2be4aa"
+    },
+    "data/rosters/vct-2021/src/future_2026_backfill_prospects.yaml": {
+      "git_sha256": "3b7fb044be2ea7074d9deed4b2e1bd0f6bc7d5116f6fabd56e6f40ec5981e97c",
+      "raw_sha256": "ed7c6c61a67179a43270de1ec66f0a42e2f06965bde1da9bda5be082cd55ee52"
+    },
+    "data/rosters/vct-2021/src/future_archive_free_agents.yaml": {
+      "git_sha256": "d0f8b6174e9733110799c0e089f5aae818f0a08f207d114baef8df5cbe2cf74f",
+      "raw_sha256": "747a940ae8c3aeff55b7d464c23bd82366062d594a1b25c1cabfc55a1e412022"
+    },
+    "data/rosters/vct-2021/src/future_archive_prospects.yaml": {
+      "git_sha256": "0f39d5a1dd482f5b41c972eff52ece19a0c07827afa3fde9327461b56b3c4192",
+      "raw_sha256": "505a95194c66a78922b82f7298a99a63975df554a9bc74f08d26fb053ea2555a"
+    },
+    "data/rosters/vct-2021/src/future_prospects.yaml": {
+      "git_sha256": "41ea2b7cc2a59f8cb957aa3cc98ed042bfb0a887dd84b1a505eb07eabcb65dfd",
+      "raw_sha256": "fe85fe6fb695d4e584c9c6aceff2cd11569f6461d32ab564a4c366ad1b47eef4"
+    },
+    "data/rosters/vct-2021/src/pacific.yaml": {
+      "git_sha256": "cca149f2cf9dae8e040a7a4ea4f5baeac3858199e37ae1c263ab23fb1460567c",
+      "raw_sha256": "eb5dc843913cc2353d2d0a7c697fe8b6e79f2f4073d2dbb9632b5b34db4f733e"
+    },
+    "data/rosters/vct-2021/src/pack.yaml": {
+      "git_sha256": "cecb0838d5ba320f8bf2034b95dd1522bb66b8d30c0d2a5395e408327650fc05",
+      "raw_sha256": "a64a19e9887614c01c8bacb5cbec26e3daf0b37728b3bc09714031002f86279a"
+    },
+    "data/rosters/vct-2021/teams/team_100_thieves.yaml": {
+      "git_sha256": "167a42b85d1cbe9a42bec26e35e158d134e42fb719be01e5905ba1ea9a5c7954",
+      "raw_sha256": "ba2018df72268086d5ce500edc9851900e844d0a2165b072fcabe51464723284"
+    },
+    "data/rosters/vct-2021/teams/team_acend.yaml": {
+      "git_sha256": "693b6eeb1e900e2f9aae9fb0227306c65e05183f6ddaf600ef8397e53418f237",
+      "raw_sha256": "1b0b61955e980d82f93c6de22c43ad16f4add4569cec98d12e5d9f54bf89fb3c"
+    },
+    "data/rosters/vct-2021/teams/team_alliance.yaml": {
+      "git_sha256": "2290267d260c4a825d048985731203a8f3b27bdfbb7371075cfb0c6b86b4849d",
+      "raw_sha256": "59cdb4f459562df16ec1dcd20a95ff3720d00d4c4fe035d0de483f8c3dc14fe3"
+    },
+    "data/rosters/vct-2021/teams/team_boom_esports.yaml": {
+      "git_sha256": "fe252af1745f342dc1fb707dbc0c55d8a8b16953e45d3ef31f5cdbfd57bef095",
+      "raw_sha256": "71d00a5a9bfcc3f281b5520d510c3ba9af54a48637b745343b788d1588939215"
+    },
+    "data/rosters/vct-2021/teams/team_bren_esports.yaml": {
+      "git_sha256": "3ebddfcf0c70602df6120074b1b21f54ea9417127bb62ba1be5f64ce9cee3be3",
+      "raw_sha256": "0b73d2bfe07025468eaa66863ecdbc6eac1080d589a73e0a7ae16d9241d46a37"
+    },
+    "data/rosters/vct-2021/teams/team_cloud9_blue.yaml": {
+      "git_sha256": "79a047879199d48f29c76ea66f1fd648cefe6def1e12d85b483c4f2df71da42f",
+      "raw_sha256": "db29c717d90edc70fa5cd86c71728b24567ddc4dc7cd9bbded81a5ef33b93b76"
+    },
+    "data/rosters/vct-2021/teams/team_crazy_raccoon.yaml": {
+      "git_sha256": "04a2d6e1eb5b8201222933a457c0f2e817d04500d0fa07c3932771b94da85483",
+      "raw_sha256": "0014011aa2e816911c9b8895cbf61bf2ffc798659ad3a0212b1bd756109024e1"
+    },
+    "data/rosters/vct-2021/teams/team_damwon_gaming.yaml": {
+      "git_sha256": "96d6883eef53bd63f3a44070eba3fc0c04422c3d57ded577e0d5b5c6f0875213",
+      "raw_sha256": "3aaf589fda1c31d5ccdcb14bd44243a03de82044dfa72a707a1c4785b689782c"
+    },
+    "data/rosters/vct-2021/teams/team_f4q.yaml": {
+      "git_sha256": "7e9c2aef6b3db54ae3bd8eb1bf6aa493131f1c9b8225eaf43bca50c8c711dc5c",
+      "raw_sha256": "344de77e10a32922851a43f4c926a9181a908f90126c3dc03f0e3c32fc16342a"
+    },
+    "data/rosters/vct-2021/teams/team_faze_clan.yaml": {
+      "git_sha256": "227e4d827b616f2208ebe127587373d803fbfdac1a47e686265162d3b8042180",
+      "raw_sha256": "a2917576b3adc2131e283ec08cc971b3b06a936b0634f271110f5b15e0d9f6f2"
+    },
+    "data/rosters/vct-2021/teams/team_fennel.yaml": {
+      "git_sha256": "1fad5b8b378dc10d367d2c1de9c9bfe5b9b317ce6cd4a750a4735ea54232b73b",
+      "raw_sha256": "61d352fea7ac501b09af49903da6266c193f4ed23e8339cb5f13b6e79f2da915"
+    },
+    "data/rosters/vct-2021/teams/team_fnatic.yaml": {
+      "git_sha256": "19258090af78e92e77b4a7734ea1ea845914c9514de60ba3ed10499afeaf098b",
+      "raw_sha256": "36f651b6eb2432672f2f07a8e0e5bf973f8b9be2fb80e9829f29ea0ac85360ae"
+    },
+    "data/rosters/vct-2021/teams/team_full_sense.yaml": {
+      "git_sha256": "d8ba1d21dc55169d7848a55f10d8f0a86d5e8b0498854b7cd265654d6f175c6d",
+      "raw_sha256": "62321b79315a27bdb064ed141da3c6617af620ad50c35627b70facb7dff40922"
+    },
+    "data/rosters/vct-2021/teams/team_funplus_phoenix.yaml": {
+      "git_sha256": "e8824225e35edb1f79704390bf554249f507c26c59454481fa01eed6f01e6d51",
+      "raw_sha256": "bad578e2c3e59c9afa6e555ffaac61bc8fdc6fea5235d81cfd4e6756ad3a241a"
+    },
+    "data/rosters/vct-2021/teams/team_furia_esports.yaml": {
+      "git_sha256": "72cb06e933ccd0ea0f0a1a9b45a1cc321f776212400c212bff2c49351b925526",
+      "raw_sha256": "5aa2e5a198a3881fe1aa5bc71c54b5aad4d63460547d8c1a4ab13981db9189c9"
+    },
+    "data/rosters/vct-2021/teams/team_futbolist.yaml": {
+      "git_sha256": "3715db208be0bff886784cbe76c0418cb1abb3e732e62bb92c2eaca982bd159f",
+      "raw_sha256": "b57ef92abaea748a252e075a02d94f2fbfc0e467ee3e8f90c7defba38f306115"
+    },
+    "data/rosters/vct-2021/teams/team_gambit_esports.yaml": {
+      "git_sha256": "637e41352492875296630a45ec68a23ea8b7298ebd1a08af4300ccba9cce5e70",
+      "raw_sha256": "a79a6a7f0bd5baaea09f4c1cb0cd29cc55aa0b6a968a0e4871fd1ceb80584a90"
+    },
+    "data/rosters/vct-2021/teams/team_gen_g_esports.yaml": {
+      "git_sha256": "1d2b76e3cc25c87bdc32b6c51f06d36a550386852aee05f4a2782b7899ff858c",
+      "raw_sha256": "891ac126b392687ebcb29fc1ded398ff17dab678ad88620c59eca3fd7841de8d"
+    },
+    "data/rosters/vct-2021/teams/team_giants_gaming.yaml": {
+      "git_sha256": "9adc0fd0cc4f9c5c8649dbf237a18e5546970314e3c6bc1af57bf836718ba7a3",
+      "raw_sha256": "7d0cae0d07a726a517509059e80e45f92116e1057a5e0c9115b0e57bd7495fe8"
+    },
+    "data/rosters/vct-2021/teams/team_guild_esports.yaml": {
+      "git_sha256": "e4ef915b55e440fc77e03fd2e8e56238c3f617f3584abf2ada26950b5fdeda33",
+      "raw_sha256": "db4593088054c0fda1721a8fb54530b052e16612a80cdcd85eada201d7509ec1"
+    },
+    "data/rosters/vct-2021/teams/team_honk.yaml": {
+      "git_sha256": "a05be5c6836d305d6b914198cf763d58bcb974e4084b7c91c61088b44ff38f1d",
+      "raw_sha256": "81729249d29cb5e666742f2ba88ca86c8dc0d3973ee732bc793b8dc91c24fe72"
+    },
+    "data/rosters/vct-2021/teams/team_immortals.yaml": {
+      "git_sha256": "4a3901d3d22524e1f8cdc37cee53b18459eaee642412e1146b3dcaf1777a4c8d",
+      "raw_sha256": "98d2b4818c1eb571005a2321ab77c401cc0c98ec485e664d4b2bc443633a28ac"
+    },
+    "data/rosters/vct-2021/teams/team_kru_esports.yaml": {
+      "git_sha256": "e22b52c1f779e6c4ae6567909dca59f66882170350f7c462b4f3d749eff5c9d1",
+      "raw_sha256": "d74474ff7973db37eb08e2526d2ca7a0d87bedd52f776b6ad5bff212bc70152c"
+    },
+    "data/rosters/vct-2021/teams/team_luminosity_gaming.yaml": {
+      "git_sha256": "f683cf00c99c08a872c1e8d8769d102651ced8506218ea710bde892f6495e20d",
+      "raw_sha256": "a57714b3eea1270777e455d02265585bf68c308da889bbb104d5026b90a8b935"
+    },
+    "data/rosters/vct-2021/teams/team_ninjas_in_pyjamas.yaml": {
+      "git_sha256": "00aa67c5b39f8c488d724d405e8b70cc7051f534c19a86ebaa127269ef25d216",
+      "raw_sha256": "f548bf583f2e1a60d2c728624c3affb479582170bb8bbe528fa4bc8097aa7005"
+    },
+    "data/rosters/vct-2021/teams/team_northeption.yaml": {
+      "git_sha256": "f3747366dd5c7244cb496460230e8c790eefc05949b8da8f82590e58be8dc970",
+      "raw_sha256": "266e867c812f2e6fee40c4d7a0e6eed916bb4f0184cad977fb179d3e0ca15b89"
+    },
+    "data/rosters/vct-2021/teams/team_nrg_esports.yaml": {
+      "git_sha256": "6f33feeb49e5637fa10b20015aafb01c19739932f00efdf1500c43ad457e827c",
+      "raw_sha256": "b39ebab707652c6fb4380050da9ccce6af698021f686c1231a7ea94142488058"
+    },
+    "data/rosters/vct-2021/teams/team_nuturn_gaming.yaml": {
+      "git_sha256": "27cca3e4c255be2cf26105cc69aa12d70ed5d28cf50dee7ebc5cac7652316697",
+      "raw_sha256": "9ad89a231e84d087efc025bb709952939393688115e1c2813523ac11b7c95bb2"
+    },
+    "data/rosters/vct-2021/teams/team_paper_rex.yaml": {
+      "git_sha256": "283df205fb69e85c67b25bbf0a57df4e4b5c01b1cea3d71445e7bbd5c8215a9f",
+      "raw_sha256": "f72ea520c3e4f200857f60d95a06fc5cd1922be617e602e26881dd6a58b215fe"
+    },
+    "data/rosters/vct-2021/teams/team_prince.yaml": {
+      "git_sha256": "5fa03e6bf8b6ffa740aa249b452cce1c37c7cd402462dd12c5c39128af7e3bfe",
+      "raw_sha256": "86b366acaf581c9f6836ef3ef041004969cf018d6b91a45dfcc0f43673704ca2"
+    },
+    "data/rosters/vct-2021/teams/team_rise.yaml": {
+      "git_sha256": "0ffab50b61b264995233b5a8257795027f2b3823fc7c05bebd9270dcbb6d6f89",
+      "raw_sha256": "4febb2c9733032797790b5da17ee9fcf0aaec817a186508cf4a283f7cc01dee8"
+    },
+    "data/rosters/vct-2021/teams/team_sentinels.yaml": {
+      "git_sha256": "f2bf992fa0937ef5874f3cee87e5b3d1e9b568aca1a053b17454b7a2c8131d3f",
+      "raw_sha256": "b44ae6e67132a9c7befc45b1f94ed19112b7a315e3ed0a5387f3a7c649a63c52"
+    },
+    "data/rosters/vct-2021/teams/team_supermassive_blaze.yaml": {
+      "git_sha256": "a56f9ae5b457d798cac35bd7929ddb2b3374310363646c8e6b4967e550e4f51d",
+      "raw_sha256": "5cf1301f7ef61ed3b7f825cc1c08f63662cdb99b3235dd3e0c5d1a869a328140"
+    },
+    "data/rosters/vct-2021/teams/team_t1.yaml": {
+      "git_sha256": "a64ca399cd032d9e65fe075a0c3dd9578a3697ff7d6fdd38e02be50ef72abdb8",
+      "raw_sha256": "82181a24ffe7ec0fc1d6782da7ee7498f1ab71a39fe81b2358e10edc3cf29080"
+    },
+    "data/rosters/vct-2021/teams/team_team_bds.yaml": {
+      "git_sha256": "751fa65095c365c16e90cf08535e3f0033396bfe44d297539122847000d8a3c1",
+      "raw_sha256": "a73d4fb520d253012ad5fa3e5cec73870a2624e680dad5c379a1f346e0156ac9"
+    },
+    "data/rosters/vct-2021/teams/team_team_envy.yaml": {
+      "git_sha256": "060ab86f2d2a8e9812083f1aaa41ba7be0de667d3e95f9496f85f4530b5f7586",
+      "raw_sha256": "ab7bc1ec366fc359ad3b02cde408381d1af1004d612ddaff97155b81f81a6167"
+    },
+    "data/rosters/vct-2021/teams/team_team_finest.yaml": {
+      "git_sha256": "60b9310baca280b163d13ca142cdb3eb50c9a2ae51a87c3a4490ff9571b92df0",
+      "raw_sha256": "d3cbabd46275818ce7818868bc9dcbd785c5973178781e70af53cf23a9a27d2f"
+    },
+    "data/rosters/vct-2021/teams/team_team_heretics.yaml": {
+      "git_sha256": "5bfea498d93b7bee64e0136225c7c521d964c16917f057d37ec1dbbbd041efdb",
+      "raw_sha256": "afe5f4523b61b65a755d210210329982dce6e61f1989060216b9a79914df627c"
+    },
+    "data/rosters/vct-2021/teams/team_team_liquid.yaml": {
+      "git_sha256": "b9c07ca5a5d46e0b4bbcfcb62c983139ef5e81e3b8a1b8f33d00f0571aeb4f9d",
+      "raw_sha256": "cab73e8934b01e9c54b0ee7f55b31546541742ae01a281da53ba56675a6f59e4"
+    },
+    "data/rosters/vct-2021/teams/team_tnl_esports.yaml": {
+      "git_sha256": "1588364321188fc7a9ebb6730b90a17858c20f84d740231b6ba184ed347830ab",
+      "raw_sha256": "eda7c276177dbf30021d7a626d3b9ffa6b78faa566751fe1309d61139f90c90d"
+    },
+    "data/rosters/vct-2021/teams/team_tsm.yaml": {
+      "git_sha256": "4910a1fe7765c9eb5c7874adcf2d82728114bb71eb70024d3d47ae0d8cf215fe",
+      "raw_sha256": "bcd7c0f67ec84606fde11a2581f9cd955565893ce814d5259093b4d02d7d2f47"
+    },
+    "data/rosters/vct-2021/teams/team_version1.yaml": {
+      "git_sha256": "36d7a6bf073c861ae9376b7a1e71f91abddc205d9be783a542599cb4c9a4f69a",
+      "raw_sha256": "4af2cb4827de75beb7e37b9a469ab29e954fb85a1329a59fa1cffb2bb9cc4280"
+    },
+    "data/rosters/vct-2021/teams/team_vision_strikers.yaml": {
+      "git_sha256": "a418779c3f21ef866cbad58fb2b220aa8cb252d37ed2e8565c887256b4ea9d04",
+      "raw_sha256": "072027ae1443ac3be11fc0961021ee7c927ee34a645a32370ac071ce9e0a4e4e"
+    },
+    "data/rosters/vct-2021/teams/team_wave_esports.yaml": {
+      "git_sha256": "80fbad09c7ae89c3ce3acaf1c131dd2a8a9784194b227648f10aa5efa2db51eb",
+      "raw_sha256": "4d44cd547cc2ea431084d87033311e11ea1239eafbe0748db600580cadd17f6f"
+    },
+    "data/rosters/vct-2021/teams/team_world_game_star.yaml": {
+      "git_sha256": "d828b958553ddb6096628f80d35b582c602ae62dc0b5544a69bbc51c21c67b08",
+      "raw_sha256": "814594e131544b2435829218b0ad7066bb0e1b4b8910db6c7e3b9dd9ea8c1cfc"
+    },
+    "data/rosters/vct-2021/teams/team_x10_esports.yaml": {
+      "git_sha256": "5e5fda7030a2b8c73232f972b6d5c10b36a09488b510f4981e96155bbb3d70fd",
+      "raw_sha256": "9b722af6a8a1d34d84f13d20b07cce5e9ae7c9f60b57975ec386a0df183680de"
+    },
+    "data/rosters/vct-2021/teams/team_xset.yaml": {
+      "git_sha256": "efa89725bf539124c8318c145eaa932d66864ea87e7cf797419d2feaf7218fa2",
+      "raw_sha256": "79f379415581ad26770480b42bea050424c9a14371d67b5a3e21fc0bb6ae4ecd"
+    },
+    "data/rosters/vct-2021/teams/team_zeta_division.yaml": {
+      "git_sha256": "c89997edbabe0127bab922b23eec16c2494a31ec0937419d8b04874a98e9c052",
+      "raw_sha256": "64fa55015c10a22c9d18bf54d5e6284cc650298415fd7f2f3461ab296e3063fc"
+    },
+    "data/rosters/vct-2026/NOTES.md": {
+      "git_sha256": "69a416e852a6989e02fa2595ab874b115e4d552ea52307222010201c3361b81b",
+      "raw_sha256": "df505bbd9338af6c5c9333ba14abf92dabbd5c6ab798facedf0581c7ca43dd72"
+    },
+    "data/rosters/vct-2026/free_agents.yaml": {
+      "git_sha256": "32dd8fd04bf711a14292e5cb6fe9e51788f3619ec3d155ef38cdda4e8e541728",
+      "raw_sha256": "ed21923561f9709e5c2ef1a66b9f2ebd28d19c283a88177c69afc9b6e1bd6119"
+    },
+    "data/rosters/vct-2026/pack.yaml": {
+      "git_sha256": "e7d0d2d3ee2f9fe0a5da33f8959743915ec906e2bd8524744c9381d6d32c8f93",
+      "raw_sha256": "8ef12a895bbeeb75b06e7b91d4e49303dc24a4dc0d49f0c25608aecf98d3a1b0"
+    },
+    "data/rosters/vct-2026/src/americas.yaml": {
+      "git_sha256": "b950f21d7b45cab054a54a89b8073c28d1064bce0a28232868187a8756c84c40",
+      "raw_sha256": "be47c520843cb4f45c264b384991d4a0a78574f640212637e6d7d8119cdd1470"
+    },
+    "data/rosters/vct-2026/src/china.yaml": {
+      "git_sha256": "18117f677894b2d4bd5b1e80774b23d991b10bef4b9b9521d4df14d4cece5813",
+      "raw_sha256": "0ce80b74492657610efa1ee8c12eec429bdebb4bdbb50c36fa090365d4520ad8"
+    },
+    "data/rosters/vct-2026/src/emea.yaml": {
+      "git_sha256": "7e49af0918162ecfff7cd2d60c692bca1d605252d97bbcfef910c527ad2ad7d6",
+      "raw_sha256": "775a4e7ddfa78b754f98dcdd1ac5dc6f73ff236e3995731d00bd86943763eae6"
+    },
+    "data/rosters/vct-2026/src/free_agents.yaml": {
+      "git_sha256": "4b6a968f275fca69802e6ee194bae78ad81f3362c1d831ea7994696a0b13dc9a",
+      "raw_sha256": "7cbf265930df2895437b972af85287e648cdcf193946870d11ff58a7541fe890"
+    },
+    "data/rosters/vct-2026/src/pacific.yaml": {
+      "git_sha256": "3c0d8d0b605c9eb8b0b59ac8920074fa8dfe5e3b8b9218a77ecd602787817eeb",
+      "raw_sha256": "3389122f27d4f486e050ecade1e4f06748abc866754922fb2e5c5fe40125b40e"
+    },
+    "data/rosters/vct-2026/teams/team_100_thieves.yaml": {
+      "git_sha256": "82fe9567a48ae7e8ae79df439059037b5a8b6917563af29159b0bc93edb5d119",
+      "raw_sha256": "9593c8e7b3076b2394d28527f755d81a1f5daa37ac6b9452b9bccbb2e24030a2"
+    },
+    "data/rosters/vct-2026/teams/team_2game_esports.yaml": {
+      "git_sha256": "d914ac34853cb84308d95129c18a8308ce1e99bf36adfb8d15a9f4c77dfd959d",
+      "raw_sha256": "516a770535accea01c673ff89a21a881e553e5787f9e72db01c1d5db25125d1b"
+    },
+    "data/rosters/vct-2026/teams/team_all_gamers.yaml": {
+      "git_sha256": "6d70bcb7a32767b35b7ee192bcb818dc870a216c302a994b60a41babdab6a235",
+      "raw_sha256": "57271b609871fc1e2cd8694d4fbe48af58e7e7f174a7fc9714fef2f0057701d1"
+    },
+    "data/rosters/vct-2026/teams/team_alqadsiah_esports.yaml": {
+      "git_sha256": "26c7481f8614ebc7cf2ac56a8efebdd7f94328375c62a6592a30707769753fa2",
+      "raw_sha256": "6047811ca4d854730c9f2c1531184cb8edea4ba8448f7d273ab2279d931ea2b5"
+    },
+    "data/rosters/vct-2026/teams/team_any_questions_gaming.yaml": {
+      "git_sha256": "ab87cccb30a9833fa60da0e42d3d9c09c7c888d81cac0155d76d1c44ef7d002d",
+      "raw_sha256": "005c7ae55af94f43683b606fc3e2d177416da020ad965362955f7cf038fe877c"
+    },
+    "data/rosters/vct-2026/teams/team_bbl_esports.yaml": {
+      "git_sha256": "df2a9f55b19d480634ef73b3444dd2848e288b24c46950191c8d8004202ea28c",
+      "raw_sha256": "c62cc474fc7878463afe834975c405fc4d9f8f7847b918aa24d225c8d30fa1fd"
+    },
+    "data/rosters/vct-2026/teams/team_besiktas_esports.yaml": {
+      "git_sha256": "2ed2babe131747fa4fb97149e612364bc1d806f7ad96dfbc0a28d618f418c881",
+      "raw_sha256": "42a29d5485dcf0847af45038b0649575af0129ba91899b149466cbd774ba130b"
+    },
+    "data/rosters/vct-2026/teams/team_bestia.yaml": {
+      "git_sha256": "94e415d5e8c7606f0b82b687a0078e659de693580a67d5f5a2bcaa3f6695c30c",
+      "raw_sha256": "8c76ee70ed43e7a2cadd9247af351b6420d0c491f027a88eebc6bb9487ec84c2"
+    },
+    "data/rosters/vct-2026/teams/team_bilibili_gaming.yaml": {
+      "git_sha256": "63e9cabe8be9f48afbf7aa021eee8972efbe8b86eb928b8405dbdc13d5d10cc4",
+      "raw_sha256": "97db4319a98259bf7fd4a917014c07d04b59820ea0a1123176122bc3a9df8288"
+    },
+    "data/rosters/vct-2026/teams/team_boom_esports.yaml": {
+      "git_sha256": "c830fb606824ab8db77b09197a30a0b570b72dc38a77d05e874197288bc36091",
+      "raw_sha256": "a689d234c5874266cf452233862cb06b7b47289fd78a2fde1dd3d810c125db08"
+    },
+    "data/rosters/vct-2026/teams/team_cloud9.yaml": {
+      "git_sha256": "893d85372c725470c499925b2676cb81490da41370ce05e7cc6dbc3520e9b509",
+      "raw_sha256": "14f4bfcfb99bf4a7c1d2cfbad1861ed4447595c7c21a1733f2b970577dcaa55a"
+    },
+    "data/rosters/vct-2026/teams/team_crest_gaming_zst.yaml": {
+      "git_sha256": "2cc7f295217d14f1c9090bda5a81ab5b34be743d9fc965b8af5095c942f5444a",
+      "raw_sha256": "e92749220d951cb3eca670bf578fbe9438ce3817414763ca6010335db5b6d046"
+    },
+    "data/rosters/vct-2026/teams/team_detonation_focusme.yaml": {
+      "git_sha256": "91e9ca0c24c81539b921acd60a5776c27c1be692747d4ea7e1da93d6f6020f5c",
+      "raw_sha256": "af3f432cce2cd301e7d7d996738206795c63e0f7b7a90a4da3ad3c2ff9b310d1"
+    },
+    "data/rosters/vct-2026/teams/team_dplus.yaml": {
+      "git_sha256": "1430528b920a113fb1eeed1543e62a2367abfe40a0b6319d84e28dfc1ac63cd1",
+      "raw_sha256": "7ef308d5ab1ada7a3a0a4cf72f2037d3c7b3517ba9d34165688fc9be7f4a1e1f"
+    },
+    "data/rosters/vct-2026/teams/team_dragon_ranger_gaming.yaml": {
+      "git_sha256": "bb2c8b958807f5122b0cc6d4ff1530018ee7b2c800c559e5498d93a8b71a480f",
+      "raw_sha256": "57b4eb4a154ba64e04860b7a9fbf716add6124cedbe95fe356517eb3c7801a1c"
+    },
+    "data/rosters/vct-2026/teams/team_edward_gaming.yaml": {
+      "git_sha256": "ede70526f1fdec9dbbbfffb7f00f53af0c298dcdde7c0fe2cde4781075c8e1ad",
+      "raw_sha256": "ec6e9c8e9260def8cf9e891d933b0c40958207e126cbad0f3738f8535d7abaab"
+    },
+    "data/rosters/vct-2026/teams/team_envy.yaml": {
+      "git_sha256": "2604121f636f740174dbe152325f782a4f8ad7de501b00d631232397dfa51727",
+      "raw_sha256": "996ea2f0b08e1640a558ce1dbc78769d5a1cd46137af3d868699b39292a86644"
+    },
+    "data/rosters/vct-2026/teams/team_eternal_fire.yaml": {
+      "git_sha256": "890622211aa6495483ef531f799f8bbdb2b2a12aeb60367e13a53e328558d103",
+      "raw_sha256": "52f227d4a51f9f1bea593db592d011037df733c95fe4c3d4581d496677d8d7fc"
+    },
+    "data/rosters/vct-2026/teams/team_evil_geniuses.yaml": {
+      "git_sha256": "05c754da7a9a9783f814e7bf108843408c33c280701328337c39e1ceb3d0dd1c",
+      "raw_sha256": "5655244f1f3769d3437801be46bea88fa79f304127d17bc8f780a3564299f6ca"
+    },
+    "data/rosters/vct-2026/teams/team_fnatic.yaml": {
+      "git_sha256": "9008ed5b9d29f8ff27fbcf3714c9da3b0e07128a567a3d5582640ee6816cb7f0",
+      "raw_sha256": "f0ba198be47f65b5b872f70b203a5cfe0bf81b9b707a70d025d6f62b8799b5a2"
+    },
+    "data/rosters/vct-2026/teams/team_fokus.yaml": {
+      "git_sha256": "448853cda946e61caf5024c7b8425780b74d7448b1277dd34ce405e2c16d1014",
+      "raw_sha256": "c8085be6104bcf68aba66537ccc183720abc0e20ab4030a8fa41c3cfc9ad5cfe"
+    },
+    "data/rosters/vct-2026/teams/team_full_sense.yaml": {
+      "git_sha256": "243e5def251376ab89007019d5bf28b1bf7e24c64e8c84cd634d732d562f85cf",
+      "raw_sha256": "4de3035747510a2e9d7baf76854a946bf7d37df62d95c14810f516333530257a"
+    },
+    "data/rosters/vct-2026/teams/team_funplus_phoenix.yaml": {
+      "git_sha256": "52dfa3e58fb8bbb005a05bb2396005f7caf408915b877f0ff7cd113e09c6cbc2",
+      "raw_sha256": "be2e02366fc9339907853672e49c5598afe479332f4fbb2f3e81a078840a0d01"
+    },
+    "data/rosters/vct-2026/teams/team_furia.yaml": {
+      "git_sha256": "f14caa94ee60c710808b3222720cddfe11b6f4ea59891af00f8e2c9a1466b642",
+      "raw_sha256": "98ad06d0e65afe1434bfe155b087c01b27abe7a44341ddec615007adfab5a0e6"
+    },
+    "data/rosters/vct-2026/teams/team_fut_esports.yaml": {
+      "git_sha256": "16fc29eb4fc19efbf8c8b70d5e44e5305500f05a61d1e7c03a06442aa91064c3",
+      "raw_sha256": "d0dc3e2e4cff6f24e5750c25edf71d9b3bd771b9d58af75f3177ee37cba8f3b2"
+    },
+    "data/rosters/vct-2026/teams/team_g2_esports.yaml": {
+      "git_sha256": "2eef14261ef5b18ea74365c04536666c319c31271d71b4430b543bf28869487a",
+      "raw_sha256": "3899c48362417dc0d8a84419ea957c9da94106812390430660521f16ecce9762"
+    },
+    "data/rosters/vct-2026/teams/team_gen_g.yaml": {
+      "git_sha256": "b8011e00f35ec290cda91f893e2b988f8fc3fbd63510b75baa35380d8631f1e5",
+      "raw_sha256": "c3ea953a43c40ea283c9197dfa62c446246b3d5e5c4ec5ccc147c13a9d5c8f36"
+    },
+    "data/rosters/vct-2026/teams/team_gentle_mates.yaml": {
+      "git_sha256": "4103dda196ffa036f9122071228e186814dd8fedc5bf37b79f75c9ed33d5463b",
+      "raw_sha256": "0f0322b6a0777bc39328fa2939de2c76b1796b594b605ab5638722e55b7a891d"
+    },
+    "data/rosters/vct-2026/teams/team_giantx.yaml": {
+      "git_sha256": "67125aad79bbeb56dbf84a24f589ddda274a41c1f512dd972390a0f99ca6da60",
+      "raw_sha256": "a9e948512ab947e9bd9e4c664b61131515dd399b981988b57f91fe16194af393"
+    },
+    "data/rosters/vct-2026/teams/team_global_esports.yaml": {
+      "git_sha256": "bc80c3cb93c34bae411b3e77ef419a18c9fd3dba29ef064b25098b04c52836ac",
+      "raw_sha256": "744fae624b4b455dff7ca130779e0b3233dcf078294e70be19e856aa305f4d85"
+    },
+    "data/rosters/vct-2026/teams/team_jdg_esports.yaml": {
+      "git_sha256": "162139a8823c6e32109b621af7c00f8bcf4bc4a13d49d2917c881f7cd5c87b70",
+      "raw_sha256": "9053649a992f6c1fa72fee972fcf08b58f9860671a530ab736d34d7e043b254d"
+    },
+    "data/rosters/vct-2026/teams/team_joblife.yaml": {
+      "git_sha256": "bed7c0e27e23b04ff4224200ae4d627961d048f84530fc51aca4bd8c0c79cb76",
+      "raw_sha256": "1c70a4377542b0c29d62d1f9daac9c3ab3c47dc395b147954ef1fbb03348a08e"
+    },
+    "data/rosters/vct-2026/teams/team_karmine_corp.yaml": {
+      "git_sha256": "a175ce0a195b304a69d8b552bdab1a0c2b01261368367bbfd9c938e4535c284c",
+      "raw_sha256": "42a0976435ae5c4be3cd0888291dd849cae5d5b8e6ee7a29fb8d47e6f12f3e01"
+    },
+    "data/rosters/vct-2026/teams/team_keepbest_gaming.yaml": {
+      "git_sha256": "c5babc89c97a4ec1468105d9eebde3ccc4f66f5f101ef708c4f87af48ff221fb",
+      "raw_sha256": "8bbc96f8258891f21a6bc3d4d313ccbc65d2f8e7d4f378dda268e9456fb868de"
+    },
+    "data/rosters/vct-2026/teams/team_kiwoom_drx.yaml": {
+      "git_sha256": "9e3a5a65e7fd521a3fde2576c32d22d58a8f5ec1522db8c93ec35cd6a673eec2",
+      "raw_sha256": "cca89485c7491d2e813243b2ab53ef04f3c6f4962ab46627bd2b2b7bb5bc7275"
+    },
+    "data/rosters/vct-2026/teams/team_kru_esports.yaml": {
+      "git_sha256": "b03651cd2990e9575d0fa1ffd4118ef239e140bc76fd2b205dfa041132b97933",
+      "raw_sha256": "0e26e28e04479af964d6972f1881702b98b2bf28be20202b28a1d6cd0ab0826e"
+    },
+    "data/rosters/vct-2026/teams/team_leviatan.yaml": {
+      "git_sha256": "754a9626d5007c61a18923e54a92d7c0df9b541d6b4be5428bc03d6082622447",
+      "raw_sha256": "a4574c4d957c9bcc73c3ca525ef0f4d6c0122aa54fb81ba3115ca91c4f68ec16"
+    },
+    "data/rosters/vct-2026/teams/team_loud.yaml": {
+      "git_sha256": "88a3e8807eb00bf0689c195149de9df0493d494ceb110ecf6056bfda861db2d1",
+      "raw_sha256": "3d7a090bc88846eca1ecd7f566498f2ce5c2296022a8e0b412ee2df268798b10"
+    },
+    "data/rosters/vct-2026/teams/team_m80.yaml": {
+      "git_sha256": "98fd14d99eb4874a064259fe1a2282f777fac6b969a176e94c4e00c15ca00a96",
+      "raw_sha256": "28af0fd205c4bffda32651c3bfa09a390c99a8ae49804e25cec3c8dcdff6bef5"
+    },
+    "data/rosters/vct-2026/teams/team_mibr.yaml": {
+      "git_sha256": "894b9b53ff08f472ea83cc196f70484174dfdabc196da1cff0693090a3715803",
+      "raw_sha256": "65548408c34b1c79f5b123a1a88b4e8e5a76b7d779cadad2a03b52525643a911"
+    },
+    "data/rosters/vct-2026/teams/team_natus_vincere.yaml": {
+      "git_sha256": "093f429ebc6075fa397e7febb07ec4b75d949f9237609317c9e47245af15bc70",
+      "raw_sha256": "f4516e166f7961255e11b90bf1f6dd98d0bfa354ce841d7990c8b64f0002a76e"
+    },
+    "data/rosters/vct-2026/teams/team_navi_junior.yaml": {
+      "git_sha256": "3cc56be4c13af7d99b2ff511518cfff1a7b7c2ac232939886ee8d39fc12e6f93",
+      "raw_sha256": "0e11b70ab7ee4a756a8bb0d037fb8043c7e4204ffc3e5ba5a2b3e9179e256dcf"
+    },
+    "data/rosters/vct-2026/teams/team_nightblood_gaming.yaml": {
+      "git_sha256": "093454caf4ace90f255623c8548a41c64b8837b4121c67c477178bd13c96a7b4",
+      "raw_sha256": "da2d0b00d4668f84a95bcf1ac1669a938f22fe7c4e99763c6c8d263fc46fb2a0"
+    },
+    "data/rosters/vct-2026/teams/team_nongshim_redforce.yaml": {
+      "git_sha256": "8719c58938809845f5da30cbc17054252320ecf5fe9cf594036c18ad9c710f99",
+      "raw_sha256": "3f6cb28833b48b3ac424c551f30155b8a56d87fbc3f806fe16f7436515223f99"
+    },
+    "data/rosters/vct-2026/teams/team_nova_esports.yaml": {
+      "git_sha256": "c8b49746c9f07b5c0f91cf09377838ac2904cf48dc0fdf807ae67aab9770bbcc",
+      "raw_sha256": "f0014dcbc71d1a2b40159296a0a9b93145f32ea1cd18ec25df799bb0ce256c06"
+    },
+    "data/rosters/vct-2026/teams/team_nrg.yaml": {
+      "git_sha256": "a0b51f27cec88d8b10d0fb45dbb3dbd8ddfcf3647b4a1cca874a8d7de0d5e3d6",
+      "raw_sha256": "ac44a760b6f9731d981ed79465bfb0472431b08cfb30798038fd9322f8cd299f"
+    },
+    "data/rosters/vct-2026/teams/team_onside_gaming.yaml": {
+      "git_sha256": "afaf27561f8042dfdc45e01246b9807f03d996602406da5af236989662282afd",
+      "raw_sha256": "9ebd2a39a328a166f386906166735dc0c87bfc43c5a0601d3d3b98e5d5325250"
+    },
+    "data/rosters/vct-2026/teams/team_paper_rex.yaml": {
+      "git_sha256": "6966cac4e74bcd25c99ca99a5064fa8212c4a2c21b8d31839a72a4308500d865",
+      "raw_sha256": "c9ad75427f51fb2e596cfef475501fc2a386a393468d4af1e2e4c12bd8be1b87"
+    },
+    "data/rosters/vct-2026/teams/team_pcific_esports.yaml": {
+      "git_sha256": "c8365b5cf795ffc1e628a3b27aca76a2b423c588a54a987bacfae22b4e486a8e",
+      "raw_sha256": "f49e111f321bd56b77185011ff3e90b86ee07c70f9a299906622da8ca96f27a7"
+    },
+    "data/rosters/vct-2026/teams/team_rare_atom.yaml": {
+      "git_sha256": "541357b0e90b75be8ac7a3faca8dc5c8b209e0630470f0e094f601a148f332dc",
+      "raw_sha256": "bc96017e3e106e74099bbd0fd98f33ad8ee3f797b9820d0728f79237bf461933"
+    },
+    "data/rosters/vct-2026/teams/team_red_canids.yaml": {
+      "git_sha256": "5572ea0ebd4886fee8fe9f1fccb347b4b6d8c685d2f66ccfb7ba79613bd1c097",
+      "raw_sha256": "cb6a85782d34f81ada965ab761cf91c4774378b46fedcf6a361e335e575c8366"
+    },
+    "data/rosters/vct-2026/teams/team_reject.yaml": {
+      "git_sha256": "b8c65d6e9585c02b4c81f06a0be2d0c196cb58a11ca71643bafdc7fabefedb89",
+      "raw_sha256": "649393fe9e6594e70e3577da89d3536dd92d906c821e4197da13cd572e459a15"
+    },
+    "data/rosters/vct-2026/teams/team_rex_regum_qeon.yaml": {
+      "git_sha256": "03a526318b20dc391da19723e09cac0572bdca6a7b613657bd01320eec6691db",
+      "raw_sha256": "5347dc9b5e5d9a47cb0112cbb3c7c37f00b257e76e0c2c35d202aaa155dcb627"
+    },
+    "data/rosters/vct-2026/teams/team_sentinels.yaml": {
+      "git_sha256": "36df47b21e8902fa1fae3eac4718dae3a31355526ebce86715dcd09df26faeec",
+      "raw_sha256": "51b468868e12183d81277bf1e3f22e884b32e3f9705b963b8e84ab2971f8b120"
+    },
+    "data/rosters/vct-2026/teams/team_sharper_esports.yaml": {
+      "git_sha256": "7ac002805ccd06aa419f1e3265a865f3ce72ebec1ded0dd84a8e7b83edf06643",
+      "raw_sha256": "fb20fe86051893c8d7cb228c81b3be3ebbec8e2793f070af0740122724df40dd"
+    },
+    "data/rosters/vct-2026/teams/team_shopify_rebellion_black.yaml": {
+      "git_sha256": "7b27e8ac9b370640f2ac0944587e8ab5e2259778aaa7104b9c7cdfeaf4eb5fdd",
+      "raw_sha256": "e3509bd4c5fb565eb6d9f8349d272798a9ee25c5a9bab64535ec7b6e8c799443"
+    },
+    "data/rosters/vct-2026/teams/team_t1.yaml": {
+      "git_sha256": "5063afa1200414d364942547203e5cae375908a5a8365a23aa64672a4f6461aa",
+      "raw_sha256": "f6dc24ff2090b1fcfa6b74b2b0c15364c959d32e8935399d803205cef5d8fa69"
+    },
+    "data/rosters/vct-2026/teams/team_team_heretics.yaml": {
+      "git_sha256": "031fc6e4eabf05c7f51b6330659284a78373a73807d5b92de48027de6d6b970b",
+      "raw_sha256": "423358daf44ae0fbcd45f2d70230d0481a447439029030fb376864edfb91728b"
+    },
+    "data/rosters/vct-2026/teams/team_team_liquid.yaml": {
+      "git_sha256": "049cdfde28df11518a5d47615269f019ae3e10daa8eff5ceb0fa9033c527e96d",
+      "raw_sha256": "974b4ddef34e121836912ad39d48e5ca23a4708707fbfe672a0b6f0a0c0ece98"
+    },
+    "data/rosters/vct-2026/teams/team_team_secret.yaml": {
+      "git_sha256": "f14a17555233b818201e866c0c793c5250da94f705a761effd764f1bcea26886",
+      "raw_sha256": "6899801a67f10dc412e72fa2007580c214e44d3b6ea7843beffe2ee37992864a"
+    },
+    "data/rosters/vct-2026/teams/team_team_vitality.yaml": {
+      "git_sha256": "8ad66dd09a1184a5de9d25c1db2626dd6e753e1e91ab1c9da38ff7bc906c801e",
+      "raw_sha256": "9c140c03e036ec913222a1706d8ec3ebdc3b56065925e61e720cef03775ea4ad"
+    },
+    "data/rosters/vct-2026/teams/team_titan_esports_club.yaml": {
+      "git_sha256": "8568448905cc71f5be6d9741b08d0c090b0b53d2797f7365f30a2de4794eea41",
+      "raw_sha256": "61afd1bfef7bf22f7275bf0d309553d16c229fc209ea4be27aef8605d90b2980"
+    },
+    "data/rosters/vct-2026/teams/team_trace_esports.yaml": {
+      "git_sha256": "d0fc20f49d28f45caf28eb4c5f884169b7a5a41c9151cc4f75c9a33a2718a9a8",
+      "raw_sha256": "6faca64b82aecb75668d4d18b9d170e0f3a631d3c13c76435b6db069edc247e6"
+    },
+    "data/rosters/vct-2026/teams/team_tyloo.yaml": {
+      "git_sha256": "aa4ba2957ade7f9b67bcc98a907fddbf74ad982551ee850981e192ab74a56866",
+      "raw_sha256": "8af39051123c0107d95076d64cba5d885f9502539835278724f16952ced4a03d"
+    },
+    "data/rosters/vct-2026/teams/team_ucam_esports_club.yaml": {
+      "git_sha256": "f0d81a9a9380f4fd69cf4b8b532990fab170ecf9da5ab03abd25a8ef80f51473",
+      "raw_sha256": "f0fa8b43f2c6d26424ac436986f99d796db3889fbbcedf78e4cd55726c798c52"
+    },
+    "data/rosters/vct-2026/teams/team_varrel.yaml": {
+      "git_sha256": "a812c18b3b0fd0d61d5b58eb216e9941ec2e168cc93d5afbb31910a1a46ac7b9",
+      "raw_sha256": "d2c7fb1c1ceb1cda41b0debd737fa89dd42e9c4ed07389bb4ec9a8eb4d97d350"
+    },
+    "data/rosters/vct-2026/teams/team_weibo_gaming.yaml": {
+      "git_sha256": "4c1f8d957c00211e4d9d1c800307255c27ac4d2ef20d46159663a7cb239d212b",
+      "raw_sha256": "810a0821cf9504599694e5471a266701f1c493945606dbd498235ae723ac46b7"
+    },
+    "data/rosters/vct-2026/teams/team_wolves_esports.yaml": {
+      "git_sha256": "bd7e379b30c4df2223b900774ee2a50af4ad99e2b5287010f53c815a06af0ea4",
+      "raw_sha256": "f9e76a3031b6711fab391d504c37e926110ac633bba0ad9d30d9bf0396c2147d"
+    },
+    "data/rosters/vct-2026/teams/team_xi_lai_gaming.yaml": {
+      "git_sha256": "6a68b2f46dd376a4140c4df2ecffd2f4f5a356cef2c4c730e8dfbf34bb56b4fc",
+      "raw_sha256": "2ce77a75a8da80a4f8eb9edaa48f293bd9c0f00b5ef85e3d23c8048fa2fc9d95"
+    },
+    "data/rosters/vct-2026/teams/team_zeta_division.yaml": {
+      "git_sha256": "1aaca2507229c08475283e03aa18fe4c5adae55ef27912ed4ccda61460cba533",
+      "raw_sha256": "11dc9262698fa4c80d536b468e9b0cd8f140bbdbfd89f3e9397de610dbfb60dd"
+    },
+    "data/teams/team_nexus.yaml": {
+      "git_sha256": "6abb4011fbd34d7712b5d58684222673a0e3ce31b13d1ccebb92f1ccd4ddb37d",
+      "raw_sha256": "f0ff71f1bd21f5403ed92ce591b0ae8abc4647ab998fbc6a3177aa71c063fbb6"
+    },
+    "data/teams/team_vanguard.yaml": {
+      "git_sha256": "ae1e0cb00ac2a05bc0a0a8a5459ee0b87005c18c0a46a8a3a15e51b39d8d2836",
+      "raw_sha256": "cd67082132b6f421cf74b590d56c95413ef37ba25233fbd74f5ac7daa6349215"
+    },
+    "data/weapons.yaml": {
+      "git_sha256": "65917cddb7658f434e6c774b895a2670f9014cd2428b2da04b29bcfa048b3981",
+      "raw_sha256": "d994a3e1c42133aaf73239fbc9e0378932220f5cfc1e2485e68e030c7c3c3a94"
+    },
+    "scripts/Map Studio.ico": {
+      "git_sha256": "a817f77a677c765ab63d511eca6a1f1858a96c11660469d3e1f2e8ef9d4a79ea",
+      "raw_sha256": "a817f77a677c765ab63d511eca6a1f1858a96c11660469d3e1f2e8ef9d4a79ea"
+    },
+    "scripts/align_painted.py": {
+      "git_sha256": "419681aa640c309ad88915cabdd9d6aca08859f8bb39c0f821f0e22d72ec3da7",
+      "raw_sha256": "ff414001b316bdf0ebd6654091bedf70e99b3dc31979dc478decdfa589bcb242"
+    },
+    "scripts/analyze_vlr_research.py": {
+      "git_sha256": "fffa780690901cf55a17b0e15017aea09db580bf02ffc0cd0cc324748bd9470d",
+      "raw_sha256": "61b22708b271f0bcff28090505c2652abe5b63fce753fcb45c24e5edf7f2daf1"
+    },
+    "scripts/analyze_vlr_war_history.py": {
+      "git_sha256": "cb9c28c466987955167c763195bd86bd801b23eedb7fab2588a5315c291469ca",
+      "raw_sha256": "2dc439f677e0c8e5de6b9454ac8f20736b1acf61964f19da599b1283dcfdca84"
+    },
+    "scripts/balance_report.py": {
+      "git_sha256": "493e58f94a17d0943271691efb3a39b105468ce38fc26ab09d4e654a163cdeff",
+      "raw_sha256": "992bfd3f8aabba1875e1beb0cafebd93eec5c8cdf446b04767dea6195538bdc3"
+    },
+    "scripts/build_additional_layouts.py": {
+      "git_sha256": "eeb17cb422b2d18225bf6b808590369d49360c62c3aa1842ea4b5f35edfcca82",
+      "raw_sha256": "0d02b4f0b9c1d4f9ee9b000169235df90e8baaf3c6759def56f626042b229324"
+    },
+    "scripts/build_layout_drafts.py": {
+      "git_sha256": "ec2d576e84f60e455e8c69fd0847ce2642ba5283dc6828c9fb22830eedfa8b70",
+      "raw_sha256": "9764c44f2ad0cfb9e9b445e40d0c5713abc17ea770fad5ba739770133452fef9"
+    },
+    "scripts/build_roster_pack.py": {
+      "git_sha256": "6cf64b56b043b27beb654222ee9c7d4af04e244b222a63e3970db1eeefd715bc",
+      "raw_sha256": "6d3b95151a92bcba448b65b050a0ed8b106561f9f74fca56a4b4823310bb3adb"
+    },
+    "scripts/build_vlr_agent_reference.py": {
+      "git_sha256": "342e42725fffe550402e8f461a640d00713d2e8665003f950bb55a7005bdb4d5",
+      "raw_sha256": "b99b7a3dac2a97a02d77d64470c739aca8677e68bdfba05063ca011e1b4524f2"
+    },
+    "scripts/causal_match_experiment.py": {
+      "git_sha256": "c29bc69f61f98617bb0808b7e1d3e8d7f11fdfa2282e6218b1eba563bc2700d6",
+      "raw_sha256": "55bf5b2cf96f81b500290b7311c9d3260390d0963ff23a9594c4969fa0cd9c93"
+    },
+    "scripts/causal_match_supplement.py": {
+      "git_sha256": "7c42ff2c765c7336bda251a12760af4760a43891ebe3e464c23c31a8556613b4",
+      "raw_sha256": "050be6c6b40df5848c4f215fbbf18b5f35904e7d505213e1d603eacbe53faaa9"
+    },
+    "scripts/check_layout_drafts.py": {
+      "git_sha256": "953fa1b8c9277a8d1c1a5c000343bcdae1a9aca7e2b4ebf0bed302997253df04",
+      "raw_sha256": "c3d75a8467583e9dc804a62307563ad93499d0fc058cf98b19095c34917a2df3"
+    },
+    "scripts/check_vlr_manual_audit.py": {
+      "git_sha256": "72f79e6af8e239fcbe574457f0d6a68fce0eee77120be59eb6acbbe64a888599",
+      "raw_sha256": "595816267e1b066a6bc3be5ff2ef83a85e487243b1cb8b46443d9df7ff727957"
+    },
+    "scripts/collect_vlr_research.py": {
+      "git_sha256": "5573e7b428d109a28f87b332d35129ceeb31acd1ea89cb91c4089a1187e24d35",
+      "raw_sha256": "62e520dbaddd3b9d3ac7e167256d5606ce5ff1004375ef50ae39f48901d8612f"
+    },
+    "scripts/collect_vlr_roster_evidence.py": {
+      "git_sha256": "b0d2a5aa0b45222b99b0f0290b68228d46afb6d2ce76f9e2815350c2377343db",
+      "raw_sha256": "ee1d3ce39045fefe1da0e5337edf2fb17efc51d1c0d32cf7d70b1098e5a22bfd"
+    },
+    "scripts/collect_vlr_war_history.py": {
+      "git_sha256": "b8dc557cdf858479ef6e5df14451adcd8f03888f1a732728263d3e942261a524",
+      "raw_sha256": "bbff172e40022f1035ac3e7cf027ec74f759b5772af0c5a3be97104deeff0b2b"
+    },
+    "scripts/create_map_studio_shortcut.ps1": {
+      "git_sha256": "b7926151bd90cee17d21a2582a2c38df3554bf0bd4f8bef9c39e9ea7b31e179d",
+      "raw_sha256": "4c3111247dbbf5cd5a279b6d93373a0629d0decde5332f57f1a0a3a7d9d0f81e"
+    },
+    "scripts/css_token_gate.py": {
+      "git_sha256": "d211d091e07416c15c7d07732f38e719312fa6034ac49dcb6ec2f8a6bff8f416",
+      "raw_sha256": "3cd4a2dba8f8203b21bc2d7e526e633e7a9f1c2a352ccac53294548ddd8766e6"
+    },
+    "scripts/dump_campaign_tokens.py": {
+      "git_sha256": "f2d7e93bd5c84cbf7739a4480a34fbfb772416c9afdebb4ea5b473089a0e4257",
+      "raw_sha256": "dd865216eb1656fbba0232eb52ae8453ce421e40f3790abafe7f456cd7ad3c92"
+    },
+    "scripts/dump_season_tokens.py": {
+      "git_sha256": "c086d404b8d0bf74d9e79ee46e778d29c99fcdf7fa7942b4780fc30b44066df7",
+      "raw_sha256": "c212e9c745d9109553872ebaa2971648afcfbfef68f03e257fbe1a379e942219"
+    },
+    "scripts/dynasty_report.py": {
+      "git_sha256": "9706bc8c7b8b216c5592345a9c06378e2c95770bd7f73e53b652183b7803ac58",
+      "raw_sha256": "eac6450fdc17e2d13e7aa5430c3a49aefddc3468e0b8653ccdbfc9dd210806d0"
+    },
+    "scripts/enrich_vlr_war_sides.py": {
+      "git_sha256": "c848462d50746587fa9d248dee43ba16f89d55b019ce0a17aed9bc8f1b521fcb",
+      "raw_sha256": "46c4dcee460989283b706b03dd8c5af476035b69be59b97d77e8854bc71c9137"
+    },
+    "scripts/export_telemetry.py": {
+      "git_sha256": "c9e506f009d86d95c916569ac8e4f84db1912a63a3068f31c3d2b8055fef156d",
+      "raw_sha256": "304aaa1149800ff92eb0660bc6e853ee1213ec27addc7ff23113b6bad8fbc350"
+    },
+    "scripts/extend_layout_floors.py": {
+      "git_sha256": "37d3e347f48dc7f004f227110c149c99ff0c52429325d6d0eac20215547f7c09",
+      "raw_sha256": "6c3a987f16be286ae274a0a6a1aef528a331971b14d859f6fe7338928efcb569"
+    },
+    "scripts/extract_historical_stats.py": {
+      "git_sha256": "4846ada2f1f5ab587f90edb4c369e738d4f26680cbca8aa803b66f2aeec5c171",
+      "raw_sha256": "de536be2f39b5f1fe16f6773e93bb0ab7b59ce2e4f2f6b7ff32f0588c5b95590"
+    },
+    "scripts/gen_geometry.py": {
+      "git_sha256": "05dbc0b07022e695ad67d32ac10a14774532dd8a32296d58b4f3f8b35cdf418c",
+      "raw_sha256": "9be659f9cdf314bfeb5f4b4edf2df700886d8ec68ff081de872702b3e5120d99"
+    },
+    "scripts/import_future_archive_players.py": {
+      "git_sha256": "2764c6a4e4c95f3f9e468519a856b731e3792b4a7c4a0ac42ba4985e503c367d",
+      "raw_sha256": "0ed221a41249136a5bb7a705c8aa8e5f901c41ef7a70ebc1e67a3f3ee1067819"
+    },
+    "scripts/install_taskbar_launcher.ps1": {
+      "git_sha256": "cd62805771ccccd2cdb6574c055e5e278dd2db8c04bf9189e2dee0164ca051dd",
+      "raw_sha256": "106e0ff58e10fd044ae87e8ad3b84290cf65cd8b7697ef44c4cb796f3a1bdb1e"
+    },
+    "scripts/launch_map_studio.py": {
+      "git_sha256": "07b924bbedf10e902b39809d89fb91b55f08fb95e529d744cad5825104e15f1f",
+      "raw_sha256": "c385c8208585d9d331c505b846bb25093406a54042ee8ffbef303fd454ea4250"
+    },
+    "scripts/map_floor_audit.py": {
+      "git_sha256": "3433e03c655e09da92202dd62276c2d0ac01ec3f697c5a666ab3c756ef77afc3",
+      "raw_sha256": "7574af3745e06457aca6da20d4d8b307d1d24f46f263c49edd81e30e94d65276"
+    },
+    "scripts/map_keep_awake.ps1": {
+      "git_sha256": "d309258502d85ceb556d48001f93ec2fe10ad22df8ae5f299965bfcea5acfcbd",
+      "raw_sha256": "9a108ca72fa6912ce134ac05bd62e117454300c622f4ffc2008c62551df4fcca"
+    },
+    "scripts/market_report.py": {
+      "git_sha256": "bdfe555443e5921cbcabdf231fca206978953cdb3db004fcffd4d21f09d8e36c",
+      "raw_sha256": "4a2b4f71ef0dad8f8ddbdc80c2b8b57651da7bcf25ba4191c14dc1215c8fe4b9"
+    },
+    "scripts/match_review_report.py": {
+      "git_sha256": "2de5a60e5b1236ae05510c69492f4f8aa1356fdbab6d72436bc31402fb3871f8",
+      "raw_sha256": "dc4ab5270421fb128cc71c216798510b0781f68a468c3ab0fbea0c227e52affb"
+    },
+    "scripts/online_train_manager_policy.py": {
+      "git_sha256": "ea3ba3257514a08cf9b8cd21df11f096389d2bbe13327d590c56e2839c0803a6",
+      "raw_sha256": "b2d2f98f1ef3b9c160a243acefcec8f9439e51d8fc6ee32f90e7c81de7e84177"
+    },
+    "scripts/pacing_report.py": {
+      "git_sha256": "ecb9848b46760b0b5126107bb2750f1df5fdb2c5a8defc371a7e8b2e8be8a5a9",
+      "raw_sha256": "3df01cb53c9f1e74c80b13c511738d0874752d128b9dfa21e9761fe9ce62983f"
+    },
+    "scripts/playtest_log.py": {
+      "git_sha256": "740465a952d6b9eefa7b14f6cf5015253c76e26075c87fdf60d6e3c26c7d3346",
+      "raw_sha256": "ca30c1c4894a351695741b036fbf8087485590d959dcc7fef1f6f9702f8a30c4"
+    },
+    "scripts/refine_layout_masks.py": {
+      "git_sha256": "15e29ea701eb43373f0aea77176cc28015bb6decc28b3d4bf4fc0c82ddf5f4aa",
+      "raw_sha256": "858768526050834b209137e1daa48d5819a11737b6ea8c8cec57eac8cea6ccd5"
+    },
+    "scripts/regen_golden.py": {
+      "git_sha256": "e1bd09cb948e2a0e9254c74bc5b4cf8c5fd0dc1e3d0e693dbd72444be0b55f59",
+      "raw_sha256": "3d583bfcfbf507fa7236bf40cd95bbde6eae705917144646265df72c720f2cb2"
+    },
+    "scripts/render_map_guide.py": {
+      "git_sha256": "cf2bb51417acf46d378ca75019bc332a0203d4696f33a3093558732a4964667e",
+      "raw_sha256": "32cdfda573dea2fed85a971578050dfe311e704543697dba70f51e57f51f60ad"
+    },
+    "scripts/render_map_thumbs.py": {
+      "git_sha256": "18644def2e2bd134590653c9878a3ed476c111992b29f2ce98a03ba1cf6df9e0",
+      "raw_sha256": "59ab68fcb94dfd74c8348cad2249c1787d75a49a66b8dcdcf3717ae670aba017"
+    },
+    "scripts/render_office_guide.py": {
+      "git_sha256": "0eb9dc873bc7589b602b3d394c0681883502bf1cc44715b0c55d83874a986642",
+      "raw_sha256": "42fdb46bafb815eab40c8f9b87d603dc76c56d3c944873411af2416c08d50421"
+    },
+    "scripts/render_sprite_office.py": {
+      "git_sha256": "7e52ca426a2871337a59624ddb0640296df4a56f30f23e116528d4d4eb9e1bc2",
+      "raw_sha256": "356da7024df82cff8cb74233766e72f9a9dca4499eb0de9e3b0c6192701c6ce5"
+    },
+    "scripts/repair_vlr_performance_tags.py": {
+      "git_sha256": "45ee39d63e5c891301fb5bdd227363ed9baa7e33321f42c8083e15bc36db0edf",
+      "raw_sha256": "635d536cca2b055da0776b8aafdaa21f661767d67246263231582a68766e88bc"
+    },
+    "scripts/roster_fit_series_experiment.py": {
+      "git_sha256": "6631b6c0c4a5b962143928bc4df7e64deaada1904c742f21503c4ab2d18c8891",
+      "raw_sha256": "1a1eff3afd00b775864a64dfc98e64b210f58649d70dcd9dac9e76088494d32a"
+    },
+    "scripts/roster_pack_tactics_experiment.py": {
+      "git_sha256": "4e7654e5e3366b861f319527128d0fd98038676ee4a0ad6a020a5d8d50a637a5",
+      "raw_sha256": "48ad9840f6289e142ac376f8784fa9d20c6ac585762d354683e565c0484b3fe2"
+    },
+    "scripts/roster_pack_tool.py": {
+      "git_sha256": "416724a445199fae5f0faed851bf58408be6d4232b563437ea6a9913904e720e",
+      "raw_sha256": "57965044046fd2f05b1e9d50ee27f21546966e64f04cb94642da6395f7fd6877"
+    },
+    "scripts/run_llm_playtest.py": {
+      "git_sha256": "59a99b01387a16055bebac189c21eb73935537392752b59d887d03a11fa76173",
+      "raw_sha256": "e4e8b5c7b5880e0647badfe7a995c853d77dc5a86a46a660a8def1a78d0019ac"
+    },
+    "scripts/run_manager_rollouts.py": {
+      "git_sha256": "872cf9588d2b22d3bc2f0941f9242975eb238041f3b348e688fcd7f6ac3f061b",
+      "raw_sha256": "ee5af3b75a95b45b38619082a52684eca6d8ed39bda759899c78c729d812e0bb"
+    },
+    "scripts/serve.ps1": {
+      "git_sha256": "3cea44fa8c22d33f59e01faf901d7bbce69adc0972f94ae8819fb7bcc60660b0",
+      "raw_sha256": "097d4b2d610b1e1d8f7053f411c210982727b01e0c4bb23199ba30719fe1808d"
+    },
+    "scripts/serve_tunnel.ps1": {
+      "git_sha256": "74bc3f3da22993f240e16e59aeb007963220f209d386fe62299ec703d09c7f3a",
+      "raw_sha256": "cd2c997f771c28ea55b3c08d6d3ec609a41605fee5df785b20d0c66c4395176e"
+    },
+    "scripts/setup_remote_play.ps1": {
+      "git_sha256": "c893ded8dce49bb3d176f8a390dff697f8037be3d6d9af39dba7adc18e5e369d",
+      "raw_sha256": "eb1575be17633d03b1f00ce9d4caad1544ef1a6232d86f4de15a157ff3c0f9ed"
+    },
+    "scripts/sign_launcher.ps1": {
+      "git_sha256": "966827e4bb3b7d41c3b77a5ca7cdb13936bc855042718157a316f0b557055906",
+      "raw_sha256": "c5b2b91b76f87fbed4752ab917604547ab5395dfcd256291e479af48d6b7518f"
+    },
+    "scripts/snowball_report.py": {
+      "git_sha256": "215f2d40ffe4ec461ae00d5b8de83db478bd27b6f4f0e9d090295908d5bb5d46",
+      "raw_sha256": "86aa72672ee746659d5cd7198e810a1ebfc1ce5dfcf0e53665b02b1b73a18869"
+    },
+    "scripts/symmetry_series_experiment.py": {
+      "git_sha256": "6a22f493ac411f56456b50ac176aff8390481b27cadad3af50db60908f18baab",
+      "raw_sha256": "c54cac8f5934ad8b17a00e41995a7e37018e85d753ced8f57709dc8cf5b3245b"
+    },
+    "scripts/tactics_report.py": {
+      "git_sha256": "08eca0e44b3a60ed2b460f76d3505d5d8322a81dfa614dd41308117d7dd9ad78",
+      "raw_sha256": "23cd900443651c15fe4ef6f82e7a5bc05af0e7a29e5b1cba699dab2688c2322f"
+    },
+    "scripts/taskbar_launcher.cs": {
+      "git_sha256": "e9696940c3273d5ec7ec25f9dcf5ecbf6e84ff15e2a997bcd06969be2a93ba52",
+      "raw_sha256": "9e65a3c2520070aa2bd7a534a5182b3e9a395183d81455d57e376aba7f931ddf"
+    },
+    "scripts/taskbar_launcher.ps1": {
+      "git_sha256": "5c1a1bb5b72975966de9dc2ab2ba2ba3af13832969d9e789ae3a2ee9c42091a4",
+      "raw_sha256": "ab6637f6c1b9e72819f36e871db963e393b831181049005300a273c0e4e8440c"
+    },
+    "scripts/telemetry_report.py": {
+      "git_sha256": "220d4e673f99492431f8f52da467d6b2d55acdda1cff6babb3c0dc3d3849ef2d",
+      "raw_sha256": "8f3ddf312c1ff7c64649a58f9efa39be7122abbc24ae45e947b85b4a6d95fb7a"
+    },
+    "scripts/train_manager_policy.py": {
+      "git_sha256": "ae68a4a5463f6b1bdc802385cbe6306c47ab8287917c8c7ad5e0b3442196f18c",
+      "raw_sha256": "40b92eb1671b2e5b9052ca36a52a1b80a4a2abed90050fbd97ca35baa0060b26"
+    },
+    "scripts/train_player_policy.py": {
+      "git_sha256": "1c3b1e54ab751f9739ef1facc2a1f1e36ebdfc182d5296c97cba1b5b04f19b80",
+      "raw_sha256": "26598e356cfb8ab687ba090dd719698c064cf905bc86aa8200248551b1b9f783"
+    },
+    "scripts/ui_review.py": {
+      "git_sha256": "de42f801f21dab66bb25058a7a19a998175916d72d90d89c6be314cebe07204b",
+      "raw_sha256": "dbd58724259cf680e96e7756eac45332d8861906da2180f76e2e1569587e5210"
+    },
+    "scripts/ui_usage_report.py": {
+      "git_sha256": "8a20285da22c0684dff889caa17be77d05345ba3b3a35c5f511563ed852ce720",
+      "raw_sha256": "326779eb838155682987558b27dff7d43adda75d750c4d58b9f1d08b4d6eaeba"
+    },
+    "scripts/validate_causal_match_dataset.py": {
+      "git_sha256": "9fd58cc6d9f517d65f2c3ddbc02c1deb79cb16a56f8d52885e4aa260b8515a62",
+      "raw_sha256": "7fea42170fa1f187b7b5902bae7e04c9902def506effd56b816f806f32bff2eb"
+    },
+    "scripts/verify_roster_progression.py": {
+      "git_sha256": "d854094ef3a65e8d47b18eca7f6c41c84bc621761cfc04e641bb0a4f3c799e92",
+      "raw_sha256": "b6cc3582ccea72b18c6f29b9fb159c286194725f76796a09f0c2039e51327ee6"
+    },
+    "scripts/wiki_map_trace.py": {
+      "git_sha256": "b51aa3f6725a1a1a1d731ebbebaf67c791710d9e8dea2351237ad42c0af4bc9a",
+      "raw_sha256": "1b7cf075cdaa5773a7d98e115ad506cffcd2ce3a3623b7cfe57ac94990012128"
+    },
+    "src/esports_sim/__init__.py": {
+      "git_sha256": "9d538189f8a1070f8fb9192909d8a29500e100cd03f879fb7421c83a5fe52171",
+      "raw_sha256": "1496580b027be299eb895b37953ba97df8893a7bc98457f5e17980448ea6f122"
+    },
+    "src/esports_sim/__main__.py": {
+      "git_sha256": "59605dc008e01d1158d6c0c2ac532146b9714216ef2aabf3cec8b2a1538c3288",
+      "raw_sha256": "5a3f3644b98ef1c26499748ecdbe6fd2dd41a85755d2ebd2a78754cf6f715617"
+    },
+    "src/esports_sim/_compat.py": {
+      "git_sha256": "38512a1b068752e9589a5f92cc9756f9b19198f972ae9c4ea9c0dd518af17792",
+      "raw_sha256": "b60cfcf0cdd4560d05b19955c04c018acabd1bf5457038fd3b4344481289e809"
+    },
+    "src/esports_sim/app/__init__.py": {
+      "git_sha256": "e8f9b9fdb22d7b0136d1cea2ef77685419163d6810a888633055b6d509619874",
+      "raw_sha256": "ea30f3b15c3389d2bf537f5ca2d41e4c63597d9098c6de546e07c99b8f1a7c45"
+    },
+    "src/esports_sim/app/cli.py": {
+      "git_sha256": "5834bca141b63cf85c037528ca250d2ece15da9a750fc49561bdb3a56937949a",
+      "raw_sha256": "4073729a2a00b093a3f7d6d61a26e5c52b42200c1e2b1bd7f3405ca50f9cc451"
+    },
+    "src/esports_sim/events/__init__.py": {
+      "git_sha256": "53c25a2a811b01ec8bdd2ec4e738caaafcc0403ff5075fc2e567b92a62f67ebd",
+      "raw_sha256": "5b4f25a573010836dd8396776a5bca036dccb8c3755915f732b72337c95f644a"
+    },
+    "src/esports_sim/events/log.py": {
+      "git_sha256": "270538eb159e7127c4cc845e6e5e8f7e4843e720668fb89aebf38d5377ac3dec",
+      "raw_sha256": "c68a4f7ebef4b203157946fe5a16e2460f472d37ab385b349a749b5d8e165d9e"
+    },
+    "src/esports_sim/labels.py": {
+      "git_sha256": "09b4d5d545ef07a58fb62d7e19f4ba77d834ccc83c860ae77eba2b187250ccf0",
+      "raw_sha256": "36ab1029cd913a07e02d70a053ec82987950674ef8e6617d22452afe3c4e0771"
+    },
+    "src/esports_sim/manager/__init__.py": {
+      "git_sha256": "a538734eff0c134ba00480a629af4f56028e8e4193c35a58dac211ef38078433",
+      "raw_sha256": "8f29c87de2615adca87b0c59859ed1a660f881ce968044f87462ad1b1ea14b4b"
+    },
+    "src/esports_sim/manager/academy.py": {
+      "git_sha256": "554998a8ff9e713d4d017d988b87795c82f139ac81ab4dda5a65d98c61cd6b42",
+      "raw_sha256": "9a4bb293437d1fff51d7fe4512ee89d56fe76f15f33618da85dd183f895cb4c4"
+    },
+    "src/esports_sim/manager/analytics.py": {
+      "git_sha256": "2a862d319b30195ca5adbdfe81c5624f0f2434c6e112eec213f6beb68a679fce",
+      "raw_sha256": "4d9653e617645734ecccd31fb475edc31096605806f502aef8a124268cbda63e"
+    },
+    "src/esports_sim/manager/arcs.py": {
+      "git_sha256": "c67eecec11e2a27c4424e36fc2d4ff3f0533d4abc6cc425239bfead95c345fe2",
+      "raw_sha256": "b17e7f6c8aaacb4a9b1ad441c877ff4c8b842be47ab4f3e431638d633f9fe4b3"
+    },
+    "src/esports_sim/manager/badges.py": {
+      "git_sha256": "e5c3e50ec607b2e31d19340e0c76221b561ff795d6c9aecabafa558832cb2885",
+      "raw_sha256": "9a29fcfa292c1e5580435fa8ff948212eb14bb94c3399dcc608fcbab4366559c"
+    },
+    "src/esports_sim/manager/campaign.py": {
+      "git_sha256": "0b87ee649b3a47f238cda3f64f763e0b9cc43875fa8e7eae9919420d3d9158af",
+      "raw_sha256": "9adcca3304be46ca9d113cb307f514883ad7c8171ea37e7e01506d7a1d36ca0d"
+    },
+    "src/esports_sim/manager/career.py": {
+      "git_sha256": "dd195181f05229fcc32a4308ced61d4e91005854f88a2a4bb8c4b02f43157539",
+      "raw_sha256": "7039261bb5673badbfbcd12ee491d9fde6c9a8b87ec360123c5569dfd0e6d89d"
+    },
+    "src/esports_sim/manager/chronicle.py": {
+      "git_sha256": "3beefd9a26b12795d1ba91dfb29d2f20401fc4873abfae6fb9b50c61eb536b05",
+      "raw_sha256": "6d0397c5fafb076c8972af665f83004fead3a783831a28ec6a9fb3ead691dbe6"
+    },
+    "src/esports_sim/manager/culture.py": {
+      "git_sha256": "433698270fbb710e9733bba9f66adaa156e4b2527278491c9948d76243ab8db6",
+      "raw_sha256": "f3e228f6553eb8484e51a98206eb7c09161cb69dd22cf663fc87d016dc4d8b10"
+    },
+    "src/esports_sim/manager/decision_env.py": {
+      "git_sha256": "d4a571466805e3095901a7aa578e3dbab8458d1c43ed4db16009c37ffc14b759",
+      "raw_sha256": "b1407203c0f77223af42727c73db3ef28ee2df446d1876e6b2bca344c63122e3"
+    },
+    "src/esports_sim/manager/decision_ledger.py": {
+      "git_sha256": "4ebcdd36a2053403b4f93cbda75b6421eca9d4154f11fd11a9b9cdc44920974b",
+      "raw_sha256": "1c366ea72970eb608a39c3d01e7c8f3a45876998b49325a5fc48b9d299d156a1"
+    },
+    "src/esports_sim/manager/delegation.py": {
+      "git_sha256": "3e6d9fed9dd3849b15e6f136040f72db05bdee014fca6d91a1c2e9c8211b20a2",
+      "raw_sha256": "f133bc26f6eb6032c5f925050b0b32a82273f197c0089dbc7005e949adadf861"
+    },
+    "src/esports_sim/manager/development.py": {
+      "git_sha256": "f3c138c6771b69344d8272d6cb3390a54378a6df6ceac2805795062e7674cdf2",
+      "raw_sha256": "9eac39807f2ecf923900f6745cdcd17a96de04b3c63c1621e77693733e26ff6b"
+    },
+    "src/esports_sim/manager/development_path.py": {
+      "git_sha256": "278523decca925cc01b79e3222396289101a84d7c07563b15e1fb23193e8e667",
+      "raw_sha256": "1133e783c477336a9a768a37a6db7850986ba079f70f3209c95ecd1baab9932e"
+    },
+    "src/esports_sim/manager/economy.py": {
+      "git_sha256": "a9900040d3315c523526583675b24de94bf1d79298b9b86d4e171201a8e0b40d",
+      "raw_sha256": "29e4e720dcda9db5b78422229ee9cfb2ec6d0622fddb52f03bc7157b9c563caf"
+    },
+    "src/esports_sim/manager/facilities.py": {
+      "git_sha256": "081a3a202c5cfd29b27390b53ac4b026acf7b3a1b4e0fbc556c87779a61b2e1b",
+      "raw_sha256": "5fa15644061cbf3920ac037e9767d40214b01894c8a20f97ad42c83dd3765734"
+    },
+    "src/esports_sim/manager/fantasy_draft.py": {
+      "git_sha256": "eeb27476e3c8db66b24a44b6781330b773dbcd2b2868cd553def3eaa8373681c",
+      "raw_sha256": "872273be9f7c6e290d6bb3d5048147906ec2847334b3df90cdfd1f3801e82c55"
+    },
+    "src/esports_sim/manager/flavor_events.py": {
+      "git_sha256": "db7761847681ff2de974210317495b5942acba476363aa31f362ab32ebd99930",
+      "raw_sha256": "53045339744f71030b242c93e9c352a01b015012d5b6de7a1ddfd549d9ea8887"
+    },
+    "src/esports_sim/manager/gen.py": {
+      "git_sha256": "ad3092ec190bfa071599536b385710328aaf7eac8ab99dd3e498e1ae4a8738c0",
+      "raw_sha256": "118ca6199bb7645362e955bd5e435da313e581386c05081aa38a70fb07fe2f01"
+    },
+    "src/esports_sim/manager/gm_personalities.py": {
+      "git_sha256": "68c8a83137353eb1f7ecd740f54bf90794fb7564573212204ccd141a66ac378b",
+      "raw_sha256": "8031a6d70c5bab6bfd8608c613eaa43efad8621e7e370080c1a50cfdc852c83e"
+    },
+    "src/esports_sim/manager/hof.py": {
+      "git_sha256": "f56e448990ae03ccc201209bda64a72fdaf3d59c7f5a0344021e6cfbf9ed06f1",
+      "raw_sha256": "38ffef9192f496b330a7b1c6a1cd7c1cd1e4a3f117a0c9f1912f36c9373929a0"
+    },
+    "src/esports_sim/manager/inbox.py": {
+      "git_sha256": "334031e48a566abdf320b5bd039e0c334b81b0741b336655458271ad0ee08071",
+      "raw_sha256": "ee7c9d47dd656e37969fab318e849da9a99c6325067dd0c22baa430ea29a848b"
+    },
+    "src/esports_sim/manager/knowledge.py": {
+      "git_sha256": "2a8b38c753aa72a8ab7a2c57da4156980efd9501bf22e9e321025898d5aa605d",
+      "raw_sha256": "e0ce010b7bca95a1e091ed693111fbb1dc517efa93d25847470a89181f91a96b"
+    },
+    "src/esports_sim/manager/learned_manager_policy.py": {
+      "git_sha256": "0ce8e32c1ca3d86defed4c5f7557b7a5de1e0e6839b2426ac3c8782664933273",
+      "raw_sha256": "fbb86ca5fdb79606543d95932f9c86f14f5f59366dbb0b55e239bfb062281d79"
+    },
+    "src/esports_sim/manager/llm_playtest.py": {
+      "git_sha256": "e553c2b13de2f9166900aa13bda6437b9de03b36a40088ca20e84b4527cc56ec",
+      "raw_sha256": "f3d48295b6f5c510779257615c50d3be2c7796340baec949c6942e4c70249d76"
+    },
+    "src/esports_sim/manager/llm_talk.py": {
+      "git_sha256": "fa7e8d12706376a94cde9449969e6c3842c794372a8cc68d48f4d1310b47b222",
+      "raw_sha256": "ca5932e8187771e542a5ac809ef596316143fb795df4645d9d2de54882216161"
+    },
+    "src/esports_sim/manager/locker_room.py": {
+      "git_sha256": "c8893605347440b1d3fae6f0478cfd3e30094727beefcdd0140ff475438c9151",
+      "raw_sha256": "e020e83a904865f8ea08a6306347a61f7326a3d05af54274525002717e955fa4"
+    },
+    "src/esports_sim/manager/manager_policy.py": {
+      "git_sha256": "1abd6a357b3bd01793d30158ed5895134d60f553725901cb058364ce392dc848",
+      "raw_sha256": "0098d9b149d2e91b4b87deff40d77a35662c2ced1f51fef693a77e4437273591"
+    },
+    "src/esports_sim/manager/market.py": {
+      "git_sha256": "1591b69d499c7e4dfcb6d4a7c0578f5d922279336f73fdaf4eb9f3d7887752ac",
+      "raw_sha256": "9be7b35aa559bfcdbc8fdd4f7afe9b57f098036d3e9cadfe0e8f7b1703cdd7b9"
+    },
+    "src/esports_sim/manager/market_history.py": {
+      "git_sha256": "0d0331dc57d1823d4491c300598cec0d9ac9db3ceea6ce4a0519104dd2a6b368",
+      "raw_sha256": "47d5df3a44f5a31458332b294603b210b080d00010ab18ed5acba6d25f5e6603"
+    },
+    "src/esports_sim/manager/match_review.py": {
+      "git_sha256": "00745b463b836049f102d79857a3ae20921349cac53c217facfa0e77926811f8",
+      "raw_sha256": "4b39b2df928bc3bb7129e707aa03f5cda9a656820691539bf901f1f04d32cb06"
+    },
+    "src/esports_sim/manager/media_events.py": {
+      "git_sha256": "c7207c99b07a9b5717b50579a0c1e8489012871c1eac5708a351e2ba5238c512",
+      "raw_sha256": "91b849f4dd01b8d620db72ee0a6ab2f73075998977bc7a65bd85e7dafa1fd22a"
+    },
+    "src/esports_sim/manager/memories.py": {
+      "git_sha256": "4a87d3542f5933bb7460f9b1bd6e07a391506ad9365a09ecfb74c55efb6d0945",
+      "raw_sha256": "8326b6b27de6f0b5422bac13c8c8b5342513a63743b3ed633f386f8eb791c31d"
+    },
+    "src/esports_sim/manager/mentorship.py": {
+      "git_sha256": "dd55aa853a5beba726a5682a46275e80ac988e795541f8d5c76ef2f27f66c96e",
+      "raw_sha256": "67cf6d8c7166e81a022813a8626f5f56f0f23a51594bafce80ed99364411b35f"
+    },
+    "src/esports_sim/manager/meta.py": {
+      "git_sha256": "899da2e80ee9c2c36234e26c3e82c115097f32b967241f32633053a15ad9bf09",
+      "raw_sha256": "beb3b7328b9518a899749bfbb683273d9511e89653e28fc4d6185d96b83c1490"
+    },
+    "src/esports_sim/manager/narrative.py": {
+      "git_sha256": "2e10d8834eea79b717621b26795d4aee432aa2abafcb25f38b0d58c0a993e2de",
+      "raw_sha256": "8a390c7a44c5787e3b1c487aef51e3425f377451d61cf11062bed78fb1f20cc3"
+    },
+    "src/esports_sim/manager/online_manager_learning.py": {
+      "git_sha256": "a07525ce3b2f7c1ab836354733131c5e3b564ad2039b92c010794792bfb8d520",
+      "raw_sha256": "581459d578a45d7b04a444ea66974f36d206ab6fac7e551235b57bea69833e41"
+    },
+    "src/esports_sim/manager/pep_talk.py": {
+      "git_sha256": "01bcf1c982c239a7008ac2002dff76994a4aa05b90ba3c5ac384e7ef3f4b3d9f",
+      "raw_sha256": "1ea95d12081af91c1217ad5267074efcd1ebd10b1961468b1eeb4e354eec7285"
+    },
+    "src/esports_sim/manager/personality.py": {
+      "git_sha256": "d33483c11b7fadd036ba165a5dd545452f709843da0c3d327ae74243b0647411",
+      "raw_sha256": "30609943e19cd27243eabb693cf788b4036b3023b0e23c1b46b9fa64f36874bc"
+    },
+    "src/esports_sim/manager/preparation.py": {
+      "git_sha256": "28cf2455a82cead0d136c51ddf07f8bb565c57e0fafb029ed21ba5151ea31deb",
+      "raw_sha256": "a7b401340fc2aff6f647bef852f5c9b3a84868502e6a8fa98e053e45e8a938af"
+    },
+    "src/esports_sim/manager/promises.py": {
+      "git_sha256": "8f5ade584478399cb392e92d4c3e1e19903a1d4d9a1e50d50ccef67c8d1e951f",
+      "raw_sha256": "696b0d56d1415b89c799b92a896dab3322b612ea9ebefa668fcdbe59fe9207e7"
+    },
+    "src/esports_sim/manager/relationships.py": {
+      "git_sha256": "97fc6bfa25d20cafbb4d7a604941fde8bb486289b3d5d67cf77d533854b67738",
+      "raw_sha256": "6d65672c8c3968822d79d9458978730b6ffcf5983e3485fe1084a7fd0742cc37"
+    },
+    "src/esports_sim/manager/rival_managers.py": {
+      "git_sha256": "f3ed6e08d87b23fed606f7a03c6571b3fd2e6bec6a6b59c4197214dc706c0941",
+      "raw_sha256": "03a5e5d5ba8ec146b50a98a8137451dd1253c0a09456ca07139aa9289c8670d7"
+    },
+    "src/esports_sim/manager/rivalries.py": {
+      "git_sha256": "6cda59a6d1125bcf8fece42f03cc4eb520865b087b70882b8205acd4fcd57c75",
+      "raw_sha256": "b77985460cbaaa7df8bdd85969e3eded97d5f5f63d88efc9de9dec0c67b8032f"
+    },
+    "src/esports_sim/manager/role_fit.py": {
+      "git_sha256": "57a2019bbdab7f4885046d71d4cb670be3da27b9d4ab9860b7d36969e1b578a2",
+      "raw_sha256": "4025a079b76eeba7a29e002f5c8c5cd2bc5de1bc07d9034cd21148a445395c3a"
+    },
+    "src/esports_sim/manager/rollout.py": {
+      "git_sha256": "0f3543c71ff790b0d12940167b034fabe33228f32999318cb91609297b9541dd",
+      "raw_sha256": "aa23fac0be43d9c8e0732e359115d3d7ac0dac08f5753194b958208e1154f26f"
+    },
+    "src/esports_sim/manager/scenarios.py": {
+      "git_sha256": "d23ea85eb9f30ac028bf907ec9933f7518be554ebb19ecdd9f547e1a664ca0a8",
+      "raw_sha256": "5e80e2d4251f13a1f037b9f861428c231f7e754c58a46781193b37d484728149"
+    },
+    "src/esports_sim/manager/schedule.py": {
+      "git_sha256": "75f8dbc9879fbfb71e09ced1370c7039f5847a5477e6fb20a89ecaf47358543f",
+      "raw_sha256": "1828c71b3a4e7b5aca7414e55d4bf4177aa8ca4bb5fcbe65b14de683d9aed8de"
+    },
+    "src/esports_sim/manager/scouting.py": {
+      "git_sha256": "40925c09a7d0ac34264b30a0b0633cfaaa5029ae1d1687859c2ab6e02976bb7f",
+      "raw_sha256": "230dfee90f150f429606cd470f7b438283cbafa2f1c9f5c8dde92bc6557c92d1"
+    },
+    "src/esports_sim/manager/series_management.py": {
+      "git_sha256": "2cb1463f266bd12a103e267c7eee66602514a54495bb13e9837bc476a0bd4e7e",
+      "raw_sha256": "962a45465eb2ae8c65f66c15ab00a92e9052a2fcf7b3f46733a3cd85b8274444"
+    },
+    "src/esports_sim/manager/shouts.py": {
+      "git_sha256": "14cbe5564704186619b404812f6d6b127e6997be210249042ebf6dbcb8547110",
+      "raw_sha256": "9dec50834f503917fb90053184599063e60533444ab8bb816ac123954d27270d"
+    },
+    "src/esports_sim/manager/sim_ahead.py": {
+      "git_sha256": "2eb3cc28d617743cfd13f6b1b72b92893de31c7365b7c72ef49cbfbdb7a7ee64",
+      "raw_sha256": "26b22e01fecdd74c00963d6783fcd78d10f58c684551cf1399835aa0fe949999"
+    },
+    "src/esports_sim/manager/social.py": {
+      "git_sha256": "484a4b8a8aceab07325a2e2d9757fd8c8234319fc559416826a41068cfd5f433",
+      "raw_sha256": "f735fed1277eae4a19c4347c4eaca03ecc6a639f97146e5f33c2ed857240ffb8"
+    },
+    "src/esports_sim/manager/sponsors.py": {
+      "git_sha256": "e36ff8990f9000a22b7a39abd482307783e5964f378fee566659cf8f2b74a7b8",
+      "raw_sha256": "08b4a77d546b8c24c79ee1ee8d6e8d53be02483bdc305dfa45e037afdc47b19e"
+    },
+    "src/esports_sim/manager/staff.py": {
+      "git_sha256": "6d70bb5d215972251ac2e279e8dda17a5c48f7df89763c2b56943b239baff508",
+      "raw_sha256": "a68611c4e3dfb353fa52e96318b32edf43a331162b7a49ca378c6134953dcc07"
+    },
+    "src/esports_sim/manager/staff_effects.py": {
+      "git_sha256": "3ed100419979599460ee3e4871e5113d5895cb42bac31fd52e09a795763e38a1",
+      "raw_sha256": "2fda447575c5ac36062e7a28f00ddff4a2df82c36feb51c6d1c335b46e3ddb37"
+    },
+    "src/esports_sim/manager/state.py": {
+      "git_sha256": "f7b5596fc7e4878ad357a0e9cb2e875fe0bc3f4c3b19ed1604fc7842095d7a29",
+      "raw_sha256": "20b353fe5e5f636888b70ea1a185f4db0529074b26b773863dd6e730e7da34dc"
+    },
+    "src/esports_sim/manager/talk.py": {
+      "git_sha256": "367737efe10aac3ccfde01d3842c24909b03aaf0cde50470746d8203cecb7054",
+      "raw_sha256": "8a78c8a9e736483dd227fa3ae02348a153d62fc9c0cf65833fce29d024a6f3c2"
+    },
+    "src/esports_sim/manager/telemetry.py": {
+      "git_sha256": "56380efb1b348fa36726832cc75161da0035d02007e514cefcbaa43f6b9234b3",
+      "raw_sha256": "fa88d94ff6fd8b3b5a29c7ab61cd03ec358d3d0c7c0f560f02f6b4348fcc4a3b"
+    },
+    "src/esports_sim/manager/training.py": {
+      "git_sha256": "0762a6b467f5811db64bdd5e15f82e30077e4722cf6b3bb2cd3e45a32b8fed42",
+      "raw_sha256": "e761896bba141300a54d867b44c6cd54a85964344926bbbc182dab8edac0d1b1"
+    },
+    "src/esports_sim/manager/transfer_requests.py": {
+      "git_sha256": "075fea1a362bbf46d276f3e6b2662a0b3121f6c6e614d8b05a35f0c684892177",
+      "raw_sha256": "048b4998668b2db7bc463a396439aefd18c1736a8c75bdc50c11c994df7b24b5"
+    },
+    "src/esports_sim/manager/xduel.py": {
+      "git_sha256": "d24730025e034f341c782a56fcf68619703db7bc43c6a91eed21df6bf64b92c2",
+      "raw_sha256": "8084d3198184d0aabe5594bc77c5518a7a8580feed0593ce6ee57bd8771e1e3a"
+    },
+    "src/esports_sim/mcp/__init__.py": {
+      "git_sha256": "5c69bbf528009dc594d9afe321490112708ad6cdef74bb1f0d69932cb4bde543",
+      "raw_sha256": "4607ac4fd9e3e7671c01f24472922d70d4286421e63d3f753f7fef67a21292dc"
+    },
+    "src/esports_sim/mcp/experiment_server.py": {
+      "git_sha256": "a5faf11ce6223b0c5c63d9e1b59a8ea035ec1ecc3ed04d1e9b33f7c115ffcfc6",
+      "raw_sha256": "9ca0feaac9c2874ee6df12da1c77ae90edf044602025833d434a6251d62f3eb6"
+    },
+    "src/esports_sim/mcp/map_server.py": {
+      "git_sha256": "d1550eaccbeb59c5ef5317393adda1c8f7b0a6ae8e4252a84001b686958ba349",
+      "raw_sha256": "16072e6eaafe9f3eb56ab4497f332af9ac412482e3b8c49ecaae71ce778339d4"
+    },
+    "src/esports_sim/mcp/play_server.py": {
+      "git_sha256": "ebc04dd1a713ef3cfd99e7a8d395a53fb20993727d4e4c341e2e03527c5d6252",
+      "raw_sha256": "0468d87f5d9e94a65623b565394bcceb9024a7868b932780c0008a072d055029"
+    },
+    "src/esports_sim/mcp/roster_server.py": {
+      "git_sha256": "90831611e9e5d92b49d2ec3082eab32a8c427655875ae6120b350744a650305b",
+      "raw_sha256": "4ad7a3b34ed92fa84f7684c0e9b806582500c05823f190c0feedbf6220e9be43"
+    },
+    "src/esports_sim/perf.py": {
+      "git_sha256": "c86d5930eca124af0dc1752cb63c4864fec157246582790c54f55a76ace8894b",
+      "raw_sha256": "aa8f9adb3c5cdd714575afe717b0d086bf65f554e417d355133414ca3f92e306"
+    },
+    "src/esports_sim/policy/__init__.py": {
+      "git_sha256": "c34884faaf19b1992ed7d0f63440a44e72c69f76bf0818670c69b94dd3d4a409",
+      "raw_sha256": "47a913d1071baf3272ddd492e2b512473a2b734d551ac8649287e0d1e5e212fa"
+    },
+    "src/esports_sim/policy/base.py": {
+      "git_sha256": "28424a503dbea45f9b47cb63fbb3186d32618ca8693c58334c43bf198d825b44",
+      "raw_sha256": "ae22f999b0d084b9c786ecfaf0c5368742f4a744d7f6b60aeb6513848f5681a0"
+    },
+    "src/esports_sim/policy/heuristic.py": {
+      "git_sha256": "7409dfa9cfd98cc6112c7e3e1488c0331547210d2986fcdb069d811a5e401adf",
+      "raw_sha256": "bcc359f2a4abe18c0e2fc70afeef015f3145ee0b26dec77597b1e6923bf4ba79"
+    },
+    "src/esports_sim/policy/learned.py": {
+      "git_sha256": "2cce432aae7c9c899bbabf4918e8b189cc1f22d9c827e5dca2a13d8984fe5232",
+      "raw_sha256": "fb7751da1665921950e3771d78d7f4f62ec28d9ac6eb130609f96b726d0041b9"
+    },
+    "src/esports_sim/registry/__init__.py": {
+      "git_sha256": "ea9054f4902646e5bb8bddc0ddc035efd60c00b45e5df506b637538ba3ea0511",
+      "raw_sha256": "055a2cf4b242f0ef09706898ff84346e92bdef4c4f806f83df7ea45cb1715f36"
+    },
+    "src/esports_sim/registry/experiment_mcp_ops.py": {
+      "git_sha256": "67503bac48b30c44597d316e5b0d577a240b8f7d10f26b98186a0425023b4fa2",
+      "raw_sha256": "a38867802ab04ffafaaaab7be94a919bea139a111f6ec6029e20115c25ee4e36"
+    },
+    "src/esports_sim/registry/loader.py": {
+      "git_sha256": "8fd725e93d6d1f704dc0be41e83097c3eeed9d4e4842c6e97bcbab849c2d242b",
+      "raw_sha256": "2def55aefc8c20e255245c8594218fc9241d23411feb7b07bf4ce9bb668c0583"
+    },
+    "src/esports_sim/registry/map_audit.py": {
+      "git_sha256": "4d034772a7dad8d69b87b6d5614b77d2ce2a6e08152b6c61bb954baed899132c",
+      "raw_sha256": "9b9ef41775709dac6746a8ec85a7a72e862b6bf906c34fb9478f7d05f4c55fc6"
+    },
+    "src/esports_sim/registry/map_guide_renderer.py": {
+      "git_sha256": "d313a83e727c9121845636e276a02e21a533c906fcb7b85c74653bcfd38a31db",
+      "raw_sha256": "a95fcbc1f722fc027b588c27b14cc31c0a5885704202052426169fc7826978cf"
+    },
+    "src/esports_sim/registry/map_mcp_ops.py": {
+      "git_sha256": "310ed3943ff2734f77455d2c00e2466265c26ae28e0d61c615a0dcf450185d75",
+      "raw_sha256": "8e280fad155526398eb152eca3cb6ea9eeed02500dccab6e2f47bfbaeb47fe61"
+    },
+    "src/esports_sim/registry/map_probe.py": {
+      "git_sha256": "cf06b7d5e783165447e19eb85b00eedcd13261d6147d91795bf66e59b4cdbbcb",
+      "raw_sha256": "79c8257ab1f818f4159261b03db6d94a196eb236664dd3024c50800f56cee1da"
+    },
+    "src/esports_sim/registry/map_reference.py": {
+      "git_sha256": "c03d6533e5931ec5be49df528bb1b0184abd2859aae82d18b6bfdc936cd0979a",
+      "raw_sha256": "8e6f32bf7c8f8080bf78b68350c2247bdfacaadfb69e34fa1563956f1b4620ef"
+    },
+    "src/esports_sim/registry/map_workbench.py": {
+      "git_sha256": "6e27c0844e1968e29e97aed54551c3bb32c292c82c6f126b1fec8a56c4d42d88",
+      "raw_sha256": "fe09ec7944e62d5b2cf32a4f3b337413039865c0dedb2fcbb81d312be802942a"
+    },
+    "src/esports_sim/registry/play_mcp_ops.py": {
+      "git_sha256": "c66767b2963b10bc24172fcda7bc603d519349f1e1f034509f5b58b9b73fc87c",
+      "raw_sha256": "a0cd9e5f241676911a23dfe298cf78f72f59670a51e98702093ba4dfc29747fc"
+    },
+    "src/esports_sim/registry/roster_admin.py": {
+      "git_sha256": "09df63325a8d4afa42129ac1eddd9b134a9fe9f9e0808c5859aead0b32dfd20b",
+      "raw_sha256": "fdef0548459048350464355c957ec5373abe5fd93ceb98c2138fd8692d425663"
+    },
+    "src/esports_sim/registry/roster_mcp_ops.py": {
+      "git_sha256": "b6cc4a1e3d871823ed5edb81e64ba2958924a8071df469954c673ad2495fe730",
+      "raw_sha256": "546b00ec2f98ba3af6a46a3b6987818554fcaf76110cd089d4357b281afef449"
+    },
+    "src/esports_sim/registry/roster_pack_builder.py": {
+      "git_sha256": "805edf3e7506dcd377a6d181b21b921ba519f6cfa18894ed9ce3003fdcece97b",
+      "raw_sha256": "dff61d8ece326277544c0b5498b2d5c6a4e1bb3234daad86bf269e76ada2048c"
+    },
+    "src/esports_sim/registry/roster_workbench.py": {
+      "git_sha256": "12da9129bbad16e4627a9b381afb196575391c6cd7cffb6471b5b03dbda50ced",
+      "raw_sha256": "01c317db54a48715268cb28644afffe7dde6cbf952895a377c3cf3923b53622d"
+    },
+    "src/esports_sim/registry/rosters.py": {
+      "git_sha256": "9bbd36ee9378f30c2dd8640093a41f61cc135ddcc3a5a79fe402d4d4add5e459",
+      "raw_sha256": "64ad657e078237e615540ebcb85262adfc4bc6edf87aba9680bb73651a3f9fd0"
+    },
+    "src/esports_sim/rng/__init__.py": {
+      "git_sha256": "090b7b7b1d8645325fbf826e96be0d3c77dbd14877d2e2e59ffa7380c82f3854",
+      "raw_sha256": "c3a7cae81a284e07619c18e10618b26aadac6719898e4d44475796bed0cdfeca"
+    },
+    "src/esports_sim/rng/tree.py": {
+      "git_sha256": "db5b2e6fe4a279520928ae7152f5d214954e14f8d1d9688e58226e04bbabcf16",
+      "raw_sha256": "5c149faaa331ce80c264c4f89c19aec2f1e214908559fa961c5669c807f9ffd6"
+    },
+    "src/esports_sim/schemas/__init__.py": {
+      "git_sha256": "90845a4acb78874e2c34640bf1baeb7886aed11929a83194c9af5e65e6970335",
+      "raw_sha256": "5ec656784328a7bd7c647608f524d649b86b54ac2f7ec5e90055a6960979b9b5"
+    },
+    "src/esports_sim/schemas/agent.py": {
+      "git_sha256": "49013e027ef2d17f48bdd80bf18b6c9c84a2e9bace175e83025cde70d1eb3222",
+      "raw_sha256": "3d517341a9eed7deaa22aab9acc250721a8a8512ab1858851d9734de4d0e3215"
+    },
+    "src/esports_sim/schemas/attributes.py": {
+      "git_sha256": "a642e6b2864c0524cdfd7a2198cdff9b60c6d6fce61578aa288f5f7d9159540b",
+      "raw_sha256": "5bbbbd927e37a979335c7933fac7fbb2d13805b4532fa7eaccea54a8bcc2ed3b"
+    },
+    "src/esports_sim/schemas/badges.py": {
+      "git_sha256": "d0aa35e1ccc4491d3443fea443ed14302764192b6918dcbe0a04da5cc858bd43",
+      "raw_sha256": "ebe4a4d57db490a62993e9c9a791d1aa8d2cf91cf362e1593854e56c874b910a"
+    },
+    "src/esports_sim/schemas/common.py": {
+      "git_sha256": "19a1645f0e2f5b1c060663bb04b7e387bc3f432bf1f4e16b7c2f6bf87e9aa15b",
+      "raw_sha256": "bf8e940c590159d786dd67b0b3c4a6a60952807c1e174262f42f382ac9a2fd40"
+    },
+    "src/esports_sim/schemas/communication.py": {
+      "git_sha256": "e64a186f652cb8b602710a578409945d79226644f31ee2f4a563fd4d439e2a33",
+      "raw_sha256": "010f7f16e52110d33189c77c5d4bd989088af1037e3160eb849e47ec92b5711f"
+    },
+    "src/esports_sim/schemas/decision.py": {
+      "git_sha256": "fe0a7db7f5da053eb128241ff48ea488631131a5dc7bf0cb60fa75536dbefdb8",
+      "raw_sha256": "dd3447b99e6c4544f4fba47c666a200136e445d35c8b09c93a1afd8a4801e568"
+    },
+    "src/esports_sim/schemas/events.py": {
+      "git_sha256": "7017a9daf4eb18547217ed5ce0310cd5740937aa7f00e190babea9ed6644dcf1",
+      "raw_sha256": "2a6890110597070a6768fe1f3217f73595b1f24b0c775f22aa8ec25d9dcebcf1"
+    },
+    "src/esports_sim/schemas/geometry.py": {
+      "git_sha256": "854cdcdd38d5ba482ca4b5a2fcb2a97334cbefe3265696c6a112e9aaa88d9c62",
+      "raw_sha256": "360850d7a69bce253f06cd98a91216a40d95e735cd08d976e79b40e93b6a917d"
+    },
+    "src/esports_sim/schemas/map.py": {
+      "git_sha256": "3b4c96ededfa95008d0a587dbe65eab09be8aeafa4c96af1911b4f91d934f498",
+      "raw_sha256": "65d8bb8c6afb8be27700d2f90c22a5a24dcd2815c25b51821238336274c1b538"
+    },
+    "src/esports_sim/schemas/match.py": {
+      "git_sha256": "c10b7d914377577fedeb680a55906644ce482ec7eecb7549353d912b8a32b83c",
+      "raw_sha256": "65a78b380c32d1c2404410056d749fe0d7b89f76870f356d7c9fc775ffc20f5a"
+    },
+    "src/esports_sim/schemas/observation.py": {
+      "git_sha256": "2df6bf7811853cbabb849c50ed4129fa63753c19dfa9f4cc3977be26086c6aea",
+      "raw_sha256": "c57f8ffaba96f8f213a6cedf005a2e299585711c2612aa6bc3374531d521fef4"
+    },
+    "src/esports_sim/schemas/player.py": {
+      "git_sha256": "c96641dc73c8a6580a45d31cce2b317701652c5845913924b3335c6d84303c76",
+      "raw_sha256": "766ce8dccf86528a75999e426dd2cbdd959979afbd068195c14b0d55724cc11f"
+    },
+    "src/esports_sim/schemas/promise.py": {
+      "git_sha256": "7a9a32ddacb0d7bb863f895b932a807cfdd26773a35adc1125c6da25f482778a",
+      "raw_sha256": "7ad82db4484b7ff7264870005b19177d64134d93b2c419a98b56e1297fae0bcc"
+    },
+    "src/esports_sim/schemas/studio.py": {
+      "git_sha256": "365c9351bf77e4457ce14037f58606aa4ebf969560e96d9afa38782ddcc48620",
+      "raw_sha256": "9c97df7cc53f6d2920b400217c46991a80465f36224bd399acba3adb713e2fb2"
+    },
+    "src/esports_sim/schemas/team.py": {
+      "git_sha256": "350556ffd522096b1300e77346627876a6c57122273d0fb62ed9860d7e34ee47",
+      "raw_sha256": "88b22e604c703a6c688a7b82fbbcb05da7f845b65349d3831236886d6c7c4b5a"
+    },
+    "src/esports_sim/schemas/traits.py": {
+      "git_sha256": "915e853901fa3bdee90bffe893eafdf797b65651b391b778917f7baa2b449329",
+      "raw_sha256": "223fcd1cb8fae529afa4f522974f8d4e74419e33a79c4406669a2ab206e2ba38"
+    },
+    "src/esports_sim/schemas/weapon.py": {
+      "git_sha256": "25345edb7a998930f6d867b5b7983dda11d1018453284c7de3356eeedffea19d",
+      "raw_sha256": "ed6c200864f016dd186fcc5053f073c9da445f17eb477cfffc2872168dfdfca4"
+    },
+    "src/esports_sim/sim/__init__.py": {
+      "git_sha256": "153c32ae974f9aeb75581c6a1b71975206f821ad31bb7e67d17c7f808969d23e",
+      "raw_sha256": "1bf878ded2a4af20e73edf67b3340aadae70930ad06a5f8120df510e85f422a7"
+    },
+    "src/esports_sim/sim/comms.py": {
+      "git_sha256": "cd0d13c36b344540ed605b9c1c42981abdd7a033f42485811d5c00a8efab426c",
+      "raw_sha256": "c13b5f9f909865afbbd6a1a8ee1d201a4f55eb5768af9ef0c637b7958ca5f3d3"
+    },
+    "src/esports_sim/sim/constants.py": {
+      "git_sha256": "0ebdb3b9d0f7349b24ce16df4974d031e919e7d04ff0d817ab9f5bd2d83f55a4",
+      "raw_sha256": "03644736fef868b9eb15f330227cdf8a186d3c1b20467bd333189e2b80eded81"
+    },
+    "src/esports_sim/sim/engine.py": {
+      "git_sha256": "f85179ac16d25f0f50ee057f565e2ceb4d16e927c27cdb49df0e9059b17a5db2",
+      "raw_sha256": "4897fe8574e14d523b5e689391f6b78ed7926af555846f436841d03261b10e0a"
+    },
+    "src/esports_sim/sim/free_movement.py": {
+      "git_sha256": "aeabd6fbaca57b9778c615142b22a2aea96ac20c8f3f372cf1b0a51eacfbdf1e",
+      "raw_sha256": "d2b09c7dceb7a7ce7725beb8eee0fa15bb788f03e0279a7192150853bdd6118a"
+    },
+    "src/esports_sim/sim/igl.py": {
+      "git_sha256": "efa1fc9f464bbccd867d8f2292bd9c91caf7284e45273f5497b887d496470edc",
+      "raw_sha256": "e593aa92c285d17b52c6d1a194013b45ddc7cbc7ff6594b365163487a9d608ea"
+    },
+    "src/esports_sim/sim/lineup.py": {
+      "git_sha256": "36297318f91c49f364bdde214d62e50ae64914b8b58b215ab3350157044826be",
+      "raw_sha256": "979082d1a0489614075a844ce66616a58ce8a112705365a61e7544d179156bb4"
+    },
+    "src/esports_sim/sim/momentum.py": {
+      "git_sha256": "522cead6d3bc79c2ad1d841a2ed8247146a57f5ca5cf8a5ae5946b3f578349b9",
+      "raw_sha256": "82e2b7988759972ed232f699d93e76b0a26b710a89095c892593eaf401d692ef"
+    },
+    "src/esports_sim/sim/stats.py": {
+      "git_sha256": "7fdc3ab106ed6d0670aa90f166b12862fa91c2d6486f46ee2bac25c28474854b",
+      "raw_sha256": "e862b9782cf24ce8be75bc5b1ff83043636e9af3912daa5e3ec2d85e0547714d"
+    },
+    "src/esports_sim/sim/tactics_fit.py": {
+      "git_sha256": "bd3dd6af0e9397cda46f940dcc330ec925e16266528565762de3dfc2e4ee2bca",
+      "raw_sha256": "71683614c5ee3f44f1196f7a3cefc8e069f788c55ac7c3a7858f6b45b04e4ece"
+    },
+    "src/esports_sim/web/__init__.py": {
+      "git_sha256": "fd29f67e11630207ec86ba00bd70d76ac249dc1a441e616d0ae207b10c8d1870",
+      "raw_sha256": "344b0953b030c4e9bfd07b032c703189e6324ba51f90083d69fbfd43695d575c"
+    },
+    "src/esports_sim/web/llm_flavor.py": {
+      "git_sha256": "d1d5c99cf30222ea95e3a2952b319877defa99fd962ad079830db5b233c8e0e2",
+      "raw_sha256": "fe77d216a6428c8f6a090b9ec073a76da7a90ae5b32792d311270650cd3a0625"
+    },
+    "src/esports_sim/web/llm_social.py": {
+      "git_sha256": "9fb6eacd6c6aff51ca5e9b820f4e03d209995717ff6bdc5355b28826c0de5306",
+      "raw_sha256": "2a0334ce9e4fa44c1793bff3185c40b855632c6dd7beb63045813355d221adb6"
+    },
+    "src/esports_sim/web/llm_talk.py": {
+      "git_sha256": "f0fe09cb510ff341363b95319aad80eb4233b88b4a95e4cd534427048fd06233",
+      "raw_sha256": "fed122a827c8ddf1023a887d9817cb949c90e77bb6a9268d6d213637beae9c50"
+    },
+    "src/esports_sim/web/review_history.py": {
+      "git_sha256": "34ccf55ebe36046ee9420734d0750a24ce05429f021a66fd8f81e8ed651498be",
+      "raw_sha256": "92a8a8d0935473db3cf8b45e3bd3c62d934b47b2229f2251983792c2e9ff522c"
+    },
+    "src/esports_sim/web/server.py": {
+      "git_sha256": "2f2a35d924d43feb31e076f0b966656dfc11ee34134d5a0b9f4b05393905d6e2",
+      "raw_sha256": "e88f032ea81595ba8f52f697c9e1e456ccf20118cf54b95a03a4590842cbd75f"
+    },
+    "src/esports_sim/web/static/app.css": {
+      "git_sha256": "5e7b7b576a8a1fb9b9c1f72be7cb9c238c7f9ce7a50b1b822ccbb9192e3da87b",
+      "raw_sha256": "cf88ff2cf63e29651580e5d29ae6dc7170863e6d275284e53e4ff42f032bd4a0"
+    },
+    "src/esports_sim/web/static/app.js": {
+      "git_sha256": "8226982c12818e81f3015ac6029867e169b6bc9ae151770c9a8356324b73acd2",
+      "raw_sha256": "30aa8b6a41ab8ca5eb225e927760995e0f36720bb8fa8e89c9afd8a25da9b374"
+    },
+    "src/esports_sim/web/static/audio.js": {
+      "git_sha256": "b43ee1598ba3a7d70dba618ac8cfa1353bd499375dbd408164a760b74728103e",
+      "raw_sha256": "b4501b2bd86a4e2f0fc845f7d625bf9436e83da89cf733fd9d7dd3d39bedfb91"
+    },
+    "src/esports_sim/web/static/draft.js": {
+      "git_sha256": "352592aa80a32fd9dcb10891d8b4854d547fe1d3d968e04d8655a97bea22663f",
+      "raw_sha256": "ef2f05910a158214d3a1a939cfe4290a5e8f1242217db518f8aff28189567efa"
+    },
+    "src/esports_sim/web/static/facilities.css": {
+      "git_sha256": "4d3623995055dde0f25ac6fee147d7bc0c417c15e434e96acf1b5502b407b2e3",
+      "raw_sha256": "8a679148f132345a8cfa13512875263e428519d5dc8f2ecebb7278c9f274b822"
+    },
+    "src/esports_sim/web/static/facilities.js": {
+      "git_sha256": "c3836a7b1cd7853932dd743902d9927177f0975082d3b85535fac4bf68558791",
+      "raw_sha256": "9e8a447e7e85a01da3e20db6c2780508ac30711e65bedf80825b51ffe7601c89"
+    },
+    "src/esports_sim/web/static/inbox.js": {
+      "git_sha256": "21d696d8bb2e7b8356f9dc2fd0b9fe87d73a164aed8cd23a2e0e157dd9c947e2",
+      "raw_sha256": "e75f580eb5fa55042e19c4e37fd6851811dc8cbc973e221f510aeb497fabe083"
+    },
+    "src/esports_sim/web/static/index.html": {
+      "git_sha256": "75956fc5dbe650a12bdf641fc46af77350c6d6f93708c1ab2c78a47af212bb12",
+      "raw_sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0"
+    },
+    "src/esports_sim/web/static/map-authoring.js": {
+      "git_sha256": "f000e264861702de3234564872b907100d7047ba9ddc572a8e32eab3dc707b95",
+      "raw_sha256": "f7e36a36e9c3136cad33032edbff019317f13b266ee75c28aecd1ba925b743a8"
+    },
+    "src/esports_sim/web/static/map-studio.css": {
+      "git_sha256": "6deb32648b25b297caf98366c5d2a0f75e9af6474884579b91e292800e737c28",
+      "raw_sha256": "4d084bfa6459b8a10cdb53b06f41e1ae13a8c25f02492337661783746118c043"
+    },
+    "src/esports_sim/web/static/map-studio.html": {
+      "git_sha256": "4d1d98d61000bf26a96b4d8701582ff432f254a5c4fb5d1484a4474b26fe181c",
+      "raw_sha256": "cb5ac66dd9455182a82c7f01b4ab148e07139d5a4c07455fa5d21c7a1d25ac09"
+    },
+    "src/esports_sim/web/static/map-studio.js": {
+      "git_sha256": "30bd54faba502487233c511d9c0cb28f07477c2bb60e37efe9ec1757abcf3fa7",
+      "raw_sha256": "f5bd4b9c97c0de30517fc99891fa312b9c0d7db61d980dde8ae7e7d3691ca72b"
+    },
+    "src/esports_sim/web/static/map-transform.js": {
+      "git_sha256": "84b7a36f34d040081cb306bb34ce2e36a1a152c376b6578cd3859e2403595de7",
+      "raw_sha256": "bfe05b5f113f4c1100484e41d1125e329f7e8df4a33dbf13a9aacbc89b051b4c"
+    },
+    "src/esports_sim/web/static/office_plan.json": {
+      "git_sha256": "bf30fcf9844a3b120593fe588366d13b1409ada57952cd34eb07ddb23ce41487",
+      "raw_sha256": "0127746641855e92a1953e249d0550471f376f4688b916504d8a248e52737b74"
+    },
+    "src/esports_sim/web/static/office_sprites.json": {
+      "git_sha256": "1ff9690e16ebd3476787f3c4e18af5c11d62f8fd6e1b83da924060a4f4313b62",
+      "raw_sha256": "94244efa2c2f422fb2d1658bb4796e2ad6d53c2e4b8e08547ea7eefcbdbb6690"
+    },
+    "src/esports_sim/web/static/profile.css": {
+      "git_sha256": "958ac8d138965ae05f0e704b7ae8c11e53ce32fbedb6bd69236d76199a7596b4",
+      "raw_sha256": "87ead9f9dfbe867e9f61f05cbec43890f78afd4b1c5f0f011acdaab5e077f300"
+    },
+    "src/esports_sim/web/static/profile.js": {
+      "git_sha256": "3eb66e0e493a496db46cb19e534de1e43146efb1201dbc3c53d01959061e538c",
+      "raw_sha256": "11333856588350608066312f87c78abc5992ce3fbf7300fc181f3f64aaa59e2a"
+    },
+    "src/esports_sim/web/static/roster-studio.css": {
+      "git_sha256": "2fb2310ec4bb0822edf51b31681ff177d9224f12841168c4bd0e0492fe706e27",
+      "raw_sha256": "5dd49eeeabf801bdefc14d298de9fb885043ca80d46efd83fd7b9c6d79ac7966"
+    },
+    "src/esports_sim/web/static/roster-studio.html": {
+      "git_sha256": "cb60d9547cb9b7cab8b82cca4bbff2089677611239a05164aa2aeb7149d61d7d",
+      "raw_sha256": "b174828f0e1f9f2ddf9d09b96ff74aff903b17c80a572ee600e073f615ec966d"
+    },
+    "src/esports_sim/web/static/roster-studio.js": {
+      "git_sha256": "b21d0cf49f6b80a1a21fc85d1293a598243467db4a0ab8ac4cdd1a7ffc216671",
+      "raw_sha256": "36f7bf0c6ec35c4523099bf48340d6de55658b57518649c2bd8904e3643bf436"
+    },
+    "src/esports_sim/web/static/usage.js": {
+      "git_sha256": "386cfe4afc89912cee5e78356e6738b4d34276435ae08f48e45bfcc8353d945b",
+      "raw_sha256": "afafc055e4f36a3f7ce332c5741512542fd63e0d40d8c9874217218dc20b460e"
+    },
+    "src/esports_sim/web/static/viewer.js": {
+      "git_sha256": "84556bf062b2be357b13d67b09222548e260275f2e7b95fa03be725694186e92",
+      "raw_sha256": "77b2cc708072a865718c98ed48e63c929ee64c53436122ea60dd68beb202445c"
+    },
+    "src/esports_sim/web/usage_telemetry.py": {
+      "git_sha256": "7e1f30179103e952368839abb35f1ff9ef0cd746882ff79b964ba26e02e3c42e",
+      "raw_sha256": "f85b7927b2dc55e9b6ba7c8225e9170fdb825e5abd5c9869bba63a1b53d78d46"
+    },
+    "tests/__init__.py": {
+      "git_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests/conftest.py": {
+      "git_sha256": "74e5918d75b83e8a1e14e93b2472081a361827ebd9710bdf39793268f7910bd5",
+      "raw_sha256": "cd145279bd75eaad40c64bf174ca7739e012f6d85ac4e7d0ceaeb52f36576fe2"
+    },
+    "tests/development_feedback_check.cjs": {
+      "git_sha256": "ec979b4cea3d64dfa93ee21ede6e5e657839e69e5e1fb5e5bad3190e63f21f85",
+      "raw_sha256": "57ea2c36bfa8df0615b65546c12dc265ec66b44d40037874865dc9113b56a4a8"
+    },
+    "tests/golden/match_haven_42.json": {
+      "git_sha256": "2bd8d5419f96e9835783e2efae272f64e122b28631894e32077bb6d98ca5da02",
+      "raw_sha256": "168cbc84ea690d479b9d1050b64e36db327f6a65413e5899dc6e9272ed94db10"
+    },
+    "tests/golden/sweep_neutral.json": {
+      "git_sha256": "c6c5624a43495fb3bd9cdca7efd310a2b9061e9f5a7873766f0f0f971b071959",
+      "raw_sha256": "5880d6aa8816ba5a0ca6303259f67e61dd5dcff34791af57861a1a46bf45f25a"
+    },
+    "tests/market_search_usage_check.cjs": {
+      "git_sha256": "b1e813b0a5f795c04a481ad8fece3a1cee6075314a75417daeb777ca77b23bb9",
+      "raw_sha256": "66467e3278ba91933940274c09199206812278fa0f0d8572757efd9081e815f2"
+    },
+    "tests/preparation_condition_check.cjs": {
+      "git_sha256": "a96a021904a31ffdb63db5b30ba354e836187f6ebc4fa6219cb950b7f9159c32",
+      "raw_sha256": "ebd2c75169274505dc87159f33a82215afc409dff5e11df1ae0628914976d7a3"
+    },
+    "tests/stress_llm_talk.py": {
+      "git_sha256": "8875bb84352b23885e761e425f51f91f7dd241fb4dfb0d08b6fb3ad3008d2779",
+      "raw_sha256": "124fcb66dea44eb7dbb51c1b4dd4ff716347eeeb3d017df643750139ca06553a"
+    },
+    "tests/stress_test_duel_score.py": {
+      "git_sha256": "1fa32c1e700510802619b0d2f958b30116783bdb054286d2488fe30ece9c9868",
+      "raw_sha256": "496f067d9c7956d77af775bbb9ea94ea1f9d955fa7ffeee3ffc7c5f342b594a1"
+    },
+    "tests/stress_test_map_studio_frontend.js": {
+      "git_sha256": "7cee0dfdfaf3a1dd5088654b0ec53c7ee3e56b7d84ff5eaa01d66684d7e41580",
+      "raw_sha256": "b1441b4a2175e92a4af799acb9676ec374205c2baece1fbc20fed32f2d9e99a0"
+    },
+    "tests/test_ability_realism.py": {
+      "git_sha256": "e38c6fb16f545270cab619ff8119fc40305861aa274b0bd3f9c427933f665658",
+      "raw_sha256": "52962a4b176e5a2177a1b1cf05f69cbb7af06256958c9ae2c7f08d43e673e784"
+    },
+    "tests/test_academy.py": {
+      "git_sha256": "64607ddd6069b9507dbb65ad2d8c9ed5e49cf092394bfc219ca4e36e827e158b",
+      "raw_sha256": "75c34ea4a7927f8e25aadb21cbdda3f458fce5034c94e416809fa1af594dfe08"
+    },
+    "tests/test_actionable_management.py": {
+      "git_sha256": "d70bc67382248ca3a03e677976020a39001987c54e9abf37751f3f4ec5e6cbef",
+      "raw_sha256": "ee121ed531153c3afff1756f2fb59198326a5c0b53e9c6645425f0337edaf189"
+    },
+    "tests/test_agent_icons.py": {
+      "git_sha256": "2a5641b6c210268b2381bd924f33b298ddd315dfb8b826d28183fbe4e1b75235",
+      "raw_sha256": "119cbc1fb510d69866d5bfcfe77daf84b472fd7ac1c438f3735947af6e78915f"
+    },
+    "tests/test_analytics.py": {
+      "git_sha256": "957bae2220845144fe7ea88627f3db427c4d9d43dc0f4e0c90df559123cc727a",
+      "raw_sha256": "14a877fde1bd82a303171dfed95231a9e1f8d5333f61cbe28fc21dec79fb5322"
+    },
+    "tests/test_api_contract.py": {
+      "git_sha256": "563710f5acc07128c339e9fd821e41f68c5c38472d2c34972d7eb7959086d189",
+      "raw_sha256": "e4a39b78679c74f2a635f5885946bf24dd221c7fca1f0b1f38db025802bd939f"
+    },
+    "tests/test_arcs.py": {
+      "git_sha256": "2619197399d956af37aac5cd2da118ec33a0656f0c2e51b2d91ad717c28664d5",
+      "raw_sha256": "39f9021a3d21398c7d81e37a24fdef84efef3fb05a5830d3fcf768cac3d5008c"
+    },
+    "tests/test_badge_development_attribution.py": {
+      "git_sha256": "69a5b2e33b38240c3257ac3c9efba00020faaf3d8316fc8e685747af4b535d91",
+      "raw_sha256": "d236d67d561e22f5bdf49ca1d4edc1f330af16f81fb7bebd0a699a041e37f4ff"
+    },
+    "tests/test_badges.py": {
+      "git_sha256": "cba4a1dfc621fa071a1e78b8ed03972b58b700072514aad6b18eb69598f92a46",
+      "raw_sha256": "ead3686439c938d25d988dc36c79d434739fe6f113419f8e50acbdf5df3cdaa6"
+    },
+    "tests/test_campaign_depth.py": {
+      "git_sha256": "bd789510e1d050de0936800d98939532adc947371b65b0551ba2029bde95c7d5",
+      "raw_sha256": "74d66d658ab05751a059da602c9d9479110174c5c1ed387314f087291c15be08"
+    },
+    "tests/test_campaign_tokens.py": {
+      "git_sha256": "514d3fc23127aed6aa3becb4395217895ee22c2470a852cbad5b75bc32e62410",
+      "raw_sha256": "809b0e9d1bce5502deb5956f98aa9af554463220e71d55c4aed2cbb3c7caff10"
+    },
+    "tests/test_campaign_variance.py": {
+      "git_sha256": "8fb49304b094b2ac0fb98708948b39740b4d27fa7bcf59bb543b63d88c3dbbd0",
+      "raw_sha256": "c7016bb92b8bd2409c942df1820bcecc7482404ee6518f39c7743a4b96599283"
+    },
+    "tests/test_causal_match_experiment.py": {
+      "git_sha256": "e91970b7b170422602d7ef136513c3dd674197c720ad173fadb35a76662d95d3",
+      "raw_sha256": "c4dcf93fd87b360c705d9286e7a42fa61368cb9f3ace34d0fb4aae65fb173095"
+    },
+    "tests/test_causal_match_supplement.py": {
+      "git_sha256": "e8724b3fed5d8820e1a7ac80aa97e8c97b31b71117ac728763850203365bc339",
+      "raw_sha256": "87bcbb9c1406834957e9ef5477f103637c44227083113c918e07f9b18a88bfb0"
+    },
+    "tests/test_club_management.py": {
+      "git_sha256": "cc9dbba65b721ce263d5fd794ed27de75fefb88717b36ddb81d2ed183be92a3a",
+      "raw_sha256": "9a33ee66d18646fa267384017dc743e322c28ed8855892c97a4ee673a18fb0ee"
+    },
+    "tests/test_culture.py": {
+      "git_sha256": "d43aeb950b5b67455cd681b9695354a871d2a681ac1784ff9a315d05afd820ec",
+      "raw_sha256": "7645bc8c71b708a39db59cf82fd38beb36c638106026f256d08163973c64b01a"
+    },
+    "tests/test_dashboard_roster_readiness.py": {
+      "git_sha256": "1db217ff6efa421747c67b01a8d32909d033edb7433cd378e2c2587ac38c18dd",
+      "raw_sha256": "979bf7a0c5f720e1e6ff8ecc73b34e529d2c02199e707d94ec4419b4a42af198"
+    },
+    "tests/test_decision_env.py": {
+      "git_sha256": "de4abccba63a9ea4a1b445d2d64e2149fdaa09875d2e1f004eede4a661c7ebad",
+      "raw_sha256": "a18f1544bdfa75a19afb6264627ee2d9cfc7ea9a716ec76d8ce86baeb8cb0353"
+    },
+    "tests/test_decision_ledger.py": {
+      "git_sha256": "268bb991614e830fd1eb68b7ea8569ba51fcae7c6b9cf34daf9811401bf40cf4",
+      "raw_sha256": "93235a316300e1945ca7d9706a6d9c385c55572c30df1836ee3f7c3b34573707"
+    },
+    "tests/test_delegation_media.py": {
+      "git_sha256": "ce543a75deacbae4eebbbef2ee0caca2e557eee6e66bd403bc6d95502ceac503",
+      "raw_sha256": "7cbbe81093af61f181b2e0512fa0d507e3252c5f1bd71a1b68a7e319e638edb5"
+    },
+    "tests/test_determinism.py": {
+      "git_sha256": "793419b699dfa0c8b2a322121b19919c43858b4cd942a34f305ec86523a5f369",
+      "raw_sha256": "a141b97ca2b4fdcf58a4a2f0b5149a3f5120382eeb273aa0d7770b8349a04c94"
+    },
+    "tests/test_dev_systems.py": {
+      "git_sha256": "c7705d51a9030f6d47882d13a5b11ce729ccade7c64a2685dfaab42baef6382d",
+      "raw_sha256": "9caeaf8ffc472ca8c62d2abaab54985d2eff8d6b258da8cee9e44104cc079ffb"
+    },
+    "tests/test_development.py": {
+      "git_sha256": "1d6a85937fc070634e2d79cd4550c2acb3d2af414e25a83f23a15f9783de52b2",
+      "raw_sha256": "dcf725b7bdff4d0a51e58cca142dd86cfd954d0ca17c4ae1da754a440e887aca"
+    },
+    "tests/test_development_feedback_frontend.py": {
+      "git_sha256": "c6abbf7518f8adb371d2b6c90f20ed8b60de71b3a7eff1c6991768c211ea94ed",
+      "raw_sha256": "e0d993869be54359e63d31f2c7358ca2413d378cf0a30ecb494d37b648c68152"
+    },
+    "tests/test_development_path.py": {
+      "git_sha256": "dfa2396d91c2db2850d2b8f04c2e0241b5b834e6a67377343a29bc3620779446",
+      "raw_sha256": "604eb94113333e416613d2060e7925d188fcd5200c23817147cf10eb9dce1766"
+    },
+    "tests/test_duel_score_stress.py": {
+      "git_sha256": "b7082f83f2c7e2639203d1c390b90ee5a48ddb70a5a6004928077a1d7db632a5",
+      "raw_sha256": "60136e99eb8f5a792de8a9dc0db94c1f19303b01028c957d125c323bef8be5f6"
+    },
+    "tests/test_e2e_enhancements.py": {
+      "git_sha256": "5b7f853c29bae5559b431ad1398776af25d5b6bd44079f0809a23d6b51727b6e",
+      "raw_sha256": "2917a717ffec3a27bc458a2226a63b7ee71703cbf62db24c0a3403a91c8993a5"
+    },
+    "tests/test_engine.py": {
+      "git_sha256": "878b454c5718c9412ff8d5a9a3270f6166819d83276f396fa13ec0d68d4d1aa6",
+      "raw_sha256": "7d0463908a268aa4aaead33a52da5193f0556630addeb8c839f7d69fd0e9b531"
+    },
+    "tests/test_event_log.py": {
+      "git_sha256": "bd15399ec0a8274b0153f2dd3146b6baf64d0f7c1755540049160d80d4ac7f35",
+      "raw_sha256": "78a9d165dfc7044f0f47173cc2f7d8f692702e4ced22939018c0997c8dc06c3e"
+    },
+    "tests/test_experiment_mcp.py": {
+      "git_sha256": "8c9a4303648d716601a4b984c4fd7a51e786a2ec1c1dc85dc60c6aecdc2c3e49",
+      "raw_sha256": "d215d59b7671c7ec9eb50a91dbc8e51adce56d6f4c6cd5e1ef161ea6c9a4aab8"
+    },
+    "tests/test_extract_historical_stats.py": {
+      "git_sha256": "311302474aa68984d4f60a24b4e5c1d36cfdbb373f171eb405d7b1da9604986b",
+      "raw_sha256": "281077795862483843cb76accf44c9b8502d11b79a57fe87173aae1ad6d15758"
+    },
+    "tests/test_facilities.py": {
+      "git_sha256": "6add6e59401d05ad6b4bf4e1db8ac09a288b0a26fff2c77e5f24bb84e94e299f",
+      "raw_sha256": "5fd2d730f7ad93425444f8b1db960b93575e8e597c027dbcb2c412e0605b1a0e"
+    },
+    "tests/test_fantasy_draft.py": {
+      "git_sha256": "2bbab0b8d5295f2b7f4b822c8eb33693331ee2daf73b4b34c270003bc7c2d722",
+      "raw_sha256": "9af7115343473c0bcbf209dd3c936c967cb7b96a5a9405c87e3b9f2af319dfa9"
+    },
+    "tests/test_finance.py": {
+      "git_sha256": "27498afbb5e4ee88bbebba5ca5a3a24885b4a69192612ca2a4994ca7bc4d78b6",
+      "raw_sha256": "185554ae3a249786c396966181636492bf63bae3c8271c6fa0570457f70ba1ef"
+    },
+    "tests/test_flavor_events.py": {
+      "git_sha256": "44bb78472be31a4755b4739fd9fb1b98c6baa64dd556b4eddf9adde3cd6f40ea",
+      "raw_sha256": "3aaa58ff9d7bb43bd6f1caa206805e7a5c95709624bf2554825e9c693a8d9e5a"
+    },
+    "tests/test_format_quality.py": {
+      "git_sha256": "4dff635fcb655d09822774aeaad0de9f085095164d77139ccce382b42ca0da49",
+      "raw_sha256": "498cd1c0bb2e34b1cf034374971620ea680a40cd4b1f70b42b16269a0c663c6a"
+    },
+    "tests/test_free_movement.py": {
+      "git_sha256": "f37e4a46593d86c8f63b4ce7c113923213f098c8d5aa8e9e37397424c9047dfd",
+      "raw_sha256": "42ce4ff8b9f0c0d5aa68f3b4768d264c0fbe9fc705f12c99dd7a888b5633116d"
+    },
+    "tests/test_gen.py": {
+      "git_sha256": "c55c86cdff22deb88d6ee0e59a0dffe6f2a954d9ae60a44ebde9e99f3948f20a",
+      "raw_sha256": "d001bc5f9f9bf0fc437b8f3f9c477ae2c072473e536a2ae8920be03b6c84227f"
+    },
+    "tests/test_geometry.py": {
+      "git_sha256": "44b5e0b56a7c8cbe4d2e858a1c1bbc1b87f165ab439e6120d216aafc1c3113f3",
+      "raw_sha256": "16597c5cd929025c103ab82c43b3a97dfc8a9ee3155f7b96f3c7b13673d256a5"
+    },
+    "tests/test_gimmicks.py": {
+      "git_sha256": "d7d464d58beb8552f8348d0245254ca7e527e44fb8d515bab518401a125cf9b8",
+      "raw_sha256": "cd7c9a61b6fb32c7fb2792ecff9f2cfdaca9617b3aa8c5ece59bdf43236d769c"
+    },
+    "tests/test_golden.py": {
+      "git_sha256": "1bc036746575edacf69b5d290d4c3a3d87d976e3469a85093fe6cf302896aa48",
+      "raw_sha256": "4196d8f273f2a51552346656221ca0bace78413e2b7f87e3d82c8c02af71e6ed"
+    },
+    "tests/test_immersion_wire.py": {
+      "git_sha256": "b482b9891c089d94bb9972f102c422ae8bad6404e21565f9a6a699d867248e66",
+      "raw_sha256": "f494626eb8e61d5fdabc11731f8157c5c7bcbd2dfe333c4abd11cf16e1094399"
+    },
+    "tests/test_inbox.py": {
+      "git_sha256": "9a9acae9b3524720b28fbd51c755deccf0a0ddec671aa33b48441af5b90ef106",
+      "raw_sha256": "ae90cb6a76689e6bfa28af075a26ce18be78635c3d65de99037af13499646f78"
+    },
+    "tests/test_labels.py": {
+      "git_sha256": "ad947e69e8170ea8a713500e55a4b299e4f5e0ef590bdc5c9e1153cb037c7f21",
+      "raw_sha256": "66ffe30c96ee26f10676a91b932655c1c59814abaec60b4cdebef0acdc705623"
+    },
+    "tests/test_layout_authoring.py": {
+      "git_sha256": "033b855b50b3bde3a89d6c842ffeb93efda241a53581e9a25231844fb3e65208",
+      "raw_sha256": "d19fd3914536c5b2c5ebb4c5aaddf60e006790365c8cb71965cd552abe17bf52"
+    },
+    "tests/test_learned_manager_policy.py": {
+      "git_sha256": "c27a1e7949453f06a6b0290918c5383f52de57dd060cc97db1ceecf343b12fab",
+      "raw_sha256": "c9ac64f815487f92bcd82914077b26e671c56e0e6bf53936b9eb171aee64bd2f"
+    },
+    "tests/test_legacy_career.py": {
+      "git_sha256": "677330a1a672bd9137823677d032e271f2d4837eb846ae130043c05c26748921",
+      "raw_sha256": "9c273e7f0eadb93c737e5bad3f5e678b0181c172092774cc40c3bb74e76dacc9"
+    },
+    "tests/test_legacy_chronicle.py": {
+      "git_sha256": "57847bc6de60120873e134a902bf33bd298f80102f7487c2e1534702ba21f119",
+      "raw_sha256": "7f27184906c107bc4d80b788a3676a28cc18552fab87933d84ce39f00c89566f"
+    },
+    "tests/test_legacy_memories.py": {
+      "git_sha256": "5ecb81e776a2fc3f203671ef93c5a4b80946181bec046e43d6c4464d77c0a09c",
+      "raw_sha256": "7287e96e20a6d68e6d6ff1abe9e134d69025d73064df170c53e4a79124ee7251"
+    },
+    "tests/test_legacy_meta.py": {
+      "git_sha256": "dfe6ef3d41cf29a1d14d5bc8229939ab33633849409696f2b0041fb23c7219a2",
+      "raw_sha256": "e64077055669636db988a6d63857a8396946b5ed5b465ab2722266f97f7b3ff9"
+    },
+    "tests/test_legacy_org.py": {
+      "git_sha256": "5634fc3198b274e5175c09649e06690641ce0d2de987b59983b2a630d0d534b9",
+      "raw_sha256": "d02717578d2151a361004424e15f24fbd502d7069381f8da2fef35455163e07a"
+    },
+    "tests/test_legacy_world.py": {
+      "git_sha256": "f8b2f098d4c944e2beb8f2141ddcd463db40c3dcd8f442a2f2b120f9fa3dc568",
+      "raw_sha256": "6901e7b704db2ad74bbbb065c64b23a1c1b7bd3a8e872988c81230d12fc9dd72"
+    },
+    "tests/test_lineup.py": {
+      "git_sha256": "7b6444ef77f2a8fcff56cf0fa03b63e3cbf4d4322d14cbfedc7ca070b3024d02",
+      "raw_sha256": "4675c7280905bb5e92ffcfa34fb238a618c37eea7c284a4186a79448adb80d66"
+    },
+    "tests/test_llm_playtest.py": {
+      "git_sha256": "ed843452644881545132502552bb3a8d136b7047d0f93656caebe42ac9ca1205",
+      "raw_sha256": "ace01babaf6ff3d02d7788afa5baa1d1351f266ecf94cc8c7ff6e85dfa48d4b5"
+    },
+    "tests/test_llm_social.py": {
+      "git_sha256": "67cfeca1746aca7a4060c3bf4556163219f2d219ec1853594c1ad6145e32637d",
+      "raw_sha256": "e93c0786ab08cdab487f083dd30019bcea18c2fec096ecd0ef82e5a1786aefe9"
+    },
+    "tests/test_llm_talk.py": {
+      "git_sha256": "10629102af703328fdb7f29690a2401ceb3dd75215ad19e0a6e9c02ff6fdbf60",
+      "raw_sha256": "fff33c3d8a2dc8613dd909fdd6542734863bc9de28787c917f87324a1f72bdee"
+    },
+    "tests/test_lobby_new_game.py": {
+      "git_sha256": "ac495df4d4b4c9b78e0d2342f37abac52183ebe50b4777bc27aa63ce3ee48e36",
+      "raw_sha256": "7b5940d7c6e301541aa1906e167a8e749add5daf36d3963800f6656664792a26"
+    },
+    "tests/test_locker_room.py": {
+      "git_sha256": "2f18676161b2874a35fa874fc623dd18bbe723f129319a99148500e0eb3e4fd0",
+      "raw_sha256": "db5cb5184a79a8ab98cc31b3848bc127732cee041bf6d5d42ecd51573ab32e59"
+    },
+    "tests/test_manager.py": {
+      "git_sha256": "b7ee1b6b402b36146ef427a18932f40bb7bfbd40441cda6f294949550112090d",
+      "raw_sha256": "695880dc3bea9877e7ffbf538df652990bd91f109b197865572143629a7af5bc"
+    },
+    "tests/test_manager_economy.py": {
+      "git_sha256": "502801c2e2610357f57d6e5cdf3c08678771b8cb9324894d504f217293a454aa",
+      "raw_sha256": "eef2f9895fa3c0be29ca6daf68e6c012b69bbc160c4f88d48928f98fe0abc051"
+    },
+    "tests/test_manager_rollouts.py": {
+      "git_sha256": "10f19d4154f4a0c32054e5fbdad36ae828d13782f4ecaf60c60f02736947b0dd",
+      "raw_sha256": "ec17935742957f25bb507873b75dff5d5856047d07e8fdb246b54b85351e31d9"
+    },
+    "tests/test_manager_stats_market.py": {
+      "git_sha256": "9da143a0562bb236265f75779aa47636c973b0257e60930821bbbf4d140a5a22",
+      "raw_sha256": "69788c677d566e3451a5e8fe3b14dcbaaac6e4805f5717dabb9a195c4e384288"
+    },
+    "tests/test_map_authoring_frontend.js": {
+      "git_sha256": "bd4b2208e7d15c3a8e6787bcdb2fc46b84a5f8f37e8360cb844b998fd682ad37",
+      "raw_sha256": "d8132e04c310988cc0030c9eb25d6added60c5d50c72f9bc703c9f488683bca4"
+    },
+    "tests/test_map_mcp.py": {
+      "git_sha256": "d196e751bae366212237589d610d18edc393448eb6d1550126e7a3b0cc2cd0f2",
+      "raw_sha256": "6a666691e9ce57d82f0b7562ce3543978972031e7d48fc089d7c88886eaef05e"
+    },
+    "tests/test_map_openings.py": {
+      "git_sha256": "680f178a4b945f5d3dfc396fccc772cc7c1086e35a8f494300dac0a2af02ce71",
+      "raw_sha256": "e48214b5b6f63d88879cb3dc9acbdb237fb3442da5c1d8673786d44baf0ae75d"
+    },
+    "tests/test_map_studio.py": {
+      "git_sha256": "f6403686a0ac629902443fd2e85ad50923975ecfc321863b4afa2b501c74dcb7",
+      "raw_sha256": "0b2eed0a08e28ba257fdc4367b78aaeff12e9068ef82ee012df536d47a8a0cd8"
+    },
+    "tests/test_match_review.py": {
+      "git_sha256": "8c1228271df4c95f58502009e05c6788b27c033ff5f8597ff47d0a113cab1baa",
+      "raw_sha256": "1f651e62b4a32070be6cc89b68c8316c67a77e1476178370844f460b93175234"
+    },
+    "tests/test_motor_control.py": {
+      "git_sha256": "a9de098b45f30212df4d6af07e6937ff95c73ca619b9b0fd3ff50c4e092648b2",
+      "raw_sha256": "8d8d1d1938a4369005669e35528ac37f499df6d883ac7357a2729919cf0f22cf"
+    },
+    "tests/test_narrative.py": {
+      "git_sha256": "20c6fca6f468c55dec4a605c8fcba0706f282ce8292a0dd525abbe20302db0ec",
+      "raw_sha256": "f06192e67edb9bc8d0bc1794f53661ed844c37ccce56d969e113a74f11cd963b"
+    },
+    "tests/test_next_pass.py": {
+      "git_sha256": "fc46ab16704c146df02398e810a49493fc390775fad7a7f589f7d30ebd17dfe2",
+      "raw_sha256": "4db4aab5031c8619291dfe9b72059b17dfb9e2302b58875f66f0d22a7c791b6a"
+    },
+    "tests/test_online_manager_learning.py": {
+      "git_sha256": "31cdb4b125e15cc7acde09164f826b810b88c88ecbc3d09adaf909750a082898",
+      "raw_sha256": "f5c885da0fd71b9fe88b913a4c18fb21efc71e135ddc31dbcfdd6fc8c08b26ee"
+    },
+    "tests/test_org_player_value.py": {
+      "git_sha256": "d02eb15980d47249c12542ebe1071456ecf54430292ebe366a23c2afbd430506",
+      "raw_sha256": "2fe6ff8e6fab9077f5774e70092ff3929e4c48b242e0539dac85d51432c93d76"
+    },
+    "tests/test_perf.py": {
+      "git_sha256": "858ef2bffba35a1f79a9f3775e6f84636742ba68a886b584a1fbe1d880f835f0",
+      "raw_sha256": "18eb171085497941c66730aaecc32d7886d98d51c07e1d01cc1921828e2e812b"
+    },
+    "tests/test_play_mcp.py": {
+      "git_sha256": "3fa4e0022bf4717f687cbc013648c26c2742b9929b4abf89a1addbc88cd81ddd",
+      "raw_sha256": "e6083018630480d2256ae3da4c27dca13c9269c87f0634fb03dfb72bf1b4ab49"
+    },
+    "tests/test_player_policy_comms.py": {
+      "git_sha256": "a973cdc622983a11ee6aa73bc583248161f5d6e3a27e76d23011dc3343b98e9d",
+      "raw_sha256": "7e3d3d5b228b0647e405112bc913047f705a7f44b202bcfb90f0cb2da4ace41d"
+    },
+    "tests/test_playtest_log.py": {
+      "git_sha256": "c6983c8ce00a72c7ffad44c3bca3936b0eb2662ddef6718233b660b51c38fd8d",
+      "raw_sha256": "69fec2fbc0ca178f4119d48dad646a83573f3ab629d3bfe41035acd44eafe755"
+    },
+    "tests/test_policy_stack.py": {
+      "git_sha256": "2070d92fa39e03c23f2a076d6289735d4af6e23f2bf88254544df9c047366ec4",
+      "raw_sha256": "792a7bdfba916b3753ae5ca1b1bd655d3681b198a36b12918f3d45bb3d602bc5"
+    },
+    "tests/test_preparation.py": {
+      "git_sha256": "9e014622d05d8e11768db4bf7cea00ce95798cd333f687c515134302e0f48f9c",
+      "raw_sha256": "bd669f5caf75d15b8294493baf0e6e148418b91fac3ac89f6049a23933f326bd"
+    },
+    "tests/test_preparation_condition_frontend.py": {
+      "git_sha256": "edb30ac5ee7e9254a2e062ec5141f6189acbbd85c3c072318f461cb1b2902274",
+      "raw_sha256": "c9b48c9dab3c06e1129afa12c545635f0c15fad862ea3abece88d6d1447394a5"
+    },
+    "tests/test_preparation_form_frontend.py": {
+      "git_sha256": "3113528eabd260413594b79318a4b7eb9a0eb84708a444ddaeb62c8db46239be",
+      "raw_sha256": "70f047237b5e36613b95e996c4db8ca3fd681dfa1e1d05cff11b4e6256641570"
+    },
+    "tests/test_profiles.py": {
+      "git_sha256": "8bc9a0d087858c0a91e1b39ecc87db942f2f010fcd0f4e72aae98e74f23dc240",
+      "raw_sha256": "aede53c909f68cb1dfe42b36b8f5d467bb4b90d86c74bff79b7994ae816fe6f5"
+    },
+    "tests/test_registry.py": {
+      "git_sha256": "197162863f0089ecf4bf04150415a7e0453af441b24949ae2ce6b1101ac33608",
+      "raw_sha256": "cb822f11b8b292ae3e124900cead1b2988748ab960950529189f9a0972d60b06"
+    },
+    "tests/test_relationships.py": {
+      "git_sha256": "e3d52dbf3b27405883baebf2a561c7654ad63b7a82d807dc8cdd8cd9cf1a6560",
+      "raw_sha256": "8a7cdf61fe5a9a8b3ac9e15b85638b56a02a1c5850e07192fbf0f73af33f0947"
+    },
+    "tests/test_release_cost.py": {
+      "git_sha256": "bde99cf4b46d138613b0348470e3bb5cac9ec2487aafa52ad24cc3b9cd19a0f9",
+      "raw_sha256": "0d5214a9eb6a385fcd4c8c6cd7101740b0da25e957737cb72b6117d180cfe322"
+    },
+    "tests/test_review_current_roster.py": {
+      "git_sha256": "d1e24e070842e49a21812483c6a2705bcd3a31c6256732d63835ea9a9fccbb2b",
+      "raw_sha256": "7451786b43d84300fbdaf1466fb25e54e882ffc024015a46485e2dbd03210ea2"
+    },
+    "tests/test_review_history.py": {
+      "git_sha256": "f1a56ae4822f3b088b6c6f632a4d600a76f6caf8aa19a333b5329b1123d4ed42",
+      "raw_sha256": "63533838eb05b36322575dd4586550e1704331ee8c8bc2692d3cc7759b271882"
+    },
+    "tests/test_rival_managers.py": {
+      "git_sha256": "e85d117be04795656597d104ab217f281181be777e61d895bed104bb67ea67a5",
+      "raw_sha256": "89079b804df04431dea6e1fe0c4a080962e1705b158548c494a31075499b296b"
+    },
+    "tests/test_rng_tree.py": {
+      "git_sha256": "448a6a20b900056657b31dde3b86ff222d4c08e64826438952eccdd71da7700f",
+      "raw_sha256": "e1b2364c5c7eb251597e7df9cf24a8ecf7b81b24e1cb5ecc98587e520c734166"
+    },
+    "tests/test_role_fit.py": {
+      "git_sha256": "c1f0464710bcbc90ad864d7b742d601f65918e21832971e531c1aff49fe63161",
+      "raw_sha256": "541deb96d7d5bf7cf94f8e547a23a7caf2a3b217db8212e4ae45935d4686a418"
+    },
+    "tests/test_roster_mcp.py": {
+      "git_sha256": "1a85bb3e572d11769194cc0f1e79b7fb2a381ecf0b6d78dc0f535c6982d96795",
+      "raw_sha256": "ba9f50e2b2e25cfca97e6fc818116015921e4dd8b6cd78a08129af5268ebf57a"
+    },
+    "tests/test_roster_pack_tactics_experiment.py": {
+      "git_sha256": "f825c88f95d18d82fbe2fbdbde56985722fb1ac4952cb7e5215c592130546e78",
+      "raw_sha256": "118121e1d5a7f6b5275927917d1cb05b71226575df58fb95ed25622d424de708"
+    },
+    "tests/test_roster_workbench.py": {
+      "git_sha256": "110b6544fe2b808f12679d73b2466c669414161497c6990a619644201d142c71",
+      "raw_sha256": "fa2a02289b8c8758cfdfb0a5ca64ac30900d7ead0bd6859cf3d9844793ac5856"
+    },
+    "tests/test_rosters.py": {
+      "git_sha256": "373151ed03822f88955c668a10be6d59838f26f1e5529ab7a1b5094172fba82b",
+      "raw_sha256": "c8097be670748d5d28be84b45565318f068ffee439aeffedc80998d34d77543e"
+    },
+    "tests/test_scenarios.py": {
+      "git_sha256": "fd02481edf1455bd8e2e77e8acb8c91e2b489750f97beb11236d477aeb6f305b",
+      "raw_sha256": "60612156e667c267bc3ccec4d8514b53a237d2dd44bfea2f23a2eb61bfb36211"
+    },
+    "tests/test_sim_ahead.py": {
+      "git_sha256": "03f8b6f9a4a05e6ac9a944b5cdb33340052a81e2b09a0f2f698cef49065ee43e",
+      "raw_sha256": "123eba1ee20164d2d0bd9779d70611c73137b83dd019d2cc76a1ead5c7fb7291"
+    },
+    "tests/test_sponsor_demands.py": {
+      "git_sha256": "7c4f00c93b9c5c45a425ca0049242499ef99f8cad7d9366788a68af14fcc39c6",
+      "raw_sha256": "3872255a8afa9f9ad60749761acc9445add22ebd71b8ba4635bb2356d57cacec"
+    },
+    "tests/test_staff_depth.py": {
+      "git_sha256": "e0d9d5df4a98e0052fbaad0b8cf2fbe429f8520192a15b415bf8efe917e9efd9",
+      "raw_sha256": "36e4d74044d03c0cd4069670060f56a493a62625c2d811394b42d7be493c9bef"
+    },
+    "tests/test_streaming.py": {
+      "git_sha256": "6c4aaf7c455239c0bde93867699a52b847063bc99df8087a657bc9f75fb3fe29",
+      "raw_sha256": "8261a90934fc6565565f2437246b2bca41b091e18d9914a3280460e3add24a9d"
+    },
+    "tests/test_tactics.py": {
+      "git_sha256": "d251fd8befdfcf5b1c2f3d0f54073610dde5c160b1f141379e5108df658372a3",
+      "raw_sha256": "ca05ca6009efd7b71768b08e1791929a752b9b717426650e4a5eab5335d91cbc"
+    },
+    "tests/test_telemetry.py": {
+      "git_sha256": "ed9fe5e300d8f32401eb6165348028bbad1e2784619b991d3b251473ff4d084e",
+      "raw_sha256": "5e7f0dc20fbb965ad7127cb442c1b5e487d9a42a550805f0da664d60f3a0bf4a"
+    },
+    "tests/test_telemetry_report.py": {
+      "git_sha256": "d56914b63bf0c0e476eeaf33e565539971338228e1c9bbca0bac50144b11090a",
+      "raw_sha256": "5ae16df81053602f51ce17fe5c2d5956a3519aac1b7bdcb06ed82cdabf37da32"
+    },
+    "tests/test_transfers.py": {
+      "git_sha256": "6fb648929f9aa697c959971be100fea2f7a1c1043d07a49ab3c2e24a45e54928",
+      "raw_sha256": "69145a41721e9e4db6ef55469fec11544ab3d29c41872e2313ed9dc24be2390d"
+    },
+    "tests/test_tutorial_helpers.py": {
+      "git_sha256": "8040b3567284ecb297d521a7562bbd77b3d4bd6f930d47cb1f16749d82c501c1",
+      "raw_sha256": "23f22af1e523baaa3f774f5fe1344cd9b729017eba3df56a709239e9440a6794"
+    },
+    "tests/test_usage_telemetry.py": {
+      "git_sha256": "c840052fbce26486925288fe2fc18c2284b1b2f5a8e3a7c3521cf8f5b0a7e7ee",
+      "raw_sha256": "38abadd6cb97db785f878ee4b8fa4a83aaed99935e763b3b262cffdfe561539f"
+    },
+    "tests/test_viewer_static.py": {
+      "git_sha256": "cada2f0d33b4ed346aa6911418eaa2e420ca59d941e0c901a68b109c895138ee",
+      "raw_sha256": "107da09fa9fdcea3651a7da886e902c5ec348e622d9543832db402c9f40543bf"
+    },
+    "tests/test_vlr_research.py": {
+      "git_sha256": "ae6c1c528dfb936acec9484c90979d763e937776fb03e38e3c98de54eb10c5c8",
+      "raw_sha256": "3d0c019227100ce71d14b0546031540b56b0091748ce37b7e44f2c4f34732385"
+    },
+    "tests/test_vlr_war_history.py": {
+      "git_sha256": "9c3610c860ec855340d86b94214d0820fdcaadf54e3d486b38a75c898bb4e049",
+      "raw_sha256": "e91ff358610ff00cc2d6842bc9cdba68d89d47f7fc12816ac979831f5163b8dc"
+    },
+    "tests/test_web_advance_flavor_recovery.py": {
+      "git_sha256": "9fd98ae07f51ec5c69354a4336a334927670bfdb5db12bd35491ac6155ef6689",
+      "raw_sha256": "76b48d10c9a2fdef2d7e708bf2fa9f5e75581e80be5894dbe7e744e64c5885d8"
+    },
+    "tests/test_web_advance_roster_recovery.py": {
+      "git_sha256": "95544d3728dc4966e516ee1d7862e58a5fe1ddab50a625a1722a25bcd8755c25",
+      "raw_sha256": "8ac3cca199e35239f12ea638585136748ac3027d182941919be48ddae9697b44"
+    },
+    "tests/test_web_choice_telemetry.py": {
+      "git_sha256": "46331ed8e0ed0fd5fcf3e6a014f4f77a3cf6b506a9f1fe5b8e11cb9e2f3c31cb",
+      "raw_sha256": "c58eef4c0ff9e7f3e0e284bad2604e7bdfa9af42d049b43e2a4f9d0b7aeb1213"
+    },
+    "tests/test_web_default_lineup.py": {
+      "git_sha256": "f9492ec76be1f02f811a35c0f69a5f0beb88f48b61201151c58c823795bbb301",
+      "raw_sha256": "4a59b3587d7eebd369ff52c0287b0cdd00c529a09846671b57bac530ff226c1b"
+    },
+    "tests/test_web_mentorship_telemetry.py": {
+      "git_sha256": "35ee3289bbbf881a275d2f40cdf8798151b82c38d25124c78d39628909458e81",
+      "raw_sha256": "35b2537350b6c0df868f732a181ad4d201145b97de3c7a3db6b9973cb4a1d6f2"
+    },
+    "tests/test_web_replay_identity.py": {
+      "git_sha256": "22fd4596e90a87cc057d948757698fcafaba02f469ec34042bb626df996761e7",
+      "raw_sha256": "eba73dc01c410b45ecd00cc4ab4b50b296797582a4e14f32fa5ed1de9c6aabbf"
+    },
+    "tests/test_web_sponsor_facility_labels.py": {
+      "git_sha256": "af01f8e962581f07a97afd49825eed5924b37e3255ddb222c9728cdc4c5c5e87",
+      "raw_sha256": "af01f8e962581f07a97afd49825eed5924b37e3255ddb222c9728cdc4c5c5e87"
+    },
+    "tests/test_web_tournament_roles.py": {
+      "git_sha256": "67e3a0d0875d32136247a924254fc66a737748c2e7dbb818d0838114f437cb63",
+      "raw_sha256": "1ec509edf1e14edc1c75a98556ebf29c805d3c74615f733e6280d36a6adcf82a"
+    },
+    "tests/test_weekly_development_report.py": {
+      "git_sha256": "adfb14472df1dc6a27555e66a85466c8a09b82c3977b88194d48f8380ecc51c2",
+      "raw_sha256": "3d075f6fa41262a8bbf97f52f586dd999dd9a5ece80ebcb6861ad6fa815e1373"
+    },
+    "tests/usage_frontend_check.cjs": {
+      "git_sha256": "74bd8c56641919b4b3c42dc87ff1ab1d55196aaab07c09608867061c5dd9a5eb",
+      "raw_sha256": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064"
+    }
+  },
+  "historical_acceptance": "Original freezes/browser receipts/native logs remain evidence for their original source only; integrated current source has not been replayed or tested locally.",
+  "local_tests_launched": false,
+  "new_browser_acceptance": false,
+  "current_remote_CI_required": true
+}

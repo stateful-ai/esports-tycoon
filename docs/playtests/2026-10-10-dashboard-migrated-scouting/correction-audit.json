@@ -1,0 +1,58 @@
+{
+  "backup_sha256": "52acfa37e24a991c227aa915790897edb42557cec2f7668b75558aa4b0046f73",
+  "original_rows": 6,
+  "original_observation_fields_preserved": [
+    "session_id",
+    "step",
+    "started_at_utc",
+    "finished_at_utc",
+    "commit",
+    "working_tree_dirty",
+    "game_version",
+    "model",
+    "effort",
+    "surface",
+    "world_code",
+    "seed",
+    "game_time",
+    "intent",
+    "action",
+    "expected_outcome",
+    "actual_outcome",
+    "result",
+    "evidence"
+  ],
+  "save_usage_pairs": [
+    {
+      "step": "2",
+      "world": "MG35R",
+      "session_id": "36d29f8b942fe1eab508880ed76cb510",
+      "request_id": 10,
+      "target": "/api/actions/save",
+      "attempt_received_at": "2026-10-10T21:19:49.443353+00:00",
+      "result_received_at": "2026-10-10T21:19:49.443353+00:00",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "step": "5",
+      "world": "MG35M",
+      "session_id": "c2eb6566650bd305386ce3a2fb2a2dae",
+      "request_id": 10,
+      "target": "/api/actions/save",
+      "attempt_received_at": "2026-10-10T21:19:53.334577+00:00",
+      "result_received_at": "2026-10-10T21:19:53.334577+00:00",
+      "status": 200,
+      "outcome": "success"
+    }
+  ],
+  "scope_correction": {
+    "steps": [
+      1,
+      4
+    ],
+    "performed": "Dashboard public view only",
+    "matchday": "untested"
+  },
+  "verification_surface": "offline audit of existing screenshot/public readback and independently retained browser usage"
+}

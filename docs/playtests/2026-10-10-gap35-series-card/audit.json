@@ -1,0 +1,763 @@
+{
+  "source_sha256": "e8c864a4fb5f6e5894cab49cb4e7e40939a9335286aa1a7f1506036c7a100743",
+  "final_sha256": "55879871f9ae8c366c09fcb4b4e495d75c79f6f73adb8fe42d2f6c69c40238f9",
+  "before_accepted": 78,
+  "after_accepted": 79,
+  "prefix_preserved": true,
+  "added_decisions": [
+    {
+      "index": 78,
+      "season": 1,
+      "week": 18,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "series_directive",
+      "params": {
+        "clear": "False",
+        "fixture_id": "s1msf0",
+        "response": "stabilize",
+        "substitute_in": "fa_0",
+        "substitute_out": "ghost",
+        "trigger": "after_loss"
+      },
+      "source": "web"
+    }
+  ],
+  "changed_GameState_fields": [
+    "action_log"
+  ],
+  "telemetry_snapshots_unchanged": true,
+  "snapshot_teams": 1,
+  "snapshots": 17,
+  "saved_directive": {
+    "fixture_id": "s1msf0",
+    "trigger": "after_loss",
+    "response": "stabilize",
+    "substitute_in": "fa_0",
+    "substitute_out": "ghost"
+  },
+  "default_lineup": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "retained_usage_total": 75,
+  "retained_world_usage": 71,
+  "world_usage_kinds": {
+    "visible_time": 39,
+    "session_end": 4,
+    "session_start": 4,
+    "view": 20,
+    "attempt": 2,
+    "result": 2
+  },
+  "paired_requests": [
+    {
+      "target": "/api/actions/series_directive",
+      "request_id": 12,
+      "matches": 1,
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "target": "/api/actions/save",
+      "request_id": 24,
+      "matches": 1,
+      "status": 200,
+      "outcome": "success"
+    }
+  ],
+  "sanitized_world_usage": [
+    {
+      "received_at": "2026-10-11T00:07:09.050911+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 7525
+    },
+    {
+      "received_at": "2026-10-11T00:07:09.050911+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 175
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 7641
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/strategy"
+    },
+    {
+      "received_at": "2026-10-11T00:07:24.070041+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/strategy",
+      "duration_ms": 7184
+    },
+    {
+      "received_at": "2026-10-11T00:07:39.070109+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/strategy",
+      "duration_ms": 492
+    },
+    {
+      "received_at": "2026-10-11T00:07:39.070109+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:07:39.070109+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 14509
+    },
+    {
+      "received_at": "2026-10-11T00:07:39.460941+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "attempt",
+      "target": "/api/actions/series_directive",
+      "request_id": 12
+    },
+    {
+      "received_at": "2026-10-11T00:07:39.460941+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "result",
+      "target": "/api/actions/series_directive",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 4
+    },
+    {
+      "received_at": "2026-10-11T00:07:54.069583+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 15000
+    },
+    {
+      "received_at": "2026-10-11T00:08:09.072981+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 2881
+    },
+    {
+      "received_at": "2026-10-11T00:08:09.072981+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:08:09.072981+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 2313
+    },
+    {
+      "received_at": "2026-10-11T00:08:09.072981+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:08:09.072981+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 9809
+    },
+    {
+      "received_at": "2026-10-11T00:08:19.771495+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 24
+    },
+    {
+      "received_at": "2026-10-11T00:08:19.771495+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 24,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 50
+    },
+    {
+      "received_at": "2026-10-11T00:08:24.069107+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 14998
+    },
+    {
+      "received_at": "2026-10-11T00:08:39.071069+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 15002
+    },
+    {
+      "received_at": "2026-10-11T00:08:54.068743+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 13888
+    },
+    {
+      "received_at": "2026-10-11T00:08:54.068743+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:08:54.068743+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 20
+    },
+    {
+      "received_at": "2026-10-11T00:08:54.068743+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:08:54.068743+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 1090
+    },
+    {
+      "received_at": "2026-10-11T00:09:09.072112+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 15003
+    },
+    {
+      "received_at": "2026-10-11T00:09:18.147108+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 9076
+    },
+    {
+      "received_at": "2026-10-11T00:09:18.147108+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:09:33.165138+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:09:33.165138+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "received_at": "2026-10-11T00:09:33.165138+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 33
+    },
+    {
+      "received_at": "2026-10-11T00:09:33.165138+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:09:33.165138+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14969
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 10911
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/strategy"
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/strategy",
+      "duration_ms": 276
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 3019
+    },
+    {
+      "received_at": "2026-10-11T00:09:47.369570+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:10:02.388732+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:10:02.388732+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "received_at": "2026-10-11T00:10:02.388732+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 30
+    },
+    {
+      "received_at": "2026-10-11T00:10:02.388732+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:10:02.388732+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14974
+    },
+    {
+      "received_at": "2026-10-11T00:10:17.384969+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14997
+    },
+    {
+      "received_at": "2026-10-11T00:10:32.387418+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15003
+    },
+    {
+      "received_at": "2026-10-11T00:10:47.391688+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14999
+    },
+    {
+      "received_at": "2026-10-11T00:11:02.397190+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15000
+    },
+    {
+      "received_at": "2026-10-11T00:11:17.396672+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 10021
+    },
+    {
+      "received_at": "2026-10-11T00:11:17.396672+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/strategy"
+    },
+    {
+      "received_at": "2026-10-11T00:11:17.396672+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/strategy",
+      "duration_ms": 229
+    },
+    {
+      "received_at": "2026-10-11T00:11:17.396672+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:11:17.396672+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 4750
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 2802
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 79
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "tactics/prep"
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "tactics/prep",
+      "duration_ms": 8581
+    },
+    {
+      "received_at": "2026-10-11T00:11:28.846929+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:11:43.866664+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "received_at": "2026-10-11T00:11:43.866664+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "received_at": "2026-10-11T00:11:43.866664+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 30
+    },
+    {
+      "received_at": "2026-10-11T00:11:43.866664+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "received_at": "2026-10-11T00:11:43.866664+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14972
+    },
+    {
+      "received_at": "2026-10-11T00:11:58.862623+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14998
+    },
+    {
+      "received_at": "2026-10-11T00:12:13.865468+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15003
+    },
+    {
+      "received_at": "2026-10-11T00:12:34.630955+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 18,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14999
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+[
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 21,
+    "target": "/api/actions/scout",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:01:44.361758+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "attempt",
+        "target": "/api/actions/scout",
+        "request_id": 21
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:01:44.361758+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "result",
+        "target": "/api/actions/scout",
+        "request_id": 21,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 5
+      }
+    ]
+  },
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 24,
+    "target": "/api/actions/series_directive",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:02:55.027563+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "attempt",
+        "target": "/api/actions/series_directive",
+        "request_id": 24
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:02:55.027563+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "result",
+        "target": "/api/actions/series_directive",
+        "request_id": 24,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 5
+      }
+    ]
+  },
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 31,
+    "target": "/api/actions/gameplan",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:04:49.208851+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "attempt",
+        "target": "/api/actions/gameplan",
+        "request_id": 31
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:04:49.208851+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "result",
+        "target": "/api/actions/gameplan",
+        "request_id": 31,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 4
+      }
+    ]
+  },
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 34,
+    "target": "/api/actions/save",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:05:28.831337+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 34
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:05:28.831337+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 34,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 44
+      }
+    ]
+  },
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 35,
+    "target": "/api/actions/advance",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:06:00.594352+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 18,
+        "kind": "attempt",
+        "target": "/api/actions/advance",
+        "request_id": 35
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:06:03.862000+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 19,
+        "kind": "result",
+        "target": "/api/actions/advance",
+        "request_id": 35,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 4522
+      }
+    ]
+  },
+  {
+    "session_id": "6807afd244af4e9d78ad3b92386bd081",
+    "request_id": 46,
+    "target": "/api/actions/save",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:07:57.276384+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 19,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 46
+      },
+      {
+        "schema_version": 1,
+        "session_id": "6807afd244af4e9d78ad3b92386bd081",
+        "received_at": "2026-10-11T00:07:57.276384+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 19,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 46,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 50
+      }
+    ]
+  }
+]

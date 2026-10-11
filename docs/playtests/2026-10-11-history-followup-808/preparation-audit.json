@@ -1,0 +1,1244 @@
+{
+  "prepared_at_utc": "2026-10-11T07:05:06.149152+00:00",
+  "base_reviewed_PR377_head": "fb23ff3f41a8f480e25ade6a664e69ffca9ff39a",
+  "publication_rows": 808,
+  "sha256": "29ff8f6ae1674d72d6fd72edf0fefbe5ebf8cf5e8a7702ff753346fc88d2875a",
+  "unique_keys": 808,
+  "exact765_raw_prefix": true,
+  "765_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "primary_observed_sha256": "3bb0f7f6abc92d1ea0f56278e946b4984906430d3840a6a67ad33f455c8a24b2",
+  "primary_observed_rows": 928,
+  "raw_prefix808_boundary_physical_lines": 2369,
+  "new_rows": 43,
+  "shards": {
+    "docs/playtests/2026-10-10-coach-plan-match/actions.csv": {
+      "rows": 10,
+      "sha256": "090a2d2861db9edffa97aa914066214320126018f5061fea7ff03f0904d5b7f1",
+      "all21columns_match": true
+    },
+    "docs/playtests/2026-10-10-one-match-rotation/actions.csv": {
+      "rows": 10,
+      "sha256": "ae8a9a904209b77af550536eee88f89cb29722eebcf2596b7b152bac8e100ced",
+      "all21columns_match": true
+    },
+    "docs/playtests/2026-10-10-regional-semi/actions.csv": {
+      "rows": 11,
+      "sha256": "f7b5ab85cd60aea3b2a8719b8f128b2ed0f1a8fb8e4f20f2ced8140d119d8b32",
+      "all21columns_match": true
+    },
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/actions.csv": {
+      "rows": 7,
+      "sha256": "f73d595d4384b94b13b2385da9a04d180efaa2476361de7cf0507da47cb6d8b5",
+      "all21columns_match": true
+    },
+    "docs/playtests/gap29/actions.csv": {
+      "rows": 2,
+      "sha256": "8018c4d01bb5727cc8e836abab7c92bb0e60054b5a99a1226d9c50bb4687ef20",
+      "all21columns_match": true
+    },
+    "docs/playtests/2026-10-10-overlay-usage/integration/actions.csv": {
+      "rows": 3,
+      "sha256": "1e6227cc3c015b2e142ea59e5c1a23bce9af2c795bf9ea07e09d73db54c297e8",
+      "all21columns_match": true
+    }
+  },
+  "copied_files_sha256": {
+    "docs/playtests/2026-10-10-coach-plan-match/actions.csv": "090a2d2861db9edffa97aa914066214320126018f5061fea7ff03f0904d5b7f1",
+    "docs/playtests/2026-10-10-coach-plan-match/report.md": "fd8a0587619b7946c679b9c6da4d4ffbd13fed3a8b46aa490b4821ee8351a974",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/01-dashboard.txt": "dd4e13c988d627d6998f764fccb4f2dfe70e19448fec911e54a0c6e560350fce",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/06-reloaded.yml": "2e079306d86fb5ddb77f4b3da513d25c24d6a450240da920dde524506d61a01c",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/07-advance-progress.yml": "96a7b6d38ffa85d08d2a767212636796ef1bbd8188a99c058ec76b49354d2e57",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/08-dashboard.yml": "e39141f51f5511c28886c11d77d917f42b72a13e9139a6d60ba8a6d1528fd9c0",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/08-prep-label-full.png": "10e89c7282871d8f80d4a6f09d4445aa2d4c11ab0a2810002967bdbfe7245a4e",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/08-prep-label.png": "6ba68c83d0ddec15e9eba036129dddb4e34710b09a36f3dd3d2432ac05fe4f72",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/audit-corrected.json": "78118d99659ca5a6ccdcb31a6a85a63f29dba1e32fc775f4b97a7271d1d43b8f",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/audit.json": "4263875ed3064e83afa4a0089e2ed739eec3d97cdd0ac73d0df36615f33b3448",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/decision-indexed.json": "aef54898f889845828ceab62f77f71e4cd9e2a98a83d0abcec7ea5c98281ac28",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/decision-report.txt": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/flywheel-after.json": "0efc9c76008b76ea31443a09aab1616f4975ee488a5436bda607b158eb00ddc3",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/flywheel-before.json": "35d81ccab335d171682a381e7553b3ee293c2336432c70423634004ae29c3309",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/hash-correction.json": "eabc48ccff9af478cc7a0f2ee74eafadefcfcb8098e4810b00f7b61643fa9086",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-12-24-082Z.yml": "7a9402d3eed183e66a8d07fe7905fb56c1898924fb4d79a42b4cfead791fe06e",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-14-58-155Z.yml": "a34a982b71a41765389dd5d684f7257e7fe0d5ab350802070bd4ce6638cef892",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-15-14-352Z.yml": "dd3fc89c165ea3f8668b43ef73179fba272563ca33f5415470d9188ce8a6862c",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-15-40-273Z.yml": "5da74d0fd733983bc96c8ecd41e77091cb394aad791d523526d4c072e551517e",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-16-16-551Z.yml": "69cebf28dae4108f6ede861d17c1acf20e7aab618e2a5441e15d31391d4fcefe",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-17-14-261Z.yml": "8580db6f4abab2b6961b02b5f718255b5d590f7dff7b051bb343da2e6d5619f4",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-17-49-706Z.yml": "ccff29f6f28ed97d8e96d75f52a2f2844dabdb6fb77b9bd211af2606556ccf30",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-19-03-124Z.yml": "aa80bd4f09f8ce39f1df47afccdc058d900f8cf03e53ad07e9d3fd15aaed9fba",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/pending-9.json": "673e9d6504c3f5f4872e54a36787d10725e4ca908096c65cec5b3e03deb44df2",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/request-pairs.json": "e216a091a34297a2e8ecf24192e19d378168bcf872f71293fefc30fcb500820d",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/save-before.json": "03cbe1eddec3655116f67b06923aacf0124ab9718c643e2f9925bdec4b51122a",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/save-pre-advance.json": "c98984c4216a4ccd49eacc8be2bee52df8e7bc22ea6d48368d722559aec70fe2",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/server-running.json": "77810f86e4cd7c90f3f74dcfcf6bea9b6a047f0765e22e4f029efbd46cef6f3e",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/source-manifest.json": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/usage-report.txt": "397a0dbd356d20f6f956238e965936940b32118cce34558a5c607c592a36f736",
+    "docs/playtests/2026-10-10-coach-plan-match/evidence/usage.0.jsonl": "469249d0bacbcf4fcccb88ea889a7228ffc422aed4aafc87cfed8d5ddfed0b29",
+    "docs/playtests/2026-10-10-one-match-rotation/actions.csv": "ae8a9a904209b77af550536eee88f89cb29722eebcf2596b7b152bac8e100ced",
+    "docs/playtests/2026-10-10-one-match-rotation/arithmetic-correction.actions.csv": "f01fb90886414c31065faae6fb55856aa80e99676dd13616ea9b54da1332b47e",
+    "docs/playtests/2026-10-10-one-match-rotation/report.md": "8cf1bc565ca95bf097e0d8ed4ab1989de877830c209e48efbb0bffa5c460f5fb",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/01-dashboard.yml": "a94dbedae46fe743269256a64e226fd2b2081091a76429dd1d251c4494808a88",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/02-five-picked.png": "d53fa3ed5caf240b6fd485fc068be781dd338424b44f7d7b9f1dfb4cb93f51b6",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/02-locked.yml": "3fdce3eff2130ade3894b51002c0c23af6e3c30e467027f6ce702e008938072a",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/03-reload.yml": "8f52436aa71d57dbd0e0d476cdaba21d4fdc2f7239e885559adacc33b286310e",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/04-final-calendar.png": "d6b4193a8004f9d8d51fe43045814a391a032c8d186fe88189a8688bb7b3542c",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/05-advance.yml": "fc21d367d460cf63d1a3cbe120dc15b563143159f696ff85112512b8e1233316",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/05-replay.yml": "bf48584c2ded3aceaf4b64e0dfe759cc447935ab67e95eceb004890f332e1076",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/06-before-finances.yml": "08b513082e5e55bcff86c40523cd1595f006a4574a4de977c0fccb48109138bd",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/06-finances.yml": "fa9252e3a47f0ae6d650beb7685665a9d2680a153e9b45fdee49b6e3ac58baad",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/actions-before-analytics.csv": "95ae6165a91c037b9f2844ca5989addfbaacc49c1d823f12fd4ccdbe77e06ce6",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/actions-before-arithmetic-correction.csv": "ddb1bc0dcd66032ac3bf38c9bbeb7be3f88ab957d71a03798a78744833bb2a98",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/annotation-proof.json": "2135c561d3fc0c92b0e8cda48dae1bf4da743f7ec4768d590aa3af58e00d5b93",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/arithmetic-append-proof.json": "039b0d3be15c7a6fbbd3a29a2f9acb427adcfe15e262372ce897474d72a59bff",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/arithmetic-correction.json": "234f355001d040c68965c068b7b4608c2a889043f09bdad129a1e4f7c56cf212",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/audit.json": "3de1888c7684bd1db3251e8fcd4a69bd1e55d0365f12c31f98ea66ec29d349d8",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/decision-indexed.json": "02c2f6b9f3768773f12298892a02632fc202bb532cfe082ef4cc8121155b99a3",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/decision-report.txt": "886719c55aaa4c81b714f5ae04eb58b9fa024bdba7572a51d7507a45e254aff6",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/flywheel-after.json": "0b0d6972bad502e014cebfe82aa5cbac66ac38ee2e054fe31b3ece44ad7dfca8",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/flywheel-before.json": "434afbbf50b04ff121e8f267bd2def13cb83564a43c9e11824da4513b45f7cd0",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-20-091Z.yml": "8b56fed543cdf345e22ff0d211b4281b0bcc5903f20c2568f37964adf05813a9",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-29-362Z.yml": "71c07a76d923e0a201442471b967abeaf97b9ab87053d4a3a744fd30030fe808",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-53-859Z.yml": "82af378d744bf5e1f07853c4a38e1c06dce0aa3274ae70178509fe9d73ff7245",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-14-217Z.yml": "f6cf0e3c62680c8f2928aa95c4aa5517d38eaa2a21e7cb1bf4ad2b5456f76615",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-41-696Z.yml": "8789fa6f2b63cf72cb1caa7c73e131f9bb857bd4491263e630ff1f2eeedf84ad",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-44-060Z.yml": "f55ad0bcd0945dc11dde2ace45ab5cd68698ecf7f02b72ddd70daf922f0734ff",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-46-398Z.yml": "0ebf51ef75a2a1d17d3afe9c272400d0900551c5e895b8c92a87ba5f0bacdf17",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-48-766Z.yml": "17ae8217606436bff7c12c515624afca8fcc919ebb1acbc7540351cc70dd7bf4",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-57-318Z.yml": "2dda3793dd203e071855fed0e0a96ef5daed4cf90b8ebc5f96b3550d5a68e496",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-29-32-626Z.yml": "565fd63bcef2ee9dcc812daa522858b0fac50066ba42324b3183d4c010314aec",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-29-34-281Z.yml": "6db52ad06f6399073b10e0041d7bd3f16170bac8611a20f4abf3c59b3e77f3ab",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-30-12-451Z.yml": "b611a913edd58827fdb0614970eb777c6a6112fa80f3843c07c020655f66c648",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-30-24-795Z.yml": "e0c9523b007a618e7f4cf56dd8878fb253055c0aba4cf58ca43651dde6041c97",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-32-02-841Z.yml": "a66a504ac65fd689046c4c58121e97c9afe4ecf26ba69fa1b0eeed85b81a643a",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-32-36-677Z.yml": "81f360c6b93cfc9438c36e2672c2b6f097f211f915162a2dad6a6695f6477671",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-33-34-207Z.yml": "bb8f5d954206afa2789c637ec637b13d400757c90ddf745d6cc6379fa0980f5a",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-35-08-864Z.yml": "81f360c6b93cfc9438c36e2672c2b6f097f211f915162a2dad6a6695f6477671",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-35-14-899Z.yml": "08b513082e5e55bcff86c40523cd1595f006a4574a4de977c0fccb48109138bd",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-36-06-950Z.yml": "719e4041abf143703e5ca0768278e15d928b52dd5c247768c36917203aa44dc3",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-36-49-789Z.yml": "fa9252e3a47f0ae6d650beb7685665a9d2680a153e9b45fdee49b6e3ac58baad",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-40-55-326Z.yml": "6193ea5a1035403b8b6107e3a9581fb648463069a6cef9ead486e5dee82dd3fb",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/pending-8.json": "c490e94ed6ed9f0101a480b61eae1300d14008f5ca5c122d8d23c1c401c8bc26",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/report-before-arithmetic-correction.md": "79d06f7f07523c44eca013d808dc502f64b9d789dfd665351e9b8b799ff2b583",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/request-pairs.json": "d67d4cee465957f4b6fb446bc94bbd8479e1e27b4c493d43b3b2f4c51a178757",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/save-before.json": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/save-pre-advance.json": "963099a66623ba63c343901a4841bc54eb6f4dffd2353928ba0960174f7cd622",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/server-running.json": "5d3ed502bd25e1c6ec534476aa7a3c12d8322b04354ce12fe30b5d4af02c8935",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/source-manifest.json": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/usage-report.txt": "913f2585fd5a4a0e7aa89080feef1f62de21554b86331b66a28eb7ef73dbbd97",
+    "docs/playtests/2026-10-10-one-match-rotation/evidence/usage.0.jsonl": "d779c79de501596d7c02a24352c95632f135a22a36893c4f8c9755b50cca54a7",
+    "docs/playtests/2026-10-10-regional-semi/actions.csv": "f7b5ab85cd60aea3b2a8719b8f128b2ed0f1a8fb8e4f20f2ced8140d119d8b32",
+    "docs/playtests/2026-10-10-regional-semi/report.md": "8338c264e132e48e28569a72e74e9b64d7f5f32a80a0e0e6892496ce224f7c2b",
+    "docs/playtests/2026-10-10-regional-semi/evidence/01-dashboard.yml": "66c7ac46bcb397137d0dabedf5c7f3942407594bf1d49fbe2f461c89b106a883",
+    "docs/playtests/2026-10-10-regional-semi/evidence/02-series-saved.yml": "c1286d5d762427b7a63c95848d0836ce93b7a027f4296da2f00770c68d07b1df",
+    "docs/playtests/2026-10-10-regional-semi/evidence/03-reloaded.yml": "6eb150a8c1df88661cd62fa9d776317a123f8aa58a6c5ead774324bcc5767d77",
+    "docs/playtests/2026-10-10-regional-semi/evidence/04-before-advance.yml": "3f00f43f136be0e6f6ab85ed164a22160a18a1f03124d1fe4cbf8044bf79967b",
+    "docs/playtests/2026-10-10-regional-semi/evidence/05-ready-to-advance.yml": "972bb7d5e729dd09a2b2877e13493fb5308f0c1643adfde956a40e064af05101",
+    "docs/playtests/2026-10-10-regional-semi/evidence/06-resolved.yml": "ed60d8774aff9ae44ef359d738dc7cd38224077a2cd68f7f0c6ffea5ad48750c",
+    "docs/playtests/2026-10-10-regional-semi/evidence/07-full-report.yml": "456713f4be76f9f6abd58c93a722e95f680a3863fcbfd22513cb5c309ee2a87c",
+    "docs/playtests/2026-10-10-regional-semi/evidence/08-dashboard.yml": "15d396be76fbe051150dab0b6c227296d7bc75610b0173c189ab8732371f4966",
+    "docs/playtests/2026-10-10-regional-semi/evidence/09-season.yml": "cf65650fe18efa7ef680df60ac73e2bef703d6b558a8bb500d18ae317e3ca329",
+    "docs/playtests/2026-10-10-regional-semi/evidence/10-fixtures.yml": "120cc628528f7c9e9772de03303ff32ad6468d7e322e7a29c7a6cbd7ec9e3d7f",
+    "docs/playtests/2026-10-10-regional-semi/evidence/11-played-fixtures.yml": "8359e7e1c6bfeea45dca10092e5995c71dc7226b976a810a726d2d9b62b27224",
+    "docs/playtests/2026-10-10-regional-semi/evidence/12-before-save.yml": "8359e7e1c6bfeea45dca10092e5995c71dc7226b976a810a726d2d9b62b27224",
+    "docs/playtests/2026-10-10-regional-semi/evidence/actions-before-analytics.csv": "08a8d56cfd8bd7ca288ae4cb1de47ff937e332e0a92abccbaeb9b836a6c512c8",
+    "docs/playtests/2026-10-10-regional-semi/evidence/annotation-proof.json": "8adc9782059db894f2c141df3ff067f3943cfb77ab1c1b7bfd5c98a1e5516c53",
+    "docs/playtests/2026-10-10-regional-semi/evidence/audit-script-first-failed.py": "33627c8e6d94992f6978e131597219423aa90f16526c658c16c67d7894d806c7",
+    "docs/playtests/2026-10-10-regional-semi/evidence/audit.json": "8f02059076bff08e9488c75ec9b916d5e093c9ecc8d02c680e68b970718ca374",
+    "docs/playtests/2026-10-10-regional-semi/evidence/decision-indexed.json": "34829bac2c82da0c6a8c8d36aca60229391473f9a358b43caedf4e6099b3f248",
+    "docs/playtests/2026-10-10-regional-semi/evidence/decision-report.txt": "a8ab07e729d944e1946a621111460100aee91daa334c8f69fad7fffebe5cab59",
+    "docs/playtests/2026-10-10-regional-semi/evidence/flywheel-after.json": "bf47f400eaa4986495b9c755b6fc1f135eaa30fc8c5af8c6b92918c7a56397d9",
+    "docs/playtests/2026-10-10-regional-semi/evidence/flywheel-before.json": "357c80d465e886fc683fcc2626a2ebe30fd3b7aefc53a3f64a3a4789bd308c5d",
+    "docs/playtests/2026-10-10-regional-semi/evidence/pending-11.json": "a0402a021bca0907f767886b2dd6caaf440b43872abf6010d112c1301313c852",
+    "docs/playtests/2026-10-10-regional-semi/evidence/request-pairs.json": "ab480a1557a4d5293299431adbc61b9839ddbe2824e89a0f678edfdb5c167536",
+    "docs/playtests/2026-10-10-regional-semi/evidence/save-before.json": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+    "docs/playtests/2026-10-10-regional-semi/evidence/save-pre-advance.json": "117bad483a32e497afdf92e7e5e071422d857542d1c716cfa78fffe66eba3c2a",
+    "docs/playtests/2026-10-10-regional-semi/evidence/series-notes.png": "9ea16d48a77721965e39994e2b540ff1aeb8a9fccd466f2609080db739be3dd9",
+    "docs/playtests/2026-10-10-regional-semi/evidence/server-running.json": "cdc241ecb67045fc3c2dfdf510f0267d4b7f48ec9f57b78bf61c0569cd565a69",
+    "docs/playtests/2026-10-10-regional-semi/evidence/source-manifest.json": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+    "docs/playtests/2026-10-10-regional-semi/evidence/usage-report.txt": "764d2f8bc70b91fa2a30436edad48ceb741cec96445c2ffc11d5e481075bfdc6",
+    "docs/playtests/2026-10-10-regional-semi/evidence/usage.0.jsonl": "605338edbcd0ea403dd1cb980e5e99bad922caa66f27a9acebebe3b143bb21ba",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/actions.csv": "f73d595d4384b94b13b2385da9a04d180efaa2476361de7cf0507da47cb6d8b5",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/correction-audit.json": "9817e1815f66cbb2b95fefd046e235ef737de5d633618f5b076035894bd78ffc",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-1.png": "1960f9ad10253fe96544ec5e45513306deeeadef4f268c6d7f4708615819ceb8",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-3.png": "c48ea70e88fa11528fd76dfe77d9d7095d4b8fddda60bf36a4f82429ededa12c",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-4.png": "6bfc3cca1b6a1224714f7f40407b5f84ecb5218ab85f99138f78e88840f01cf9",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-6.png": "c4ff2282864349fc0160692c8c966c281147ba847f649f08fe564aebd926bbe4",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/decision-report.txt": "31eff92db2599b168530beb10670da0883af1e0d1b5835e86c511b042dc379e7",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-post.json": "8e0b2b5748b1c48f1a9a795edc3b7bb860ffe42f9998075d4ad1b871e1b44815",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-pre.json": "745f4cc43c818a995143760f9c5e406d374de82299c419a4d178e8dc5ac2b81c",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-final-verification.json": "607f5ad41e7077453bc505bb8c1140f417f94f107fcb21dac5d49b52683d39b6",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-exit.json": "22601bdd3e42b9963e12ab8b68d60313302fea799af6a8d2326b5ed962c17ee7",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-full.log": "80ea25206794af190fd06a2a10001cb7bfa8e91802ad5586cead8fdc959f55d5",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-gate.py": "706abfff4fac68ec27ca1f30c85bc42471c0e0a8a512fb5cdf6a84fbcc3cc333",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-result.json": "cb59f7f5960c95260493b1539584ccda8756b841dd46ff5179fe37cb60154738",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-source-freeze.json": "7d374cb6d7317602d5ef58c726f5d07a70a57feb39a3be4e2e0679ad570503ea",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-started.json": "86af4ff9bb347e254be464b90b277be39d14c5396c8b4b5fdc0146b3ca39f523",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/original-actions-before-annotation.csv": "52acfa37e24a991c227aa915790897edb42557cec2f7668b75558aa4b0046f73",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-1.json": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-3.json": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-4.json": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-6.json": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/reconciliation.json": "76da98bdbf4dd15856f2424a7fa7805f936003a5828206b0dcfe2ccb37d98e97",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/report.md": "871e33724a83dc065eba3feabbbc849926f5c902c3406d9609f468fc59b9b859",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/superseded-usage-report.txt": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056",
+    "docs/playtests/2026-10-10-dashboard-migrated-scouting/usage-report.txt": "ff105a762b3592e0e0fb7e0e46a0c7431d1fe30903ca0bccfe3b87bbf3bc2aa0",
+    "docs/playtests/gap29/actions.csv": "8018c4d01bb5727cc8e836abab7c92bb0e60054b5a99a1226d9c50bb4687ef20",
+    "docs/playtests/gap29/native-frozen-files.json": "e8ca1fae660fde315f68014f4f2b981696fe53f7c7781020a9504a2634bc7caf",
+    "docs/playtests/gap29/native-full-suite.log": "45684eb470b25218f33b41177086298a187411785f27aab6f8b16ac5305a1054",
+    "docs/playtests/gap29/native-receipt.json": "e916e3fa40bb2e48e11621c5f14a39a9e24343a23853c2b7f034d749bc05a804",
+    "docs/playtests/gap29/report.md": "f0098c0775be3a702f70367d8d94a41d24735eb829255605c3c249b26f4e629e",
+    "docs/playtests/gap29/save-audit-correction.json": "a92c2c68c2e6427bcb831ce5e7aab8c27d04c74b2050aedfd4ce04559a7ab157",
+    "docs/playtests/gap29/save-audit.json": "616d7f1eb96dbc22dae416302d57d0dc07fad9ce1d3482998b5bc5cb9249b25d",
+    "docs/playtests/gap29/usage-audit.json": "51a9976a12ad30a2849a0d5ac90d7296793cd669ccbe05b172a0dd45ceb9c4e3",
+    "docs/playtests/2026-10-10-overlay-usage/integration/actions.csv": "1e6227cc3c015b2e142ea59e5c1a23bce9af2c795bf9ea07e09d73db54c297e8",
+    "docs/playtests/2026-10-10-overlay-usage/integration/audit.json": "c84309fafdada217e8650ce22de9030140ba24c7a1adaced9b4e9f2fa99f5fe4",
+    "docs/playtests/2026-10-10-overlay-usage/integration/ci-diagnosis.json": "7d04b607fa5503473147d2c35394469e5d6c1099c2a4a5ff35b5db8d0639186f",
+    "docs/playtests/2026-10-10-overlay-usage/integration/cleanup-server-before.json": "cc2c001760c4bbd69edc6645ea033035b09565918966700b9d647a49360c127d",
+    "docs/playtests/2026-10-10-overlay-usage/integration/cleanup.json": "86eed5d6e6ce288d577d07cc6b8f59b9e6347f224fd38d44964d23c8fb256205",
+    "docs/playtests/2026-10-10-overlay-usage/integration/focused-tests.log": "fafcddf803e48999c05b3c310b631d1a90cf838b058151b754f7c7141302e4b9",
+    "docs/playtests/2026-10-10-overlay-usage/integration/full-pytest.log": "b822ba7166635533a7122c04148d737bea6c29d21f19d4443d96015265dc8c7d",
+    "docs/playtests/2026-10-10-overlay-usage/integration/gate-receipt.json": "91a597b11ae925df25fae3bf855cac25c8e086b1b60639f4d16ac023f47b6417",
+    "docs/playtests/2026-10-10-overlay-usage/integration/gate-running.json": "28e2f669ddfa14fc63a9b829e083d25c9755a3fdfdc06ed0b58c7710c03ad976",
+    "docs/playtests/2026-10-10-overlay-usage/integration/handbook-readback.txt": "188bc857de231bdad027f1c108c6aabd27842a7c4d5e1330b315e230c254a36a",
+    "docs/playtests/2026-10-10-overlay-usage/integration/handbook-snapshot.txt": "d2b5449ff513111a1c375befd1c4038da805b7a2eaa2e143d6c0ce2df2c882a3",
+    "docs/playtests/2026-10-10-overlay-usage/integration/HANDOFF.md": "e8af3d709fb697edfcfff17f8aec89438221966de227b9221f2a0282af73a069",
+    "docs/playtests/2026-10-10-overlay-usage/integration/integration-source-proof.json": "347580431ae3ccf8d4be5bef331ec900643590e34df781518b0c07028173eef4",
+    "docs/playtests/2026-10-10-overlay-usage/integration/profile-readback.txt": "590cc80149d63ce06df6242dc938d7285dfd21485045021692205a8536a79408",
+    "docs/playtests/2026-10-10-overlay-usage/integration/README.md": "66bfa47eed8a3728231d7ead6bca3c357736a65d230e9dac0ded4a27e0ed59ec",
+    "docs/playtests/2026-10-10-overlay-usage/integration/save-readback.txt": "2e82603ec50b9189fd1a592b8844c8a6fbd4021fb4963f3bc00ad25acbafd486",
+    "docs/playtests/2026-10-10-overlay-usage/integration/search-readback.txt": "993858827ddcdf77e02aa4dd3c99e8a41bbbb29c83f0e3da7996973b5cecfb57",
+    "docs/playtests/2026-10-10-overlay-usage/integration/search-snapshot.txt": "5e4b2239237c500dabf164d89c1a0d147c657d2721246b79267197ea393cca25",
+    "docs/playtests/2026-10-10-overlay-usage/integration/source-freeze-after.json": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9",
+    "docs/playtests/2026-10-10-overlay-usage/integration/source-freeze.json": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9",
+    "docs/playtests/2026-10-10-overlay-usage/integration/terminal-gate-proof.json": "53a89cb125adb8b80948634856bd75ab559708463da03fdc1555fb3cd3f911b8",
+    "docs/playtests/2026-10-10-overlay-usage/integration/usage-events.jsonl": "36e01347a9b1a132b6a2b626cb1e9d22ad207a3d8bb12bf328287ca11a1fc1b9",
+    "docs/playtests/2026-10-10-overlay-usage/integration/usage-report.json": "fd1e16c3dfb8aaaf8976012d7083e20246815bae9d443a859b92ed1da209608a"
+  },
+  "raw_source_to_published_mapping": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/actions.csv",
+      "sha256": "090a2d2861db9edffa97aa914066214320126018f5061fea7ff03f0904d5b7f1",
+      "byte_count": 10160
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\report.md",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/report.md",
+      "sha256": "fd8a0587619b7946c679b9c6da4d4ffbd13fed3a8b46aa490b4821ee8351a974",
+      "byte_count": 4167
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/01-dashboard.txt",
+      "sha256": "dd4e13c988d627d6998f764fccb4f2dfe70e19448fec911e54a0c6e560350fce",
+      "byte_count": 16970
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\06-reloaded.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/06-reloaded.yml",
+      "sha256": "2e079306d86fb5ddb77f4b3da513d25c24d6a450240da920dde524506d61a01c",
+      "byte_count": 16473
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\07-advance-progress.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/07-advance-progress.yml",
+      "sha256": "96a7b6d38ffa85d08d2a767212636796ef1bbd8188a99c058ec76b49354d2e57",
+      "byte_count": 18411
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\08-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/08-dashboard.yml",
+      "sha256": "e39141f51f5511c28886c11d77d917f42b72a13e9139a6d60ba8a6d1528fd9c0",
+      "byte_count": 17550
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\08-prep-label-full.png",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/08-prep-label-full.png",
+      "sha256": "10e89c7282871d8f80d4a6f09d4445aa2d4c11ab0a2810002967bdbfe7245a4e",
+      "byte_count": 204170
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\08-prep-label.png",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/08-prep-label.png",
+      "sha256": "6ba68c83d0ddec15e9eba036129dddb4e34710b09a36f3dd3d2432ac05fe4f72",
+      "byte_count": 175213
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\audit-corrected.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/audit-corrected.json",
+      "sha256": "78118d99659ca5a6ccdcb31a6a85a63f29dba1e32fc775f4b97a7271d1d43b8f",
+      "byte_count": 3067
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\audit.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/audit.json",
+      "sha256": "4263875ed3064e83afa4a0089e2ed739eec3d97cdd0ac73d0df36615f33b3448",
+      "byte_count": 3013
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/decision-indexed.json",
+      "sha256": "aef54898f889845828ceab62f77f71e4cd9e2a98a83d0abcec7ea5c98281ac28",
+      "byte_count": 1451
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\decision-report.txt",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/decision-report.txt",
+      "sha256": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+      "byte_count": 2040
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/flywheel-after.json",
+      "sha256": "0efc9c76008b76ea31443a09aab1616f4975ee488a5436bda607b158eb00ddc3",
+      "byte_count": 2606
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/flywheel-before.json",
+      "sha256": "35d81ccab335d171682a381e7553b3ee293c2336432c70423634004ae29c3309",
+      "byte_count": 6389
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\hash-correction.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/hash-correction.json",
+      "sha256": "eabc48ccff9af478cc7a0f2ee74eafadefcfcb8098e4810b00f7b61643fa9086",
+      "byte_count": 966
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-12-24-082Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-12-24-082Z.yml",
+      "sha256": "7a9402d3eed183e66a8d07fe7905fb56c1898924fb4d79a42b4cfead791fe06e",
+      "byte_count": 9226
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-14-58-155Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-14-58-155Z.yml",
+      "sha256": "a34a982b71a41765389dd5d684f7257e7fe0d5ab350802070bd4ce6638cef892",
+      "byte_count": 8594
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-15-14-352Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-15-14-352Z.yml",
+      "sha256": "dd3fc89c165ea3f8668b43ef73179fba272563ca33f5415470d9188ce8a6862c",
+      "byte_count": 22961
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-15-40-273Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-15-40-273Z.yml",
+      "sha256": "5da74d0fd733983bc96c8ecd41e77091cb394aad791d523526d4c072e551517e",
+      "byte_count": 23328
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-16-16-551Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-16-16-551Z.yml",
+      "sha256": "69cebf28dae4108f6ede861d17c1acf20e7aab618e2a5441e15d31391d4fcefe",
+      "byte_count": 23147
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-17-14-261Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-17-14-261Z.yml",
+      "sha256": "8580db6f4abab2b6961b02b5f718255b5d590f7dff7b051bb343da2e6d5619f4",
+      "byte_count": 23368
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-17-49-706Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-17-49-706Z.yml",
+      "sha256": "ccff29f6f28ed97d8e96d75f52a2f2844dabdb6fb77b9bd211af2606556ccf30",
+      "byte_count": 9306
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\page-2026-10-10T22-19-03-124Z.yml",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/page-2026-10-10T22-19-03-124Z.yml",
+      "sha256": "aa80bd4f09f8ce39f1df47afccdc058d900f8cf03e53ad07e9d3fd15aaed9fba",
+      "byte_count": 9187
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\pending-9.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/pending-9.json",
+      "sha256": "673e9d6504c3f5f4872e54a36787d10725e4ca908096c65cec5b3e03deb44df2",
+      "byte_count": 930
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/request-pairs.json",
+      "sha256": "e216a091a34297a2e8ecf24192e19d378168bcf872f71293fefc30fcb500820d",
+      "byte_count": 4825
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\save-before.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/save-before.json",
+      "sha256": "03cbe1eddec3655116f67b06923aacf0124ab9718c643e2f9925bdec4b51122a",
+      "byte_count": 4662446
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\save-pre-advance.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/save-pre-advance.json",
+      "sha256": "c98984c4216a4ccd49eacc8be2bee52df8e7bc22ea6d48368d722559aec70fe2",
+      "byte_count": 4664474
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\server-running.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/server-running.json",
+      "sha256": "77810f86e4cd7c90f3f74dcfcf6bea9b6a047f0765e22e4f029efbd46cef6f3e",
+      "byte_count": 896
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\source-manifest.json",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/source-manifest.json",
+      "sha256": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+      "byte_count": 64012
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\usage-report.txt",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/usage-report.txt",
+      "sha256": "397a0dbd356d20f6f956238e965936940b32118cce34558a5c607c592a36f736",
+      "byte_count": 1505
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-coach-plan-match\\evidence\\usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-coach-plan-match/evidence/usage.0.jsonl",
+      "sha256": "469249d0bacbcf4fcccb88ea889a7228ffc422aed4aafc87cfed8d5ddfed0b29",
+      "byte_count": 15647
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/actions.csv",
+      "sha256": "ae8a9a904209b77af550536eee88f89cb29722eebcf2596b7b152bac8e100ced",
+      "byte_count": 12020
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\arithmetic-correction.actions.csv",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/arithmetic-correction.actions.csv",
+      "sha256": "f01fb90886414c31065faae6fb55856aa80e99676dd13616ea9b54da1332b47e",
+      "byte_count": 1505
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\report.md",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/report.md",
+      "sha256": "8cf1bc565ca95bf097e0d8ed4ab1989de877830c209e48efbb0bffa5c460f5fb",
+      "byte_count": 3769
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/01-dashboard.yml",
+      "sha256": "a94dbedae46fe743269256a64e226fd2b2081091a76429dd1d251c4494808a88",
+      "byte_count": 17316
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\02-five-picked.png",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/02-five-picked.png",
+      "sha256": "d53fa3ed5caf240b6fd485fc068be781dd338424b44f7d7b9f1dfb4cb93f51b6",
+      "byte_count": 250970
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\02-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/02-locked.yml",
+      "sha256": "3fdce3eff2130ade3894b51002c0c23af6e3c30e467027f6ce702e008938072a",
+      "byte_count": 22856
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\03-reload.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/03-reload.yml",
+      "sha256": "8f52436aa71d57dbd0e0d476cdaba21d4fdc2f7239e885559adacc33b286310e",
+      "byte_count": 17210
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\04-final-calendar.png",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/04-final-calendar.png",
+      "sha256": "d6b4193a8004f9d8d51fe43045814a391a032c8d186fe88189a8688bb7b3542c",
+      "byte_count": 125046
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\05-advance.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/05-advance.yml",
+      "sha256": "fc21d367d460cf63d1a3cbe120dc15b563143159f696ff85112512b8e1233316",
+      "byte_count": 6545
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\05-replay.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/05-replay.yml",
+      "sha256": "bf48584c2ded3aceaf4b64e0dfe759cc447935ab67e95eceb004890f332e1076",
+      "byte_count": 20645
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\06-before-finances.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/06-before-finances.yml",
+      "sha256": "08b513082e5e55bcff86c40523cd1595f006a4574a4de977c0fccb48109138bd",
+      "byte_count": 5914
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\06-finances.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/06-finances.yml",
+      "sha256": "fa9252e3a47f0ae6d650beb7685665a9d2680a153e9b45fdee49b6e3ac58baad",
+      "byte_count": 16596
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\actions-before-analytics.csv",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/actions-before-analytics.csv",
+      "sha256": "95ae6165a91c037b9f2844ca5989addfbaacc49c1d823f12fd4ccdbe77e06ce6",
+      "byte_count": 10094
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\actions-before-arithmetic-correction.csv",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/actions-before-arithmetic-correction.csv",
+      "sha256": "ddb1bc0dcd66032ac3bf38c9bbeb7be3f88ab957d71a03798a78744833bb2a98",
+      "byte_count": 10747
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\annotation-proof.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/annotation-proof.json",
+      "sha256": "2135c561d3fc0c92b0e8cda48dae1bf4da743f7ec4768d590aa3af58e00d5b93",
+      "byte_count": 289
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\arithmetic-append-proof.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/arithmetic-append-proof.json",
+      "sha256": "039b0d3be15c7a6fbbd3a29a2f9acb427adcfe15e262372ce897474d72a59bff",
+      "byte_count": 306
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\arithmetic-correction.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/arithmetic-correction.json",
+      "sha256": "234f355001d040c68965c068b7b4608c2a889043f09bdad129a1e4f7c56cf212",
+      "byte_count": 640
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\audit.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/audit.json",
+      "sha256": "3de1888c7684bd1db3251e8fcd4a69bd1e55d0365f12c31f98ea66ec29d349d8",
+      "byte_count": 2979
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/decision-indexed.json",
+      "sha256": "02c2f6b9f3768773f12298892a02632fc202bb532cfe082ef4cc8121155b99a3",
+      "byte_count": 894
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\decision-report.txt",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/decision-report.txt",
+      "sha256": "886719c55aaa4c81b714f5ae04eb58b9fa024bdba7572a51d7507a45e254aff6",
+      "byte_count": 2040
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/flywheel-after.json",
+      "sha256": "0b0d6972bad502e014cebfe82aa5cbac66ac38ee2e054fe31b3ece44ad7dfca8",
+      "byte_count": 2633
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/flywheel-before.json",
+      "sha256": "434afbbf50b04ff121e8f267bd2def13cb83564a43c9e11824da4513b45f7cd0",
+      "byte_count": 6572
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-27-20-091Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-20-091Z.yml",
+      "sha256": "8b56fed543cdf345e22ff0d211b4281b0bcc5903f20c2568f37964adf05813a9",
+      "byte_count": 1025
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-27-29-362Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-29-362Z.yml",
+      "sha256": "71c07a76d923e0a201442471b967abeaf97b9ab87053d4a3a744fd30030fe808",
+      "byte_count": 1673
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-27-53-859Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-27-53-859Z.yml",
+      "sha256": "82af378d744bf5e1f07853c4a38e1c06dce0aa3274ae70178509fe9d73ff7245",
+      "byte_count": 22696
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-14-217Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-14-217Z.yml",
+      "sha256": "f6cf0e3c62680c8f2928aa95c4aa5517d38eaa2a21e7cb1bf4ad2b5456f76615",
+      "byte_count": 22693
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-41-696Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-41-696Z.yml",
+      "sha256": "8789fa6f2b63cf72cb1caa7c73e131f9bb857bd4491263e630ff1f2eeedf84ad",
+      "byte_count": 22693
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-44-060Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-44-060Z.yml",
+      "sha256": "f55ad0bcd0945dc11dde2ace45ab5cd68698ecf7f02b72ddd70daf922f0734ff",
+      "byte_count": 22693
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-46-398Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-46-398Z.yml",
+      "sha256": "0ebf51ef75a2a1d17d3afe9c272400d0900551c5e895b8c92a87ba5f0bacdf17",
+      "byte_count": 22693
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-48-766Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-48-766Z.yml",
+      "sha256": "17ae8217606436bff7c12c515624afca8fcc919ebb1acbc7540351cc70dd7bf4",
+      "byte_count": 22693
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-28-57-318Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-28-57-318Z.yml",
+      "sha256": "2dda3793dd203e071855fed0e0a96ef5daed4cf90b8ebc5f96b3550d5a68e496",
+      "byte_count": 22922
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-29-32-626Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-29-32-626Z.yml",
+      "sha256": "565fd63bcef2ee9dcc812daa522858b0fac50066ba42324b3183d4c010314aec",
+      "byte_count": 22973
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-29-34-281Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-29-34-281Z.yml",
+      "sha256": "6db52ad06f6399073b10e0041d7bd3f16170bac8611a20f4abf3c59b3e77f3ab",
+      "byte_count": 1125
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-30-12-451Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-30-12-451Z.yml",
+      "sha256": "b611a913edd58827fdb0614970eb777c6a6112fa80f3843c07c020655f66c648",
+      "byte_count": 67620
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-30-24-795Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-30-24-795Z.yml",
+      "sha256": "e0c9523b007a618e7f4cf56dd8878fb253055c0aba4cf58ca43651dde6041c97",
+      "byte_count": 6627
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-32-02-841Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-32-02-841Z.yml",
+      "sha256": "a66a504ac65fd689046c4c58121e97c9afe4ecf26ba69fa1b0eeed85b81a643a",
+      "byte_count": 7026
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-32-36-677Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-32-36-677Z.yml",
+      "sha256": "81f360c6b93cfc9438c36e2672c2b6f097f211f915162a2dad6a6695f6477671",
+      "byte_count": 11899
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-33-34-207Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-33-34-207Z.yml",
+      "sha256": "bb8f5d954206afa2789c637ec637b13d400757c90ddf745d6cc6379fa0980f5a",
+      "byte_count": 20282
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-35-08-864Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-35-08-864Z.yml",
+      "sha256": "81f360c6b93cfc9438c36e2672c2b6f097f211f915162a2dad6a6695f6477671",
+      "byte_count": 11899
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-35-14-899Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-35-14-899Z.yml",
+      "sha256": "08b513082e5e55bcff86c40523cd1595f006a4574a4de977c0fccb48109138bd",
+      "byte_count": 5914
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-36-06-950Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-36-06-950Z.yml",
+      "sha256": "719e4041abf143703e5ca0768278e15d928b52dd5c247768c36917203aa44dc3",
+      "byte_count": 21424
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-36-49-789Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-36-49-789Z.yml",
+      "sha256": "fa9252e3a47f0ae6d650beb7685665a9d2680a153e9b45fdee49b6e3ac58baad",
+      "byte_count": 16596
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\page-2026-10-10T22-40-55-326Z.yml",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/page-2026-10-10T22-40-55-326Z.yml",
+      "sha256": "6193ea5a1035403b8b6107e3a9581fb648463069a6cef9ead486e5dee82dd3fb",
+      "byte_count": 16281
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\pending-8.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/pending-8.json",
+      "sha256": "c490e94ed6ed9f0101a480b61eae1300d14008f5ca5c122d8d23c1c401c8bc26",
+      "byte_count": 1057
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\report-before-arithmetic-correction.md",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/report-before-arithmetic-correction.md",
+      "sha256": "79d06f7f07523c44eca013d808dc502f64b9d789dfd665351e9b8b799ff2b583",
+      "byte_count": 3275
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/request-pairs.json",
+      "sha256": "d67d4cee465957f4b6fb446bc94bbd8479e1e27b4c493d43b3b2f4c51a178757",
+      "byte_count": 3850
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\save-before.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/save-before.json",
+      "sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+      "byte_count": 4765590
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\save-pre-advance.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/save-pre-advance.json",
+      "sha256": "963099a66623ba63c343901a4841bc54eb6f4dffd2353928ba0960174f7cd622",
+      "byte_count": 4766746
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\server-running.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/server-running.json",
+      "sha256": "5d3ed502bd25e1c6ec534476aa7a3c12d8322b04354ce12fe30b5d4af02c8935",
+      "byte_count": 890
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\source-manifest.json",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/source-manifest.json",
+      "sha256": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+      "byte_count": 64012
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\usage-report.txt",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/usage-report.txt",
+      "sha256": "913f2585fd5a4a0e7aa89080feef1f62de21554b86331b66a28eb7ef73dbbd97",
+      "byte_count": 1694
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-one-match-rotation\\evidence\\usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-one-match-rotation/evidence/usage.0.jsonl",
+      "sha256": "d779c79de501596d7c02a24352c95632f135a22a36893c4f8c9755b50cca54a7",
+      "byte_count": 22050
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/actions.csv",
+      "sha256": "f7b5ab85cd60aea3b2a8719b8f128b2ed0f1a8fb8e4f20f2ced8140d119d8b32",
+      "byte_count": 13264
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\report.md",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/report.md",
+      "sha256": "8338c264e132e48e28569a72e74e9b64d7f5f32a80a0e0e6892496ce224f7c2b",
+      "byte_count": 3012
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/01-dashboard.yml",
+      "sha256": "66c7ac46bcb397137d0dabedf5c7f3942407594bf1d49fbe2f461c89b106a883",
+      "byte_count": 18130
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\02-series-saved.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/02-series-saved.yml",
+      "sha256": "c1286d5d762427b7a63c95848d0836ce93b7a027f4296da2f00770c68d07b1df",
+      "byte_count": 10304
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\03-reloaded.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/03-reloaded.yml",
+      "sha256": "6eb150a8c1df88661cd62fa9d776317a123f8aa58a6c5ead774324bcc5767d77",
+      "byte_count": 18130
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\04-before-advance.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/04-before-advance.yml",
+      "sha256": "3f00f43f136be0e6f6ab85ed164a22160a18a1f03124d1fe4cbf8044bf79967b",
+      "byte_count": 23166
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\05-ready-to-advance.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/05-ready-to-advance.yml",
+      "sha256": "972bb7d5e729dd09a2b2877e13493fb5308f0c1643adfde956a40e064af05101",
+      "byte_count": 23047
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\06-resolved.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/06-resolved.yml",
+      "sha256": "ed60d8774aff9ae44ef359d738dc7cd38224077a2cd68f7f0c6ffea5ad48750c",
+      "byte_count": 23899
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\07-full-report.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/07-full-report.yml",
+      "sha256": "456713f4be76f9f6abd58c93a722e95f680a3863fcbfd22513cb5c309ee2a87c",
+      "byte_count": 28570
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\08-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/08-dashboard.yml",
+      "sha256": "15d396be76fbe051150dab0b6c227296d7bc75610b0173c189ab8732371f4966",
+      "byte_count": 23108
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\09-season.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/09-season.yml",
+      "sha256": "cf65650fe18efa7ef680df60ac73e2bef703d6b558a8bb500d18ae317e3ca329",
+      "byte_count": 64491
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\10-fixtures.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/10-fixtures.yml",
+      "sha256": "120cc628528f7c9e9772de03303ff32ad6468d7e322e7a29c7a6cbd7ec9e3d7f",
+      "byte_count": 5258
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\11-played-fixtures.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/11-played-fixtures.yml",
+      "sha256": "8359e7e1c6bfeea45dca10092e5995c71dc7226b976a810a726d2d9b62b27224",
+      "byte_count": 8716
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\12-before-save.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/12-before-save.yml",
+      "sha256": "8359e7e1c6bfeea45dca10092e5995c71dc7226b976a810a726d2d9b62b27224",
+      "byte_count": 8716
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\actions-before-analytics.csv",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/actions-before-analytics.csv",
+      "sha256": "08a8d56cfd8bd7ca288ae4cb1de47ff937e332e0a92abccbaeb9b836a6c512c8",
+      "byte_count": 12053
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\annotation-proof.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/annotation-proof.json",
+      "sha256": "8adc9782059db894f2c141df3ff067f3943cfb77ab1c1b7bfd5c98a1e5516c53",
+      "byte_count": 306
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\audit-script-first-failed.py",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/audit-script-first-failed.py",
+      "sha256": "33627c8e6d94992f6978e131597219423aa90f16526c658c16c67d7894d806c7",
+      "byte_count": 7646
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\audit.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/audit.json",
+      "sha256": "8f02059076bff08e9488c75ec9b916d5e093c9ecc8d02c680e68b970718ca374",
+      "byte_count": 3399
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/decision-indexed.json",
+      "sha256": "34829bac2c82da0c6a8c8d36aca60229391473f9a358b43caedf4e6099b3f248",
+      "byte_count": 1274
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\decision-report.txt",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/decision-report.txt",
+      "sha256": "a8ab07e729d944e1946a621111460100aee91daa334c8f69fad7fffebe5cab59",
+      "byte_count": 2102
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/flywheel-after.json",
+      "sha256": "bf47f400eaa4986495b9c755b6fc1f135eaa30fc8c5af8c6b92918c7a56397d9",
+      "byte_count": 2490
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/flywheel-before.json",
+      "sha256": "357c80d465e886fc683fcc2626a2ebe30fd3b7aefc53a3f64a3a4789bd308c5d",
+      "byte_count": 6959
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\pending-11.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/pending-11.json",
+      "sha256": "a0402a021bca0907f767886b2dd6caaf440b43872abf6010d112c1301313c852",
+      "byte_count": 1004
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/request-pairs.json",
+      "sha256": "ab480a1557a4d5293299431adbc61b9839ddbe2824e89a0f678edfdb5c167536",
+      "byte_count": 5797
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\save-before.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/save-before.json",
+      "sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+      "byte_count": 4888893
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\save-pre-advance.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/save-pre-advance.json",
+      "sha256": "117bad483a32e497afdf92e7e5e071422d857542d1c716cfa78fffe66eba3c2a",
+      "byte_count": 4890536
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\series-notes.png",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/series-notes.png",
+      "sha256": "9ea16d48a77721965e39994e2b540ff1aeb8a9fccd466f2609080db739be3dd9",
+      "byte_count": 156023
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\server-running.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/server-running.json",
+      "sha256": "cdc241ecb67045fc3c2dfdf510f0267d4b7f48ec9f57b78bf61c0569cd565a69",
+      "byte_count": 887
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\source-manifest.json",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/source-manifest.json",
+      "sha256": "80ee04e49f1b8cee53a076c2e018969179eb41829f0bce0b93da65eccc09485a",
+      "byte_count": 64012
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\usage-report.txt",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/usage-report.txt",
+      "sha256": "764d2f8bc70b91fa2a30436edad48ceb741cec96445c2ffc11d5e481075bfdc6",
+      "byte_count": 1919
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-regional-semi\\evidence\\usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-regional-semi/evidence/usage.0.jsonl",
+      "sha256": "605338edbcd0ea403dd1cb980e5e99bad922caa66f27a9acebebe3b143bb21ba",
+      "byte_count": 29404
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/actions.csv",
+      "sha256": "f73d595d4384b94b13b2385da9a04d180efaa2476361de7cf0507da47cb6d8b5",
+      "byte_count": 6328
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\correction-audit.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/correction-audit.json",
+      "sha256": "9817e1815f66cbb2b95fefd046e235ef737de5d633618f5b076035894bd78ffc",
+      "byte_count": 1538
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\dashboard-1.png",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-1.png",
+      "sha256": "1960f9ad10253fe96544ec5e45513306deeeadef4f268c6d7f4708615819ceb8",
+      "byte_count": 505210
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\dashboard-3.png",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-3.png",
+      "sha256": "c48ea70e88fa11528fd76dfe77d9d7095d4b8fddda60bf36a4f82429ededa12c",
+      "byte_count": 512564
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\dashboard-4.png",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-4.png",
+      "sha256": "6bfc3cca1b6a1224714f7f40407b5f84ecb5218ab85f99138f78e88840f01cf9",
+      "byte_count": 504894
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\dashboard-6.png",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/dashboard-6.png",
+      "sha256": "c4ff2282864349fc0160692c8c966c281147ba847f649f08fe564aebd926bbe4",
+      "byte_count": 512150
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\decision-report.txt",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/decision-report.txt",
+      "sha256": "31eff92db2599b168530beb10670da0883af1e0d1b5835e86c511b042dc379e7",
+      "byte_count": 1655
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\flywheel-post.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-post.json",
+      "sha256": "8e0b2b5748b1c48f1a9a795edc3b7bb860ffe42f9998075d4ad1b871e1b44815",
+      "byte_count": 2052
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\flywheel-pre.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-pre.json",
+      "sha256": "745f4cc43c818a995143760f9c5e406d374de82299c419a4d178e8dc5ac2b81c",
+      "byte_count": 4185
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-final-verification.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-final-verification.json",
+      "sha256": "607f5ad41e7077453bc505bb8c1140f417f94f107fcb21dac5d49b52683d39b6",
+      "byte_count": 695
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-exit.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-exit.json",
+      "sha256": "22601bdd3e42b9963e12ab8b68d60313302fea799af6a8d2326b5ed962c17ee7",
+      "byte_count": 104
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-full.log",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-full.log",
+      "sha256": "80ea25206794af190fd06a2a10001cb7bfa8e91802ad5586cead8fdc959f55d5",
+      "byte_count": 1539
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-gate.py",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-gate.py",
+      "sha256": "706abfff4fac68ec27ca1f30c85bc42471c0e0a8a512fb5cdf6a84fbcc3cc333",
+      "byte_count": 1639
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-result.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-result.json",
+      "sha256": "cb59f7f5960c95260493b1539584ccda8756b841dd46ff5179fe37cb60154738",
+      "byte_count": 496
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-source-freeze.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-source-freeze.json",
+      "sha256": "7d374cb6d7317602d5ef58c726f5d07a70a57feb39a3be4e2e0679ad570503ea",
+      "byte_count": 63890
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\migration-independent-started.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-started.json",
+      "sha256": "86af4ff9bb347e254be464b90b277be39d14c5396c8b4b5fdc0146b3ca39f523",
+      "byte_count": 279
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\original-actions-before-annotation.csv",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/original-actions-before-annotation.csv",
+      "sha256": "52acfa37e24a991c227aa915790897edb42557cec2f7668b75558aa4b0046f73",
+      "byte_count": 4872
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\public-1.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-1.json",
+      "sha256": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+      "byte_count": 1060
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\public-3.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-3.json",
+      "sha256": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+      "byte_count": 1060
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\public-4.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-4.json",
+      "sha256": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+      "byte_count": 1060
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\public-6.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-6.json",
+      "sha256": "433cb43135844d243d2ce1a8399600947713c44559462905145dc49a9af4d18f",
+      "byte_count": 1060
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/reconciliation.json",
+      "sha256": "76da98bdbf4dd15856f2424a7fa7805f936003a5828206b0dcfe2ccb37d98e97",
+      "byte_count": 1068
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\report.md",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/report.md",
+      "sha256": "871e33724a83dc065eba3feabbbc849926f5c902c3406d9609f468fc59b9b859",
+      "byte_count": 5625
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\superseded-usage-report.txt",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/superseded-usage-report.txt",
+      "sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056",
+      "byte_count": 288
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-10-dashboard-migrated-scouting\\usage-report.txt",
+      "published_path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/usage-report.txt",
+      "sha256": "ff105a762b3592e0e0fb7e0e46a0c7431d1fe30903ca0bccfe3b87bbf3bc2aa0",
+      "byte_count": 748
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\actions.csv",
+      "published_path": "docs/playtests/gap29/actions.csv",
+      "sha256": "8018c4d01bb5727cc8e836abab7c92bb0e60054b5a99a1226d9c50bb4687ef20",
+      "byte_count": 2257
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\native-frozen-files.json",
+      "published_path": "docs/playtests/gap29/native-frozen-files.json",
+      "sha256": "e8ca1fae660fde315f68014f4f2b981696fe53f7c7781020a9504a2634bc7caf",
+      "byte_count": 69948
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\native-full-suite.log",
+      "published_path": "docs/playtests/gap29/native-full-suite.log",
+      "sha256": "45684eb470b25218f33b41177086298a187411785f27aab6f8b16ac5305a1054",
+      "byte_count": 1539
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\native-receipt.json",
+      "published_path": "docs/playtests/gap29/native-receipt.json",
+      "sha256": "e916e3fa40bb2e48e11621c5f14a39a9e24343a23853c2b7f034d749bc05a804",
+      "byte_count": 502
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\report.md",
+      "published_path": "docs/playtests/gap29/report.md",
+      "sha256": "f0098c0775be3a702f70367d8d94a41d24735eb829255605c3c249b26f4e629e",
+      "byte_count": 4504
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\save-audit-correction.json",
+      "published_path": "docs/playtests/gap29/save-audit-correction.json",
+      "sha256": "a92c2c68c2e6427bcb831ce5e7aab8c27d04c74b2050aedfd4ce04559a7ab157",
+      "byte_count": 609
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\save-audit.json",
+      "published_path": "docs/playtests/gap29/save-audit.json",
+      "sha256": "616d7f1eb96dbc22dae416302d57d0dc07fad9ce1d3482998b5bc5cb9249b25d",
+      "byte_count": 327
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\gap29\\usage-audit.json",
+      "published_path": "docs/playtests/gap29/usage-audit.json",
+      "sha256": "51a9976a12ad30a2849a0d5ac90d7296793cd669ccbe05b172a0dd45ceb9c4e3",
+      "byte_count": 4772
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/actions.csv",
+      "sha256": "1e6227cc3c015b2e142ea59e5c1a23bce9af2c795bf9ea07e09d73db54c297e8",
+      "byte_count": 2505
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\audit.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/audit.json",
+      "sha256": "c84309fafdada217e8650ce22de9030140ba24c7a1adaced9b4e9f2fa99f5fe4",
+      "byte_count": 1617
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\ci-diagnosis.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/ci-diagnosis.json",
+      "sha256": "7d04b607fa5503473147d2c35394469e5d6c1099c2a4a5ff35b5db8d0639186f",
+      "byte_count": 878
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\cleanup-server-before.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/cleanup-server-before.json",
+      "sha256": "cc2c001760c4bbd69edc6645ea033035b09565918966700b9d647a49360c127d",
+      "byte_count": 536
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\cleanup.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/cleanup.json",
+      "sha256": "86eed5d6e6ce288d577d07cc6b8f59b9e6347f224fd38d44964d23c8fb256205",
+      "byte_count": 1020
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\focused-tests.log",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/focused-tests.log",
+      "sha256": "fafcddf803e48999c05b3c310b631d1a90cf838b058151b754f7c7141302e4b9",
+      "byte_count": 102
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\full-pytest.log",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/full-pytest.log",
+      "sha256": "b822ba7166635533a7122c04148d737bea6c29d21f19d4443d96015265dc8c7d",
+      "byte_count": 1539
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\gate-receipt.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/gate-receipt.json",
+      "sha256": "91a597b11ae925df25fae3bf855cac25c8e086b1b60639f4d16ac023f47b6417",
+      "byte_count": 143
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\gate-running.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/gate-running.json",
+      "sha256": "28e2f669ddfa14fc63a9b829e083d25c9755a3fdfdc06ed0b58c7710c03ad976",
+      "byte_count": 371
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\handbook-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/handbook-readback.txt",
+      "sha256": "188bc857de231bdad027f1c108c6aabd27842a7c4d5e1330b315e230c254a36a",
+      "byte_count": 427
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\handbook-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/handbook-snapshot.txt",
+      "sha256": "d2b5449ff513111a1c375befd1c4038da805b7a2eaa2e143d6c0ce2df2c882a3",
+      "byte_count": 36340
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\HANDOFF.md",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/HANDOFF.md",
+      "sha256": "e8af3d709fb697edfcfff17f8aec89438221966de227b9221f2a0282af73a069",
+      "byte_count": 3295
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\integration-source-proof.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/integration-source-proof.json",
+      "sha256": "347580431ae3ccf8d4be5bef331ec900643590e34df781518b0c07028173eef4",
+      "byte_count": 752
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\profile-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/profile-readback.txt",
+      "sha256": "590cc80149d63ce06df6242dc938d7285dfd21485045021692205a8536a79408",
+      "byte_count": 400
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\README.md",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/README.md",
+      "sha256": "66bfa47eed8a3728231d7ead6bca3c357736a65d230e9dac0ded4a27e0ed59ec",
+      "byte_count": 4817
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\save-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/save-readback.txt",
+      "sha256": "2e82603ec50b9189fd1a592b8844c8a6fbd4021fb4963f3bc00ad25acbafd486",
+      "byte_count": 401
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\search-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/search-readback.txt",
+      "sha256": "993858827ddcdf77e02aa4dd3c99e8a41bbbb29c83f0e3da7996973b5cecfb57",
+      "byte_count": 1199
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\search-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/search-snapshot.txt",
+      "sha256": "5e4b2239237c500dabf164d89c1a0d147c657d2721246b79267197ea393cca25",
+      "byte_count": 44039
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\source-freeze-after.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/source-freeze-after.json",
+      "sha256": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9",
+      "byte_count": 70200
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\source-freeze.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/source-freeze.json",
+      "sha256": "28206b6d803db3af3cf11c3c815248765d383d26b00c50f900cf6a907ddd1db9",
+      "byte_count": 70200
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\terminal-gate-proof.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/terminal-gate-proof.json",
+      "sha256": "53a89cb125adb8b80948634856bd75ab559708463da03fdc1555fb3cd3f911b8",
+      "byte_count": 1243
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\usage-events.jsonl",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/usage-events.jsonl",
+      "sha256": "36e01347a9b1a132b6a2b626cb1e9d22ad207a3d8bb12bf328287ca11a1fc1b9",
+      "byte_count": 7296
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\docs\\playtests\\2026-10-10-overlay-usage\\integration\\usage-report.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/integration/usage-report.json",
+      "sha256": "fd1e16c3dfb8aaaf8976012d7083e20246815bae9d443a859b92ed1da209608a",
+      "byte_count": 1081
+    }
+  ],
+  "source612_raw_unchanged": true,
+  "source_git_tree_equals_prior_tested64": true,
+  "local_tests_or_gameplay_launched": false,
+  "prerequisite": "Actual merge of PR377 required before base/main retarget or publication merge",
+  "CI_green_inherited": false
+}
