@@ -64,7 +64,8 @@
     ...["player", "team", "staff", "manager"].flatMap(kind =>
       ["open", "close"].map(action => `profile/${kind}_${action}`)),
     "handbook/open", "handbook/close", "handbook/section_first_week",
-    "handbook/section_screens", "handbook/section_glossary"]);
+    "handbook/section_screens", "handbook/section_glossary",
+    "matchday/briefing_open", "matchday/briefing_close"]);
   function interaction(target) {
     if (interactions.has(target)) emit({kind: "interaction", target});
   }

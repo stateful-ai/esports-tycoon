@@ -325,3 +325,37 @@ def test_market_and_overlay_events_share_one_valid_batch(client):
     assert all(report['events'][f'interaction:{target}'] == 1 for target in INTERACTIONS)
     assert report['attempts'] == report['paired_results'] == 1
     assert report['unmatched_attempts'] == report['orphan_results'] == 0
+
+
+def test_matchday_actual_open_and_close_handlers():
+    import shutil
+    import subprocess
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('Node is required for briefing handler verification')
+    subprocess.run([node, 'tests/matchday_usage_frontend_check.cjs'],
+                   check=True, capture_output=True, text=True)
+
+
+def test_matchday_receipts_are_coarse_sidecar_counts(client):
+    from esports_sim.web.usage_telemetry import MATCHDAY_INTERACTIONS
+    targets = sorted(MATCHDAY_INTERACTIONS)
+    assert client.post('/api/usage/events', json=payload(*[
+        {'kind': 'interaction', 'target': target} for target in targets])).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert report['events'] == {f'interaction:{target}': 1 for target in targets}
+    assert report['attempts'] == report['paired_results'] == 0
+    assert report['visible_ms'] == report['outcomes'] == {}
+
+
+@pytest.mark.parametrize('event', [
+    {'kind': 'interaction', 'target': 'matchday/briefing_open/private-id'},
+    {'kind': 'interaction', 'target': 'matchday/unknown'},
+    *[{'kind': 'interaction', 'target': 'matchday/briefing_open', field: value}
+      for field, value in [('player_id', 'private'), ('seed', 2071), ('text', 'private'),
+                           ('params', {}), ('request_id', 1), ('duration_ms', 1),
+                           ('outcome', 'success')]],
+    {'kind': 'view', 'target': 'matchday/briefing_open'},
+])
+def test_matchday_rejects_private_payloads_and_other_semantics(client, event):
+    assert client.post('/api/usage/events', json=payload(event)).status_code == 422

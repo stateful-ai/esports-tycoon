@@ -63,3 +63,21 @@ request initiation, including requests that fail or return no matches; it
 does not establish successful results, attention, accepted decisions, or a
 complete search-to-negotiation funnel. Existing bounded queue and loss limits
 apply. Keep deterministic decisions and coarse control counts separate.
+
+Pre-match briefing inspections use the closed `interaction:matchday/briefing_open`
+and `interaction:matchday/briefing_close` buckets. Opening counts after the
+Match day overlay has finished rendering visible content, including its
+no-fixture message. Refreshing an already open overlay, failed reads, missing
+overlay elements, and incomplete renders do not count another opening.
+Closing counts once for an inspected visible overlay via Continue, backdrop,
+game-plan handoff, or the no-fixture Close control; repeated hidden closes do
+not count. These hooks cover the Dashboard's Match day briefing shortcut.
+The current pre-advance flow has no call to this overlay and produces no
+briefing interaction merely by advancing.
+
+Each browser event contains only `kind` and its fixed target. No fixture,
+player, seed, text, game parameters, or raw payload is added. The existing
+server-resolved sidecar linkage and bounded best-effort delivery apply.
+Opening/closing counts do not measure attention, briefing duration, accepted
+decisions, or a complete funnel; the overlay leaves its underlying tab view
+unchanged. These additions do not retroactively fill missing retained events.
