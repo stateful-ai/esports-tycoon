@@ -71,3 +71,12 @@ Raw shard SHA256:
 Root late cleanup/readback found the dedicated browser still open, generating idle visibility records. The browser was closed through its named CLI session and both task-owned server families were stopped, with ports8514/8515 no longer listening; user8421 was untouched. The original dated aggregate27/25 counts above remain historical snapshots. Current raw retained readback contains507 events, all currently tagged26UHC, including495 visibility slices, seven views, two starts, one end and the same single Save pair. These later visibility records are idle surface exposure, not player attention. The original27-event audit categories and newer raw filtering are separate observations; no absent final session-end beacon is reconstructed after server shutdown. Durable evidence now lives in evidence/.
 
 Only the Save row's factual analytics status/evidence was updated to recorded for the retained paired browser usage request, explicitly outside accepted campaign decisions. All19 observation fields, partial/failed outcomes and original intentions remain unchanged. The original scoped CSV and field-protection proof are preserved in evidence/.
+
+Publication clarification: the current adjacent shard SHA256 is
+`8e7b6b0a42a2cad455f4c8dfa8e639d733473e6522f5927f5116ed74a97d6b96`.
+The earlier SHA identifies `evidence/actions-before-analytics-correction.csv`.
+There are now three `not_instrumented` annotations and one `recorded` Save
+annotation for the separate browser stream; accepted decision coverage remains
+0/0. Each cited snapshot, reconciliation, aggregate report and native receipt
+has its same-named durable copy in `evidence/`. Original ignored run paths above
+describe acquisition locations, not fresh-checkout artifact locations.
