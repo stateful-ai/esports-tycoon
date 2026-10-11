@@ -37,8 +37,11 @@
     emit({kind: "view", target});
   }
   function request(path, mutation) {
-    const parts = path.split("?")[0].split("/");
-    const target = parts.slice(0, parts[2] === "actions" ? 4 : 3).join("/");
+    const cleanPath = path.split("?")[0];
+    const parts = cleanPath.split("/");
+    // One fixed read-state endpoint; all other inbox paths remain in the coarse bucket.
+    const target = cleanPath === "/api/inbox/read" ? cleanPath
+      : parts.slice(0, parts[2] === "actions" ? 4 : 3).join("/");
     if (!target.startsWith("/api/") || target.startsWith("/api/usage")) return null;
     const token = {target, id: ++serial, start: performance.now(), mutation};
     if (mutation) emit({kind: "attempt", target, request_id: token.id});
