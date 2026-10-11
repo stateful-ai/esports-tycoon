@@ -61,6 +61,7 @@
     if (target === "close") view(replayReturn || "dashboard");
   }
   const interactions = new Set(["lobby/seed_change", "week/full_report_open", "market/player_search",
+    "stats/competition_top_flight", "stats/competition_challengers",
     ...["player", "team", "staff", "manager"].flatMap(kind =>
       ["open", "close"].map(action => `profile/${kind}_${action}`)),
     "handbook/open", "handbook/close", "handbook/section_first_week",
