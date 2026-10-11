@@ -189,6 +189,10 @@ class _Game:
         # A human's team id, marked when they've hit "advance"; the week only
         # ticks once every human is ready.
         self.ready: set[str] = set()
+        # Provenance belongs to the first accepted vote, even if a seat
+        # repeats it from another surface while waiting. Session memory,
+        # with precisely the same lifetime as ready; never saved on GameState.
+        self.ready_sources: dict[str, agent_play.AdvanceSource] = {}
         # fixture id -> one event list per map, captured at sim time.
         self.event_logs: dict[str, list[list[Event]]] = {}
         # (team_id, fixture_id) keys already written to the on-disk match-review
@@ -213,6 +217,11 @@ class _Game:
         # resume / leave), and on autosave every Nth week tick.
         self.dirty = False
         self.ticks_since_save = 0
+
+    def unready(self, team_id: str) -> None:
+        """Drop a seat's vote and its provenance together."""
+        self.ready.discard(team_id)
+        self.ready_sources.pop(team_id, None)
 
     def require_gs(self) -> GameState:
         if self.gs is None:
@@ -2055,7 +2064,7 @@ def accept_job(body: AcceptJobBody) -> dict:
             gs, "accept_job", {"seat": seat.id}, team_id=body.team_id
         )
         game = ctx.game
-        game.ready.discard(gs.acting_team_id)
+        game.unready(gs.acting_team_id)
         gs.set_acting(body.team_id)
         game.save(force=True)  # a career move must survive a restart
     # Rebind the lobby session to the new club (outside the game lock;
@@ -7467,7 +7476,9 @@ def advance() -> dict:
         return _advance_locked()
 
 
-def _advance_locked(*, agent_response: bool = False) -> dict:
+def _advance_locked(
+    *, agent_response: bool = False, source: agent_play.AdvanceSource = "web"
+) -> dict:
     """Advance and capture the caller response under one game lock."""
     gs = S.require_gs()
     me = gs.acting_team_id
@@ -7508,6 +7519,8 @@ def _advance_locked(*, agent_response: bool = False) -> dict:
             f"{'agent' if short == 1 else 'agents'}, then try Advance Week again",
         )
     game = _ctx.get().game
+    if me not in game.ready:
+        game.ready_sources[me] = source
     game.ready.add(me)
     waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
     if waiting_on:
@@ -7531,7 +7544,7 @@ def _advance_locked(*, agent_response: bool = False) -> dict:
     short = [t for t in gs.human_team_ids if not market.roster_ready(gs, t)[0]]
     if short:
         for t in short:
-            game.ready.discard(t)
+            game.unready(t)
         game.save()
         names = ", ".join(gs.teams[t].name for t in short)
         raise HTTPException(
@@ -7556,13 +7569,14 @@ def _advance_locked(*, agent_response: bool = False) -> dict:
     }
     try:
         tick = agent_play.tick_shared_week(
-            gs, S.gd, game.ready, events_out=game.event_logs, source="web"
+            gs, S.gd, game.ready, events_out=game.event_logs,
+            source="web", sources_by_team=game.ready_sources,
         )
     except agent_play.ShortRosters as exc:
         # Unreachable in practice (the revalidation above runs under the
         # same lock), kept as a defensive mirror of that 409.
         for t in exc.team_ids:
-            game.ready.discard(t)
+            game.unready(t)
         game.save()
         names = ", ".join(gs.teams[t].name for t in exc.team_ids)
         raise HTTPException(
@@ -7579,6 +7593,7 @@ def _advance_locked(*, agent_response: bool = False) -> dict:
         for t, pids in development_rosters.items()
     }
     game.ready.clear()
+    game.ready_sources.clear()
     # Append this week's fresh match reviews to the durable on-disk corpus
     # (serving-layer side effect, off the deterministic tick — see
     # web/review_history.py). Never fatal: the corpus is analysis-only.
@@ -7689,7 +7704,7 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
             before_week=_before,
             after_week=_after,
         )
-        game.ready.discard(me)
+        game.unready(me)
         if weeks > 0:
             llm_social.enqueue(game)
         # Re-bind acting (advance_week churns the acting pointer internally),
@@ -8033,7 +8048,7 @@ def agent_act(body: AgentActBody) -> dict:
     sync.last_tick). Every other kind resolves immediately."""
     if body.kind == "advance":
         with S.lock:
-            return _advance_locked(agent_response=True)
+            return _advance_locked(agent_response=True, source="agent")
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
@@ -8048,7 +8063,7 @@ def agent_act(body: AgentActBody) -> dict:
         if moved_to is not None:
             # accept_job: the seat moved clubs — mirror the human endpoint's
             # session rebinding (ready flag + acting pointer now).
-            S.ready.discard(me)
+            _ctx.get().game.unready(me)
             gs.set_acting(moved_to)
             game = _ctx.get().game
             game.save(force=True)  # a career move must survive a restart
