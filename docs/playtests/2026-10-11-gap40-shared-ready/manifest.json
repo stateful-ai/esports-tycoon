@@ -98,6 +98,14 @@
     "evidence/usage-world.jsonl": {
       "bytes": 8793,
       "sha256": "e99488c2636bab2ad12fb1432f71489f2fe6f9ffafa62aaf357c6ac705291c0a"
+    },
+    "evidence/telemetry-report.txt": {
+      "bytes": 2090,
+      "sha256": "f468a41f04259e3ec40af3921cbf6f58ae76d6dee478f89e14b7a52d5def2768"
+    },
+    "evidence/usage-report.json": {
+      "bytes": 288,
+      "sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056"
     }
   }
 }
