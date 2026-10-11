@@ -11,18 +11,24 @@
    earned). onAccept(offer, answers) fires when a deal is signed. */
 
 async function runDraftInterview(container, opts, onAccept) {
+  // Create-lobby interviews belong to the seed/settings snapshot that
+  // started them. Join interviews need no create-lobby freshness guard.
+  const isCurrent = opts.isCurrent || (() => true);
   let questions;
   try {
     const packQ = opts.pack ? `?pack=${encodeURIComponent(opts.pack)}` : "";
     questions = (await api(`/api/lobby/interview${packQ}`)).questions;
   } catch (e) {
+    if (!isCurrent()) return;
     container.innerHTML = '<span class="muted">Could not load the interview.</span>';
     return;
   }
+  if (!isCurrent()) return;
   const answers = {};
   let step = 0;
 
   const askNext = () => {
+    if (!isCurrent()) return;
     if (step >= questions.length) return showOffers();
     const q = questions[step];
     container.innerHTML = "";
@@ -39,6 +45,7 @@ async function runDraftInterview(container, opts, onAccept) {
         `<b>${esc(o.label)}</b><br><span class="muted">${esc(o.blurb)}</span>`
       );
       b.onclick = () => {
+        if (!isCurrent()) return;
         answers[q.id] = o.id;
         step += 1;
         askNext();
@@ -49,6 +56,7 @@ async function runDraftInterview(container, opts, onAccept) {
   };
 
   const showOffers = async () => {
+    if (!isCurrent()) return;
     container.innerHTML = '<span class="muted">The orgs are talking it over…</span>';
     let offers;
     try {
@@ -60,9 +68,11 @@ async function runDraftInterview(container, opts, onAccept) {
       }
       offers = (await api("/api/lobby/interview_offers", body)).offers;
     } catch (e) {
+      if (!isCurrent()) return;
       container.innerHTML = '<span class="muted">No org called back. Try again.</span>';
       return;
     }
+    if (!isCurrent()) return;
     container.innerHTML = "";
     const head = el("div", "card");
     head.innerHTML = `
@@ -88,7 +98,9 @@ async function runDraftInterview(container, opts, onAccept) {
         <p class="draft-offer-goal">“${esc(o.goal)}”</p>
         <p class="muted">${esc(o.blurb)}</p>
         <button class="btn btn-primary">Sign with ${esc(o.tag)} ▸</button>`;
-      card.querySelector("button").onclick = () => onAccept(o, answers);
+      card.querySelector("button").onclick = () => {
+        if (isCurrent()) onAccept(o, answers);
+      };
       grid.appendChild(card);
     }
     container.appendChild(grid);
