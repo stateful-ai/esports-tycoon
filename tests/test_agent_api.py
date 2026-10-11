@@ -106,6 +106,30 @@ def test_http_transfer_requires_boolean_before_mutation(lobby, accept):
     assert game.gs.model_dump_json() == before
 
 
+@pytest.mark.parametrize("kind", ["sponsor_respond", "sponsor_demand_respond"])
+@pytest.mark.parametrize("accept", ["false", "true", 0, 1, None, [], {}])
+def test_http_sponsor_decisions_reject_nonboolean_without_mutation(lobby, monkeypatch, kind, accept):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=925))
+    _as(lobby, SID_A)
+    game = lobby.games[created["code"]]
+    called = []
+    def domain_action(*args):
+        called.append(args)
+        game.gs.teams["team_nexus"].balance += 1
+        return True, "resolved"
+    monkeypatch.setattr(server.sponsors, "sign_market_offer", domain_action)
+    monkeypatch.setattr(server.sponsors, "decline_market_offer", domain_action)
+    monkeypatch.setattr(server.sponsors, "respond_demand", domain_action)
+    before = game.gs.model_dump_json()
+    with pytest.raises(HTTPException) as err:
+        server.agent_act(server.AgentActBody(kind=kind, params={"accept": accept}))
+    assert err.value.status_code == 422
+    assert "JSON boolean" in err.value.detail
+    assert not called
+    assert game.gs.model_dump_json() == before
+
+
 @pytest.mark.parametrize("first_advances", [False, True])
 def test_agent_advance_response_is_captured_before_concurrent_votes(lobby, monkeypatch, first_advances):
     _as(lobby, SID_A)
