@@ -586,7 +586,17 @@ function renderOfferGrid(grid, offers, onPick) {
   }
 }
 
+let lobbyGeneration = 0;
+
+function lobbySeed() {
+  const value = $("#ng-seed").value.trim();
+  if (!/^[+-]?\d+$/.test(value)) return null;
+  const seed = Number(value);
+  return Number.isSafeInteger(seed) ? seed : null;
+}
+
 function setupLobby(lob) {
+  const generation = ++lobbyGeneration;
   window.Usage?.view("lobby");
   const create = $("#lobby-create");
   const join = $("#lobby-join");
@@ -631,6 +641,8 @@ function setupLobby(lob) {
   // Sandbox-only fantasy-draft start: tier-1 rosters enter one shared pool
   // and every org (human + AI) snake-drafts its ten before week 1.
   let fantasyDraft = false;
+  let pickRevision = 0;
+  let seedTimer = null;
   const worldTeams = () =>
     world === null ? lob.teams : packs.find((p) => p.id === world).teams;
   const renderScenarios = () => {
@@ -745,6 +757,28 @@ function setupLobby(lob) {
     for (const p of packs) mk(p.name, p.id);
   };
   const renderPick = () => {
+    clearTimeout(seedTimer);
+    if (generation !== lobbyGeneration) return;
+    const revision = ++pickRevision;
+    const seed = lobbySeed();
+    const pack = world;
+    const mode = gameMode;
+    const shared = shared_;
+    const draft = fantasyDraft;
+    const grid = $("#ng-teams");
+    const isCurrent = () => generation === lobbyGeneration &&
+      revision === pickRevision && seed === lobbySeed() &&
+      pack === world && mode === gameMode && shared === shared_ &&
+      draft === fantasyDraft && !create.classList.contains("hidden");
+    const pick = (teamId, interview = null) => {
+      if (!isCurrent()) return;
+      return createGame(teamId, shared, pack, mode, draft ? null : scenario, draft, interview, seed);
+    };
+    grid.innerHTML = "";
+    if (seed === null) {
+      grid.innerHTML = '<span role="status" class="muted">Enter a whole-number seed to choose an organisation.</span>';
+      return;
+    }
     const p = packs.find((x) => x.id === world);
     const desc = $("#ng-world-desc");
     if (p) {
@@ -758,33 +792,26 @@ function setupLobby(lob) {
     if (gameMode === "legacy") {
       // Career offers come from the server (same seed/pack derivation
       // the create call validates against). Repaint on seed edits.
-      const grid = $("#ng-teams");
       grid.innerHTML = '<span class="muted">Loading offers…</span>';
-      const seed = parseInt($("#ng-seed").value) || 2026;
       api(
         `/api/lobby/offers?seed=${seed}` +
           (world ? `&pack=${encodeURIComponent(world)}` : "")
       )
-        .then((r) =>
-          renderOfferGrid(grid, r.offers, (o) =>
-            createGame(o.team_id, shared_, world, "legacy")
-          )
-        )
-        .catch(() => (grid.innerHTML = '<span class="muted">Could not load offers.</span>'));
+        .then((r) => {
+          if (isCurrent()) renderOfferGrid(grid, r.offers, (o) => pick(o.team_id));
+        })
+        .catch(() => {
+          if (isCurrent()) grid.innerHTML = '<span role="status" class="muted">Could not load offers. Change the seed or mode to retry.</span>';
+        });
       return;
     }
     if (fantasyDraft) {
       // A fantasy-draft career starts with the interview, not a team
       // grid: answer five questions, field four org offers, sign one.
-      const grid = $("#ng-teams");
-      grid.innerHTML = "";
       runDraftInterview(
         grid,
-        { pack: world, getSeed: () => parseInt($("#ng-seed").value) || 2026 },
-        (offer, answers) =>
-          createGame(
-            offer.team_id, shared_, world, "sandbox", null, true, answers
-          )
+        { pack, getSeed: () => seed, isCurrent },
+        (offer, answers) => pick(offer.team_id, answers)
       );
       return;
     }
@@ -793,28 +820,29 @@ function setupLobby(lob) {
       // the CURRENT seed — otherwise a solo start at a random seed builds a
       // different league than the grid shows (and the pick 422s). Pack
       // worlds are static data, so they keep using the packs payload.
-      const grid = $("#ng-teams");
       grid.innerHTML = '<span class="muted">Preparing league…</span>';
-      const seed = parseInt($("#ng-seed").value) || 2026;
       api(`/api/lobby/preview?seed=${seed}`)
-        .then((r) =>
-          renderTeamGrid(grid, r.teams, (t) =>
-            createGame(t.id, shared_, world, "sandbox", scenario)
-          )
-        )
-        .catch(
-          () => (grid.innerHTML = '<span class="muted">Could not load teams.</span>')
-        );
+        .then((r) => {
+          if (isCurrent()) renderTeamGrid(grid, r.teams, (t) => pick(t.id));
+        })
+        .catch(() => {
+          if (isCurrent()) grid.innerHTML = '<span role="status" class="muted">Could not load teams. Change the seed or mode to retry.</span>';
+        });
       return;
     }
-    renderTeamGrid($("#ng-teams"), worldTeams(), (t) =>
-      createGame(t.id, shared_, world, "sandbox", scenario)
-    );
+    renderTeamGrid(grid, worldTeams(), (t) => pick(t.id));
   };
-  $("#ng-seed").addEventListener("change", () => {
+  // Assign properties so re-entering the lobby replaces old handlers.
+  $("#ng-seed").oninput = () => {
+    ++pickRevision;
+    clearTimeout(seedTimer);
+    $("#ng-teams").innerHTML = '<span role="status" class="muted">Updating organisations…</span>';
+    seedTimer = setTimeout(renderPick, 200);
+  };
+  $("#ng-seed").onchange = () => {
     window.Usage?.interaction("lobby/seed_change");
     renderPick();
-  });
+  };
   const showCreate = (shared) => {
     shared_ = shared;
     create.classList.remove("hidden");
@@ -835,6 +863,8 @@ function setupLobby(lob) {
   $("#mode-solo").onclick = () => { setActiveMode($("#mode-solo")); showCreate(false); };
   $("#mode-shared").onclick = () => { setActiveMode($("#mode-shared")); showCreate(true); };
   $("#mode-join").onclick = () => {
+    ++pickRevision;
+    clearTimeout(seedTimer);
     setActiveMode($("#mode-join"));
     create.classList.add("hidden");
     join.classList.remove("hidden");
@@ -870,9 +900,10 @@ function setupLobby(lob) {
 
 async function createGame(
   teamId, shared, pack = null, gameMode = "sandbox", scenario = null,
-  fantasyDraft = false, interview = null
+  fantasyDraft = false, interview = null, previewSeed = null
 ) {
-  const seed = parseInt($("#ng-seed").value) || 2026;
+  const seed = previewSeed ?? lobbySeed();
+  if (seed === null || seed !== lobbySeed()) return toast("Choose an organisation for the current seed.");
   const r = await api("/api/new", {
     team_id: teamId, seed, shared, pack, game_mode: gameMode, scenario,
     fantasy_draft: fantasyDraft, interview,
