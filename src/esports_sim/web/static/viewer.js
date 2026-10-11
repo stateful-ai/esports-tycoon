@@ -931,6 +931,48 @@ function getPlayerEls(pid) {
   return e;
 }
 
+// Reuse unchanged event rows so playback does not discard a focused player
+// control. Keep authored HTML separately: an image's onerror can change its DOM.
+function renderFeed(feed, items) {
+  const previous = V._feedEl === feed ? (V._feedRows || []) : [];
+  if (previous.length === items.length && feed.childNodes.length === items.length &&
+      previous.every((row, i) => row.html === items[i].html && feed.childNodes[i] === row.el)) {
+    return;
+  }
+
+  const available = new Map();
+  for (const row of previous) {
+    if (row.el.parentNode !== feed) continue;
+    if (!available.has(row.html)) available.set(row.html, []);
+    available.get(row.html).push(row);
+  }
+  const focused = feed.contains(document.activeElement) ? document.activeElement : null;
+  const rows = items.map(({ html }) => {
+    const reused = available.get(html)?.shift();
+    if (reused) return reused;
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    return { html, el: template.content.firstElementChild };
+  });
+  // Insert additions before existing rows; do not move a row already in place.
+  let next = feed.firstChild;
+  for (const row of rows) {
+    if (row.el === next) next = next.nextSibling;
+    else feed.insertBefore(row.el, next);
+  }
+  while (next) {
+    const removed = next;
+    next = next.nextSibling;
+    removed.remove();
+  }
+  V._feedEl = feed;
+  V._feedRows = rows;
+  // Reordering can blur a retained control in browsers; restore that same node.
+  if (focused && feed.contains(focused) && document.activeElement !== focused) {
+    focused.focus({ preventScroll: true });
+  }
+}
+
 function drawFrame() {
   const round = V.rounds[V.roundIdx];
   const t = V.tick;
@@ -1092,11 +1134,9 @@ function drawFrame() {
       }));
 
   const feed = document.getElementById("v-feed");
-  feed.innerHTML = feedItems
+  renderFeed(feed, feedItems
     .sort((a, b) => a.tick - b.tick)
-    .reverse()
-    .map((it) => it.html)
-    .join("");
+    .reverse());
 
   document.getElementById("v-scrub").max = round.maxTick;
   document.getElementById("v-scrub").value = Math.min(t, round.maxTick);
