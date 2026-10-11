@@ -1,0 +1,31 @@
+{
+  "original_head": "7faf3806faf9c83bd10391c869f22d37e92e4784",
+  "original_tree": "90d9062f9841ba881edda99049e57f4295de6906",
+  "integrated_main": "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b",
+  "main_tree": "c3416c0cf000fc7107a02cd9d63021506fad14e7",
+  "conflicts": [
+    "actions.csv",
+    "audit.json",
+    "browser-evidence.md",
+    "evidence/gate-launcher.py",
+    "evidence/post.json",
+    "evidence/pre.json",
+    "evidence/publication-review.json",
+    "evidence/pytest.log",
+    "evidence/receipt.json",
+    "report.md"
+  ],
+  "resolution": "Canonical files use exact main blobs; original PR files, source and tests are retained in original-pr-7faf3806.zip",
+  "archive_sha256": "ccaf34ffce270b28c00693ea04d10899e3b4d121e5689ed10daf925592a186b5",
+  "source_changes_against_main": [
+    "src/esports_sim/web/server.py",
+    "src/esports_sim/web/static/app.js",
+    "tests/test_web_series_card.py"
+  ],
+  "original_test_blob": "b3ce24887ad7b53692decfceb9e00db86ca244c8",
+  "integrated_test_blob": "b3ce24887ad7b53692decfceb9e00db86ca244c8",
+  "canonical_evidence_changes_against_main": [],
+  "main_native_profile_and_replay_changes": [],
+  "local_validation": "UNRUN: no local tests, CJS, syntax validators, simulations, gates, application reports, hooks or new playtests under user waiver",
+  "prior_ci": "Original head 7faf3806 remote Python 3.12 and 3.13 jobs succeeded; not evidence for the integrated tree"
+}
