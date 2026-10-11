@@ -1903,10 +1903,10 @@ async function pfAssignIgl(p) {
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
+let pfOpener = null; // original focus target across loading and profile navigation
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
-let pfOpener = null; // original focus target across loading and profile navigation
 
 function pfNavTo(entry, opts) {
   const replace = !!(opts && opts.replace);
@@ -1960,11 +1960,11 @@ function pfShow(vnode) {
 }
 
 function closeProfile() {
-  const opener = pfOpener;
-  pfOpener = null;
   pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
+  const opener = pfOpener;
+  pfOpener = null;
   if (pfOverlayEl) {
     // The fade keeps this subtree displayed; closed controls must leave focus
     // and the accessibility tree immediately, even while opacity animates.
