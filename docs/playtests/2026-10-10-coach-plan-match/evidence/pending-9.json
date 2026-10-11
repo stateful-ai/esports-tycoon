@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-coach-plan-match",
+  "step": 9,
+  "started_at_utc": "2026-10-10T22:19:00.868+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "browser",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W14",
+  "intent": "Retain the completed fixture for telemetry and follow-up label testing",
+  "action": "Save W14 through browser and audit only this copied career",
+  "expected_outcome": "Save success, exactly3 new accepted decisions in order and complete matching UI request pairs; report preserves original60 decisions/snapshots and distinguishes unsupported read-only clicks.",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

@@ -1,0 +1,83 @@
+{
+  "read_at_utc": "2026-10-11T07:26:24.793105+00:00",
+  "recent": [
+    {
+      "id": "esports-playtest-0209",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Copied test-world session bootstrap",
+      "problem": "IAB Join disabled the existing human Nexus seat even with copied registry cleared",
+      "solution": "Restore original copied identity into isolated named CLI browser; discard secret-bearing stdout",
+      "lesson": "Auth fixture restoration requires explicit separate evidence and must not be confused with gameplay.",
+      "confidence": "high",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\gap39-all-sponsor-runrate\\ESports Simulator\\docs\\playtests\\2026-10-11-gap39-sponsor-runrate\\report.md",
+      "code": "",
+      "tags": [],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0208",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Separate stream revenue sources",
+      "problem": "Player Streaming and Stream sponsorship are different revenue sources",
+      "solution": "Display separate Stream sponsor and player Streaming rows",
+      "lesson": "Browser showed sponsor9400 and player8968 separately while save104actions23snaps remained byte-identical.",
+      "confidence": "high",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\gap39-all-sponsor-runrate\\ESports Simulator\\docs\\playtests\\2026-10-11-gap39-sponsor-runrate\\report.md",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0207",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Sponsor run-rate completeness",
+      "problem": "Live Company net omitted the active Stream contract",
+      "solution": "Use canonical sponsor slot order and render server rows",
+      "lesson": "Projection first row exposed the missing9400 recurring income on copied26UHC seed2038 S2W1.",
+      "confidence": "high",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\gap39-all-sponsor-runrate\\ESports Simulator\\docs\\playtests\\2026-10-11-gap39-sponsor-runrate\\report.md",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0206",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Report overlay blocks immediate Save",
+      "problem": "Post-rollover report intercepted the Save click",
+      "solution": "Preserve blocked attempt and reopen career before explicit Save",
+      "lesson": "A blocked UI click emitted no Save request; recovery Save POST200 persisted the same single advance decision",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; gap40 own session 2026-10-11-gap40-rollover; seed2038 world26UHC copied save; tested6f8a114",
+      "code": "",
+      "tags": [
+        "gap40",
+        "offseason",
+        "browser"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0205",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Server-authored transition copy survives rollover",
+      "problem": "Client wording can become stale after a phase change",
+      "solution": "Render advance_transition from public state on refresh",
+      "lesson": "Public readback after advance restored Advance Week and hid the notice without changing simulation rules",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; gap40 own session 2026-10-11-gap40-rollover; seed2038 world26UHC copied save; tested6f8a114",
+      "code": "",
+      "tags": [
+        "gap40",
+        "offseason",
+        "browser"
+      ],
+      "kind": "learning"
+    }
+  ]
+}

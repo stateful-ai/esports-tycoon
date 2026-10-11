@@ -1,0 +1,77 @@
+{
+  "at_utc": "2026-10-11T02:21:30.037664+00:00",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "source_paths_unchanged": 630,
+  "local_tests_run": false,
+  "rows": 6,
+  "outcomes": {
+    "met": 5,
+    "partial": 1
+  },
+  "decision_count_before": 79,
+  "decision_count_after": 81,
+  "accepted_prefix_preserved": true,
+  "new_decisions": [
+    {
+      "season": 1,
+      "week": 19,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "mental",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "fa_0"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 19,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "snapshots_before": 18,
+  "snapshots_after": 19,
+  "save_schema_before": 36,
+  "save_schema_after": 37,
+  "bank_before": 1564014,
+  "bank_after": 1749103,
+  "reported_income": 112189,
+  "reported_expenses": 47100,
+  "unreported_prize": 120000,
+  "usage_events": 31,
+  "views": {
+    "lobby": 2,
+    "dashboard": 2,
+    "club/squad": 2,
+    "club/development": 1
+  },
+  "request_attempts": 3,
+  "paired_results": 3,
+  "request_outcomes": {
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "limits": [
+    "Six logged attempts are not a conversion denominator for two accepted decisions.",
+    "Save is a usage request, not an accepted manager decision.",
+    "The stale element click failed before HTTP; no request telemetry is expected for it.",
+    "Lobby visibility records during copied-identity restoration are harness activity; visible time is not attention.",
+    "Wall-clock usage context is resolved at receipt; advance events show W20 while the accepted decision was made W19.",
+    "Whole save bytes differ due to week advancement and schema36-to37 migration; semantic ledger and snapshot prefixes were independently checked.",
+    "Three observed product issues already have owned PRs382,380,381; no duplicate gaps created."
+  ],
+  "ghost_stamina_raw_before": 70.5,
+  "ghost_stamina_raw_after": 88.5,
+  "ghost_condition_display_before": 71,
+  "ghost_condition_display_after": 89
+}

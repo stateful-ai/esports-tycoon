@@ -1,0 +1,667 @@
+{
+  "season": 1,
+  "week": 19,
+  "phase": "playoffs",
+  "window": {
+    "open": false,
+    "kind": "roster_lock",
+    "label": "Tournament lock",
+    "detail": "Playoff rosters are frozen until the offseason."
+  },
+  "roster_readiness": {
+    "ready": true,
+    "reason": "",
+    "count": 6,
+    "minimum": 5,
+    "shortfall": 0
+  },
+  "user_team": {
+    "id": "team_nexus",
+    "name": "Team Nexus",
+    "tag": "NXS",
+    "logo": "/assets/logos/logo_1.webp",
+    "region": "americas",
+    "balance": 1564014,
+    "reputation": 66.2,
+    "fan_count": 330117,
+    "world_rank": 4,
+    "chemistry": 68.7,
+    "captain_id": "apex",
+    "player_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "starter_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo"
+    ],
+    "record": {
+      "wins": 11,
+      "losses": 3,
+      "diff": 69
+    }
+  },
+  "next_fixture": null,
+  "leaders": [
+    {
+      "pid": "team_crimson_order_p2",
+      "handle": "Wraithghost",
+      "team": "Crimson Order",
+      "team_id": "team_crimson_order",
+      "rating": 1.65,
+      "kills": 334
+    },
+    {
+      "pid": "team_outback_sentinels_p2",
+      "handle": "Karmahawk",
+      "team": "Outback Sentinels",
+      "team_id": "team_outback_sentinels",
+      "rating": 1.53,
+      "kills": 337
+    },
+    {
+      "pid": "team_solar_flare_p2",
+      "handle": "Karmawire",
+      "team": "Solar Flare",
+      "team_id": "team_solar_flare",
+      "rating": 1.45,
+      "kills": 419
+    }
+  ],
+  "movers": [
+    {
+      "pid": "apex",
+      "handle": "Apex",
+      "delta": 0.5
+    },
+    {
+      "pid": "echo",
+      "handle": "Echo",
+      "delta": -0.5
+    },
+    {
+      "pid": "fa_0",
+      "handle": "Hollowlock",
+      "delta": -0.5
+    }
+  ],
+  "run_in": [],
+  "on_this_day": [],
+  "debrief": {
+    "result": "Lost to Team Vanguard 1-2",
+    "won": false,
+    "standout": "Vortex (1.20)",
+    "underperformer": "Hollowlock (0.54)"
+  },
+  "last_match_review": {
+    "fixture_id": "s1msf0",
+    "won": false,
+    "contested": true,
+    "best_of": 3,
+    "your_maps": 1,
+    "their_maps": 2,
+    "your_rounds": 37,
+    "their_rounds": 44,
+    "opp_id": "team_vanguard",
+    "opp_name": "Team Vanguard",
+    "potm": {
+      "player_id": "slice",
+      "handle": "Slice",
+      "badges": [
+        {
+          "id": "aim_demon",
+          "name": "Aim Demon",
+          "emoji": "\ud83c\udfaf",
+          "polarity": 1,
+          "blurb": "raw mechanical menace",
+          "kind": "positive",
+          "impact": "While held: +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 2.",
+          "decay": "It can fade after 2 seasons without re-qualifying.",
+          "art": "/assets/badges/aim_demon.webp",
+          "season": 1
+        }
+      ]
+    },
+    "tier": 0,
+    "tier_label": "box scores only",
+    "momentum_beat": {
+      "player_id": "vortex",
+      "tone": "hot",
+      "rounds": 21,
+      "start_round": 16,
+      "end_round": 36,
+      "peak": 0.41,
+      "handle": "Vortex",
+      "text": "got hot mid-map (21-round run)."
+    },
+    "your_calls": {
+      "plan_set": true,
+      "dials": [],
+      "site_focus": null,
+      "focus_target": {
+        "player_id": "slice",
+        "handle": "Slice"
+      },
+      "team_talk": null,
+      "lineup": {
+        "override": false,
+        "followed": false,
+        "picked": [
+          {
+            "player_id": "fa_0",
+            "handle": "Hollowlock",
+            "rating": 0.54
+          }
+        ],
+        "benched": []
+      },
+      "prep": {
+        "edge": null,
+        "maps_played": [
+          "Haven",
+          "Ascent",
+          "Lotus"
+        ],
+        "maps_missed": []
+      }
+    },
+    "working": [
+      {
+        "code": "player_std",
+        "category": "player",
+        "tone": "good",
+        "headline": "Vortex carried",
+        "detail": "Team-high 1.2 average rating.",
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "site": null,
+        "badges": [
+          {
+            "id": "aim_demon",
+            "name": "Aim Demon",
+            "emoji": "\ud83c\udfaf",
+            "polarity": 1,
+            "blurb": "raw mechanical menace",
+            "kind": "positive",
+            "impact": "While held: +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 2.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/aim_demon.webp",
+            "season": 1
+          }
+        ]
+      }
+    ],
+    "breaking": [
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "headline": "Hollowlock off-colour",
+        "detail": "0.55 average rating across the series.",
+        "player_id": "fa_0",
+        "handle": "Hollowlock",
+        "site": null,
+        "badges": [
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "\ud83e\udd76",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "While held: -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          },
+          {
+            "id": "inconsistent",
+            "name": "Inconsistent",
+            "emoji": "\ud83c\udfb2",
+            "polarity": -1,
+            "blurb": "a different player week to week",
+            "kind": "negative",
+            "impact": "While held: -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/inconsistent.webp",
+            "season": 1
+          }
+        ],
+        "dev_note": "Near their ceiling (proj. 55\u201366) \u2014 a lineup call."
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "headline": "Defense is leaking",
+        "detail": "18/43 defense rounds won (42%).",
+        "player_id": null,
+        "handle": null,
+        "site": null,
+        "badges": []
+      }
+    ],
+    "levers": [
+      {
+        "code": "player_form",
+        "tab": "roster",
+        "specialty": "team",
+        "on_focus": false,
+        "text": "Hollowlock is off-colour \u2014 consider a bench or agent swap on the Roster screen.",
+        "adjustment": null
+      },
+      {
+        "code": "def_setups",
+        "tab": "tactics",
+        "specialty": "tactical",
+        "on_focus": false,
+        "text": "Set Map control to 30 (currently 50) \u2014 Stack more tightly and simplify the defensive setup.",
+        "adjustment": {
+          "dial": "map_control",
+          "label": "Map control",
+          "current": 50,
+          "target": 30,
+          "at_limit": false,
+          "reason": "Stack more tightly and simplify the defensive setup.",
+          "coach_step": 20,
+          "analyst_precision": 10
+        }
+      }
+    ],
+    "coach": {
+      "present": true,
+      "specialty": "mechanical"
+    },
+    "locked": true,
+    "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+  },
+  "decision_ledger": [
+    {
+      "kind": "focus_target",
+      "verdict": "backfired",
+      "text": "Game plan hunted Slice: 1.45 rating in the series vs 1.33 season form.",
+      "signal": 0.426,
+      "season": 1,
+      "week": 18,
+      "subject": "focus|s1msf0|slice"
+    }
+  ],
+  "press": null,
+  "suggested_lineup": {
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "quality": 79,
+        "dressed": true
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "quality": 78,
+        "dressed": true
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "quality": 76,
+        "dressed": true
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "quality": 76,
+        "dressed": true
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "quality": 73,
+        "dressed": true
+      }
+    ],
+    "changed": false
+  },
+  "board": null,
+  "form_trend": [
+    {
+      "n": 1,
+      "week": 1,
+      "wins": 1,
+      "won": true
+    },
+    {
+      "n": 2,
+      "week": 2,
+      "wins": 2,
+      "won": true
+    },
+    {
+      "n": 3,
+      "week": 3,
+      "wins": 3,
+      "won": true
+    },
+    {
+      "n": 4,
+      "week": 4,
+      "wins": 4,
+      "won": true
+    },
+    {
+      "n": 5,
+      "week": 5,
+      "wins": 5,
+      "won": true
+    },
+    {
+      "n": 6,
+      "week": 6,
+      "wins": 6,
+      "won": true
+    },
+    {
+      "n": 7,
+      "week": 7,
+      "wins": 6,
+      "won": false
+    },
+    {
+      "n": 8,
+      "week": 8,
+      "wins": 7,
+      "won": true
+    },
+    {
+      "n": 9,
+      "week": 9,
+      "wins": 8,
+      "won": true
+    },
+    {
+      "n": 10,
+      "week": 10,
+      "wins": 9,
+      "won": true
+    },
+    {
+      "n": 11,
+      "week": 11,
+      "wins": 10,
+      "won": true
+    },
+    {
+      "n": 12,
+      "week": 12,
+      "wins": 10,
+      "won": false
+    },
+    {
+      "n": 13,
+      "week": 13,
+      "wins": 11,
+      "won": true
+    },
+    {
+      "n": 14,
+      "week": 14,
+      "wins": 11,
+      "won": false
+    },
+    {
+      "n": 15,
+      "week": 15,
+      "wins": 12,
+      "won": true
+    },
+    {
+      "n": 16,
+      "week": 16,
+      "wins": 12,
+      "won": false
+    },
+    {
+      "n": 17,
+      "week": 17,
+      "wins": 13,
+      "won": true
+    },
+    {
+      "n": 18,
+      "week": 18,
+      "wins": 13,
+      "won": false
+    }
+  ],
+  "squad_profile": {
+    "avg_age": 24.0,
+    "buckets": {
+      "youth": 1,
+      "prime": 4,
+      "veteran": 1
+    },
+    "expiries": [
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "weeks_left": 26
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "weeks_left": 33
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "weeks_left": 34
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "weeks_left": 38
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 26,
+        "weeks_left": 44
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 28,
+        "weeks_left": 44
+      }
+    ]
+  },
+  "objectives_hub": [
+    {
+      "kind": "award",
+      "label": "Vortex: Top Fragger",
+      "state": "leading",
+      "detail": "1st \u00b7 582"
+    },
+    {
+      "kind": "award",
+      "label": "Vortex: Opening King",
+      "state": "leading",
+      "detail": "1st \u00b7 104"
+    },
+    {
+      "kind": "award",
+      "label": "Echo: Clutch Merchant",
+      "state": "in contention",
+      "detail": "2nd \u00b7 12"
+    },
+    {
+      "kind": "award",
+      "label": "Slyblade: Clutch Merchant",
+      "state": "in contention",
+      "detail": "3rd \u00b7 12"
+    }
+  ],
+  "rotation": [
+    {
+      "id": "fa_13",
+      "handle": "Slyblade",
+      "maps": 25,
+      "starter": true,
+      "stamina": 94,
+      "burnout": false
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "maps": 25,
+      "starter": true,
+      "stamina": 94,
+      "burnout": false
+    },
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "maps": 24,
+      "starter": true,
+      "stamina": 94,
+      "burnout": false
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "maps": 23,
+      "starter": true,
+      "stamina": 94,
+      "burnout": false
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "maps": 16,
+      "starter": true,
+      "stamina": 70,
+      "burnout": false
+    },
+    {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "maps": 12,
+      "starter": false,
+      "stamina": 100,
+      "burnout": false
+    }
+  ],
+  "training_focus": "tactical",
+  "training_delegated": false,
+  "focus_options": [
+    "mechanical",
+    "tactical",
+    "mental",
+    "team",
+    "rest"
+  ],
+  "news": [
+    "[S1 W18] Zenith (Team Vanguard) passes 200 kills this season.",
+    "[S1 W18] Grimwing (Solar Flare) passes 300 kills this season.",
+    "[S1 W18] Falconghost (Adriatic Sirens) passes 300 kills this season.",
+    "[S1 W18] Shade (Team Vanguard) passes 300 kills this season.",
+    "[S1 W18] Ghost (Team Nexus) passes 200 kills this season.",
+    "[S1 W18] Apex (Team Nexus) passes 300 kills this season.",
+    "[S1 W18] [MASTERS_SF] Solar Flare beat Adriatic Sirens, 2-0.",
+    "[S1 W18] [MASTERS_SF] 2-1 loss to Team Vanguard on haven, ascent, lotus. Pulse put up 23 kills (1.61). On disciplined, utility-perfect retakes. Team Vanguard have fourth straight over them now.",
+    "[S1 W18] Riftlock re-signs with Nordic Frost at 4,900/wk.",
+    "[S1 W18] Slystorm re-signs with Hokkaido Drift at 3,700/wk.",
+    "[S1 W18] Lunarhawk re-signs with Berlin Wolves at 3,900/wk.",
+    "[S1 W18] Deadzone Desks are courting the peripheral slot (7,100/wk steady, alternatives available). On the table until week 20."
+  ],
+  "scout": {
+    "target": "player:slice",
+    "target_name": "Slice",
+    "progress": 0.29,
+    "cap": 1.0
+  },
+  "standings_top": [
+    {
+      "team_id": "team_vanguard",
+      "name": "Team Vanguard",
+      "wins": 13,
+      "losses": 1,
+      "rounds_won": 181,
+      "rounds_lost": 99
+    },
+    {
+      "team_id": "team_nexus",
+      "name": "Team Nexus",
+      "wins": 11,
+      "losses": 3,
+      "rounds_won": 172,
+      "rounds_lost": 103
+    },
+    {
+      "team_id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming",
+      "wins": 10,
+      "losses": 4,
+      "rounds_won": 158,
+      "rounds_lost": 103
+    },
+    {
+      "team_id": "team_saracen_guard",
+      "name": "Saracen Guard",
+      "wins": 8,
+      "losses": 6,
+      "rounds_won": 157,
+      "rounds_lost": 131
+    }
+  ],
+  "champions": [],
+  "transfer_offers": [],
+  "flavor_event": null,
+  "media_event": null,
+  "career": {
+    "mode": "sandbox",
+    "seat": {
+      "id": "mgr_team_nexus",
+      "name": "NXS manager",
+      "team_id": "team_nexus",
+      "archetype": "",
+      "unemployed": false
+    },
+    "contract": null,
+    "offers": [],
+    "blocked": false
+  },
+  "multiplayer": {
+    "mode": "solo",
+    "code": "26UHC",
+    "humans": [
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "is_you": true
+      }
+    ],
+    "ready": [],
+    "you_ready": false
+  },
+  "save": {
+    "dirty": false,
+    "autosave_enabled": true,
+    "autosave_every_weeks": 1
+  },
+  "promise_pending": false,
+  "scout_shortlist_ready": false,
+  "scrim_proposal_pending": false,
+  "culture_violation_unack": false
+}

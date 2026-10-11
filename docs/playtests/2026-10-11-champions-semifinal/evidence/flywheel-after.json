@@ -1,0 +1,44 @@
+[
+  {
+    "id": "esports-playtest-0192",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Between-map response is visible in fixture history",
+    "problem": "Dashboardinitialplan lacked conditionalresponse feedback",
+    "solution": "ReadSeasonFixturesPlayedweeks and independently savedfixture",
+    "lesson": "NXSStabilize firedaftermap2 beforeLotus; acceptedcard alone is not executionproof. Existing publicseriesnotes corroborate savednotes.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-semifinal world26UHC seed2038 main20273cd7; root model/effort unknown; afterplay 2026-10-11T06:32:59.952229+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0193",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Sponsor structure has independently measurable immediate effect",
+    "problem": "Needed cash after semifinal loss without futurewin dependence",
+    "solution": "SignedRedlineChairsupfront and checkedUIbank plus savedcontractdecision",
+    "lesson": "Immediate106000 and1800/wk contract are confirmed; achievedscaledgoal12600 does not prove a payout. One13weekpackage comparison is visible arithmetic, not actual futureincome.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-semifinal world26UHC seed2038 main20273cd7; root model/effort unknown; afterplay 2026-10-11T06:32:59.952229+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0194",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Initial-plan recap obscures applied between-map calls",
+    "problem": "Fourinitialdials appear inDashboardYourCalls despite laterStabilize",
+    "solution": "Delegatedgap37 to ownGPT6.1solmediumagent to exposeexistingfixture notes nearby",
+    "lesson": "Surface engine-authoredseriesnotes besideinitialplan without JSformulas or claims that a response caused the result. Avoidduplicate378 formprefill.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-semifinal world26UHC seed2038 main20273cd7; root model/effort unknown; afterplay 2026-10-11T06:32:59.952229+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  }
+]

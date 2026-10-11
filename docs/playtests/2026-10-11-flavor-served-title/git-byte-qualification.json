@@ -1,0 +1,165 @@
+{
+  "parent_head": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+  "raw_scoped_attributes": "docs/playtests/2026-10-11-flavor-served-title/** -text -whitespace",
+  "files": {
+    "docs/playtests/2026-10-11-flavor-served-title/01-cached-moment.png": {
+      "sha256": "8c8f5b6761fd33b13923defd93626a2d8bcdd1840a02523358c1daeeb214f3d0",
+      "git_blob": "d7f09f081121217b23fe28ff4cb546482da7347a",
+      "bytes": 592069,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/02-served-title-receipt.png": {
+      "sha256": "5f4347aa0c153d8d7800c149a8f0c429e56572e8a0e650294b81aff474dc3d84",
+      "git_blob": "8d571735cb93d71234cf0da08ede243a34c5f6a1",
+      "bytes": 614312,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/actions.csv": {
+      "sha256": "d2764f38768adfc2548c512d41df7e48a269daed73d2b8393c37dea71d2b4046",
+      "git_blob": "b088c376247cdc75041dd5d6fdab024b18dee5ab",
+      "bytes": 3005,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/audit.json": {
+      "sha256": "dfbd018684a9cf1572f8d65d748f82cb7ffb8a75c93c49593336c1d6c88f89b5",
+      "git_blob": "201a6c024162c9fb0056e7b25e8f41fc08eedd8b",
+      "bytes": 655,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/automation/audit.py": {
+      "sha256": "00e8e12a9ffc69535bd1a30a8aabf53c6fc5bb26ca5355226b99a61fc2635d5d",
+      "git_blob": "c3c448855416509eb858d9b72e08ac6fc3f126f6",
+      "bytes": 7258,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/automation/log.py": {
+      "sha256": "998018ad228a95771d5b7f560a23e5c8f845de073029281d058d96b2fd8b5c48",
+      "git_blob": "feb9c91ad5ca7c5c61edeab338cdd8c5057ab42f",
+      "bytes": 307,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/automation/play.py": {
+      "sha256": "deab6d32862c4ad46374603044d0f1c335b6f81ec3218fe9ec4ed520afb2162c",
+      "git_blob": "73b77c0c2d71312c243b7b9fcf8e1504cfd5c44f",
+      "bytes": 5458,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/automation/qualify.py": {
+      "sha256": "e9f1165cf52450e80126e1b9e52111d8e778d5b7944740f9e2d490ffe7d87044",
+      "git_blob": "81115597c62b8e691336d8cdc4f3ddf191814d5b",
+      "bytes": 2017,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/automation/setup.py": {
+      "sha256": "63d5bc69266f626d021deb5af34cd3cb44cdacb5b82f98ebed6368a3d366d57c",
+      "git_blob": "6437e8309ff516e3753bfcd63dc549401d7e5565",
+      "bytes": 3731,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/baseline-comparison.json": {
+      "sha256": "559b748afaf3dfe6bfb7613fe0480797290f47af6e2dc6df84b6c6a4fc274f6e",
+      "git_blob": "5d94b39b507662563fd26acc3a813703d355c875",
+      "bytes": 534,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json": {
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob": "f4b0e74d8b0f1af7798dee084a09fcadee620179",
+      "bytes": 58450,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/cleanup-receipt.json": {
+      "sha256": "e05cb9af020170e26becd2877c1a6d4c659a06bf7c4b0c2e7923724f12aadb7e",
+      "git_blob": "c57bbe1da4b54879129ca01a512da5fd790d88a2",
+      "bytes": 1319,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/decision-indexed.json": {
+      "sha256": "50780870d14f820c690308c16349854a8122cba2ce56d67efa74ec2d8a5f4432",
+      "git_blob": "4e31b8249fc0722b62994f5afed309b227da05b9",
+      "bytes": 308,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/flywheel-after.json": {
+      "sha256": "5c77be4377afb8897d14b20e1a03efc53fb74f85c6adcdb3f063a0c659628701",
+      "git_blob": "eb0444cbdec862ba12fa5c5a9a2cacf1b4515ae6",
+      "bytes": 2280,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/flywheel-before.json": {
+      "sha256": "85062be01a2bb553d87eba285ca1cd70b563dcaef5b60e0cff003b848ff50e10",
+      "git_blob": "8f147ec5d82bcd6004d8333e60b66b17ebb58d88",
+      "bytes": 5918,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/historical-preservation.json": {
+      "sha256": "11ecc112263e7113cca1517bb876a6133572f60fcc5fe59fb6ad44ed42774e75",
+      "git_blob": "685a5dbaa2f2033382be1969388daad5a4004f0f",
+      "bytes": 3946,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/report.md": {
+      "sha256": "5e0c7736da6b4c35f6c87616f6b62a85fe562d44b29e7db8a335675e9e0d3a70",
+      "git_blob": "cebdf58a9deda6a3fabbf64a3fab414df6cdd99d",
+      "bytes": 4411,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/request-pairs.json": {
+      "sha256": "cd355f4241410562aa7929869813471ec1c45bb8e06b2c6af44dbd7e801d6447",
+      "git_blob": "9ffd56ff2a4c37494f3e0deb9a9b6b9b68d5f003",
+      "bytes": 1939,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/setup-receipt.json": {
+      "sha256": "7e3a0188b68a977f3e12351162070c8323536c29eff3f4d9f63aa65695e4ac5c",
+      "git_blob": "f40eebb56a700e39d2876f3d87749b5938b58df1",
+      "bytes": 606,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/source/src/esports_sim/web/static/app.js": {
+      "sha256": "db156263d04723885f266fa05ce8c79d87535b2367ff7085d4faf3ccfde26612",
+      "git_blob": "32511b5b911b0958566860d2c7881ed2039af4fa",
+      "bytes": 407890,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/source/tests/flavor_feedback_check.cjs": {
+      "sha256": "f4693a6ca44d015f2643a174d71915bccdd6653f2e955d23dc840be73d60500e",
+      "git_blob": "31a6fe59b624e6ee7ab10e32cebe5c32e21495e5",
+      "bytes": 3487,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/source-freeze.json": {
+      "sha256": "5b7219dbb8b22d509c25e080961908d986b30af049ebb22346948f79face18d4",
+      "git_blob": "798e89b5784bfada9175a901f8e3c4c7a02fad02",
+      "bytes": 507,
+      "raw_equals_staged_blob": true
+    },
+    "docs/playtests/2026-10-11-flavor-served-title/usage.0.jsonl": {
+      "sha256": "9c24be2b7a26e410d7666c6846768f6e74790e485d3b310aa35263b88ffa1809",
+      "git_blob": "f2f239013822fee365070e6190afede535f2755f",
+      "bytes": 4115,
+      "raw_equals_staged_blob": true
+    }
+  },
+  "source_qualification": {
+    "src/esports_sim/web/static/app.js": {
+      "raw_snapshot_equals_working_source": true,
+      "git_source_equals_snapshot_after_only_crlf_normalization": true,
+      "raw_sha256": "db156263d04723885f266fa05ce8c79d87535b2367ff7085d4faf3ccfde26612",
+      "git_source_blob": "017579f6605ec0aa3df6bcf298d784b4384e64e3",
+      "git_source_sha256": "3d80cfffee3356c9eeb6aeaf51562c7e138f158bea0baa1f583708b63f9e96d8"
+    },
+    "tests/flavor_feedback_check.cjs": {
+      "raw_snapshot_equals_working_source": true,
+      "git_source_equals_snapshot_after_only_crlf_normalization": true,
+      "raw_sha256": "f4693a6ca44d015f2643a174d71915bccdd6653f2e955d23dc840be73d60500e",
+      "git_source_blob": "8c2884cfd6d27c0869b3339e6fce7955fb9e936e",
+      "git_source_sha256": "97af6250ff34cbf9daff22ee4d42b2b9dfd6ecddf8e41f5eb5fd67b4b0f2a9fd"
+    }
+  },
+  "historical_qualification": "historical-preservation.json; original files unchanged",
+  "self_exclusion": "This qualification file is excluded from its own recursive manifest; verify its Git blob directly.",
+  "local_pytest": "UNRUN",
+  "local_node_regressions": "UNRUN",
+  "expensive_gates": "UNRUN"
+}

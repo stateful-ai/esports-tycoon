@@ -1,0 +1,228 @@
+{
+  "advanced": true,
+  "season": 1,
+  "week": 23,
+  "phase": "offseason",
+  "fixtures": [],
+  "user_income": 0,
+  "user_expenses": 0,
+  "notes": [
+    "Season MVP: Wraithghost (Crimson Order) \u2014 1.65 rating over 14 maps",
+    "Top Fragger: Slice (Team Vanguard) \u2014 767 kills",
+    "Opening King: Slice (Team Vanguard) \u2014 114 opening kills",
+    "Rookie of the Season: Ironhawk (Midnight Polders) \u2014 1.36 rating at age 18",
+    "Clutch Merchant: Karmawire (Solar Flare) \u2014 16 clutch rounds from a man down, incl. 5 from 1v3+",
+    "Most Improved: Driftlock (Kathmandu Apex) \u2014 +8 CA this season (61 -> 70)",
+    "Challengers MVP: Falconzero (Berlin Wolves) \u2014 1.67 rating, age 20",
+    "Best Defensive Team: Team Vanguard (Team Vanguard) \u2014 62% defensive round win rate",
+    "All-Star Five: Wraithghost (duelist), Riftbyte (controller), Crimghost (initiator), Nightwing (sentinel)",
+    "Patch 2.00 lands over the break.",
+    "S1 in review: Team Vanguard were crowned world champions; Wraithghost claimed MVP; Driftlock made the biggest leap; the league settled into a spread-map-control era.",
+    "Offseason complete \u2014 Season 2 starts now."
+  ],
+  "development": {
+    "season": 1,
+    "week": 23,
+    "players": [
+      {
+        "id": "team_adriatic_sirens_p0",
+        "handle": "Karmahawk",
+        "attribution": {
+          "season": 1,
+          "week": 23,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "thriving",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "team_adriatic_sirens_p1",
+        "handle": "Falconghost",
+        "attribution": {
+          "season": 1,
+          "week": 23,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "thriving",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "team_adriatic_sirens_p2",
+        "handle": "Hollowwing",
+        "attribution": {
+          "season": 1,
+          "week": 23,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "thriving",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "team_adriatic_sirens_p3",
+        "handle": "Ironbyte",
+        "attribution": {
+          "season": 1,
+          "week": 23,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "team_adriatic_sirens_p4",
+        "handle": "Emberveil",
+        "attribution": {
+          "season": 1,
+          "week": 23,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      }
+    ]
+  },
+  "week_reveal": {
+    "fixture_id": null,
+    "standings": null
+  }
+}

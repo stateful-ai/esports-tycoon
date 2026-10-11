@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0213",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Neutral opener plan has bounded consequences",
+    "problem": "Plan success should not imply victory.",
+    "solution": "Neutral plan saved with0 overrides, consumed in7-13loss; original standingfive retained.",
+    "lesson": "Validate preparation persistence/consumption separately from match outcome.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-opener copied26UHC seed2038 rootunknown runtime 2026-10-11T07:42:32.726856+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0214",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Individual plans show ordinary weekly causality",
+    "problem": "Offseason rollover did not exercise Ghost practice.",
+    "solution": "W1 ordinary tick showed mechanical/light0.09practice,0.01match and mentorship factor; Sly rest0practice.",
+    "lesson": "Compare authored attribution plus independent ID-based settings after a real weekly tick.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-opener copied26UHC seed2038 rootunknown runtime 2026-10-11T07:42:32.726856+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0215",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Response observer watched wrong flavor endpoint",
+    "problem": "Choice succeeded but endpoint mismatch timed out.",
+    "solution": "Retained timeout, checked public clearedevent, usage200 and saved measuredchoice without repeat.",
+    "lesson": "Resolve ambiguous browser timeout from independent saved evidence before retrying mutation.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-opener copied26UHC seed2038 rootunknown runtime 2026-10-11T07:42:32.726856+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "development",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  }
+]

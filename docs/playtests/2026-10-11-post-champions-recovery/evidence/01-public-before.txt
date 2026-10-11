@@ -1,0 +1,10 @@
+### Ran Playwright code
+```js
+await (async page => { const r = await page.evaluate(async () => ({state: await (await fetch('/api/state')).json(), roster: await (await fetch('/api/roster')).json()})); console.log(JSON.stringify(r)); })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8527/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T06-47-22-596Z.log#L2

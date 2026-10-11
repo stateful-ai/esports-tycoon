@@ -1,0 +1,1437 @@
+{
+  "code": "RSET4",
+  "mode": "shared",
+  "game_mode": "sandbox",
+  "fantasy_draft_active": false,
+  "teams": [
+    {
+      "id": "team_adriatic_sirens",
+      "name": "Adriatic Sirens",
+      "tag": "ADS",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "emea",
+      "balance": 1978494,
+      "reputation": 73.7,
+      "fan_count": 864977,
+      "world_rank": 10,
+      "chemistry": 60.9,
+      "captain_id": "team_adriatic_sirens_p0",
+      "player_ids": [
+        "team_adriatic_sirens_p0",
+        "team_adriatic_sirens_p1",
+        "team_adriatic_sirens_p2",
+        "team_adriatic_sirens_p3",
+        "team_adriatic_sirens_p4"
+      ],
+      "starter_ids": [
+        "team_adriatic_sirens_p0",
+        "team_adriatic_sirens_p1",
+        "team_adriatic_sirens_p2",
+        "team_adriatic_sirens_p3",
+        "team_adriatic_sirens_p4"
+      ],
+      "record": {
+        "wins": 9,
+        "losses": 5,
+        "diff": 31
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_alpine_echo",
+      "name": "Alpine Echo",
+      "tag": "ALE",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "pacific",
+      "balance": 1452773,
+      "reputation": 73.4,
+      "fan_count": 573656,
+      "world_rank": 17,
+      "chemistry": 57.2,
+      "captain_id": "team_alpine_echo_p1",
+      "player_ids": [
+        "team_alpine_echo_p1",
+        "team_alpine_echo_p3",
+        "fa_2",
+        "fa_10",
+        "fa_6"
+      ],
+      "starter_ids": [
+        "team_alpine_echo_p1",
+        "team_alpine_echo_p3",
+        "fa_2",
+        "fa_10",
+        "fa_6"
+      ],
+      "record": {
+        "wins": 7,
+        "losses": 7,
+        "diff": 18
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_anatolia_forge",
+      "name": "Anatolia Forge",
+      "tag": "ANF",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "emea",
+      "balance": 561285,
+      "reputation": 51.8,
+      "fan_count": 74299,
+      "world_rank": 28,
+      "chemistry": 52.0,
+      "captain_id": "team_anatolia_forge_p2",
+      "player_ids": [
+        "team_anatolia_forge_p2",
+        "team_anatolia_forge_p3",
+        "phantom",
+        "team_alpine_echo_p4",
+        "team_alpine_echo_p0"
+      ],
+      "starter_ids": [
+        "team_anatolia_forge_p2",
+        "team_anatolia_forge_p3",
+        "phantom",
+        "team_alpine_echo_p4",
+        "team_alpine_echo_p0"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 6,
+        "diff": -19
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_apex_syndicate",
+      "name": "Apex Syndicate",
+      "tag": "APX",
+      "logo": "/assets/logos/logo_7.webp",
+      "region": "emea",
+      "balance": 669059,
+      "reputation": 67.0,
+      "fan_count": 26992,
+      "world_rank": 8,
+      "chemistry": 59.3,
+      "captain_id": "team_apex_syndicate_p0",
+      "player_ids": [
+        "team_apex_syndicate_p0",
+        "team_apex_syndicate_p1",
+        "team_apex_syndicate_p2",
+        "team_apex_syndicate_p3",
+        "team_apex_syndicate_p4"
+      ],
+      "starter_ids": [
+        "team_apex_syndicate_p0",
+        "team_apex_syndicate_p1",
+        "team_apex_syndicate_p2",
+        "team_apex_syndicate_p3",
+        "team_apex_syndicate_p4"
+      ],
+      "record": {
+        "wins": 9,
+        "losses": 1,
+        "diff": 53
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_azure_vanta",
+      "name": "Azure Vanta",
+      "tag": "AZV",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "americas",
+      "balance": 766823,
+      "reputation": 56.7,
+      "fan_count": 83732,
+      "world_rank": 34,
+      "chemistry": 57.0,
+      "captain_id": "team_azure_vanta_p0",
+      "player_ids": [
+        "team_azure_vanta_p0",
+        "team_azure_vanta_p1",
+        "team_azure_vanta_p2",
+        "team_azure_vanta_p3",
+        "team_azure_vanta_p4"
+      ],
+      "starter_ids": [
+        "team_azure_vanta_p0",
+        "team_azure_vanta_p1",
+        "team_azure_vanta_p2",
+        "team_azure_vanta_p3",
+        "team_azure_vanta_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 7,
+        "diff": -21
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_baltic_meridian",
+      "name": "Baltic Meridian",
+      "tag": "BLM",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 1397224,
+      "reputation": 77.2,
+      "fan_count": 455281,
+      "world_rank": 23,
+      "chemistry": 59.3,
+      "captain_id": "team_baltic_meridian_p0",
+      "player_ids": [
+        "team_baltic_meridian_p0",
+        "team_baltic_meridian_p1",
+        "team_baltic_meridian_p2",
+        "team_baltic_meridian_p3",
+        "team_baltic_meridian_p4"
+      ],
+      "starter_ids": [
+        "team_baltic_meridian_p0",
+        "team_baltic_meridian_p1",
+        "team_baltic_meridian_p2",
+        "team_baltic_meridian_p3",
+        "team_baltic_meridian_p4"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 8,
+        "diff": -38
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_bayou_kings",
+      "name": "Bayou Kings",
+      "tag": "BYK",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "emea",
+      "balance": 2135152,
+      "reputation": 67.5,
+      "fan_count": 678760,
+      "world_rank": 15,
+      "chemistry": 57.4,
+      "captain_id": "team_bayou_kings_p0",
+      "player_ids": [
+        "team_bayou_kings_p0",
+        "team_bayou_kings_p2",
+        "team_bayou_kings_p3",
+        "team_bayou_kings_p4",
+        "team_harbour_city_nine_p1"
+      ],
+      "starter_ids": [
+        "team_bayou_kings_p0",
+        "team_bayou_kings_p2",
+        "team_bayou_kings_p3",
+        "team_bayou_kings_p4",
+        "team_harbour_city_nine_p1"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 6,
+        "diff": 12
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_berlin_wolves",
+      "name": "Berlin Wolves",
+      "tag": "BWV",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "emea",
+      "balance": 532552,
+      "reputation": 47.1,
+      "fan_count": 88987,
+      "world_rank": 33,
+      "chemistry": 55.2,
+      "captain_id": "team_berlin_wolves_p0",
+      "player_ids": [
+        "team_berlin_wolves_p0",
+        "team_berlin_wolves_p1",
+        "team_berlin_wolves_p2",
+        "team_berlin_wolves_p3",
+        "team_berlin_wolves_p4"
+      ],
+      "starter_ids": [
+        "team_berlin_wolves_p0",
+        "team_berlin_wolves_p1",
+        "team_berlin_wolves_p2",
+        "team_berlin_wolves_p3",
+        "team_berlin_wolves_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 7,
+        "diff": -16
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_busan_tempest",
+      "name": "Busan Tempest",
+      "tag": "BST",
+      "logo": "/assets/logos/logo_3.webp",
+      "region": "pacific",
+      "balance": 659367,
+      "reputation": 57.6,
+      "fan_count": 61195,
+      "world_rank": 24,
+      "chemistry": 55.0,
+      "captain_id": "team_busan_tempest_p0",
+      "player_ids": [
+        "team_busan_tempest_p0",
+        "team_busan_tempest_p1",
+        "team_busan_tempest_p2",
+        "team_busan_tempest_p3",
+        "team_busan_tempest_p4"
+      ],
+      "starter_ids": [
+        "team_busan_tempest_p0",
+        "team_busan_tempest_p1",
+        "team_busan_tempest_p2",
+        "team_busan_tempest_p3",
+        "team_busan_tempest_p4"
+      ],
+      "record": {
+        "wins": 5,
+        "losses": 5,
+        "diff": 2
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_cascadia_youth",
+      "name": "Cascadia Youth",
+      "tag": "CSY",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "pacific",
+      "balance": 711690,
+      "reputation": 57.3,
+      "fan_count": 40150,
+      "world_rank": 36,
+      "chemistry": 58.5,
+      "captain_id": "team_cascadia_youth_p0",
+      "player_ids": [
+        "team_cascadia_youth_p0",
+        "team_cascadia_youth_p1",
+        "team_cascadia_youth_p2",
+        "team_cascadia_youth_p3",
+        "team_cascadia_youth_p4"
+      ],
+      "starter_ids": [
+        "team_cascadia_youth_p0",
+        "team_cascadia_youth_p1",
+        "team_cascadia_youth_p2",
+        "team_cascadia_youth_p3",
+        "team_cascadia_youth_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 7,
+        "diff": -36
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_chao_phraya_owls",
+      "name": "Chao Phraya Owls",
+      "tag": "CPO",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "emea",
+      "balance": 1309343,
+      "reputation": 54.5,
+      "fan_count": 312597,
+      "world_rank": 26,
+      "chemistry": 57.2,
+      "captain_id": "team_chao_phraya_owls_p0",
+      "player_ids": [
+        "team_chao_phraya_owls_p0",
+        "team_chao_phraya_owls_p1",
+        "team_chao_phraya_owls_p2",
+        "team_chao_phraya_owls_p3",
+        "team_chao_phraya_owls_p4"
+      ],
+      "starter_ids": [
+        "team_chao_phraya_owls_p0",
+        "team_chao_phraya_owls_p1",
+        "team_chao_phraya_owls_p2",
+        "team_chao_phraya_owls_p3",
+        "team_chao_phraya_owls_p4"
+      ],
+      "record": {
+        "wins": 5,
+        "losses": 9,
+        "diff": -23
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_coral_sea_drakes",
+      "name": "Coral Sea Drakes",
+      "tag": "CSD",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "pacific",
+      "balance": 1970660,
+      "reputation": 77.4,
+      "fan_count": 291226,
+      "world_rank": 14,
+      "chemistry": 60.6,
+      "captain_id": "team_coral_sea_drakes_p0",
+      "player_ids": [
+        "team_coral_sea_drakes_p0",
+        "team_coral_sea_drakes_p1",
+        "team_coral_sea_drakes_p2",
+        "team_coral_sea_drakes_p3",
+        "team_coral_sea_drakes_p4"
+      ],
+      "starter_ids": [
+        "team_coral_sea_drakes_p0",
+        "team_coral_sea_drakes_p1",
+        "team_coral_sea_drakes_p2",
+        "team_coral_sea_drakes_p3",
+        "team_coral_sea_drakes_p4"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 6,
+        "diff": 19
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_crimson_order",
+      "name": "Crimson Order",
+      "tag": "CRO",
+      "logo": "/assets/logos/logo_3.webp",
+      "region": "emea",
+      "balance": 793036,
+      "reputation": 68.5,
+      "fan_count": 219624,
+      "world_rank": 19,
+      "chemistry": 63.4,
+      "captain_id": "team_crimson_order_p0",
+      "player_ids": [
+        "team_crimson_order_p0",
+        "team_crimson_order_p2",
+        "team_crimson_order_p3",
+        "team_crimson_order_p4",
+        "team_bayou_kings_p1"
+      ],
+      "starter_ids": [
+        "team_crimson_order_p0",
+        "team_crimson_order_p2",
+        "team_crimson_order_p3",
+        "team_crimson_order_p4",
+        "team_bayou_kings_p1"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 8,
+        "diff": -11
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_gallic_storm",
+      "name": "Gallic Storm",
+      "tag": "GST",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 507543,
+      "reputation": 36.6,
+      "fan_count": 27787,
+      "world_rank": 35,
+      "chemistry": 58.9,
+      "captain_id": "team_gallic_storm_p0",
+      "player_ids": [
+        "team_gallic_storm_p0",
+        "team_gallic_storm_p1",
+        "team_gallic_storm_p2",
+        "team_gallic_storm_p3",
+        "team_gallic_storm_p4"
+      ],
+      "starter_ids": [
+        "team_gallic_storm_p0",
+        "team_gallic_storm_p1",
+        "team_gallic_storm_p2",
+        "team_gallic_storm_p3",
+        "team_gallic_storm_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 7,
+        "diff": -25
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_ghostline",
+      "name": "Ghostline",
+      "tag": "GHL",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "pacific",
+      "balance": 1183110,
+      "reputation": 62.7,
+      "fan_count": 107130,
+      "world_rank": 31,
+      "chemistry": 57.7,
+      "captain_id": "team_ghostline_p0",
+      "player_ids": [
+        "team_ghostline_p0",
+        "team_ghostline_p1",
+        "team_ghostline_p2",
+        "team_ghostline_p3",
+        "team_ghostline_p4"
+      ],
+      "starter_ids": [
+        "team_ghostline_p0",
+        "team_ghostline_p1",
+        "team_ghostline_p2",
+        "team_ghostline_p3",
+        "team_ghostline_p4"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 10,
+        "diff": -52
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_harbour_city_nine",
+      "name": "Harbour City Nine",
+      "tag": "HC9",
+      "logo": "/assets/logos/logo_7.webp",
+      "region": "pacific",
+      "balance": 1397673,
+      "reputation": 68.7,
+      "fan_count": 439625,
+      "world_rank": 21,
+      "chemistry": 57.1,
+      "captain_id": "team_harbour_city_nine_p0",
+      "player_ids": [
+        "team_harbour_city_nine_p0",
+        "team_harbour_city_nine_p2",
+        "team_harbour_city_nine_p3",
+        "team_harbour_city_nine_p4",
+        "team_crimson_order_p1"
+      ],
+      "starter_ids": [
+        "team_harbour_city_nine_p0",
+        "team_harbour_city_nine_p2",
+        "team_harbour_city_nine_p3",
+        "team_harbour_city_nine_p4",
+        "team_crimson_order_p1"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 8,
+        "diff": -23
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_highlands_nine",
+      "name": "Highlands Nine",
+      "tag": "HL9",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "pacific",
+      "balance": 533252,
+      "reputation": 45.3,
+      "fan_count": 53373,
+      "world_rank": 41,
+      "chemistry": 55.5,
+      "captain_id": "team_highlands_nine_p0",
+      "player_ids": [
+        "team_highlands_nine_p0",
+        "team_highlands_nine_p1",
+        "team_highlands_nine_p2",
+        "team_highlands_nine_p3",
+        "team_highlands_nine_p4"
+      ],
+      "starter_ids": [
+        "team_highlands_nine_p0",
+        "team_highlands_nine_p1",
+        "team_highlands_nine_p2",
+        "team_highlands_nine_p3",
+        "team_highlands_nine_p4"
+      ],
+      "record": {
+        "wins": 1,
+        "losses": 9,
+        "diff": -66
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_hokkaido_drift",
+      "name": "Hokkaido Drift",
+      "tag": "HKD",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "emea",
+      "balance": 603589,
+      "reputation": 50.6,
+      "fan_count": 44421,
+      "world_rank": 12,
+      "chemistry": 57.0,
+      "captain_id": "team_hokkaido_drift_p0",
+      "player_ids": [
+        "team_hokkaido_drift_p0",
+        "team_hokkaido_drift_p1",
+        "team_hokkaido_drift_p2",
+        "team_hokkaido_drift_p3",
+        "team_hokkaido_drift_p4"
+      ],
+      "starter_ids": [
+        "team_hokkaido_drift_p0",
+        "team_hokkaido_drift_p1",
+        "team_hokkaido_drift_p2",
+        "team_hokkaido_drift_p3",
+        "team_hokkaido_drift_p4"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 2,
+        "diff": 34
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_iron_pact",
+      "name": "Iron Pact",
+      "tag": "IRP",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "pacific",
+      "balance": 936950,
+      "reputation": 61.8,
+      "fan_count": 219624,
+      "world_rank": 22,
+      "chemistry": 60.2,
+      "captain_id": "team_iron_pact_p0",
+      "player_ids": [
+        "team_iron_pact_p0",
+        "team_iron_pact_p1",
+        "team_iron_pact_p2",
+        "team_iron_pact_p3",
+        "team_iron_pact_p4"
+      ],
+      "starter_ids": [
+        "team_iron_pact_p0",
+        "team_iron_pact_p1",
+        "team_iron_pact_p2",
+        "team_iron_pact_p3",
+        "team_iron_pact_p4"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 8,
+        "diff": -29
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_kathmandu_apex",
+      "name": "Kathmandu Apex",
+      "tag": "KTA",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "americas",
+      "balance": 1436659,
+      "reputation": 70.0,
+      "fan_count": 407453,
+      "world_rank": 37,
+      "chemistry": 58.3,
+      "captain_id": "team_kathmandu_apex_p0",
+      "player_ids": [
+        "team_kathmandu_apex_p0",
+        "team_kathmandu_apex_p1",
+        "team_kathmandu_apex_p2",
+        "team_kathmandu_apex_p3",
+        "team_kathmandu_apex_p4"
+      ],
+      "starter_ids": [
+        "team_kathmandu_apex_p0",
+        "team_kathmandu_apex_p1",
+        "team_kathmandu_apex_p2",
+        "team_kathmandu_apex_p3",
+        "team_kathmandu_apex_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 11,
+        "diff": -51
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_kraken_unit",
+      "name": "Kraken Unit",
+      "tag": "KRK",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 792470,
+      "reputation": 59.8,
+      "fan_count": 18314,
+      "world_rank": 25,
+      "chemistry": 53.4,
+      "captain_id": "team_kraken_unit_p0",
+      "player_ids": [
+        "team_kraken_unit_p0",
+        "team_kraken_unit_p1",
+        "team_kraken_unit_p2",
+        "team_kraken_unit_p3",
+        "team_kraken_unit_p4"
+      ],
+      "starter_ids": [
+        "team_kraken_unit_p0",
+        "team_kraken_unit_p1",
+        "team_kraken_unit_p2",
+        "team_kraken_unit_p3",
+        "team_kraken_unit_p4"
+      ],
+      "record": {
+        "wins": 5,
+        "losses": 5,
+        "diff": -9
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_lisbon_tide",
+      "name": "Lisbon Tide",
+      "tag": "LTD",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "pacific",
+      "balance": 1185216,
+      "reputation": 75.3,
+      "fan_count": 74817,
+      "world_rank": 5,
+      "chemistry": 57.5,
+      "captain_id": "team_lisbon_tide_p0",
+      "player_ids": [
+        "team_lisbon_tide_p0",
+        "team_lisbon_tide_p1",
+        "team_lisbon_tide_p2",
+        "team_lisbon_tide_p4",
+        "team_sahara_compass_p3"
+      ],
+      "starter_ids": [
+        "team_lisbon_tide_p0",
+        "team_lisbon_tide_p1",
+        "team_lisbon_tide_p2",
+        "team_lisbon_tide_p4",
+        "team_sahara_compass_p3"
+      ],
+      "record": {
+        "wins": 10,
+        "losses": 0,
+        "diff": 83
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_mekong_vipers",
+      "name": "Mekong Vipers",
+      "tag": "MKV",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "emea",
+      "balance": 932586,
+      "reputation": 68.9,
+      "fan_count": 45073,
+      "world_rank": 40,
+      "chemistry": 56.8,
+      "captain_id": "team_mekong_vipers_p0",
+      "player_ids": [
+        "team_mekong_vipers_p0",
+        "team_mekong_vipers_p1",
+        "team_mekong_vipers_p2",
+        "team_mekong_vipers_p3",
+        "team_mekong_vipers_p4"
+      ],
+      "starter_ids": [
+        "team_mekong_vipers_p0",
+        "team_mekong_vipers_p1",
+        "team_mekong_vipers_p2",
+        "team_mekong_vipers_p3",
+        "team_mekong_vipers_p4"
+      ],
+      "record": {
+        "wins": 2,
+        "losses": 8,
+        "diff": -55
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_meridian_cross",
+      "name": "Meridian Cross",
+      "tag": "MRC",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "emea",
+      "balance": 1552876,
+      "reputation": 74.3,
+      "fan_count": 279026,
+      "world_rank": 3,
+      "chemistry": 60.0,
+      "captain_id": "team_meridian_cross_p0",
+      "player_ids": [
+        "team_meridian_cross_p0",
+        "team_meridian_cross_p1",
+        "team_meridian_cross_p2",
+        "team_meridian_cross_p3",
+        "team_meridian_cross_p4"
+      ],
+      "starter_ids": [
+        "team_meridian_cross_p0",
+        "team_meridian_cross_p1",
+        "team_meridian_cross_p2",
+        "team_meridian_cross_p3",
+        "team_meridian_cross_p4"
+      ],
+      "record": {
+        "wins": 11,
+        "losses": 3,
+        "diff": 74
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_midnight_polders",
+      "name": "Midnight Polders",
+      "tag": "MDP",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "emea",
+      "balance": 1136325,
+      "reputation": 55.9,
+      "fan_count": 696112,
+      "world_rank": 30,
+      "chemistry": 55.5,
+      "captain_id": "team_midnight_polders_p0",
+      "player_ids": [
+        "team_midnight_polders_p0",
+        "team_midnight_polders_p1",
+        "team_midnight_polders_p2",
+        "team_midnight_polders_p3",
+        "team_midnight_polders_p4"
+      ],
+      "starter_ids": [
+        "team_midnight_polders_p0",
+        "team_midnight_polders_p1",
+        "team_midnight_polders_p2",
+        "team_midnight_polders_p3",
+        "team_midnight_polders_p4"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 10,
+        "diff": -40
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 2266822,
+      "reputation": 66.5,
+      "fan_count": 333918,
+      "world_rank": 4,
+      "chemistry": 63.8,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo"
+      ],
+      "record": {
+        "wins": 11,
+        "losses": 3,
+        "diff": 69
+      },
+      "taken": true,
+      "tier": 1
+    },
+    {
+      "id": "team_nordic_frost",
+      "name": "Nordic Frost",
+      "tag": "NFR",
+      "logo": "/assets/logos/logo_7.webp",
+      "region": "americas",
+      "balance": 1100484,
+      "reputation": 55.6,
+      "fan_count": 308550,
+      "world_rank": 42,
+      "chemistry": 56.1,
+      "captain_id": "team_nordic_frost_p0",
+      "player_ids": [
+        "team_nordic_frost_p0",
+        "team_nordic_frost_p1",
+        "team_nordic_frost_p3",
+        "team_nordic_frost_p4",
+        "team_lisbon_tide_p3"
+      ],
+      "starter_ids": [
+        "team_nordic_frost_p0",
+        "team_nordic_frost_p1",
+        "team_nordic_frost_p3",
+        "team_nordic_frost_p4",
+        "team_lisbon_tide_p3"
+      ],
+      "record": {
+        "wins": 1,
+        "losses": 13,
+        "diff": -87
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_nova_rift",
+      "name": "Nova Rift",
+      "tag": "NVR",
+      "logo": "/assets/logos/logo_4.webp",
+      "region": "pacific",
+      "balance": 797054,
+      "reputation": 61.6,
+      "fan_count": 118591,
+      "world_rank": 16,
+      "chemistry": 62.7,
+      "captain_id": "team_nova_rift_p0",
+      "player_ids": [
+        "team_nova_rift_p0",
+        "team_nova_rift_p1",
+        "team_nova_rift_p2",
+        "team_nova_rift_p3",
+        "team_nova_rift_p4"
+      ],
+      "starter_ids": [
+        "team_nova_rift_p0",
+        "team_nova_rift_p1",
+        "team_nova_rift_p2",
+        "team_nova_rift_p3",
+        "team_nova_rift_p4"
+      ],
+      "record": {
+        "wins": 7,
+        "losses": 3,
+        "diff": 45
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_outback_sentinels",
+      "name": "Outback Sentinels",
+      "tag": "OBS",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "pacific",
+      "balance": 1314092,
+      "reputation": 54.4,
+      "fan_count": 288622,
+      "world_rank": 20,
+      "chemistry": 57.0,
+      "captain_id": "team_outback_sentinels_p0",
+      "player_ids": [
+        "team_outback_sentinels_p0",
+        "team_outback_sentinels_p1",
+        "team_outback_sentinels_p2",
+        "team_outback_sentinels_p3",
+        "team_outback_sentinels_p4"
+      ],
+      "starter_ids": [
+        "team_outback_sentinels_p0",
+        "team_outback_sentinels_p1",
+        "team_outback_sentinels_p2",
+        "team_outback_sentinels_p3",
+        "team_outback_sentinels_p4"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 8,
+        "diff": -17
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_patagonia_sur",
+      "name": "Patagonia Sur",
+      "tag": "PSU",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "americas",
+      "balance": 578882,
+      "reputation": 49.9,
+      "fan_count": 64505,
+      "world_rank": 39,
+      "chemistry": 57.6,
+      "captain_id": "team_patagonia_sur_p0",
+      "player_ids": [
+        "team_patagonia_sur_p0",
+        "team_patagonia_sur_p1",
+        "team_patagonia_sur_p2",
+        "team_patagonia_sur_p3",
+        "team_patagonia_sur_p4"
+      ],
+      "starter_ids": [
+        "team_patagonia_sur_p0",
+        "team_patagonia_sur_p1",
+        "team_patagonia_sur_p2",
+        "team_patagonia_sur_p3",
+        "team_patagonia_sur_p4"
+      ],
+      "record": {
+        "wins": 2,
+        "losses": 8,
+        "diff": -25
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_phantom_core",
+      "name": "Phantom Core",
+      "tag": "PHC",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "emea",
+      "balance": 637741,
+      "reputation": 51.0,
+      "fan_count": 28096,
+      "world_rank": 27,
+      "chemistry": 57.8,
+      "captain_id": "team_phantom_core_p0",
+      "player_ids": [
+        "team_phantom_core_p0",
+        "team_phantom_core_p1",
+        "team_phantom_core_p2",
+        "team_phantom_core_p3",
+        "team_phantom_core_p4"
+      ],
+      "starter_ids": [
+        "team_phantom_core_p0",
+        "team_phantom_core_p1",
+        "team_phantom_core_p2",
+        "team_phantom_core_p3",
+        "team_phantom_core_p4"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 6,
+        "diff": 3
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_prairie_signal",
+      "name": "Prairie Signal",
+      "tag": "PRS",
+      "logo": "/assets/logos/logo_2.webp",
+      "region": "emea",
+      "balance": 1448311,
+      "reputation": 68.4,
+      "fan_count": 245695,
+      "world_rank": 38,
+      "chemistry": 55.2,
+      "captain_id": "team_prairie_signal_p0",
+      "player_ids": [
+        "team_prairie_signal_p0",
+        "team_prairie_signal_p1",
+        "team_prairie_signal_p2",
+        "team_prairie_signal_p3",
+        "team_prairie_signal_p4"
+      ],
+      "starter_ids": [
+        "team_prairie_signal_p0",
+        "team_prairie_signal_p1",
+        "team_prairie_signal_p2",
+        "team_prairie_signal_p3",
+        "team_prairie_signal_p4"
+      ],
+      "record": {
+        "wins": 3,
+        "losses": 11,
+        "diff": -105
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming",
+      "tag": "RBG",
+      "logo": "/assets/logos/logo_0.webp",
+      "region": "americas",
+      "balance": 1614950,
+      "reputation": 69.7,
+      "fan_count": 194514,
+      "world_rank": 7,
+      "chemistry": 62.1,
+      "captain_id": "team_rust_belt_gaming_p0",
+      "player_ids": [
+        "team_rust_belt_gaming_p0",
+        "team_rust_belt_gaming_p1",
+        "team_rust_belt_gaming_p2",
+        "team_rust_belt_gaming_p3",
+        "team_rust_belt_gaming_p4"
+      ],
+      "starter_ids": [
+        "team_rust_belt_gaming_p0",
+        "team_rust_belt_gaming_p1",
+        "team_rust_belt_gaming_p2",
+        "team_rust_belt_gaming_p3",
+        "team_rust_belt_gaming_p4"
+      ],
+      "record": {
+        "wins": 10,
+        "losses": 4,
+        "diff": 55
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_sahara_compass",
+      "name": "Sahara Compass",
+      "tag": "SHC",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 1069743,
+      "reputation": 54.9,
+      "fan_count": 792320,
+      "world_rank": 32,
+      "chemistry": 55.4,
+      "captain_id": "team_sahara_compass_p0",
+      "player_ids": [
+        "team_sahara_compass_p0",
+        "fa_7",
+        "fa_16",
+        "team_sahara_compass_p2",
+        "fa_9"
+      ],
+      "starter_ids": [
+        "team_sahara_compass_p0",
+        "fa_7",
+        "fa_16",
+        "team_sahara_compass_p2",
+        "fa_9"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 10,
+        "diff": -56
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_saracen_guard",
+      "name": "Saracen Guard",
+      "tag": "SRG",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 1679184,
+      "reputation": 81.4,
+      "fan_count": 652771,
+      "world_rank": 13,
+      "chemistry": 60.0,
+      "captain_id": "team_saracen_guard_p0",
+      "player_ids": [
+        "team_saracen_guard_p0",
+        "team_saracen_guard_p1",
+        "team_saracen_guard_p2",
+        "team_saracen_guard_p3",
+        "team_saracen_guard_p4"
+      ],
+      "starter_ids": [
+        "team_saracen_guard_p0",
+        "team_saracen_guard_p1",
+        "team_saracen_guard_p2",
+        "team_saracen_guard_p3",
+        "team_saracen_guard_p4"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 6,
+        "diff": 26
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_seoul_dynasty_prime",
+      "name": "Seoul Dynasty Prime",
+      "tag": "SDP",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "pacific",
+      "balance": 1569027,
+      "reputation": 66.9,
+      "fan_count": 640453,
+      "world_rank": 18,
+      "chemistry": 57.3,
+      "captain_id": "team_seoul_dynasty_prime_p0",
+      "player_ids": [
+        "team_seoul_dynasty_prime_p0",
+        "team_seoul_dynasty_prime_p1",
+        "team_seoul_dynasty_prime_p2",
+        "team_seoul_dynasty_prime_p3",
+        "team_seoul_dynasty_prime_p4"
+      ],
+      "starter_ids": [
+        "team_seoul_dynasty_prime_p0",
+        "team_seoul_dynasty_prime_p1",
+        "team_seoul_dynasty_prime_p2",
+        "team_seoul_dynasty_prime_p3",
+        "team_seoul_dynasty_prime_p4"
+      ],
+      "record": {
+        "wins": 7,
+        "losses": 7,
+        "diff": 5
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_solar_flare",
+      "name": "Solar Flare",
+      "tag": "SOL",
+      "logo": "/assets/logos/logo_4.webp",
+      "region": "pacific",
+      "balance": 2301023,
+      "reputation": 96.7,
+      "fan_count": 304110,
+      "world_rank": 2,
+      "chemistry": 63.2,
+      "captain_id": "team_solar_flare_p0",
+      "player_ids": [
+        "team_solar_flare_p0",
+        "team_solar_flare_p1",
+        "team_solar_flare_p2",
+        "team_solar_flare_p3",
+        "team_solar_flare_p4"
+      ],
+      "starter_ids": [
+        "team_solar_flare_p0",
+        "team_solar_flare_p1",
+        "team_solar_flare_p2",
+        "team_solar_flare_p3",
+        "team_solar_flare_p4"
+      ],
+      "record": {
+        "wins": 12,
+        "losses": 2,
+        "diff": 79
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_taipei_circuit",
+      "name": "Taipei Circuit",
+      "tag": "TPC",
+      "logo": "/assets/logos/logo_3.webp",
+      "region": "americas",
+      "balance": 835493,
+      "reputation": 67.8,
+      "fan_count": 121814,
+      "world_rank": 9,
+      "chemistry": 58.9,
+      "captain_id": "team_taipei_circuit_p0",
+      "player_ids": [
+        "team_taipei_circuit_p0",
+        "team_taipei_circuit_p1",
+        "team_taipei_circuit_p2",
+        "team_taipei_circuit_p3",
+        "team_taipei_circuit_p4"
+      ],
+      "starter_ids": [
+        "team_taipei_circuit_p0",
+        "team_taipei_circuit_p1",
+        "team_taipei_circuit_p2",
+        "team_taipei_circuit_p3",
+        "team_taipei_circuit_p4"
+      ],
+      "record": {
+        "wins": 9,
+        "losses": 1,
+        "diff": 37
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_tokyo_drift_six",
+      "name": "Tokyo Drift Six",
+      "tag": "TD6",
+      "logo": "/assets/logos/logo_4.webp",
+      "region": "emea",
+      "balance": 1573645,
+      "reputation": 72.9,
+      "fan_count": 354286,
+      "world_rank": 6,
+      "chemistry": 56.7,
+      "captain_id": "team_tokyo_drift_six_p0",
+      "player_ids": [
+        "team_tokyo_drift_six_p0",
+        "team_tokyo_drift_six_p1",
+        "team_tokyo_drift_six_p2",
+        "team_tokyo_drift_six_p3",
+        "team_tokyo_drift_six_p4"
+      ],
+      "starter_ids": [
+        "team_tokyo_drift_six_p0",
+        "team_tokyo_drift_six_p1",
+        "team_tokyo_drift_six_p2",
+        "team_tokyo_drift_six_p3",
+        "team_tokyo_drift_six_p4"
+      ],
+      "record": {
+        "wins": 10,
+        "losses": 4,
+        "diff": 62
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_vanguard",
+      "name": "Team Vanguard",
+      "tag": "VGD",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "americas",
+      "balance": 3689591,
+      "reputation": 99.0,
+      "fan_count": 1008707,
+      "world_rank": 1,
+      "chemistry": 70.4,
+      "captain_id": "zenith",
+      "player_ids": [
+        "zenith",
+        "pulse",
+        "warden",
+        "slice",
+        "shade"
+      ],
+      "starter_ids": [
+        "zenith",
+        "pulse",
+        "warden",
+        "slice",
+        "shade"
+      ],
+      "record": {
+        "wins": 13,
+        "losses": 1,
+        "diff": 82
+      },
+      "taken": false,
+      "tier": 1
+    },
+    {
+      "id": "team_volga_reign",
+      "name": "Volga Reign",
+      "tag": "VLG",
+      "logo": "/assets/logos/logo_5.webp",
+      "region": "americas",
+      "balance": 581292,
+      "reputation": 53.1,
+      "fan_count": 49781,
+      "world_rank": 11,
+      "chemistry": 60.3,
+      "captain_id": "team_volga_reign_p0",
+      "player_ids": [
+        "team_volga_reign_p0",
+        "team_volga_reign_p1",
+        "team_volga_reign_p2",
+        "team_volga_reign_p3",
+        "team_volga_reign_p4"
+      ],
+      "starter_ids": [
+        "team_volga_reign_p0",
+        "team_volga_reign_p1",
+        "team_volga_reign_p2",
+        "team_volga_reign_p3",
+        "team_volga_reign_p4"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 2,
+        "diff": 43
+      },
+      "taken": false,
+      "tier": 2
+    },
+    {
+      "id": "team_yucatan_ceibas",
+      "name": "Yucatan Ceibas",
+      "tag": "YCB",
+      "logo": "/assets/logos/logo_6.webp",
+      "region": "pacific",
+      "balance": 566941,
+      "reputation": 43.2,
+      "fan_count": 42924,
+      "world_rank": 29,
+      "chemistry": 56.1,
+      "captain_id": "team_yucatan_ceibas_p0",
+      "player_ids": [
+        "team_yucatan_ceibas_p0",
+        "team_yucatan_ceibas_p1",
+        "team_yucatan_ceibas_p2",
+        "team_yucatan_ceibas_p3",
+        "team_yucatan_ceibas_p4"
+      ],
+      "starter_ids": [
+        "team_yucatan_ceibas_p0",
+        "team_yucatan_ceibas_p1",
+        "team_yucatan_ceibas_p2",
+        "team_yucatan_ceibas_p3",
+        "team_yucatan_ceibas_p4"
+      ],
+      "record": {
+        "wins": 4,
+        "losses": 6,
+        "diff": -28
+      },
+      "taken": false,
+      "tier": 2
+    }
+  ]
+}

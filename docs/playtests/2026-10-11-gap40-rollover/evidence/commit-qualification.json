@@ -1,0 +1,7 @@
+{
+  "head": "6f8a114741a2d0000e05168bf3faf7118fc4a8ac",
+  "tracked_files": 1803,
+  "raw_blob_mismatches": 1146,
+  "mismatch_reason": "LF repository blobs versus Windows CRLF checkouts only",
+  "non_newline_mismatches": []
+}

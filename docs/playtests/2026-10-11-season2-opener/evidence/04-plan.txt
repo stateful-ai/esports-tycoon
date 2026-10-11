@@ -1,0 +1,6 @@
+### Result
+"ESPORTSSIM\nSeason 2 · Week 1 · Regular — Team Nexus\n2,266,822 cr\nSave •\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide\nWEEKLY\nDASHBOARD\nINBOX16\nMATCH2\nORG\nCLUB\nFACILITIES\nSEASON\nMARKET\nSTATS\nCOMPANY\nMATCH\nS2 · W1 · Regular\nSTRATEGY\nGAME PLAN\nPREP\nGuide\nMATCH DAY BRIEFING ▸\nThe full pre-match buildup: storylines, form, danger men, maps"
+### Ran Playwright code
+```js
+await (async page => { await page.getByRole('button',{name:'Build plan ▸',exact:true}).click(); return await page.locator('body').innerText(); })(page);
+```
