@@ -1,0 +1,36 @@
+[
+  {
+    "schema_version": 1,
+    "session_id": "e9b0bff6641c349f918dc739a60975b7",
+    "received_at": "2026-10-10T17:19:58.341154+00:00",
+    "world": null,
+    "team": null,
+    "season": null,
+    "week": null,
+    "kind": "session_start",
+    "target": ""
+  },
+  {
+    "schema_version": 1,
+    "session_id": "e9b0bff6641c349f918dc739a60975b7",
+    "received_at": "2026-10-10T17:19:58.341154+00:00",
+    "world": null,
+    "team": null,
+    "season": null,
+    "week": null,
+    "kind": "view",
+    "target": "lobby"
+  },
+  {
+    "schema_version": 1,
+    "session_id": "e9b0bff6641c349f918dc739a60975b7",
+    "received_at": "2026-10-10T17:19:58.341154+00:00",
+    "world": null,
+    "team": null,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby",
+    "duration_ms": 15003
+  }
+]

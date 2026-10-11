@@ -1,0 +1,44 @@
+[
+  {
+    "index": 43,
+    "season": 1,
+    "week": 9,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "team_first",
+      "event_id": "72b29241b2f60658"
+    },
+    "source": "web"
+  },
+  {
+    "index": 44,
+    "season": 1,
+    "week": 9,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "False",
+      "default_five": "True",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  {
+    "index": 45,
+    "season": 1,
+    "week": 9,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

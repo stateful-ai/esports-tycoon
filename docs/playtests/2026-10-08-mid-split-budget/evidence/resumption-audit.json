@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-10-10T17:19:15.805519+00:00",
+  "tested_commit": "121e55ed36e5538eeee80a2c17c656a8021ccf22",
+  "source_paths_unchanged": 539,
+  "baseline_action_count": 36,
+  "saved_action_count": 36,
+  "saved_action_prefix_unchanged": true,
+  "new_saved_actions": 0,
+  "usage_files": 1,
+  "retained_usage_records": 721,
+  "receipt_store_recovered": false,
+  "important_limit": "First five recorded outcomes describe earlier UI observations; referenced ephemeral receipt files were never exported. No save persistence or complete usage coverage claim can be made."
+}

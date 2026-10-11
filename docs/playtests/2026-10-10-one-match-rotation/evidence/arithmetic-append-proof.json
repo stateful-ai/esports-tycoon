@@ -1,0 +1,8 @@
+{
+  "original9row_bytes_preserved": true,
+  "session_rows": 10,
+  "new_step": 10,
+  "old_shard_sha256": "ddb1bc0dcd66032ac3bf38c9bbeb7be3f88ab957d71a03798a78744833bb2a98",
+  "new_shard_sha256": "ae8a9a904209b77af550536eee88f89cb29722eebcf2596b7b152bac8e100ced",
+  "original_report_preserved": true
+}

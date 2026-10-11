@@ -7,7 +7,7 @@ import pytest
 from esports_sim.manager import advance_week, new_campaign
 from esports_sim.manager.market import release_player
 from esports_sim.manager.match_review import build_match_review, tactic_adjustment
-from esports_sim.manager.state import GamePlan, GameState, StaffMember
+from esports_sim.manager.state import Fixture, GamePlan, GameState, StaffMember
 from esports_sim.registry import GameData
 from esports_sim.schemas import TeamTactics
 
@@ -254,6 +254,48 @@ def test_build_empty_bundles() -> None:
     assert rv.contested is False
     assert rv.fixture_id == "fx" and rv.season == 1 and rv.week == 2
     assert not rv.working and not rv.breaking
+
+
+@pytest.mark.parametrize("mismatch", [None, "id", "week", "teams", "season", "missing"])
+def test_review_series_notes_belong_to_exact_fixture(game_data: GameData, mismatch) -> None:
+    """Notes need no initial plan or analyst; stale reviews cannot borrow notes."""
+    pytest.importorskip("fastapi")
+    from esports_sim.web import server
+
+    gs = new_campaign(game_data, seed=123)
+    uid = gs.user_team_id
+    opp = next(tid for tid in gs.teams if tid != uid)
+    review = build_match_review(gs.season, 1, "notes-fx", uid, opp, 3, [], {})
+    gs.last_review_by[uid] = review
+    gs.set_acting(uid)
+    gs.staff.pop("analyst", None)
+    notes = ["AWY: targeting <Vortex>.", "OWN: stabilize response after map 2."]
+    fixture = Fixture(id="notes-fx", week=1, team_a=opp, team_b=uid, series_notes=notes)
+    gs.fixtures = [fixture]
+    if mismatch == "id":
+        fixture.id = "other-fx"
+    elif mismatch == "week":
+        fixture.week = 2
+    elif mismatch == "teams":
+        fixture.team_a = "other-team"
+    elif mismatch == "season":
+        gs.season += 1
+    elif mismatch == "missing":
+        gs.fixtures = []
+    out = server._last_match_review(gs)
+    assert out["series_notes"] == (notes if mismatch is None else [])
+    assert out["your_calls"] is None
+    assert fixture.series_notes == notes
+    if mismatch is None:
+        out["series_notes"].append("consumer edit")
+        assert fixture.series_notes == notes
+        fixture.series_notes = []
+        assert server._last_match_review(gs)["series_notes"] == []
+        # The field's default preserves the old-save contract.
+        legacy = fixture.model_dump()
+        legacy.pop("series_notes")
+        gs.fixtures = [Fixture.model_validate(legacy)]
+        assert server._last_match_review(gs)["series_notes"] == []
 
 
 def test_momentum_trace_reconstructs_kills_decay_and_clutch() -> None:

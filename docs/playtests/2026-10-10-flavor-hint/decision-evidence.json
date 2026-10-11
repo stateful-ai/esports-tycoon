@@ -1,0 +1,41 @@
+{
+  "world": "26UHC",
+  "seed": 2038,
+  "before_actions": 27,
+  "after_actions": 29,
+  "prefix_unchanged": true,
+  "before_snapshots": 5,
+  "after_snapshots": 6,
+  "snapshot_prefix_unchanged": true,
+  "added_actions": [
+    {
+      "index": 27,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "let_loose",
+        "event_id": "39e83f39373aa3ea"
+      },
+      "source": "web"
+    },
+    {
+      "index": 28,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "accepted_decision_coverage": "2/2",
+  "rejected_advance_decisions": 0,
+  "before_save_sha256": "40d4f3d782a74a980c0c0cce65b68f34f2f87ed6991001cf046f60d1003ca5f3",
+  "after_save_sha256": "fe19e5c8af41eb69438f775258e2a872b4f96f7baf40eb27bd0e87e96ce938f0"
+}

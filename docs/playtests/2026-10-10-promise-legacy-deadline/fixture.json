@@ -1,0 +1,36 @@
+{
+  "controlled_fixture": true,
+  "source": "C:\\Users\\aidan\\.codex\\worktrees\\current-main-recovery-playtest\\ESports Simulator\\runs\\playtests\\2026-10-10-media-sponsor\\saves\\campaign_f2977bf6e97d789a.json",
+  "source_sha256": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "modified_fields": "Only promises replaced by two explicitly controlled review examples; no match participation claim",
+  "promises": [
+    {
+      "id": "early",
+      "team_id": "team_nexus",
+      "player_id": "echo",
+      "promise_type": "play_time",
+      "target_value": 60,
+      "weeks_left": 2,
+      "created_week": 1,
+      "created_season": 1,
+      "status": "active",
+      "dressed_count": 3,
+      "initial_duration": 8,
+      "source": "talk"
+    },
+    {
+      "id": "legacy",
+      "team_id": "team_nexus",
+      "player_id": "apex",
+      "promise_type": "play_time",
+      "target_value": 60,
+      "weeks_left": 1,
+      "created_week": 2,
+      "created_season": 1,
+      "status": "active",
+      "dressed_count": 5,
+      "initial_duration": 0,
+      "source": "talk"
+    }
+  ]
+}

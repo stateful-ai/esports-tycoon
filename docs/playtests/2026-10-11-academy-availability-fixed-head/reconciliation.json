@@ -1,0 +1,130 @@
+{
+  "head": "679fdb313cc8004fb0a34db271ff62c736cbf099",
+  "git_status": "",
+  "source_files_frozen": 524,
+  "source_raw_hashes_unchanged": true,
+  "source_hash_note": "Git index blob IDs versus checkout raw SHA256; CRLF checkout bytes are not claimed identical to LF Git blobs. Freeze covers tracked src/scripts/tests/data text source extensions, 524 files.",
+  "before_actions": 112,
+  "after_actions": 112,
+  "action_prefix_equal": true,
+  "new_actions": [],
+  "before_snapshots": 26,
+  "after_snapshots": 26,
+  "snapshot_prefix_equal": {
+    "mgr_team_nexus": true
+  },
+  "changed_top_level_state_keys": [],
+  "season_week_before": [
+    2,
+    4
+  ],
+  "season_week_after": [
+    2,
+    4
+  ],
+  "saved_lineup_before": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "saved_lineup_after": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "public_effective_lineup_ids": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo"
+  ],
+  "public_team_player_ids": [
+    "apex",
+    "vortex",
+    "ghost",
+    "fa_13",
+    "echo",
+    "fa_0"
+  ],
+  "public_affiliate_ids": [
+    "team_kraken_unit_p0",
+    "team_kraken_unit_p1",
+    "team_kraken_unit_p3",
+    "team_kraken_unit_p4",
+    "team_kraken_unit_p2"
+  ],
+  "public_nightsurge_contract": {
+    "salary": 3100,
+    "weeks": 31,
+    "terms": {
+      "stream_share": 70,
+      "release_fee": 37000,
+      "buyout": 233000,
+      "no_transfer": false,
+      "roster_role": "starter"
+    }
+  },
+  "usage_total_events": 42,
+  "usage_counts": {
+    "session_start": 1,
+    "view": 5,
+    "visible_time": 33,
+    "attempt": 1,
+    "result": 1,
+    "session_end": 1
+  },
+  "usage_sessions": [
+    "506b15c9de64ca82f1300f1d77c43055"
+  ],
+  "usage_attempts": [
+    {
+      "schema_version": 1,
+      "session_id": "506b15c9de64ca82f1300f1d77c43055",
+      "received_at": "2026-10-11T10:23:49.916220+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 4,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 14
+    }
+  ],
+  "usage_results": [
+    {
+      "schema_version": 1,
+      "session_id": "506b15c9de64ca82f1300f1d77c43055",
+      "received_at": "2026-10-11T10:23:49.916220+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 4,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 14,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 38
+    }
+  ],
+  "usage_prefix_equal": {
+    "usage.0.jsonl": true
+  },
+  "csv_rows": 6,
+  "csv_columns": 21,
+  "csv_result_counts": {
+    "met": 4,
+    "blocked": 2
+  },
+  "csv_analytics_counts": {
+    "recorded": 3,
+    "unverified": 3
+  },
+  "accepted_decision_coverage": "0 new accepted decisions; no promotion/send-down/Advance requested; no positive mutation coverage claimed",
+  "limitations": "No local automated tests/gates or native acceptance. Actual browser discoverability and no-request blocker handling observed; successful send-down/promotion, closed-window rendering, stale-availability failure feedback unverified. Independent direct public GETs after player choices are not browser usage."
+}

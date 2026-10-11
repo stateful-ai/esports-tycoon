@@ -1,0 +1,1414 @@
+session_id,step,started_at_utc,finished_at_utc,commit,working_tree_dirty,game_version,model,effort,surface,world_code,seed,game_time,intent,action,expected_outcome,actual_outcome,result,evidence,analytics_status,analytics_evidence
+2026-10-08-preparation-decision-clarity,1,2026-10-08T20:38:37.116+00:00,2026-10-08T20:38:47.032+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Resume owned Week 4 test world and find Match navigation,open,Week 4 world loads with Match navigation," — LAST 3
+L
+W
+W
+DANGER MEN
+Crimghost
+INITIATOR
+~80
+Lunardash
+DUELIST
+~77
+Frostbyte
+CONTROLLER
+~72
+MAP POOL & VETO
+Ascent
+100%
+1/1
+Bind
+100%
+1/1
+Lotus
+100%
+1/1
+MATCH REVIEW
+
+Last time out — Beat Kathmandu Apex 13-10. Standout: Slyblade (1.27). Off-colour: Ghost (0.76).
+
+“Team Nexus are one of the form teams on a 3-match run.”
+
+W
+vs Kathmandu Apex
+13–10
+★
+POTM
+Slyblade
+WHAT WORKED
+Defense is a wall
+8/12 defense rounds won (67%).
+Slyblade carried
+Team-high 1.27 average rating.
+WHERE IT BROKE DOWN
+Ghost off-colour
+0.76 average rating across the series.
+Young with room (proj. 82–99) — a development call, not a bench.
+WHAT TO TWEAK
+▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+
+A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Team Vanguard	3	0	+29
+2	Team Nexus	3	0	+18
+3	Rust Belt Gaming	2	1	+12
+4	Saracen Guard	2	1	+6
+LAST RESULT
+W
+Kathmandu Apex
+13–10
+
+World #6 · Rep 60 · Fans 294.1K
+
+Full table ▸
+NEEDS YOU
+TEAM MOMENT
+A sponsor wants a quick Team Nexus shoot
+
+A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.
+
+Take the shoot
+Ask for a leaner setup
+Pass on the campaign
+▸ Vortex contract up in 5w
+▸ No game plan set for W4
+▸ 7 unread inbox messages
+▸ Coach proposed a scrim plan Match · Prep
+NEWS
+[S1 W3] Midnight Polders part with Liam Park and appoint Veer after a 2-match losing streak.
+[S1 W3] 10-13 win over Kathmandu Apex. Slyblade finished at 1.27.
+[S1 W3] Upset: #29 Iron Pact take down #24 Seoul Dynasty Prime, 9-13.
+[S1 W3] Anatolia Forge sign Phantom (entry) for 5,800/wk.
+[S1 W3] Anatolia Forge release Falconlock (severance 29,000 cr).
+[S1 W3] Sahara Compass sign Cipherpulse (awper) for 4,300/wk.
+[S1 W3] Sahara Compass release Cipherpulse (severance 52,000 cr).
+[S1 W3] Apex re-signs with Team Nexus at 10,500/wk.
+[S1 W2] #18 Harbour City Nine stumble against #23 Ghostline (11-13).
+[S1 W2] 9-13 win over Nordic Frost. Top rating: Crimrush, 1.49.
+[S1 W2] Upset: #29 Prairie Signal take down #22 Adriatic Sirens, 17-15.
+[S1 W2] Alpine Echo sign Voltecho (igl) for 7,100/wk.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-1.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,2,2026-10-08T20:39:09.322+00:00,2026-10-08T20:39:12.482+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Find preparation controls from Match,click,Match workspace exposes a Prep tab,"Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH2
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+COACHING STRATEGY
+
+The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 74.
+
+EXECUTION EDGE
+0.0
+duel points from how your roster fits this system (neutral = 0, capped ±8)
+AGGRESSION I
+NEUTRAL
+50
+Hold & anchor
+safe spacing, patient angles
+Swing & refrag
+peek hard, trade every duel
+Roster fit by system
+↓ 83 (Positioning · Game Sense · Composure)
+↑ 78 (Aim Reactivity · Aim Precision · Movement)
+Echo
+neutral
+Vortex
+Slyblade
+PACE I
+NEUTRAL
+50
+Slow default
+read it out, pull off bad hits
+Fast execute
+early timings, ram the site
+Roster fit by system
+↓ 80 (Game Sense · Utility Usage · Comms Quality)
+↑ 76 (Movement · Aim Reactivity · Comms Quality)
+Apex
+Ghost
+neutral
+Slyblade
+UTILITY DISCIPLINE I
+NEUTRAL
+50
+Dump on the hit
+spend util entering
+Hold for retakes
+bank util to swing & retake
+Roster fit by system
+↓ 76 (Utility Usage · Movement · Aim Reactivity)
+↑ 80 (Game Sense · Utility Usage · Comms Quality)
+Slyblade
+neutral
+—
+↑ side is coordination-heavy — leans on team chemistry (74)
+ECO GREED I
+NEUTRAL
+50
+Disciplined save
+bank credits when broke
+Force-buy often
+gamble on half-buys
+Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+MAP CONTROL I
+NEUTRAL
+50
+Stack & hit five
+simple, cohesion-light
+Spread & lurk
+flank presence, pick timings
+Roster fit by system
+↓ 78 (Aim Precision · Aim Reactivity · Utility Usage)
+↑ 83 (Game Sense · Positioning · Comms Quality)
+Slyblade
+neutral
+Ghost
+↑ side is coordination-heavy — leans on team chemistry (74)
+SITE FOCUS
+I
+
+Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+
+BALANCED
+A SITE
+B SITE
+C SITE
+SET STRATEGY
+
+Scout a rival to 50%+ to read their coaching identity on their roster page.
+
+Set strategy
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-2.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,3,2026-10-08T20:39:55.970+00:00,2026-10-08T20:39:59.579+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Assess coach recommendation and manual preparation tradeoff before booking,click,"Four named controls, Adriatic Sirens Bind Anti Exec Light proposal and cost appear","Opened Prep; checked named controls, concrete coach partner/map/objective/intensity and current squad condition against public club preview.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-3.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,4,2026-10-08T20:40:35.086+00:00,2026-10-08T20:41:06.819+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Compare normal practice with light before choosing,select,Manual cost updates to 4 and coach proposal stays light at 1.5,"Locator.select_option: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_label(""Session intensity"", exact=True)
+",blocked,runs/playtests/2026-10-08-preparation-decision-clarity/step-4.txt,unverified,Blocked exact-label selector before correction; timeout retained in CSV but no step snapshot was emitted; no mutation request attempted; no decision-log entry; coarse visibility is not capture of the blocked intent
+2026-10-08-preparation-decision-clarity,5,2026-10-08T20:41:08.325+00:00,2026-10-08T20:41:40.929+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Compare intense preparation condition cost,select,Manual preview updates to7.5 without booking,"Locator.select_option: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_label(""Session intensity"", exact=True)
+",blocked,runs/playtests/2026-10-08-preparation-decision-clarity/step-5.txt,unverified,Blocked exact-label selector before correction; timeout retained in CSV but no step snapshot was emitted; no mutation request attempted; no decision-log entry; coarse visibility is not capture of the blocked intent
+2026-10-08-preparation-decision-clarity,6,2026-10-08T20:41:42.263+00:00,2026-10-08T20:42:13.386+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Return to lower condition cost before accepting coach plan,select,Manual preview returns to1.5,"Locator.select_option: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_label(""Session intensity"", exact=True)
+",blocked,runs/playtests/2026-10-08-preparation-decision-clarity/step-6.txt,unverified,Blocked exact-label selector before correction; timeout retained in CSV but no step snapshot was emitted; no mutation request attempted; no decision-log entry; coarse visibility is not capture of the blocked intent
+2026-10-08-preparation-decision-clarity,7,2026-10-08T20:42:15.732+00:00,2026-10-08T20:42:18.795+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Accept the named light Bind coach plan after assessing current condition,click,Booked Adriatic Sirens Anti Exec Bind Light; proposal disappears and condition is unchanged until resolution,"Read public booked coach plan: Adriatic Sirens/Bind/anti_exec/light; proposal absent. Current condition remains Apex43, Echo49, Slyblade33.9, Ghost53, Vortex65.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-7.txt,recorded,"audit.json action_log[15] kind=set_preparation team=team_nexus source=web S1W4 params={""created_season"": ""1"", ""created_week"": ""4"", ""fixture_id"": ""s1w4m2am"", ""id"": ""50fadd1cec4334f7"", ""intensity"": ""light"", ""map_id"": ""bind"", ""objective"": ""anti_exec"", ""opponent_id"": ""team_saracen_guard"", ""partner_id"": ""team_adriatic_sirens"", ""team_id"": ""team_nexus""}; separate UI usage successful preparation pair 1/4"
+2026-10-08-preparation-decision-clarity,8,2026-10-08T20:42:18.985+00:00,2026-10-08T20:42:23.268+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Reload corrected accessible preparation controls after blocked selector attempts,open,World reloads without changing booked preparation,"am Vanguard
+W8 Sahara Compass
+SARACEN GUARD — LAST 3
+L
+W
+W
+DANGER MEN
+Crimghost
+INITIATOR
+~80
+Lunardash
+DUELIST
+~77
+Frostbyte
+CONTROLLER
+~72
+MAP POOL & VETO
+Ascent
+100%
+1/1
+Bind
+100%
+1/1
+Lotus
+100%
+1/1
+MATCH REVIEW
+
+Last time out — Beat Kathmandu Apex 13-10. Standout: Slyblade (1.27). Off-colour: Ghost (0.76).
+
+“Team Nexus are one of the form teams on a 3-match run.”
+
+W
+vs Kathmandu Apex
+13–10
+★
+POTM
+Slyblade
+WHAT WORKED
+Defense is a wall
+8/12 defense rounds won (67%).
+Slyblade carried
+Team-high 1.27 average rating.
+WHERE IT BROKE DOWN
+Ghost off-colour
+0.76 average rating across the series.
+Young with room (proj. 82–99) — a development call, not a bench.
+WHAT TO TWEAK
+▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+
+A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Team Vanguard	3	0	+29
+2	Team Nexus	3	0	+18
+3	Rust Belt Gaming	2	1	+12
+4	Saracen Guard	2	1	+6
+LAST RESULT
+W
+Kathmandu Apex
+13–10
+
+World #6 · Rep 60 · Fans 294.1K
+
+Full table ▸
+NEEDS YOU
+TEAM MOMENT
+A sponsor wants a quick Team Nexus shoot
+
+A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.
+
+Take the shoot
+Ask for a leaner setup
+Pass on the campaign
+▸ Vortex contract up in 5w
+▸ No game plan set for W4
+▸ 7 unread inbox messages
+NEWS
+[S1 W3] Midnight Polders part with Liam Park and appoint Veer after a 2-match losing streak.
+[S1 W3] 10-13 win over Kathmandu Apex. Slyblade finished at 1.27.
+[S1 W3] Upset: #29 Iron Pact take down #24 Seoul Dynasty Prime, 9-13.
+[S1 W3] Anatolia Forge sign Phantom (entry) for 5,800/wk.
+[S1 W3] Anatolia Forge release Falconlock (severance 29,000 cr).
+[S1 W3] Sahara Compass sign Cipherpulse (awper) for 4,300/wk.
+[S1 W3] Sahara Compass release Cipherpulse (severance 52,000 cr).
+[S1 W3] Apex re-signs with Team Nexus at 10,500/wk.
+[S1 W2] #18 Harbour City Nine stumble against #23 Ghostline (11-13).
+[S1 W2] 9-13 win over Nordic Frost. Top rating: Crimrush, 1.49.
+[S1 W2] Upset: #29 Prairie Signal take down #22 Adriatic Sirens, 17-15.
+[S1 W2] Alpine Echo sign Voltecho (igl) for 7,100/wk.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-8.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,9,2026-10-08T20:42:25.522+00:00,2026-10-08T20:42:29.766+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Return to Match after reload,click,Match workspace opens,"Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+COACHING STRATEGY
+
+The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 74.
+
+EXECUTION EDGE
+0.0
+duel points from how your roster fits this system (neutral = 0, capped ±8)
+AGGRESSION I
+NEUTRAL
+50
+Hold & anchor
+safe spacing, patient angles
+Swing & refrag
+peek hard, trade every duel
+Roster fit by system
+↓ 83 (Positioning · Game Sense · Composure)
+↑ 78 (Aim Reactivity · Aim Precision · Movement)
+Echo
+neutral
+Vortex
+Slyblade
+PACE I
+NEUTRAL
+50
+Slow default
+read it out, pull off bad hits
+Fast execute
+early timings, ram the site
+Roster fit by system
+↓ 80 (Game Sense · Utility Usage · Comms Quality)
+↑ 76 (Movement · Aim Reactivity · Comms Quality)
+Apex
+Ghost
+neutral
+Slyblade
+UTILITY DISCIPLINE I
+NEUTRAL
+50
+Dump on the hit
+spend util entering
+Hold for retakes
+bank util to swing & retake
+Roster fit by system
+↓ 76 (Utility Usage · Movement · Aim Reactivity)
+↑ 80 (Game Sense · Utility Usage · Comms Quality)
+Slyblade
+neutral
+—
+↑ side is coordination-heavy — leans on team chemistry (74)
+ECO GREED I
+NEUTRAL
+50
+Disciplined save
+bank credits when broke
+Force-buy often
+gamble on half-buys
+Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+MAP CONTROL I
+NEUTRAL
+50
+Stack & hit five
+simple, cohesion-light
+Spread & lurk
+flank presence, pick timings
+Roster fit by system
+↓ 78 (Aim Precision · Aim Reactivity · Utility Usage)
+↑ 83 (Game Sense · Positioning · Comms Quality)
+Slyblade
+neutral
+Ghost
+↑ side is coordination-heavy — leans on team chemistry (74)
+SITE FOCUS
+I
+
+Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+
+BALANCED
+A SITE
+B SITE
+C SITE
+SET STRATEGY
+
+Scout a rival to 50%+ to read their coaching identity on their roster page.
+
+Set strategy
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-9.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,10,2026-10-08T20:42:31.961+00:00,2026-10-08T20:42:35.419+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Inspect corrected labels and accepted coach booking,click,Four explicitly named selects and Light coach booking appear,"weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 43 · Echo 49 · Slyblade 33.9 · Ghost 53 · Vortex 65.
+
+Next: Team Nexus vs Saracen Guard · week 4
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nordic Frost
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Bind
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale but still spends condition. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+
+Booked: Anti Exec on Bind with Adriatic Sirens (Light). Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-10.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,11,2026-10-08T20:42:35.453+00:00,2026-10-08T20:42:38.281+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Compare manual normal preview with existing light booking,select,"Manual preview becomes4, booked coach session remainsLight1.5","Corrected exact-name selector works. Manual normal preview displays up to4, and booked Light retains1.5.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-11.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,12,2026-10-08T20:43:03.330+00:00,2026-10-08T20:43:07.348+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Choose another legal sparring partner through its named control,select,Alpine Echo is selected without changing booked coach plan,"2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 43 · Echo 49 · Slyblade 33.9 · Ghost 53 · Vortex 65.
+
+Next: Team Nexus vs Saracen Guard · week 4
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nordic Frost
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Bind
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale but still spends condition. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+
+Booked: Anti Exec on Bind with Adriatic Sirens (Light). Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-12.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,13,2026-10-08T20:43:09.502+00:00,2026-10-08T20:43:12.657+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Confirm the named map selector exposes the legal Bind fixture map,select,Bind remains selected,"2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 43 · Echo 49 · Slyblade 33.9 · Ghost 53 · Vortex 65.
+
+Next: Team Nexus vs Saracen Guard · week 4
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nordic Frost
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Bind
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale but still spends condition. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+
+Booked: Anti Exec on Bind with Adriatic Sirens (Light). Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-13.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,14,2026-10-08T20:43:12.853+00:00,2026-10-08T20:43:15.942+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Choose morale preparation and inspect its condition tradeoff,select,Mental Reset selection still shows normal extra condition cost4,"2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 43 · Echo 49 · Slyblade 33.9 · Ghost 53 · Vortex 65.
+
+Next: Team Nexus vs Saracen Guard · week 4
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nordic Frost
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Bind
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale but still spends condition. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+
+Booked: Anti Exec on Bind with Adriatic Sirens (Light). Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-14.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,15,2026-10-08T20:43:16.895+00:00,2026-10-08T20:43:19.756+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Assess intense manual session before booking,select,Up to7.5 condition per player appears while booked Light remains1.5,Exact accessible label works; intense manual preview7.5 and current Light booking1.5 remain distinct.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-15.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,16,2026-10-08T20:43:19.943+00:00,2026-10-08T20:43:22.626+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Replace coach plan with intense Mental Reset at Alpine Echo,click,Booked Mental Reset Bind Alpine Echo Intense at7.5; condition unchanged immediately,Public readback confirms Alpine Echo/Bind/mental_reset/intense and cost7.5; squad condition unchanged until preparation resolves.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-16.txt,recorded,"audit.json action_log[16] kind=set_preparation team=team_nexus source=web S1W4 params={""created_season"": ""1"", ""created_week"": ""4"", ""fixture_id"": ""s1w4m2am"", ""id"": ""e41a89baef5645ef"", ""intensity"": ""intense"", ""map_id"": ""bind"", ""objective"": ""mental_reset"", ""opponent_id"": ""team_saracen_guard"", ""partner_id"": ""team_alpine_echo"", ""team_id"": ""team_nexus""}; separate UI usage successful preparation pair 2/4"
+2026-10-08-preparation-decision-clarity,17,2026-10-08T20:43:22.629+00:00,2026-10-08T20:43:26.006+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Assess a normal alternative to intense booking,select,Manual preview4 while current intense cost7.5 remains," weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+MATCH PREPARATION
+
+Current squad condition: Apex 43 · Echo 49 · Slyblade 33.9 · Ghost 53 · Vortex 65.
+
+Next: Team Nexus vs Saracen Guard · week 4
+
+Sparring partner
+Adriatic Sirens
+Alpine Echo
+Anatolia Forge
+Apex Syndicate
+Azure Vanta
+Baltic Meridian
+Bayou Kings
+Berlin Wolves
+Busan Tempest
+Cascadia Youth
+Chao Phraya Owls
+Coral Sea Drakes
+Crimson Order
+Gallic Storm
+Ghostline
+Harbour City Nine
+Highlands Nine
+Hokkaido Drift
+Iron Pact
+Kathmandu Apex
+Kraken Unit
+Lisbon Tide
+Mekong Vipers
+Meridian Cross
+Midnight Polders
+Nordic Frost
+Nova Rift
+Outback Sentinels
+Patagonia Sur
+Phantom Core
+Prairie Signal
+Rust Belt Gaming
+Sahara Compass
+Seoul Dynasty Prime
+Solar Flare
+Taipei Circuit
+Tokyo Drift Six
+Team Vanguard
+Volga Reign
+Yucatan Ceibas
+Preparation map
+Bind
+Session objective
+Anti Exec
+Retakes
+Lineup Test
+Mental Reset
+Session intensity
+Light
+Normal
+Intense
+
+Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+
+This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale but still spends condition. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+
+Book session
+
+Booked: Mental Reset on Bind with Alpine Echo (Intense). Session condition cost: up to 7.5 points per squad player, including the bench (condition floors at 0).
+
+TOURNAMENT SIX
+
+Five starters plus one between-map substitute.
+
+Apex
+26 · Starter
+Echo
+23 · Starter
+Slyblade
+28 · Starter
+Ghost
+19 · Starter
+Vortex
+22 · Starter
+Submit roster
+SERIES PLAN
+
+Set a between-map response that applies after map one when its condition is met.
+
+No upcoming best-of-three is on the calendar.
+
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-17.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,18,2026-10-08T20:43:26.032+00:00,2026-10-08T20:43:28.975+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Replace intense booking with normal manual session,click,Booked Alpine Echo Bind Anti Exec Normal cost4,Public readback confirms current form default Adriatic Sirens/Bind/anti_exec/normal and cost4; squad condition unchanged.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-18.txt,recorded,"audit.json action_log[17] kind=set_preparation team=team_nexus source=web S1W4 params={""created_season"": ""1"", ""created_week"": ""4"", ""fixture_id"": ""s1w4m2am"", ""id"": ""129614670d15a719"", ""intensity"": ""normal"", ""map_id"": ""bind"", ""objective"": ""anti_exec"", ""opponent_id"": ""team_saracen_guard"", ""partner_id"": ""team_adriatic_sirens"", ""team_id"": ""team_nexus""}; separate UI usage successful preparation pair 3/4"
+2026-10-08-preparation-decision-clarity,19,2026-10-08T20:43:59.545+00:00,2026-10-08T20:44:03.476+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Reconcile the normal booking outcome with the earlier step18 expectation,inspect,Read current partner/objective and explain the form-reset discrepancy,"Correction to step18: its expectation named Alpine Echo, but after prior booking the manual form reset to Adriatic Sirens/Anti Exec/Light. Normal was then selected and booked Adriatic Sirens/Anti Exec/Normal. Step18 met assertion but did not fully meet recorded expectation; treat it as partial in session coverage.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-19.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,20,2026-10-08T20:44:03.672+00:00,2026-10-08T20:44:06.735+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Book the visible default light manual session after comparing all intensity costs,click,Current booking becomes Adriatic Sirens Bind Anti Exec Light at1.5,Manual light booking public readback matches Adriatic Sirens/Bind/anti_exec/light; cost1.5 and condition unchanged.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-20.txt,recorded,"audit.json action_log[18] kind=set_preparation team=team_nexus source=web S1W4 params={""created_season"": ""1"", ""created_week"": ""4"", ""fixture_id"": ""s1w4m2am"", ""id"": ""50fadd1cec4334f7"", ""intensity"": ""light"", ""map_id"": ""bind"", ""objective"": ""anti_exec"", ""opponent_id"": ""team_saracen_guard"", ""partner_id"": ""team_adriatic_sirens"", ""team_id"": ""team_nexus""}; separate UI usage successful preparation pair 4/4"
+2026-10-08-preparation-decision-clarity,21,2026-10-08T20:44:06.934+00:00,2026-10-08T20:44:10.030+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Persist isolated preparation decisions through the browser,click,Save succeeds and the current light booking persists,Clicked Save through played browser surface; Light booking still shown. Persisted ledger and save will be audited after play.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-21.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,22,2026-10-08T20:44:10.228+00:00,2026-10-08T20:44:14.459+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Read back preparation after saving and reloading,open,Saved world reloads atWeek4,"mpass
+SARACEN GUARD — LAST 3
+L
+W
+W
+DANGER MEN
+Crimghost
+INITIATOR
+~80
+Lunardash
+DUELIST
+~77
+Frostbyte
+CONTROLLER
+~72
+MAP POOL & VETO
+Ascent
+100%
+1/1
+Bind
+100%
+1/1
+Lotus
+100%
+1/1
+MATCH REVIEW
+
+Last time out — Beat Kathmandu Apex 13-10. Standout: Slyblade (1.27). Off-colour: Ghost (0.76).
+
+“Team Nexus are one of the form teams on a 3-match run.”
+
+W
+vs Kathmandu Apex
+13–10
+★
+POTM
+Slyblade
+WHAT WORKED
+Defense is a wall
+8/12 defense rounds won (67%).
+Slyblade carried
+Team-high 1.27 average rating.
+WHERE IT BROKE DOWN
+Ghost off-colour
+0.76 average rating across the series.
+Young with room (proj. 82–99) — a development call, not a bench.
+WHAT TO TWEAK
+▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+
+A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Team Vanguard	3	0	+29
+2	Team Nexus	3	0	+18
+3	Rust Belt Gaming	2	1	+12
+4	Saracen Guard	2	1	+6
+LAST RESULT
+W
+Kathmandu Apex
+13–10
+
+World #6 · Rep 60 · Fans 294.1K
+
+Full table ▸
+NEEDS YOU
+TEAM MOMENT
+A sponsor wants a quick Team Nexus shoot
+
+A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.
+
+Take the shoot
+Ask for a leaner setup
+Pass on the campaign
+▸ Vortex contract up in 5w
+▸ No game plan set for W4
+▸ 7 unread inbox messages
+NEWS
+[S1 W3] Midnight Polders part with Liam Park and appoint Veer after a 2-match losing streak.
+[S1 W3] 10-13 win over Kathmandu Apex. Slyblade finished at 1.27.
+[S1 W3] Upset: #29 Iron Pact take down #24 Seoul Dynasty Prime, 9-13.
+[S1 W3] Anatolia Forge sign Phantom (entry) for 5,800/wk.
+[S1 W3] Anatolia Forge release Falconlock (severance 29,000 cr).
+[S1 W3] Sahara Compass sign Cipherpulse (awper) for 4,300/wk.
+[S1 W3] Sahara Compass release Cipherpulse (severance 52,000 cr).
+[S1 W3] Apex re-signs with Team Nexus at 10,500/wk.
+[S1 W2] #18 Harbour City Nine stumble against #23 Ghostline (11-13).
+[S1 W2] 9-13 win over Nordic Frost. Top rating: Crimrush, 1.49.
+[S1 W2] Upset: #29 Prairie Signal take down #22 Adriatic Sirens, 17-15.
+[S1 W2] Alpine Echo sign Voltecho (igl) for 7,100/wk.
+SAVE
+Save your campaign",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-22.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,23,2026-10-08T20:44:14.638+00:00,2026-10-08T20:44:17.562+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Return to Match for saved-plan verification,click,Match workspace appears,"Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+COACHING STRATEGY
+
+The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 74.
+
+EXECUTION EDGE
+0.0
+duel points from how your roster fits this system (neutral = 0, capped ±8)
+AGGRESSION I
+NEUTRAL
+50
+Hold & anchor
+safe spacing, patient angles
+Swing & refrag
+peek hard, trade every duel
+Roster fit by system
+↓ 83 (Positioning · Game Sense · Composure)
+↑ 78 (Aim Reactivity · Aim Precision · Movement)
+Echo
+neutral
+Vortex
+Slyblade
+PACE I
+NEUTRAL
+50
+Slow default
+read it out, pull off bad hits
+Fast execute
+early timings, ram the site
+Roster fit by system
+↓ 80 (Game Sense · Utility Usage · Comms Quality)
+↑ 76 (Movement · Aim Reactivity · Comms Quality)
+Apex
+Ghost
+neutral
+Slyblade
+UTILITY DISCIPLINE I
+NEUTRAL
+50
+Dump on the hit
+spend util entering
+Hold for retakes
+bank util to swing & retake
+Roster fit by system
+↓ 76 (Utility Usage · Movement · Aim Reactivity)
+↑ 80 (Game Sense · Utility Usage · Comms Quality)
+Slyblade
+neutral
+—
+↑ side is coordination-heavy — leans on team chemistry (74)
+ECO GREED I
+NEUTRAL
+50
+Disciplined save
+bank credits when broke
+Force-buy often
+gamble on half-buys
+Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+MAP CONTROL I
+NEUTRAL
+50
+Stack & hit five
+simple, cohesion-light
+Spread & lurk
+flank presence, pick timings
+Roster fit by system
+↓ 78 (Aim Precision · Aim Reactivity · Utility Usage)
+↑ 83 (Game Sense · Positioning · Comms Quality)
+Slyblade
+neutral
+Ghost
+↑ side is coordination-heavy — leans on team chemistry (74)
+SITE FOCUS
+I
+
+Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+
+BALANCED
+A SITE
+B SITE
+C SITE
+SET STRATEGY
+
+Scout a rival to 50%+ to read their coaching identity on their roster page.
+
+Set strategy
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-23.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,24,2026-10-08T20:44:17.763+00:00,2026-10-08T20:44:20.256+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Verify final saved manual light booking and no premature condition deduction,click,Adriatic Sirens Anti Exec Bind Light1.5 persists with original current condition,Reloaded saved light booking shows named partner/objective/map/intensity/cost. Condition remains Apex43/Echo49/Slyblade33.9/Ghost53/Vortex65; no week advanced.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-24.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture"
+2026-10-08-preparation-decision-clarity,25,2026-10-08T20:58:54.703+00:00,2026-10-08T20:58:56.750+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Reload final copy after correcting the zero-cost strategy-lab case,open,Saved test world loads atWeek4 with original Light booking,"am Vanguard
+W8 Sahara Compass
+SARACEN GUARD — LAST 3
+L
+W
+W
+DANGER MEN
+Crimghost
+INITIATOR
+~80
+Lunardash
+DUELIST
+~77
+Frostbyte
+CONTROLLER
+~72
+MAP POOL & VETO
+Ascent
+100%
+1/1
+Bind
+100%
+1/1
+Lotus
+100%
+1/1
+MATCH REVIEW
+
+Last time out — Beat Kathmandu Apex 13-10. Standout: Slyblade (1.27). Off-colour: Ghost (0.76).
+
+“Team Nexus are one of the form teams on a 3-match run.”
+
+W
+vs Kathmandu Apex
+13–10
+★
+POTM
+Slyblade
+WHAT WORKED
+Defense is a wall
+8/12 defense rounds won (67%).
+Slyblade carried
+Team-high 1.27 average rating.
+WHERE IT BROKE DOWN
+Ghost off-colour
+0.76 average rating across the series.
+Young with room (proj. 82–99) — a development call, not a bench.
+WHAT TO TWEAK
+▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+
+A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Team Vanguard	3	0	+29
+2	Team Nexus	3	0	+18
+3	Rust Belt Gaming	2	1	+12
+4	Saracen Guard	2	1	+6
+LAST RESULT
+W
+Kathmandu Apex
+13–10
+
+World #6 · Rep 60 · Fans 294.1K
+
+Full table ▸
+NEEDS YOU
+TEAM MOMENT
+A sponsor wants a quick Team Nexus shoot
+
+A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.
+
+Take the shoot
+Ask for a leaner setup
+Pass on the campaign
+▸ Vortex contract up in 5w
+▸ No game plan set for W4
+▸ 7 unread inbox messages
+NEWS
+[S1 W3] Midnight Polders part with Liam Park and appoint Veer after a 2-match losing streak.
+[S1 W3] 10-13 win over Kathmandu Apex. Slyblade finished at 1.27.
+[S1 W3] Upset: #29 Iron Pact take down #24 Seoul Dynasty Prime, 9-13.
+[S1 W3] Anatolia Forge sign Phantom (entry) for 5,800/wk.
+[S1 W3] Anatolia Forge release Falconlock (severance 29,000 cr).
+[S1 W3] Sahara Compass sign Cipherpulse (awper) for 4,300/wk.
+[S1 W3] Sahara Compass release Cipherpulse (severance 52,000 cr).
+[S1 W3] Apex re-signs with Team Nexus at 10,500/wk.
+[S1 W2] #18 Harbour City Nine stumble against #23 Ghostline (11-13).
+[S1 W2] 9-13 win over Nordic Frost. Top rating: Crimrush, 1.49.
+[S1 W2] Upset: #29 Prairie Signal take down #22 Adriatic Sirens, 17-15.
+[S1 W2] Alpine Echo sign Voltecho (igl) for 7,100/wk.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-25.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture; final short copy-readback browser visit has no new retained usage events; UI capture unverified, actual DOM text and screenshot retained"
+2026-10-08-preparation-decision-clarity,26,2026-10-08T20:58:56.753+00:00,2026-10-08T20:58:57.976+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Return to Match for final-copy verification,click,Match workspace opens,"Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD1
+INBOX7
+MATCH1
+ORG
+CLUB1
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+MATCH
+S1 · W4 · Regular
+STRATEGY
+GAME PLAN
+PREP
+Guide
+COACHING STRATEGY
+
+The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 74.
+
+EXECUTION EDGE
+0.0
+duel points from how your roster fits this system (neutral = 0, capped ±8)
+AGGRESSION I
+NEUTRAL
+50
+Hold & anchor
+safe spacing, patient angles
+Swing & refrag
+peek hard, trade every duel
+Roster fit by system
+↓ 83 (Positioning · Game Sense · Composure)
+↑ 78 (Aim Reactivity · Aim Precision · Movement)
+Echo
+neutral
+Vortex
+Slyblade
+PACE I
+NEUTRAL
+50
+Slow default
+read it out, pull off bad hits
+Fast execute
+early timings, ram the site
+Roster fit by system
+↓ 80 (Game Sense · Utility Usage · Comms Quality)
+↑ 76 (Movement · Aim Reactivity · Comms Quality)
+Apex
+Ghost
+neutral
+Slyblade
+UTILITY DISCIPLINE I
+NEUTRAL
+50
+Dump on the hit
+spend util entering
+Hold for retakes
+bank util to swing & retake
+Roster fit by system
+↓ 76 (Utility Usage · Movement · Aim Reactivity)
+↑ 80 (Game Sense · Utility Usage · Comms Quality)
+Slyblade
+neutral
+—
+↑ side is coordination-heavy — leans on team chemistry (74)
+ECO GREED I
+NEUTRAL
+50
+Disciplined save
+bank credits when broke
+Force-buy often
+gamble on half-buys
+Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+MAP CONTROL I
+NEUTRAL
+50
+Stack & hit five
+simple, cohesion-light
+Spread & lurk
+flank presence, pick timings
+Roster fit by system
+↓ 78 (Aim Precision · Aim Reactivity · Utility Usage)
+↑ 83 (Game Sense · Positioning · Comms Quality)
+Slyblade
+neutral
+Ghost
+↑ side is coordination-heavy — leans on team chemistry (74)
+SITE FOCUS
+I
+
+Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+
+BALANCED
+A SITE
+B SITE
+C SITE
+SET STRATEGY
+
+Scout a rival to 50%+ to read their coaching identity on their roster page.
+
+Set strategy
+MATCH
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.",met,runs/playtests/2026-10-08-preparation-decision-clarity/step-26.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture; final short copy-readback browser visit has no new retained usage events; UI capture unverified, actual DOM text and screenshot retained"
+2026-10-08-preparation-decision-clarity,27,2026-10-08T20:58:57.978+00:00,2026-10-08T20:58:59.179+00:00,ac62c26572c67a6a5ee80b45fdacb9664546999c,true,0.0.1,gpt-6.1-sol,medium,browser,26UHC,2038,S1 W4,Verify condition copy remains truthful when discounts can eliminate session cost,click,Mental Reset refers to displayed condition cost rather than always spending condition,Final live Prep copy reads Mental reset can lift morale; the displayed condition cost applies to every objective. Saved Light booking cost1.5 remains shown with original current condition. Strategy-lab-zero case is covered by backend regression.,met,runs/playtests/2026-10-08-preparation-decision-clarity/step-27.txt,not_instrumented,"Navigation, local select, observation, or save is outside deterministic decision vocabulary; separate retained UI stream has coarse page views and one successful save pair, not per-select intent capture; final short copy-readback browser visit has no new retained usage events; UI capture unverified, actual DOM text and screenshot retained"

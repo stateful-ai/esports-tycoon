@@ -1,0 +1,55 @@
+[
+  {
+    "index": 72,
+    "season": 1,
+    "week": 17,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 73,
+    "season": 1,
+    "week": 17,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1mqf1",
+      "focus_target": "",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "True",
+      "opponent": "team_meridian_cross",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[\"apex\",\"echo\",\"fa_0\",\"fa_13\",\"vortex\"]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 74,
+    "season": 1,
+    "week": 17,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

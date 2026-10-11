@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:53:35.456685+00:00",
+  "exit_code": 1,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  const pid='team_kraken_unit_p0';  const getRoster=async()=> (await (await page.request.get(new URL('/api/roster/team_nexus',page.url()).href)).json()).players.map(p=>({id:p.id,dev_focus:p.dev_focus,training_intensity:p.training_intensity,learning_language:p.learning_language,starter:p.starter}));  const before=await getRoster(); const observations=[];  for (const [field,value,param] of [['focus','tactical','dev_focus'],['intensity','light','intensity']]) {   const row=page.locator('tr').filter({has:page.locator('td span.plink[data-pid=\"'+pid+'\"]')});   if(await row.count()!==1)throw new Error('Expected one identity-scoped row');   const select=row.locator('select[data-act=\"'+field+'\"]');if(await select.count()!==1)throw new Error('Expected one row control');   const pending=page.waitForResponse(response=>{if(response.request().method()!=='POST'||!response.url().endsWith('/api/actions/dev_plan'))return false;const body=response.request().postDataJSON();return body.player_id===pid&&body[param]===value;});   await select.selectOption(value);const response=await pending;   observations.push({field,value,status:response.status(),request:response.request().postDataJSON(),result:await response.json(),roster:await getRoster()});  }  return {before,observations,after:await getRoster()}; }"
+  ],
+  "stdout_bytes": 106,
+  "stderr_bytes": 0
+}

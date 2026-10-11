@@ -1,0 +1,148 @@
+{
+  "immutable_source_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "saved_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "bytes_identical": true,
+  "json_identical": true,
+  "action_log_before": 72,
+  "action_log_after": 72,
+  "action_log_unchanged": true,
+  "telemetry_snaps_unchanged": true,
+  "changed_top_level_fields": [],
+  "historical_relative_strength": {
+    "opponent": "Meridian Cross",
+    "ban": {
+      "map": "Haven",
+      "map_id": "haven",
+      "their_wr": 100,
+      "our_wr": 50
+    },
+    "pick": {
+      "map": "Bind",
+      "map_id": "bind",
+      "their_wr": 57,
+      "our_wr": 100
+    }
+  },
+  "current_fixture": {
+    "team_id": "team_nexus",
+    "team_name": "Team Nexus",
+    "maps": [
+      {
+        "map": "Bind",
+        "map_id": "bind",
+        "played": 4,
+        "wins": 4,
+        "win_rate": 100
+      },
+      {
+        "map": "Split",
+        "map_id": "split",
+        "played": 1,
+        "wins": 1,
+        "win_rate": 100
+      },
+      {
+        "map": "Ascent",
+        "map_id": "ascent",
+        "played": 5,
+        "wins": 3,
+        "win_rate": 60
+      },
+      {
+        "map": "Lotus",
+        "map_id": "lotus",
+        "played": 7,
+        "wins": 4,
+        "win_rate": 57
+      },
+      {
+        "map": "Haven",
+        "map_id": "haven",
+        "played": 2,
+        "wins": 1,
+        "win_rate": 50
+      }
+    ],
+    "veto": null,
+    "fixture": {
+      "fixture_id": "s1mqf1",
+      "veto_locked": true,
+      "veto": [
+        "MRC ban haven",
+        "NXS ban bind",
+        "MRC pick ascent",
+        "NXS pick lotus",
+        "decider split"
+      ],
+      "opponent": "Meridian Cross",
+      "maps": [
+        {
+          "map_id": "ascent",
+          "map": "Ascent",
+          "ours": {
+            "played": 5,
+            "wins": 3,
+            "win_rate": 60
+          },
+          "theirs": {
+            "played": 4,
+            "wins": 2,
+            "win_rate": 50
+          }
+        },
+        {
+          "map_id": "lotus",
+          "map": "Lotus",
+          "ours": {
+            "played": 7,
+            "wins": 4,
+            "win_rate": 57
+          },
+          "theirs": {
+            "played": 2,
+            "wins": 1,
+            "win_rate": 50
+          }
+        },
+        {
+          "map_id": "split",
+          "map": "Split",
+          "ours": {
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          "theirs": {
+            "played": 5,
+            "wins": 5,
+            "win_rate": 100
+          }
+        }
+      ]
+    }
+  },
+  "retained_usage_events": 27,
+  "usage_kinds": {
+    "session_start": 2,
+    "view": 7,
+    "visible_time": 15,
+    "session_end": 1,
+    "attempt": 1,
+    "result": 1
+  },
+  "usage_keys": [
+    "duration_ms",
+    "kind",
+    "outcome",
+    "received_at",
+    "request_id",
+    "schema_version",
+    "season",
+    "session_id",
+    "status",
+    "target",
+    "team",
+    "week",
+    "world"
+  ]
+}

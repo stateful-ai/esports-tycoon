@@ -1,0 +1,240 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 10 · Regular — Team Nexus
+      - generic [ref=f1e6]: 333,406 cr
+      - button "Save •" [ref=f1e810] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard" [ref=f1e1366] [cursor=pointer]
+        - button "Inbox 16" [ref=f1e20] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e21]: "16"
+        - button "Match 2" [ref=f1e22] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e23]: "2"
+      - generic "Org" [ref=f1e24]:
+        - button "Club" [ref=f1e26] [cursor=pointer]
+        - button "Facilities" [ref=f1e27] [cursor=pointer]
+        - button "Season" [ref=f1e28] [cursor=pointer]
+        - button "Market" [ref=f1e29] [cursor=pointer]
+        - button "Stats" [ref=f1e30] [cursor=pointer]
+        - button "Company" [ref=f1e31] [cursor=pointer]
+    - main [ref=f1e32]:
+      - generic [ref=f1e1858]:
+        - generic [ref=f1e1859]:
+          - generic [ref=f1e1860]: Company
+          - generic [ref=f1e1861]:
+            - button "Finances" [ref=f1e1862] [cursor=pointer]
+            - button "Brand" [ref=f1e1863] [cursor=pointer]
+        - generic [ref=f1e1864]:
+          - paragraph [ref=f1e1865]: 333,406 cr banked · net +61,534 cr/wk
+          - generic [ref=f1e1866]:
+            - generic [ref=f1e1868]:
+              - heading "Sponsorships — marketability 1.17" [level=2] [ref=f1e1869]:
+                - text: Sponsorships
+                - generic [ref=f1e1870]: — marketability 1.17
+              - generic [ref=f1e1871]:
+                - generic [ref=f1e1872]:
+                  - generic [ref=f1e1873]: active
+                  - generic [ref=f1e1874]: Title
+                  - generic [ref=f1e1875]: Polar Compute
+                  - generic [ref=f1e1876]: Steady
+                - generic [ref=f1e1877]: 41,300 cr/wk — 37 weeks
+                - generic [ref=f1e1879]:
+                  - generic "currently 2nd of 8" [ref=f1e1880]: win the regional split → 424,000 cr · On Track
+                  - generic "currently 2nd of 8" [ref=f1e1881]: qualify for Masters → 445,000 cr · On Track
+              - generic [ref=f1e1882]:
+                - generic [ref=f1e1883]:
+                  - generic [ref=f1e1884]: active
+                  - generic [ref=f1e1885]: Jersey
+                  - generic [ref=f1e1886]: Streamforge
+                  - generic [ref=f1e1887]: Steady
+                - generic [ref=f1e1888]: 10,100 cr/wk — 22 weeks
+                - generic "currently 2nd of 8" [ref=f1e1891]: win the regional split → 117,000 cr · On Track
+              - generic [ref=f1e1892]:
+                - generic [ref=f1e1893]:
+                  - generic [ref=f1e1894]: open
+                  - generic [ref=f1e1895]: Peripheral
+                  - generic [ref=f1e1896]: no active deal — offers below
+                - generic [ref=f1e1897]:
+                  - generic [ref=f1e1898]:
+                    - generic [ref=f1e1899]: offer
+                    - generic [ref=f1e1900]: Deadzone Desks
+                    - generic [ref=f1e1901]: 18w · until wk 11
+                  - generic "19,000 cr" [ref=f1e1903]: make the regional playoffs → 19,000 cr
+                  - generic [ref=f1e1904]:
+                    - 'button "upfront: 110,000 cr now + 1,300 cr/wk" [ref=f1e1905] [cursor=pointer]'
+                    - 'button "steady: 5,200 cr/wk" [ref=f1e1906] [cursor=pointer]'
+                    - 'button "performance: 1,800 cr/wk + 3,500 cr/win" [ref=f1e1907] [cursor=pointer]'
+                    - button "✕" [ref=f1e1908] [cursor=pointer]
+              - generic [ref=f1e1910]:
+                - generic [ref=f1e1911]: open
+                - generic [ref=f1e1912]: Stream
+                - generic [ref=f1e1913]: no active deal — no suitors yet
+              - generic [ref=f1e1915]:
+                - generic [ref=f1e1916]: locked
+                - generic [ref=f1e1917]: Apparel
+                - generic [ref=f1e1918]: requires Marketing Office level 2
+            - generic [ref=f1e1919]:
+              - generic [ref=f1e1920]:
+                - heading "This week" [level=2] [ref=f1e1921]
+                - generic [ref=f1e1922]:
+                  - generic [ref=f1e1923]:
+                    - generic [ref=f1e1924]: 333,406 cr
+                    - generic [ref=f1e1925]: Balance
+                  - generic [ref=f1e1926]:
+                    - generic [ref=f1e1927]: +61,534 cr
+                    - generic [ref=f1e1928]: Net / wk
+                  - generic [ref=f1e1929]:
+                    - generic [ref=f1e1930]: 110,134 cr
+                    - generic [ref=f1e1931]: Income
+                  - generic [ref=f1e1932]:
+                    - generic [ref=f1e1933]: 48,600 cr
+                    - generic [ref=f1e1934]: Expenses
+              - generic [ref=f1e1935]:
+                - heading "This week's run rate" [level=2] [ref=f1e1936]
+                - table [ref=f1e1937]:
+                  - rowgroup [ref=f1e1938]:
+                    - row [ref=f1e1939]:
+                      - columnheader "Item" [ref=f1e1940]
+                      - columnheader "cr / wk" [ref=f1e1941]
+                  - rowgroup [ref=f1e1942]:
+                    - row [ref=f1e1943]:
+                      - cell "Base sponsorship" [ref=f1e1944]
+                      - cell "46,885 cr" [ref=f1e1945]
+                    - row [ref=f1e1946]:
+                      - cell "Title sponsor" [ref=f1e1947]
+                      - cell "41,300 cr" [ref=f1e1948]
+                    - row [ref=f1e1949]:
+                      - cell "Jersey sponsor" [ref=f1e1950]
+                      - cell "10,100 cr" [ref=f1e1951]
+                    - row [ref=f1e1952]:
+                      - cell "Peripheral sponsor" [ref=f1e1953]
+                      - cell "0 cr" [ref=f1e1954]
+                    - row [ref=f1e1955]:
+                      - cell "Merchandise" [ref=f1e1956]
+                      - cell "3,449 cr" [ref=f1e1957]
+                    - row [ref=f1e1958]:
+                      - cell "Ticket sales" [ref=f1e1959]
+                      - cell "2,299 cr" [ref=f1e1960]
+                    - row [ref=f1e1961]:
+                      - cell [ref=f1e1962]:
+                        - text: Streaming
+                        - button "→ Brand" [ref=f1e1963] [cursor=pointer]
+                      - cell "6,101 cr" [ref=f1e1964]
+                    - row [ref=f1e1965]:
+                      - cell "Prize money" [ref=f1e1966]
+                      - cell "0 cr" [ref=f1e1967]
+                    - row [ref=f1e1968]:
+                      - cell "Income total" [ref=f1e1969]
+                      - cell "110,134 cr" [ref=f1e1970]
+                    - row [ref=f1e1971]:
+                      - cell [ref=f1e1972]:
+                        - text: Salaries
+                        - button "→ Squad" [ref=f1e1973] [cursor=pointer]
+                      - cell "-42,200 cr" [ref=f1e1974]
+                    - row [ref=f1e1975]:
+                      - cell "Staff" [ref=f1e1976]
+                      - cell "-4,900 cr" [ref=f1e1977]
+                    - row [ref=f1e1978]:
+                      - cell [ref=f1e1979]:
+                        - text: Facility upkeep
+                        - button "→ Facilities" [ref=f1e1980] [cursor=pointer]
+                      - cell "-1,500 cr" [ref=f1e1981]
+                    - row [ref=f1e1982]:
+                      - cell "Expense total" [ref=f1e1983]
+                      - cell "-48,600 cr" [ref=f1e1984]
+                    - row [ref=f1e1986]:
+                      - cell "Net" [ref=f1e1987]
+                      - cell "+61,534 cr" [ref=f1e1988]
+                - paragraph [ref=f1e1990]: A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.
+              - generic [ref=f1e1991]:
+                - heading "8-week cash projection" [level=2] [ref=f1e1992]
+                - generic [ref=f1e1993]:
+                  - img "projected balance" [ref=f1e1994]
+                  - generic [ref=f1e1996]: 825,678 cr in 8w
+                - table [ref=f1e1997]:
+                  - rowgroup [ref=f1e1998]:
+                    - row [ref=f1e1999]:
+                      - columnheader "Week" [ref=f1e2000]
+                      - columnheader "Net" [ref=f1e2001]
+                      - columnheader "Balance" [ref=f1e2002]
+                  - rowgroup [ref=f1e2003]:
+                    - row [ref=f1e2004]:
+                      - cell "W11" [ref=f1e2005]
+                      - cell "+61,534 cr" [ref=f1e2006]
+                      - cell "394,940 cr" [ref=f1e2007]
+                    - row [ref=f1e2008]:
+                      - cell "W12" [ref=f1e2009]
+                      - cell "+61,534 cr" [ref=f1e2010]
+                      - cell "456,474 cr" [ref=f1e2011]
+                    - row [ref=f1e2012]:
+                      - cell "W13" [ref=f1e2013]
+                      - cell "+61,534 cr" [ref=f1e2014]
+                      - cell "518,008 cr" [ref=f1e2015]
+                    - row [ref=f1e2016]:
+                      - cell "W14" [ref=f1e2017]
+                      - cell "+61,534 cr" [ref=f1e2018]
+                      - cell "579,542 cr" [ref=f1e2019]
+                    - row [ref=f1e2020]:
+                      - cell "W15" [ref=f1e2021]
+                      - cell "+61,534 cr" [ref=f1e2022]
+                      - cell "641,076 cr" [ref=f1e2023]
+                    - row [ref=f1e2024]:
+                      - cell "W16" [ref=f1e2025]
+                      - cell "+61,534 cr" [ref=f1e2026]
+                      - cell "702,610 cr" [ref=f1e2027]
+                    - row [ref=f1e2028]:
+                      - cell "W17" [ref=f1e2029]
+                      - cell "+61,534 cr" [ref=f1e2030]
+                      - cell "764,144 cr" [ref=f1e2031]
+                    - row [ref=f1e2032]:
+                      - cell "W18" [ref=f1e2033]
+                      - cell "+61,534 cr" [ref=f1e2034]
+                      - cell "825,678 cr" [ref=f1e2035]
+                - paragraph [ref=f1e2036]: Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.
+              - generic [ref=f1e2037]:
+                - heading "Brand value — marketability 1.17 (facility ×1.05)" [level=2] [ref=f1e2038]:
+                  - text: Brand value
+                  - generic [ref=f1e2039]: — marketability 1.17 (facility ×1.05)
+                - generic [ref=f1e2040]:
+                  - generic [ref=f1e2041]:
+                    - generic [ref=f1e2042]: Reputation
+                    - generic [ref=f1e2045]: "+0.7"
+                  - generic [ref=f1e2046]:
+                    - generic [ref=f1e2047]: Results
+                    - generic [ref=f1e2050]: "+0.16"
+                  - generic [ref=f1e2051]:
+                    - generic [ref=f1e2052]: Star power
+                    - generic [ref=f1e2055]: "+0.11"
+                  - generic [ref=f1e2056]:
+                    - generic [ref=f1e2057]: Social reach
+                    - generic [ref=f1e2060]: "+0.08"
+                  - generic [ref=f1e2061]:
+                    - generic [ref=f1e2062]: Fanbase
+                    - generic [ref=f1e2065]: "+0.05"
+                  - generic [ref=f1e2066]:
+                    - generic [ref=f1e2067]: Community mood
+                    - generic [ref=f1e2070]: "+0.02"
+                  - generic [ref=f1e2071]:
+                    - generic [ref=f1e2072]: International run
+                    - generic [ref=f1e2074]: "+0"
+  - generic [ref=f1e1089]: signed with Polar Compute (title, steady)
+  - tooltip [aria-hidden]:
+    - heading [level=4]: "steady: 41,300 cr/wk"
+    - generic: "objective bonuses scale: upfront ×0.7, steady ×1.0, performance ×1.4"

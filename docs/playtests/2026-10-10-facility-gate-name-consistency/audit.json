@@ -1,0 +1,30 @@
+{
+  "baseline_decisions": 46,
+  "final_decisions": 47,
+  "new_decision_index": 46,
+  "decision_delta": [
+    {
+      "season": 1,
+      "week": 10,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "facility_upgrade",
+      "params": {
+        "cost": "150000",
+        "facility": "marketing_office",
+        "level": "1"
+      },
+      "source": "web"
+    }
+  ],
+  "source_fixture_sha256": "5a89f0fce54c7855224376d7a1370838e526de3dc8649ec3f3f81d5433caf42a",
+  "usage_events": 26,
+  "usage_kinds": {
+    "session_start": 2,
+    "view": 9,
+    "visible_time": 9,
+    "attempt": 3,
+    "result": 3
+  }
+}

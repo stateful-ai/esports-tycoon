@@ -1,0 +1,238 @@
+{
+  "id": "s1csf0",
+  "week": 21,
+  "stage": "champ_sf",
+  "bracket": "champions",
+  "tier": 1,
+  "best_of": 3,
+  "team_a": "team_vanguard",
+  "team_b": "team_nexus",
+  "maps": [
+    "haven",
+    "ascent",
+    "lotus"
+  ],
+  "veto": [
+    "VGD ban split",
+    "NXS ban bind",
+    "VGD pick haven",
+    "NXS pick ascent",
+    "decider lotus"
+  ],
+  "played": true,
+  "results": [
+    {
+      "map_id": "haven",
+      "seed": 13727038093640292590,
+      "score_a": 8,
+      "score_b": 13,
+      "winner_id": "team_nexus",
+      "lines": [
+        {
+          "player_id": "apex",
+          "kills": 18,
+          "deaths": 16,
+          "rating": 1.23
+        },
+        {
+          "player_id": "echo",
+          "kills": 11,
+          "deaths": 13,
+          "rating": 0.77
+        },
+        {
+          "player_id": "fa_13",
+          "kills": 12,
+          "deaths": 20,
+          "rating": 0.7
+        },
+        {
+          "player_id": "ghost",
+          "kills": 15,
+          "deaths": 13,
+          "rating": 1.03
+        },
+        {
+          "player_id": "pulse",
+          "kills": 11,
+          "deaths": 20,
+          "rating": 0.59
+        },
+        {
+          "player_id": "shade",
+          "kills": 20,
+          "deaths": 17,
+          "rating": 1.18
+        },
+        {
+          "player_id": "slice",
+          "kills": 22,
+          "deaths": 17,
+          "rating": 1.24
+        },
+        {
+          "player_id": "vortex",
+          "kills": 23,
+          "deaths": 14,
+          "rating": 1.33
+        },
+        {
+          "player_id": "warden",
+          "kills": 14,
+          "deaths": 13,
+          "rating": 0.88
+        },
+        {
+          "player_id": "zenith",
+          "kills": 9,
+          "deaths": 12,
+          "rating": 0.78
+        }
+      ]
+    },
+    {
+      "map_id": "ascent",
+      "seed": 12003683452534020421,
+      "score_a": 13,
+      "score_b": 6,
+      "winner_id": "team_vanguard",
+      "lines": [
+        {
+          "player_id": "apex",
+          "kills": 11,
+          "deaths": 16,
+          "rating": 0.81
+        },
+        {
+          "player_id": "echo",
+          "kills": 8,
+          "deaths": 18,
+          "rating": 0.54
+        },
+        {
+          "player_id": "fa_13",
+          "kills": 9,
+          "deaths": 14,
+          "rating": 0.64
+        },
+        {
+          "player_id": "ghost",
+          "kills": 15,
+          "deaths": 15,
+          "rating": 0.96
+        },
+        {
+          "player_id": "pulse",
+          "kills": 17,
+          "deaths": 16,
+          "rating": 1.15
+        },
+        {
+          "player_id": "shade",
+          "kills": 12,
+          "deaths": 12,
+          "rating": 0.85
+        },
+        {
+          "player_id": "slice",
+          "kills": 25,
+          "deaths": 16,
+          "rating": 1.62
+        },
+        {
+          "player_id": "vortex",
+          "kills": 22,
+          "deaths": 17,
+          "rating": 1.33
+        },
+        {
+          "player_id": "warden",
+          "kills": 19,
+          "deaths": 10,
+          "rating": 1.25
+        },
+        {
+          "player_id": "zenith",
+          "kills": 7,
+          "deaths": 11,
+          "rating": 0.69
+        }
+      ]
+    },
+    {
+      "map_id": "lotus",
+      "seed": 16032824382542628649,
+      "score_a": 13,
+      "score_b": 7,
+      "winner_id": "team_vanguard",
+      "lines": [
+        {
+          "player_id": "apex",
+          "kills": 14,
+          "deaths": 19,
+          "rating": 0.84
+        },
+        {
+          "player_id": "echo",
+          "kills": 9,
+          "deaths": 18,
+          "rating": 0.59
+        },
+        {
+          "player_id": "fa_13",
+          "kills": 17,
+          "deaths": 9,
+          "rating": 1.2
+        },
+        {
+          "player_id": "ghost",
+          "kills": 15,
+          "deaths": 14,
+          "rating": 0.98
+        },
+        {
+          "player_id": "pulse",
+          "kills": 15,
+          "deaths": 13,
+          "rating": 1.03
+        },
+        {
+          "player_id": "shade",
+          "kills": 12,
+          "deaths": 12,
+          "rating": 0.87
+        },
+        {
+          "player_id": "slice",
+          "kills": 26,
+          "deaths": 11,
+          "rating": 1.66
+        },
+        {
+          "player_id": "vortex",
+          "kills": 8,
+          "deaths": 18,
+          "rating": 0.51
+        },
+        {
+          "player_id": "warden",
+          "kills": 15,
+          "deaths": 13,
+          "rating": 0.95
+        },
+        {
+          "player_id": "zenith",
+          "kills": 10,
+          "deaths": 14,
+          "rating": 0.77
+        }
+      ]
+    }
+  ],
+  "winner_id": "team_vanguard",
+  "series_notes": [
+    "VGD: targeting Vortex.",
+    "VGD: stabilize response after map 1.",
+    "NXS: stabilize response after map 2."
+  ]
+}

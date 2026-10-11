@@ -1,0 +1,190 @@
+{
+  "at_utc": "2026-10-11T07:14:56.324110+00:00",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "before_season": 1,
+  "before_week": 23,
+  "after_season": 2,
+  "after_week": 1,
+  "saved_decisions": 104,
+  "new_accepted_decisions": 4,
+  "new_decisions": [
+    {
+      "index": 100,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "sponsor_respond",
+      "params": {
+        "accept": "True",
+        "brand": "OrbitCast",
+        "slot": "stream",
+        "structure": "steady"
+      },
+      "source": "web"
+    },
+    {
+      "index": 101,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "mechanical",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 102,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "mechanical",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 103,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 22,
+  "snapshots_after": 23,
+  "old_snapshot_prefix_preserved": true,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "3bfd798c8468af822e9233cbe331f07afcabd28ff983a58b9c0f573286c85ee3",
+  "save_after_sha256": "68d1cb1ff58813416eb23c92caf94d1c8046e7286e111fa4682155ad7e778663",
+  "final_settings": {
+    "apex": {
+      "dev_focus": "auto",
+      "training_intensity": "light",
+      "mentor_id": null,
+      "mentor_progress": null
+    },
+    "vortex": {
+      "dev_focus": "auto",
+      "training_intensity": "normal",
+      "mentor_id": null,
+      "mentor_progress": null
+    },
+    "ghost": {
+      "dev_focus": "mechanical",
+      "training_intensity": "light",
+      "mentor_id": "apex",
+      "mentor_progress": 0
+    },
+    "fa_13": {
+      "dev_focus": "rest",
+      "training_intensity": "normal",
+      "mentor_id": null,
+      "mentor_progress": null
+    },
+    "echo": {
+      "dev_focus": "auto",
+      "training_intensity": "light",
+      "mentor_id": null,
+      "mentor_progress": null
+    },
+    "fa_0": {
+      "dev_focus": "rest",
+      "training_intensity": "normal",
+      "mentor_id": null,
+      "mentor_progress": null
+    }
+  },
+  "condition_after": {
+    "apex": 92.5,
+    "vortex": 89.5,
+    "ghost": 100,
+    "fa_13": 88,
+    "echo": 92.5,
+    "fa_0": 100
+  },
+  "bank_before": 2266822,
+  "bank_after": 2266822,
+  "rollover_income": 0,
+  "rollover_expenses": 0,
+  "deal": {
+    "name": "OrbitCast",
+    "kind": "steady",
+    "signing_bonus": 0,
+    "weekly": 9400,
+    "per_win": 0,
+    "weeks_left": 22,
+    "objectives": [
+      {
+        "kind": "make_playoffs",
+        "bonus": 43000,
+        "met": null
+      }
+    ]
+  },
+  "omitted_slot": "stream",
+  "missing_run_rate": 9400,
+  "root_gap_owners": {
+    "39": "sponsor_all_slot_finances",
+    "40": "offseason_rollover_hint"
+  },
+  "retained_usage": 44,
+  "page_sessions": 2,
+  "paired_requests": 5,
+  "successful_requests": 5,
+  "unmatched_requests": 0,
+  "event_counts": {
+    "session_start": 2,
+    "view": 9,
+    "visible_time": 22,
+    "session_end": 1,
+    "attempt": 5,
+    "result": 5
+  },
+  "views": {
+    "lobby": 2,
+    "dashboard": 1,
+    "company/finances": 3,
+    "club/squad": 1,
+    "club/development": 2
+  },
+  "decision_request_mapping": {
+    "100": 11,
+    "101": 17,
+    "102": 19,
+    "103": 21
+  },
+  "save_request": 27,
+  "local_tests_launched": false,
+  "limits": [
+    "Complete-save report104 includes100 historical decisions, only4 new.",
+    "Usage timestamps/context for rollover show S2W1 whereas accepted advance records pre-transitionS1W23; streams reflect different recording points.",
+    "Premature button uniqueness check emitted no sponsor request; Company view does not establish a rejected sponsor attempt.",
+    "No weekly training or sponsor tick occurs during offseason season transition; unchanged22-week contract is not failed payout.",
+    "Current live run-rate omits active Stream deal, distinct from already-known resolved-prize and facility reporting gaps.",
+    "Ghost mechanical/light persists but transition report Auto/normal defaults are not proof settings reset or practice occurred.",
+    "Echo badge loss is engine-authored rollover change; Ghost small overall change is not attributed to selected practice.",
+    "Visibility is not attention or complete funnels.",
+    "Cleanup query initially matched its own PowerShell; original receipt retained, scoped Python verification confirms port absent."
+  ]
+}

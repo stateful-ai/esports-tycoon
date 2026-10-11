@@ -1,0 +1,52 @@
+{
+  "appended_at_utc": "2026-10-10T22:05:51.820000+00:00",
+  "canonical_rows": 765,
+  "canonical_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "raw733prefix_preserved": true,
+  "approved374scope724_unchanged": true,
+  "imported_rows": 32,
+  "scope": [
+    {
+      "pr": 370,
+      "reviewed_head": "832c0704340b5c6a1805023221833d9003fa1dd5",
+      "relative": "docs/playtests/2026-10-10-flavor-feedback/actions.csv",
+      "rows": 9,
+      "sha256": "1889794d7fea4d066ee3166ee8b4e218ec848dca4924de907db3487f7ecada41"
+    },
+    {
+      "pr": 371,
+      "reviewed_head": "80aca637029dd0af578017af38a3a9efe2411e1e",
+      "relative": "docs/playtests/2026-10-10-facility-gate-name-consistency/actions.csv",
+      "rows": 10,
+      "sha256": "e977bdeb67d649e7fde011042fd43d0464acb118835380fa0c32522cace6c411"
+    },
+    {
+      "pr": 372,
+      "reviewed_head": "d3632e3d7f29db2357b91f4bf1fda10a49d2a8ee",
+      "relative": "docs/playtests/2026-10-10-gap26-spacing.actions.csv",
+      "rows": 3,
+      "sha256": "b3540c4c3727bfc0fbdae36036d0ea658d005ca1a1bacaad34304176843bd64e"
+    },
+    {
+      "pr": 366,
+      "reviewed_head": "c0b24cab31b02187a080e5d68cd2762a47497467",
+      "relative": "docs/playtests/2026-10-10-promise-legacy-deadline/actions.csv",
+      "rows": 5,
+      "sha256": "fc5ae6e4dfe74f31e422b7dacabbba0b7c1d86b111d35b9501002eb3e387bf2f"
+    },
+    {
+      "pr": 369,
+      "reviewed_head": "28cb13a6cf48ce8937f18ac17f7bc9534eb2d203",
+      "relative": "docs/playtests/2026-10-10-overlay-usage/actions.csv",
+      "rows": 5,
+      "sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f"
+    }
+  ],
+  "root_new_session_rows": 9,
+  "later_publication_required": true,
+  "excluded": [
+    "scouting migration7 pending full gate",
+    "overlay integration3 pending full gate/current source review",
+    "upkeep7 pending corrected CLI full gate"
+  ]
+}

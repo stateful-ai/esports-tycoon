@@ -1,0 +1,91 @@
+{
+  "baseline_decisions": 15,
+  "final_decisions": 20,
+  "new_decisions": [
+    {
+      "index": 15,
+      "csv_step": 2,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "4",
+        "fixture_id": "s1w4m2am",
+        "id": "50fadd1cec4334f7",
+        "intensity": "light",
+        "map_id": "bind",
+        "objective": "anti_exec",
+        "opponent_id": "team_saracen_guard",
+        "partner_id": "team_adriatic_sirens",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 16,
+      "csv_step": 4,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_scout_directive",
+      "params": {
+        "directive": "scout_opponents",
+        "lane": "pro"
+      },
+      "source": "web"
+    },
+    {
+      "index": 17,
+      "csv_step": 6,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "fa_13"
+      },
+      "source": "web"
+    },
+    {
+      "index": 18,
+      "csv_step": 8,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "pass",
+        "event_id": "f2a5627fa7271ddf"
+      },
+      "source": "web"
+    },
+    {
+      "index": 19,
+      "csv_step": 9,
+      "season": 1,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_snapshots": 3,
+  "final_snapshots": 4,
+  "save_sha256": "811e4cfc01cf6415942a5291a8c554a4bb918e77cd8daeee9d48199231d8538e"
+}

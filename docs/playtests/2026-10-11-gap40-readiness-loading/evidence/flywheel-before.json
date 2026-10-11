@@ -1,0 +1,87 @@
+{
+  "read_at_utc": "2026-10-11T08:14:10.144302+00:00",
+  "recent": [
+    {
+      "id": "esports-playtest-0227",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Away recap contradicted the result",
+      "problem": "Dashboard news said3-13 win while report and Inbox correctly said13-3.",
+      "solution": "Logged discrepancy and assigned a dedicated GPT6.1sol medium owner; PR392 replayed deterministic fixture with corrected user-first recap.",
+      "lesson": "Cross-check narrative perspective against user-relative authoritative result.",
+      "confidence": "high",
+      "source": "2026-10-11-season2-preparation copied26UHC seed2038 rootunknown runtime 2026-10-11T08:09:18.537585+00:00",
+      "code": "",
+      "tags": [
+        "playtest",
+        "preparation",
+        "evidence"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0226",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Rest and injury are separate outcomes",
+      "problem": "A rested bench player lost35 condition, initially unexplained in reveal.",
+      "solution": "Inbox reports Hollowlock wrist tweak; source event cost35 is separate from ordinary practice and normal scrim4.",
+      "lesson": "Inspect Inbox and attribution before diagnosing a recovery bug.",
+      "confidence": "high",
+      "source": "2026-10-11-season2-preparation copied26UHC seed2038 rootunknown runtime 2026-10-11T08:09:18.537585+00:00",
+      "code": "",
+      "tags": [
+        "playtest",
+        "preparation",
+        "evidence"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0225",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Preparation is visible but bounded",
+      "problem": "Booking should not imply a win or free condition.",
+      "solution": "Normal Ascent anti-exec artifact+1.56 and cost4 were exposed separately from ordinary weekly recovery; Nexus won13-3.",
+      "lesson": "Verify authored artifact, expenditure and plan consumption independently of victory.",
+      "confidence": "high",
+      "source": "2026-10-11-season2-preparation copied26UHC seed2038 rootunknown runtime 2026-10-11T08:09:18.537585+00:00",
+      "code": "",
+      "tags": [
+        "playtest",
+        "preparation",
+        "evidence"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0224",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Response listener and DOM text mismatch",
+      "problem": "Advance listener used /api/advance while actual route is /api/actions/advance; NEWS has CSS uppercase.",
+      "solution": "Keep timeout evidence and recover public state/report rather than advancing again.",
+      "lesson": "No second advance occurred. Public readback, saved fixture, and usage paired200 independently prove result.",
+      "confidence": "high",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\away-recap-score-perspective\\ESports Simulator\\docs\\playtests\\2026-10-11-away-recap\\actions.csv",
+      "code": "26UHC",
+      "tags": [],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0223",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Copied acceptance decision audit",
+      "problem": "Browser success alone does not establish persisted preparation and gameplan.",
+      "solution": "Read public prep/gameplan then save and compare107 baseline against110 end.",
+      "lesson": "Exactly3 new accepted decisions correlate to3 gameplay requests, while Save adds usage only. Retained usage remains bounded.",
+      "confidence": "high",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\away-recap-score-perspective\\ESports Simulator\\docs\\playtests\\2026-10-11-away-recap\\actions.csv",
+      "code": "26UHC",
+      "tags": [],
+      "kind": "learning"
+    }
+  ]
+}

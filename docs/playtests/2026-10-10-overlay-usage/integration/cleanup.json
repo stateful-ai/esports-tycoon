@@ -1,0 +1,24 @@
+{
+  "gate_processes": [
+    {
+      "ProcessId": 10092,
+      "ParentProcessId": 11936,
+      "Name": "python3.13.exe",
+      "CommandLine": "\"C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe\" \"C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\runs\\overlay-usage-integration\\gate.py\" --worker"
+    },
+    {
+      "ProcessId": 2348,
+      "ParentProcessId": 10092,
+      "Name": "python.exe",
+      "CommandLine": "\"C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe\" -m pytest -q -n2"
+    }
+  ],
+  "port_listeners": [],
+  "server_processes": [],
+  "frozen_source_unchanged": true,
+  "frozen_path_count": 616,
+  "browser_closed": "overlay-integration",
+  "server_stop": "Ctrl-C to owned exec session42188 after PID37820->40080 and8484 ownership verification",
+  "integration_rows": 3,
+  "original_csv_sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f"
+}

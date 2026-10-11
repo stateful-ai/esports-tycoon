@@ -1,0 +1,25 @@
+[
+  {
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "film_grind",
+      "event_id": "f18ff1509b545e6c"
+    },
+    "source": "web"
+  },
+  {
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

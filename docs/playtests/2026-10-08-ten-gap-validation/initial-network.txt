@@ -1,0 +1,3 @@
+Evidence clarification: this is a retrospective record, not a raw network export.
+During the initial failed fixture setup, the browser showed the lobby instead of the expected Dashboard. The contemporaneous tool observation reported root and preview requests successful and a favicon404; the initial raw request list was not saved to this named file.
+The retained original console file is evidence/initial-console.log. It supports the observed favicon404 only and does not establish a successful game resume or a rejected Find players HTTP request. The blocked click made no observed request. Rows2-4 and report.md preserve the setup correction; initial missing screenshots remain explicitly unavailable.

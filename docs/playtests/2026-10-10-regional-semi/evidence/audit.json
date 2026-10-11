@@ -1,0 +1,130 @@
+{
+  "audited_at_utc": "2026-10-10T23:12:37.566520+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "actual_seed": 2038,
+  "baseline_actions": 65,
+  "final_actions": 68,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 3,
+    "accepted": 3
+  },
+  "standing_five_unchanged": true,
+  "plan_and_directive_consumed": true,
+  "snapshot_prefix_unchanged": true,
+  "manager_streams": 1,
+  "snapshots_before_after": [
+    14,
+    15
+  ],
+  "bank_before_after": [
+    741367,
+    805569
+  ],
+  "report_income": 111302,
+  "report_expenses": 47100,
+  "bank_delta": 64202,
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "7ed0ae942affd1e1da074e1f88c6075435735bb2d5dacf4c34378627bf3f2cae",
+  "usage_events_at_audit": 123,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 16,
+    "visible_time": 89,
+    "session_end": 2,
+    "attempt": 6,
+    "result": 6,
+    "interaction": 1
+  },
+  "usage_target_counts": {
+    "view": {
+      "lobby": 3,
+      "dashboard": 2,
+      "tactics/strategy": 2,
+      "tactics/gameplan": 3,
+      "club/squad": 2,
+      "club/operations": 1,
+      "tactics/prep": 1,
+      "season/league": 1,
+      "season/fixtures": 1
+    },
+    "interaction": {
+      "week/full_report_open": 1
+    },
+    "replay": {}
+  },
+  "request_pairs": 6,
+  "pairs": [
+    {
+      "session_id": "6871fe40dd19a4e59fd3d6acacc75100",
+      "request_id": 19,
+      "target": "/api/actions/series_directive"
+    },
+    {
+      "session_id": "6871fe40dd19a4e59fd3d6acacc75100",
+      "request_id": 23,
+      "target": "/api/actions/save"
+    },
+    {
+      "session_id": "c7052f807f497c2829efb6f3c9149782",
+      "request_id": 13,
+      "target": "/api/actions/gameplan"
+    },
+    {
+      "session_id": "c7052f807f497c2829efb6f3c9149782",
+      "request_id": 16,
+      "target": "/api/actions/save"
+    },
+    {
+      "session_id": "c7052f807f497c2829efb6f3c9149782",
+      "request_id": 17,
+      "target": "/api/actions/advance"
+    },
+    {
+      "session_id": "c7052f807f497c2829efb6f3c9149782",
+      "request_id": 29,
+      "target": "/api/actions/save"
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 34316,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 40348,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8499",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 39472,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8499",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Retained visibility is not attention or complete funnels. Series interpretation has no semantic browser event. CLI stale refs, unsupported command and observer failures are preserved qualitatively, not HTTP rejections. No causal inference from2-1 result. No new confirmed product gap."
+}

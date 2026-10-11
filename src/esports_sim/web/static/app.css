@@ -105,6 +105,14 @@ body {
   display: flex; align-items: center; gap: var(--es-space-3, 6px);
 }
 .balance { font-size: var(--es-text-lg, 15px); }
+.advance-notice {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--es-color-text-primary);
+  background: var(--es-color-bg-surface);
+  border-bottom: 1px solid var(--es-color-border-primary);
+  font-size: 13px;
+}
 
 #tabs {
   display: flex; gap: var(--es-space-1, 2px); padding: 0 var(--es-space-6, 16px);
@@ -2528,6 +2536,8 @@ tbody tr {
   border-radius: var(--es-radius-sm, 6px);
 }
 .prep-proposal-head { display: flex; align-items: center; gap: var(--es-space-2, 8px); margin-bottom: var(--es-space-1, 4px); }
+.prep-controls { flex-wrap: wrap; align-items: flex-end; }
+.prep-control { display: flex; flex-direction: column; gap: var(--es-space-1, 4px); }
 .prep-finding { font-size: 12px; margin-top: 2px; }
 .gp-prep-parts { display: inline-flex; gap: var(--es-space-3, 12px); margin: var(--es-space-1, 4px) 0; flex-wrap: wrap; }
 .gp-prep-part { font-size: 12px; }
