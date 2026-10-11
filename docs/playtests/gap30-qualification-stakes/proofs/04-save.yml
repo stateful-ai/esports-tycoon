@@ -1,0 +1,135 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 14 · Regular — Team Nexus
+      - generic [ref=f1e6]: 608,307 cr
+      - button "Save" [active] [ref=f1e7] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard" [ref=f1e18] [cursor=pointer]
+        - button "Inbox 19" [ref=f1e19] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e20]: "19"
+        - button "Match 2" [ref=f1e21] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e22]: "2"
+      - generic "Org" [ref=f1e23]:
+        - button "Club" [ref=f1e25] [cursor=pointer]
+        - button "Facilities" [ref=f1e26] [cursor=pointer]
+        - button "Season" [ref=f1e27] [cursor=pointer]
+        - button "Market" [ref=f1e28] [cursor=pointer]
+        - button "Stats" [ref=f1e29] [cursor=pointer]
+        - button "Company" [ref=f1e30] [cursor=pointer]
+    - main [ref=f1e31]:
+      - generic [ref=f1e1500]:
+        - generic [ref=f1e1501]:
+          - generic [ref=f1e1502]: Season
+          - generic [ref=f1e1503]: S1 · W14 · Regular
+          - generic [ref=f1e1504]:
+            - button "League" [ref=f1e1505] [cursor=pointer]
+            - button "Fixtures" [ref=f1e1506] [cursor=pointer]
+            - button "Playoffs" [ref=f1e1507] [cursor=pointer]
+            - button "Records" [ref=f1e1508] [cursor=pointer]
+          - button "Guide" [ref=f1e1509] [cursor=pointer]
+        - generic [ref=f1e1510]:
+          - generic [ref=f1e1511]:
+            - generic [ref=f1e1513]:
+              - button "My matches" [ref=f1e1514] [cursor=pointer]
+              - button "All" [ref=f1e1515] [cursor=pointer]
+              - button "Americas" [ref=f1e1516] [cursor=pointer]
+              - button "Emea" [ref=f1e1517] [cursor=pointer]
+              - button "Pacific" [ref=f1e1518] [cursor=pointer]
+            - generic [ref=f1e1519]:
+              - heading "Week 14 — this week" [level=2] [ref=f1e1520]
+              - generic [ref=f1e1521]:
+                - generic [ref=f1e1522]: league
+                - generic [ref=f1e1523]: Team Vanguard vs Team Nexus
+            - group [ref=f1e1525]:
+              - heading "Played weeks — 13 weeks" [level=2] [ref=f1e1527]:
+                - text: Played weeks
+                - generic [ref=f1e1528]: — 13 weeks
+          - generic [ref=f1e1530]:
+            - heading "This week" [level=2] [ref=f1e1531]
+            - generic [ref=f1e1532]:
+              - generic [ref=f1e1533]: W14
+              - generic [ref=f1e1534]: vs Team Vanguard
+              - generic [ref=f1e1535]: Bo1 · league
+            - text: Across the league
+            - generic [ref=f1e1537]:
+              - generic [ref=f1e1538]:
+                - generic [ref=f1e1539]: league
+                - generic [ref=f1e1540]: Kathmandu Apex
+                - generic [ref=f1e1541]: vs
+                - generic [ref=f1e1542]: Baltic Meridian
+              - generic [ref=f1e1543]:
+                - generic [ref=f1e1544]: league
+                - generic [ref=f1e1545]: Bayou Kings
+                - generic [ref=f1e1546]: vs
+                - generic [ref=f1e1547]: Adriatic Sirens
+              - generic [ref=f1e1548]:
+                - generic [ref=f1e1549]: league
+                - generic [ref=f1e1550]: Coral Sea Drakes
+                - generic [ref=f1e1551]: vs
+                - generic [ref=f1e1552]: Alpine Echo
+              - generic [ref=f1e1553]:
+                - generic [ref=f1e1554]: league
+                - generic [ref=f1e1555]: Team Vanguard
+                - generic [ref=f1e1556]: vs
+                - generic [ref=f1e1557]: Team Nexus
+              - generic [ref=f1e1558]:
+                - generic [ref=f1e1559]: league
+                - generic [ref=f1e1560]: Tokyo Drift Six
+                - generic [ref=f1e1561]: vs
+                - generic [ref=f1e1562]: Chao Phraya Owls
+              - generic [ref=f1e1563]:
+                - generic [ref=f1e1564]: league
+                - generic [ref=f1e1565]: Solar Flare
+                - generic [ref=f1e1566]: vs
+                - generic [ref=f1e1567]: Ghostline
+              - generic [ref=f1e1568]:
+                - generic [ref=f1e1569]: league
+                - generic [ref=f1e1570]: Saracen Guard
+                - generic [ref=f1e1571]: vs
+                - generic [ref=f1e1572]: Nordic Frost
+              - generic [ref=f1e1573]:
+                - generic [ref=f1e1574]: league
+                - generic [ref=f1e1575]: Prairie Signal
+                - generic [ref=f1e1576]: vs
+                - generic [ref=f1e1577]: Crimson Order
+              - generic [ref=f1e1578]:
+                - generic [ref=f1e1579]: league
+                - generic [ref=f1e1580]: Seoul Dynasty Prime
+                - generic [ref=f1e1581]: vs
+                - generic [ref=f1e1582]: Harbour City Nine
+              - generic [ref=f1e1583]:
+                - generic [ref=f1e1584]: league
+                - generic [ref=f1e1585]: Sahara Compass
+                - generic [ref=f1e1586]: vs
+                - generic [ref=f1e1587]: Rust Belt Gaming
+              - generic [ref=f1e1588]:
+                - generic [ref=f1e1589]: league
+                - generic [ref=f1e1590]: Midnight Polders
+                - generic [ref=f1e1591]: vs
+                - generic [ref=f1e1592]: Meridian Cross
+              - generic [ref=f1e1593]:
+                - generic [ref=f1e1594]: league
+                - generic [ref=f1e1595]: Outback Sentinels
+                - generic [ref=f1e1596]: vs
+                - generic [ref=f1e1597]: Iron Pact
+  - tooltip "Save Save your campaign":
+    - heading "Save" [level=4]
+    - generic: Save your campaign

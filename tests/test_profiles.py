@@ -1435,7 +1435,8 @@ def test_next_fixture_names_stakes_and_owns_map_record(env, reverse, acting):
     view, opp_id = server_mod._next_fixture_board(gs)
     assert opp_id == (opponent if tid == own else own)
     name = gs.teams[tid].name
-    assert any(name + "'s grip" in line for line in view["preview"])
+    assert any(name + " have already secured a top-four playoff berth" in line
+               for line in view["preview"])
     winning_runs = [line for line in view["preview"] if "winning run" in line]
     assert winning_runs == ([f"{name} arrive on a 2-match winning run."] if tid == own else [])
     assert not any("They" in line or "their grip" in line for line in view["preview"])

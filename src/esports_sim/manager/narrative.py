@@ -13,6 +13,7 @@ from __future__ import annotations
 import random
 
 from esports_sim.manager.state import AwardRecord, GameState
+from esports_sim.manager.qualification import PLAYOFF_CUT, qualification_statuses
 
 _MIN_AWARD_MAPS = 6
 _MIN_CLUTCHES = 4  # below this, "Clutch Merchant" is noise, not an honour
@@ -168,7 +169,6 @@ def head_to_head(gs: GameState, team_a: str, team_b: str) -> dict:
     }
 
 
-_PLAYOFF_CUT = 4
 
 
 def match_preview(
@@ -233,11 +233,21 @@ def match_preview(
 
     region = str(gs.teams[team_id].region)
     order = gs.standings_order(region, tier=gs.teams[team_id].tier)
-    if team_id in order and opp in order and gs.phase == "regular":
+    if (team_id in order and opp in order and gs.phase == "regular"
+            and gs.teams[team_id].tier == 1 and fixture.tier == 1
+            and fixture.stage == "regular" and fixture.bracket == "league"
+            and not fixture.played):
         pos = order.index(team_id) + 1
-        if pos > _PLAYOFF_CUT:
+        status = qualification_statuses(gs, region)[team_id]
+        if status == "secured":
+            bits.append(f"{subject} have already secured a top-four playoff berth; "
+                        "this match counts toward the final league order and playoff seeding.")
+        elif status == "eliminated":
+            bits.append(f"{subject} can no longer reach the top-four playoff places; "
+                        "this match still counts toward the final league record.")
+        elif pos > PLAYOFF_CUT:
             bits.append(f"A win would haul {objective} back toward the playoff places.")
-        elif pos <= _PLAYOFF_CUT:
+        else:
             bits.append(f"Three points here tighten {possessive} grip on a top-four berth.")
 
     # Opponent danger man: their top-rated player this season (min a few maps).

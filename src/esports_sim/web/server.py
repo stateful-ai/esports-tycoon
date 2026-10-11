@@ -29,6 +29,7 @@ from pydantic import BaseModel
 
 from esports_sim.web.usage_telemetry import install_usage_routes
 from esports_sim.labels import humanize_identifier
+from esports_sim.manager.qualification import PLAYOFF_CUT, qualification_statuses
 from esports_sim.manager import (
     academy,
     analytics,
@@ -3855,37 +3856,14 @@ def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     return out
 
 
-PLAYOFF_CUT = 4  # regional playoffs take the top four of the regular season
-
-
 def _eliminated_teams(gs: GameState, region: str) -> set[str]:
     """Tier-1 teams in `region` that can no longer reach the top-4 playoff
     cut, however every remaining regular-season game falls. Correct
     regardless of tiebreakers — it uses only strict win comparisons: a team
     X is out when at least four rivals already have more wins than X could
     reach by winning out. Empty outside the regular season."""
-    if gs.phase != "regular":
-        return set()
-    tids = [
-        t.id for t in gs.teams.values()
-        if str(t.region) == region and t.tier == 1
-    ]
-    wins = {tid: (gs.standings[tid].wins if tid in gs.standings else 0) for tid in tids}
-    remaining = {tid: 0 for tid in tids}
-    for f in gs.fixtures:
-        if f.tier != 1 or f.stage != "regular" or f.played:
-            continue
-        if f.team_a in remaining:
-            remaining[f.team_a] += 1
-        if f.team_b in remaining:
-            remaining[f.team_b] += 1
-    out: set[str] = set()
-    for x in tids:
-        x_ceiling = wins[x] + remaining[x]
-        certainly_ahead = sum(1 for y in tids if y != x and wins[y] > x_ceiling)
-        if certainly_ahead >= PLAYOFF_CUT:
-            out.add(x)
-    return out
+    return {tid for tid, status in qualification_statuses(gs, region).items()
+            if status == "eliminated"}
 
 
 def _team_map_record(gs: GameState, tid: str) -> dict[str, list[int]]:
