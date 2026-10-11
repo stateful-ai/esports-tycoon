@@ -430,14 +430,36 @@ def _candidate_rows(obs: dict[str, Any], kind: str) -> list[tuple[str, np.ndarra
     own = {row["id"]: row for row in obs.get("roster", [])}
     free = {row["player_id"]: row for row in obs.get("free_agents", [])}
     staff = {row["id"]: row for row in obs.get("staff_candidates", [])}
+    transfer = {
+        option["player_id"]: option for option in legal.get("options", [])
+    } if kind in ("bid", "buyout") else {}
+    scouted = {
+        row["player_id"]: row for row in (obs.get("opponent") or {}).get("players", [])
+    }
     ids: list[str] = []
-    if "player_ids" in legal:
+    if kind in ("bid", "buyout"):
+        ids = list(transfer)
+    elif "player_ids" in legal:
         ids = list(legal["player_ids"])
     elif "candidate_ids" in legal:
         ids = list(legal["candidate_ids"])
     rows: list[tuple[str, np.ndarray]] = []
-    for cid in ids:
-        if cid in own:
+    for cid in sorted(ids):
+        if cid in transfer:
+            option = transfer[cid]
+            row = scouted.get(cid, {})
+            # Only public mask terms and already-scouted observation rows.
+            # Keep the existing candidate width for older checkpoint heads.
+            values = [
+                float(row.get("perceived_quality", 0.0)) / 100.0,
+                float(row.get("age", 0.0)) / 40.0,
+                float(row.get("asking_salary", 0.0)) / 100_000.0,
+                float(option["ask" if kind == "bid" else "fee"]) / 1_000_000.0,
+                float(option.get("seller_human", False)),
+                float(row.get("progress", 0.0)),
+                0.0, 0.0, 0.0, 0.0,
+            ]
+        elif cid in own:
             row = own[cid]
             values = [
                 row["ca"] / 100.0, row["age"] / 40.0, row["salary"] / 100_000.0,
@@ -507,6 +529,9 @@ class LearnedManagerPolicy:
             return ""
         weight = self.model.candidate_weights.get(kind)
         if weight is None:
+            if kind in ("bid", "buyout"):
+                # Preserve the behavior of checkpoints predating these heads.
+                return obs["legal_actions"][kind]["options"][0]["player_id"]
             return max(rows, key=lambda item: (item[1][0], item[0]))[0]
         return max(rows, key=lambda item: (float(weight @ item[1]), item[0]))[0]
 
@@ -665,7 +690,7 @@ class LearnedManagerPolicy:
                 "principle": "balanced",
             }
         elif kind in ("bid", "buyout"):
-            params = {"player_id": legal["options"][0]["player_id"]}
+            params = {"player_id": self._candidate(obs, kind)}
         elif kind == "transfer_offer":
             offer = legal["offers"][0]
             # Accept when the move can complete, decline otherwise — both are
