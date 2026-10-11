@@ -1,8 +1,8 @@
 /* Campaign hub. Pure API consumer — all state lives server-side. */
 
-import { h, render } from 'https://esm.sh/preact@10.19.2';
-import { useState, useEffect, useMemo, useRef } from 'https://esm.sh/preact@10.19.2/hooks';
-import htm from 'https://esm.sh/htm@3.1.1';
+import { h, render } from './vendor/preact.mjs';
+import { useState, useEffect, useMemo, useRef } from './vendor/preact-hooks.mjs';
+import htm from './vendor/htm.mjs';
 const html = htm.bind(h);
 
 const $ = (s) => document.querySelector(s);
@@ -1401,7 +1401,7 @@ async function clubOps(v, sub) {
   const trustRow = el("div", "row");
   for (const p of d.media.player_trust || []) trustRow.appendChild(el("span", "pill", `${p.handle} ${Math.round(p.trust)}`));
   mc.appendChild(trustRow);
-  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
+  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}${(h.effect_feedback || []).map(line => `<div class="muted">${esc(line)}</div>`).join("")}`));
   if (d.media.commitment) mc.appendChild(el("p", "muted", "A public derby expectation will settle after the fixture."));
   ws.appendChild(mc);
 
@@ -2858,6 +2858,19 @@ function computeNeedsYou(data) {
       label: `${tlink(o.to_team, o.to_team_name)} offer ${gets} for <b>${plink(o.player_id, o.handle)}</b>`,
       detail: `expires W${o.expires_week}` });
   }
+  // A tired squad is the thing the dashboard most needs to say out loud:
+  // playtesters advanced past condition 87 -> 0 while this rail stayed quiet.
+  if (s.recovery?.needs_a_break) {
+    const r = s.recovery;
+    const worst = r.worst
+      ? ` — worst ${plink(r.worst.id, r.worst.handle)} at <b class="mono">${r.worst.condition}</b>`
+      : "";
+    items.push({ tab: "club", subtab: "squad", kind: "condition", action: "Rest", needs_action: true,
+      label: `Squad condition <b class="mono">${r.average_condition}</b>${worst}`,
+      detail: r.exhausted_count
+        ? `${r.exhausted_count} player${r.exhausted_count === 1 ? "" : "s"} close to burnout`
+        : "Rest a player or book recovery" });
+  }
   for (const e of (s.squad_profile?.expiries ?? []).filter((e) => e.weeks_left > 0 && e.weeks_left <= 8)) {
     items.push({ tab: "club", subtab: "squad", kind: "contract", action: "Renew", needs_action: true,
       label: `${plink(e.id, e.handle)} contract up in <b class="mono">${e.weeks_left}w</b>`,
@@ -3212,6 +3225,70 @@ async function roster(v, opts = {}) {
     }));
   }
 
+  // Condition panel, above the table that shows the problem. Rest is free and
+  // costs a week of development; a booking costs money and nothing else. Both
+  // are stated here because a playtester who could not find either ran the
+  // squad to zero and read it as a dead end.
+  if (clubHost && data.is_user_team) {
+    const rec = App.state.recovery;
+    const card = el("div", `card ${rec?.needs_a_break ? "alert" : ""} recovery-card`);
+    const avg = rec?.average_condition ?? 0;
+    card.innerHTML =
+      `<h3>Squad condition <b class="mono">${avg}</b>` +
+      (rec?.needs_a_break ? ' <span class="chip tone-bad">NEEDS A BREAK</span>' : "") +
+      `</h3><p class="muted">Matches and training drain condition; tired players play worse and learn less. ` +
+      `Set a player to <b>Rest</b> below to recover them for free (they train nothing that week), or buy the whole squad a break.</p>`;
+    const row = el("div", "row recovery-options");
+    card.appendChild(row);
+    v.appendChild(card);
+    // Options and prices are server-computed (see manager/recovery.py); this
+    // only renders what /api/club sends.
+    api("/api/club").then((club) => {
+      const r = club.recovery;
+      if (!r) return;
+      if (r.booked_this_week) {
+        row.appendChild(el("span", "muted", "Recovery already booked this week."));
+        return;
+      }
+      // The cap decides WHICH option to buy, so it has to be readable before
+      // you spend, not after. Two playtesters bought blind and only then found
+      // out they had used the week.
+      row.appendChild(el("span", "muted", "One booking per week — choose one:"));
+      for (const o of r.options) {
+        // Effect on the face of the button, not just the tooltip. The server
+        // already sends condition_gain; both round-two personas reported the
+        // price was stated and the effect was not, and one of them measured
+        // it by hand across twelve weeks to find out.
+        const b = el(
+          "button", "btn btn-sm",
+          `${o.label} · +${o.condition_gain} condition · ${money(o.cost)}`,
+        );
+        b.title = o.enabled
+          ? `${o.blurb} +${o.condition_gain} condition and +${o.morale_gain} morale for every player on the roster. One booking per week.`
+          : o.blocked_reason;
+        // A disabled control must say why — the Facilities screen one tab over
+        // already does this and it was cited as the right pattern.
+        if (!o.enabled && o.blocked_reason) {
+          b.setAttribute("aria-label", `${o.label}: ${o.blocked_reason}`);
+        }
+        b.disabled = !o.enabled;
+        b.onclick = async () => {
+          b.disabled = true;
+          try {
+            const res = await api("/api/actions/recovery", { tier: o.id });
+            toast(res.message);
+            await refresh();
+            renderApp();
+          } catch { b.disabled = false; }
+        };
+        row.appendChild(b);
+        if (!o.enabled && o.blocked_reason) {
+          row.appendChild(el("span", "muted", o.blocked_reason));
+        }
+      }
+    });
+  }
+
   const ws = el("div", "ws roster-ws");
   v.appendChild(ws);
   // The roster table is wide (13 columns) — give it the full content width so
@@ -3286,7 +3363,15 @@ async function roster(v, opts = {}) {
     let rowHtml;
     if (overview) {
       const actions = data.is_user_team
-        ? `${requestChip}<button class="btn btn-sm" data-act="talk">Talk</button>
+        // Rest sits FIRST and on this screen on purpose. Condition is shown
+        // in this table, and until now the only way to act on it was a
+        // dropdown on another sub-tab — three playtesters ran a squad to
+        // zero without ever finding it.
+        // Rest on a full-condition player burns their development week for
+        // nothing, and used to do it without saying so. Still clickable (you
+        // may want it before a heavy run), but it now warns first.
+        ? `${requestChip}<button class="btn btn-sm ${p.dev_focus === "rest" ? "active" : ""}" data-act="rest" title="${p.dev_focus === "rest" ? "Resting: recovers condition instead of training. Click to resume training." : (p.stamina != null && p.stamina >= 97 ? "Already at full condition — resting costs a week of development and recovers nothing." : "Rest this player: recovers condition this week instead of training.")}">${p.dev_focus === "rest" ? "Resting" : "Rest"}</button>
+           <button class="btn btn-sm" data-act="talk">Talk</button>
            <button class="btn btn-sm" data-act="renew">Renew</button>
            <button class="btn btn-sm" data-act="release" ${canRelease ? "" : "disabled"} title="${canRelease ? "Release player" : esc(s.window.detail)}">Release</button>`
         : p.buyout != null
@@ -3408,6 +3493,17 @@ async function roster(v, opts = {}) {
       };
     }
     if (overview && data.is_user_team) {
+      tr.querySelector('[data-act="rest"]').onclick = async (e) => {
+        e.stopPropagation();
+        // Toggle: resting -> back to the team focus, anything else -> rest.
+        const next = p.dev_focus === "rest" ? "auto" : "rest";
+        if (next === "rest" && p.stamina != null && p.stamina >= 97) {
+          toast(`${p.handle} is already at full condition — resting spends a development week for nothing.`);
+          return;
+        }
+        const r = await api("/api/actions/dev_plan", { player_id: p.id, dev_focus: next });
+        toast(r.message); await refresh(); renderApp();
+      };
       tr.querySelector('[data-act="talk"]').onclick = (e) => {
         e.stopPropagation();
         openTalk(p);
@@ -7141,7 +7237,7 @@ async function stats(v) {
   const [data, racesResp, metaResp, perf] = await Promise.all([
     api("/api/stats" + qs),
     sub === "races" ? api("/api/races").catch(() => null) : Promise.resolve(null),
-    sub === "meta" ? api("/api/meta").catch(() => null) : Promise.resolve(null),
+    sub === "meta" ? api(`/api/meta?league_tier=${lgTier}`).catch(() => null) : Promise.resolve(null),
     sub === "history" ? api("/api/perf").catch(() => null) : Promise.resolve(null),
   ]);
   const tier = data.analytics.tier;
@@ -7321,6 +7417,7 @@ function statsRaces(ws, data, racesResp) {
    click closure guards on isConnected (a dropped row means "recreate", not
    "collapse"). */
 function statsMeta(ws, data, metaResp, tier) {
+  const competition = data.league_tier === 2 ? "Challengers" : "Top flight";
   const main = el("div", "ws-8 ws-col");
   const rail = el("div", "ws-4 ws-col");
   ws.appendChild(main);
@@ -7328,11 +7425,11 @@ function statsMeta(ws, data, metaResp, tier) {
 
   if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
     const mc = el("div", "card");
-    mc.appendChild(el("h2", "", "Agent meta"));
+    mc.appendChild(el("h2", "", `Agent meta — ${competition}`));
     const lp = metaResp.latest_patch;
     if (lp) {
       mc.appendChild(el("p", "muted",
-        `Patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
+        `Global patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
     }
     const patched = metaResp.patched_agents || [];
     if (patched.length) {
@@ -7354,13 +7451,22 @@ function statsMeta(ws, data, metaResp, tier) {
           `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
           `<span class="mono muted">${a.pick_rate}%</span>`));
       }
-      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked in recorded competition maps this season"));
       mc.appendChild(list);
+    } else {
+      mc.appendChild(el("p", "muted", "No competition agent sample recorded yet."));
     }
     main.appendChild(mc);
   } else {
     main.appendChild(el("div", "card",
-      `<h2>Agent meta</h2><p class="muted">No meta data compiled yet.</p>`));
+      `<h2>Agent meta — ${competition}</h2><p class="muted">No competition agent sample recorded yet.</p>`));
+  }
+
+  if (metaResp?.sample) {
+    const sample = metaResp.sample;
+    main.appendChild(el("p", "muted",
+      `${competition}: ${sample.completed_team_maps} completed team maps; agent and tactic samples recorded for ${sample.recorded_team_maps}.` +
+      (sample.legacy_team_maps ? ` ${sample.legacy_team_maps} older team maps have no competition agent or tactic record.` : "")));
   }
 
   const mapTrends = metaResp?.map_trends || [];
@@ -7370,12 +7476,12 @@ function statsMeta(ws, data, metaResp, tier) {
   };
   if (mapTrends.length) {
     const trends = el("div", "card");
-    trends.innerHTML = `<h2>Map trends</h2><p class="muted">Public league data from completed maps. Use it to match the field or prepare a counter; team-specific plans remain scouting intel.</p>`;
+    trends.innerHTML = `<h2>Map trends — ${competition}</h2><p class="muted">Public competition data from completed maps. Agent picks and tactics use the recorded sample; older map counts remain visible.</p>`;
     const grid = el("div", "es-map-meta-grid");
     for (const trend of mapTrends) {
       const agents = trend.agents.length
         ? trend.agents.map((a) => `${esc(a.name)} <span class="muted">${a.pick_rate}%</span>`).join(" · ")
-        : "No agent picks yet";
+        : "No competition agent sample recorded";
       const tactics = trend.tactics.map((t) =>
         `<span class="es-map-meta-dial"><b>${esc(dialLabels[t.key] || t.key)}</b> ${t.average}</span>`
       ).join("");
@@ -7383,16 +7489,19 @@ function statsMeta(ws, data, metaResp, tier) {
         <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(humanize(trend.map_id))}</b>
           <span class="mono muted">${trend.team_maps} team maps</span></div>
         <div><span class="muted">Top agents</span> ${agents}</div>
-        <div class="es-map-meta-dials">${tactics}</div>
-        <span class="muted">Most focused site: ${esc(trend.site_focus)}</span>`));
+        <div class="es-map-meta-dials">${tactics || "No competition tactic sample recorded"}</div>
+        <span class="muted">Recorded sample: ${trend.recorded_team_maps ?? trend.team_maps} team maps${trend.site_focus ? ` · Most focused site: ${esc(trend.site_focus)}` : ""}</span>`));
     }
     trends.appendChild(grid);
     main.appendChild(trends);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Map trends — ${competition}</h2><p class="muted">No completed competition maps yet.</p>`));
   }
 
   if (data.teams.length) {
     const tc = el("div", "card");
-    tc.innerHTML = `<h2>Team tendencies</h2>` +
+    tc.innerHTML = `<h2>Team tendencies — ${competition}</h2>` +
       (tier >= 2 ? `<p class="muted">Click a team row for its per-map record.</p>` : "");
     const t = el("table");
     t.innerHTML = `<thead><tr><th>Team</th><th class="num">Maps</th>
@@ -7431,11 +7540,14 @@ function statsMeta(ws, data, metaResp, tier) {
     t.appendChild(tb);
     tc.appendChild(t);
     main.appendChild(tc);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Team tendencies — ${competition}</h2><p class="muted">No competition team sample yet.</p>`));
   }
 
   if ((data.patches ?? []).length) {
     const pc = el("div", "card");
-    pc.innerHTML = `<h2>Patch notes</h2>
+    pc.innerHTML = `<h2>Global patch notes</h2>
       <p class="muted">The meta moves twice a season — mid-split and over the break.
       Rosters built around a nerfed kit feel it.</p>`;
     const scroll = el("div", "card-scroll");
@@ -8476,6 +8588,11 @@ $("#advance-btn").onclick = async () => {
     if (!startWeekReveal(rep)) showReport(rep);
     // Refresh the Inbox badge and toast any newly-arrived unread mail.
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // api() has already toasted the reason (a 409 for a decision still
+    // waiting is a normal answer here, not a fault). Swallow it: an
+    // unhandled rejection surfaces as a pageerror, which turns "you have
+    // one thing left to do" into what looks like a crashed game.
   } finally {
     hideWeekLoading();
     if (!mpPolling) $("#advance-btn").disabled = false;
@@ -8505,6 +8622,9 @@ $("#simahead-btn").onclick = async () => {
       if (!startWeekReveal(res.report)) showReport(res.report);
     }
     if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+  } catch {
+    // Same as Advance Week: sim_ahead reuses the manual advance's 409
+    // guards, so a refusal is expected and already toasted.
   } finally {
     hideWeekLoading();
     btn.disabled = false;

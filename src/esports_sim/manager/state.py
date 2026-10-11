@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 37
+SCHEMA_VERSION = 38
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -551,6 +551,21 @@ def _migrate_v36_to_v37(data: dict) -> dict:
     return data
 
 
+def _migrate_v37_to_v38(data: dict) -> dict:
+    """Additive fields keep their defaults; qualify legacy recovery weeks.
+
+    Pre-integration recovery saves stored only the week. Retain their booking
+    lock for the saved season, without blocking that week in future seasons.
+    MEDIA phase measurements and separate culture effects default unknown;
+    tier meta starts empty because historic global totals lack tier identity.
+    """
+    data.setdefault("recovery_booked_season_by", {
+        tid: data.get("season", 1) for tid in data.get("recovery_booked_by", {})
+    })
+    data.setdefault("map_meta_stats_by_tier", {})
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -588,6 +603,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     34: _migrate_v34_to_v35,
     35: _migrate_v35_to_v36,
     36: _migrate_v36_to_v37,
+    37: _migrate_v37_to_v38,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1553,6 +1569,26 @@ class MediaCommitment(BaseModel):
     player_id: str = ""
 
 
+class MediaEffectChange(BaseModel):
+    """One measured target, captured around its explicitly named mutation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    before: float
+    after: float
+    delta: float
+
+
+class MediaEffects(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentiment: MediaEffectChange
+    player_trust: list[MediaEffectChange] = Field(default_factory=list)
+    sponsor_relations: list[MediaEffectChange] = Field(default_factory=list)
+
+
 class MediaDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1569,6 +1605,14 @@ class MediaDecision(BaseModel):
     sponsor_delta: float = 0.0
     trust_delta: float = 0.0
     settlement: str = ""
+    # None means this save predates measurement; nominal deltas above cannot
+    # reconstruct clamped history. An old pending promise may still gain an
+    # independently measured settlement after loading.
+    immediate_effects: MediaEffects | None = None
+    settlement_effects: MediaEffects | None = None
+    # Separate from MEDIA deltas: the public choice can trigger culture trust
+    # penalties for the whole roster. None means this phase was not measured.
+    culture_trust_effects: list[MediaEffectChange] | None = None
 
 
 class DraftPick(BaseModel):
@@ -1690,6 +1734,10 @@ class GameState(BaseModel):
     fixtures: list[Fixture] = Field(default_factory=list)
     standings: dict[str, TeamRecord] = Field(default_factory=dict)
     training_focus: dict[str, str] = Field(default_factory=dict)
+    # team_id -> the week that club last bought a recovery block. One booking
+    # per club per week; absent means never booked. See manager/recovery.py.
+    recovery_booked_by: dict[str, int] = Field(default_factory=dict)
+    recovery_booked_season_by: dict[str, int] = Field(default_factory=dict)
 
     news: list[str] = Field(default_factory=list)
     # Per-manager PRIVATE news: subsystem events that belong to one manager
@@ -1740,6 +1788,11 @@ class GameState(BaseModel):
     team_map_stats: dict[str, dict[str, TeamMapStats]] = Field(default_factory=dict)
     # Aggregate observations from completed maps, never gated by scouting.
     map_meta_stats: dict[str, MapMetaStats] = Field(default_factory=dict)
+    # Fixture-tier identity captured at completion, independent of transfers.
+    # Older saves retain global totals but cannot reconstruct scoped picks/dials.
+    map_meta_stats_by_tier: dict[str, dict[str, MapMetaStats]] = Field(
+        default_factory=dict
+    )
     # Time-series (SURVIVE season rollover, capped): performance points for
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)

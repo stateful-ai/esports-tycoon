@@ -443,7 +443,9 @@ def draft_class_size(n_teams: int, existing_pool: int) -> int:
     return max(0, n_teams * ROUNDS + POOL_SURPLUS - existing_pool)
 
 
-def generate_draft_class(rng, gd: "GameData", regions, n: int) -> list:
+def generate_draft_class(
+    rng, gd: "GameData", regions, n: int, *, taken_handles: set[str] | None = None,
+) -> list:
     """Generate the top-up draft class: a few blue-chips, a solid middle,
     and a long tail of teenage projects whose PA outruns their CA. Ids are
     `draftee_{i}` (never collides with fa_/team slugs). Spread round-robin
@@ -466,6 +468,7 @@ def generate_draft_class(rng, gd: "GameData", regions, n: int) -> list:
         p = generate_player(
             rng, f"draftee_{i}", style, role, float(quality), gd,
             region=region, age_lo=age_lo, age_hi=age_hi,
+            taken_handles=taken_handles,
         )
         p.contract_weeks_left = 0
         out.append(p)

@@ -560,7 +560,9 @@ def _generate_rookie(gs: GameState, gd, rng: np.random.Generator) -> Player:
     gs.fa_counter += 1
     pid = f"fa_gen_{gs.fa_counter}"
     quality = float(rng.uniform(42, 60))
-    p = generate_player(rng, pid, style, role, quality, gd)
+    taken_handles = {player.handle for player in gs.players.values()}
+    taken_handles.update(prospect.player.handle for prospect in gs.future_prospects.values())
+    p = generate_player(rng, pid, style, role, quality, gd, taken_handles=taken_handles)
     p.contract_weeks_left = 0
     gs.players[pid] = p
     gs.free_agent_ids.append(pid)
@@ -1568,11 +1570,12 @@ def buy_out_player(gs: GameState, buyer_id: str, pid: str) -> tuple[bool, str]:
     return True, f"bought out {p.handle} for {fee:,} cr"
 
 
-def execute_transfer(
-    gs: GameState, pid: str, buyer_id: str, fee: int, weeks: int = 52
+def can_execute_transfer(
+    gs: GameState, pid: str, buyer_id: str, fee: int
 ) -> tuple[bool, str]:
-    """Move a contracted player for money. The buyer must have roster
-    space unless it's an AI org (which auto-releases its weakest)."""
+    """Read-only completion preconditions, also rechecked at execution."""
+    if buyer_id not in gs.teams or pid not in gs.players:
+        return False, "player is not transferable"
     seller_id = team_of(gs, pid)
     if seller_id is None or seller_id == buyer_id:
         return False, "player is not transferable"
@@ -1590,6 +1593,22 @@ def execute_transfer(
             cap = roster_cap(gs, buyer_id)
             return False, f"roster is full ({cap}); release someone first"
     elif len(buyer.player_ids) >= ROSTER_SIZE:
+        if _ai_release_candidate(gs, buyer_id) is None:
+            return False, "buyer has no player available to make room"
+    return True, ""
+
+
+def execute_transfer(
+    gs: GameState, pid: str, buyer_id: str, fee: int, weeks: int = 52
+) -> tuple[bool, str]:
+    """Move a contracted player for money, revalidating current conditions."""
+    allowed, why = can_execute_transfer(gs, pid, buyer_id, fee)
+    if not allowed:
+        return False, why
+    seller_id = team_of(gs, pid)
+    seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
+    p = gs.players[pid]
+    if not gs.is_human(buyer_id) and len(buyer.player_ids) >= ROSTER_SIZE:
         # An AI BUYER stays lean at the field size: it sheds its weakest to
         # make room, so AI-window trades never grow AI rosters (their bench
         # headroom up to roster_cap only ever fills via human-offered
@@ -1731,19 +1750,17 @@ def _relocate(gs: GameState, pid: str, from_id: str, to_id: str, weeks: int) -> 
     p.tenure_weeks = 0
 
 
-def execute_package(
+def can_execute_package(
     gs: GameState,
     target_pid: str,
     buyer_id: str,
     out_pids: list[str],
     cash_to_seller: int,
     cash_to_buyer: int,
-    weeks: int = 52,
 ) -> tuple[bool, str]:
-    """Settle a package: `target_pid` joins the buyer, `out_pids` go the other
-    way, and cash flows per `cash_to_seller` / `cash_to_buyer`. Assumes the deal
-    was already vetted (see `propose_package`) but re-checks ownership + funds
-    defensively, since an offer can sit on a human's desk for weeks."""
+    """Read-only package completion preconditions shared with execution."""
+    if buyer_id not in gs.teams or target_pid not in gs.players:
+        return False, "player is not transferable"
     seller_id = team_of(gs, target_pid)
     if seller_id is None or seller_id == buyer_id:
         return False, "player is not transferable"
@@ -1768,6 +1785,26 @@ def execute_package(
         return False, "buyer cannot afford the cash in this deal"
     if seller.balance + cash_to_seller < cash_to_buyer:
         return False, "seller cannot afford the cash in this deal"
+    return True, ""
+
+
+def execute_package(
+    gs: GameState,
+    target_pid: str,
+    buyer_id: str,
+    out_pids: list[str],
+    cash_to_seller: int,
+    cash_to_buyer: int,
+    weeks: int = 52,
+) -> tuple[bool, str]:
+    """Settle a package after revalidating current ownership, sizes and cash."""
+    allowed, why = can_execute_package(
+        gs, target_pid, buyer_id, out_pids, cash_to_seller, cash_to_buyer
+    )
+    if not allowed:
+        return False, why
+    seller_id = team_of(gs, target_pid)
+    seller, buyer = gs.teams[seller_id], gs.teams[buyer_id]
     buyer.balance += cash_to_buyer - cash_to_seller
     seller.balance += cash_to_seller - cash_to_buyer
     target = gs.players[target_pid]
@@ -1973,7 +2010,16 @@ def respond_offer(
     # drop a player they then can't replace under the advance gate). Accepting is
     # refused and the offer stays live; declining is still allowed.
     if accept:
-        allowed, why = market_move_allowed(gs, offer.to_team)
+        if team_of(gs, player_id) != seller_id:
+            return False, "player is not transferable"
+        allowed, why = (
+            can_execute_package(
+                gs, player_id, offer.to_team, offer.offer_player_ids,
+                offer.cash_to_seller, offer.cash_to_buyer,
+            )
+            if offer.offer_player_ids or offer.cash_to_buyer
+            else can_execute_transfer(gs, player_id, offer.to_team, offer.fee)
+        )
         if not allowed:
             return False, why
     gs.transfer_offers = [o for o in gs.transfer_offers if o is not offer]

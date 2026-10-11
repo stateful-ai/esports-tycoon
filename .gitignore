@@ -23,7 +23,7 @@ htmlcov/
 .env
 .claude/settings.local.json
 
-# Sim artifacts
+# Sim artifacts (also: synthetic-player screenshots/journals under runs/)
 runs/
 events/*.jsonl
 replays/

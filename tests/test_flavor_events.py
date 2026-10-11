@@ -81,8 +81,12 @@ def test_web_state_hides_outcomes_and_advance_requires_resolution(campaign, game
     assert view is not None and view["id"] == event.id
     assert "outcomes" not in json.dumps(view)
     assert "effects" not in json.dumps(view)
-    with pytest.raises(HTTPException, match="flavor event"):
+    # Preserve the current navigation instructions when the older synthetic
+    # player branch is integrated: users can follow this route to the choice.
+    with pytest.raises(HTTPException, match="Team moment") as refusal:
         server_mod.advance()
+    assert refusal.value.status_code == 409
+    assert "Needs you" in str(refusal.value.detail)
 
     result = server_mod.resolve_flavor_event(server_mod.FlavorEventChoiceBody(
         event_id=event.id, choice_id=event.choices[0].id,
