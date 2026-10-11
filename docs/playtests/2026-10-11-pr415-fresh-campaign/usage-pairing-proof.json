@@ -1,0 +1,113 @@
+{
+  "baseline_records": 8,
+  "end_records": 140,
+  "baseline_prefix_preserved": true,
+  "delta_records": 132,
+  "delta_attempts": 9,
+  "delta_results": 9,
+  "paired_request_ids": 9,
+  "unmatched_attempts": 0,
+  "unmatched_results": 0,
+  "delta_world_records": 126,
+  "delta_null_world_records": 6,
+  "delta_other_world_records": 0,
+  "delta_interactions": {
+    "handbook/open": 1,
+    "handbook/section_first_week": 1,
+    "handbook/close": 1
+  },
+  "pairs": [
+    {
+      "attempt_delta_index": 4,
+      "result_delta_index": 6,
+      "target": "/api/new",
+      "result_target": "/api/new",
+      "attempt_world": null,
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 27,
+      "result_delta_index": 29,
+      "target": "/api/actions/advance",
+      "result_target": "/api/actions/advance",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 48,
+      "result_delta_index": 49,
+      "target": "/api/negotiation",
+      "result_target": "/api/negotiation",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 52,
+      "result_delta_index": 53,
+      "target": "/api/negotiation",
+      "result_target": "/api/negotiation",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 76,
+      "result_delta_index": 77,
+      "target": "/api/actions/dev_plan",
+      "result_target": "/api/actions/dev_plan",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 79,
+      "result_delta_index": 80,
+      "target": "/api/actions/dev_plan",
+      "result_target": "/api/actions/dev_plan",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 87,
+      "result_delta_index": 89,
+      "target": "/api/actions/advance",
+      "result_target": "/api/actions/advance",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 101,
+      "result_delta_index": 102,
+      "target": "/api/actions/sponsor",
+      "result_target": "/api/actions/sponsor",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "attempt_delta_index": 129,
+      "result_delta_index": 130,
+      "target": "/api/actions/save",
+      "result_target": "/api/actions/save",
+      "attempt_world": "REWKH",
+      "result_world": "REWKH",
+      "status": 200,
+      "outcome": "success"
+    }
+  ],
+  "scope": "Pairs match private session_id+request_id; safe output omits page session/auth IDs. Null world not inferred as REWKH. Root independently audits raw stream and original rows.",
+  "caveat": "Bounded best effort; no complete funnel, exact attention duration, or causal win attribution"
+}

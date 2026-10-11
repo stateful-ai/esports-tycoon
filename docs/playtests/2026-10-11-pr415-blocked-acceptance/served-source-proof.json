@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:8558/app.js",
+  "http_status": 200,
+  "served_bytes": 411665,
+  "served_sha256": "5985294b841815db1b062236c5c1c3c2e2e2dc15767b4de58f552957f95762e4",
+  "worktree_bytes": 411665,
+  "worktree_sha256": "5985294b841815db1b062236c5c1c3c2e2e2dc15767b4de58f552957f95762e4",
+  "raw_equal": true,
+  "normalized_equal": true,
+  "head": "27a2ea2f40aec80fed9ec57b04c7d8baf52f1ee9",
+  "candidate_git_app_sha256": "9bc8f20b4c75b9173e947bb4ab2c91e56dcc833cd300633bcfa8339b40b99e32"
+}

@@ -1,0 +1,20 @@
+{
+  "all_retained_records": 8,
+  "world26UHC_records": 0,
+  "null_world_records": 8,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 1,
+    "visible_time": 6
+  },
+  "target_counts": {
+    "": 1,
+    "lobby": 7
+  },
+  "request_attempts": 0,
+  "request_results": 0,
+  "interaction_records": 0,
+  "request_result_pairs": 0,
+  "scope": "all retained records are lobby scope; never infer world26UHC from UI code entry",
+  "caveat": "Best effort, no gameplay funnel, no attention/session-duration claim"
+}

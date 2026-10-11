@@ -1,0 +1,223 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Team Nexus
+  - generic: 508,816 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 2":
+      - text: Club
+      - generic: "2"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W2 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 1–0
+  - generic: Record
+  - generic: +7 rd
+  - button "4th League Americas":
+    - generic: 4th
+    - generic: League
+    - generic: Americas
+  - generic: W1
+  - generic: Streak
+  - button "508,816 cr Balance":
+    - generic: 508,816 cr
+    - generic: Balance
+  - generic: "75"
+  - generic: Morale
+  - button "62 Condition":
+    - generic: "62"
+    - generic: Condition
+  - text: W2 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Team Nexus
+  - generic: 4th · 1–0
+  - generic: VS
+  - generic: S1 · W2
+  - generic: Americas League
+  - generic: Best of 1
+  - generic "The manager across the aisle": vs Noah Herrera · Unshakeable
+  - generic: Team Vanguard
+  - generic: 1st · 1–0
+  - generic: Today's prep
+  - generic: Team Vanguard in W2
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Team Vanguard
+  - paragraph: Your scout is not assigned to Team Vanguard. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Phantom's development plan
+  - paragraph: Phantom moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: Three points here tighten Team Nexus's grip on a top-four berth.
+  - generic: Map
+  - figure "lotus":
+    - img "lotus"
+    - generic: lotus
+  - text: Run-in
+  - generic: W2 Team Vanguard
+  - generic: W3 Chao Phraya Owls
+  - generic: W4 Harbour City Nine
+  - generic: W5 Coral Sea Drakes
+  - generic: W6 Outback Sentinels
+  - generic: Team Vanguard — last 1
+  - generic "vs Chao Phraya Owls · 13–3": W
+  - generic: Danger men
+  - generic: Zenith
+  - generic: Controller
+  - generic: ~86
+  - generic: Shade
+  - generic: Initiator
+  - generic: ~83
+  - generic: Warden
+  - generic: Sentinel
+  - generic: ~81
+  - text: Your map pool & veto
+  - text: Team Nexus — season map record (wins / played)
+  - generic: Lotus
+  - generic: 100%
+  - generic: 1/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Beat Gallic Storm 13-6. Standout: Phantom (1.48). Off-colour: Echo (0.62)."
+  - generic: W
+  - generic: vs Gallic Storm
+  - generic: 13–6
+  - generic: ★
+  - text: POTM
+  - generic: Phantom
+  - generic: cold
+  - generic: Frostrush got cold mid-map (16-round run).
+  - generic: What worked
+  - generic: Pistols won
+  - generic: 2/2 pistol rounds (100%).
+  - generic: Phantom carried
+  - generic: Team-high 1.48 average rating.
+  - generic: Defense is a wall
+  - generic: 9/12 defense rounds won (75%).
+  - generic: Attack is clicking
+  - generic: 4/7 attack rounds won (57%).
+  - generic: Where it broke down
+  - generic: Echo off-colour
+  - generic: 0.62 average rating across the series.
+  - generic: Near their ceiling (proj. 61–76) — a lineup call.
+  - text: What to tweak
+  - generic: ▸ Echo is off-colour — consider a bench or agent swap on the Roster screen.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Team Vanguard 1 0 +10":
+        - cell "1"
+        - cell "Team Vanguard"
+        - cell "1"
+        - cell "0"
+        - cell "+10"
+      - row "2 Outback Sentinels 1 0 +9":
+        - cell "2"
+        - cell "Outback Sentinels"
+        - cell "1"
+        - cell "0"
+        - cell "+9"
+      - row "3 Harbour City Nine 1 0 +7":
+        - cell "3"
+        - cell "Harbour City Nine"
+        - cell "1"
+        - cell "0"
+        - cell "+7"
+      - row "4 Team Nexus 1 0 +7":
+        - cell "4"
+        - cell "Team Nexus"
+        - cell "1"
+        - cell "0"
+        - cell "+7"
+  - text: Last result
+  - generic: W
+  - generic: Gallic Storm
+  - generic: 13–6
+  - img "lotus"
+  - paragraph: "World #13 · Rep 59 · Fans 287.3K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: ▸
+  - generic: Apex contract up in 2w
+  - text: ▸
+  - generic: Vortex contract up in 7w
+  - generic: ▸ No game plan set for W2
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "News" [level=2]
+  - generic: "[S1 W1] 13-6 win over Gallic Storm. Phantom finished at 1.48."
+  - generic: "[S1 W1] Highlands Nine sign Riftshot (igl) for 5,800/wk."
+  - generic: "[S1 W1] Highlands Nine release Wraithstep (severance 34,000 cr)."
+  - generic: "[S1 W1] Obsidian Watch sign Blitzwolf (support) for 5,700/wk."
+  - generic: "[S1 W1] TRANSFER: Frostecho joins Patagonia Sur from Obsidian Watch for 348,000 cr."
+  - generic: "[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+- generic: league · Season 1 · Week 1
+- generic: Team Nexus vs Gallic Storm
+- generic: Lotus
+- generic: 13–6
+- generic: Victory
+- generic: League position
+- generic: 4th of 8
+- button "Continue"
+- button "Full report"
+- generic: click anywhere to skip
+- generic: 2 new inbox items
+- tooltip

@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:8558/app.js",
+  "http_status": 200,
+  "served_sha256": "5985294b841815db1b062236c5c1c3c2e2e2dc15767b4de58f552957f95762e4",
+  "frozen_local_sha256": "5985294b841815db1b062236c5c1c3c2e2e2dc15767b4de58f552957f95762e4",
+  "raw_equal": true,
+  "bytes": 411665,
+  "candidate_head": "27a2ea2f40aec80fed9ec57b04c7d8baf52f1ee9"
+}

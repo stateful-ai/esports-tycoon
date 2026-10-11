@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:8554/api/actions/save",
+  "status": 200,
+  "body": {
+    "ok": true,
+    "message": "World saved."
+  }
+}

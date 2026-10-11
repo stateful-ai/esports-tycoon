@@ -1,0 +1,59 @@
+{
+  "at_utc": "2026-10-11T16:49:03.595012+00:00",
+  "base": "b9ec161f85d8dcca1152fd3d1b874c1afec77980",
+  "head": "ce71dea2f6854b66850e93d4a06c083ea261eeb3",
+  "tree": "8567f146e35dbd659d22d5bd1642759701072a78",
+  "merge_chain": [
+    {
+      "merge": "ce71dea2f6854b66850e93d4a06c083ea261eeb3",
+      "parents": [
+        "5d10581fa7ef68a9ec961797dc7709be3efe6c60",
+        "eaac8f3852f737ae3eab2f1e1f07ccdcd0854da4"
+      ]
+    },
+    {
+      "merge": "5d10581fa7ef68a9ec961797dc7709be3efe6c60",
+      "parents": [
+        "d38b09d1c3ba6378cecf669e6229e162a4c0e4cd",
+        "5674bad4ac3ca15794f12d2020ed1f47ad92ba04"
+      ]
+    },
+    {
+      "merge": "d38b09d1c3ba6378cecf669e6229e162a4c0e4cd",
+      "parents": [
+        "b9ec161f85d8dcca1152fd3d1b874c1afec77980",
+        "da2207febaf8bf577e7c49650449cf54ab9a59cc"
+      ]
+    }
+  ],
+  "delta_paths": [
+    "docs/inbox-read-usage-change.md",
+    "docs/playtests/2026-10-11-inbox-collapsed-controls/expanded-route-club-dom.txt",
+    "docs/playtests/2026-10-11-inbox-collapsed-controls/inbox-collapsed-controls.json",
+    "docs/playtests/2026-10-11-inbox-collapsed-controls/inbox-expanded-controls.json",
+    "docs/playtests/2026-10-11-inbox-collapsed-controls/inbox-open-roster-noop-dom.txt",
+    "docs/playtests/2026-10-11-inbox-collapsed-controls/report.md",
+    "docs/playtests/2026-10-11-inbox-interaction-usage-candidate.md",
+    "src/esports_sim/web/static/app.css",
+    "src/esports_sim/web/static/inbox.js",
+    "src/esports_sim/web/static/usage.js",
+    "src/esports_sim/web/usage_telemetry.py",
+    "tests/inbox_read_usage_check.cjs",
+    "tests/inbox_usage_frontend_check.cjs",
+    "tests/overlay_usage_frontend_check.cjs",
+    "tests/test_inbox_frontend.py",
+    "tests/test_inbox_read_usage.py",
+    "tests/test_usage_telemetry.py"
+  ],
+  "overlap_paths": [
+    "src/esports_sim/web/static/inbox.js",
+    "src/esports_sim/web/static/usage.js",
+    "src/esports_sim/web/usage_telemetry.py"
+  ],
+  "all_other_base_blobs_exact": true,
+  "nonoverlapping_candidate_blobs_exact": true,
+  "three_source_overlap_diffs_independently_read": true,
+  "source_clean": true,
+  "local_tests_launched": false,
+  "runtime_acceptance": false
+}

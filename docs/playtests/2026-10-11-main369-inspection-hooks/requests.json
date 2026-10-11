@@ -1,0 +1,224 @@
+[
+  {
+    "at": "2026-10-11T14:22:33.665Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/lobby",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.682Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/state",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.695Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/inbox",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.696Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/gameplan",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.704Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/schedule",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.705Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/career",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.706Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_nexus",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.706Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/standings",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.706Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/gameplan",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:33.707Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_sahara_compass",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:42.303Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_nexus",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:48.352Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:58.709Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/players/vortex/profile",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:22:58.759Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_nexus",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:03.352Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:17.759Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/teams/team_nexus/profile",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:17.841Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/players/vortex/profile",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:17.860Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_nexus",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:18.348Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:33.351Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:23:48.350Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.111Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/lobby",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.123Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/state",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.123Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/inbox",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.139Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/gameplan",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.141Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/schedule",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.143Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_nexus",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.143Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/standings",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.144Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/gameplan",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.144Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/roster/team_sahara_compass",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:24.144Z",
+    "method": "GET",
+    "url": "http://127.0.0.1:8554/api/career",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:38.966Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:24:53.962Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:25:08.962Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:25:23.964Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:25:30.474Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/actions/save",
+    "status": 200
+  },
+  {
+    "at": "2026-10-11T14:25:30.477Z",
+    "method": "POST",
+    "url": "http://127.0.0.1:8554/api/usage/events",
+    "status": 200
+  }
+]

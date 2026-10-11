@@ -1,0 +1,93 @@
+MANAGER HANDBOOK
+LEARN THE JOB
+
+A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.
+
+Close
+FIRST WEEK
+SCREEN GUIDE
+KEY TERMS
+Dashboard
+CURRENT
+
+See what changed, what needs a decision, and what the next fixture demands.
+
+START HERE
+Begin with Needs You, then scan the next fixture and recent form.
+WATCH FOR
+A red or amber item usually deserves attention before advancing the week.
+Open Dashboard
+Inbox
+
+Work through decisions and deadlines without losing them in league news.
+
+START HERE
+Handle Actionable Items first; League Feed is context, not a to-do list.
+WATCH FOR
+Buttons are based on the current campaign state, so an old message cannot trigger an expired offer.
+Open Inbox
+Match
+
+Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+
+START HERE
+Check the opponent report, then adjust only the dials or lineup you have a reason to change.
+WATCH FOR
+Extreme tactics create real trade-offs. Neutral settings are safe while you learn the roster.
+Open Match
+Club
+
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+
+START HERE
+Name a default five, check condition and confidence, then set team and player training plans.
+WATCH FOR
+Bench players still develop, but slower, and established players eventually expect minutes.
+Open Club
+Facilities
+
+Invest in permanent departments that support training, preparation, recovery, and wellbeing.
+
+START HERE
+Compare the next-level benefit with both the build cost and weekly upkeep.
+WATCH FOR
+Upgrades are long-term commitments; do not spend the wage budget needed to keep the roster legal.
+Open Facilities
+Season
+
+Track the table, schedule, playoff cut, records, and the rest of the league.
+
+START HERE
+Use Fixtures for timing and League for the playoff race; team names open full profiles.
+WATCH FOR
+Round difference and head-to-head results can matter when records are tied.
+Open Season
+Market
+
+Find players and staff who improve the club without breaking its finances or chemistry.
+
+START HERE
+Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.
+WATCH FOR
+A higher overall is not automatically a better fit for your lineup, system, or budget.
+Open Market
+Stats
+
+Separate repeatable performance from short streaks and identify league-wide strengths.
+
+START HERE
+Begin with Leaders, then use team and map splits to test the story behind the headline numbers.
+WATCH FOR
+Your analytics department controls how much detail is available; locked columns are a staff/facility problem.
+Open Stats
+Company
+
+Keep the club solvent while growing sponsors, supporters, reach, and public sentiment.
+
+START HERE
+Check weekly net cash flow before accepting costs, then review sponsor demands and brand momentum.
+WATCH FOR
+Results, player reach, and public decisions affect the commercial side of the club over time.
+Open Company
+
+Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.

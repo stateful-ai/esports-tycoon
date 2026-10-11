@@ -1,0 +1,106 @@
+{
+  "head": "8d6315303205e6ebefa425a9015fc5523ccef701",
+  "sourceFiles": 425,
+  "sourceFreezeIdentical": true,
+  "actionBefore": 135,
+  "actionAfter": 138,
+  "actionPrefixPreserved": true,
+  "actions": [
+    {
+      "index": 135,
+      "season": 2,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 136,
+      "season": 2,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "decline",
+        "event_id": "d021a8755127f819"
+      },
+      "source": "web"
+    },
+    {
+      "index": 137,
+      "season": 2,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "snapsBefore": 30,
+  "snapsAfter": 31,
+  "snapPrefixPreserved": true,
+  "usageRetained": 80,
+  "usageKinds": {
+    "session_start": 4,
+    "view": 16,
+    "visible_time": 44,
+    "session_end": 1,
+    "interaction": 5,
+    "attempt": 5,
+    "result": 5
+  },
+  "pairs": [
+    {
+      "request_id": 13,
+      "target": "/api/actions/dev_plan",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 15,
+      "target": "/api/actions/advance",
+      "status": 409,
+      "outcome": "http_error"
+    },
+    {
+      "request_id": 22,
+      "target": "/api/actions/flavor_event",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 31,
+      "target": "/api/actions/advance",
+      "status": 200,
+      "outcome": "success"
+    },
+    {
+      "request_id": 50,
+      "target": "/api/actions/save",
+      "status": 200,
+      "outcome": "success"
+    }
+  ],
+  "unmatchedAttempts": 0,
+  "unmatchedResults": 0,
+  "coverage": "3/3 accepted decisions matched;5/5 retained attempts paired (dev_plan200,advance409,flavor200,advance200,save200)",
+  "limitations": [
+    "Usage is bounded best effort. Initial browser tool resets lost some public response capture; retained usage still contains earlier sessions. No initial usage snapshot was taken; own sidecar directory was initially absent.",
+    "Direct independent public GET readbacks do not emit browser usage events.",
+    "Rows5,11,12 corrected by13 where applicable; isVisible is not proof of opacity-visible overlay.",
+    "Live flywheel connector unavailable; inherited findings and local2learnings1pain retained."
+  ],
+  "usageScope": "Own isolated server; page-session IDs kept private"
+}

@@ -1,0 +1,131 @@
+{
+  "allowlist": [
+    {
+      "path": "actions.csv",
+      "bytes": 2553,
+      "sha256": "5ac924d77e1966928ad4f9e1c76089b6c42c1ef62e9a55313f0adf27cc61b243"
+    },
+    {
+      "path": "actions-before-analytics.csv",
+      "bytes": 1096,
+      "sha256": "b32ee965f3b06382ad199b8d325e735d93906552ebd1f8553c8ee26a3a5b93bc"
+    },
+    {
+      "path": "actions-final-before-analytics.csv",
+      "bytes": 2553,
+      "sha256": "5ac924d77e1966928ad4f9e1c76089b6c42c1ef62e9a55313f0adf27cc61b243"
+    },
+    {
+      "path": "annotation-scope.json",
+      "bytes": 78,
+      "sha256": "dc79b7a0a1085a4a1f8a6a970459f6988604d933d3c7ab33b940512416c5781a"
+    },
+    {
+      "path": "browser-blocker.json",
+      "bytes": 771,
+      "sha256": "571dabacfd4716cf3fe3e2e53314c66e57788fe2432f1068e083e26804b62276"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 141392,
+      "sha256": "30eeacb7289bd040d06e1dbe70a2abf842d9e0ac35b318fcc9020d74b232e24b"
+    },
+    {
+      "path": "git-before.json",
+      "bytes": 20384,
+      "sha256": "368ad7768cf73d10501d648ebca323dcbee65777e4c128f0df841f5389548564"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 74272,
+      "sha256": "bbc07f7b36278a6f51887786fe8698eeaeacc93d13b4a3e1a1aa94a6f1d46fb5"
+    },
+    {
+      "path": "git-after.json",
+      "bytes": 217,
+      "sha256": "a7c74fe2c912b6ac233e55072bbc197a067be17824547475a9e36109f7471d0f"
+    },
+    {
+      "path": "source-final.json",
+      "bytes": 74272,
+      "sha256": "bbc07f7b36278a6f51887786fe8698eeaeacc93d13b4a3e1a1aa94a6f1d46fb5"
+    },
+    {
+      "path": "git-final.json",
+      "bytes": 217,
+      "sha256": "a7c74fe2c912b6ac233e55072bbc197a067be17824547475a9e36109f7471d0f"
+    },
+    {
+      "path": "source-startup-proof.json",
+      "bytes": 609,
+      "sha256": "b48cd5de059ab2f020e545a3869daac290dc3a7aa097859bf68868f9218ff444"
+    },
+    {
+      "path": "served-source-proof.json",
+      "bytes": 507,
+      "sha256": "0d2e2c6d17d361ceaacf9b6f560434fc29ff63f3b4119530305f61d0b7506cb3"
+    },
+    {
+      "path": "child-blocked-reconciliation.json",
+      "bytes": 1034,
+      "sha256": "960f9738e8539f8927c635b2f7594f7a4a92560d991d15e3e06a63122a04605e"
+    },
+    {
+      "path": "reconciliation.json",
+      "bytes": 1034,
+      "sha256": "960f9738e8539f8927c635b2f7594f7a4a92560d991d15e3e06a63122a04605e"
+    },
+    {
+      "path": "final-reconciliation.json",
+      "bytes": 3206,
+      "sha256": "b0a979e200fca9afe25bcb858f642265720e9eeb8a9288274f0925beba42bee1"
+    },
+    {
+      "path": "final-csv-proof.json",
+      "bytes": 520,
+      "sha256": "568ac88289db8d939671f2ff692dea010c70d13c9f8a2cd2d32f4de628c1a5e9"
+    },
+    {
+      "path": "usage-safe-events.json",
+      "bytes": 1023,
+      "sha256": "b053251249e4b6f7285bd4d16dba575adb3e622cfee9822e104f7a3db5fedb46"
+    },
+    {
+      "path": "usage-final-summary.json",
+      "bytes": 525,
+      "sha256": "b5c973b8d3a94ec21b49f14c7561cfe79d0fe7cbbc4dd7f9d25823d312eb12e0"
+    },
+    {
+      "path": "shutdown-proof.json",
+      "bytes": 162,
+      "sha256": "2ec721a71eb8638446eea36ec49f3cbaebee577df0872c6c2a2a7853a8555202"
+    },
+    {
+      "path": "child-intermediate-shutdown-proof.json",
+      "bytes": 162,
+      "sha256": "2ec721a71eb8638446eea36ec49f3cbaebee577df0872c6c2a2a7853a8555202"
+    },
+    {
+      "path": "final-shutdown-proof.json",
+      "bytes": 307,
+      "sha256": "761b1fd35a91b234797c3c4cd28d761e65dadf84bc40f828f764e9e2723ebb29"
+    },
+    {
+      "path": "report.md",
+      "bytes": 3150,
+      "sha256": "222856b274ac7adcbe5eadf577cad44f48a151a2adfcf14c47b02153d40f4d76"
+    },
+    {
+      "path": "final-report.md",
+      "bytes": 2628,
+      "sha256": "79d24b2e5860a15dcfa5f909c5d43503b1d4695102ca20dbcf8c537b40915754"
+    },
+    {
+      "path": "flywheel-local.json",
+      "bytes": 765,
+      "sha256": "09de1658d837fb22dd81224a1eaff3a87ecb443655e651e77044386d20a966f6"
+    }
+  ],
+  "excluded": "Full saves/action logs/telemetry snaps;auth/session bindings;private raw usage/page IDs;binary Git indexes;private server logs/receipts;bookkeeping scripts;inherited private findings;absolute private paths",
+  "claims": "Blocked acceptance only. Static served-source and file preservation evidence; no gameplay success."
+}

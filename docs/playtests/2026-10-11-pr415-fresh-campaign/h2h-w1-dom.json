@@ -1,0 +1,92 @@
+[
+  {
+    "headers": [
+      {
+        "aria_label": null,
+        "text": "",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "CHA",
+        "title": "Chao Phraya Owls"
+      },
+      {
+        "aria_label": null,
+        "text": "COR",
+        "title": "Coral Sea Drakes"
+      },
+      {
+        "aria_label": null,
+        "text": "GAL",
+        "title": "Gallic Storm"
+      },
+      {
+        "aria_label": null,
+        "text": "HAR",
+        "title": "Harbour City Nine"
+      },
+      {
+        "aria_label": null,
+        "text": "MER",
+        "title": "Meridian Cross"
+      },
+      {
+        "aria_label": null,
+        "text": "TEA",
+        "title": "Team Nexus"
+      },
+      {
+        "aria_label": null,
+        "text": "OUT",
+        "title": "Outback Sentinels"
+      },
+      {
+        "aria_label": null,
+        "text": "TEA",
+        "title": "Team Vanguard"
+      },
+      {
+        "aria_label": null,
+        "text": "CHA",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "COR",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "GAL",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "HAR",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "MER",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "TEA",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "OUT",
+        "title": null
+      },
+      {
+        "aria_label": null,
+        "text": "TEA",
+        "title": null
+      }
+    ],
+    "html": "<table class=\"es-h2hm\"><thead><tr><th></th><th title=\"Chao Phraya Owls\">CHA</th><th title=\"Coral Sea Drakes\">COR</th><th title=\"Gallic Storm\">GAL</th><th title=\"Harbour City Nine\">HAR</th><th title=\"Meridian Cross\">MER</th><th title=\"Team Nexus\">TEA</th><th title=\"Outback Sentinels\">OUT</th><th title=\"Team Vanguard\">TEA</th></tr></thead><tbody><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_chao_phraya_owls\">CHA</span></th><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_coral_sea_drakes\">COR</span></th><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_gallic_storm\">GAL</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_harbour_city_nine\">HAR</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_meridian_cross\">MER</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_nexus\">TEA</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_outback_sentinels\">OUT</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td><td class=\"muted\">·</td></tr><tr><th class=\"es-h2hm-row\"><span class=\"tlink \" data-tid=\"team_vanguard\">TEA</span></th><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"muted\">·</td><td class=\"es-h2hm-self\">—</td></tr></tbody></table>"
+  }
+]

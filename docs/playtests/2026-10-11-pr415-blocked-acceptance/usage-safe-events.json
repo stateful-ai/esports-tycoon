@@ -1,0 +1,58 @@
+[
+  {
+    "retained_index": 0,
+    "season": null,
+    "week": null,
+    "kind": "session_start",
+    "target": ""
+  },
+  {
+    "retained_index": 1,
+    "season": null,
+    "week": null,
+    "kind": "view",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 2,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 3,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 4,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 5,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 6,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  },
+  {
+    "retained_index": 7,
+    "season": null,
+    "week": null,
+    "kind": "visible_time",
+    "target": "lobby"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-11T17:20:11.9414809Z",
+  "port_has_listener": false,
+  "stopped_owned_only": true,
+  "port": 8562,
+  "head": "83cd64d1d15b066c17cb392c483f21b870356831",
+  "host": "127.0.0.1",
+  "launcher_pid": 41440,
+  "ownership_rechecked": true,
+  "tree": "4bcc0ca59c7dbc121d3a0feecb0665ebd943af81",
+  "listener_pid": 19880,
+  "listener_parent_pid": 41440
+}

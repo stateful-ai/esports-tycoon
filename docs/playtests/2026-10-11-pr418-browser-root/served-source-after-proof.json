@@ -1,0 +1,30 @@
+[
+  {
+    "asset": "app.js",
+    "status": 200,
+    "bytes": 408874,
+    "sha256": "bce630359457252521a72a4d03e9ce1bb2f1059a591115f03a019d1df6dfa795",
+    "equals_frozen_source": true
+  },
+  {
+    "asset": "inbox.js",
+    "status": 200,
+    "bytes": 23339,
+    "sha256": "b1e7731901cb0f0b0830f124b80341dc7e1a93572743798e5aeaa6692cc891bc",
+    "equals_frozen_source": true
+  },
+  {
+    "asset": "app.css",
+    "status": 200,
+    "bytes": 145158,
+    "sha256": "87ec0ba72b214b173abd416dffa4f9573915b5010fd992cde7cf5d0ef4aab364",
+    "equals_frozen_source": true
+  },
+  {
+    "asset": "index.html",
+    "status": 200,
+    "bytes": 12585,
+    "sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0",
+    "equals_frozen_source": true
+  }
+]

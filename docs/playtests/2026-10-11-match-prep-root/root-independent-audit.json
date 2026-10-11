@@ -1,0 +1,252 @@
+{
+  "at_utc": "2026-10-11T17:21:50.710452+00:00",
+  "head": "83cd64d1d15b066c17cb392c483f21b870356831",
+  "tree": "4bcc0ca59c7dbc121d3a0feecb0665ebd943af81",
+  "acceptance_scope": "genuine actual-main Phantom Core session; no candidate PR runtime claim",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "world": "TTJVS",
+  "seed": 2040,
+  "saved_week": 2,
+  "saved_balance": 269034,
+  "frozen_tracked_files": 3560,
+  "frozen_source_files": 707,
+  "raw_git_exact_files": 2392,
+  "CRLF_only_files": 1168,
+  "all_actual_prepost_raw_hashes_equal": true,
+  "head_tree_index_clean_unchanged": true,
+  "baseline_actions": 0,
+  "accepted_decisions": 3,
+  "decisions": [
+    {
+      "index": 0,
+      "csv_step": 3,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_phantom_core",
+        "team_id": "team_phantom_core",
+        "source": "web",
+        "kind": "set_game_plan",
+        "params": {
+          "aggression": "",
+          "choice_encoding": "json-v1",
+          "eco_greed": "",
+          "fixture_id": "s1w1m0pat2",
+          "focus_target": "team_alpine_echo_p2",
+          "map_control": "",
+          "n_dials": "0",
+          "one_match_lineup": "False",
+          "opponent": "team_alpine_echo",
+          "pace": "",
+          "site_focus": "b",
+          "starter_ids": "[]",
+          "team_talk": "focus",
+          "util_discipline": ""
+        }
+      }
+    },
+    {
+      "index": 1,
+      "csv_step": 6,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_phantom_core",
+        "team_id": "team_phantom_core",
+        "source": "web",
+        "kind": "set_preparation",
+        "params": {
+          "created_season": "1",
+          "created_week": "1",
+          "fixture_id": "s1w1m0pat2",
+          "id": "1c2532d72479c1d9",
+          "intensity": "light",
+          "map_id": "bind",
+          "objective": "anti_exec",
+          "opponent_id": "team_alpine_echo",
+          "partner_id": "team_adriatic_sirens",
+          "team_id": "team_phantom_core"
+        }
+      }
+    },
+    {
+      "index": 2,
+      "csv_step": 8,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_phantom_core",
+        "team_id": "team_phantom_core",
+        "source": "web",
+        "kind": "advance",
+        "params": {}
+      }
+    }
+  ],
+  "decision_full_params_team_source_order_verified": true,
+  "baseline_snapshot_records": 0,
+  "snapshot_records": 1,
+  "save_before_sha256": "be5cb974c10d388dc0bd459c1860296801748affcc31842d57ef02ce3414b99c",
+  "save_after_sha256": "1d84443d13d4dd704a87a95be469172ce0ec857aac9e62f20caec783e5b02258",
+  "resolved_prep": {
+    "knowledge_gain": 0.75,
+    "stamina_cost": 1.5
+  },
+  "baseline_usage_events": 14,
+  "retained_usage_events": 113,
+  "new_usage_after_baseline": 99,
+  "retained_world_events": 106,
+  "retained_null_world_events": 7,
+  "kind_counts": {
+    "session_start": 1,
+    "view": 11,
+    "visible_time": 86,
+    "attempt": 5,
+    "result": 5,
+    "interaction": 5
+  },
+  "request_pairs": [
+    {
+      "attempt_index": 5,
+      "result_index": 7,
+      "target": "/api/new",
+      "csv_step": 1,
+      "status": 200
+    },
+    {
+      "attempt_index": 22,
+      "result_index": 23,
+      "target": "/api/actions/gameplan",
+      "csv_step": 3,
+      "status": 200
+    },
+    {
+      "attempt_index": 37,
+      "result_index": 38,
+      "target": "/api/actions/preparation",
+      "csv_step": 6,
+      "status": 200
+    },
+    {
+      "attempt_index": 48,
+      "result_index": 50,
+      "target": "/api/actions/advance",
+      "csv_step": 8,
+      "status": 200
+    },
+    {
+      "attempt_index": 110,
+      "result_index": 111,
+      "target": "/api/actions/save",
+      "csv_step": 11,
+      "status": 200
+    }
+  ],
+  "unmatched_requests": 0,
+  "interactions": [
+    {
+      "index": 10,
+      "target": "handbook/open",
+      "received_at": "2026-10-11T17:01:46.937777+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 11,
+      "target": "handbook/section_first_week",
+      "received_at": "2026-10-11T17:01:46.937777+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 16,
+      "target": "handbook/close",
+      "received_at": "2026-10-11T17:02:46.939730+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 70,
+      "target": "profile/player_open",
+      "received_at": "2026-10-11T17:10:01.933165+00:00",
+      "csv_step_from_observed_UI_order": 10
+    },
+    {
+      "index": 109,
+      "target": "profile/player_close",
+      "received_at": "2026-10-11T17:19:25.295749+00:00",
+      "csv_step_from_observed_UI_order": 11
+    }
+  ],
+  "views": [
+    {
+      "index": 1,
+      "target": "lobby",
+      "received_at": "2026-10-11T17:01:01.952999+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 9,
+      "target": "dashboard",
+      "received_at": "2026-10-11T17:01:46.937777+00:00",
+      "csv_step_from_observed_UI_order": 1
+    },
+    {
+      "index": 18,
+      "target": "tactics/gameplan",
+      "received_at": "2026-10-11T17:02:46.939730+00:00",
+      "csv_step_from_observed_UI_order": 2
+    },
+    {
+      "index": 28,
+      "target": "dashboard",
+      "received_at": "2026-10-11T17:04:16.934412+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 31,
+      "target": "tactics/gameplan",
+      "received_at": "2026-10-11T17:04:31.935965+00:00",
+      "csv_step_from_observed_UI_order": 4
+    },
+    {
+      "index": 34,
+      "target": "tactics/prep",
+      "received_at": "2026-10-11T17:04:46.936412+00:00",
+      "csv_step_from_observed_UI_order": 5
+    },
+    {
+      "index": 43,
+      "target": "dashboard",
+      "received_at": "2026-10-11T17:06:01.933199+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 46,
+      "target": "tactics/prep",
+      "received_at": "2026-10-11T17:06:16.934917+00:00",
+      "csv_step_from_observed_UI_order": 7
+    },
+    {
+      "index": 62,
+      "target": "tactics/gameplan",
+      "received_at": "2026-10-11T17:09:16.931127+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 64,
+      "target": "tactics/strategy",
+      "received_at": "2026-10-11T17:09:16.931127+00:00",
+      "csv_step_from_observed_UI_order": 9
+    },
+    {
+      "index": 69,
+      "target": "tactics/prep",
+      "received_at": "2026-10-11T17:10:01.933165+00:00",
+      "csv_step_from_observed_UI_order": 10
+    }
+  ],
+  "local_tests_launched": false,
+  "qualification": "Coarse browser events do not describe every dial/click or seed change: no lobby/seed_change retained in this session. received_at is server batch receipt time, not client occurrence. No session_end retained; bounded best-effort counts do not establish complete funnels, attention, exact duration or causal wins. CSV step3 expectation named set_match_plan; actual accepted vocabulary is set_game_plan, preserved without rewriting expectation."
+}

@@ -1,0 +1,131 @@
+{
+  "head": "da2207febaf8bf577e7c49650449cf54ab9a59cc",
+  "tree": "9fda35192a33e3b81d230e71e68c95aef4c7ad1a",
+  "head_unchanged": true,
+  "tree_unchanged": true,
+  "status_before": "",
+  "status_after": "",
+  "source_files": 707,
+  "source_raw_unchanged": true,
+  "source_normalized_equal_git_before": true,
+  "source_normalized_equal_git_after": true,
+  "index_raw_unchanged": true,
+  "preexisting_save_files": 0,
+  "preexisting_save_bytes_unchanged": true,
+  "world_receipts": [
+    {
+      "ordinal": 1,
+      "save_sha256": "9db568dc8196681249dc9fcb6b61e0ffe4172b1bed32d9017268910a477c57f8",
+      "seed": 2039,
+      "season": 1,
+      "week": 2,
+      "accepted_actions_before": 0,
+      "accepted_actions": 1,
+      "action_kinds": {
+        "advance": 1
+      },
+      "accepted_action_prefix_preserved": true,
+      "telemetry_snapshots_before": 0,
+      "telemetry_snapshots": 1,
+      "snapshot_prefixes_preserved": true
+    }
+  ],
+  "usage_baseline_records": 0,
+  "usage_baseline_prefix_preserved": true,
+  "usage_delta_records": 37,
+  "usage_kind_counts": {
+    "session_start": 1,
+    "view": 4,
+    "attempt": 3,
+    "visible_time": 23,
+    "result": 3,
+    "interaction": 3
+  },
+  "usage_target_counts": {
+    "": 1,
+    "lobby": 3,
+    "/api/new": 2,
+    "dashboard": 7,
+    "handbook/open": 1,
+    "handbook/section_first_week": 1,
+    "handbook/close": 1,
+    "/api/actions/advance": 2,
+    "inbox": 13,
+    "club/squad": 4,
+    "/api/actions/save": 2
+  },
+  "tests_or_gates_ran": false,
+  "acceptance_verdict": "Root owns actual CUA receipts and verdict; this is file evidence only",
+  "privacy": "Full saves, auth/session metadata, page IDs and raw usage remain in ignored private files",
+  "world_code": "REWKH",
+  "world_code_source": "persisted sessions mapping; auth key private",
+  "served_before": [
+    {
+      "asset": "app.js",
+      "status": 200,
+      "bytes": 408874,
+      "sha256": "bce630359457252521a72a4d03e9ce1bb2f1059a591115f03a019d1df6dfa795",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "inbox.js",
+      "status": 200,
+      "bytes": 23339,
+      "sha256": "b1e7731901cb0f0b0830f124b80341dc7e1a93572743798e5aeaa6692cc891bc",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "app.css",
+      "status": 200,
+      "bytes": 145158,
+      "sha256": "87ec0ba72b214b173abd416dffa4f9573915b5010fd992cde7cf5d0ef4aab364",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "index.html",
+      "status": 200,
+      "bytes": 12585,
+      "sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0",
+      "equals_frozen_source": true
+    }
+  ],
+  "served_after": [
+    {
+      "asset": "app.js",
+      "status": 200,
+      "bytes": 408874,
+      "sha256": "bce630359457252521a72a4d03e9ce1bb2f1059a591115f03a019d1df6dfa795",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "inbox.js",
+      "status": 200,
+      "bytes": 23339,
+      "sha256": "b1e7731901cb0f0b0830f124b80341dc7e1a93572743798e5aeaa6692cc891bc",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "app.css",
+      "status": 200,
+      "bytes": 145158,
+      "sha256": "87ec0ba72b214b173abd416dffa4f9573915b5010fd992cde7cf5d0ef4aab364",
+      "equals_frozen_source": true
+    },
+    {
+      "asset": "index.html",
+      "status": 200,
+      "bytes": 12585,
+      "sha256": "50416e63b5671e124e814c742bde415c59e5b33df4308019cf5ed9af08a151d0",
+      "equals_frozen_source": true
+    }
+  ],
+  "shutdown": {
+    "port": 8560,
+    "launcher_pid": 20492,
+    "listener_pid": 23520,
+    "ownership_verified_before_stop": true,
+    "listener_absent_after": true,
+    "owned_processes_absent_after": true,
+    "user_8421_untouched": true
+  }
+}

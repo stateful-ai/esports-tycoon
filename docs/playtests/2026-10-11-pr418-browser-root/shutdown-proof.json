@@ -1,0 +1,9 @@
+{
+  "port": 8560,
+  "launcher_pid": 20492,
+  "listener_pid": 23520,
+  "ownership_verified_before_stop": true,
+  "listener_absent_after": true,
+  "owned_processes_absent_after": true,
+  "user_8421_untouched": true
+}

@@ -1,0 +1,114 @@
+{
+  "head": "b5fcd57dfa2b99527d518fd2c51f5e6060712865",
+  "tree": "ad0ee3155aad7f3b37314718606b7e0897c82b97",
+  "tracked_files": 3547,
+  "scope_counts": {
+    ".claude": 20,
+    ".gitattributes": 1,
+    ".github": 1,
+    ".gitignore": 1,
+    ".mcp.json": 1,
+    "AGENTS.md": 1,
+    "CLAUDE.md": 1,
+    "GDD.md": 1,
+    "GDD.pdf": 1,
+    "LICENSE": 1,
+    "README.md": 1,
+    "ROADMAP.md": 1,
+    "SKILLS.md": 1,
+    "analysis": 46,
+    "assets": 276,
+    "data": 271,
+    "docs": 2559,
+    "launch-map-studio.bat": 1,
+    "pyproject.toml": 1,
+    "scripts": 65,
+    "skills": 1,
+    "src": 154,
+    "telemetry": 1,
+    "tests": 135,
+    "ui": 5
+  },
+  "exact_raw_blob_matches": 2383,
+  "raw_blob_differences_normalized_equal": 1164,
+  "normalization": "CRLF to LF applied identically to HEAD raw cat-file bytes and actual file bytes; actual raw hashes separately frozen",
+  "world_codes": [
+    "REWKH"
+  ],
+  "seed": 2039,
+  "season": 1,
+  "week": 1,
+  "game_mode": "sandbox",
+  "user_team_id": "team_nexus",
+  "accepted_decision_count": 0,
+  "telemetry_snapshot_team_count": 0,
+  "telemetry_snapshot_total_count": 0,
+  "retained_usage_event_count": 35,
+  "request_receipts": [
+    {
+      "file": "usage.0.jsonl",
+      "line": 4,
+      "kind": "attempt",
+      "target": "/api/new",
+      "request_id": 3
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 6,
+      "kind": "result",
+      "target": "/api/new",
+      "request_id": 3,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 34,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 15
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 35,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 15,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "interaction_receipts": [
+    {
+      "file": "usage.0.jsonl",
+      "line": 9,
+      "kind": "interaction",
+      "target": "handbook/open"
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 10,
+      "kind": "interaction",
+      "target": "handbook/section_first_week"
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 20,
+      "kind": "interaction",
+      "target": "handbook/close"
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 29,
+      "kind": "interaction",
+      "target": "profile/team_open"
+    },
+    {
+      "file": "usage.0.jsonl",
+      "line": 33,
+      "kind": "interaction",
+      "target": "profile/team_close"
+    }
+  ],
+  "private_end_save_files": 4
+}

@@ -1,0 +1,222 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 3 · Regular — Team Nexus
+  - generic: 528,465 cr
+  - button "Save •"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard" [active]
+    - button "Inbox 2":
+      - text: Inbox
+      - generic: "2"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club 1":
+      - text: Club
+      - generic: "1"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W3 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 2–0
+  - generic: Record
+  - generic: +18 rd
+  - button "1st League Americas":
+    - generic: 1st
+    - generic: League
+    - generic: Americas
+  - generic: W2
+  - generic: Streak
+  - button "528,465 cr Balance":
+    - generic: 528,465 cr
+    - generic: Balance
+  - generic: "80"
+  - generic: Morale
+  - button "54 Condition":
+    - generic: "54"
+    - generic: Condition
+  - text: W3 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Team Nexus
+  - generic: 1st · 2–0
+  - generic: VS
+  - generic: S1 · W3
+  - generic: Americas League
+  - generic: Best of 1
+  - generic "The manager across the aisle": vs Liam Castro · Technician
+  - generic: Chao Phraya Owls
+  - generic: 7th · 0–2
+  - generic: Today's prep
+  - generic: Chao Phraya Owls in W3
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Chao Phraya Owls
+  - paragraph: Your scout is not assigned to Chao Phraya Owls. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Phantom's development plan
+  - paragraph: Phantom moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: Team Nexus arrive on a 2-match winning run. Three points here tighten Team Nexus's grip on a top-four berth.
+  - generic: Map
+  - figure "lotus":
+    - img "lotus"
+    - generic: lotus
+  - text: Run-in
+  - generic: W3 Chao Phraya Owls
+  - generic: W4 Harbour City Nine
+  - generic: W5 Coral Sea Drakes
+  - generic: W6 Outback Sentinels
+  - generic: W7 Meridian Cross
+  - generic: Chao Phraya Owls — last 2
+  - generic "vs Team Vanguard · 3–13": L
+  - generic "vs Outback Sentinels · 10–13": L
+  - generic: Danger men
+  - generic: Pyrorush
+  - generic: Controller
+  - generic: ~71
+  - generic: Nightfade
+  - generic: Sentinel
+  - generic: ~70
+  - generic: Cipherstep
+  - generic: Initiator
+  - generic: ~69
+  - text: Your map pool & veto
+  - text: Team Nexus — season map record (wins / played)
+  - generic: Lotus
+  - generic: 100%
+  - generic: 2/2
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Beat Team Vanguard 13-2. Standout: Vortex (2.01). Off-colour: Ghost (0.71)."
+  - paragraph: “Team Nexus have put themselves in the title picture from first.”
+  - generic: W
+  - generic: vs Team Vanguard
+  - generic: 13–2
+  - generic: ★
+  - text: POTM
+  - generic: Vortex
+  - generic: cold
+  - generic: Shade got cold mid-map (11-round run).
+  - generic: What worked
+  - generic: Vortex carried
+  - generic: Team-high 2.01 average rating.
+  - generic: Pistols won
+  - generic: 2/2 pistol rounds (100%).
+  - generic: Attack is clicking
+  - generic: 10/12 attack rounds won (83%).
+  - generic: Where it broke down
+  - generic: Ghost off-colour
+  - generic: 0.71 average rating across the series.
+  - generic: Young with room (proj. 90–99) — a development call, not a bench.
+  - text: What to tweak
+  - generic: ▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Team Nexus 2 0 +18":
+        - cell "1"
+        - cell "Team Nexus"
+        - cell "2"
+        - cell "0"
+        - cell "+18"
+      - row "2 Harbour City Nine 2 0 +14":
+        - cell "2"
+        - cell "Harbour City Nine"
+        - cell "2"
+        - cell "0"
+        - cell "+14"
+      - row "3 Outback Sentinels 2 0 +12":
+        - cell "3"
+        - cell "Outback Sentinels"
+        - cell "2"
+        - cell "0"
+        - cell "+12"
+      - row "4 Team Vanguard 1 1 -1":
+        - cell "4"
+        - cell "Team Vanguard"
+        - cell "1"
+        - cell "1"
+        - cell "-1"
+  - text: Last result
+  - generic: W
+  - generic: Team Vanguard
+  - generic: 13–2
+  - img "lotus"
+  - paragraph: "World #2 · Rep 60 · Fans 290.7K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: ▸
+  - generic: Vortex contract up in 6w
+  - generic: ▸ No game plan set for W3
+  - generic: ▸ 2 unread inbox messages
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - text: ▸
+  - generic: Clutchgear Audio — beat a world top-4 team (per win) Sponsor · Peripheral · In Progress · pays per qualifying win
+  - heading "News" [level=2]
+  - generic: "[S1 W3] Team Nexus sign a peripheral deal with Clutchgear Audio (7,000/wk, objectives: beat a world top-4 team (per win) → 2,000 for 12 weeks)."
+  - generic: "[S1 W2] Baltic Meridian part with Diego Kim and appoint Jan Santos after a 2-match losing streak."
+  - generic: "[S1 W2] #15 Yucatan Ceibas stumble against #29 Patagonia Sur (13-8)."
+  - generic: "[S1 W2] Upset: #28 Tokyo Drift Six take down #16 Obsidian Watch, 10-13."
+  - generic: "[S1 W2] Team Vanguard fall 13-2; lotus decided it. Top rating: Vortex, 2.01."
+  - generic: "[S1 W2] Highlands Nine sign Voltshot (support) for 6,400/wk."
+  - generic: "[S1 W2] Highlands Nine release Pyrostorm (severance 38,000 cr)."
+  - generic: "[S1 W2] Meridian Cross sign Voltfade (lurker) for 3,600/wk."
+  - generic: "[S1 W2] TRANSFER: Nightstorm joins Busan Tempest from Meridian Cross for 241,000 cr."
+  - generic: "[S1 W2] Obsidian Watch expand their academy program to level 2 (300,000 cr)."
+  - generic: "[S1 W2] Clutchgear Audio are courting the peripheral slot (7,000/wk steady, alternatives available). On the table until week 4."
+  - generic: "[S1 W2] Apex re-signs with Team Nexus at 10,400/wk."
+- tooltip "Dashboard See what changed, what needs a decision, and what the next fixture demands. Begin with Needs You, then scan the next fixture and recent form.":
+  - heading "Dashboard" [level=4]
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.
