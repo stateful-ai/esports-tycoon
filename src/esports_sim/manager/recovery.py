@@ -83,9 +83,14 @@ def booked_week(gs, team_id: str) -> int | None:
 
 
 def already_booked(gs, team_id: str) -> bool:
+    """Only a season-qualified booking locks the current week.
+
+    Later-season legacy saves may lack enough evidence to recover the season.
+    An unknown booking allows a fresh paid booking, which stamps both fields.
+    """
     return (
         booked_week(gs, team_id) == gs.week
-        and gs.recovery_booked_season_by.get(team_id, gs.season) == gs.season
+        and gs.recovery_booked_season_by.get(team_id) == gs.season
     )
 
 

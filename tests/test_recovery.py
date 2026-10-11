@@ -171,6 +171,146 @@ def test_legacy_recovery_booking_preserves_current_season_lock(
     assert not recovery.already_booked(loaded, TEAM)
 
 
+def _load_legacy_recovery(gs, tmp_path):
+    import json
+
+    from esports_sim.manager.state import GameState
+
+    old = gs.model_dump(mode="json")
+    old["schema_version"] = 37
+    old.pop("recovery_booked_season_by")
+    save = tmp_path / "legacy-recovery.json"
+    save.write_text(json.dumps(old), encoding="utf-8")
+    return GameState.load(save)
+
+
+@pytest.mark.campaign
+@pytest.mark.parametrize("evidence", ["news", "recovery", "book_recovery"])
+def test_later_season_legacy_current_booking_retains_lock(
+    game_data: GameData, tmp_path, evidence: str,
+) -> None:
+    from esports_sim.manager import telemetry
+
+    gs = _wrecked(game_data)
+    gs.season, gs.week = 2, 3
+    assert recovery.book(gs, TEAM, "day")[0]
+    if evidence != "news":
+        telemetry.record_action(gs, evidence, {"tier": "day"}, team_id=TEAM)
+        gs.news.clear()
+    loaded = _load_legacy_recovery(gs, tmp_path)
+    assert loaded.recovery_booked_season_by[TEAM] == 2
+    assert not recovery.can_book(loaded, TEAM, "retreat")[0]
+    assert loaded.teams[TEAM].balance == gs.teams[TEAM].balance
+
+
+@pytest.mark.campaign
+@pytest.mark.parametrize("keep_evidence", [True, False])
+def test_legacy_previous_season_same_week_does_not_block(
+    game_data: GameData, tmp_path, keep_evidence: bool,
+) -> None:
+    from esports_sim.manager import telemetry
+    from esports_sim.manager.state import GameState
+
+    gs = _wrecked(game_data)
+    gs.week = 3
+    assert recovery.book(gs, TEAM, "day")[0]
+    telemetry.record_action(gs, "recovery", {"tier": "day"}, team_id=TEAM)
+    gs.season = 2
+    if not keep_evidence:
+        gs.action_log.clear()
+        gs.news.clear()
+    loaded = _load_legacy_recovery(gs, tmp_path)
+    assert loaded.recovery_booked_by[TEAM] == 3
+    assert TEAM not in loaded.recovery_booked_season_by
+    assert recovery.can_book(loaded, TEAM, "day")[0]
+    save = tmp_path / "roundtrip.json"
+    loaded.save(save)
+    reloaded = GameState.load(save)
+    assert reloaded.model_dump_json() == loaded.model_dump_json()
+    assert recovery.book(reloaded, TEAM, "day")[0]
+    assert reloaded.recovery_booked_season_by[TEAM] == 2
+    assert not recovery.can_book(reloaded, TEAM, "retreat")[0]
+    reloaded.save(save)
+    assert recovery.already_booked(GameState.load(save), TEAM)
+
+
+@pytest.mark.campaign
+def test_legacy_evidence_is_club_specific_for_multiple_humans_and_ai(
+    game_data: GameData, tmp_path,
+) -> None:
+    from esports_sim.manager import telemetry
+
+    gs = _wrecked(game_data)
+    other, ai = [tid for tid in sorted(gs.teams) if tid != TEAM][:2]
+    gs.human_team_ids = [TEAM, other]
+    gs.season, gs.week = 2, 3
+    for tid in (TEAM, other, ai):
+        assert recovery.book(gs, tid, "day")[0]
+    # Only the first human has accepted current-season action evidence.
+    telemetry.record_action(gs, "recovery", {"tier": "day"}, team_id=TEAM)
+    # AI is not in the human log, but its deterministic news proves booking.
+    gs.news = [line for line in gs.news if gs.teams[ai].name in line]
+    loaded = _load_legacy_recovery(gs, tmp_path)
+    assert recovery.already_booked(loaded, TEAM)
+    assert recovery.already_booked(loaded, ai)
+    assert not recovery.already_booked(loaded, other)
+
+
+@pytest.mark.campaign
+def test_legacy_first_season_lock_needs_no_retained_evidence(
+    game_data: GameData, tmp_path,
+) -> None:
+    gs = _wrecked(game_data)
+    assert recovery.book(gs, TEAM, "day")[0]
+    gs.news.clear()
+    loaded = _load_legacy_recovery(gs, tmp_path)
+    assert recovery.already_booked(loaded, TEAM)
+
+
+@pytest.mark.campaign
+def test_legacy_news_requires_unique_club_name_and_exact_booking_sentence(
+    game_data: GameData, tmp_path,
+) -> None:
+    gs = _wrecked(game_data)
+    gs.season, gs.week = 2, 3
+    assert recovery.book(gs, TEAM, "day")[0]
+    other = next(tid for tid in sorted(gs.teams) if tid != TEAM)
+    gs.teams[other].name = gs.teams[TEAM].name
+    assert not recovery.already_booked(_load_legacy_recovery(gs, tmp_path), TEAM)
+    gs.teams[other].name = "Distinct club"
+    gs.news = [f"[S2 W3] {gs.teams[TEAM].name} consider a recovery day."]
+    assert not recovery.already_booked(_load_legacy_recovery(gs, tmp_path), TEAM)
+
+
+@pytest.mark.campaign
+@pytest.mark.parametrize("kind,week", [("recovery", 2), ("advance", 3)])
+def test_legacy_unrelated_action_does_not_qualify_booking(
+    game_data: GameData, tmp_path, kind: str, week: int,
+) -> None:
+    from esports_sim.manager import telemetry
+
+    gs = _wrecked(game_data)
+    gs.season, gs.week = 2, week
+    telemetry.record_action(gs, kind, team_id=TEAM)
+    gs.week = 3
+    gs.recovery_booked_by[TEAM] = 3
+    gs.news.clear()
+    assert not recovery.already_booked(_load_legacy_recovery(gs, tmp_path), TEAM)
+
+
+@pytest.mark.campaign
+def test_explicit_booking_season_survives_migration(game_data: GameData) -> None:
+    from esports_sim.manager.state import _migrate_v37_to_v38
+
+    gs = _wrecked(game_data)
+    gs.season, gs.week = 2, 3
+    assert recovery.book(gs, TEAM, "day")[0]
+    data = gs.model_dump(mode="json")
+    data["recovery_booked_season_by"][TEAM] = 1
+    migrated = _migrate_v37_to_v38(data)
+    assert migrated["recovery_booked_season_by"][TEAM] == 1
+
+
 @pytest.mark.campaign
 def test_a_club_that_cannot_pay_is_refused_with_the_shortfall(
     game_data: GameData,

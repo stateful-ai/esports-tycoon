@@ -13,6 +13,7 @@ event log (nothing but the box score is persisted).
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
@@ -554,14 +555,44 @@ def _migrate_v36_to_v37(data: dict) -> dict:
 def _migrate_v37_to_v38(data: dict) -> dict:
     """Additive fields keep their defaults; qualify legacy recovery weeks.
 
-    Pre-integration recovery saves stored only the week. Retain their booking
-    lock for the saved season, without blocking that week in future seasons.
+    Pre-integration recovery weeks survive season rollover. Only qualify them
+    when season one, accepted action telemetry, or unambiguous stamped recovery
+    news proves the booking belongs to the saved season. Unknown later-season
+    bookings retain their week but no season: they allow one new booking,
+    which immediately records both values. Never guess from the week alone.
     MEDIA phase measurements and separate culture effects default unknown;
     tier meta starts empty because historic global totals lack tier identity.
     """
-    data.setdefault("recovery_booked_season_by", {
-        tid: data.get("season", 1) for tid in data.get("recovery_booked_by", {})
-    })
+    seasons = data.setdefault("recovery_booked_season_by", {})
+    season = data.get("season", 1)
+    teams = data.get("teams", {})
+    for tid, week in sorted(data.get("recovery_booked_by", {}).items()):
+        if tid in seasons:
+            continue
+        accepted = any(
+            action.get("kind") in {"recovery", "book_recovery"}
+            and action.get("team_id") == tid
+            and action.get("season") == season
+            and action.get("week") == week
+            for action in data.get("action_log", [])
+        )
+        name = teams.get(tid, {}).get("name")
+        unique_name = name and sum(
+            team.get("name") == name for team in teams.values()
+        ) == 1
+        # News is bounded, so absence cannot establish that a booking is stale.
+        # Match the emitted recovery sentence, not incidental mentions of rest.
+        stamped_news = unique_name and any(
+            re.fullmatch(
+                rf"\[S{season} W{week}\] {re.escape(name)} book a recovery "
+                r"(?:day|retreat) \([\d,]+ cr\)\. Squad condition "
+                r"\d+ -> \d+\.",
+                line,
+            )
+            for line in data.get("news", [])
+        )
+        if season == 1 or accepted or stamped_news:
+            seasons[tid] = season
     data.setdefault("map_meta_stats_by_tier", {})
     return data
 
