@@ -1,0 +1,52 @@
+{
+  "verified_at_utc": "2026-10-11T01:33:20.321270+00:00",
+  "native": {
+    "supervisor_pid": 42124,
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator",
+    "pythonpath": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\src",
+    "started": 1791677408.4862304,
+    "pytest_pid": 41704,
+    "exit_code": 0,
+    "finished": 1791679330.743442,
+    "manifest_equal": true,
+    "files": 634,
+    "pre_digest": "17fe17e9733e57a18f45bd7a20cb9d4d40cea230baf2975b565c1b992146d731",
+    "post_digest": "17fe17e9733e57a18f45bd7a20cb9d4d40cea230baf2975b565c1b992146d731"
+  },
+  "terminal": "1283 passed in 1921.53s (0:32:01)",
+  "source_current_matches_all634_frozen_paths": true,
+  "freeze_scope": "src/tests/data/scripts/config/.github/.claude plus existing root runtime config extensions",
+  "immutable_source_sha256": "e8c864a4fb5f6e5894cab49cb4e7e40939a9335286aa1a7f1506036c7a100743",
+  "final_save_sha256": "55879871f9ae8c366c09fcb4b4e495d75c79f6f73adb8fe42d2f6c69c40238f9",
+  "accepted_prefix": 78,
+  "accepted_added": 1,
+  "snapshots_unchanged": 17,
+  "only_changed_GameState_field": "action_log",
+  "historical_audit_world_usage": 71,
+  "historical_audit_raw_usage": 75,
+  "current_world_usage": 74,
+  "current_raw_usage": 78,
+  "current_usage_kinds": {
+    "visible_time": 42,
+    "session_end": 4,
+    "session_start": 4,
+    "view": 20,
+    "attempt": 2,
+    "result": 2
+  },
+  "original71_sanitized_events_exact_prefix": true,
+  "three_later_visible_time_events": true,
+  "paired_successful_requests": 2,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "rows": 11,
+  "original_csv_sha256": "c54da4ce8264fb2bdafd846a2b937b9674500439107f1143f4a18ce934f77e00",
+  "local_tests_launched": false,
+  "limits": "Historical completed native gate independently verified; no new test launched. Controlled browser responses test display only. Bounded usage does not prove attention or complete funnels. Session IDs used locally for pairing; no private bootstrap committed."
+}

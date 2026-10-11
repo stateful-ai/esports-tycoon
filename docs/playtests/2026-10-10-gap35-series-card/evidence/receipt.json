@@ -1,0 +1,19 @@
+{
+  "supervisor_pid": 42124,
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator",
+  "pythonpath": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\src",
+  "started": 1791677408.4862304,
+  "pytest_pid": 41704,
+  "exit_code": 0,
+  "finished": 1791679330.743442,
+  "manifest_equal": true,
+  "files": 634,
+  "pre_digest": "17fe17e9733e57a18f45bd7a20cb9d4d40cea230baf2975b565c1b992146d731",
+  "post_digest": "17fe17e9733e57a18f45bd7a20cb9d4d40cea230baf2975b565c1b992146d731"
+}
