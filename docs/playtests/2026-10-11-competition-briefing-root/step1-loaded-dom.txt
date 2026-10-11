@@ -1,0 +1,23 @@
+- banner:
+  - generic: ESPORTSSIM
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main
+- tooltip

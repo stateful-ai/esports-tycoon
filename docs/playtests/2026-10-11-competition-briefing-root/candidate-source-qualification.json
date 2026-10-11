@@ -1,0 +1,33 @@
+{
+  "at_utc": "2026-10-11T18:56:41.689627+00:00",
+  "head": "d04096e29491d6acb380d0ae1bf9b4771bd84f67",
+  "tree": "37bd5bfb24c79baa93528da11ed0e4496a2cb038",
+  "actual_main": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "required_prs": {
+    "427": "cac7dca470d86499c634f9fc863161d1f11e84b8",
+    "428": "a02bb81f4f9747e82e7a03608e290204673c4125"
+  },
+  "computed_combined_merge_tree_exact": true,
+  "all_non_app_feature_blobs_exact_original_heads": true,
+  "all_main_nonfeature_paths_unchanged": true,
+  "combined_app_diff_independently_read": true,
+  "canonical1044_raw_and_attributes_unchanged": true,
+  "delta_paths": [
+    "docs/dashboard-competition-tier.md",
+    "docs/matchday-briefing-usage-change.md",
+    "docs/ui-usage-telemetry.md",
+    "src/esports_sim/web/server.py",
+    "src/esports_sim/web/static/app.js",
+    "src/esports_sim/web/static/usage.js",
+    "src/esports_sim/web/usage_telemetry.py",
+    "tests/matchday_usage_frontend_check.cjs",
+    "tests/overlay_usage_frontend_check.cjs",
+    "tests/test_dashboard_competition.py",
+    "tests/test_dashboard_competition_frontend.py",
+    "tests/test_usage_telemetry.py"
+  ],
+  "optional358_excluded": true,
+  "other419_420_421_422_423_424_excluded": true,
+  "local_tests_launched": false,
+  "new_runtime_acceptance": false
+}

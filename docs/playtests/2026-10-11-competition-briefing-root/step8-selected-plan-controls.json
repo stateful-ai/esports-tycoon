@@ -1,0 +1,89 @@
+{
+  "buttons": [
+    {
+      "class": "tac-seg-btn on",
+      "text": "Book"
+    },
+    {
+      "class": "btn btn-sm",
+      "text": "None — let them focus"
+    },
+    {
+      "class": "btn btn-sm",
+      "text": "Fire them up (lift, best for ambitious players)"
+    },
+    {
+      "class": "btn btn-sm active",
+      "text": "Reassure (steadies fragile nerves)"
+    },
+    {
+      "class": "btn btn-sm",
+      "text": "Refocus (settle tilt and hubris alike)"
+    }
+  ],
+  "checkboxes": [
+    {
+      "checked": false
+    },
+    {
+      "checked": false
+    },
+    {
+      "checked": false
+    },
+    {
+      "checked": false
+    },
+    {
+      "checked": false
+    }
+  ],
+  "radios": [
+    {
+      "checked": true,
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "value": "on"
+    }
+  ],
+  "sliders": [
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    },
+    {
+      "disabled": true,
+      "value": "50"
+    }
+  ]
+}
