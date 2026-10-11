@@ -291,6 +291,12 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
   // first-week auto-open; a manual open is always intentional.
   const skipWrap = document.getElementById("help-skip-wrap");
   if (skipWrap) skipWrap.hidden = !automatic;
+  overlay.dataset.preferenceKey = helpSeenKey();
+  const skip = document.getElementById("help-skip");
+  if (skip) {
+    skip.checked = false;
+    try { skip.checked = localStorage.getItem(overlay.dataset.preferenceKey) === "1"; } catch (_e) {}
+  }
   overlay.classList.remove("hidden");
   if (opening) {
     helpUsageSection = null;
@@ -309,9 +315,12 @@ function closeHelp() {
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
-    // Auto-open marks seen on ANY close so it never blocks nav twice; the
-    // checkbox is redundant but harmless (also sets the same key).
-    try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {}
+    const key = overlay.dataset.preferenceKey || helpSeenKey();
+    const skip = document.getElementById("help-skip");
+    try {
+      if (skip?.checked) localStorage.setItem(key, "1");
+      else localStorage.removeItem(key);
+    } catch (_e) {}
   }
   overlay.dataset.automatic = "false";
 }
@@ -331,8 +340,9 @@ function initHelpSystem() {
   // Persist the "don't open automatically again" choice the moment it changes,
   // so it holds even if the user dismisses the overlay some other way.
   document.getElementById("help-skip")?.addEventListener("change", (event) => {
-    if (event.target.checked) { try { localStorage.setItem(helpSeenKey(), "1"); } catch (_e) {} }
-    else { try { localStorage.removeItem(helpSeenKey()); } catch (_e) {} }
+    const key = document.getElementById("help")?.dataset.preferenceKey || helpSeenKey();
+    if (event.target.checked) { try { localStorage.setItem(key, "1"); } catch (_e) {} }
+    else { try { localStorage.removeItem(key); } catch (_e) {} }
   });
   document.getElementById("help")?.addEventListener("click", (event) => {
     if (event.target.closest("[data-tour-start]")) {
