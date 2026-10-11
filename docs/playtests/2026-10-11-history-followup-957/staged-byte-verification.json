@@ -1,0 +1,18 @@
+{
+  "verified_at_utc": "2026-10-11T07:53:54.442617+00:00",
+  "verification_kind": "Read-only raw/Git hash, CSV and original JSON/JSONL inspection; no local tests or historical helper execution",
+  "original_artifact_raw_and_Git_byte_matches": 87,
+  "historical_tested_Git_source_blob_matches": 7,
+  "named_row_reference_hashes": 29,
+  "report_reference_hashes": 11,
+  "directory_mappings": 8,
+  "all_parent_artifact_blobs_unchanged": true,
+  "active_source612_raw_and_Git_tree_equal_tested64": true,
+  "current_PR387_validation_inherited": false,
+  "gap40_original_and_shared_tests_UNRUN": true,
+  "canonical957_sha256": "03ce93cc384758de6ce74b0ffacbd1444b63cfb07ca6b99305e525841ef399a9",
+  "parent938_exact_raw_prefix": true,
+  "docs_only_staged_paths_before_this_receipt": 102,
+  "JSON_format_limit": "All .json files among87 copied original receipt files parse; existing zero-byte stderr preserved as empty text, no missing output synthesized",
+  "privacy": "Complete original gap40 owner/source saves and auth/session/launch inputs excluded; two usage report sessions keys are integer aggregate counts"
+}

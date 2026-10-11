@@ -1,0 +1,127 @@
+{
+  "receipt_count": 20,
+  "all_raw_equals_staged_git_blob": true,
+  "scope": "Original receipt paths in manifest; proof file excluded from self-hashing",
+  "receipts": [
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/actions.csv",
+      "sha256": "a3c62be9f2d26e85dfa4b6c3f652039d1ac282c2f5712538ab7fccc95f72b928",
+      "bytes": 4364,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/01-offseason.png",
+      "sha256": "885390f41984f0e84483e627c91631d0fc94e74570d43c117f3f7c95bb9b2c67",
+      "bytes": 284056,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/01-state.json",
+      "sha256": "62b309c70631ae1748bc3b31e34ee010b77672869920c22ddf17920ef60662f3",
+      "bytes": 15091,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-readback.json",
+      "sha256": "11baf9c8193bf866ea9af39d0ee1a254cbfee395307ed54a732989abbde82a73",
+      "bytes": 23837,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-response.json",
+      "sha256": "892eec66c32a4a9e824c52bc5cbd6b21aca32556a7b91378a126016de7062b38",
+      "bytes": 7849,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/02-rollover.png",
+      "sha256": "f688fcf7c4d01f3b4b31a8c96b62937acf9826d1cf34e1c98dfea96669a26446",
+      "bytes": 252218,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/05-save-response.json",
+      "sha256": "6fcc8a6cbbec0e6957d06ed678450a61fc5b952311f93eaeee10326e50880f79",
+      "bytes": 39,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/05-state.json",
+      "sha256": "7a7954dcf521ce1c80f220d3cd75fadff5ab345f78755a79458439d8ddac7ce3",
+      "bytes": 13672,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/audit.json",
+      "sha256": "3fae430c26016d543c5b900ae7dc6d8b41584abebdd02dbe002036e5b50fa233",
+      "bytes": 14074,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/commit-qualification.json",
+      "sha256": "02174884f22474c0c7039a6be406e6679e16e39186c6daaa2906a07aa66ac11c",
+      "bytes": 229,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/flywheel-after-recent.json",
+      "sha256": "80f1777b522356f924fd3f76f79a023e1b5faab03edb12dcd510e5e11d3bfe11",
+      "bytes": 4396,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/flywheel-after-record.json",
+      "sha256": "44b75cabd283ed0eec8e23528620506ea59eaf2ac9b69f4d122b97311839286d",
+      "bytes": 2411,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/freeze-after.json",
+      "sha256": "d09db2212fd54c04d681c38baa105401c04a96016ecde3c95d91d75f22bbf3e6",
+      "bytes": 233054,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/freeze-before.json",
+      "sha256": "d09db2212fd54c04d681c38baa105401c04a96016ecde3c95d91d75f22bbf3e6",
+      "bytes": 233054,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/runtime-metadata-correction.json",
+      "sha256": "3d2f3bbf17cf18950dfbcdafd35514750760027056c099a348d518be4f23d73c",
+      "bytes": 425,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/telemetry-report.txt",
+      "sha256": "e9fafce1c2c59d6eab99ee2f4e2bec6559906f916f5468d00aec8a54a0df9a8e",
+      "bytes": 2226,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/tested-git-blobs.json",
+      "sha256": "a17613c4723f5851367ddbe1d3543a0a829a070422b2bace1a33a85650e68722",
+      "bytes": 299821,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/usage-report.json",
+      "sha256": "2132eb25ae63be85a84fb86f856b2eb5df7b6c54556e775091fcef1665ea9d32",
+      "bytes": 824,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/visible-body.txt",
+      "sha256": "c6729cb0084a7f1c2f74d2b5df48bcbcd36cb10cb96d27fd67878137a464b8d2",
+      "bytes": 3063,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/actions-before-analytics-correction.csv",
+      "sha256": "24255d6bf100312846a58efe299502bea3445c7c872f121174cc5ada78994277",
+      "bytes": 4273,
+      "raw_equals_staged_git_blob": true
+    }
+  ]
+}
