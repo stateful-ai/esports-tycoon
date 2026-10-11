@@ -1,0 +1,335 @@
+- main [ref=e30]:
+  - generic [ref=e2805]:
+    - generic [ref=e2806]:
+      - generic [ref=e2807]: Club
+      - generic [ref=e2808]: Team Nexus · 6/10
+      - generic [ref=e2809]:
+        - button "Squad" [ref=e2810] [cursor=pointer]
+        - button "Development" [ref=e2811] [cursor=pointer]
+        - button "Locker Room" [ref=e2812] [cursor=pointer]
+        - button "Operations" [ref=e2813] [cursor=pointer]
+      - button "Guide" [ref=e2814] [cursor=pointer]
+      - generic [ref=e2815]:
+        - generic "Toggle ★ in the table to change who dresses. Bench players scrim (reduced growth) and good ones want minutes." [ref=e2816]: Default five
+        - generic [ref=e2817]: 5/5
+        - button "Save lineup" [ref=e2818] [cursor=pointer]
+    - generic [ref=e2819]:
+      - table [ref=e2823]:
+        - rowgroup [ref=e2824]:
+          - row [ref=e2825]:
+            - columnheader "★" [ref=e2826] [cursor=pointer]
+            - columnheader "Player" [ref=e2827] [cursor=pointer]
+            - columnheader "Role" [ref=e2828] [cursor=pointer]
+            - columnheader "Agent" [ref=e2829] [cursor=pointer]
+            - columnheader "Age" [ref=e2830] [cursor=pointer]
+            - columnheader "OVR" [ref=e2831]
+            - columnheader "Ceiling" [ref=e2832]
+            - columnheader "Form" [ref=e2833]
+            - columnheader "Morale" [ref=e2834]
+            - columnheader "Condition" [ref=e2835]
+            - columnheader "Confidence" [ref=e2836]
+            - columnheader "Salary" [ref=e2837]
+            - columnheader "Wks" [ref=e2838]
+            - columnheader [ref=e2839] [cursor=pointer]
+        - rowgroup [ref=e2840]:
+          - row [ref=e2841] [cursor=pointer]:
+            - cell [ref=e2842]:
+              - button "★" [ref=e2843]
+            - cell "Apex IGL" [ref=e2844]:
+              - generic [ref=e2845]: Apex
+              - generic [ref=e2846]: IGL
+            - cell "Controller IGL" [ref=e2847]:
+              - generic [ref=e2848]:
+                - generic [ref=e2849]: Controller
+                - generic [ref=e2850]: IGL
+            - cell "Omen ?" [ref=e2851]:
+              - generic "likely auto-pick — not locked by the coach" [ref=e2852]: Omen ?
+            - cell "26" [ref=e2853]
+            - cell "78.3" [ref=e2854]
+            - cell "★★★½" [ref=e2855]
+            - cell "57" [ref=e2856]:
+              - generic [ref=e2857]:
+                - generic "57" [ref=e2858]
+                - generic [ref=e2860]: "57"
+            - cell "100" [ref=e2861]:
+              - generic [ref=e2862]:
+                - generic "100" [ref=e2863]
+                - generic [ref=e2865]: "100"
+            - cell "98" [ref=e2866]:
+              - generic [ref=e2867]:
+                - generic "98" [ref=e2868]
+                - generic [ref=e2870]: "98"
+            - cell "63 ▲" [ref=e2871]:
+              - generic [ref=e2872]:
+                - generic "63" [ref=e2873]
+                - generic [ref=e2875]: "63"
+                - generic "trending up" [ref=e2876]: ▲
+            - cell "10,500 cr/wk" [ref=e2877]
+            - cell "42w" [ref=e2878]
+            - cell [ref=e2879]:
+              - generic [ref=e2880]:
+                - button "Talk" [ref=e2881]
+                - button "Renew" [ref=e2882]
+                - button "Release" [disabled] [ref=e2883]
+          - row [ref=e2884] [cursor=pointer]:
+            - cell [ref=e2885]:
+              - button "★" [ref=e2886]
+            - cell "Vortex" [ref=e2887]
+            - cell "Duelist Awper" [ref=e2889]:
+              - generic [ref=e2890]:
+                - generic [ref=e2891]: Duelist
+                - generic [ref=e2892]: Awper
+            - cell "Jett ?" [ref=e2893]:
+              - generic "likely auto-pick — not locked by the coach" [ref=e2894]: Jett ?
+            - cell "22" [ref=e2895]
+            - cell "74.7" [ref=e2896]
+            - cell "★★★" [ref=e2897]
+            - cell "70 ▲" [ref=e2898]:
+              - generic [ref=e2899]:
+                - generic "70" [ref=e2900]
+                - generic [ref=e2902]: "70"
+                - generic "trending up" [ref=e2903]: ▲
+            - cell "94" [ref=e2904]:
+              - generic [ref=e2905]:
+                - generic "94" [ref=e2906]
+                - generic [ref=e2908]: "94"
+            - cell "100" [ref=e2909]:
+              - generic [ref=e2910]:
+                - generic "100" [ref=e2911]
+                - generic [ref=e2913]: "100"
+            - cell "69 ▲" [ref=e2914]:
+              - generic [ref=e2915]:
+                - generic "69" [ref=e2916]
+                - generic [ref=e2918]: "69"
+                - generic "trending up" [ref=e2919]: ▲
+            - cell "9,200 cr/wk" [ref=e2920]
+            - cell "43w" [ref=e2921]
+            - cell [ref=e2922]:
+              - generic [ref=e2923]:
+                - button "Talk" [ref=e2924]
+                - button "Renew" [ref=e2925]
+                - button "Release" [disabled] [ref=e2926]
+          - row [ref=e2927] [cursor=pointer]:
+            - cell [ref=e2928]:
+              - button "★" [ref=e2929]
+            - cell "Ghost Mentored player" [ref=e2930]:
+              - generic [ref=e2931]: Ghost
+              - generic "Mentored player" [ref=e2932]: 🎓
+            - cell "Initiator Lurker" [ref=e2933]:
+              - generic [ref=e2934]:
+                - generic [ref=e2935]: Initiator
+                - generic [ref=e2936]: Lurker
+            - cell "Sova ?" [ref=e2937]:
+              - generic "likely auto-pick — not locked by the coach" [ref=e2938]: Sova ?
+            - cell "19" [ref=e2939]
+            - cell "76.5" [ref=e2940]
+            - cell "★★★★★" [ref=e2941]
+            - cell "57" [ref=e2942]:
+              - generic [ref=e2943]:
+                - generic "57" [ref=e2944]
+                - generic [ref=e2946]: "57"
+            - cell "100" [ref=e2947]:
+              - generic [ref=e2948]:
+                - generic "100" [ref=e2949]
+                - generic [ref=e2951]: "100"
+            - cell "81" [ref=e2952]:
+              - generic [ref=e2953]:
+                - generic "81" [ref=e2954]
+                - generic [ref=e2956]: "81"
+            - cell "66 ▲" [ref=e2957]:
+              - generic [ref=e2958]:
+                - generic "66" [ref=e2959]
+                - generic [ref=e2961]: "66"
+                - generic "trending up" [ref=e2962]: ▲
+            - cell "4,500 cr/wk" [ref=e2963]
+            - cell "35w" [ref=e2964]
+            - cell [ref=e2965]:
+              - generic [ref=e2966]:
+                - button "Talk" [ref=e2967]
+                - button "Renew" [ref=e2968]
+                - button "Release" [disabled] [ref=e2969]
+          - row [ref=e2970] [cursor=pointer]:
+            - cell [ref=e2971]:
+              - button "★" [ref=e2972]
+            - cell "Slyblade" [ref=e2973]
+            - cell "Duelist Entry" [ref=e2975]:
+              - generic [ref=e2976]:
+                - generic [ref=e2977]: Duelist
+                - generic [ref=e2978]: Entry
+            - cell "Yoru ?" [ref=e2979]:
+              - generic "likely auto-pick — not locked by the coach" [ref=e2980]: Yoru ?
+            - cell "28" [ref=e2981]
+            - cell "72.3" [ref=e2982]
+            - cell "★★★½" [ref=e2983]
+            - cell "52 ▼" [ref=e2984]:
+              - generic [ref=e2985]:
+                - generic "52" [ref=e2986]
+                - generic [ref=e2988]: "52"
+                - generic "trending down" [ref=e2989]: ▼
+            - cell "100" [ref=e2990]:
+              - generic [ref=e2991]:
+                - generic "100" [ref=e2992]
+                - generic [ref=e2994]: "100"
+            - cell "97" [ref=e2995]:
+              - generic [ref=e2996]:
+                - generic "97" [ref=e2997]
+                - generic [ref=e2999]: "97"
+            - cell "59 ▼" [ref=e3000]:
+              - generic [ref=e3001]:
+                - generic "59" [ref=e3002]
+                - generic [ref=e3004]: "59"
+                - generic "trending down" [ref=e3005]: ▼
+            - cell "6,300 cr/wk" [ref=e3006]
+            - cell "53w" [ref=e3007]
+            - cell [ref=e3008]:
+              - generic [ref=e3009]:
+                - button "Talk" [ref=e3010]
+                - button "Renew" [ref=e3011]
+                - button "Release" [disabled] [ref=e3012]
+          - row [ref=e3013] [cursor=pointer]:
+            - cell [ref=e3014]:
+              - button "★" [ref=e3015]
+            - 'cell "Echo Clutch Master: wants the round with the game on the line" [ref=e3016]':
+              - generic [ref=e3017]: Echo
+              - 'img "Clutch Master: wants the round with the game on the line" [ref=e3018]'
+            - cell "Sentinel Anchor" [ref=e3019]:
+              - generic [ref=e3020]:
+                - generic [ref=e3021]: Sentinel
+                - generic [ref=e3022]: Anchor
+            - cell "Killjoy ?" [ref=e3023]:
+              - generic "likely auto-pick — not locked by the coach" [ref=e3024]: Killjoy ?
+            - cell "23" [ref=e3025]
+            - cell "76" [ref=e3026]
+            - cell "★★★" [ref=e3027]
+            - cell "57 ▲" [ref=e3028]:
+              - generic [ref=e3029]:
+                - generic "57" [ref=e3030]
+                - generic [ref=e3032]: "57"
+                - generic "trending up" [ref=e3033]: ▲
+            - cell "100" [ref=e3034]:
+              - generic [ref=e3035]:
+                - generic "100" [ref=e3036]
+                - generic [ref=e3038]: "100"
+            - cell "90" [ref=e3039]:
+              - generic [ref=e3040]:
+                - generic "90" [ref=e3041]
+                - generic [ref=e3043]: "90"
+            - cell "65 ▲" [ref=e3044]:
+              - generic [ref=e3045]:
+                - generic "65" [ref=e3046]
+                - generic [ref=e3048]: "65"
+                - generic "trending up" [ref=e3049]: ▲
+            - cell "7,700 cr/wk" [ref=e3050]
+            - cell "47w" [ref=e3051]
+            - cell [ref=e3052]:
+              - generic [ref=e3053]:
+                - button "Talk" [ref=e3054]
+                - button "Renew" [ref=e3055]
+                - button "Release" [disabled] [ref=e3056]
+          - row [ref=e3057] [cursor=pointer]:
+            - cell [ref=e3058]:
+              - button "☆" [ref=e3059]
+            - 'cell "Hollowlock Inconsistent: a different player week to week bench" [ref=e3060]':
+              - generic [ref=e3061]: Hollowlock
+              - 'img "Inconsistent: a different player week to week" [ref=e3062]'
+              - generic [ref=e3063]: bench
+            - cell "Controller IGL" [ref=e3064]:
+              - generic [ref=e3065]:
+                - generic [ref=e3066]: Controller
+                - generic [ref=e3067]: IGL
+            - cell "Harbor" [ref=e3068]:
+              - generic "locked by their coach" [ref=e3069]: Harbor
+            - cell "26" [ref=e3070]
+            - cell "63.1" [ref=e3071]
+            - cell "★★" [ref=e3072]
+            - cell "43 ▲" [ref=e3073]:
+              - generic [ref=e3074]:
+                - generic "43" [ref=e3075]
+                - generic [ref=e3077]: "43"
+                - generic "trending up" [ref=e3078]: ▲
+            - cell "78" [ref=e3079]:
+              - generic [ref=e3080]:
+                - generic "78" [ref=e3081]
+                - generic [ref=e3083]: "78"
+            - cell "43" [ref=e3084]:
+              - generic [ref=e3085]:
+                - generic "43" [ref=e3086]
+                - generic [ref=e3088]: "43"
+            - cell "52 ▲" [ref=e3089]:
+              - generic [ref=e3090]:
+                - generic "52" [ref=e3091]
+                - generic [ref=e3093]: "52"
+                - generic "trending up" [ref=e3094]: ▲
+            - cell "4,000 cr/wk" [ref=e3095]
+            - cell "53w" [ref=e3096]
+            - cell [ref=e3097]:
+              - generic [ref=e3098]:
+                - button "Talk" [ref=e3099]
+                - button "Renew" [ref=e3100]
+                - button "Release" [disabled] [ref=e3101]
+      - generic [ref=e3102]:
+        - generic [ref=e3103]:
+          - heading "Form & fitness" [level=2] [ref=e3104]
+          - text: Cumulative wins
+          - generic [ref=e3105]:
+            - img "cumulative wins" [ref=e3106]
+            - text: 8W in 9 played
+        - generic [ref=e3117]:
+          - heading "Squad profile" [level=2] [ref=e3118]
+          - paragraph [ref=e3119]: Average age 24
+          - generic [ref=e3120]:
+            - generic [ref=e3121]: Youth ≤21
+            - generic [ref=e3124]: "1"
+          - generic [ref=e3125]:
+            - generic [ref=e3126]: Prime 22–26
+            - generic [ref=e3129]: "4"
+          - generic [ref=e3130]:
+            - generic [ref=e3131]: Veteran 27+
+            - generic [ref=e3134]: "1"
+        - generic [ref=e3135]:
+          - heading "Scouting book" [level=2] [ref=e3136]
+          - paragraph [ref=e3137]: Balanced
+        - generic [ref=e3138]:
+          - heading "Locker room" [level=2] [ref=e3139]
+          - paragraph [ref=e3140]: No standout duos or feuds.
+          - paragraph [ref=e3141]:
+            - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry." [ref=e3142]: Comms 58
+            - text: shared languages feed chemistry.
+        - generic [ref=e3143]:
+          - heading "Map lineups" [level=2] [ref=e3144]
+          - paragraph [ref=e3145]: vs Kathmandu Apex · Bo1
+          - generic [ref=e3146]:
+            - generic [ref=e3147]: Lotus
+            - generic "uses your default five" [ref=e3148]: default
+          - generic [ref=e3149]: Apex · Vortex · Ghost · Slyblade · Echo
+          - button "Edit ▸" [ref=e3150] [cursor=pointer]
+      - generic [ref=e3152]:
+        - heading "Lineups — vs Kathmandu Apex (Bo1)" [level=2] [ref=e3153]
+        - paragraph [ref=e3154]: Dress exactly 5 for each map. A map with no pick uses your default five (★).
+        - generic [ref=e3155]:
+          - heading "Default five" [level=3] [ref=e3156]
+          - generic [ref=e3157]:
+            - generic [ref=e3158]:
+              - button "Apex" [ref=e3159] [cursor=pointer]
+              - button "Vortex" [ref=e3160] [cursor=pointer]
+              - button "Ghost" [ref=e3161] [cursor=pointer]
+              - button "Slyblade" [ref=e3162] [cursor=pointer]
+              - button "Echo" [ref=e3163] [cursor=pointer]
+              - button "Hollowlock" [ref=e3164] [cursor=pointer]
+            - generic [ref=e3165]:
+              - generic [ref=e3166]: 5/5
+              - button "Save" [ref=e3167] [cursor=pointer]
+          - button "Clear (auto top-5)" [ref=e3168] [cursor=pointer]
+        - generic [ref=e3169]:
+          - heading "Lotus · default" [level=3] [ref=e3170]
+          - generic [ref=e3171]:
+            - generic [ref=e3172]:
+              - button "Apex" [ref=e3173] [cursor=pointer]
+              - button "Vortex" [ref=e3174] [cursor=pointer]
+              - button "Ghost" [ref=e3175] [cursor=pointer]
+              - button "Slyblade" [ref=e3176] [cursor=pointer]
+              - button "Echo" [ref=e3177] [cursor=pointer]
+              - button "Hollowlock" [ref=e3178] [cursor=pointer]
+            - generic [ref=e3179]:
+              - generic [ref=e3180]: 5/5
+              - button "Save" [ref=e3181] [cursor=pointer]

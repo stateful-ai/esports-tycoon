@@ -1,0 +1,22 @@
+- main [ref=e32]:
+  - generic [ref=e2414]:
+    - generic [ref=e2415]:
+      - generic [ref=e2416]: Company
+      - generic [ref=e2417]:
+        - button "Finances" [ref=e2418] [cursor=pointer]
+        - button "Brand" [ref=e2419] [cursor=pointer]
+    - generic [ref=e2420]:
+      - paragraph [ref=e2421]: 441,090 cr banked · net +20,150 cr/wk
+      - generic [ref=e2422]:
+        - generic [ref=e2424]:
+          - heading "Sponsorships — marketability 1.07" [level=2] [ref=e2425]
+          - generic [ref=e2428]
+          - generic [ref=e2432]
+          - generic [ref=e2442]
+          - generic [ref=e2473]
+          - generic [ref=e2478]
+        - generic [ref=e2482]:
+          - generic [ref=e2483]
+          - generic [ref=e2498]
+          - generic [ref=e2554]
+          - generic [ref=e2600]

@@ -1,0 +1,154 @@
+[
+  {
+    "id": "esports-playtest-0130",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Distinguish control behavior and later verification from initial expectations",
+    "problem": "Roster row expands detail rather than profile; reload returns Dashboard and premature readback claimed persistence too early",
+    "solution": "Use Ghost name link, reopen Club after reload, append step8 timing correction and preserve UTF8 audit failure13",
+    "lesson": "Visible readbacks support settings only once actually observed; existing overlay telemetry/spacing/accounting agents cover repeated known gaps",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0129",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Exact choice capture supports real-play auditing",
+    "problem": "Coarse lineup flags did not identify the selected five in earlier builds",
+    "solution": "Save Lotus five and Map control30 on main64, compare network parameters, saved accepted indices51/52 and independent public readback",
+    "lesson": "json-v1 telemetry retains playerIDs and each dial selection while leaving consumed one-match plans to the campaign lifecycle",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0128",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Rookie sponsorship resolves from visible participation",
+    "problem": "Understand whether accepting an obligation guarantees the reward",
+    "solution": "Accept Ghost request, inspect career9maps and selected Lotus five, then verify1map/HONORED/relation52to57 after advance",
+    "lesson": "Acceptance alone left the bank unchanged; actual participation honored the20200 request. A short run does not establish causality of the win",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0127",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Expose upkeep as a weekly expense",
+    "problem": "Real settlement hides1500 facility upkeep in reported income, while live Finance shows it as expense",
+    "solution": "Compare observed bank/report/live breakdown; inspect settlement code after choices and delegate gross classification fix",
+    "lesson": "Net cash is correct; reported gross income/expense is misleading, not an unpaid upkeep defect. Gap25 preserves mechanics; gap26 separately fixes actual visible Ghostagainst spacing",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0126",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Facility requirements must use the visible department name",
+    "problem": "Finance locks and upgrade News call Media Department Marketing Office",
+    "solution": "Match the displayed Stream-unlock benefit, build150000, and read back level/upkeep and newly open slot",
+    "lesson": "The correct department unlocked Stream but naming friction is real; gap24 delegated without changing internal keys",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0125",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Sponsor packages visibly change run rate before settlement",
+    "problem": "Need reliable recurring income before an offer expires",
+    "solution": "Choose steady41300 and verify active37-week contract, unchanged bank and net21734->63034; after one tick verify36weeks",
+    "lesson": "The same visible package persists through Save/reload; future win/objective income is not guaranteed",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0124",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Observe active subtab, request routes and modal state before automation",
+    "problem": "Retained LockerRoom, flavor_event route and open report invalidated assumed row/response/navigation targets",
+    "solution": "Preserve observer timeouts, retrieve actual network response and resnapshot controls; close report with Continue",
+    "lesson": "Tooling failures are not game HTTP rejections; actual four requests paired200, and no mutation was repeated after response timeout",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0123",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Verify lineup intent separately from coarse decision telemetry",
+    "problem": "Current build records accepted set_lineup but not exact selected player IDs",
+    "solution": "Read public currentfive immediately and after reload, then reconcile savedlineup and accepted actionprefix",
+    "lesson": "Echo starter/Hollowlockbench persisted and report showed1/0maps; exact-choice telemetry remains already-assigned PR361, not a duplicate gap",
+    "confidence": "high",
+    "source": "2026-10-10-leadership-obligations main042 browser8479 world26UHC seed2038 W9-W10",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "promises",
+      "lineup",
+      "press"
+    ],
+    "kind": "learning"
+  }
+]
