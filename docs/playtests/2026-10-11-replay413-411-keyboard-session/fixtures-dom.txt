@@ -1,0 +1,60 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 7 · Regular — Team Nexus 2,366,434 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 15"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Season S2 · W7 · Regular
+  - button "League"
+  - button "Fixtures"
+  - button "Playoffs"
+  - button "Records"
+  - button "Guide"
+  - button "My matches"
+  - button "All"
+  - button "Americas"
+  - button "Emea"
+  - button "Pacific"
+  - heading "Week 7 — this week" [level=2]
+  - text: league Team Nexus vs Team Vanguard
+  - heading "Week 8" [level=2]
+  - text: league Sahara Compass vs Team Nexus
+  - heading "Week 9" [level=2]
+  - text: league Team Nexus vs Nordic Frost
+  - heading "Week 10" [level=2]
+  - text: league Team Nexus vs Kathmandu Apex
+  - heading "Week 11" [level=2]
+  - text: league Saracen Guard vs Team Nexus
+  - heading "Week 12" [level=2]
+  - text: league Team Nexus vs Rust Belt Gaming
+  - heading "Week 13" [level=2]
+  - text: league Baltic Meridian vs Team Nexus
+  - heading "Week 14" [level=2]
+  - text: league Team Vanguard vs Team Nexus
+  - group:
+    - heading "Played weeks — 6 weeks" [level=2]
+  - heading "This week" [level=2]
+  - text: W7 vs Team Vanguard Bo1 · league Across the league league Baltic Meridian vs Kathmandu Apex league Adriatic Sirens vs Bayou Kings league Alpine Echo vs Coral Sea Drakes league Team Nexus vs Team Vanguard league Chao Phraya Owls vs Tokyo Drift Six league Ghostline vs Solar Flare league Nordic Frost vs Saracen Guard league Crimson Order vs Prairie Signal league Harbour City Nine vs Seoul Dynasty Prime league Rust Belt Gaming vs Sahara Compass league Meridian Cross vs Midnight Polders league Iron Pact vs Outback Sentinels

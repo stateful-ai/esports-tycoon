@@ -1,0 +1,147 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 6 · Regular — Team Nexus 2,287,871 cr
+  - button "Save"
+  - combobox:
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 13"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Company
+  - button "Finances"
+  - button "Brand"
+  - paragraph: 2,287,871 cr banked · net +75,657 cr/wk
+  - heading "Sponsorships — marketability 1.05" [level=2]
+  - text: "Sponsor demands specific match obligations with real financial stakes met Streamforge Jersey week 11 Play Ghost against Saracen Guard Ghost is age 20 with 26 career maps (rookie limit: 10). reward 20,200 cr failure -10,100 cr brand relation 51 Commitments accepted sponsor obligations and how they landed honored Streamforge Jersey Play Ghost against Saracen Guard reward 20,200 cr risk -10,100 cr +5.0 relation settled wk 11 active Title Polar Compute Steady 41,300 cr/wk — 19 weeks ✗ win the regional split → 424,000 cr ✓ qualify for Masters → 445,000 cr active Jersey Streamforge Steady 10,100 cr/wk — 4 weeks ✗ win the regional split → 117,000 cr active Peripheral Redline Chairs Upfront 106,000 cr up front · 1,800 cr/wk — 7 weeks ✓ make the regional playoffs → 12,600 cr active Stream OrbitCast Steady 9,400 cr/wk — 17 weeks make the regional playoffs → 43,000 cr · At Risk active Apparel GG Threads Steady 5,900 cr/wk — 21 weeks make the regional playoffs → 16,000 cr · At Risk"
+  - heading "This week" [level=2]
+  - text: 2,287,871 cr Balance +75,657 cr Net / wk 131,057 cr Income 55,400 cr Expenses
+  - heading "This week's run rate" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item cr / wk":
+        - columnheader "Item"
+        - columnheader "cr / wk"
+    - rowgroup:
+      - row "Base sponsorship 48,729 cr":
+        - cell "Base sponsorship"
+        - cell "48,729 cr"
+      - row "Title sponsor 41,300 cr":
+        - cell "Title sponsor"
+        - cell "41,300 cr"
+      - row "Jersey sponsor 10,100 cr":
+        - cell "Jersey sponsor"
+        - cell "10,100 cr"
+      - row "Peripheral sponsor 1,800 cr":
+        - cell "Peripheral sponsor"
+        - cell "1,800 cr"
+      - row "Stream sponsor 9,400 cr":
+        - cell "Stream sponsor"
+        - cell "9,400 cr"
+      - row "Apparel sponsor 5,900 cr":
+        - cell "Apparel sponsor"
+        - cell "5,900 cr"
+      - row "Merchandise 2,377 cr":
+        - cell "Merchandise"
+        - cell "2,377 cr"
+      - row "Ticket sales 1,585 cr":
+        - cell "Ticket sales"
+        - cell "1,585 cr"
+      - row "Streaming → Brand 9,866 cr":
+        - cell "Streaming → Brand":
+          - text: Streaming
+          - button "→ Brand"
+        - cell "9,866 cr"
+      - row "Prize money 0 cr":
+        - cell "Prize money"
+        - cell "0 cr"
+      - row "Income total 131,057 cr":
+        - cell "Income total"
+        - cell "131,057 cr"
+      - row "Salaries → Squad -47,500 cr":
+        - cell "Salaries → Squad":
+          - text: Salaries
+          - button "→ Squad"
+        - cell "-47,500 cr"
+      - row "Staff -4,900 cr":
+        - cell "Staff"
+        - cell "-4,900 cr"
+      - row "Facility upkeep → Facilities -3,000 cr":
+        - cell "Facility upkeep → Facilities":
+          - text: Facility upkeep
+          - button "→ Facilities"
+        - cell "-3,000 cr"
+      - row "Expense total -55,400 cr":
+        - cell "Expense total"
+        - cell "-55,400 cr"
+      - row "Net +75,657 cr":
+        - cell "Net"
+        - cell "+75,657 cr"
+  - paragraph: A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.
+  - heading "8-week cash projection" [level=2]
+  - img "projected balance"
+  - text: 2,850,927 cr in 8w
+  - table:
+    - rowgroup:
+      - row "Week Net Balance":
+        - columnheader "Week"
+        - columnheader "Net"
+        - columnheader "Balance"
+    - rowgroup:
+      - row "W7 +75,657 cr 2,363,528 cr":
+        - cell "W7"
+        - cell "+75,657 cr"
+        - cell "2,363,528 cr"
+      - row "W8 +75,657 cr 2,439,185 cr":
+        - cell "W8"
+        - cell "+75,657 cr"
+        - cell "2,439,185 cr"
+      - row "W9 +75,657 cr 2,514,842 cr":
+        - cell "W9"
+        - cell "+75,657 cr"
+        - cell "2,514,842 cr"
+      - row "W10 +75,657 cr 2,590,499 cr":
+        - cell "W10"
+        - cell "+75,657 cr"
+        - cell "2,590,499 cr"
+      - row "W11 +65,557 cr 2,656,056 cr":
+        - cell "W11"
+        - cell "+65,557 cr"
+        - cell "2,656,056 cr"
+      - row "W12 +65,557 cr 2,721,613 cr":
+        - cell "W12"
+        - cell "+65,557 cr"
+        - cell "2,721,613 cr"
+      - row "W13 +65,557 cr 2,787,170 cr":
+        - cell "W13"
+        - cell "+65,557 cr"
+        - cell "2,787,170 cr"
+      - row "W14 +63,757 cr 2,850,927 cr":
+        - cell "W14"
+        - cell "+63,757 cr"
+        - cell "2,850,927 cr"
+  - paragraph: Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.
+  - heading "Brand value — marketability 1.05 (facility ×1.1)" [level=2]
+  - text: Reputation +0.73 Social reach +0.11 Star power +0.11 Fanbase +0.06 International run +0 Community mood -0.01 Results -0.04
+- tooltip "Dashboard See what changed, what needs a decision, and what the next fixture demands. Begin with Needs You, then scan the next fixture and recent form.":
+  - heading "Dashboard" [level=4]
+  - text: See what changed, what needs a decision, and what the next fixture demands. Begin with Needs You, then scan the next fixture and recent form.

@@ -1,0 +1,30 @@
+{
+  "at_utc": "2026-10-11T13:40:40.326392+00:00",
+  "prior1079_raw_prefix_all_fields_exact": true,
+  "original19_rows_all399fields_exact": true,
+  "separate_root2_rows_all42fields": true,
+  "canonical_rows": 1100,
+  "sessions": 99,
+  "columns": 21,
+  "canonical_sha256": "d6a5d6396951669d6b97ccdede16f556441e64c9374b62d3493b5ede262f79b1",
+  "sessions_appended": [
+    {
+      "session": "2026-10-11-fatigue-rotation-recovery",
+      "rows": 13,
+      "original_rows": 12,
+      "safe_files": 55,
+      "original_shard_sha256": "3e693a1a6d4391bf19002c57a46ccb4379e4cab4019540c8e4512665b88e742d",
+      "played_head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1"
+    },
+    {
+      "session": "2026-10-11-profile406-keyboard-session",
+      "rows": 8,
+      "original_rows": 7,
+      "safe_files": 36,
+      "original_shard_sha256": "a7fd9f354fef9921743197064dbfc165b9ab18abef0b1a17052dfc6e57957413",
+      "played_head": "9d859741d80fb8a6fbb6d5802dfbac93fc195664"
+    }
+  ],
+  "local_tests_launched": false,
+  "finite_PR4101079_unchanged": true
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "index": 127,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "sponsor_respond",
+    "params": {
+      "accept": "True",
+      "brand": "GG Threads",
+      "slot": "apparel",
+      "structure": "steady"
+    },
+    "source": "web"
+  }
+]

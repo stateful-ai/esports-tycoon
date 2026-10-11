@@ -1,0 +1,15 @@
+[
+  {
+    "text": "View roster ▸",
+    "pid": null,
+    "tag": "BUTTON",
+    "type": null
+  },
+  {
+    "text": "Vortex",
+    "pid": "vortex",
+    "tag": "BUTTON",
+    "type": "button",
+    "row": "<tr class=\"pf-rrow plink\" data-pid=\"vortex\"><td><b><button type=\"button\" class=\"plink\" data-pid=\"vortex\">Vortex</button></b></td><td><span class=\"pill\">Duelist</span></td><td class=\"num\">6</td><td class=\"num\">1.30</td><td class=\"pf-acs-cell\"><span class=\"pf-hbar\"><i style=\"width: 2%; --target-width: 2%;\"></i></span><span class=\"mono pf-acs-val\">—</span></td></tr>"
+  }
+]

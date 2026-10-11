@@ -1,0 +1,314 @@
+[
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/actions-agent-corrected.csv",
+    "bytes": 7605,
+    "sha256": "2cdb22d8e8a97f3b152d06b808f592575d52baaa666e577608aee8fb705fa892",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\actions-agent-corrected.csv",
+    "session_relative": "actions-agent-corrected.csv",
+    "published": "docs/playtests/2026-10-11-media2-league-week/actions-agent-corrected.csv"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/actions.csv",
+    "bytes": 7605,
+    "sha256": "5d01503a17285cb2f84d14b3b932f840cd23339089cc04117e32aa9eae5d87fe",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\actions.csv",
+    "session_relative": "actions.csv",
+    "published": "docs/playtests/2026-10-11-media2-league-week/actions.csv"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/advance-wait.txt",
+    "bytes": 52,
+    "sha256": "520fde27f9eedc2b4e08b45d4c5616421f582102317828e83927d2f046d850d8",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\advance-wait.txt",
+    "session_relative": "advance-wait.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/advance-wait.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/advance-wire.txt",
+    "bytes": 2558,
+    "sha256": "33c0e29856eb064efe0b6207659a1f49b2a42d58c51dca969ee7aa38c1b3f1d9",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\advance-wire.txt",
+    "session_relative": "advance-wire.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/advance-wire.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/after-advance-public.json",
+    "bytes": 162177,
+    "sha256": "6735fb442fe48ee3881cb6b724343a4022b6f3d6d9be8cfad49cd99bb1f6b358",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\after-advance-public.json",
+    "session_relative": "after-advance-public.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/after-advance-public.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/before-public.json",
+    "bytes": 29587,
+    "sha256": "feb0def688d1e4022f6decd0f4ca6493a813d77bcd0cafce9bdc484e354b8b12",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\before-public.json",
+    "session_relative": "before-public.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/before-public.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/booked-ready.txt",
+    "bytes": 9894,
+    "sha256": "31cf5596a3212287cb2c4eb054d5b08492365c48560a6a1a646d54dafc59593f",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\booked-ready.txt",
+    "session_relative": "booked-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/booked-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/brand-ready.txt",
+    "bytes": 36228,
+    "sha256": "7438e0e35d6a071cbb175c9cd10c8e2291169513c7fa0de921b201d5af031f9a",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\brand-ready.txt",
+    "session_relative": "brand-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/brand-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/brand.png",
+    "bytes": 267457,
+    "sha256": "2a830fa8277b911ea22da54eea17711ec0a4692e3fe71a5caa0449b6abfdc4dc",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\brand.png",
+    "session_relative": "brand.png",
+    "published": "docs/playtests/2026-10-11-media2-league-week/brand.png"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/close.txt",
+    "bytes": 37,
+    "sha256": "b4e784c99b36cb4f996f4c5efa33049365f1671cca887fab6a6c90cb969ce883",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\close.txt",
+    "session_relative": "close.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/close.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/company-ready.txt",
+    "bytes": 15979,
+    "sha256": "d2fcdf4698dbf1def6567873b50e3bcbdc66801d6cac9769670d68958fbc3b40",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\company-ready.txt",
+    "session_relative": "company-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/company-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/company.png",
+    "bytes": 312392,
+    "sha256": "6a1e2eccc2e18f76016878f35283c1cbda95408271cbd55e809e2e91f1706de7",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\company.png",
+    "session_relative": "company.png",
+    "published": "docs/playtests/2026-10-11-media2-league-week/company.png"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/dashboard-ready.txt",
+    "bytes": 17760,
+    "sha256": "c8f11980b37ca5772e017b2628c9a058fc176b7ac0a5a4e3cd7d96d78f1c00d2",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\dashboard-ready.txt",
+    "session_relative": "dashboard-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/dashboard-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/decisions-added.json",
+    "bytes": 1098,
+    "sha256": "747ea6daf985d079590daa15c8ea3459376b4d50d66e061a49570a3be2226034",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\decisions-added.json",
+    "session_relative": "decisions-added.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/decisions-added.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/final-public.json",
+    "bytes": 77156,
+    "sha256": "ccb05e0cab63ad37327fdd431b0f627d2ae62d7341301135979fd085227dfa59",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\final-public.json",
+    "session_relative": "final-public.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/final-public.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/flavor-ready.txt",
+    "bytes": 16998,
+    "sha256": "8b22c23a466585b1ebe30b29360f9828859c7a87a817cb79534bf347e015c720",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\flavor-ready.txt",
+    "session_relative": "flavor-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/flavor-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/flavor-wire.txt",
+    "bytes": 1057,
+    "sha256": "f941bb12e197cd21639a031f9b241e995d6560b23a347ed103f92cc55813b722",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\flavor-wire.txt",
+    "session_relative": "flavor-wire.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/flavor-wire.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/flywheel-after.json",
+    "bytes": 2229,
+    "sha256": "6876542f9c95a7c2f8669e031e2dc2d7b61261d99e2b40487666266a2a46388d",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\flywheel-after.json",
+    "session_relative": "flywheel-after.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/flywheel-after.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/flywheel-before.json",
+    "bytes": 6149,
+    "sha256": "4a179d555b64959d8a4f45d14fa65011ddb88b34b24622f47733deb4e78bd6b8",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\flywheel-before.json",
+    "session_relative": "flywheel-before.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/flywheel-before.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/full-report-ready.txt",
+    "bytes": 29052,
+    "sha256": "a7fd04ef0118f3b6b259f80b7104eaaec1d5f05655d3774201767322bbda02fb",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\full-report-ready.txt",
+    "session_relative": "full-report-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/full-report-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/game-time-correction-audit.json",
+    "bytes": 2220,
+    "sha256": "a9b420b2edca6947ed259f37ba4b9ef87412de4f639f0436e78f71b3eda925d8",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\game-time-correction-audit.json",
+    "session_relative": "game-time-correction-audit.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/game-time-correction-audit.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/mutation-wire.json",
+    "bytes": 41639,
+    "sha256": "f876114da3cd062a4c760f4d8ffeef1f910ef1109793423800d376d4c507159a",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\mutation-wire.json",
+    "session_relative": "mutation-wire.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/mutation-wire.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/original-agent-manifest.json",
+    "bytes": 4856,
+    "sha256": "af90a30b08144ced43b7ce6907288c7ef05ac66a59c4949b15b6614541ece331",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\original-agent-manifest.json",
+    "session_relative": "original-agent-manifest.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/original-agent-manifest.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/prep-public.json",
+    "bytes": 21896,
+    "sha256": "0c6be2a81346921700a1306f1eb6440f8f67e81726d41b9f63c899c4dc2eb5b1",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\prep-public.json",
+    "session_relative": "prep-public.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/prep-public.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/prep-ready.txt",
+    "bytes": 10575,
+    "sha256": "f9bcc0717dce14c08eeebaa9c041c8019e7238fda45c43c445b3ac2498bb5bcf",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\prep-ready.txt",
+    "session_relative": "prep-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/prep-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/receipt-summary.json",
+    "bytes": 14341,
+    "sha256": "fb4793b56fec7400cfb20379b67a3e00a5a01589bbcf22a4d8562d61cf3c2251",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\receipt-summary.json",
+    "session_relative": "receipt-summary.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/receipt-summary.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/reconciliation.json",
+    "bytes": 3364,
+    "sha256": "d49a8f50e23a57f4f3c50343503ffc9363f4a3b0623b459e7d7cd870b6f6b508",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\reconciliation.json",
+    "session_relative": "reconciliation.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/reconciliation.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/report.md",
+    "bytes": 3863,
+    "sha256": "c472d82e2a73636ac46e567295c5bf76ba4539e915ecfdd49332f2d1e2aaad04",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\report.md",
+    "session_relative": "report.md",
+    "published": "docs/playtests/2026-10-11-media2-league-week/report.md"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/report.png",
+    "bytes": 301353,
+    "sha256": "2604bce0a20f0d959e7972f9b3ac47f09ea6e5e80cd7ba2396e36e7acf99093b",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\report.png",
+    "session_relative": "report.png",
+    "published": "docs/playtests/2026-10-11-media2-league-week/report.png"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/result-ready.txt",
+    "bytes": 19735,
+    "sha256": "4b9589293f76029912197e694b436cc40088197aebfcda1650d8498d9fa34226",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\result-ready.txt",
+    "session_relative": "result-ready.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/result-ready.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/result.png",
+    "bytes": 220749,
+    "sha256": "da2186895b0f7e6c49718447fbe1607e84665a2dc37decf82b46114cebda7927",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\result.png",
+    "session_relative": "result.png",
+    "published": "docs/playtests/2026-10-11-media2-league-week/result.png"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/root-audit.json",
+    "bytes": 5784,
+    "sha256": "0a75afc2c6ce89cdf7f5ecca167f83582b26356e4242bad2d1a9d3f809347f69",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\root-audit.json",
+    "session_relative": "root-audit.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/root-audit.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/root-correction.csv",
+    "bytes": 1806,
+    "sha256": "b1dd0897e96719617ddccf24b9affca9b9c5ad6d91d1980ba7b88917480aae18",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\root-correction.csv",
+    "session_relative": "root-correction.csv",
+    "published": "docs/playtests/2026-10-11-media2-league-week/root-correction.csv"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/root-evidence-manifest.json",
+    "bytes": 12147,
+    "sha256": "bee893fc019133b5224d2b03596003bf2b595733cb0871438bf2aadb72b52ba5",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\root-evidence-manifest.json",
+    "session_relative": "root-evidence-manifest.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/root-evidence-manifest.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/save.txt",
+    "bytes": 271,
+    "sha256": "5a8116bc19fcdc4943b893958ed28cb686eead6f98bcba67b179c229c116cf47",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\save.txt",
+    "session_relative": "save.txt",
+    "published": "docs/playtests/2026-10-11-media2-league-week/save.txt"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/shutdown.json",
+    "bytes": 82,
+    "sha256": "37318d22434487ee3458a1daa62f62cf7572f652ba1b49ef65d1103baa787636",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\shutdown.json",
+    "session_relative": "shutdown.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/shutdown.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/source-after.json",
+    "bytes": 95623,
+    "sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\source-after.json",
+    "session_relative": "source-after.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/source-after.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/source-before.json",
+    "bytes": 95623,
+    "sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\source-before.json",
+    "session_relative": "source-before.json",
+    "published": "docs/playtests/2026-10-11-media2-league-week/source-before.json"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-media2-league-week/usage-end.jsonl",
+    "bytes": 12103,
+    "sha256": "b46d2b2ae8ba71eae10c5514856dc7f13bd2fe3ebd3363c1d32f49357f53dace",
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-media2-league-week\\usage-end.jsonl",
+    "session_relative": "usage-end.jsonl",
+    "published": "docs/playtests/2026-10-11-media2-league-week/usage-end.jsonl"
+  }
+]
