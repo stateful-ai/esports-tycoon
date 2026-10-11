@@ -7,6 +7,7 @@ from __future__ import annotations
 import pytest
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from types import SimpleNamespace
 
 fastapi = pytest.importorskip("fastapi")
@@ -65,6 +66,97 @@ def test_agent_state_requires_a_world(lobby):
     with pytest.raises(HTTPException) as err:
         server.agent_state()
     assert err.value.status_code == 409
+
+
+@pytest.mark.parametrize("cached_tick", [True, False])
+def test_accept_job_keeps_last_tick_available_at_new_club(lobby, cached_tick):
+    from esports_sim.manager import career
+
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    old = "team_nexus"
+    other = next(t for t in sorted(game.gs.teams) if t != old and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=other))
+    game.gs.game_mode = "legacy"
+    seat = game.gs.manager_for(old)
+    career.apply_dismissals(game.gs, [seat.id])
+    target = game.gs.career_offers_by[seat.id][0].team_id
+    chronicle_before = deepcopy(game.gs.chronicle)
+
+    # Represent the dismissal week's cached digest without simulating a week.
+    # Historical club references must survive the cache-key move verbatim.
+    digest = {
+        "season": 1, "week": 10, "now_season": 2, "now_week": 1,
+        "done": True, "reward": -1.0,
+        "results": [{"fixture_id": "s1_test", "opponent_id": other, "score": [1, 2]}],
+        "season_champion": {"team_id": old, "team_name": game.gs.teams[old].name, "yours": True},
+    }
+    digest_before = deepcopy(digest)
+    other_digest = {"season": 1, "week": 10, "done": False}
+    game.agent_last_tick = {other: other_digest}
+    if cached_tick:
+        game.agent_last_tick[old] = digest
+    game.tick_seq = 3
+    game.ready.update((old, other))
+
+    _as(lobby, SID_A)
+    moved = server.agent_act(server.AgentActBody(kind="accept_job", params={"team_id": target}))
+    assert moved["ok"] and moved["team_id"] == target
+    assert lobby.membership(SID_A) == (game.code, target)
+    assert game.gs.managers[seat.id].team_id == target
+    assert game.ready == {other}
+    assert old not in game.agent_last_tick
+    assert game.agent_last_tick[other] is other_digest
+    assert game.gs.chronicle[:len(chronicle_before)] == chronicle_before
+    assert game.gs.chronicle[-1].kind == "appointment"
+    assert game.gs.chronicle[-1].team_id == target
+    assert game.gs.chronicle[-1].manager_id == seat.id
+
+    # A fresh request resolves the new lobby binding before reading either API.
+    _as(lobby, SID_A)
+    state = server.agent_state()
+    sync = server.agent_sync()
+    assert state["team_id"] == target
+    assert sync["tick_seq"] == state["sync"]["tick_seq"] == 3
+    expected = digest_before if cached_tick else None
+    assert sync["last_tick"] == state["sync"]["last_tick"] == expected
+    if cached_tick:
+        assert game.agent_last_tick[target] is digest
+        assert digest == digest_before
+    else:
+        assert target not in game.agent_last_tick
+    _as(lobby, SID_B)
+    assert server.agent_sync()["last_tick"] == other_digest
+
+
+def test_rejected_job_does_not_rebind_last_tick(lobby):
+    from esports_sim.manager import career
+
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    old = "team_nexus"
+    game.gs.game_mode = "legacy"
+    seat = game.gs.manager_for(old)
+    career.apply_dismissals(game.gs, [seat.id])
+    digest = {"season": 1, "week": 10, "done": True}
+    game.agent_last_tick[old] = digest
+    game.ready.add(old)
+    before = game.gs.model_dump_json()
+
+    _as(lobby, SID_A)
+    with pytest.raises(HTTPException) as err:
+        server.agent_act(server.AgentActBody(kind="accept_job", params={"team_id": "unknown-club"}))
+    assert err.value.status_code == 422
+    assert game.gs.model_dump_json() == before
+    assert lobby.membership(SID_A) == (game.code, old)
+    assert game.ready == {old}
+    assert game.agent_last_tick == {old: digest}
+    assert game.agent_last_tick[old] is digest
+    assert server.agent_state()["sync"]["last_tick"] == digest
+    assert server.agent_sync()["last_tick"] == digest
 
 
 @pytest.mark.parametrize("pace", ["fast", None, [], {}])
