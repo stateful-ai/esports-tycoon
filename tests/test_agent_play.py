@@ -100,6 +100,38 @@ def test_direct_transfer_requires_boolean_and_retains_live_offer(game_data, acce
     assert world.gs.model_dump_json() == before
 
 
+@pytest.mark.parametrize("kind", ["sponsor_respond", "sponsor_demand_respond"])
+@pytest.mark.parametrize("accept", ["false", "true", 0, 1, None, [], {}])
+def test_direct_sponsor_decisions_reject_nonboolean_before_domain_mutation(game_data, monkeypatch, kind, accept):
+    from esports_sim.manager import sponsors
+
+    world = AgentWorld.create(game_data, seed=924, n_teams=2)
+    called = []
+    def domain_action(*args):
+        called.append(args)
+        world.gs.teams[world.team_ids[0]].balance += 1
+        return True, "resolved"
+    monkeypatch.setattr(sponsors, "sign_market_offer", domain_action)
+    monkeypatch.setattr(sponsors, "decline_market_offer", domain_action)
+    monkeypatch.setattr(sponsors, "respond_demand", domain_action)
+    before = world.gs.model_dump_json()
+    with pytest.raises(InvalidManagerAction, match="JSON boolean"):
+        world.act(world.team_ids[0], {"kind": kind, "params": {"accept": accept}})
+    assert not called
+    assert world.gs.model_dump_json() == before
+
+
+@pytest.mark.parametrize("kind", ["sponsor_respond", "sponsor_demand_respond"])
+def test_sponsor_missing_accept_keeps_decline_default(kind):
+    from esports_sim.manager.decision_env import validate_manager_action
+
+    assert validate_manager_action({"kind": kind, "params": {}}) == (kind, {})
+    for accept in (False, True):
+        assert validate_manager_action({"kind": kind, "params": {"accept": accept}}) == (
+            kind, {"accept": accept},
+        )
+
+
 def test_observation_is_json_safe_and_carries_sync_and_objective(game_data):
     world = AgentWorld.create(game_data, seed=911, n_teams=2)
     a, b = world.team_ids

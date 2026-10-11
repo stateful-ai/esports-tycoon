@@ -135,6 +135,9 @@ def validate_manager_action(action: dict[str, Any]) -> tuple[str, dict[str, Any]
         tier = params.get("tier")
         if not isinstance(tier, str) or tier not in recovery.TIER_IDS:
             raise InvalidManagerAction("unknown recovery tier")
+    if kind in ("sponsor_respond", "sponsor_demand_respond") and "accept" in params:
+        if type(params["accept"]) is not bool:
+            raise InvalidManagerAction("accept must be a JSON boolean")
     list_fields = {
         "set_lineup": ("player_ids",),
         "set_game_plan": ("starter_ids",),
