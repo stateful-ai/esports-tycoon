@@ -1,0 +1,162 @@
+{
+  "pr": 380,
+  "old_head": "193d3945f597d54cfc254c5a9e7b00662544980c",
+  "old_tree": "1ff91f3a36411b9539a0ede11d65fffd672894a8",
+  "main": "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b",
+  "normal_merge_parents": [
+    "193d3945f597d54cfc254c5a9e7b00662544980c",
+    "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b"
+  ],
+  "conflict_count": 17,
+  "conflict_resolution": "17 historical evidence add/add EOL-only conflicts; exact main raw blobs retained. Other feature/docs merged cleanly.",
+  "evidence_blobs": [
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/arithmetic-corrected.json",
+      "original_pr_blob": "cb1b2ce14f144b0490d1dd143310f452fa7acc1a",
+      "main_blob": "50dc0e1b559afc53f4616ff4e323687a2e748ad1",
+      "integrated_blob": "50dc0e1b559afc53f4616ff4e323687a2e748ad1",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/baseline-W14-acceptance.json",
+      "original_pr_blob": "60c2fdae685bfac000b0216d1909af5fc8ad821c",
+      "main_blob": "35926388071c041b838fdbf88b8bc51c4e277d55",
+      "integrated_blob": "35926388071c041b838fdbf88b8bc51c4e277d55",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/challengers-receipt.json",
+      "original_pr_blob": "50e9a80b3af1aa14a279a2d251de31dbc3b14272",
+      "main_blob": "1e6db70cacf3a41247186015d9c64dc9db3dbbab",
+      "integrated_blob": "1e6db70cacf3a41247186015d9c64dc9db3dbbab",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/gate-freeze-after.json",
+      "original_pr_blob": "7c53ea66979d7c8c36c3afa7c071797dfa567631",
+      "main_blob": "7c5f6de2100dc8b3517e4f274539b8ab0d0a9b03",
+      "integrated_blob": "7c5f6de2100dc8b3517e4f274539b8ab0d0a9b03",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/gate-freeze-before.json",
+      "original_pr_blob": "7c53ea66979d7c8c36c3afa7c071797dfa567631",
+      "main_blob": "7c5f6de2100dc8b3517e4f274539b8ab0d0a9b03",
+      "integrated_blob": "7c5f6de2100dc8b3517e4f274539b8ab0d0a9b03",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/gate-full-pytest.log",
+      "original_pr_blob": "00d7f68ca4190bf216e3e93afa5c95bb980f0d68",
+      "main_blob": "3a4e400e9bdc263878207b5edcb62a4b720f3d0c",
+      "integrated_blob": "3a4e400e9bdc263878207b5edcb62a4b720f3d0c",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/gate-full_gate.py",
+      "original_pr_blob": "d5d3a77352a1da20bfe49068cb34fcb0d125c60c",
+      "main_blob": "d5d3a77352a1da20bfe49068cb34fcb0d125c60c",
+      "integrated_blob": "d5d3a77352a1da20bfe49068cb34fcb0d125c60c",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/gate-receipt.json",
+      "original_pr_blob": "8c3abdb2a9160cd2bd294eb08796368fa221af52",
+      "main_blob": "9d72252ba16043ee6228283eec3b330fae60a2a3",
+      "integrated_blob": "9d72252ba16043ee6228283eec3b330fae60a2a3",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/late-flywheel-recovery.json",
+      "original_pr_blob": "67d97d46dfb34b1aca130a05f8b57b2a91dffa9e",
+      "main_blob": "ba89891ae81ac11a83331146ca98d01ec8a33e1c",
+      "integrated_blob": "ba89891ae81ac11a83331146ca98d01ec8a33e1c",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/patched-W14-acceptance.json",
+      "original_pr_blob": "0f501041988a14ebe618145342ccd378cd98cc55",
+      "main_blob": "0c950d3e6c139da16523331152c063449ff951cf",
+      "integrated_blob": "0c950d3e6c139da16523331152c063449ff951cf",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/patched-W16-acceptance.json",
+      "original_pr_blob": "9e6807fb9e299a5c1d03809714cde85d3abc3aec",
+      "main_blob": "f2f6b2285ab899fb4412b31cdc85aa27ca39d060",
+      "integrated_blob": "f2f6b2285ab899fb4412b31cdc85aa27ca39d060",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/publication-review.json",
+      "original_pr_blob": "5cf4b9398db73285c078fe6f322d38b85d5de9b9",
+      "main_blob": "34e6e24379968ebc44c8d8097aec83218911d2ae",
+      "integrated_blob": "34e6e24379968ebc44c8d8097aec83218911d2ae",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/regional-final-exit.txt",
+      "original_pr_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+      "main_blob": "18748286e5b8b4de5db905f87cdfed1a7d48fe60",
+      "integrated_blob": "18748286e5b8b4de5db905f87cdfed1a7d48fe60",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/regional-final-freeze.json",
+      "original_pr_blob": "02ded05d9489dd4b45b32fb2b44446d887095db4",
+      "main_blob": "a42302f27da5154bfa2d4d9e21837205a2ae659f",
+      "integrated_blob": "a42302f27da5154bfa2d4d9e21837205a2ae659f",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/regional-final-terminal.log",
+      "original_pr_blob": "30e4dd1e78eae4ea54710bda70a83a711999a918",
+      "main_blob": "bb01f305f91b30e4291cf8f88307335420ee4f43",
+      "integrated_blob": "bb01f305f91b30e4291cf8f88307335420ee4f43",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/state-comparison.json",
+      "original_pr_blob": "552b47b974778207831f689da495b29c9b59ea08",
+      "main_blob": "86eb8104d39dc1e6fdf74fc945b33623c110e191",
+      "integrated_blob": "86eb8104d39dc1e6fdf74fc945b33623c110e191",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/telemetry-corrected.json",
+      "original_pr_blob": "76de1c77d50106cfe72135c19905bdc02224920c",
+      "main_blob": "62608aa7416f2da3717274ca56252f222f4342d3",
+      "integrated_blob": "62608aa7416f2da3717274ca56252f222f4342d3",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    },
+    {
+      "path": "docs/playtests/2026-10-10-gap31-evidence/telemetry-report.txt",
+      "original_pr_blob": "a514a5adac98b1664776379eaee85bb2aed4e9ed",
+      "main_blob": "78f176b8ad96d62479b32c54c1c7f7aaae1c99c3",
+      "integrated_blob": "78f176b8ad96d62479b32c54c1c7f7aaae1c99c3",
+      "main_raw_retained": true,
+      "non_eol_difference_lines": 0
+    }
+  ],
+  "review": "Reviewed original source diff, all phase-transition payout branches, ordinary finance mirroring, current report serializer, unchanged regression assertions, root exact-head review bodies, inline4239895510 and CLI disposition. No additional source defect found.",
+  "historical_evidence": "1279 native tests and W14/W16 saved-state receipts are historical. Prior CI at old PR head succeeded on 3.12 and 3.13. Neither establishes validation of this integrated head.",
+  "local_execution": "No local tests, CJS checks, syntax validators, simulation/gates, application reports, hooks, server or gameplay actions were run. Explicit user waiver.",
+  "remote_ci": "New exact-head CI required after ordinary push; root owns final review and merge."
+}

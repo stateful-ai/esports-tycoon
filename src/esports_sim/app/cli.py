@@ -457,9 +457,14 @@ def render_week_results(gs: GameState, report) -> None:
     if report.user_expenses or report.user_income:
         net = report.user_income - report.user_expenses
         console.print(
-            f"[dim]weekly finances: +{report.user_income:,} sponsor, "
-            f"-{report.user_expenses:,} payroll (net {net:+,})[/]"
+            f"[dim]weekly finances: {report.user_income:+,} income, "
+            f"-{report.user_expenses:,} expenses (net {net:+,})[/]"
         )
+        upkeep = report.facility_upkeep_by.get(gs.user_team_id, 0)
+        if upkeep:
+            console.print(
+                f"[dim]facility upkeep: -{upkeep:,} (included in expenses)[/]"
+            )
 
 
 def render_match_detail(gs: GameState, fixture, stats_list) -> None:

@@ -129,6 +129,7 @@ class WeekReport:
     # reads income_by/expenses_by for the manager actually being served.
     income_by: dict[str, int] = field(default_factory=dict)
     expenses_by: dict[str, int] = field(default_factory=dict)
+    facility_upkeep_by: dict[str, int] = field(default_factory=dict)
     user_income: int = 0
     user_expenses: int = 0
     notes: list[str] = field(default_factory=list)
@@ -867,8 +868,13 @@ def advance_week(
         fx = gs.team_fixture(tid)
         won = bool(fx and fx.winner_id == tid)
         sponsor_delta = sponsors.settle_demands(gs, week_dressed)
-        sponsor_delta += sponsors.weekly_tick(gs, won)
+        settlement = sponsors.weekly_settlement(gs, won)
+        sponsor_delta += settlement.income
         report.income_by[tid] = report.income_by.get(tid, 0) + sponsor_delta
+        report.facility_upkeep_by[tid] = settlement.facility_upkeep
+        report.expenses_by[tid] = (
+            report.expenses_by.get(tid, 0) + settlement.facility_upkeep
+        )
         sponsors.maybe_offer(gs, week_rng)
         sponsors.maybe_demand(
             gs,
@@ -914,7 +920,11 @@ def advance_week(
 
     _cp.mark("market_scouting")
 
-    # 5. Phase transitions.
+    # 5. Phase transitions. The only balance mutations in this block are
+    # resolved prize payouts (Challengers, regional placement/playoffs,
+    # Masters and Champions). Capture the actual credits so reporting shares
+    # the payout truth without duplicating any prize ladder or paying again.
+    before_prizes = {tid: gs.teams[tid].balance for tid in sorted(gs.human_team_ids)}
     def veto_for(a: str, b: str) -> tuple[list[str], list[str]]:
         return veto_bo3(
             sorted(gd.maps),
@@ -1277,6 +1287,17 @@ def advance_week(
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
             )
+
+    for tid, balance in before_prizes.items():
+        prize_income = gs.teams[tid].balance - balance
+        if prize_income:
+            report.income_by[tid] = report.income_by.get(tid, 0) + prize_income
+            report.notes.append(
+                f"{gs.teams[tid].name} received {prize_income:,} cr in tournament "
+                "prize income this week (included in reported income)."
+            )
+    # Prize payouts happen after the ordinary-finance mirror above.
+    report.user_income = report.income_by.get(primary, 0)
 
     _cp.mark("transitions")
 
