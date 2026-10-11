@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-10-11T07:29:43.069158+00:00",
+  "entries": [
+    {
+      "id": "esports-playtest-0210",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Shared server readiness preserves waiting",
+      "problem": "Shared server readiness preserves waiting",
+      "solution": "Use public multiplayer.you_ready when rendering the advance action",
+      "lesson": "Browser ready-seat reload and repeat ready request retain Waiting with server you_ready true; internal polling timing is source-qualified.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-shared-ready seed2038 SHRD4 tested4fee846e9a582ba5cb6c5e2fcf91518d9bda21df",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0211",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Shared offseason ready-up restores ordinary label",
+      "problem": "Shared offseason ready-up restores ordinary label",
+      "solution": "Use public multiplayer.you_ready when rendering the advance action",
+      "lesson": "After second manager ready-up, the first manager polling reached S2W1 and restored Advance Week with notice hidden.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-shared-ready seed2038 SHRD4 tested4fee846e9a582ba5cb6c5e2fcf91518d9bda21df",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0212",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Module capture hook can miss live refresh",
+      "problem": "Module capture hook can miss live refresh",
+      "solution": "Use public multiplayer.you_ready when rendering the advance action",
+      "lesson": "A window.refresh wrapper does not intercept module-local refresh; preserve failed capture and verify public state plus visible DOM sequence instead.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-shared-ready seed2038 SHRD4 tested4fee846e9a582ba5cb6c5e2fcf91518d9bda21df",
+      "code": "",
+      "tags": [],
+      "kind": "pain-point"
+    }
+  ]
+}

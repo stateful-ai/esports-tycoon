@@ -1,0 +1,2711 @@
+{
+  "audited_at_utc": "2026-10-11T07:23:34.070849+00:00",
+  "rows": 77,
+  "named_references": 151,
+  "resolved": 151,
+  "unavailable": [],
+  "references": [
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/01-dashboard.yml",
+      "sha256": "e1613cd8a7512fda86e5bec2ac54a9997481dff137902b8b471a3b52464565dc",
+      "byte_count": 19198,
+      "git_blob_sha256": "e1613cd8a7512fda86e5bec2ac54a9997481dff137902b8b471a3b52464565dc",
+      "git_blob_byte_count": 19198
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "02-match.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/02-match.yml",
+      "sha256": "f6fd5f4cebf07732aebe29bce81f88a1b0b284827d27f7cc25663097db45bf11",
+      "byte_count": 10769,
+      "git_blob_sha256": "f6fd5f4cebf07732aebe29bce81f88a1b0b284827d27f7cc25663097db45bf11",
+      "git_blob_byte_count": 10769
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "04-media-after.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/04-media-after.yml",
+      "sha256": "620b160dba79a8080511f89aa6198845c11a8d4028e4b80555c196c760ef287a",
+      "byte_count": 18440,
+      "git_blob_sha256": "620b160dba79a8080511f89aa6198845c11a8d4028e4b80555c196c760ef287a",
+      "git_blob_byte_count": 18440
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "07-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/07-prep.yml",
+      "sha256": "01aa2995ccecb864a23d5374505225627766a8f362eb70dd985d97e29166ef44",
+      "byte_count": 10230,
+      "git_blob_sha256": "01aa2995ccecb864a23d5374505225627766a8f362eb70dd985d97e29166ef44",
+      "git_blob_byte_count": 10230
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "07-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/07-prep.yml",
+      "sha256": "01aa2995ccecb864a23d5374505225627766a8f362eb70dd985d97e29166ef44",
+      "byte_count": 10230,
+      "git_blob_sha256": "01aa2995ccecb864a23d5374505225627766a8f362eb70dd985d97e29166ef44",
+      "git_blob_byte_count": 10230
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "08-prep-booked.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/08-prep-booked.yml",
+      "sha256": "436183db0cbd8f7ea0ad589f0b6f9becab8bccc295c255cd1d83fa33db2276e5",
+      "byte_count": 9591,
+      "git_blob_sha256": "436183db0cbd8f7ea0ad589f0b6f9becab8bccc295c255cd1d83fa33db2276e5",
+      "git_blob_byte_count": 9591
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "10-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/10-gameplan.yml",
+      "sha256": "8e54b0ee361925f126730c8fefeca803dfa25b0bcc3d39839c2d482ba0d8b25e",
+      "byte_count": 23214,
+      "git_blob_sha256": "8e54b0ee361925f126730c8fefeca803dfa25b0bcc3d39839c2d482ba0d8b25e",
+      "git_blob_byte_count": 23214
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "11-focus-selected.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/11-focus-selected.yml",
+      "sha256": "5d414df4ed11a1d2b03e8abf4d494d01fdba7c704f9b905dd5ec7029f9407ac5",
+      "byte_count": 23214,
+      "git_blob_sha256": "5d414df4ed11a1d2b03e8abf4d494d01fdba7c704f9b905dd5ec7029f9407ac5",
+      "git_blob_byte_count": 23214
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "12-plan-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/12-plan-locked.yml",
+      "sha256": "d30ed1249d8dbabe41e15632b759eafcdd9fc0f699d94e07380725bd4c0b9713",
+      "byte_count": 23447,
+      "git_blob_sha256": "d30ed1249d8dbabe41e15632b759eafcdd9fc0f699d94e07380725bd4c0b9713",
+      "git_blob_byte_count": 23447
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "save-pre-advance.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/save-pre-advance.json",
+      "sha256": "9cf48a1c6e44d70ab5a911acdbce9122a603b1f6a2de43cebecaf787fddbdef4",
+      "byte_count": 4976111,
+      "git_blob_sha256": "9cf48a1c6e44d70ab5a911acdbce9122a603b1f6a2de43cebecaf787fddbdef4",
+      "git_blob_byte_count": 4976111
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "12-plan-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/12-plan-locked.yml",
+      "sha256": "d30ed1249d8dbabe41e15632b759eafcdd9fc0f699d94e07380725bd4c0b9713",
+      "byte_count": 23447,
+      "git_blob_sha256": "d30ed1249d8dbabe41e15632b759eafcdd9fc0f699d94e07380725bd4c0b9713",
+      "git_blob_byte_count": 23447
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "15-full-report.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/15-full-report.yml",
+      "sha256": "257d1bcc3508ab5d4d4a2ef6d616c14677dbf9f678242c450598798918f5fc66",
+      "byte_count": 27458,
+      "git_blob_sha256": "257d1bcc3508ab5d4d4a2ef6d616c14677dbf9f678242c450598798918f5fc66",
+      "git_blob_byte_count": 27458
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "17-dashboard-after.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/17-dashboard-after.yml",
+      "sha256": "a6be2199251429ad96857a620dacec0d130034cc1534e83620b05cc03bbf64ad",
+      "byte_count": 18829,
+      "git_blob_sha256": "a6be2199251429ad96857a620dacec0d130034cc1534e83620b05cc03bbf64ad",
+      "git_blob_byte_count": 18829
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "19-operations.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/19-operations.yml",
+      "sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "byte_count": 10503,
+      "git_blob_sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "git_blob_byte_count": 10503
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "17-dashboard-after.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/17-dashboard-after.yml",
+      "sha256": "a6be2199251429ad96857a620dacec0d130034cc1534e83620b05cc03bbf64ad",
+      "byte_count": 18829,
+      "git_blob_sha256": "a6be2199251429ad96857a620dacec0d130034cc1534e83620b05cc03bbf64ad",
+      "git_blob_byte_count": 18829
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "sourcecapturecampaign.py",
+      "published_path": "src/esports_sim/manager/campaign.py",
+      "sha256": "ea963db6d4359a561ef6b4322406a765cf516243b080d6b287db6f4d5ced73f6",
+      "byte_count": 144251,
+      "qualification": "Historical source inspection reference mapped to unchanged tested64 source; code is not a new execution receipt.",
+      "git_blob_sha256": "265c940af58e02486bb4d8f286d569dc2a27fd495b0b7f0e84de35e7e8bb8bf7",
+      "git_blob_byte_count": 140938,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/audit.json",
+      "sha256": "eb222a720825d432321c613fb46727ecf49ebcc492d566b3a4992d8b2218eeb0",
+      "byte_count": 3296,
+      "git_blob_sha256": "eb222a720825d432321c613fb46727ecf49ebcc492d566b3a4992d8b2218eeb0",
+      "git_blob_byte_count": 3296
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/decision-indexed.json",
+      "sha256": "3abea56380c9a1b7b4d641967c0a1e2dbcc93e7247e810b2c283957f7a7ce4fd",
+      "byte_count": 1726,
+      "git_blob_sha256": "3abea56380c9a1b7b4d641967c0a1e2dbcc93e7247e810b2c283957f7a7ce4fd",
+      "git_blob_byte_count": 1726
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/request-pairs.json",
+      "sha256": "b591e347b8de7678660f9ae08f9f97aaf6c676b9ca59a561bb5cdbcf2e7b1f0d",
+      "byte_count": 5801,
+      "git_blob_sha256": "b591e347b8de7678660f9ae08f9f97aaf6c676b9ca59a561bb5cdbcf2e7b1f0d",
+      "git_blob_byte_count": 5801
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/realized-state-readback.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/realized-state-readback.json",
+      "sha256": "8aafcadee543e46bf116570dd2e9ad2b930ef1132428f37b2a128d8f6e7eb42f",
+      "byte_count": 11794,
+      "git_blob_sha256": "8aafcadee543e46bf116570dd2e9ad2b930ef1132428f37b2a128d8f6e7eb42f",
+      "git_blob_byte_count": 11794
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/flywheel-after.json",
+      "sha256": "cd9e45f52d3cb34afce7fe1204da6640ba8f3d717eb0ff3115363509e06bca85",
+      "byte_count": 2687,
+      "git_blob_sha256": "cd9e45f52d3cb34afce7fe1204da6640ba8f3d717eb0ff3115363509e06bca85",
+      "git_blob_byte_count": 2687
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "11",
+      "field": "evidence",
+      "historical_reference": "evidence/19-operations.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/19-operations.yml",
+      "sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "byte_count": 10503,
+      "git_blob_sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "git_blob_byte_count": 10503
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "11",
+      "field": "evidence",
+      "historical_reference": "evidence/realized-state-readback.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/realized-state-readback.json",
+      "sha256": "8aafcadee543e46bf116570dd2e9ad2b930ef1132428f37b2a128d8f6e7eb42f",
+      "byte_count": 11794,
+      "git_blob_sha256": "8aafcadee543e46bf116570dd2e9ad2b930ef1132428f37b2a128d8f6e7eb42f",
+      "git_blob_byte_count": 11794
+    },
+    {
+      "session_id": "2026-10-10-regional-final",
+      "step": "11",
+      "field": "evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/audit.json",
+      "sha256": "eb222a720825d432321c613fb46727ecf49ebcc492d566b3a4992d8b2218eeb0",
+      "byte_count": 3296,
+      "git_blob_sha256": "eb222a720825d432321c613fb46727ecf49ebcc492d566b3a4992d8b2218eeb0",
+      "git_blob_byte_count": 3296
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/01-dashboard.yml",
+      "sha256": "478cda84c2eec993e42c0a180145cb17dc73c40008ff6ee38416f8e79bbe1115",
+      "byte_count": 17980,
+      "git_blob_sha256": "478cda84c2eec993e42c0a180145cb17dc73c40008ff6ee38416f8e79bbe1115",
+      "git_blob_byte_count": 17980
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "02-squad.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/02-squad.yml",
+      "sha256": "54b3cdae7928c775a7723c02b97216aed04867eeeedec4ec3685fe535f6e25d2",
+      "byte_count": 21653,
+      "git_blob_sha256": "54b3cdae7928c775a7723c02b97216aed04867eeeedec4ec3685fe535f6e25d2",
+      "git_blob_byte_count": 21653
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/01-dashboard.yml",
+      "sha256": "478cda84c2eec993e42c0a180145cb17dc73c40008ff6ee38416f8e79bbe1115",
+      "byte_count": 17980,
+      "git_blob_sha256": "478cda84c2eec993e42c0a180145cb17dc73c40008ff6ee38416f8e79bbe1115",
+      "git_blob_byte_count": 17980
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "04-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/04-gameplan.yml",
+      "sha256": "bf475ea18bc9c93c392fa1c863c40969adea2efd2c0762bca4e1b0c9b2b021e0",
+      "byte_count": 23176,
+      "git_blob_sha256": "bf475ea18bc9c93c392fa1c863c40969adea2efd2c0762bca4e1b0c9b2b021e0",
+      "git_blob_byte_count": 23176
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "05-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/05-prep.yml",
+      "sha256": "dc58357e90220c74f43a4d4ef6b2b19017bc3a675db121f894ac6807daf17e8d",
+      "byte_count": 10238,
+      "git_blob_sha256": "dc58357e90220c74f43a4d4ef6b2b19017bc3a675db121f894ac6807daf17e8d",
+      "git_blob_byte_count": 10238
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "server.py",
+      "published_path": "src/esports_sim/web/server.py",
+      "sha256": "338d6f2aa32e3205bd105b20fbcbd259983b47bf1d078c7c8dbb4c3e85be8288",
+      "byte_count": 390141,
+      "qualification": "Historical source inspection reference mapped to unchanged tested64 source; code is not a new execution receipt.",
+      "git_blob_sha256": "7e8f926e99feac2ca3eb48c0ab31282474532d11c313adb72e68577f1a9b18f2",
+      "git_blob_byte_count": 380625,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "07-development.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/07-development.yml",
+      "sha256": "f25f939b6b80a21fbd9024d07d6b9a890c7e88ddcc822f316d6397766daa9c1a",
+      "byte_count": 36030,
+      "git_blob_sha256": "f25f939b6b80a21fbd9024d07d6b9a890c7e88ddcc822f316d6397766daa9c1a",
+      "git_blob_byte_count": 36030
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "08-ghost-rest.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/08-ghost-rest.yml",
+      "sha256": "11db403aa39c79849fefc895e5f66660a031aca1ca22de4b450a68c4f83e6945",
+      "byte_count": 35968,
+      "git_blob_sha256": "11db403aa39c79849fefc895e5f66660a031aca1ca22de4b450a68c4f83e6945",
+      "git_blob_byte_count": 35968
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "12-lineup-five.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/12-lineup-five.yml",
+      "sha256": "cf01d32cc806c48c016e1001f8d0fd819cfecaa11c7526d801b8d5c07e9cd75b",
+      "byte_count": 23263,
+      "git_blob_sha256": "cf01d32cc806c48c016e1001f8d0fd819cfecaa11c7526d801b8d5c07e9cd75b",
+      "git_blob_byte_count": 23263
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "13-lineup-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/13-lineup-locked.yml",
+      "sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "byte_count": 23429,
+      "git_blob_sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "git_blob_byte_count": 23429
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "save-pre-advance.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/save-pre-advance.json",
+      "sha256": "306a118353086902d4551d694558ce70ac3170347df56ebb123d4b919538e59b",
+      "byte_count": 5023173,
+      "git_blob_sha256": "306a118353086902d4551d694558ce70ac3170347df56ebb123d4b919538e59b",
+      "git_blob_byte_count": 5023173
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "13-lineup-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/13-lineup-locked.yml",
+      "sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "byte_count": 23429,
+      "git_blob_sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "git_blob_byte_count": 23429
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "14-week-report.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/14-week-report.yml",
+      "sha256": "af5ae80945eb65f480096b4fbb24194e4f904c99ae87372b2b7f843bc50d33d7",
+      "byte_count": 23824,
+      "git_blob_sha256": "af5ae80945eb65f480096b4fbb24194e4f904c99ae87372b2b7f843bc50d33d7",
+      "git_blob_byte_count": 23824
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "16-full-report.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/16-full-report.yml",
+      "sha256": "0a232c719a73b32501b990e53496121a4512694757b4c7a166796c24f1eec715",
+      "byte_count": 26707,
+      "git_blob_sha256": "0a232c719a73b32501b990e53496121a4512694757b4c7a166796c24f1eec715",
+      "git_blob_byte_count": 26707
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "18-dashboard-review.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/18-dashboard-review.yml",
+      "sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "byte_count": 19219,
+      "git_blob_sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "git_blob_byte_count": 19219
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "server.py",
+      "published_path": "src/esports_sim/web/server.py",
+      "sha256": "338d6f2aa32e3205bd105b20fbcbd259983b47bf1d078c7c8dbb4c3e85be8288",
+      "byte_count": 390141,
+      "qualification": "Historical source inspection reference mapped to unchanged tested64 source; code is not a new execution receipt.",
+      "git_blob_sha256": "7e8f926e99feac2ca3eb48c0ab31282474532d11c313adb72e68577f1a9b18f2",
+      "git_blob_byte_count": 380625,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "13-lineup-locked.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/13-lineup-locked.yml",
+      "sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "byte_count": 23429,
+      "git_blob_sha256": "cc7bf5b06efe48114131127f1c35c594fe594f86c554fc6f322671b2e84daade",
+      "git_blob_byte_count": 23429
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "18-dashboard-review.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/18-dashboard-review.yml",
+      "sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "byte_count": 19219,
+      "git_blob_sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "git_blob_byte_count": 19219
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "server.py",
+      "published_path": "src/esports_sim/web/server.py",
+      "sha256": "338d6f2aa32e3205bd105b20fbcbd259983b47bf1d078c7c8dbb4c3e85be8288",
+      "byte_count": 390141,
+      "qualification": "Historical source inspection reference mapped to unchanged tested64 source; code is not a new execution receipt.",
+      "git_blob_sha256": "7e8f926e99feac2ca3eb48c0ab31282474532d11c313adb72e68577f1a9b18f2",
+      "git_blob_byte_count": 380625,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "19-final-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/19-final-dashboard.yml",
+      "sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "byte_count": 19219,
+      "git_blob_sha256": "4a4c1f3e555a2aeb1a2431b08e5fefe17be40222ae2ea289ce7592d47deb498c",
+      "git_blob_byte_count": 19219
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/audit.json",
+      "sha256": "3fd4ce8c8bf920520bed3bbcaa25123b1a6efa6119e3789cf3d3eada3a00a7d9",
+      "byte_count": 3296,
+      "git_blob_sha256": "3fd4ce8c8bf920520bed3bbcaa25123b1a6efa6119e3789cf3d3eada3a00a7d9",
+      "git_blob_byte_count": 3296
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/decision-indexed.json",
+      "sha256": "fda5806dd9e287f497e4aa577e141c665e9b591b5ade558df64448f6fac1f655",
+      "byte_count": 1249,
+      "git_blob_sha256": "fda5806dd9e287f497e4aa577e141c665e9b591b5ade558df64448f6fac1f655",
+      "git_blob_byte_count": 1249
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/request-pairs.json",
+      "sha256": "42d115ef2d394a28562b45433c91175a464620e807b0289b9d40bd1f51eb3fd4",
+      "byte_count": 4816,
+      "git_blob_sha256": "42d115ef2d394a28562b45433c91175a464620e807b0289b9d40bd1f51eb3fd4",
+      "git_blob_byte_count": 4816
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/flywheel-after.json",
+      "sha256": "f6259899a06edacdd6268792c6c15ed508864163cb220f9edbda55f2fda5fa84",
+      "byte_count": 2676,
+      "git_blob_sha256": "f6259899a06edacdd6268792c6c15ed508864163cb220f9edbda55f2fda5fa84",
+      "git_blob_byte_count": 2676
+    },
+    {
+      "session_id": "2026-10-10-masters-quarter",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "evidence/realized-state-readback.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/realized-state-readback.json",
+      "sha256": "88c47e18159a315dc70ccac041123117d5f27e59d5be06f830a495415b0aa6e4",
+      "byte_count": 10614,
+      "git_blob_sha256": "88c47e18159a315dc70ccac041123117d5f27e59d5be06f830a495415b0aa6e4",
+      "git_blob_byte_count": 10614
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-39-23-697Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-39-23-697Z.yml",
+      "sha256": "c738c0b264834f190dd1fbf95336c809c7f6db2f73c899e5196334e52633e7d2",
+      "byte_count": 13312,
+      "git_blob_sha256": "c738c0b264834f190dd1fbf95336c809c7f6db2f73c899e5196334e52633e7d2",
+      "git_blob_byte_count": 13312
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-40-25-843Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-40-25-843Z.yml",
+      "sha256": "103c79a31a44458918bcea125dd2b33693a36fab186e63e82f93b493e813b275",
+      "byte_count": 16799,
+      "git_blob_sha256": "103c79a31a44458918bcea125dd2b33693a36fab186e63e82f93b493e813b275",
+      "git_blob_byte_count": 16799
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "decisions.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "byte_count": 1189,
+      "git_blob_sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "git_blob_byte_count": 1189
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-events.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "byte_count": 19886,
+      "git_blob_sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "git_blob_byte_count": 19886
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-41-27-363Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-41-27-363Z.yml",
+      "sha256": "4c2ae54b771c756b0da07932803362cf2bbdad4ae1493222e9a3c6c144e4d9c3",
+      "byte_count": 17560,
+      "git_blob_sha256": "4c2ae54b771c756b0da07932803362cf2bbdad4ae1493222e9a3c6c144e4d9c3",
+      "git_blob_byte_count": 17560
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "decisions.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "byte_count": 1189,
+      "git_blob_sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "git_blob_byte_count": 1189
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-events.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "byte_count": 19886,
+      "git_blob_sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "git_blob_byte_count": 19886
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-41-55-551Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-41-55-551Z.yml",
+      "sha256": "a2a26a1afb50bc6cc7655064499b98a912ba9c69c4da96d600d1680ebf82dd95",
+      "byte_count": 12718,
+      "git_blob_sha256": "a2a26a1afb50bc6cc7655064499b98a912ba9c69c4da96d600d1680ebf82dd95",
+      "git_blob_byte_count": 12718
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "decisions.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "byte_count": 1189,
+      "git_blob_sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "git_blob_byte_count": 1189
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-events.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "byte_count": 19886,
+      "git_blob_sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "git_blob_byte_count": 19886
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-44-02-199Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-44-02-199Z.yml",
+      "sha256": "dc52aa9fa61810ff6150d2a7ffbbad6c0f813b7833ebdc1109f057b573ccbc89",
+      "byte_count": 22320,
+      "git_blob_sha256": "dc52aa9fa61810ff6150d2a7ffbbad6c0f813b7833ebdc1109f057b573ccbc89",
+      "git_blob_byte_count": 22320
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "output/playwright/gap25-full-report.png",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/gap25-full-report.png",
+      "sha256": "d2cfe79c276b41244d91cc8e5548784cc8d18e45c78a4c7fbee9ac2919c0338d",
+      "byte_count": 173481,
+      "git_blob_sha256": "d2cfe79c276b41244d91cc8e5548784cc8d18e45c78a4c7fbee9ac2919c0338d",
+      "git_blob_byte_count": 173481
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "runs/gap25/public-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/runs/gap25/public-readback.txt",
+      "sha256": "34674f80f5605c900771358b7d831f3bbeae477f4f58ecddef1bb63e90c4a583",
+      "byte_count": 85316,
+      "git_blob_sha256": "34674f80f5605c900771358b7d831f3bbeae477f4f58ecddef1bb63e90c4a583",
+      "git_blob_byte_count": 85316
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "5",
+      "field": "analytics_evidence",
+      "historical_reference": "decisions.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "byte_count": 1189,
+      "git_blob_sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "git_blob_byte_count": 1189
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "5",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-events.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "byte_count": 19886,
+      "git_blob_sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "git_blob_byte_count": 19886
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T19-46-19-670Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-46-19-670Z.yml",
+      "sha256": "2bd20af50aa53129d25a891e4987169f96a15d17a60be98731013ed17bcd3ae8",
+      "byte_count": 14895,
+      "git_blob_sha256": "2bd20af50aa53129d25a891e4987169f96a15d17a60be98731013ed17bcd3ae8",
+      "git_blob_byte_count": 14895
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "saves/campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "0dcd151b6758ce3e604fc1ca6c31b9e601c40e7d3df41dc7a5ffd30ea2765394",
+      "byte_count": 4464606,
+      "git_blob_sha256": "0dcd151b6758ce3e604fc1ca6c31b9e601c40e7d3df41dc7a5ffd30ea2765394",
+      "git_blob_byte_count": 4464606
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "cli-revision/rendered-output.txt",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/rendered-output.txt",
+      "sha256": "e67198387589e6582fb59f0a055ef41ab9c72afa8e7e45c42b383889be29ac28",
+      "byte_count": 236,
+      "git_blob_sha256": "e67198387589e6582fb59f0a055ef41ab9c72afa8e7e45c42b383889be29ac28",
+      "git_blob_byte_count": 236
+    },
+    {
+      "session_id": "2026-10-10-weekly-facility-accounting",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "cli-revision/receipt.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/receipt.json",
+      "sha256": "ed5cb84f0dab19339902bdc36ba541eee2511a53b8339df9759ad6bea0122383",
+      "byte_count": 337,
+      "git_blob_sha256": "ed5cb84f0dab19339902bdc36ba541eee2511a53b8339df9759ad6bea0122383",
+      "git_blob_byte_count": 337
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/01-dashboard.yml",
+      "sha256": "49a9a17a87640708431a4377704868c430850fd94ddc33222f1db1633b6e91da",
+      "byte_count": 18360,
+      "git_blob_sha256": "49a9a17a87640708431a4377704868c430850fd94ddc33222f1db1633b6e91da",
+      "git_blob_byte_count": 18360
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "02-squad.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/02-squad.yml",
+      "sha256": "de2ce5a3c2d0d9dcc7a33024adcaacef2829e5b5215e15fdc2c736791cdbac10",
+      "byte_count": 21429,
+      "git_blob_sha256": "de2ce5a3c2d0d9dcc7a33024adcaacef2829e5b5215e15fdc2c736791cdbac10",
+      "git_blob_byte_count": 21429
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "03-match.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/03-match.yml",
+      "sha256": "cecb0e1210bfa53661680b73e2b2d3b35d100d346031ed0f16aebe71ca1f3f38",
+      "byte_count": 10703,
+      "git_blob_sha256": "cecb0e1210bfa53661680b73e2b2d3b35d100d346031ed0f16aebe71ca1f3f38",
+      "git_blob_byte_count": 10703
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "04-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/04-prep.yml",
+      "sha256": "d6ae054e4cb5b28d5549434c254ccefbf9ff01bf17b583621f141dee1ae951a0",
+      "byte_count": 10162,
+      "git_blob_sha256": "d6ae054e4cb5b28d5549434c254ccefbf9ff01bf17b583621f141dee1ae951a0",
+      "git_blob_byte_count": 10162
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "05-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/05-dashboard.yml",
+      "sha256": "42e3d3490bb2170eef1c68e7557eb3c6b8eaa3a7c01703aedcae3b754a56eaee",
+      "byte_count": 19027,
+      "git_blob_sha256": "42e3d3490bb2170eef1c68e7557eb3c6b8eaa3a7c01703aedcae3b754a56eaee",
+      "git_blob_byte_count": 19027
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "06-scouting-desk.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/06-scouting-desk.yml",
+      "sha256": "9e4cc6b3905663b71fb4563146ae04679a88bc5c8f7e7c7dcb20d01525973603",
+      "byte_count": 7546,
+      "git_blob_sha256": "9e4cc6b3905663b71fb4563146ae04679a88bc5c8f7e7c7dcb20d01525973603",
+      "git_blob_byte_count": 7546
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "07-slice-search.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/07-slice-search.yml",
+      "sha256": "e92c9cd0966b42593850a7cf224b99fc8f1525be70bfb8a4912b279be433a096",
+      "byte_count": 7633,
+      "git_blob_sha256": "e92c9cd0966b42593850a7cf224b99fc8f1525be70bfb8a4912b279be433a096",
+      "git_blob_byte_count": 7633
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "08-slice-assigned.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/08-slice-assigned.yml",
+      "sha256": "6c2e30618d1a0c194a8a7641b232c344517899ef1304e3a0cf3f4a5a61e1bd6d",
+      "byte_count": 9117,
+      "git_blob_sha256": "6c2e30618d1a0c194a8a7641b232c344517899ef1304e3a0cf3f4a5a61e1bd6d",
+      "git_blob_byte_count": 9117
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "09-match-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/09-match-prep.yml",
+      "sha256": "d6c713c8e3a5fb4fae59959f0db72c042b2e503cdbce5735fec8e880c7ef46cb",
+      "byte_count": 10411,
+      "git_blob_sha256": "d6c713c8e3a5fb4fae59959f0db72c042b2e503cdbce5735fec8e880c7ef46cb",
+      "git_blob_byte_count": 10411
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "10-series-card.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/10-series-card.yml",
+      "sha256": "55bf7bd832f2f2ca6dffd4803b938620bc5881510164ef9fa9c62ba46bc0521a",
+      "byte_count": 10323,
+      "git_blob_sha256": "55bf7bd832f2f2ca6dffd4803b938620bc5881510164ef9fa9c62ba46bc0521a",
+      "git_blob_byte_count": 10323
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "11-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/11-gameplan.yml",
+      "sha256": "a25e8e57d6bc37ba824f3c6e0bf7948335135f4b38bc1249b5daa4f9fb2b114e",
+      "byte_count": 10323,
+      "git_blob_sha256": "a25e8e57d6bc37ba824f3c6e0bf7948335135f4b38bc1249b5daa4f9fb2b114e",
+      "git_blob_byte_count": 10323
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "12-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/12-gameplan.yml",
+      "sha256": "15a61a87f161b4a43c1fe99834e373ef0975d4794cb1dd472007fb7aee66fe3f",
+      "byte_count": 23211,
+      "git_blob_sha256": "15a61a87f161b4a43c1fe99834e373ef0975d4794cb1dd472007fb7aee66fe3f",
+      "git_blob_byte_count": 23211
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "13-pre-save.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/13-pre-save.yml",
+      "sha256": "ae7adb249c39f063b78571db0066836a1fbbc41ea032b04acaed2b613da91fb0",
+      "byte_count": 23377,
+      "git_blob_sha256": "ae7adb249c39f063b78571db0066836a1fbbc41ea032b04acaed2b613da91fb0",
+      "git_blob_byte_count": 23377
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "pre-advance-proof.json",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/pre-advance-proof.json",
+      "sha256": "e832d211527a941edf904ade2462b7781d8c47f6fdb876221b82fef4c062cd67",
+      "byte_count": 2045,
+      "git_blob_sha256": "e832d211527a941edf904ade2462b7781d8c47f6fdb876221b82fef4c062cd67",
+      "git_blob_byte_count": 2045
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "14-after-advance.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/14-after-advance.yml",
+      "sha256": "f3f36644761f038a0c7f0fd1838b03d90f786d7326bc970ac7ae4761773555c3",
+      "byte_count": 14619,
+      "git_blob_sha256": "f3f36644761f038a0c7f0fd1838b03d90f786d7326bc970ac7ae4761773555c3",
+      "git_blob_byte_count": 14619
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "15-full-report.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/15-full-report.yml",
+      "sha256": "6dbb6e4fd1f16b5b9c8659564b33a1ab459dbc3844060e12e4d80ba86ec814c9",
+      "byte_count": 17396,
+      "git_blob_sha256": "6dbb6e4fd1f16b5b9c8659564b33a1ab459dbc3844060e12e4d80ba86ec814c9",
+      "git_blob_byte_count": 17396
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "16-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/16-dashboard.yml",
+      "sha256": "58a1ef9089c99b2d3506e67233b57bb70251e709e7fe2a6c7975f855ead207fb",
+      "byte_count": 11293,
+      "git_blob_sha256": "58a1ef9089c99b2d3506e67233b57bb70251e709e7fe2a6c7975f855ead207fb",
+      "git_blob_byte_count": 11293
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "17-scout-after.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/17-scout-after.yml",
+      "sha256": "fabab2aadbe482c04b1f9f7beec209a4dfbefafdd4c37092a2498affb0c73f6a",
+      "byte_count": 9233,
+      "git_blob_sha256": "fabab2aadbe482c04b1f9f7beec209a4dfbefafdd4c37092a2498affb0c73f6a",
+      "git_blob_byte_count": 9233
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "17-scout-after.yml",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/17-scout-after.yml",
+      "sha256": "fabab2aadbe482c04b1f9f7beec209a4dfbefafdd4c37092a2498affb0c73f6a",
+      "byte_count": 9233,
+      "git_blob_sha256": "fabab2aadbe482c04b1f9f7beec209a4dfbefafdd4c37092a2498affb0c73f6a",
+      "git_blob_byte_count": 9233
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "completed/saves/campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "222d4fdb5763cbade7dc28479704e9475ed4fa30004850391e2d251315b68a6b",
+      "byte_count": 5124406,
+      "git_blob_sha256": "222d4fdb5763cbade7dc28479704e9475ed4fa30004850391e2d251315b68a6b",
+      "git_blob_byte_count": 5124406
+    },
+    {
+      "session_id": "2026-10-10-masters-semi",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-masters-semi/evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/audit.json",
+      "sha256": "60743b6bd957e03fc24400b563707126b0781464bf51983c3e226bbaab6ec1c1",
+      "byte_count": 3559,
+      "git_blob_sha256": "60743b6bd957e03fc24400b563707126b0781464bf51983c3e226bbaab6ec1c1",
+      "git_blob_byte_count": 3559
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap32-media/server.log",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/runs/playtests/2026-10-10-gap32-media/server.log",
+      "sha256": "7eac86833e5eb0e478bba048c1eefe055a9c2cea91a35b88c3668d6d5bfef862",
+      "byte_count": 170,
+      "git_blob_sha256": "7eac86833e5eb0e478bba048c1eefe055a9c2cea91a35b88c3668d6d5bfef862",
+      "git_blob_byte_count": 170
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/01-dashboard.txt",
+      "sha256": "6774c2bb3d4acbf6a4c489c8d2fd1aeaf8b77e51d7166dd555b50dbd178e631a",
+      "byte_count": 19638,
+      "git_blob_sha256": "6774c2bb3d4acbf6a4c489c8d2fd1aeaf8b77e51d7166dd555b50dbd178e631a",
+      "git_blob_byte_count": 19638
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "02-operations-before.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/02-operations-before.txt",
+      "sha256": "04d99773f004ee404b5404a343f5cf3a3ec30bcc422c288e7ec0643ca07f61b9",
+      "byte_count": 10600,
+      "git_blob_sha256": "04d99773f004ee404b5404a343f5cf3a3ec30bcc422c288e7ec0643ca07f61b9",
+      "git_blob_byte_count": 10600
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-media-immediate-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/03-media-immediate-dashboard.txt",
+      "sha256": "d578a6a5ed36a0f31f5629cca60ba269402ef609f30865f90566027ba028c8f1",
+      "byte_count": 19640,
+      "git_blob_sha256": "d578a6a5ed36a0f31f5629cca60ba269402ef609f30865f90566027ba028c8f1",
+      "git_blob_byte_count": 19640
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "04-operations-immediate.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/04-operations-immediate.txt",
+      "sha256": "3b74935e2963ac90de77e0642d086e2e1429ba8e0a75a575029b8119a8c2f4e8",
+      "byte_count": 11222,
+      "git_blob_sha256": "3b74935e2963ac90de77e0642d086e2e1429ba8e0a75a575029b8119a8c2f4e8",
+      "git_blob_byte_count": 11222
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "public-media-immediate.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-immediate.txt",
+      "sha256": "5566df852546704eb51f8bbc00e07448082b1f660409b5504c04ab91a98b9dde",
+      "byte_count": 4008,
+      "git_blob_sha256": "5566df852546704eb51f8bbc00e07448082b1f660409b5504c04ab91a98b9dde",
+      "git_blob_byte_count": 4008
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/audit.json",
+      "sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "byte_count": 6037,
+      "git_blob_sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "git_blob_byte_count": 6037
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "02-operations-before.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/02-operations-before.txt",
+      "sha256": "04d99773f004ee404b5404a343f5cf3a3ec30bcc422c288e7ec0643ca07f61b9",
+      "byte_count": 10600,
+      "git_blob_sha256": "04d99773f004ee404b5404a343f5cf3a3ec30bcc422c288e7ec0643ca07f61b9",
+      "git_blob_byte_count": 10600
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "public-media-immediate.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-immediate.txt",
+      "sha256": "5566df852546704eb51f8bbc00e07448082b1f660409b5504c04ab91a98b9dde",
+      "byte_count": 4008,
+      "git_blob_sha256": "5566df852546704eb51f8bbc00e07448082b1f660409b5504c04ab91a98b9dde",
+      "git_blob_byte_count": 4008
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "05-advance.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/05-advance.txt",
+      "sha256": "e1a0b375058b1e8e21590f8943cff363f7c9a89c38486c7d307e96079835b864",
+      "byte_count": 12576,
+      "git_blob_sha256": "e1a0b375058b1e8e21590f8943cff363f7c9a89c38486c7d307e96079835b864",
+      "git_blob_byte_count": 12576
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "06-operations-settled.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/06-operations-settled.txt",
+      "sha256": "2a4af146160d20abbed642e152f8eb2c8191f2858cd5fb92408874c5caa9d4ab",
+      "byte_count": 11888,
+      "git_blob_sha256": "2a4af146160d20abbed642e152f8eb2c8191f2858cd5fb92408874c5caa9d4ab",
+      "git_blob_byte_count": 11888
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "public-media-settled.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-settled.txt",
+      "sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "byte_count": 6111,
+      "git_blob_sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "git_blob_byte_count": 6111
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "5",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/audit.json",
+      "sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "byte_count": 6037,
+      "git_blob_sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "git_blob_byte_count": 6037
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap32-media/server.log",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/runs/playtests/2026-10-10-gap32-media/server.log",
+      "sha256": "7eac86833e5eb0e478bba048c1eefe055a9c2cea91a35b88c3668d6d5bfef862",
+      "byte_count": 170,
+      "git_blob_sha256": "7eac86833e5eb0e478bba048c1eefe055a9c2cea91a35b88c3668d6d5bfef862",
+      "git_blob_byte_count": 170
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "07-operations-reloaded.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/07-operations-reloaded.txt",
+      "sha256": "6ed3e7fa1c48df6eee43db4217137a6107d36a31bd9d6a001384d2ae27c2ca4e",
+      "byte_count": 11761,
+      "git_blob_sha256": "6ed3e7fa1c48df6eee43db4217137a6107d36a31bd9d6a001384d2ae27c2ca4e",
+      "git_blob_byte_count": 11761
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "public-media-reloaded.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-reloaded.txt",
+      "sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "byte_count": 6111,
+      "git_blob_sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "git_blob_byte_count": 6111
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "7",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/audit.json",
+      "sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "byte_count": 6037,
+      "git_blob_sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "git_blob_byte_count": 6037
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/audit.json",
+      "sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "byte_count": 6037,
+      "git_blob_sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "git_blob_byte_count": 6037
+    },
+    {
+      "session_id": "2026-10-10-gap32-media",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "audit-draft.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/audit-draft.json",
+      "sha256": "61ff77ce3d016acfc611943267bf2a9674d1104816436193d6e1bcbe079a3a13",
+      "byte_count": 834,
+      "git_blob_sha256": "61ff77ce3d016acfc611943267bf2a9674d1104816436193d6e1bcbe079a3a13",
+      "git_blob_byte_count": 834
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/03-prep.yml",
+      "sha256": "ef6a7ae6779fedaac15c0badbae89a9d959b43f07f9a8c91d2b56f0aca2f99a2",
+      "byte_count": 10458,
+      "git_blob_sha256": "ef6a7ae6779fedaac15c0badbae89a9d959b43f07f9a8c91d2b56f0aca2f99a2",
+      "git_blob_byte_count": 10458
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-revisited.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-revisited.yml",
+      "sha256": "74fa82a35748272c18bcef83e4eee7430b5695f20e732ae7f24f170f5c919573",
+      "byte_count": 10543,
+      "git_blob_sha256": "74fa82a35748272c18bcef83e4eee7430b5695f20e732ae7f24f170f5c919573",
+      "git_blob_byte_count": 10543
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-public-readback.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-public-readback-cli-output.txt",
+      "sha256": "4ccefe5432f75830c45fe608079817076ac4ed633dbc6952228945a20cda9325",
+      "byte_count": 1834,
+      "format_qualification": "Captured CLI Result transcript; not standalone JSON. Original historical .json name preserved in mapping.",
+      "git_blob_sha256": "4ccefe5432f75830c45fe608079817076ac4ed633dbc6952228945a20cda9325",
+      "git_blob_byte_count": 1834
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "06-unavailable.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/06-unavailable.yml",
+      "sha256": "dbe03c2aad7e30054174527888010a63f1e59ebe25df553e945b1fce97461a89",
+      "byte_count": 10903,
+      "git_blob_sha256": "dbe03c2aad7e30054174527888010a63f1e59ebe25df553e945b1fce97461a89",
+      "git_blob_byte_count": 10903
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "08-cleared.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/08-cleared.yml",
+      "sha256": "a2a88603f6b8ce9b6933300585c8a94d3f33124203d005fbb19c85f46d74d5aa",
+      "byte_count": 10440,
+      "git_blob_sha256": "a2a88603f6b8ce9b6933300585c8a94d3f33124203d005fbb19c85f46d74d5aa",
+      "git_blob_byte_count": 10440
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "09-one-clear.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/09-one-clear.yml",
+      "sha256": "bfd57791226503a8fbd917eab4885510a67d98e119a2fd73899b49529c91c042",
+      "byte_count": 10550,
+      "git_blob_sha256": "bfd57791226503a8fbd917eab4885510a67d98e119a2fd73899b49529c91c042",
+      "git_blob_byte_count": 10550
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "09-stale.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/09-stale.yml",
+      "sha256": "0edc3c13654c2cbc434944684a90099b4f12470e168f02cb8a732fea4f971802",
+      "byte_count": 10527,
+      "git_blob_sha256": "0edc3c13654c2cbc434944684a90099b4f12470e168f02cb8a732fea4f971802",
+      "git_blob_byte_count": 10527
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/audit.json",
+      "sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "byte_count": 19028,
+      "git_blob_sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "git_blob_byte_count": 19028
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "browser-evidence.md",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/browser-evidence.md",
+      "sha256": "5bcc66e405de0e95dff5119a2b829e532cac3427334d06e1132a04decffdb8ef",
+      "byte_count": 9952,
+      "git_blob_sha256": "5bcc66e405de0e95dff5119a2b829e532cac3427334d06e1132a04decffdb8ef",
+      "git_blob_byte_count": 9952
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "11",
+      "field": "evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/audit.json",
+      "sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "byte_count": 19028,
+      "git_blob_sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "git_blob_byte_count": 19028
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/01-dashboard.yml",
+      "sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "byte_count": 17377,
+      "git_blob_sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "git_blob_byte_count": 17377
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "02-league.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/02-league.yml",
+      "sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "byte_count": 67619,
+      "git_blob_sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "git_blob_byte_count": 67619
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-fixtures.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/03-fixtures.yml",
+      "sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "byte_count": 6627,
+      "git_blob_sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "git_blob_byte_count": 6627
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-save.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/04-save.yml",
+      "sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "byte_count": 6477,
+      "git_blob_sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "git_blob_byte_count": 6477
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/audit.json",
+      "sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "byte_count": 1850,
+      "git_blob_sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "git_blob_byte_count": 1850
+    },
+    {
+      "session_id": "2026-10-10-gap30-qualification-stakes",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/audit.json",
+      "sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "byte_count": 1850,
+      "git_blob_sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "git_blob_byte_count": 1850
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap31-regional-prize/server.log",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/playtests/2026-10-10-gap31-regional-prize/server.log",
+      "sha256": "53ad4fb222cabb4b448f867e7abf7ea8a850abf57247088a1e3d0a34effc0f87",
+      "byte_count": 170,
+      "git_blob_sha256": "53ad4fb222cabb4b448f867e7abf7ea8a850abf57247088a1e3d0a34effc0f87",
+      "git_blob_byte_count": 170
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/baseline/server.log",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/gap31/baseline/server.log",
+      "sha256": "fffb2c381c49e6a0b21f521d873f15118ba9c35c2abc301d6d7061771abce01c",
+      "byte_count": 170,
+      "git_blob_sha256": "fffb2c381c49e6a0b21f521d873f15118ba9c35c2abc301d6d7061771abce01c",
+      "git_blob_byte_count": 170
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/state-comparison.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/state-comparison.json",
+      "sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "byte_count": 895,
+      "git_blob_sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "git_blob_byte_count": 895
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap31-regional-prize/acceptance.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/playtests/2026-10-10-gap31-regional-prize/acceptance.json",
+      "sha256": "2f10314615cf038cbaea3717771a76da4876e0b5f445ed271214feb0c64607f8",
+      "byte_count": 112788,
+      "git_blob_sha256": "2f10314615cf038cbaea3717771a76da4876e0b5f445ed271214feb0c64607f8",
+      "git_blob_byte_count": 112788
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/state-comparison.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/state-comparison.json",
+      "sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "byte_count": 895,
+      "git_blob_sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "git_blob_byte_count": 895
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/state-comparison.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/state-comparison.json",
+      "sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "byte_count": 895,
+      "git_blob_sha256": "0bd901678b2d7358e5d9e9046f2fea2ea17844e4698c813c41a01cbc05f857ab",
+      "git_blob_byte_count": 895
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/telemetry-corrected.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/telemetry-corrected.json",
+      "sha256": "ecd5f5dc4582b7487be47511760d879300c05144d0487d4a8fe4920c3414b181",
+      "byte_count": 643,
+      "git_blob_sha256": "ecd5f5dc4582b7487be47511760d879300c05144d0487d4a8fe4920c3414b181",
+      "git_blob_byte_count": 643
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "6",
+      "field": "analytics_evidence",
+      "historical_reference": "telemetry-corrected.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/telemetry-corrected.json",
+      "sha256": "ecd5f5dc4582b7487be47511760d879300c05144d0487d4a8fe4920c3414b181",
+      "byte_count": 643,
+      "git_blob_sha256": "ecd5f5dc4582b7487be47511760d879300c05144d0487d4a8fe4920c3414b181",
+      "git_blob_byte_count": 643
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/arithmetic-corrected.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/arithmetic-corrected.json",
+      "sha256": "5b9201d1cea150ad5e3009310c94e0ac563a321b2763330c626d8bf225e592c6",
+      "byte_count": 89,
+      "git_blob_sha256": "5b9201d1cea150ad5e3009310c94e0ac563a321b2763330c626d8bf225e592c6",
+      "git_blob_byte_count": 89
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/regional-final/acceptance.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/gap31/regional-final/acceptance.json",
+      "sha256": "710af9700e1eebf7de0a4d9e66be1fb3c9d0969226e70e628bf71eab175c1b29",
+      "byte_count": 74571,
+      "git_blob_sha256": "710af9700e1eebf7de0a4d9e66be1fb3c9d0969226e70e628bf71eab175c1b29",
+      "git_blob_byte_count": 74571
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/regional-final-terminal.log",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/regional-final-terminal.log",
+      "sha256": "5d26aed2797576dae78820f5438367b521691de70006888dad378f9862192b07",
+      "byte_count": 1027,
+      "git_blob_sha256": "5d26aed2797576dae78820f5438367b521691de70006888dad378f9862192b07",
+      "git_blob_byte_count": 1027
+    },
+    {
+      "session_id": "2026-10-10-gap31-regional-prize",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "runs/gap31/regional-final-exit.txt",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/regional-final-exit.txt",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "byte_count": 3,
+      "git_blob_sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "git_blob_byte_count": 3
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap33-fixture-map-advice/01-dashboard.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/01-dashboard.yml",
+      "sha256": "02c89ee1e548544a14f9792b80407cef9213a50c96733b8d4be876cf1e6ce800",
+      "byte_count": 1125,
+      "git_blob_sha256": "02c89ee1e548544a14f9792b80407cef9213a50c96733b8d4be876cf1e6ce800",
+      "git_blob_byte_count": 1125
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap33-fixture-map-advice/03-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/03-gameplan.yml",
+      "sha256": "41e12a13bec47f22b8753f3f6f4992bc46b0fb551c247cda3560cb6e032388bb",
+      "byte_count": 23106,
+      "git_blob_sha256": "41e12a13bec47f22b8753f3f6f4992bc46b0fb551c247cda3560cb6e032388bb",
+      "git_blob_byte_count": 23106
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "04-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/04-prep.yml",
+      "sha256": "539da11d23a72ab8e9d8d241bd8e612904220e3ea9ecb2136e2a270d875eca1e",
+      "byte_count": 10255,
+      "git_blob_sha256": "539da11d23a72ab8e9d8d241bd8e612904220e3ea9ecb2136e2a270d875eca1e",
+      "git_blob_byte_count": 10255
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "05-dashboard-confirmed.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/05-dashboard-confirmed.yml",
+      "sha256": "2a5532fac0f9bbf8ddc104a62706ccb3cf9489ff5ba43efbeeb9b0d86b9b4fc6",
+      "byte_count": 18999,
+      "git_blob_sha256": "2a5532fac0f9bbf8ddc104a62706ccb3cf9489ff5ba43efbeeb9b0d86b9b4fc6",
+      "git_blob_byte_count": 18999
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap33-fixture-map-advice/06-matchday.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/06-matchday.yml",
+      "sha256": "ec3a99062d3e365a109099a303edd4277c554333a5b73992db2d7ccc7deb15df",
+      "byte_count": 23971,
+      "git_blob_sha256": "ec3a99062d3e365a109099a303edd4277c554333a5b73992db2d7ccc7deb15df",
+      "git_blob_byte_count": 23971
+    },
+    {
+      "session_id": "2026-10-10-gap33-fixture-map-advice",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap33-fixture-map-advice/reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/reconciliation.json",
+      "sha256": "f6da124325380819dd6a77ebd1e9447e7399d42e4d176f131f493b2797dca9cd",
+      "byte_count": 3186,
+      "git_blob_sha256": "f6da124325380819dd6a77ebd1e9447e7399d42e4d176f131f493b2797dca9cd",
+      "git_blob_byte_count": 3186
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap34-already-benched/dashboard-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/dashboard-snapshot.txt",
+      "sha256": "29d03498701ee9202652b4ad2083881aa67a8011b8a9b18352d81e856802e35c",
+      "byte_count": 18546,
+      "git_blob_sha256": "29d03498701ee9202652b4ad2083881aa67a8011b8a9b18352d81e856802e35c",
+      "git_blob_byte_count": 18546
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "club-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/club-snapshot.txt",
+      "sha256": "2c5dfca8a265901442e6e7df3f6c455d2fa4cbdec5594bd859d5c27c8feda247",
+      "byte_count": 21525,
+      "git_blob_sha256": "2c5dfca8a265901442e6e7df3f6c455d2fa4cbdec5594bd859d5c27c8feda247",
+      "git_blob_byte_count": 21525
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "reproduction.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/reproduction.json",
+      "sha256": "0e8ca995e6abd82a9b36eaf799f2604c2f65f9cf470478c214d76dc94ffcc886",
+      "byte_count": 474,
+      "git_blob_sha256": "0e8ca995e6abd82a9b36eaf799f2604c2f65f9cf470478c214d76dc94ffcc886",
+      "git_blob_byte_count": 474
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap34-already-benched/saved-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/saved-snapshot.txt",
+      "sha256": "5d6294b9056edd01e42782686679bbe7aec269b698af899e3e72017dde99373e",
+      "byte_count": 21235,
+      "git_blob_sha256": "5d6294b9056edd01e42782686679bbe7aec269b698af899e3e72017dde99373e",
+      "git_blob_byte_count": 21235
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "byte_count": 1682,
+      "git_blob_sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "git_blob_byte_count": 1682
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "byte_count": 1682,
+      "git_blob_sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "git_blob_byte_count": 1682
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "byte_count": 1682,
+      "git_blob_sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "git_blob_byte_count": 1682
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-gap34-already-benched/telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/telemetry-report.txt",
+      "sha256": "b2f1c0e3d6a61ca9449d0a5938ffc4abb144a16249cc09f23aab6bf9c5eba8e9",
+      "byte_count": 2155,
+      "git_blob_sha256": "b2f1c0e3d6a61ca9449d0a5938ffc4abb144a16249cc09f23aab6bf9c5eba8e9",
+      "git_blob_byte_count": 2155
+    },
+    {
+      "session_id": "2026-10-10-gap34-already-benched",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "usage-report.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/usage-report.json",
+      "sha256": "1511c14b5d7924500e96afbb84a3c17437fddf75831d05711da4785a8b3f14fb",
+      "byte_count": 1801,
+      "git_blob_sha256": "1511c14b5d7924500e96afbb84a3c17437fddf75831d05711da4785a8b3f14fb",
+      "git_blob_byte_count": 1801
+    }
+  ],
+  "original_recovered_mapping": [
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-39-23-697Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-39-23-697Z.yml",
+      "sha256": "c738c0b264834f190dd1fbf95336c809c7f6db2f73c899e5196334e52633e7d2",
+      "byte_count": 13312,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-40-25-843Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-40-25-843Z.yml",
+      "sha256": "103c79a31a44458918bcea125dd2b33693a36fab186e63e82f93b493e813b275",
+      "byte_count": 16799,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-41-27-363Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-41-27-363Z.yml",
+      "sha256": "4c2ae54b771c756b0da07932803362cf2bbdad4ae1493222e9a3c6c144e4d9c3",
+      "byte_count": 17560,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-41-55-551Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-41-55-551Z.yml",
+      "sha256": "a2a26a1afb50bc6cc7655064499b98a912ba9c69c4da96d600d1680ebf82dd95",
+      "byte_count": 12718,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-44-02-199Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-44-02-199Z.yml",
+      "sha256": "dc52aa9fa61810ff6150d2a7ffbbad6c0f813b7833ebdc1109f057b573ccbc89",
+      "byte_count": 22320,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\output\\playwright\\gap25-full-report.png",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/gap25-full-report.png",
+      "sha256": "d2cfe79c276b41244d91cc8e5548784cc8d18e45c78a4c7fbee9ac2919c0338d",
+      "byte_count": 173481,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\runs\\gap25\\public-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/runs/gap25/public-readback.txt",
+      "sha256": "34674f80f5605c900771358b7d831f3bbeae477f4f58ecddef1bb63e90c4a583",
+      "byte_count": 85316,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\.playwright-cli\\page-2026-10-10T19-46-19-670Z.yml",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/page-2026-10-10T19-46-19-670Z.yml",
+      "sha256": "2bd20af50aa53129d25a891e4987169f96a15d17a60be98731013ed17bcd3ae8",
+      "byte_count": 14895,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\weekly-facility-expense-reporting\\saves\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "0dcd151b6758ce3e604fc1ca6c31b9e601c40e7d3df41dc7a5ffd30ea2765394",
+      "byte_count": 4464606,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-masters-semi\\saves\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "222d4fdb5763cbade7dc28479704e9475ed4fa30004850391e2d251315b68a6b",
+      "byte_count": 5124406,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\server.log",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/runs/playtests/2026-10-10-gap32-media/server.log",
+      "sha256": "7eac86833e5eb0e478bba048c1eefe055a9c2cea91a35b88c3668d6d5bfef862",
+      "byte_count": 170,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/01-dashboard.txt",
+      "sha256": "6774c2bb3d4acbf6a4c489c8d2fd1aeaf8b77e51d7166dd555b50dbd178e631a",
+      "byte_count": 19638,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\02-operations-before.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/02-operations-before.txt",
+      "sha256": "04d99773f004ee404b5404a343f5cf3a3ec30bcc422c288e7ec0643ca07f61b9",
+      "byte_count": 10600,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\03-media-immediate-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/03-media-immediate-dashboard.txt",
+      "sha256": "d578a6a5ed36a0f31f5629cca60ba269402ef609f30865f90566027ba028c8f1",
+      "byte_count": 19640,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\04-operations-immediate.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/04-operations-immediate.txt",
+      "sha256": "3b74935e2963ac90de77e0642d086e2e1429ba8e0a75a575029b8119a8c2f4e8",
+      "byte_count": 11222,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\public-media-immediate.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-immediate.txt",
+      "sha256": "5566df852546704eb51f8bbc00e07448082b1f660409b5504c04ab91a98b9dde",
+      "byte_count": 4008,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\05-advance.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/05-advance.txt",
+      "sha256": "e1a0b375058b1e8e21590f8943cff363f7c9a89c38486c7d307e96079835b864",
+      "byte_count": 12576,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\06-operations-settled.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/06-operations-settled.txt",
+      "sha256": "2a4af146160d20abbed642e152f8eb2c8191f2858cd5fb92408874c5caa9d4ab",
+      "byte_count": 11888,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\public-media-settled.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-settled.txt",
+      "sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "byte_count": 6111,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\07-operations-reloaded.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/07-operations-reloaded.txt",
+      "sha256": "6ed3e7fa1c48df6eee43db4217137a6107d36a31bd9d6a001384d2ae27c2ca4e",
+      "byte_count": 11761,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\public-media-reloaded.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/public-media-reloaded.txt",
+      "sha256": "4668e29df6f80277ef7f6b686e0dff4c63b087aeb4692af080d6ecd94c85fda6",
+      "byte_count": 6111,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap32-media-realized-effects\\ESports Simulator\\runs\\playtests\\2026-10-10-gap32-media\\audit-draft.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/retained/audit-draft.json",
+      "sha256": "61ff77ce3d016acfc611943267bf2a9674d1104816436193d6e1bcbe079a3a13",
+      "byte_count": 834,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\03-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/03-prep.yml",
+      "sha256": "ef6a7ae6779fedaac15c0badbae89a9d959b43f07f9a8c91d2b56f0aca2f99a2",
+      "byte_count": 10458,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\04-revisited.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-revisited.yml",
+      "sha256": "74fa82a35748272c18bcef83e4eee7430b5695f20e732ae7f24f170f5c919573",
+      "byte_count": 10543,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\04-public-readback.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-public-readback-cli-output.txt",
+      "sha256": "4ccefe5432f75830c45fe608079817076ac4ed633dbc6952228945a20cda9325",
+      "byte_count": 1834,
+      "original_bytes_unchanged": true,
+      "format_qualification": "Original .json acquisition file is a CLI text wrapper, not standalone JSON. Exact bytes retained under .txt."
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\06-unavailable.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/06-unavailable.yml",
+      "sha256": "dbe03c2aad7e30054174527888010a63f1e59ebe25df553e945b1fce97461a89",
+      "byte_count": 10903,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\08-cleared.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/08-cleared.yml",
+      "sha256": "a2a88603f6b8ce9b6933300585c8a94d3f33124203d005fbb19c85f46d74d5aa",
+      "byte_count": 10440,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\09-one-clear.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/09-one-clear.yml",
+      "sha256": "bfd57791226503a8fbd917eab4885510a67d98e119a2fd73899b49529c91c042",
+      "byte_count": 10550,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\runs\\playtests\\2026-10-10-gap35-series-card\\09-stale.yml",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/09-stale.yml",
+      "sha256": "0edc3c13654c2cbc434944684a90099b4f12470e168f02cb8a732fea4f971802",
+      "byte_count": 10527,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\runs\\playtests\\2026-10-10-gap30-qualification-stakes\\01-dashboard.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/01-dashboard.yml",
+      "sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "byte_count": 17377,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\runs\\playtests\\2026-10-10-gap30-qualification-stakes\\02-league.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/02-league.yml",
+      "sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "byte_count": 67619,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\runs\\playtests\\2026-10-10-gap30-qualification-stakes\\03-fixtures.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/03-fixtures.yml",
+      "sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "byte_count": 6627,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\runs\\playtests\\2026-10-10-gap30-qualification-stakes\\04-save.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/04-save.yml",
+      "sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "byte_count": 6477,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\runs\\playtests\\2026-10-10-gap30-qualification-stakes\\audit.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/audit.json",
+      "sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "byte_count": 1850,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\playtests\\2026-10-10-gap31-regional-prize\\server.log",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/playtests/2026-10-10-gap31-regional-prize/server.log",
+      "sha256": "53ad4fb222cabb4b448f867e7abf7ea8a850abf57247088a1e3d0a34effc0f87",
+      "byte_count": 170,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\gap31\\baseline\\server.log",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/gap31/baseline/server.log",
+      "sha256": "fffb2c381c49e6a0b21f521d873f15118ba9c35c2abc301d6d7061771abce01c",
+      "byte_count": 170,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\playtests\\2026-10-10-gap31-regional-prize\\acceptance.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/playtests/2026-10-10-gap31-regional-prize/acceptance.json",
+      "sha256": "2f10314615cf038cbaea3717771a76da4876e0b5f445ed271214feb0c64607f8",
+      "byte_count": 112788,
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\gap31\\regional-final\\acceptance.json",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/runs/gap31/regional-final/acceptance.json",
+      "sha256": "710af9700e1eebf7de0a4d9e66be1fb3c9d0969226e70e628bf71eab175c1b29",
+      "byte_count": 74571,
+      "original_bytes_unchanged": true
+    }
+  ],
+  "narrative_only_observations": [
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "1",
+      "historical_text": "",
+      "qualification": "No named original output receipt cited; historical execution remains unverified unless independently captured in retained browser-evidence/audit"
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "2",
+      "historical_text": "",
+      "qualification": "No named original output receipt cited; historical execution remains unverified unless independently captured in retained browser-evidence/audit"
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "5",
+      "historical_text": "",
+      "qualification": "No named original output receipt cited; historical execution remains unverified unless independently captured in retained browser-evidence/audit"
+    },
+    {
+      "session_id": "2026-10-10-gap35-series-card",
+      "step": "7",
+      "historical_text": "",
+      "qualification": "No named original output receipt cited; historical execution remains unverified unless independently captured in retained browser-evidence/audit"
+    }
+  ],
+  "tests_acceptance_helpers_gameplay_executed": false,
+  "limit": "Artifact path/hash coverage is separate from historical native stdout/exit or CLI execution coverage. No helper rerun or reconstructed output.",
+  "report_named_references": [
+    {
+      "report_path": "docs/playtests/2026-10-10-regional-final/report.md",
+      "historical_reference": "Preserved19-operations.yml",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/19-operations.yml",
+      "sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "byte_count": 10503,
+      "qualification": "Prose concatenates Preserved and filename; exact original19-operations snapshot.",
+      "git_blob_sha256": "a3fbd4237c71ad8726014c57d8bf3b520934135fbc8fb0cad029e5334e0e78a0",
+      "git_blob_byte_count": 10503
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/rendered-output.txt",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/rendered-output.txt",
+      "sha256": "e67198387589e6582fb59f0a055ef41ab9c72afa8e7e45c42b383889be29ac28",
+      "byte_count": 236,
+      "git_blob_sha256": "e67198387589e6582fb59f0a055ef41ab9c72afa8e7e45c42b383889be29ac28",
+      "git_blob_byte_count": 236
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/receipt.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/receipt.json",
+      "sha256": "ed5cb84f0dab19339902bdc36ba541eee2511a53b8339df9759ad6bea0122383",
+      "byte_count": 337,
+      "git_blob_sha256": "ed5cb84f0dab19339902bdc36ba541eee2511a53b8339df9759ad6bea0122383",
+      "git_blob_byte_count": 337
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/gate/pytest.log",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/pytest.log",
+      "sha256": "89ff1057b500ce12a2c1a5aff1a376470fc567df8cff88fbb168a1af9d8bb2a7",
+      "byte_count": 1934,
+      "git_blob_sha256": "89ff1057b500ce12a2c1a5aff1a376470fc567df8cff88fbb168a1af9d8bb2a7",
+      "git_blob_byte_count": 1934
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/gate/status.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/status.json",
+      "sha256": "d3387f4372bd21b1668f61463ff1b410e9cfb6a837d2063e5dc9f5a570f2d99e",
+      "byte_count": 733,
+      "git_blob_sha256": "d3387f4372bd21b1668f61463ff1b410e9cfb6a837d2063e5dc9f5a570f2d99e",
+      "git_blob_byte_count": 733
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/gate/source-pre.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/source-pre.json",
+      "sha256": "2dc4f61f12fa8d2f909aa8f946d1b9c6cb96b3136ae2cde8b05aba249e9e2f7f",
+      "byte_count": 69740,
+      "git_blob_sha256": "2dc4f61f12fa8d2f909aa8f946d1b9c6cb96b3136ae2cde8b05aba249e9e2f7f",
+      "git_blob_byte_count": 69740
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "cli-revision/gate/source-post.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/source-post.json",
+      "sha256": "2dc4f61f12fa8d2f909aa8f946d1b9c6cb96b3136ae2cde8b05aba249e9e2f7f",
+      "byte_count": 69740,
+      "git_blob_sha256": "2dc4f61f12fa8d2f909aa8f946d1b9c6cb96b3136ae2cde8b05aba249e9e2f7f",
+      "git_blob_byte_count": 69740
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "HANDOFF.md",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/HANDOFF.md",
+      "sha256": "992dcf3f62c324a1bf652f6fa76753c50ed86ba712ee7e902d8e1a45f3809c41",
+      "byte_count": 6985,
+      "git_blob_sha256": "992dcf3f62c324a1bf652f6fa76753c50ed86ba712ee7e902d8e1a45f3809c41",
+      "git_blob_byte_count": 6985
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/actions.csv",
+      "sha256": "7cf26aadc19c351d4e419875333b33ef66655f6dacb64e362d0aba216333d075",
+      "byte_count": 5523,
+      "git_blob_sha256": "7cf26aadc19c351d4e419875333b33ef66655f6dacb64e362d0aba216333d075",
+      "git_blob_byte_count": 5523
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "public-accounting.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/public-accounting.json",
+      "sha256": "3e6e30cf64baba8c766efb4e48aa5651a78e100f9f877c2516bf5efd03ffc693",
+      "byte_count": 502,
+      "git_blob_sha256": "3e6e30cf64baba8c766efb4e48aa5651a78e100f9f877c2516bf5efd03ffc693",
+      "git_blob_byte_count": 502
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "full-report.png",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/full-report.png",
+      "sha256": "d2cfe79c276b41244d91cc8e5548784cc8d18e45c78a4c7fbee9ac2919c0338d",
+      "byte_count": 173481,
+      "git_blob_sha256": "d2cfe79c276b41244d91cc8e5548784cc8d18e45c78a4c7fbee9ac2919c0338d",
+      "git_blob_byte_count": 173481
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "baseline-comparison.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/baseline-comparison.json",
+      "sha256": "9d4ad3778c2bdc95283807d0fd1fc2161335642ea5bf8c6e16a1b42f27b6a8db",
+      "byte_count": 526,
+      "git_blob_sha256": "9d4ad3778c2bdc95283807d0fd1fc2161335642ea5bf8c6e16a1b42f27b6a8db",
+      "git_blob_byte_count": 526
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "gate/pytest.log",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/pytest.log",
+      "sha256": "0b6eb85b375a447135ac884f49fdc651562c68032f70956a92c0e18f6320fe97",
+      "byte_count": 1934,
+      "git_blob_sha256": "0b6eb85b375a447135ac884f49fdc651562c68032f70956a92c0e18f6320fe97",
+      "git_blob_byte_count": 1934
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "gate/status.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/status.json",
+      "sha256": "ba423ce914151b5c6dfbd0768e9bae81e2139c56bbcbd9b240dee970fcafd54c",
+      "byte_count": 732,
+      "git_blob_sha256": "ba423ce914151b5c6dfbd0768e9bae81e2139c56bbcbd9b240dee970fcafd54c",
+      "git_blob_byte_count": 732
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "gate/source-pre.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/source-pre.json",
+      "sha256": "3733db5f3afd49c4375f08f1808be457c04492df958e2d31736e6576b61b98af",
+      "byte_count": 69632,
+      "git_blob_sha256": "3733db5f3afd49c4375f08f1808be457c04492df958e2d31736e6576b61b98af",
+      "git_blob_byte_count": 69632
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "gate/source-post.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/source-post.json",
+      "sha256": "3733db5f3afd49c4375f08f1808be457c04492df958e2d31736e6576b61b98af",
+      "byte_count": 69632,
+      "git_blob_sha256": "3733db5f3afd49c4375f08f1808be457c04492df958e2d31736e6576b61b98af",
+      "git_blob_byte_count": 69632
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/audit.json",
+      "sha256": "f09b324d2f1039731f978087476fc76b3d6a481f209b9c49bd5b59b5e6a4f546",
+      "byte_count": 3587,
+      "git_blob_sha256": "f09b324d2f1039731f978087476fc76b3d6a481f209b9c49bd5b59b5e6a4f546",
+      "git_blob_byte_count": 3587
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "decisions.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "byte_count": 1189,
+      "git_blob_sha256": "c7d7a1312854d4beec68d12df2fd094e778329d1535ba90f03cf916937ef5d67",
+      "git_blob_byte_count": 1189
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-weekly-facility-accounting/report.md",
+      "historical_reference": "usage-events.json",
+      "published_path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "byte_count": 19886,
+      "git_blob_sha256": "11043424a7805647f905d4e708f4ce9cafb20d855556337af9ea469ea81582fa",
+      "git_blob_byte_count": 19886
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "save-before.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/save-before.json",
+      "sha256": "7ed0ae942affd1e1da074e1f88c6075435735bb2d5dacf4c34378627bf3f2cae",
+      "byte_count": 4973691,
+      "qualification": "Exact immutable rootregional-final source SHA7ed0ae94; separate corrected feature save is not this baseline.",
+      "git_blob_sha256": "7ed0ae942affd1e1da074e1f88c6075435735bb2d5dacf4c34378627bf3f2cae",
+      "git_blob_byte_count": 4973691
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/actions.csv",
+      "sha256": "088ae6814acd602f034bdbc9bc84bb811ca4ccbc2793d600a8a1118ca77477bd",
+      "byte_count": 7033,
+      "git_blob_sha256": "088ae6814acd602f034bdbc9bc84bb811ca4ccbc2793d600a8a1118ca77477bd",
+      "git_blob_byte_count": 7033
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "docs/playtests/actions.csv",
+      "published_path": "docs/playtests/actions.csv",
+      "sha256": "46b7cf5e328b3a50298d2f2e79d8cd5ceea5f138b847ad8f5f0f06cc1670e27f",
+      "byte_count": 1476340,
+      "git_blob_sha256": "46b7cf5e328b3a50298d2f2e79d8cd5ceea5f138b847ad8f5f0f06cc1670e27f",
+      "git_blob_byte_count": 1476340
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/immediate-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/immediate-dashboard.txt",
+      "sha256": "d578a6a5ed36a0f31f5629cca60ba269402ef609f30865f90566027ba028c8f1",
+      "byte_count": 19640,
+      "git_blob_sha256": "d578a6a5ed36a0f31f5629cca60ba269402ef609f30865f90566027ba028c8f1",
+      "git_blob_byte_count": 19640
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/operations-reloaded.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/operations-reloaded.txt",
+      "sha256": "6ed3e7fa1c48df6eee43db4217137a6107d36a31bd9d6a001384d2ae27c2ca4e",
+      "byte_count": 11761,
+      "git_blob_sha256": "6ed3e7fa1c48df6eee43db4217137a6107d36a31bd9d6a001384d2ae27c2ca4e",
+      "git_blob_byte_count": 11761
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/media-feedback-visible.png",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/media-feedback-visible.png",
+      "sha256": "3df9a2549c4a917bd6484e4d7d3fec41e6546bc816893316e51363411f7e7cf7",
+      "byte_count": 161083,
+      "git_blob_sha256": "3df9a2549c4a917bd6484e4d7d3fec41e6546bc816893316e51363411f7e7cf7",
+      "git_blob_byte_count": 161083
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/audit.json",
+      "sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "byte_count": 6037,
+      "git_blob_sha256": "58850d737fa9aa6cd332c42349ec8cd3dcd9d4270062b7d6763f7d30404a9321",
+      "git_blob_byte_count": 6037
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/actions-before-analytics-correction.csv",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/actions-before-analytics-correction.csv",
+      "sha256": "8dd3d955e8c602cf3307e09c9053917208b2c48ca7bf6ae31a17e7e7e24f6975",
+      "byte_count": 6967,
+      "git_blob_sha256": "8dd3d955e8c602cf3307e09c9053917208b2c48ca7bf6ae31a17e7e7e24f6975",
+      "git_blob_byte_count": 6967
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/analytics-correction.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/analytics-correction.json",
+      "sha256": "3629559a0e653959a484fffcc810d354a6521566c188adc1e9e50d96b3ddc44d",
+      "byte_count": 1544,
+      "git_blob_sha256": "3629559a0e653959a484fffcc810d354a6521566c188adc1e9e50d96b3ddc44d",
+      "git_blob_byte_count": 1544
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/gate-receipt.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/gate-receipt.json",
+      "sha256": "b2ea15292ef0e29bade00b52e4fa9a4218d2943fc726388b7b58399bfe738a65",
+      "byte_count": 585,
+      "git_blob_sha256": "b2ea15292ef0e29bade00b52e4fa9a4218d2943fc726388b7b58399bfe738a65",
+      "git_blob_byte_count": 585
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/full-pytest.txt",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/full-pytest.txt",
+      "sha256": "36251a97fdbb8a09d2578a2e6f58220a0038639894a78fb0bff8035d64c4ac81",
+      "byte_count": 1539,
+      "git_blob_sha256": "36251a97fdbb8a09d2578a2e6f58220a0038639894a78fb0bff8035d64c4ac81",
+      "git_blob_byte_count": 1539
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/flywheel-after.json",
+      "sha256": "b27ad6e22f9cf4a542dd5d11dc9e276f8ea265012c860ced7b70790c15f916e3",
+      "byte_count": 87,
+      "git_blob_sha256": "b27ad6e22f9cf4a542dd5d11dc9e276f8ea265012c860ced7b70790c15f916e3",
+      "git_blob_byte_count": 87
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/integration-source-manifest.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/integration-source-manifest.json",
+      "sha256": "259cecc5a6f121f36fdcb921d1f469367603166090aecdeb01577d991e28d5dc",
+      "byte_count": 406456,
+      "git_blob_sha256": "259cecc5a6f121f36fdcb921d1f469367603166090aecdeb01577d991e28d5dc",
+      "git_blob_byte_count": 406456
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/integration-receipt.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/integration-receipt.json",
+      "sha256": "dd5ecb9c441426c829f0daa8ee9d006049d22fedccbd4dd62496a735d6cdcdce",
+      "byte_count": 818,
+      "git_blob_sha256": "dd5ecb9c441426c829f0daa8ee9d006049d22fedccbd4dd62496a735d6cdcdce",
+      "git_blob_byte_count": 818
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/schema38-source-manifest.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/schema38-source-manifest.json",
+      "sha256": "f285bc70ad1d4158df41f23269ebeef6353c041fbdedfdb291dd5c518e2526d1",
+      "byte_count": 406456,
+      "git_blob_sha256": "f285bc70ad1d4158df41f23269ebeef6353c041fbdedfdb291dd5c518e2526d1",
+      "git_blob_byte_count": 406456
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap32-media/report.md",
+      "historical_reference": "evidence/schema38-receipt.json",
+      "published_path": "docs/playtests/2026-10-10-gap32-media/evidence/schema38-receipt.json",
+      "sha256": "c90416416acd364657dfccea7142918aeabbc1217e605d1615421cc7ba272d48",
+      "byte_count": 818,
+      "git_blob_sha256": "c90416416acd364657dfccea7142918aeabbc1217e605d1615421cc7ba272d48",
+      "git_blob_byte_count": 818
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/actions.csv",
+      "sha256": "c54da4ce8264fb2bdafd846a2b937b9674500439107f1143f4a18ce934f77e00",
+      "byte_count": 7962,
+      "git_blob_sha256": "c54da4ce8264fb2bdafd846a2b937b9674500439107f1143f4a18ce934f77e00",
+      "git_blob_byte_count": 7962
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/audit.json",
+      "sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "byte_count": 19028,
+      "git_blob_sha256": "22f4417de947c0adeb04564164bfdb175c288fb1156d7edb649c789d4abe987d",
+      "git_blob_byte_count": 19028
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "browser-evidence.md",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/browser-evidence.md",
+      "sha256": "5bcc66e405de0e95dff5119a2b829e532cac3427334d06e1132a04decffdb8ef",
+      "byte_count": 9952,
+      "git_blob_sha256": "5bcc66e405de0e95dff5119a2b829e532cac3427334d06e1132a04decffdb8ef",
+      "git_blob_byte_count": 9952
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "evidence/receipt.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/receipt.json",
+      "sha256": "b4add050a537f616e9bc234c14be6d899aaf65f9d66bcafc877ef129852fb826",
+      "byte_count": 707,
+      "git_blob_sha256": "b4add050a537f616e9bc234c14be6d899aaf65f9d66bcafc877ef129852fb826",
+      "git_blob_byte_count": 707
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "evidence/pytest.log",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/pytest.log",
+      "sha256": "8ff13401216f4f6f6b47de7ad7015f5aa66de75bbc7bc7ef5e66c1530e10aaa1",
+      "byte_count": 1539,
+      "git_blob_sha256": "8ff13401216f4f6f6b47de7ad7015f5aa66de75bbc7bc7ef5e66c1530e10aaa1",
+      "git_blob_byte_count": 1539
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap35-series-card/report.md",
+      "historical_reference": "evidence/publication-review.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/publication-review.json",
+      "sha256": "465a58baad282a4a8688f09da4d36f5e0a0b7ae6d9441cec01fb6764965cb3dc",
+      "byte_count": 2253,
+      "git_blob_sha256": "465a58baad282a4a8688f09da4d36f5e0a0b7ae6d9441cec01fb6764965cb3dc",
+      "git_blob_byte_count": 2253
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "scripts/playtest_log.py",
+      "published_path": "scripts/playtest_log.py",
+      "sha256": "ca30c1c4894a351695741b036fbf8087485590d959dcc7fef1f6f9702f8a30c4",
+      "byte_count": 4276,
+      "git_blob_sha256": "740465a952d6b9eefa7b14f6cf5015253c76e26075c87fdf60d6e3c26c7d3346",
+      "git_blob_byte_count": 4192,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/gap30-qualification-stakes/actions.csv",
+      "sha256": "760fdd7ee505a003c510ad1892937aaf3403eb111e1959599ff4cd323b8acc4c",
+      "byte_count": 2796,
+      "git_blob_sha256": "760fdd7ee505a003c510ad1892937aaf3403eb111e1959599ff4cd323b8acc4c",
+      "git_blob_byte_count": 2796
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "01-dashboard.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/01-dashboard.yml",
+      "sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "byte_count": 17377,
+      "git_blob_sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "git_blob_byte_count": 17377
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/01-dashboard.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/01-dashboard.yml",
+      "sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "byte_count": 17377,
+      "git_blob_sha256": "f9308c7f83de49aa7281a5914e95b2cb617e74f93fd0133a8d970075bbbdf593",
+      "git_blob_byte_count": 17377
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "02-league.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/02-league.yml",
+      "sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "byte_count": 67619,
+      "git_blob_sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "git_blob_byte_count": 67619
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/02-league.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/02-league.yml",
+      "sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "byte_count": 67619,
+      "git_blob_sha256": "b51241562e79c3b2d1e0992c400158992485071b61baed289bc5e70e53a8c897",
+      "git_blob_byte_count": 67619
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "03-fixtures.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/03-fixtures.yml",
+      "sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "byte_count": 6627,
+      "git_blob_sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "git_blob_byte_count": 6627
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/03-fixtures.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/03-fixtures.yml",
+      "sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "byte_count": 6627,
+      "git_blob_sha256": "7653a876b0f33a9f2b42ef1b89340225704f8cbf243b0de885766407a467eb41",
+      "git_blob_byte_count": 6627
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "04-save.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/04-save.yml",
+      "sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "byte_count": 6477,
+      "git_blob_sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "git_blob_byte_count": 6477
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/04-save.yml",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/04-save.yml",
+      "sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "byte_count": 6477,
+      "git_blob_sha256": "12eb5f9f35aae1bb28a5856d946a3b4061933b6e05640ba2e32f47f347fa7b26",
+      "git_blob_byte_count": 6477
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/audit.json",
+      "sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "byte_count": 1850,
+      "git_blob_sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "git_blob_byte_count": 1850
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/audit.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/audit.json",
+      "sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "byte_count": 1850,
+      "git_blob_sha256": "df0d9d632f8ab98fce7ef4d47f339af5096966cd49b0545a865f0c390b764469",
+      "git_blob_byte_count": 1850
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "telemetry-report.txt",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/telemetry-report.txt",
+      "sha256": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+      "byte_count": 2040,
+      "git_blob_sha256": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+      "git_blob_byte_count": 2040
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/telemetry-report.txt",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/telemetry-report.txt",
+      "sha256": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+      "byte_count": 2040,
+      "git_blob_sha256": "23dc50a6a23fe4655a815ab9db304ccd046d89e15d75506c249327852c96bfb7",
+      "git_blob_byte_count": 2040
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "usage.jsonl",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/usage.jsonl",
+      "sha256": "051664afe6f6021e9624290df6b972b988e1f379994c4d905cd749fae0d59df7",
+      "byte_count": 7470,
+      "git_blob_sha256": "051664afe6f6021e9624290df6b972b988e1f379994c4d905cd749fae0d59df7",
+      "git_blob_byte_count": 7470
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/usage.jsonl",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/usage.jsonl",
+      "sha256": "051664afe6f6021e9624290df6b972b988e1f379994c4d905cd749fae0d59df7",
+      "byte_count": 7470,
+      "git_blob_sha256": "051664afe6f6021e9624290df6b972b988e1f379994c4d905cd749fae0d59df7",
+      "git_blob_byte_count": 7470
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "ui-usage-report.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/ui-usage-report.json",
+      "sha256": "1f4033a4e8401ba8ee8f45df708261b23eaeef29fc36110304d9d0780c7f4808",
+      "byte_count": 998,
+      "git_blob_sha256": "1f4033a4e8401ba8ee8f45df708261b23eaeef29fc36110304d9d0780c7f4808",
+      "git_blob_byte_count": 998
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "proofs/ui-usage-report.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/ui-usage-report.json",
+      "sha256": "1f4033a4e8401ba8ee8f45df708261b23eaeef29fc36110304d9d0780c7f4808",
+      "byte_count": 998,
+      "git_blob_sha256": "1f4033a4e8401ba8ee8f45df708261b23eaeef29fc36110304d9d0780c7f4808",
+      "git_blob_byte_count": 998
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "manager/qualification.py",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/report-cited-source/src/esports_sim/manager/qualification.py",
+      "sha256": "b213faa2d41667e20a1aaf833ae77fec5ada63c0a09750c20bc48121861881cd",
+      "byte_count": 1874,
+      "qualification": "Archived feature source equals its historical gate freeze; not current612 source.",
+      "git_blob_sha256": "b213faa2d41667e20a1aaf833ae77fec5ada63c0a09750c20bc48121861881cd",
+      "git_blob_byte_count": 1874
+    },
+    {
+      "report_path": "docs/playtests/gap30-qualification-stakes/report.md",
+      "historical_reference": "gap30-qualification-stakes/proofs/late-flywheel-recovery.json",
+      "published_path": "docs/playtests/gap30-qualification-stakes/proofs/late-flywheel-recovery.json",
+      "sha256": "bf930a7fa4867a91580c5cb8e9b765e32d07cffdd041610e9f4d36960717c0f3",
+      "byte_count": 675,
+      "git_blob_sha256": "bf930a7fa4867a91580c5cb8e9b765e32d07cffdd041610e9f4d36960717c0f3",
+      "git_blob_byte_count": 675
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "05-dashboard-confirmed.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/05-dashboard-confirmed.yml",
+      "sha256": "2a5532fac0f9bbf8ddc104a62706ccb3cf9489ff5ba43efbeeb9b0d86b9b4fc6",
+      "byte_count": 18999,
+      "git_blob_sha256": "2a5532fac0f9bbf8ddc104a62706ccb3cf9489ff5ba43efbeeb9b0d86b9b4fc6",
+      "git_blob_byte_count": 18999
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "06-matchday.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/06-matchday.yml",
+      "sha256": "ec3a99062d3e365a109099a303edd4277c554333a5b73992db2d7ccc7deb15df",
+      "byte_count": 23971,
+      "git_blob_sha256": "ec3a99062d3e365a109099a303edd4277c554333a5b73992db2d7ccc7deb15df",
+      "git_blob_byte_count": 23971
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "03-gameplan.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/03-gameplan.yml",
+      "sha256": "41e12a13bec47f22b8753f3f6f4992bc46b0fb551c247cda3560cb6e032388bb",
+      "byte_count": 23106,
+      "git_blob_sha256": "41e12a13bec47f22b8753f3f6f4992bc46b0fb551c247cda3560cb6e032388bb",
+      "git_blob_byte_count": 23106
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "04-prep.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/04-prep.yml",
+      "sha256": "539da11d23a72ab8e9d8d241bd8e612904220e3ea9ecb2136e2a270d875eca1e",
+      "byte_count": 10255,
+      "git_blob_sha256": "539da11d23a72ab8e9d8d241bd8e612904220e3ea9ecb2136e2a270d875eca1e",
+      "git_blob_byte_count": 10255
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "08-saved.yml",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/08-saved.yml",
+      "sha256": "6e9e426cbfe9b420b62d298dfcf3229571f19af997d64893050ec1cf88e31fb8",
+      "byte_count": 18768,
+      "git_blob_sha256": "6e9e426cbfe9b420b62d298dfcf3229571f19af997d64893050ec1cf88e31fb8",
+      "git_blob_byte_count": 18768
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/reconciliation.json",
+      "sha256": "f6da124325380819dd6a77ebd1e9447e7399d42e4d176f131f493b2797dca9cd",
+      "byte_count": 3186,
+      "git_blob_sha256": "f6da124325380819dd6a77ebd1e9447e7399d42e4d176f131f493b2797dca9cd",
+      "git_blob_byte_count": 3186
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/actions.csv",
+      "sha256": "8e7b6b0a42a2cad455f4c8dfa8e639d733473e6522f5927f5116ed74a97d6b96",
+      "byte_count": 4272,
+      "git_blob_sha256": "8e7b6b0a42a2cad455f4c8dfa8e639d733473e6522f5927f5116ed74a97d6b96",
+      "git_blob_byte_count": 4272
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "decision-report.txt",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/decision-report.txt",
+      "sha256": "f502c4ce3a4db7c39a7d8d9a13d379adcb0318edb6869d1ccebc7893f9b08022",
+      "byte_count": 2155,
+      "git_blob_sha256": "f502c4ce3a4db7c39a7d8d9a13d379adcb0318edb6869d1ccebc7893f9b08022",
+      "git_blob_byte_count": 2155
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "usage-report.json",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/usage-report.json",
+      "sha256": "20e213492539b2aeb5c4f1e886700b699b5c71af8dcd82aaa2cf4b9cda251bfa",
+      "byte_count": 1036,
+      "git_blob_sha256": "20e213492539b2aeb5c4f1e886700b699b5c71af8dcd82aaa2cf4b9cda251bfa",
+      "git_blob_byte_count": 1036
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/report.md",
+      "historical_reference": "evidence/actions-before-analytics-correction.csv",
+      "published_path": "docs/playtests/2026-10-10-gap33-fixture-map-advice/evidence/actions-before-analytics-correction.csv",
+      "sha256": "bbaef9c6897db17a388655928d2b8e45612376825b98992410d51ad0310592ff",
+      "byte_count": 4156,
+      "git_blob_sha256": "bbaef9c6897db17a388655928d2b8e45612376825b98992410d51ad0310592ff",
+      "git_blob_byte_count": 4156
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "reproduction.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/reproduction.json",
+      "sha256": "0e8ca995e6abd82a9b36eaf799f2604c2f65f9cf470478c214d76dc94ffcc886",
+      "byte_count": 474,
+      "git_blob_sha256": "0e8ca995e6abd82a9b36eaf799f2604c2f65f9cf470478c214d76dc94ffcc886",
+      "git_blob_byte_count": 474
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "dashboard-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/dashboard-snapshot.txt",
+      "sha256": "29d03498701ee9202652b4ad2083881aa67a8011b8a9b18352d81e856802e35c",
+      "byte_count": 18546,
+      "git_blob_sha256": "29d03498701ee9202652b4ad2083881aa67a8011b8a9b18352d81e856802e35c",
+      "git_blob_byte_count": 18546
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "club-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/club-snapshot.txt",
+      "sha256": "2c5dfca8a265901442e6e7df3f6c455d2fa4cbdec5594bd859d5c27c8feda247",
+      "byte_count": 21525,
+      "git_blob_sha256": "2c5dfca8a265901442e6e7df3f6c455d2fa4cbdec5594bd859d5c27c8feda247",
+      "git_blob_byte_count": 21525
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "saved-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/saved-snapshot.txt",
+      "sha256": "5d6294b9056edd01e42782686679bbe7aec269b698af899e3e72017dde99373e",
+      "byte_count": 21235,
+      "git_blob_sha256": "5d6294b9056edd01e42782686679bbe7aec269b698af899e3e72017dde99373e",
+      "git_blob_byte_count": 21235
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "tests/test_review_selected_lineup.py",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/retained/report-cited-source/tests/test_review_selected_lineup.py",
+      "sha256": "7de6600a48b7e72510f02865b222c12dcd10679e2820fde30fa374aa9c2f83b6",
+      "byte_count": 4057,
+      "git_blob_sha256": "7de6600a48b7e72510f02865b222c12dcd10679e2820fde30fa374aa9c2f83b6",
+      "git_blob_byte_count": 4057
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "tests/test_review_current_roster.py",
+      "published_path": "tests/test_review_current_roster.py",
+      "sha256": "7451786b43d84300fbdaf1466fb25e54e882ffc024015a46485e2dbd03210ea2",
+      "byte_count": 2882,
+      "git_blob_sha256": "d1e24e070842e49a21812483c6a2705bcd3a31c6256732d63835ea9a9fccbb2b",
+      "git_blob_byte_count": 2825,
+      "raw_Git_line_endings_qualification": "Unchanged source checkout raw CRLF and Git LF tracked separately; original receipts match raw Git exactly."
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/audit.json",
+      "sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "byte_count": 1682,
+      "git_blob_sha256": "6ac32ff74fba3f275b5c1fa1a2e7c4e29b531df6fa397aa6764f5d9c0443f8c9",
+      "git_blob_byte_count": 1682
+    },
+    {
+      "report_path": "docs/playtests/2026-10-10-gap34-already-benched/report.md",
+      "historical_reference": "evidence/actions-before-analytics-correction.csv",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/actions-before-analytics-correction.csv",
+      "sha256": "81699d4e6fea22794adc1e14ca985f74bf483afbfa970db46e751bf2773bd4ba",
+      "byte_count": 4303,
+      "git_blob_sha256": "81699d4e6fea22794adc1e14ca985f74bf483afbfa970db46e751bf2773bd4ba",
+      "git_blob_byte_count": 4303
+    }
+  ],
+  "report_unavailable": [],
+  "execution_qualifications": {
+    "gap35_blocked_steps": "Four bootstrap/argument failures1,2,5,7 have no original terminal output capture; historical report already labels them unverified. Step8 diagnostics were not printed and step9 supplies original controlled UI assertion narrative/DOM; no reconstructed console output.",
+    "root_session_audits": "Original process stdout/native terminal exit receipts not found in scoped retained root regional-final/masters-quarter/masters-semi session files and primary run-level artifacts. Retained corrected helpers, original audit JSON and separate report outputs are source/artifact evidence, not independent certification of original native exit. Original first failed masters-semi guessed scout source version was not separately retained.",
+    "auth_inputs": "Private sessions/meta referenced by retained helper and historical preadvance proof excluded. Safe standalone campaign inputs and usage telemetry retained; auth-dependent read/cleanup not replayed or independently recertified.",
+    "historical_feature_gates": "Original separate feature gate logs/receipts belong to their original source hashes, not this885 candidate. No inherited current-head CI success."
+  },
+  "non_JSON_format_mapping": {
+    "original_acquisition_filename": "04-public-readback.json",
+    "original_tracked_candidate_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-public-readback.json",
+    "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/04-public-readback-cli-output.txt",
+    "sha256": "4ccefe5432f75830c45fe608079817076ac4ed633dbc6952228945a20cda9325",
+    "byte_count": 1834,
+    "original_bytes_unchanged": true,
+    "format": "CLI text with Result wrapper",
+    "no_response_invented": true
+  }
+}

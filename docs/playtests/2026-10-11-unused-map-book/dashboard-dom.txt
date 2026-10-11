@@ -1,0 +1,246 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 21 · Playoffs — Team Nexus
+  - generic: 1,814,812 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 18":
+      - text: Inbox
+      - generic: "18"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W21 · Playoffs
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 11–3
+  - generic: Record
+  - generic: +69 rd
+  - button "2nd League Americas":
+    - generic: 2nd
+    - generic: League
+    - generic: Americas
+  - generic: W1
+  - generic: Streak
+  - button "1,814,812 cr Balance":
+    - generic: 1,814,812 cr
+    - generic: Balance
+  - generic: "97"
+  - generic: Morale
+  - button "95 Condition":
+    - generic: "95"
+    - generic: Condition
+  - text: W21 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Team Nexus
+  - generic: 2nd · 11–3
+  - generic: VS
+  - generic: S1 · W21
+  - generic: CHAMPIONS SEMI
+  - generic: Best of 3
+  - generic "The manager across the aisle": vs Ethan Lopez · Connector
+  - generic: Team Vanguard
+  - generic: 1st · 13–1
+  - generic: Today's prep
+  - generic: Team Vanguard in W21
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Team Vanguard
+  - paragraph: Your scout is not assigned to Team Vanguard. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Ghost's development plan
+  - paragraph: Ghost moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - generic: "Head-to-head this season: 0–4 (you trail) · L4"
+  - paragraph: Team Vanguard have taken all 4 this season. Watch Slice — Team Vanguard's form pick at 1.33.
+  - generic: Veto
+  - img "split"
+  - text: VGD ban split
+  - img "bind"
+  - text: NXS ban bind
+  - img "haven"
+  - text: VGD pick haven
+  - img "ascent"
+  - text: NXS pick ascent
+  - img "lotus"
+  - text: decider lotus
+  - generic: Team Vanguard — last 5
+  - generic "vs Saracen Guard · 2–1": W
+  - generic "vs Team Nexus · 2–0": W
+  - generic "vs Team Nexus · 2–1": W
+  - generic "vs Solar Flare · 3–2": W
+  - generic "vs Coral Sea Drakes · 2–0": W
+  - generic: Danger men
+  - generic: Zenith
+  - generic: Controller
+  - generic: ~85
+  - generic: Pulse
+  - generic: Duelist
+  - generic: ~84
+  - generic: Warden
+  - generic: Sentinel
+  - generic: ~84
+  - generic: Playstyle
+  - generic: Map-spreading
+  - generic: swings angles aggressively · hits sites fast · spreads wide and lurks for picks
+  - text: Your map pool & veto
+  - generic: Ban Haven (Team Vanguard 100% · you 33%)
+  - generic: Pick Split (you 100% · them 33%)
+  - text: Team Nexus — season map record (wins / played)
+  - generic: Bind
+  - generic: 100%
+  - generic: 4/4
+  - generic: Split
+  - generic: 100%
+  - generic: 3/3
+  - generic: Ascent
+  - generic: 62%
+  - generic: 5/8
+  - generic: Lotus
+  - generic: 56%
+  - generic: 5/9
+  - generic: Haven
+  - generic: 33%
+  - generic: 1/3
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Beat Tokyo Drift Six 2-0. Standout: Vortex (1.60). Off-colour: Echo (0.79)."
+  - paragraph: “Team Nexus have put themselves in the title picture from second.”
+  - generic: W
+  - generic: vs Tokyo Drift Six
+  - generic: 2–0
+  - generic: ★
+  - text: POTM
+  - generic: Vortex
+  - 'img "Aim Demon: raw mechanical menace"'
+  - generic: What worked
+  - generic: Pistols won
+  - generic: 4/4 pistol rounds (100%).
+  - text: Vortex carried
+  - 'img "Aim Demon: raw mechanical menace"'
+  - generic: Team-high 1.6 average rating.
+  - generic: Attack is clicking
+  - generic: 19/24 attack rounds won (79%).
+  - generic: Defense is a wall
+  - generic: 7/9 defense rounds won (78%).
+  - generic: Where it broke down
+  - text: Echo off-colour
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - 'img "Choker: tightens up when it matters most"'
+  - generic: 0.8 average rating across the series.
+  - generic: Young with room (proj. 65–80) — a development call, not a bench.
+  - text: What to tweak
+  - generic: ▸ Echo is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Team Vanguard 13 1 +82":
+        - cell "1"
+        - cell "Team Vanguard"
+        - cell "13"
+        - cell "1"
+        - cell "+82"
+      - row "2 Team Nexus 11 3 +69":
+        - cell "2"
+        - cell "Team Nexus"
+        - cell "11"
+        - cell "3"
+        - cell "+69"
+      - row "3 Rust Belt Gaming 10 4 +55":
+        - cell "3"
+        - cell "Rust Belt Gaming"
+        - cell "10"
+        - cell "4"
+        - cell "+55"
+      - row "4 Saracen Guard 8 6 +26":
+        - cell "4"
+        - cell "Saracen Guard"
+        - cell "8"
+        - cell "6"
+        - cell "+26"
+  - text: Last result
+  - generic: W
+  - generic: Tokyo Drift Six
+  - generic: 2–0
+  - img "ascent"
+  - img "split"
+  - paragraph: "World #4 · Rep 67 · Fans 333.9K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: ▸ No game plan set for W21
+  - generic: ▸ 18 unread inbox messages
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - text: ▸
+  - generic: "Vortex: Season MVP Award · In Contention · 3rd · 1.42"
+  - heading "Your calls" [level=2]
+  - text: Last match
+  - generic: ▸ Map control 30 vs book 50
+  - generic: "▸ Map book: available on Ascent, Split · unused on Lotus (not played)"
+  - heading "News" [level=2]
+  - generic: "[S1 W20] Ghostline part with NorthernLights and appoint Jhein after a 4-match losing streak."
+  - generic: "[S1 W20] Zenith (Team Vanguard) passes 300 kills this season."
+  - generic: "[S1 W20] Ciphersurge (Tokyo Drift Six) passes 300 kills this season."
+  - generic: "[S1 W20] Havocrush (Rust Belt Gaming) passes 200 kills this season."
+  - generic: "[S1 W20] Karmastep (Rust Belt Gaming) passes 300 kills this season."
+  - generic: "[S1 W20] Slystep (Meridian Cross) passes 300 kills this season."
+  - generic: "[S1 W20] Nightghost (Coral Sea Drakes) passes 300 kills this season."
+  - generic: "[S1 W20] Emberveil (Adriatic Sirens) passes 300 kills this season."
+  - generic: "[S1 W20] Ironbyte (Adriatic Sirens) passes 300 kills this season."
+  - generic: "[S1 W20] Echo (Team Nexus) passes 300 kills this season."
+  - generic: "[S1 W20] #3 Meridian Cross stumble against #7 Rust Belt Gaming (1-2)."
+  - generic: "[S1 W20] [CHAMP_QF] Solar Flare beat Adriatic Sirens, 2-1."
+- tooltip

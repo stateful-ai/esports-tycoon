@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0201",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Offseason advance is a season transition",
+    "problem": "Expected ordinary W24 training and sponsor tick; Advance Week immediately entered S2W1.",
+    "solution": "Retained unexpected result and0income/expenses; plans and22weekcontract independentlypersisted.",
+    "lesson": "Check phase-specific transition meaning; selected plans surviving is separate from practice running.",
+    "confidence": "high",
+    "source": "2026-10-11-offseason-rebuild26UHC seed2038 main20273 root unknown runtime; 2026-10-11T07:14:56.324110+00:00",
+    "code": "",
+    "tags": [
+      "offseason",
+      "sponsors",
+      "training"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0202",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Unique player targeting survived duplicate report rows",
+    "problem": "Development repeats Ghost identity in report rows.",
+    "solution": "Combined identity-cell and editable-focus control; sequentialmatchingPOSTresponses verifiedmechanical/light byID.",
+    "lesson": "Require unique editable player row, await response and check unchanged players.",
+    "confidence": "high",
+    "source": "2026-10-11-offseason-rebuild26UHC seed2038 main20273 root unknown runtime; 2026-10-11T07:14:56.324110+00:00",
+    "code": "",
+    "tags": [
+      "offseason",
+      "sponsors",
+      "training"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0203",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Active Stream sponsor absent from run-rate",
+    "problem": "OrbitCast9400/wk active but sponsors_by_slot/table omitted Stream and net unchanged.",
+    "solution": "Recorded original POST/public state, assigned one owner for all supported slots.",
+    "lesson": "Compare active contract slots with live finance components; distinguish run-rate gaps from rollover no-payment behavior.",
+    "confidence": "high",
+    "source": "2026-10-11-offseason-rebuild26UHC seed2038 main20273 root unknown runtime; 2026-10-11T07:14:56.324110+00:00",
+    "code": "",
+    "tags": [
+      "offseason",
+      "sponsors",
+      "training"
+    ],
+    "kind": "pain-point"
+  }
+]

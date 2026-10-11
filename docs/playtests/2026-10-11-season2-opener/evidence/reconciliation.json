@@ -1,0 +1,104 @@
+{
+  "at_utc": "2026-10-11T07:42:32.726856+00:00",
+  "source_head": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "68d1cb1ff58813416eb23c92caf94d1c8046e7286e111fa4682155ad7e778663",
+  "save_after_sha256": "b5fb5bccea5e89a0741aa9e762bfffc93f82969695cd81f05203ed2c880e54f2",
+  "before_decisions": 104,
+  "after_decisions": 107,
+  "new_decisions": [
+    {
+      "index": 104,
+      "season": 2,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "measured",
+        "event_id": "4d09a8049f293b2b"
+      },
+      "source": "web"
+    },
+    {
+      "index": 105,
+      "season": 2,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s2w1m2am",
+        "focus_target": "",
+        "map_control": "",
+        "n_dials": "0",
+        "one_match_lineup": "False",
+        "opponent": "team_sahara_compass",
+        "pace": "",
+        "site_focus": "",
+        "starter_ids": "[]",
+        "team_talk": "",
+        "util_discipline": ""
+      },
+      "source": "web"
+    },
+    {
+      "index": 106,
+      "season": 2,
+      "week": 1,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 23,
+  "snapshots_after": 24,
+  "old_snapshot_prefix_preserved": true,
+  "new_accepted_coverage": "3/3",
+  "retained_usage_events": 59,
+  "paired_requests": 4,
+  "all_request_statuses": 200,
+  "decision_request_mapping": {
+    "104": {
+      "session_id": "e2a3bff1211ec216b7ca76d20d3f6b3f",
+      "request_id": 11
+    },
+    "105": {
+      "session_id": "e2a3bff1211ec216b7ca76d20d3f6b3f",
+      "request_id": 22
+    },
+    "106": {
+      "session_id": "e2a3bff1211ec216b7ca76d20d3f6b3f",
+      "request_id": 25
+    }
+  },
+  "save_request": 30,
+  "event_counts": {
+    "session_start": 2,
+    "view": 4,
+    "visible_time": 44,
+    "session_end": 1,
+    "attempt": 4,
+    "result": 4
+  },
+  "outcome": "Lost Lotus7-13; neutral plan consumed; mechanical/light and rest practice causality visible",
+  "local_tests_launched": false,
+  "limits": [
+    "Exact Match role failed after badge changed its accessible name; no request/click was emitted.",
+    "Flavor choice succeeded while observer waited for the wrong endpoint; original timeout retained and no duplicate choice sent.",
+    "Navigation and Save are outside accepted decisions; coarse view/time does not prove attention or control interaction funnels.",
+    "Complete107-decision report includes104 historical actions, while new usage is scoped to this session.",
+    "Runtime root model/effort not exposed; preserved as unknown."
+  ]
+}

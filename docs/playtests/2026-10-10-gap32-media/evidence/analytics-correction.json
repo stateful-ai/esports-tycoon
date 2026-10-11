@@ -1,0 +1,48 @@
+{
+  "observations_preserved": true,
+  "rows": 8,
+  "observation_fields_unchanged": [
+    "session_id",
+    "step",
+    "started_at_utc",
+    "finished_at_utc",
+    "commit",
+    "working_tree_dirty",
+    "game_version",
+    "model",
+    "effort",
+    "surface",
+    "world_code",
+    "seed",
+    "game_time",
+    "intent",
+    "action",
+    "expected_outcome",
+    "actual_outcome",
+    "result",
+    "evidence"
+  ],
+  "changed_annotations": [
+    {
+      "step": "7",
+      "field": "analytics_status",
+      "before": "not_instrumented",
+      "after": "recorded"
+    },
+    {
+      "step": "7",
+      "field": "analytics_evidence",
+      "before": "No accepted decision for Save/navigation; retained usage save attempt/result and view events, with independent persisted media readback",
+      "after": "Browser usage: retained Save attempt/result and coarse views; Save is outside accepted decisions. Persisted media readback independently verifies history. See evidence/audit.json session-qualified request pairs."
+    }
+  ],
+  "original_csv_sha256": "8dd3d955e8c602cf3307e09c9053917208b2c48ca7bf6ae31a17e7e7e24f6975",
+  "corrected_csv_sha256": "088ae6814acd602f034bdbc9bc84bb811ca4ccbc2793d600a8a1118ca77477bd",
+  "request_pair_key": [
+    "session_id",
+    "request_id",
+    "target"
+  ],
+  "session_qualified_pairs_verified": 3,
+  "qualification": "Usage captured Save recovery; Save is not an accepted campaign decision. Coarse retained views do not prove exact intent or a full funnel."
+}

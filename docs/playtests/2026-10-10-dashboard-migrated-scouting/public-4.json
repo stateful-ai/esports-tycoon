@@ -1,0 +1,36 @@
+{
+  "readiness": {
+    "opponent_id": "team_rust_belt_gaming",
+    "assigned": true,
+    "source": "Standing pro lane",
+    "progress": 0,
+    "playbook": 0,
+    "measured": false,
+    "ready": false,
+    "badge": "Scouting assigned",
+    "status": "Assigned",
+    "title": "Coverage assigned to Rust Belt Gaming",
+    "copy": "Standing pro lane covers this fixture. No measured intel yet; coverage builds when the week resolves.",
+    "tone": ""
+  },
+  "scout": {
+    "target": null,
+    "target_name": null,
+    "progress": 0,
+    "cap": 1,
+    "readiness": {
+      "opponent_id": "team_rust_belt_gaming",
+      "assigned": true,
+      "source": "Standing pro lane",
+      "progress": 0,
+      "playbook": 0,
+      "measured": false,
+      "ready": false,
+      "badge": "Scouting assigned",
+      "status": "Assigned",
+      "title": "Coverage assigned to Rust Belt Gaming",
+      "copy": "Standing pro lane covers this fixture. No measured intel yet; coverage builds when the week resolves.",
+      "tone": ""
+    }
+  }
+}

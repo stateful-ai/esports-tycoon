@@ -1,0 +1,39 @@
+[
+  {
+    "index": 63,
+    "season": 1,
+    "week": 14,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1w14m1am",
+      "focus_target": "",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "True",
+      "opponent": "team_vanguard",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[\"fa_0\",\"apex\",\"echo\",\"fa_13\",\"vortex\"]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 64,
+    "season": 1,
+    "week": 14,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

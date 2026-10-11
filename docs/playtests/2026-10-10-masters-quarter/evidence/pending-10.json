@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-masters-quarter",
+  "step": 10,
+  "started_at_utc": "2026-10-10T23:49:26.016+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "offline_audit",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W18 playoffs",
+  "intent": "Reconcile savedquarterfinal decisions separatelyfrombrowserusage and preserve findings",
+  "action": "Audit exactprefix/threechoices/participants/recovery/cash, export isolatedreports, recordflywheel and stoponlyowned8513server",
+  "expected_outcome": "3/3 choices match old72+16snapshotprefix, final75+17entries; four/five pairedrequests separately includeSaves, actualretainedcountwithoutguess; bankdelta509703 matchesreportnet andsourcefixture unchanged.",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

@@ -1,0 +1,33 @@
+{
+  "head_before": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+  "unchanged_files": {
+    "docs/playtests/2026-10-10-flavor-feedback/actions.csv": "1889794d7fea4d066ee3166ee8b4e218ec848dca4924de907db3487f7ecada41",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/01-public-before.json": "00cd088092aec1cff3b54f54e92b9cd0c385638b3912f5d5bf60583730976dff",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/03-settlement-public-readback.json": "b7ce67a67ec32ad5a38f3f6dfae9fcf82027dfbf1546ee8f2cbe4caa9e7da7b8",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/07-switch-readback.json": "4d3d908556bae7ce5846021be164a88917e9671a088ee3fc8886e25148f59cf9",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/08-corrected-settlement.json": "cda4e0611607a341b0ca53f8202fb8905890c729c1f5991faab3eefcc3de0442",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/audit.json": "1283fe75b53c670299f62ca694af500ef925db778dbba57956836e6e723eaed0",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/decision-indexed.json": "50780870d14f820c690308c16349854a8122cba2ce56d67efa74ec2d8a5f4432",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/decision-report.txt": "28f17be9b44176f6868eea44c66d535bb74f4e8cf1d6ffea7c3ee6624fd190dc",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/flywheel-after.json": "b4bf9e933bac871d86506da46fa3d73354f240198d023e32e67cbf042a5b14ef",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/flywheel-before.json": "222be977a25977e35ef8773eb13ae0ff651d9d6cc9828839104e0a6075f86e42",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/freeze-manifest.json": "ff298353396d02a614c706f7e4639d5dc899d8d151aa16a831bd015f9a0403a5",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/full-result.json": "85a1e2e941e275e06f221d35d3bff75aebea94229a09bb78fe8ceb36ac17cbdf",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/request-pairs.json": "aae4ff3a19d1e9ade5e22759af8ebfdbd3f0def1f134f07b7c3bd7ef743f01ab",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/audit.json": "8a051fe734eff008b53374dd4533b8a2fe0aba6ce5a1f9493ae251e4a58abab5",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/decision-indexed.json": "44d0501c589c48736d74bcfa8ec38e6f874278a3523b6e25f358ab27e280f49d",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/decision-report.txt": "cdecbe0d45156f36d77457eeb935ecc479524bcb3d879721b5f8e013a5af6eb1",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/request-pairs.json": "17aea5d9261421d90dcc9ca6370caf169412c7e0fec740572597fc48abfccc7a",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/usage-report.txt": "bd1418178d198edacf7e6c10967df28e73a4d78e8f6c3a22bf3a475d7865ea0e",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/review/usage.0.jsonl": "ca855e8478790c65f79ff16f15e13ec7af1a231280c46481d38ab4144aecc410",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/superseded-full-result.json": "6ad15e3b667b1b5d816b4a369b43616d5ea882133973643d0266dc0b10474e90",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/superseded-interruption.json": "d7e749d0df89dfa963b03a7c61fb7ff4d62de613171f1ad2a3b347c4c580ec95",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/usage-report.txt": "74c8362344166540e53feb6ddeb9bbcfcf2416ae24bfdb41e50dc1e35a782989",
+    "docs/playtests/2026-10-10-flavor-feedback/evidence/usage.0.jsonl": "4ef2d3ab779ff80d404326f1a13bab070b135fda5322acc7f160323878f9d95e",
+    "docs/playtests/2026-10-10-flavor-feedback/report.md": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+    "docs/playtests/actions.csv": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+    "docs/playtests/integration-pr370/source-and-history-qualification.json": "b37b5ad994ec0753d64bafddf8f13918753852453d6a8025ea0c5ed0961f0c95"
+  },
+  "count": 26,
+  "canonical_actions_untouched": true
+}

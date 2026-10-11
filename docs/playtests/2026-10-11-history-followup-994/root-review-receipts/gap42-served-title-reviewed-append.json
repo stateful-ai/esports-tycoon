@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-11T08:33:35.905587+00:00",
+  "rows_before": 990,
+  "rows_after": 994,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "ac0f0eaea2b5059e2c65d0520d890a32ebc047b58c4a9b456d83a59bd692ef0f",
+  "sha256_after": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631",
+  "sources": [
+    {
+      "path": "docs\\playtests\\2026-10-11-flavor-served-title\\actions.csv",
+      "rows": 4,
+      "sha256": "d2764f38768adfc2548c512d41df7e48a269daed73d2b8393c37dea71d2b4046"
+    }
+  ],
+  "publication": "Primary working tree only; append requires a separately reviewed history publication. Previously merged PR362 preserves its original 597-row snapshot."
+}

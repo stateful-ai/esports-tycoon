@@ -1,5 +1,7 @@
 # Preserve whitespace inside quoted source stage labels in the research CSV.
 data/research/war-history/map_context.csv -whitespace
+# Immutable gap37 receipts: committed bytes must match the recorded SHA256s.
+docs/playtests/gap37-between-map-debrief/** -text
 
 # Preserve the exact captured Windows receipt bytes for away-recap acceptance.
 docs/playtests/2026-10-11-away-recap/evidence/** -text -whitespace

@@ -1,0 +1,35 @@
+{
+  "attempts": 2,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/save": 1,
+    "session_start:": 2,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "visible_time:dashboard": 2,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "2a85e69f9c126b6b1b290e033f0d93a1": 28962,
+    "4a79330c3d46f68a1e0e914040d89c8a": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 2,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 29818,
+    "lobby": 346
+  },
+  "world_events": {
+    "26UHC": 14
+  }
+}

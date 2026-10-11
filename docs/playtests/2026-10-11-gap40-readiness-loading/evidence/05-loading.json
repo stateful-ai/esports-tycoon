@@ -1,0 +1,26 @@
+[
+  {
+    "rendered_title": "SEASON 2 TRANSITION",
+    "title": "Season 2 transition",
+    "detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+    "visible": true,
+    "server_copy": {
+      "label": "Start Season 2",
+      "loading_title": "Season 2 transition",
+      "loading_detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+      "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+    }
+  },
+  {
+    "rendered_title": "SEASON 2 TRANSITION",
+    "title": "Season 2 transition",
+    "detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+    "visible": true,
+    "server_copy": {
+      "label": "Start Season 2",
+      "loading_title": "Season 2 transition",
+      "loading_detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+      "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+    }
+  }
+]

@@ -1,0 +1,101 @@
+{
+  "verified_at_utc": "2026-10-11T08:41:48.594708+00:00",
+  "readiness": {
+    "historical_source": "1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+    "before_after1917_freeze_equal": true,
+    "accepted_indices": [
+      100,
+      101
+    ],
+    "successful_pairs": [
+      {
+        "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+        "request_id": 7,
+        "target": "/api/actions/advance",
+        "status": 200
+      },
+      {
+        "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+        "request_id": 20,
+        "target": "/api/actions/advance",
+        "status": 200
+      },
+      {
+        "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+        "request_id": 7,
+        "target": "/api/actions/advance",
+        "status": 200
+      },
+      {
+        "session_id": "06c473a6992042090a7a6224ef258675",
+        "request_id": 10,
+        "target": "/api/actions/save",
+        "status": 200
+      }
+    ],
+    "unmatched_attempt": [
+      {
+        "session_id": "fd818515e5f444436bae44e7240b24bd",
+        "request_id": 7,
+        "target": "/api/actions/advance"
+      }
+    ],
+    "failed_state_usage_event_retained": false,
+    "actual_browser_state_connection_refusal_retained": true,
+    "distinct_backend_pids": true,
+    "no_extra_advance_on_retry": true,
+    "state_poll_count_stable_2800ms": true,
+    "all_three_loading_DOM_observations_equal_server_copy": true,
+    "private_whole_save_reproduction_claim": false
+  },
+  "served_title": {
+    "accepted_index": 55,
+    "accepted_records": 1,
+    "prior55_action_prefix_and_snapshots": "Original audit/root-review receipt only; complete private owner saves excluded",
+    "successful_pairs": [
+      {
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "request_id": 10,
+        "target": "/api/actions/flavor_event",
+        "status": 200
+      },
+      {
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "request_id": 26,
+        "target": "/api/actions/save",
+        "status": 200
+      }
+    ],
+    "usage_events": 18,
+    "unmatched_attempts": 0,
+    "served_title": "Community clinic: a small group invitation",
+    "deterministic_response_title": "A community clinic asks for Team Nexus",
+    "raw_baseline_equality": false,
+    "original_migration_qualified_equality": true,
+    "migration_loader_rerun": false,
+    "live_LLM_generation_proven": false,
+    "dirty_source_snapshots": [
+      {
+        "path": "src/esports_sim/web/static/app.js",
+        "raw_snapshot_path": "docs/playtests/2026-10-11-flavor-served-title/source/src/esports_sim/web/static/app.js",
+        "sha256": "db156263d04723885f266fa05ce8c79d87535b2367ff7085d4faf3ccfde26612",
+        "bytes": 407890,
+        "historical_parent_dirty": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+        "final_git_ref": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2:src/esports_sim/web/static/app.js",
+        "git_sha256": "3d80cfffee3356c9eeb6aeaf51562c7e138f158bea0baa1f583708b63f9e96d8",
+        "qualification": "Original dirty two-path snapshots and final Git equality. Remaining617 integrated source static qualification is retained root-review evidence, not a new broad before/after runtime freeze."
+      },
+      {
+        "path": "tests/flavor_feedback_check.cjs",
+        "raw_snapshot_path": "docs/playtests/2026-10-11-flavor-served-title/source/tests/flavor_feedback_check.cjs",
+        "sha256": "f4693a6ca44d015f2643a174d71915bccdd6653f2e955d23dc840be73d60500e",
+        "bytes": 3487,
+        "historical_parent_dirty": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+        "final_git_ref": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2:tests/flavor_feedback_check.cjs",
+        "git_sha256": "97af6250ff34cbf9daff22ee4d42b2b9dfd6ecddf8e41f5eb5fd67b4b0f2a9fd",
+        "qualification": "Original dirty two-path snapshots and final Git equality. Remaining617 integrated source static qualification is retained root-review evidence, not a new broad before/after runtime freeze."
+      }
+    ]
+  },
+  "execution": "Read-only original JSON/JSONL/hash/Git inspection; no tests, gameplay, archived helper or migration loader execution"
+}

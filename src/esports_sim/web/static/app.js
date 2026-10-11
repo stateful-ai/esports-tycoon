@@ -1452,14 +1452,9 @@ async function clubOps(v, sub) {
       const activeGrid = el("div", "row", null);
       activeGrid.style.cssText = "display:flex; flex-wrap:wrap; gap:12px;";
       for (const prom of active) {
-        const duration = prom.initial_duration || 1;
-        const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+        const assessment = prom.play_time_assessment;
+        const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
         const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
-        
-        let progressInfo = "";
-        if (prom.promise_type === "play_time") {
-          progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-        }
         
         const card = el("div", "card ws-4", null);
         card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
@@ -1467,10 +1462,14 @@ async function clubOps(v, sub) {
           `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
           `<span style="font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${esc(humanize(prom.promise_type))}</span>` +
         `</div>` +
-        `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
-        `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
-          `<span>Progress</span><span>${prom.weeks_left} weeks left</span>` +
-        `</div>` +
+        (assessment ?
+          `<div class="promise-assessment" style="font-size:0.9em; margin:6px 0;">` +
+            `<p>${esc(assessment.target_label)}</p><p>${esc(assessment.progress_label)}</p>` +
+            `<p>${esc(assessment.deadline_label)}</p><p>${esc(assessment.next_evaluation_label)}</p>` +
+            `<p class="muted">${esc(assessment.counting_label)}</p></div>` :
+          `<div style="font-size:0.9em; margin:6px 0;">Target: ${esc(prom.target_value ?? "N/A")}</div>` +
+          `<div class="muted">${prom.weeks_left} weeks left</div>`) +
+        `<div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>` +
         `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;">` +
           `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
         `</div>`;
@@ -2425,8 +2424,9 @@ async function dashboard(v) {
   // its own ledger rendering.
   {
     const yc = lmr && lmr.contested ? lmr.your_calls : null;
+    const seriesNotes = lmr && lmr.contested ? (lmr.series_notes || []) : [];
     const ledger = s.decision_ledger || [];
-    if (yc || ledger.length) {
+    if (yc || seriesNotes.length || ledger.length) {
       const card = el("div", "card");
       card.appendChild(el("h2", "", "Your calls"));
       if (yc) {
@@ -2468,14 +2468,23 @@ async function dashboard(v) {
         if (yc.prep) {
           const bits = [];
           if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
-          if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
-          if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+          if ((yc.prep.maps_played || []).length) bits.push(`stored book on ${yc.prep.maps_played.map(esc).join(", ")} (played)`);
+          if ((yc.prep.maps_missed || []).length) bits.push(`stored book on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
           if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
-          card.appendChild(el("span", "es-scout-lab muted", "Last match"));
+          card.appendChild(el("span", "es-scout-lab muted", "Last match · Initial plan"));
           card.appendChild(yl);
         }
+      }
+      if (seriesNotes.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "Last match · Series notes"));
+        card.appendChild(el("p", "muted", "Recorded calls for both teams, including applied between-map responses."));
+        const notes = el("div", "es-review-calls");
+        for (const note of seriesNotes) {
+          notes.appendChild(el("div", "es-review-call", `${esc(note)}`));
+        }
+        card.appendChild(notes);
       }
       if (ledger.length) {
         card.appendChild(el("span", "es-scout-lab muted", "Decisions settled"));
@@ -7624,10 +7633,10 @@ const FinancesTab = ({ onOpenBrand }) => {
                       <div>
                         <b>
                           ${d.kind === "field_rookie" ? html`
-                            Play <span data-pid=${d.player_id}>${d.player_name}</span>
-                            against <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Play${" "}<span data-pid=${d.player_id}>${d.player_name}</span>${" "}
+                            against${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           ` : html`
-                            Beat rivals <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Beat rivals${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           `}
                         </b>
                       </div>
