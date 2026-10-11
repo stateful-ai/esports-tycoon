@@ -1,0 +1,17 @@
+{
+  "csv_git_blob_unchanged": "78f8973cdd9bd4ada5599a42632bf8a329693238",
+  "all_csv_fields_unchanged": true,
+  "first_19_fields_unchanged": true,
+  "published_raw_files": 24,
+  "all_raw_hashes_verified": true,
+  "tested_source_paths": 425,
+  "narrative": {
+    "path": "src/esports_sim/manager/narrative.py",
+    "tested_windows_sha256": "eb2519ba0aba8e7633804c9833de7c1455ffb0284af3b7362fbe584d9754fc9d",
+    "git_blob": "af72b39e012be28d460c5eabaf19486d93dcdaa5",
+    "git_bytes_sha256": "0b7cce9589b0e7e0a231b1f11757d612b2140290e6d9508d50845c426527337c",
+    "git_filter_equivalent": true
+  },
+  "retained_sidecar_lines": 42,
+  "qualification": "Publication audit only; no new gameplay, no report rerun, no new subprocess-exit evidence"
+}

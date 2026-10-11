@@ -1,0 +1,160 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 8 · Regular — Team Nexus 2,441,133 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 16"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Dashboard S2 · W8 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - text: 2–5 Record -19 rd
+  - button "6th League Americas"
+  - text: L4 Streak
+  - button "2,441,133 cr Balance"
+  - text: 65 Morale
+  - button "78 Condition"
+  - text: W8 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - text: Plan needed Scout elsewhere 1 load risk
+  - button "Match day briefing ▸"
+  - text: Team Nexus 6th · 2–5 VS S2 · W8 Americas League Best of 1 vs Mateo Costa · Unshakeable Sahara Compass 5th · 3–4 Today's prep Sahara Compass in W8 Set the five, build the plan, sharpen the week. Assistant coach Review Review the suggested five
+  - paragraph:
+    - button "Apex"
+    - text: rate among your best available options. Confirm the five and any map overrides.
+  - button "Open roster ▸"
+  - text: Head coach Priority Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - text: Analyst Unassigned Put the book on Sahara Compass
+  - paragraph: Your scout is not assigned to Sahara Compass. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - text: Performance Mental Ease the load, keep growth targeted
+  - paragraph: Balance individual intensity against match readiness, then choose the team focus for the week.
+  - button "Development plans ▸"
+  - text: "Match intelligence Opponent read, your stakes, maps and run-in Head-to-head this season: 0–1 (you trail)"
+  - paragraph: Team Nexus arrive on a 4-match losing run. Sahara Compass won the season's only prior meeting. A win would haul Team Nexus back toward the playoff places. Watch Frostecho — Sahara Compass's form pick at 1.20.
+  - text: Map
+  - figure "ascent":
+    - img "ascent"
+    - text: ascent
+  - text: Run-in W8 Sahara Compass W9 Nordic Frost W10 Kathmandu Apex W11 Saracen Guard W12 Rust Belt Gaming Sahara Compass — last 5 W L W L L Danger men
+  - button "Wraithmark"
+  - text: Sentinel ~76
+  - button "Frostecho"
+  - text: Duelist ~70
+  - button "Cipherlock"
+  - text: Controller ~61 Your map pool & veto Ban Lotus (Sahara Compass 67% · you 0%) Pick Ascent (you 100% · them 0%) Team Nexus — season map record (wins / played) Ascent 100% 1/1 Bind 25% 1/4 Lotus 0% 0/2
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Lost to Team Vanguard 9-13. Standout: Vortex (1.72). Off-colour: Ghost (0.60)."
+  - paragraph: “4 straight losses have put Team Nexus's approach under review.”
+  - text: L vs Team Vanguard 9–13 ★ POTM
+  - button "Slice"
+  - 'img "Aim Demon: raw mechanical menace"'
+  - text: cold
+  - button "Ghost"
+  - text: got cold mid-map (13-round run). What worked
+  - button "Vortex carried"
+  - 'img "Aim Demon: raw mechanical menace"'
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - text: Team-high 1.72 average rating. Attack is clicking 7/12 attack rounds won (58%). Where it broke down Defense is leaking 2/10 defense rounds won (20%).
+  - button "Ghost off-colour"
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - 'img "Choker: tightens up when it matters most"'
+  - text: 0.6 average rating across the series. Young with room (proj. 86–99) — a development call, not a bench. What to tweak ▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup. ▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Rust Belt Gaming 7 0 +59":
+        - cell "1"
+        - cell "Rust Belt Gaming"
+        - cell "7"
+        - cell "0"
+        - cell "+59"
+      - row "2 Team Vanguard 6 1 +35":
+        - cell "2"
+        - cell "Team Vanguard"
+        - cell "6"
+        - cell "1"
+        - cell "+35"
+      - row "3 Saracen Guard 5 2 +22":
+        - cell "3"
+        - cell "Saracen Guard"
+        - cell "5"
+        - cell "2"
+        - cell "+22"
+      - row "4 Baltic Meridian 3 4 -6":
+        - cell "4"
+        - cell "Baltic Meridian"
+        - cell "3"
+        - cell "4"
+        - cell "-6"
+      - row "5 Sahara Compass 3 4 -22":
+        - cell "5"
+        - cell "Sahara Compass"
+        - cell "3"
+        - cell "4"
+        - cell "-22"
+      - row "6 Team Nexus 2 5 -19":
+        - cell "6"
+        - cell "Team Nexus"
+        - cell "2"
+        - cell "5"
+        - cell "-19"
+  - text: Last result L Team Vanguard 9–13
+  - img "lotus"
+  - paragraph: "World #32 · Rep 66 · Fans 341.6K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: Team moment
+  - heading "A community clinic asks for Team Nexus" [level=3]
+  - paragraph: A local organizer can put Team Nexus in front of a youth clinic this week. It is good visibility, but it takes time away from the routine.
+  - button "Send the full roster"
+  - button "Send a small group"
+  - button "Protect the practice schedule"
+  - text: ▸ Scout report ready — Slice ▸ No game plan set for W8 ▸ 16 unread inbox messages ▸ Coach proposed a scrim plan Match · Prep ▸ make the regional playoffs Sponsor · At Risk · currently 6th of 8 ▸ make the regional playoffs Sponsor · At Risk · currently 6th of 8
+  - heading "Your calls" [level=2]
+  - text: Last match · Initial plan ▸ Dressed
+  - button "Hollowlock"
+  - text: "over the suggested five — went 0.69 ▸ Sat from the suggestion:"
+  - button "Apex"
+  - text: Last match · Series notes
+  - paragraph: Recorded calls for both teams, including applied between-map responses.
+  - text: "VGD: targeting Vortex."
+  - heading "News" [level=2]
+  - text: "[S2 W7] Ghostline part with Veer and appoint TK9 after a 6-match losing streak. [S2 W7] Ciphermark (Yucatan Ceibas) passes 100 kills this season. [S2 W7] Slystorm (Yucatan Ceibas) passes 100 kills this season. [S2 W7] Ciphersurge (Tokyo Drift Six) passes 100 kills this season. [S2 W7] Frostpulse (Taipei Circuit) passes 100 kills this season. [S2 W7] Grimwing (Solar Flare) passes 100 kills this season. [S2 W7] Lunardash (Saracen Guard) passes 100 kills this season. [S2 W7] Cipherflare (Patagonia Sur) passes 100 kills this season. [S2 W7] Ashsnap (Patagonia Sur) passes 100 kills this season. [S2 W7] Voltshot (Patagonia Sur) passes 100 kills this season. [S2 W7] Nightlock (Outback Sentinels) passes 100 kills this season. [S2 W7] Hollowstorm (Nova Rift) passes 100 kills this season. On this day 1yr Team Vanguard win Champions."
+- text: league · Season 2 · Week 7 Team Nexus vs Team Vanguard Lotus 9–13 Defeat League position Holding 6th of 8
+- button "Continue"
+- button "Full report"
+- text: click anywhere to skip

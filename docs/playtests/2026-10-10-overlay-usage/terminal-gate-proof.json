@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n2"
+  ],
+  "terminal_summary": "1262 passed in 6596.45s (1:49:56)",
+  "receipt": {
+    "exit_code": 0,
+    "source_freeze_unchanged": true,
+    "writer_pid": 12516,
+    "pytest_pid": 30704,
+    "finished_at": 1791666558.1122148
+  },
+  "frozen_path_count": 610,
+  "frozen_source_unchanged_at_publication": true,
+  "artifact_sha256": {
+    "gate-receipt.json": "210d754422e5b153a0c2f2665cd6fa6a6a8d0690379d4f83f9bbcc2b088d7db7",
+    "full-pytest.log": "4996d580a7ea2472e9998545d56ade4f9ca13cfdc612834e4b7ec3a010d0174e",
+    "source-freeze.json": "dc9c778f96a555ffe9ecdb956113ce08f21831ad2c5609b667b91426c8f411ae",
+    "source-freeze-after.json": "dc9c778f96a555ffe9ecdb956113ce08f21831ad2c5609b667b91426c8f411ae"
+  },
+  "acceptance_rows": 5
+}

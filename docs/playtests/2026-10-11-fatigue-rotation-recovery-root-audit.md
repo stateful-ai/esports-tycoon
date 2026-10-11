@@ -1,0 +1,11 @@
+# fatigue-rotation-recovery independent receipt review
+
+Played `ba3f5894af70fc6616e5ceccb71982fcb27d47e1`, game0.0.1, copied26UHCseed2038, actual agent GPT-6.1-sol/medium. 12 original rows retain all252 fields; separate root observation13 uses model/effort unknown (not exposed). Root verified all51 safe original artifacts and manifest, source425/index/playedGit, full private baseline/final, original128 decisions and28 snapshots. Root viewed retained gameplay/profile screenshots. No local tests, syntax checks, gates or analytics commands ran.
+
+Accepted decision coverage: 5/5. Retained request/result pairs: 6/6, zero unmatched. Usage kinds: {"attempt": 6, "interaction": 1, "result": 6, "session_end": 1, "session_start": 2, "view": 7, "visible_time": 33}. These bounded best-effort receipts do not establish complete funnels or attention. No favorable-performance causal effect, counterfactual, itemized historical Apparel payment or complete usage funnel is established. Profile/keyboard inspection events absent on played ba3.
+
+One week S2W6→W7: effective and actual Nexus five vortex/ghost/fa_13/echo/fa_0, Apex0maps/Hollowlock1. Apex37→38(event)→62 and Echo29→30→41; other six training settings retained. Nexus lost5–13, no favorable-performance causation. Event+3500cash separate from actual week127463income/52400expense/+75063bank. Active Apparel5900 remains21→20weeks; individual past-week payment not exposed. Immutable correction8 fixes row6cash, correction9 fixes row7score and row8game-time. All12 originalrows remain unchanged.
+
+Own browser/server closed; user8421 untouched. Flywheel two learnings/one pain retained. Safe publication adds original manifest and root audit/correction/index; excludes private saves/auth/env/server logs/private harness. Finite PR4101079 is unchanged; these newly audited receipts are a later append, not evidence that PR410 has published.
+
+[Original shard](2026-10-11-fatigue-rotation-recovery/actions.csv), [root observation](2026-10-11-fatigue-rotation-recovery/root-correction.csv), [raw proof](2026-10-11-fatigue-rotation-recovery/root-audit.json), [manifest](2026-10-11-fatigue-rotation-recovery/root-evidence-manifest.json), [agent report](2026-10-11-fatigue-rotation-recovery/report.md).

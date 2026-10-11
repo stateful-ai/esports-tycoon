@@ -7,6 +7,8 @@ pytest.importorskip("fastapi")
 from fastapi import HTTPException
 
 from esports_sim.manager.campaign import new_campaign
+from esports_sim.manager.decision_env import HeadlessManagerEnv
+from esports_sim.manager.mentorship import pair_mentorship
 from esports_sim.manager.state import GameState, ManagerSeat
 from esports_sim.web import server
 
@@ -109,3 +111,30 @@ def test_clear_without_pair_remains_successful_and_records(mentor_world):
     assert_record(gs, tid, protege, "")
     assert protege not in gs.mentorships
     assert game.dirty
+
+
+def test_web_clear_reassign_replays_with_identical_lifecycle_and_save(mentor_world, tmp_path):
+    gs, game, tid, protege, mentor = mentor_world
+    # Choose a pair admitted by both existing contracts. The manager mask
+    # keeps older/higher-rated eligibility; web keeps veteran/youth ages.
+    for pid, ability in [(mentor, 90.0), (protege, 55.0)]:
+        gs.players[pid].attributes = {key: ability for key in gs.players[pid].attributes}
+    assert pair_mentorship(gs, protege, mentor)
+    gs.mentorship_progress[protege] = 95.0
+    replay = gs.model_copy(deep=True)
+    first_record = len(gs.action_log)
+    assert server.mentor_action(server.MentorBody(protege_id=protege))["ok"]
+    assert server.mentor_action(server.MentorBody(protege_id=protege, mentor_id=mentor))["ok"]
+    env = HeadlessManagerEnv(replay, game.gd, team_id=tid, record_actions=False)
+    for record in gs.action_log[first_record:]:
+        env.step({"kind": record.kind, "params": record.params})
+    assert replay.mentorships == gs.mentorships == {protege: mentor}
+    assert replay.mentorship_progress == gs.mentorship_progress == {protege: 0.0}
+    # Action source attribution is already recorded by the web; a replay
+    # retains those records instead of generating agent-source duplicates.
+    replay.action_log = list(gs.action_log)
+    assert replay.model_dump_json() == gs.model_dump_json()
+    game.save(force=True)
+    replay_path = tmp_path / "replayed.json"
+    replay.save(replay_path)
+    assert GameState.load(replay_path).model_dump_json() == GameState.load(game.save_path).model_dump_json()

@@ -1,0 +1,23 @@
+{
+  "row6": {
+    "field": "actual_outcome cash",
+    "original_bank": 2293871,
+    "actual_bank": 2291371,
+    "original_delta": 6000,
+    "actual_delta": 3500,
+    "correction_row": 8
+  },
+  "row7": {
+    "field": "actual_outcome score",
+    "original": "6-13",
+    "actual": "5-13",
+    "correction_row": 9
+  },
+  "row8": {
+    "field": "game_time",
+    "original": "S2 W6",
+    "actual": "S2 W7",
+    "correction_row": 9
+  },
+  "finalized_rows_edited": false
+}

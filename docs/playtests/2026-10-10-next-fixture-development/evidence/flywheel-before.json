@@ -1,0 +1,151 @@
+[
+  {
+    "id": "esports-playtest-0139",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration gap escaped initial coverage tests",
+    "problem": "First regression suite covered only modern pro directive",
+    "solution": "Add actual schema32 migration/load cases including negative targets",
+    "lesson": "Legacy values need their own acceptance and contract cases",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0138",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration guidance survives persistence",
+    "problem": "Migration clears old target but keeps the active lane",
+    "solution": "Use browser Save and native restart public readback in two isolated worlds",
+    "lesson": "Initial in-memory guidance is insufficient for persistence acceptance",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0137",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migrated pro targets still cover the fixture",
+    "problem": "Migrated rival and match assignments live outside the deep-dive slot",
+    "solution": "Recognize exact current rival or match value in the pro lane",
+    "lesson": "Coverage follows effective assignment, not slot presence",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0136",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement receipts have a browser-session lifetime",
+    "problem": "A short toast cannot support deliberate review of consequences",
+    "solution": "Keep a dismissible receipt inside existing Needs you card until page reload and show changed meter names",
+    "lesson": "Receipt survives Dashboard refresh but deliberately ends on browser reload; saved decision and actual meter changes persist. Browser automation argument failure is separately logged rather than treated as an HTTP rejection",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0135",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Reporting-only flavor feedback can preserve complete state",
+    "problem": "Nominal outcome effects may be clamped or combined with culture consequences",
+    "solution": "Snapshot public meters before and after existing resolution and compare entire saved state to exact64 baseline",
+    "lesson": "Actual deltas and no-op rows can explain settlement while retaining byte-equivalent GameState/mechanics; future choices continue to hide outcomes",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0134",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor feedback needs realized social deltas",
+    "problem": "The clinic small-group narrative does not say which meter moved",
+    "solution": "Resolve the real W12 choice through the browser and render server-authored before/after deltas",
+    "lesson": "The limited-turnout result applied only team sentiment59.1to58.1; no selected-player or small-group roster mechanics exist in this outcome",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-feedback baseline64ee15f browser8493 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "flavor",
+      "feedback",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0133",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement hides realized social effect",
+    "problem": "The clinic resolves with narrative feedback only and unchanged headline indicators",
+    "solution": "Capture actual200 response and later public screens; separately audit the saved social change and assign scoped reporting-only gap28",
+    "lesson": "Narrative result alone does not show the realized sentiment change. Preserve future-outcome secrecy while exposing already-applied effects after choice",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0132",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Individual plan updates preserve their other settings",
+    "problem": "Verify focus and intensity independently after two UI requests",
+    "solution": "Read selected Mechanical/Normal/Apex values after explicit Save and reload, then compare every persisted player record",
+    "lesson": "The two accepted dev-plan records preserve mentor and all other player fields; player plans match their own IDs",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]

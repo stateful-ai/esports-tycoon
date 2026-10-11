@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-11T08:28:27.734853+00:00",
+  "rows_before": 982,
+  "rows_after": 990,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "d9242dc4f81aa6bc98b78c130a3e2e0910cfad49bf93a6ad623c70e0762722d4",
+  "sha256_after": "ac0f0eaea2b5059e2c65d0520d890a32ebc047b58c4a9b456d83a59bd692ef0f",
+  "sources": [
+    {
+      "path": "docs\\playtests\\2026-10-11-gap40-readiness-loading\\actions.csv",
+      "rows": 8,
+      "sha256": "7bc66bf01e80012a2b9a34ae220ed15a3237fe98cc4a365fa0c053af910087d8"
+    }
+  ],
+  "publication": "Primary working tree only; append requires a separately reviewed history publication. Previously merged PR362 preserves its original 597-row snapshot."
+}

@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"status\":200,\"body\":{\"ok\":true,\"message\":\"World saved.\"}}\n### Ran Playwright code\n```js\nawait (async (page) => { const receipt = page.waitForResponse(r => r.url().endsWith('/api/actions/save') && r.request().method() === 'POST'); await page.locator('#save-btn').click(); const r = await receipt; return {status:r.status(),body:await r.json()}; })(page);\n```"
+    }
+  ]
+}

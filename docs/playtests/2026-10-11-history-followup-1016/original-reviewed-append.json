@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-11T10:02:02.178693+00:00",
+  "old_rows": 1003,
+  "new_rows": 1016,
+  "old_sha256": "33c7b39e80f3cc1d00355f01ba607ae4b9796cfc6f7f627811be07f87c328020",
+  "new_sha256": "17ceb1060a97fe258df2f5b9413829a09d0191d8527b2b6e988741fa14bebfff",
+  "raw_prefix_preserved": true,
+  "all21_columns_exact": true,
+  "appended_session": "2026-10-11-season2-youth-planning",
+  "rows": 13,
+  "primary_only": true,
+  "remote_publication_pending": true,
+  "finite394_and396_unchanged": true,
+  "flywheel": [
+    "esports-playtest-0237",
+    "esports-playtest-0238",
+    "esports-playtest-0239"
+  ]
+}

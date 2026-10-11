@@ -1,0 +1,157 @@
+[
+  {
+    "id": "esports-playtest-0151",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Series outcome notes require a second results route",
+    "problem": "Find whether a response executed after opening Full report",
+    "solution": "Inspect Season Fixtures and expand Played weeks",
+    "lesson": "Full report shows map counts but the explicit response/substitution notes are in played fixtures. Existing route is functional; this session records discoverability friction without declaring missing implementation.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0150",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Reconcile accepted choices separately from browser usage",
+    "problem": "Measure a saved playoff coaching choice",
+    "solution": "Compare exact IDs and old prefixes against session/request pairs",
+    "lesson": "65->68 decisions and14->15 snapshot entries; three exact web choices matched. Saves are separate usage. Stale refs and bad observer fields did not produce accepted choices.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0149",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Between-map response preserves standing starters",
+    "problem": "Rotate Hollowlock into a playoff series after its opener",
+    "solution": "Save Always Reset with fa_0 in and ghost out; resolve one BO3 and read actual map participants",
+    "lesson": "Ghost opener, Hollowlock maps2/3; series notes in Season Fixtures Played weeks name substitution and reset. Standing five unchanged and both plans consumed. Nexus2-1 is descriptive, not causal proof.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0148",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Final-league stakes and prize reporting omit current context",
+    "problem": "Understand already-secured qualification and a133060bank increase",
+    "solution": "Compare OUT teams and last calendar with preview, then resolved-week report with balances",
+    "lesson": "Gap30 secured seeding assigned. Gap31 missing70000second-place income assigned; separateexisting373omits100upkeep. Current-week projected run-rate explicitly not a historical ledger",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0147",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Decision choices and browser request usage are separate evidence",
+    "problem": "Quantify the controlled rotation without treating saves as decisions",
+    "solution": "Match old prefixes and exact chosen IDs separately from session/request IDs",
+    "lesson": "63->65 accepted decisions and13->14 snapshots; gameplan plus advance matched. Browser retains4success pairs including2Save; read-only overlay coverage still qualified",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0146",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "One-match five is independent of the standing lineup",
+    "problem": "Rest Ghost without permanently dropping him from starters",
+    "solution": "Lock five named players, save/reload, advance once and inspect actual replay participants",
+    "lesson": "Accepted gameplan exact IDs include Hollowlock and exclude Ghost; replay confirms all five, report Hollowlock1map/Ghost0; standing five unchanged and plan consumed. Nexus lost11-13; no causal win claim",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0145",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation development labels expose internal stable IDs",
+    "problem": "Clickable Dev note displays FA0 beside Hollowlock prose and roster",
+    "solution": "Preserve full screenshot/DOM and assign narrow known-player handle serialization/profile-target fix",
+    "lesson": "Current main report lacks dev_suggestion_handle; app falls back to humanizing fa_0. Gap29 assigned GPT6.1-sol/medium, no correction shipped yet. Stale Save reference failure is separate harness friction",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0144",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Coach booking, game plan and weekly development are distinct",
+    "problem": "Track preparation cost without attributing all weekly condition change to it",
+    "solution": "Read booking, save reload and completed preparation report plus weekly source attribution",
+    "lesson": "Normal Retakes consumed its one-fixture booking, saved cost4 and knowledge1.95; Ghost practice+0.37/matches+0.06 while bench Hollowlock recovered67.9->87.9. Condition includes training/recovery and match load",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]

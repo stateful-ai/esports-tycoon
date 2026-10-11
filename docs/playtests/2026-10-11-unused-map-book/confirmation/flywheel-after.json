@@ -1,0 +1,44 @@
+[
+  {
+    "id": "esports-playtest-0189",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Unplayed books can contribute to full preparation",
+    "problem": "Initial unused-book wording implied no contribution",
+    "solution": "Reviewed fixture plan and prep bonus before correcting copy",
+    "lesson": "All scheduled map books are averaged into one edge shared by the played maps; describe map played status without causal use claims.",
+    "confidence": "high",
+    "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0190",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Corrected stored-book attribution verified separately",
+    "problem": "Confirm postreview copy while preserving original intent history",
+    "solution": "Fresh browser Dashboard, independent Prep, Save and byte comparison",
+    "lesson": "Corrected wording retains Preparation prefix and stored-book played status; Ascent session artifact and complete85decision save remain unchanged.",
+    "confidence": "high",
+    "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0191",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Transport vanished between acceptance turns",
+    "problem": "CUA inventory became empty when continuing evidence publication",
+    "solution": "Used explicitly authorized named Playwright CLI session on owned8524",
+    "lesson": "Preserve original candidate receipts and fresh corrected observations separately; no authentication or session registry values need publication.",
+    "confidence": "high",
+    "source": "2026-10-11-stored-map-book-confirmation; gpt-6.1-sol medium; source4bbaa16; copied26UHC seed2038 S1W21; recorded after fresh browser acceptance and save comparison",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  }
+]

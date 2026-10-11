@@ -1,0 +1,33 @@
+{
+  "previous_PR414_head": "072ab427853570ec3758ee72a2a7c8bd30632224",
+  "actual_main_integrated": "8d6315303205e6ebefa425a9015fc5523ccef701",
+  "normal_merge_conflict_paths": [
+    "docs/playtests/actions.csv"
+  ],
+  "real_merge_stage_labels": "ours=prior candidate1120, theirs=actualmain1044; root merge-tree preview used reverse order",
+  "resolution": "Retain exact frozen1120 candidate bytes after proving actualmain1044 is its raw byte prefix and every21field row is unchanged.",
+  "raw_conflict_capture_files": 5,
+  "published_rows": 1044,
+  "finite_rows": 1120,
+  "sessions": 101,
+  "columns": 21,
+  "unique_session_step_ids": 1120,
+  "canonical_frozen1120_sha256": "1c852434af5d8c48b0b3f7c9bb6eff3dcc44ad6eeabbb35fad2b33e8296d7590",
+  "actual_published1044_sha256": "ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249",
+  "actual_published1044_bytes": 1616409,
+  "published1044_raw_prefix_exact": true,
+  "published1044_all21fields_exact": true,
+  "all_prior_candidate_history_blobs_exact": true,
+  "prior_history_paths_verified": 2918,
+  "all_actual_main_nonhistory_blobs_exact": true,
+  "main_nonhistory_paths_verified": 1017,
+  "all_actual_main_history_except_extended_csv_exact": true,
+  "main_history_paths_verified": 2524,
+  "attributes_union_alllines_exact": true,
+  "primary1128_not_read_or_imported": true,
+  "source_schema_data_version_actualmain_exact": true,
+  "historical_played_composition_remains_dated": true,
+  "local_tests_syntax_gates_simulation_analytics_run": false,
+  "new_gameplay": false,
+  "fresh_resultinghead_review_remoteCI_currentmain_retention_required": true
+}

@@ -1,0 +1,1 @@
+Setup attempt failed before run directory/server creation: chained template substitutions accidentally changed the previous fixture path to the new session path. FileNotFoundError for source-manifest.json. Corrected only the explicit previous fixture path and retained this setup correction; no game action occurred.

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "esports-playtest-0185",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Advance blocker recovery is separately observable",
+    "problem": "A pending interview stopped a prepared quarterfinal",
+    "solution": "Resolved Vortex interview and retriedAdvance with unchanged plan",
+    "lesson": "Retained six pairedrequests include one409 plusfive200; accepted ledger adds only preparation,gameplan,flavorchoice,advance. Never count failedAdvance as accepted.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-quarterfinal world26UHC seed2038; root model/effort unknown (not exposed); recorded afterplay at 2026-10-11T06:06:55.271744+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0186",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Preparation resolution and stored map-book coverage differ",
+    "problem": "Lotus debrief wording looked like a wrong preparation session",
+    "solution": "Compared bookedAscentRetakes with completed publicreport and matchcalls",
+    "lesson": "AscentRetakes resolvedknowledge2.12/stamina4, while unplayedLotus was accumulatedbook coverage. Preserve original misinterpretation and append correction; source investigation supports wording-onlygap36.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-quarterfinal world26UHC seed2038; root model/effort unknown (not exposed); recorded afterplay at 2026-10-11T06:06:55.271744+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0187",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Successful gameplay can still obscure preparation provenance",
+    "problem": "BookedAscent and preppedLotus appeared to conflict after2-0win",
+    "solution": "Delegated precise Mapbook wording clarification to itsownGPT6.1solmediumagent",
+    "lesson": "Make stored map coverage explicit; do not imply every unusedbook was the current session or claim a win proves preparation causality.",
+    "confidence": "high",
+    "source": "2026-10-11-champions-quarterfinal world26UHC seed2038; root model/effort unknown (not exposed); recorded afterplay at 2026-10-11T06:06:55.271744+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  }
+]

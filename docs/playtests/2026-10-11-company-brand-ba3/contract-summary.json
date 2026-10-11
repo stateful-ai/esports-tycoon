@@ -1,0 +1,14 @@
+{
+  "player_id": "fa_12",
+  "handle": "Frostdash",
+  "team_id": "team_nexus",
+  "salary": 2200,
+  "weeks": 65,
+  "terms": {
+    "stream_share": 70,
+    "release_fee": 16000,
+    "buyout": 32000,
+    "no_transfer": false,
+    "roster_role": "bench"
+  }
+}

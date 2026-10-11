@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-one-match-rotation",
+  "step": 8,
+  "started_at_utc": "2026-10-10T22:41:11.634+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "browser",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W15 playoffs",
+  "intent": "Reconcile the controlled session with quantitative instrumentation",
+  "action": "Audit saved accepted decisions, snapshot prefixes and retained browser usage; run isolated reports, preserve evidence and close only the owned browser/server",
+  "expected_outcome": "The original63 decisions and13 snapshots remain exact prefixes; exactly2 accepted decisions and successful retained request pairs can be linked to the player log; raw source and original fixture remain unchanged",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

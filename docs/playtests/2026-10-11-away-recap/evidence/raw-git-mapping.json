@@ -1,0 +1,198 @@
+{
+  "publication": "Read-only copy of retained originals; no new gameplay",
+  "original_fix_commit": "b5ca3ce000b07ee9c92711bc220a6c818afeec5c",
+  "receipts": [
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/01-dashboard.txt",
+      "bytes": 4519,
+      "sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "git_blob": "39caf71c30bb2bfdeecad2f89d07bb4bf8008bee",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/02-prep.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-prep.js",
+      "bytes": 535,
+      "sha256": "961890bceee6682a7af4295400f99687edd868cf3c397f6f2738cded101b4cd5",
+      "git_blob": "b78d736ab047db05d30e2bc88e24afbfcbeed84b",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/02-prep.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-prep.txt",
+      "bytes": 597,
+      "sha256": "144a91dd89aec986516112d2de8cae9b89e162579d6e11d8f77638f3d1ec406f",
+      "git_blob": "290dcb4d540ecfc388124b929e47802273293399",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/02-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-readback.txt",
+      "bytes": 3185,
+      "sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "git_blob": "c2985b85806e23b763830064e0da61b4abf91983",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/03-plan.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-plan.js",
+      "bytes": 764,
+      "sha256": "f129a6472a1f0612acd1cf454203d621a32516a0ff97490a1f7852ac29dc28b3",
+      "git_blob": "5ab839458bea88987631030afa618afec379bdd8",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/03-plan.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-plan.txt",
+      "bytes": 1374,
+      "sha256": "7eb09fdbac99a987189d37219d72d5b603c6db9456d62179dee4588f3d02681e",
+      "git_blob": "18e5bbf10c505a9a3ac665548398007921ac83f4",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/03-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-readback.txt",
+      "bytes": 4235,
+      "sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "git_blob": "c05b8f6bff15389f8a2dd4e578117ab67b8d3f0f",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/04-advance.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-advance.js",
+      "bytes": 346,
+      "sha256": "b531492b0ff34d7458ba703905aaf4aab32182fb1d4a05e8902ed17f46f0b53c",
+      "git_blob": "f03fb21fbec1ef93b0d9dcd2a9b3a3a755809eb8",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/04-public.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.js",
+      "bytes": 303,
+      "sha256": "43cf49277325ac09b01f88ea60964ddd4b763b53c83cef3268568443322db59a",
+      "git_blob": "dd849ba0bbd2ada691d91b11c2e2fcc3c9ba1b42",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/04-public.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.txt",
+      "bytes": 47252,
+      "sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "git_blob": "e2af50c84f559b07a34651097b417ff77863143c",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/04-readback.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-readback.js",
+      "bytes": 349,
+      "sha256": "3f5fd7dfe01d9b565a15e11f6e84f7cb948bd6d2528aabb2d294f227b410ff2e",
+      "git_blob": "b5a88e00cc227dd87e48c1ba7717bbed324a8c55",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/04-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-readback.txt",
+      "bytes": 157,
+      "sha256": "11a82c32320f504907f034b1683487189402b89e1c95fa02974b994652d918ea",
+      "git_blob": "8aec7dd3a09ab8f783d8d8a2adb1c894437530a9",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/05-save.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/05-save.js",
+      "bytes": 271,
+      "sha256": "7ca91f9808a83ce1b12b4629b514e17167ea13ec18f4db42ebfd7d5743a52d10",
+      "git_blob": "7b1a14960db1f8f780c87825d1ca0885496c64d0",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/05-save.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/05-save.txt",
+      "bytes": 401,
+      "sha256": "e766e767d538ea3315528d64a6ed959f316a9aef5a004603977d9f5b9da3c531",
+      "git_blob": "9f53176e8aad2f68b970515d1138b5057f328e47",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "bytes": 4277,
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob": "321b102a3316f1b808275166ce3201575b5f0374",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/original-comparison.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/original-comparison.json",
+      "bytes": 160,
+      "sha256": "37cb1fad1cd811780f1e8bfbbfb075b8645e1b2631ca9c0902fc525e44e1475d",
+      "git_blob": "32afef3fb8e7fd45c2bf60ff3ec9f95de737017d",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/source-manifest.json",
+      "bytes": 51487,
+      "sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7",
+      "git_blob": "9d4643f35817cbb4058b84439bf984f2b3f9e06c",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/telemetry-report.txt",
+      "bytes": 2226,
+      "sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "git_blob": "72d76652ac2d0eb00a0a8f276f78a69dbbce06b6",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/usage-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-report.txt",
+      "bytes": 1302,
+      "sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "git_blob": "a7a22613e60e3888f89864fd2b3284e7236f6a4d",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/usage-retained.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-retained.json",
+      "bytes": 11297,
+      "sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "git_blob": "cbdc8db35884ade21fe7c94403dc9ad1e019b19a",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/flywheel-before.json",
+      "bytes": 5608,
+      "sha256": "16e93d6817a0cd63b97cd563f2034dcf1ec6d70eb9a91bc701f2821682818620",
+      "git_blob": "48595de200e9966eb6edf618b4b3016eda10b46f",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/flywheel-after.json",
+      "bytes": 75,
+      "sha256": "6d623664fbc505e40ce3607f3639f9ec02fc5e9b69b0c0c722f26b178d53e4e2",
+      "git_blob": "c6f7b944de0f8f848abeb1b8fd38ab93f9836820",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/saves/usage/usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage.0.jsonl",
+      "bytes": 9901,
+      "sha256": "5377ae4d72cbaf0eee14cd43febb22074e8b27b941c781b6e7496586853c0732",
+      "git_blob": "76d713c763446b6412f7379d32cf0896ca00ff61",
+      "exact_original_bytes": true
+    },
+    {
+      "original_path": "runs/playtests/2026-10-11-away-recap/server-running.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/server-running.json",
+      "bytes": 483,
+      "sha256": "96ea8d0a164f557a84f9e408642caaa836f4ce6b772080b7811ef80c8722cc21",
+      "git_blob": "266efe3eadfe432bff18e3bf5a991e3f73cbd44d",
+      "exact_original_bytes": true
+    }
+  ]
+}

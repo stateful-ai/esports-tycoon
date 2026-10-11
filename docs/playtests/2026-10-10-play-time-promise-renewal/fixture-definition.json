@@ -1,0 +1,39 @@
+{
+  "controlled_fixture": true,
+  "source_save": "C:\\Users\\aidan\\.codex\\worktrees\\current-main-recovery-playtest\\ESports Simulator\\runs\\playtests\\2026-10-10-media-sponsor\\saves\\campaign_f2977bf6e97d789a.json",
+  "source_sha256": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "fixture_world": "RNL22",
+  "seed": 2038,
+  "game_time": "S1 W9",
+  "promise": {
+    "id": "e6c510c5e6a9e3bb",
+    "team_id": "team_nexus",
+    "player_id": "echo",
+    "promise_type": "play_time",
+    "target_value": 60,
+    "weeks_left": 1,
+    "created_week": 6,
+    "created_season": 1,
+    "status": "active",
+    "dressed_count": 3,
+    "initial_duration": 4,
+    "source": "talk"
+  },
+  "construction": "create_promise at W6, three isolated promise-module ticks with Echo dressed; these initial credits are controlled, not natural played-match evidence",
+  "default_five_before": [
+    "apex",
+    "vortex",
+    "fa_13",
+    "fa_0",
+    "ghost"
+  ],
+  "default_five_controlled": [
+    "apex",
+    "vortex",
+    "fa_13",
+    "echo",
+    "ghost"
+  ],
+  "fixture_save": "runs\\playtests\\2026-10-10-play-time-promise-renewal\\saves\\campaign_7bfecd3eeb0b461a.json",
+  "head": "3220db1fe28aecfa294072d4e831d3e723e0302c"
+}

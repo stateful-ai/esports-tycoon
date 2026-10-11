@@ -1,0 +1,5 @@
+[     416ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:8536/favicon.ico:0
+[  127945ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:8536/api/actions/advance:0
+[  127946ms] Error: Open Dashboard → Needs you → Team moment and resolve the pending flavor event by choosing a response, then try Advance Week again.
+    at api (http://127.0.0.1:8536/app.js:140:13)
+    at async $.onclick (http://127.0.0.1:8536/app.js:8156:17)

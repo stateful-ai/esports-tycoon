@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0149",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Between-map response preserves standing starters",
+    "problem": "Rotate Hollowlock into a playoff series after its opener",
+    "solution": "Save Always Reset with fa_0 in and ghost out; resolve one BO3 and read actual map participants",
+    "lesson": "Ghost opener, Hollowlock maps2/3; series notes in Season Fixtures Played weeks name substitution and reset. Standing five unchanged and both plans consumed. Nexus2-1 is descriptive, not causal proof.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0150",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Reconcile accepted choices separately from browser usage",
+    "problem": "Measure a saved playoff coaching choice",
+    "solution": "Compare exact IDs and old prefixes against session/request pairs",
+    "lesson": "65->68 decisions and14->15 snapshot entries; three exact web choices matched. Saves are separate usage. Stale refs and bad observer fields did not produce accepted choices.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0151",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Series outcome notes require a second results route",
+    "problem": "Find whether a response executed after opening Full report",
+    "solution": "Inspect Season Fixtures and expand Played weeks",
+    "lesson": "Full report shows map counts but the explicit response/substitution notes are in played fixtures. Existing route is functional; this session records discoverability friction without declaring missing implementation.",
+    "confidence": "high",
+    "source": "2026-10-10-regional-semi main64ee15f browser8499 world26UHC seed2038 W15-W16",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-response",
+      "substitution",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

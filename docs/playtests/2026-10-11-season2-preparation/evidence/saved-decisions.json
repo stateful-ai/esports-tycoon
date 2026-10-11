@@ -1,0 +1,61 @@
+[
+  {
+    "index": 107,
+    "season": 2,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "2",
+      "created_week": "2",
+      "fixture_id": "s2w2m3am",
+      "id": "f87c94062f1b5da1",
+      "intensity": "normal",
+      "map_id": "ascent",
+      "objective": "anti_exec",
+      "opponent_id": "team_nordic_frost",
+      "partner_id": "team_adriatic_sirens",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 108,
+    "season": 2,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s2w2m3am",
+      "focus_target": "",
+      "map_control": "30.0",
+      "n_dials": "2",
+      "one_match_lineup": "False",
+      "opponent": "team_nordic_frost",
+      "pace": "70.0",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 109,
+    "season": 2,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

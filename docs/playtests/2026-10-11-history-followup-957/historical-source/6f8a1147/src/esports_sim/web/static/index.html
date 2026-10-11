@@ -1,0 +1,247 @@
+<!doctype html>
+<!-- data-theme=dark: the game is dark-first by design — every painted
+     scene (office, maps) is graded onto dark navy. The token system
+     still supports light via [data-theme="light"] for a future toggle. -->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>esports-sim</title>
+<link rel="stylesheet" href="/ds/tokens.css">
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/facilities.css">
+<link rel="stylesheet" href="/profile.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <header id="topbar">
+    <div class="brand">ESPORTS<span>SIM</span></div>
+    <div id="context" class="context"></div>
+    <div class="spacer"></div>
+    <div id="balance" class="balance mono"></div>
+    <span id="mp-chip" class="pill hidden" title="Shared campaign — copy the join code"></span>
+    <button id="save-btn" class="btn hidden" title="Save your campaign">Save</button>
+    <select id="autosave-sel" class="hidden" title="Choose how often the campaign saves automatically. When off, save it yourself.">
+      <option value="0">Autosave off</option>
+      <option value="1">Every week</option>
+      <option value="2">Every 2 weeks</option>
+      <option value="3">Every 3 weeks</option>
+      <option value="5">Every 5 weeks</option>
+      <option value="8">Every 8 weeks</option>
+    </select>
+  <button id="worlds-btn" class="btn hidden" title="Return to your campaign list. This career will be waiting there.">Campaigns</button>
+    <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+    <button id="simahead-btn" class="btn" title="Sim up to 4 weeks under your delegation settings — stops the moment something needs you">Sim ahead ▸▸</button>
+  <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
+    <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
+    <button id="help-open" class="btn" title="Open the manager handbook and first-week guide" aria-label="Open manager handbook">Guide</button>
+  </header>
+
+  <!-- Two visual clusters: the weekly loop vs. the org you're building.
+       Purely presentational — every button still dispatches by data-tab. -->
+  <p id="advance-notice" class="advance-notice hidden" role="status"></p>
+  <nav id="tabs">
+    <span class="tab-group" aria-label="Weekly">
+      <span class="tab-group-label">Weekly</span>
+      <button data-tab="dashboard" class="tab active">Dashboard</button>
+      <button data-tab="inbox" class="tab">Inbox<span id="inbox-badge" class="tab-badge hidden">0</span></button>
+      <button data-tab="tactics" class="tab">Match</button>
+    </span>
+    <span class="tab-group" aria-label="Org">
+      <span class="tab-group-label">Org</span>
+      <button data-tab="club" class="tab">Club</button>
+      <button data-tab="facilities" class="tab">Facilities</button>
+      <button data-tab="season" class="tab">Season</button>
+      <button data-tab="market" class="tab">Market</button>
+      <button data-tab="stats" class="tab">Stats</button>
+      <button data-tab="company" class="tab">Company</button>
+    </span>
+  </nav>
+
+  <main id="view"></main>
+</div>
+
+<!-- Manager handbook. Content is rendered by app.js so current-screen links
+     stay aligned with the live navigation structure. -->
+<div id="help" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="help-title" aria-hidden="true">
+  <div class="panel help-panel">
+    <div class="help-title-row">
+      <div>
+        <span class="microlabel">Manager handbook</span>
+        <h1 id="help-title">Learn the job</h1>
+        <p class="muted">A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.</p>
+      </div>
+      <button id="help-close" class="btn" aria-label="Close manager handbook">Close</button>
+    </div>
+    <div class="seg help-sections" role="tablist" aria-label="Guide section">
+      <button class="seg-btn active" data-help-section="first-week" role="tab">First week</button>
+      <button class="seg-btn" data-help-section="screens" role="tab">Screen guide</button>
+      <button class="seg-btn" data-help-section="glossary" role="tab">Key terms</button>
+    </div>
+    <div id="help-body" class="help-body"></div>
+    <p class="muted help-footer">Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus.</p>
+  </div>
+</div>
+
+<!-- lobby overlay (new / join a campaign) -->
+<div id="newgame" class="overlay hidden">
+  <div class="panel">
+    <h1>Play</h1>
+    <!-- worlds this browser can jump back into -->
+    <div id="lobby-resume" class="hidden">
+      <p class="muted">Your worlds — click to resume:</p>
+      <div id="resume-list" class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+    </div>
+
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <button id="mode-solo" class="btn btn-primary">New campaign</button>
+      <button id="mode-shared" class="btn">Create shared campaign</button>
+      <button id="mode-join" class="btn">Join campaign</button>
+      <a class="btn" href="/roster-studio.html" style="text-decoration:none">Roster Studio</a>
+      <a class="btn" href="/map-studio.html" style="text-decoration:none">Map Studio</a>
+    </div>
+
+    <!-- create (solo or shared) -->
+    <div id="lobby-create" class="hidden">
+      <p class="muted" id="lobby-create-hint">Pick your organisation. Seed controls the generated league.</p>
+      <div class="row" style="gap:12px;flex-wrap:wrap;align-items:center">
+        <label>Seed <input id="ng-seed" class="mono" type="number" value="2026"></label>
+        <span id="ng-worlds" class="row" style="gap:6px;flex-wrap:wrap"></span>
+      </div>
+      <div class="row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <span class="muted">Game mode</span>
+        <span id="ng-modes" class="row" style="gap:6px"></span>
+      </div>
+      <p class="muted" id="ng-mode-desc"></p>
+      <div class="row hidden" id="ng-draft-row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <span class="muted">Rosters</span>
+        <span id="ng-draft" class="row" style="gap:6px"></span>
+      </div>
+      <p class="muted hidden" id="ng-draft-desc"></p>
+      <div class="row hidden" id="ng-scenario-row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <span class="muted">Scenario</span>
+        <span id="ng-scenarios" class="row" style="gap:6px;flex-wrap:wrap"></span>
+      </div>
+      <p class="muted hidden" id="ng-scenario-desc"></p>
+      <p class="muted hidden" id="ng-world-desc"></p>
+      <div id="ng-teams" class="team-grid"></div>
+    </div>
+
+    <!-- join an existing shared world by code -->
+    <div id="lobby-join" class="hidden">
+      <p class="muted">Enter the 5-character code your host shared, then pick a free team.</p>
+      <div class="row" style="gap:8px">
+        <label>Code <input id="join-code" class="mono" maxlength="5" style="text-transform:uppercase;width:8em"></label>
+        <button id="join-load" class="btn">Show teams ▸</button>
+      </div>
+      <div id="join-teams" class="team-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- advance-week staged reveal (presentation only; one click anywhere skips) -->
+<div id="week-reveal" class="overlay hidden" aria-live="polite"></div>
+
+<!-- advance processing: stays visible while the synchronous weekly tick runs -->
+<div id="week-loading" class="overlay hidden" role="status" aria-live="polite" aria-busy="true">
+  <div class="week-loading-card">
+    <div class="week-loading-kicker">Campaign processing</div>
+    <div class="week-loading-spinner" aria-hidden="true"></div>
+    <h1 id="week-loading-title">Advancing week</h1>
+    <p id="week-loading-detail">Resolving fixtures across the league, then settling training, scouting, and finances.</p>
+    <div class="week-loading-track" aria-hidden="true"><span></span></div>
+    <div class="week-loading-foot">
+      <span>Building the next week</span>
+      <span id="week-loading-time" class="mono">0s</span>
+    </div>
+  </div>
+</div>
+
+<!-- match-day buildup: the full pre-match briefing (GET /api/matchday) -->
+<div id="matchday" class="overlay hidden" aria-live="polite"></div>
+
+<!-- week report modal -->
+<div id="report" class="overlay hidden">
+  <div class="panel">
+    <h1 id="report-title"></h1>
+    <div id="report-body"></div>
+    <button id="report-close" class="btn btn-primary">Continue</button>
+  </div>
+</div>
+
+<!-- talk 1:1 modal -->
+<div id="talk" class="overlay hidden">
+  <div class="panel contract-room" style="width: 550px; max-width: 95%;">
+    <h1 id="talk-title">1:1</h1>
+    <p id="talk-text" class="muted" style="margin-bottom: var(--es-space-4, 10px); font-size: 13px; text-align: left;"></p>
+    
+    <div id="talk-chat-container" style="border: 1px solid var(--es-color-border-primary, #26324a); padding: 12px; border-radius: var(--es-radius-md, 6px); background-color: var(--es-color-bg-sunken, #0b1019); margin-bottom: var(--es-space-5, 14px); position: relative;">
+      <div id="talk-chat-logs" class="contract-dialogue" style="height: 250px; overflow-y: auto; border-bottom: 1px solid var(--es-color-border-secondary, #1c2536); margin-bottom: 12px; padding-bottom: 8px; font-size: 13px; text-align: left;">
+      </div>
+      
+      <div id="talk-chat-choices" style="display: flex; flex-direction: column; gap: 8px;">
+      </div>
+    </div>
+    
+    <button id="talk-close" class="btn">Close</button>
+  </div>
+</div>
+
+<!-- match viewer -->
+<div id="viewer" class="overlay hidden">
+  <div class="viewer-shell">
+    <div class="viewer-head">
+      <div id="v-title"></div>
+      <div id="v-score" class="mono"></div>
+      <button class="btn active" id="v-cones" title="Show or hide player sight lines" aria-pressed="true">Vision</button>
+      <button class="btn" id="v-view" title="toggle isometric / top-down">2D</button>
+      <button class="btn" id="v-sound" title="Match sound: muted" aria-pressed="false">🔇</button>
+      <button id="viewer-close" class="btn">✕ Close</button>
+    </div>
+    <div class="viewer-main">
+      <svg id="v-map" viewBox="-6 -6 112 112" preserveAspectRatio="xMidYMid meet"></svg>
+      <aside class="viewer-side">
+        <div id="v-round" class="v-round mono"></div>
+        <div id="v-banner" class="v-banner"></div>
+        <div id="v-feed" class="v-feed"></div>
+      </aside>
+    </div>
+    <div class="viewer-controls">
+      <button class="btn" id="v-prev">⏮</button>
+      <button class="btn" id="v-play">▶</button>
+      <button class="btn" id="v-next">⏭</button>
+      <div class="speeds">
+        <button class="btn speed active" data-speed="1">1×</button>
+        <button class="btn speed" data-speed="4">4×</button>
+        <button class="btn speed" data-speed="16">16×</button>
+        <button class="btn speed" data-speed="inst">▸▸</button>
+      </div>
+      <button class="btn" id="v-evfollow" title="Action cam: auto-center briefly on kills and spike plants" aria-pressed="false">Action cam</button>
+      <button class="btn" id="v-reframe" title="Reset zoom and framing (releases player follow)">Reframe</button>
+      <input id="v-scrub" type="range" min="0" max="200" value="0">
+      <span id="v-clock" class="mono"></span>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/usage.js"></script>
+<script src="/map-transform.js"></script>
+<script src="/viewer.js"></script>
+<script src="/facilities.js"></script>
+<script src="/draft.js"></script>
+<script type="module" src="/app.js"></script>
+<script type="module" src="/profile.js"></script>
+<script src="/audio.js"></script>
+<script src="/inbox.js"></script>
+<script>
+/* Chrome-control wiring (was inline onclick). closeReport/closeTalk/closeViewer
+   are defined by the loaded scripts above; app.js owns the handbook. */
+document.getElementById("report-close").addEventListener("click", () => window.closeReport && window.closeReport());
+document.getElementById("talk-close").addEventListener("click", () => window.closeTalk && window.closeTalk());
+document.getElementById("viewer-close").addEventListener("click", () => window.closeViewer && window.closeViewer());
+</script>
+</body>
+</html>

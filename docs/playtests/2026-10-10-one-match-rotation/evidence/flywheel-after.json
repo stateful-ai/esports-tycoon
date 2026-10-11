@@ -1,0 +1,62 @@
+[
+  {
+    "id": "esports-playtest-0146",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "One-match five is independent of the standing lineup",
+    "problem": "Rest Ghost without permanently dropping him from starters",
+    "solution": "Lock five named players, save/reload, advance once and inspect actual replay participants",
+    "lesson": "Accepted gameplan exact IDs include Hollowlock and exclude Ghost; replay confirms all five, report Hollowlock1map/Ghost0; standing five unchanged and plan consumed. Nexus lost11-13; no causal win claim",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0147",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Decision choices and browser request usage are separate evidence",
+    "problem": "Quantify the controlled rotation without treating saves as decisions",
+    "solution": "Match old prefixes and exact chosen IDs separately from session/request IDs",
+    "lesson": "63->65 accepted decisions and13->14 snapshots; gameplan plus advance matched. Browser retains4success pairs including2Save; read-only overlay coverage still qualified",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0148",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Final-league stakes and prize reporting omit current context",
+    "problem": "Understand already-secured qualification and a133060bank increase",
+    "solution": "Compare OUT teams and last calendar with preview, then resolved-week report with balances",
+    "lesson": "Gap30 secured seeding assigned. Gap31 missing70000second-place income assigned; separateexisting373omits100upkeep. Current-week projected run-rate explicitly not a historical ledger",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

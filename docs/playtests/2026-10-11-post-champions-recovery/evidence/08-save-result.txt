@@ -1,0 +1,6 @@
+### Result
+{"status":200,"body":{"ok":true,"message":"World saved."}}
+### Ran Playwright code
+```js
+await (async page => { const response = page.waitForResponse(r=>r.url().endsWith('/api/actions/save') && r.request().method()==='POST'); await page.getByRole('button',{name:'Save',exact:true}).click(); const r = await response; return {status:r.status(),body:await r.json()}; })(page);
+```

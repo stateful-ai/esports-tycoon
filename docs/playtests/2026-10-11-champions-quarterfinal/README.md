@@ -1,0 +1,14 @@
+# Champions quarterfinal playtest
+
+Played copied26UHC seed2038 on main20273cd7. Root model/effort are unknown (not exposed). Nine before-action attempts are retained: five met, two blocked, two partial. Initial identity restoration used a wrong harness path, corrected in the next logged attempt.
+
+Booked Retakes on Ascent with Team Vanguard at Normal, set one-match map_control30 with the standing book50 and defaultfive, then hit a pending Vortex interview409. Resolved it team-first and retried. Won2-0 against TokyoDriftSix (Ascent13-1,Split13-6). Completed prep matchesAscent/Retakes/Vanguard/Normal, knowledge2.12/stamina4. The two playedmaps used Apex,Vortex,Ghost,Slyblade,Echo; Hollowlock remainedbenched. The one-matchplan and booked session were consumed. W21bank1814812 reflects112809income minus47100expenses, net65709.
+
+Correction9 preserves the earlier interpretation: the debrief's preppedLotus was accumulatedmapbook coverage, not an incorrectly resolvedLotus session. Gap36 is a wording clarity issue, delegated to GPT6.1sol/medium in itsownworktree/PR. Correction7 preserves that step6 had no consequence preview, despite its originalmetclassification; numeric flavorfeedback is already trackedPR370. Failedstale references and an inputhelper quote error are retained in their original attempts.
+
+Independent persistedreadback preserved81 accepted decisions and19 snapshots, addedfour decisions andone snapshot. Browser usage captured71 retainedevents andsix pairedrequests: five200 andone409. All eight gameplay/navigation attempts have view/request evidence; the initial filesystemsetup failure is outsideinstrumentation. Save is a successful request, not an accepted decision. Counts are retainedcoverage; visibility is not attention, and one win establishes neither balance nor causal prep effects.
+
+All630 frozen sourcefiles unchanged. No local tests or expensivegates ran. Evidence: [CSV](actions.csv), [reconciliation](evidence/reconciliation.json), [rawusage](evidence/usage.0.jsonl), preserved public snapshots, browserconsole and savedbefore/after careers. Twolearning/onepainpoint entries were recorded afteractualplay. Canonical append remains pending separately reviewedpublication to main.
+
+
+Later source audit, step 10: the session now has ten attempts. This correction preserves the original nine-row audit and every earlier observation. An unplayed scheduled map is not necessarily unused: preparation averages stored books across all scheduled fixture maps before the series, and that single edge is passed to the played maps. Lotus knowledge can therefore contribute to Ascent and Split. The wording fix must describe stored knowledge and whether the map was played, and keep the full preparation edge separate from map-book attribution. PR #383 has been returned to its owner for that revision. Source audit adds no gameplay decision or browser usage event; the saved career is byte-identical to the original post-session save.

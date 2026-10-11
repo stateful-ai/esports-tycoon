@@ -1,0 +1,67 @@
+### Result
+[
+  {
+    "text": "Apex",
+    "pid": "apex",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Vortex",
+    "pid": "vortex",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Ghost",
+    "pid": "ghost",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Slyblade",
+    "pid": "fa_13",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Echo",
+    "pid": "echo",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Hollowlock",
+    "pid": "fa_0",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Nightsurge",
+    "pid": "team_kraken_unit_p0",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Apex",
+    "pid": "apex",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Vortex",
+    "pid": "vortex",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Ghost",
+    "pid": "ghost",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Slyblade",
+    "pid": "fa_13",
+    "tag": "SPAN"
+  },
+  {
+    "text": "Echo",
+    "pid": "echo",
+    "tag": "SPAN"
+  }
+]
+### Ran Playwright code
+```js
+await page.evaluate('() => (Array.from(document.querySelectorAll("main [data-pid]")).map(e=>({text:e.textContent,pid:e.dataset.pid,tag:e.tagName})))');
+```

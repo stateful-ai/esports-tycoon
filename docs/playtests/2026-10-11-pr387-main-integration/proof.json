@@ -1,0 +1,325 @@
+{
+  "generated_at_utc": "2026-10-11T12:12:11.723395Z",
+  "pr": 387,
+  "original_pr_head": "73acfce15bca918f57395b6aab7246d585e0a285",
+  "actual_main": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "merge_base": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "expected_merge_parents": [
+    "73acfce15bca918f57395b6aab7246d585e0a285",
+    "ba3f5894af70fc6616e5ceccb71982fcb27d47e1"
+  ],
+  "merge_conflicts": [
+    ".gitattributes"
+  ],
+  "resolution": "Union original PR receipt rules and actual main receipt rules",
+  "feature_lines": [
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "src/esports_sim/web/server.py",
+      "added_deleted_lines": 33
+    },
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "src/esports_sim/web/static/app.css",
+      "added_deleted_lines": 8
+    },
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "src/esports_sim/web/static/app.js",
+      "added_deleted_lines": 62
+    },
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "src/esports_sim/web/static/index.html",
+      "added_deleted_lines": 1
+    },
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "tests/test_advance_transition_frontend.py",
+      "added_deleted_lines": 70
+    },
+    {
+      "exact_original_added_deleted_lines": true,
+      "path": "tests/test_web_advance_transition.py",
+      "added_deleted_lines": 34
+    }
+  ],
+  "preserved_history_inventory_count": 2945,
+  "canonical": {
+    "unchanged_from_actual_main": true,
+    "fields": 21,
+    "raw_sha256": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631",
+    "rows": 994,
+    "git_sha256": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631"
+  },
+  "owner_publication": {
+    "field_mismatch": 0,
+    "absent": 0,
+    "rows": 32,
+    "published_all_21_fields": 32,
+    "details": [
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "1",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "2",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "3",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "4",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "5",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "6",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "7",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-readiness-loading",
+        "step": "8",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "1",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "2",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "3",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "4",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "5",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-ready-reload",
+        "step": "6",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "1",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "2",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "3",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "4",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "5",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-rollover",
+        "step": "6",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "1",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "2",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "3",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "4",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "5",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-shared-ready",
+        "step": "6",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "1",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "2",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "3",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "4",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "5",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      },
+      {
+        "session_id": "2026-10-11-gap40-status-retry",
+        "step": "6",
+        "status": "published_all_21_fields",
+        "matching_rows": 1,
+        "differing_fields": []
+      }
+    ]
+  },
+  "validation": "Static Git/blob/CSV verification only; no local tests, Node, syntax, native, simulation, gates, analytics, browser, or game launched. Historical acceptance is not new-head acceptance; fresh exact-head remote CI and root review required.",
+  "root_source_evidence": [
+    {
+      "sha256": "8cf7be7af9dc024e19cdddb0351f1db78782b56d2b47185f871e7f07393ac312",
+      "path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\review-387-current-head-evidence.json",
+      "read_only": true
+    },
+    {
+      "sha256": "3fbef2af69d617661863cab60e29b28084f061f64d81394bd0ad58cc6808c652",
+      "path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\review-387-before-readonly-correction-current-head-evidence.json",
+      "read_only": true
+    },
+    {
+      "sha256": "e646311171ee17698acec585a14a5fe31f0c694532cee1b487530579943777e1",
+      "path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\review-387-inline-audit.json",
+      "read_only": true
+    }
+  ],
+  "original_root_review_id": 5482792375,
+  "inline_dispositions": [
+    {
+      "basis": "32 of 32 original owner rows in actual main, all 21 fields exact",
+      "status": "publication_addressed",
+      "comment_id": 4240685536,
+      "other_requirements": "Independent root review of integrated head and fresh exact-head remote CI remain pending"
+    },
+    {
+      "basis": "Exact original feature added/deleted lines; original historical acceptance remains dated evidence; no new acceptance claimed",
+      "status": "original_addressed_source_preserved",
+      "comment_ids": [
+        4240668367,
+        4240718330,
+        4240771677,
+        4240771678,
+        4240811778
+      ]
+    }
+  ]
+}

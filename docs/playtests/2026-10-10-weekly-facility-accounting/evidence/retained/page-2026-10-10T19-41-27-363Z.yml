@@ -1,0 +1,302 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 10 · Regular — Team Nexus
+      - generic [ref=f1e6]: 333,406 cr
+      - button "Save •" [ref=f1e810] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard" [ref=f1e1366] [cursor=pointer]
+        - button "Inbox 16" [ref=f1e20] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e21]: "16"
+        - button "Match 2" [ref=f1e22] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e23]: "2"
+      - generic "Org" [ref=f1e24]:
+        - button "Club" [ref=f1e26] [cursor=pointer]
+        - button "Facilities" [ref=f1e27] [cursor=pointer]
+        - button "Season" [ref=f1e28] [cursor=pointer]
+        - button "Market" [ref=f1e29] [cursor=pointer]
+        - button "Stats" [ref=f1e30] [cursor=pointer]
+        - button "Company" [ref=f1e31] [cursor=pointer]
+    - main [ref=f1e32]:
+      - generic [ref=f1e1367]:
+        - generic [ref=f1e1368]:
+          - generic [ref=f1e1369]: Dashboard
+          - generic [ref=f1e1370]: S1 · W10 · Regular
+          - button "Guide" [ref=f1e1371] [cursor=pointer]
+          - button "Career ▸" [ref=f1e1372] [cursor=pointer]
+        - generic [ref=f1e1373]:
+          - generic [ref=f1e1375]:
+            - generic [ref=f1e1376]:
+              - generic [ref=f1e1377]: 8–1
+              - generic [ref=f1e1378]: Record
+              - generic [ref=f1e1379]: +55 rd
+            - button "2nd League Americas" [ref=f1e1380] [cursor=pointer]:
+              - generic [ref=f1e1381]: 2nd
+              - generic [ref=f1e1382]: League
+              - generic [ref=f1e1383]: Americas
+            - generic [ref=f1e1384]:
+              - generic [ref=f1e1385]: W2
+              - generic [ref=f1e1386]: Streak
+            - button "333,406 cr Balance" [ref=f1e1387] [cursor=pointer]:
+              - generic [ref=f1e1388]: 333,406 cr
+              - generic [ref=f1e1389]: Balance
+            - generic [ref=f1e1390]:
+              - generic [ref=f1e1391]: "95"
+              - generic [ref=f1e1392]: Morale
+            - button "85 Condition" [ref=f1e1393] [cursor=pointer]:
+              - generic [ref=f1e1394]: "85"
+              - generic [ref=f1e1395]: Condition
+          - generic [ref=f1e1396]:
+            - generic [ref=f1e1397]:
+              - generic [ref=f1e1398]:
+                - text: W10 · Staff briefing
+                - heading "Match day" [level=2] [ref=f1e1399]
+                - paragraph [ref=f1e1400]: Everything to settle before you advance the week.
+              - generic [ref=f1e1401]:
+                - generic [ref=f1e1402]: Plan needed
+                - generic [ref=f1e1403]: Scout elsewhere
+                - generic [ref=f1e1404]: Squad ready
+                - button "Match day briefing ▸" [ref=f1e1405] [cursor=pointer]
+            - generic [ref=f1e1406]:
+              - generic [ref=f1e1407]:
+                - generic [ref=f1e1408] [cursor=pointer]: Team Nexus
+                - generic [ref=f1e1409]: 2nd · 8–1
+              - generic [ref=f1e1410]:
+                - generic [ref=f1e1411]: VS
+                - generic [ref=f1e1412]: S1 · W10
+                - generic [ref=f1e1413]: Americas League
+                - generic [ref=f1e1414]: Best of 1
+                - generic "The manager across the aisle" [ref=f1e1415]: vs Victor Costa · Recluse
+              - generic [ref=f1e1416]:
+                - generic [ref=f1e1417] [cursor=pointer]: Kathmandu Apex
+                - generic [ref=f1e1418]: 8th · 1–8
+            - generic [ref=f1e1419]:
+              - generic [ref=f1e1420]:
+                - generic [ref=f1e1421]:
+                  - generic [ref=f1e1422]: Today's prep
+                  - generic [ref=f1e1423]: Kathmandu Apex in W10
+                - generic [ref=f1e1424]: Set the five, build the plan, sharpen the week.
+              - generic [ref=f1e1425]:
+                - generic [ref=f1e1426]:
+                  - generic [ref=f1e1427]:
+                    - generic [ref=f1e1428]: Assistant coach
+                    - generic [ref=f1e1429]: Stable
+                  - generic [ref=f1e1430]: Keep the match five settled
+                  - paragraph [ref=f1e1431]: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+                  - button "Open roster ▸" [ref=f1e1432] [cursor=pointer]
+                - generic [ref=f1e1433]:
+                  - generic [ref=f1e1434]:
+                    - generic [ref=f1e1435]: Head coach
+                    - generic [ref=f1e1436]: Priority
+                  - generic [ref=f1e1437]: Turn the brief into a game plan
+                  - paragraph [ref=f1e1438]: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+                  - button "Build plan ▸" [ref=f1e1439] [cursor=pointer]
+                - generic [ref=f1e1440]:
+                  - generic [ref=f1e1441]:
+                    - generic [ref=f1e1442]: Analyst
+                    - generic [ref=f1e1443]: Unassigned
+                  - generic [ref=f1e1444]: Put the book on Kathmandu Apex
+                  - paragraph [ref=f1e1445]: Your scout is not assigned to Kathmandu Apex. Switch coverage if this match is the priority.
+                  - button "Scouting desk ▸" [ref=f1e1446] [cursor=pointer]
+                - generic [ref=f1e1447]:
+                  - generic [ref=f1e1448]:
+                    - generic [ref=f1e1449]: Performance
+                    - generic [ref=f1e1450]: Tactical
+                  - generic [ref=f1e1451]: Align development with Tactical
+                  - paragraph [ref=f1e1452]: Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.
+                  - button "Development plans ▸" [ref=f1e1453] [cursor=pointer]
+            - generic [ref=f1e1454]:
+              - generic [ref=f1e1455]:
+                - generic [ref=f1e1456]: Match intelligence
+                - generic [ref=f1e1457]: Opponent read, your stakes, maps and run-in
+              - generic [ref=f1e1458]:
+                - generic [ref=f1e1459]:
+                  - generic [ref=f1e1460]: "Head-to-head this season: 1–0 (you lead)"
+                  - paragraph [ref=f1e1461]: Team Nexus arrive on a 2-match winning run. Team Nexus won the season's only prior meeting. Three points here tighten Team Nexus's grip on a top-four berth. Watch Wraithblade — Kathmandu Apex's form pick at 0.96.
+                  - generic [ref=f1e1462]:
+                    - generic [ref=f1e1463]: Map
+                    - figure "lotus" [ref=f1e1464]:
+                      - img "lotus" [ref=f1e1465]
+                  - generic [ref=f1e1467]:
+                    - text: Run-in
+                    - generic [ref=f1e1468]:
+                      - generic [ref=f1e1469]: W10 Kathmandu Apex
+                      - generic [ref=f1e1470]: W11 Saracen Guard
+                      - generic [ref=f1e1471]: W12 Rust Belt Gaming
+                      - generic [ref=f1e1472]: W13 Baltic Meridian
+                      - generic [ref=f1e1473]: W14 Team Vanguard
+                - generic [ref=f1e1474]:
+                  - generic [ref=f1e1475]:
+                    - generic [ref=f1e1476]: Kathmandu Apex — last 5
+                    - generic [ref=f1e1477]:
+                      - generic "vs Sahara Compass · 11–13" [ref=f1e1478]: L
+                      - generic "vs Nordic Frost · 14–16" [ref=f1e1479]: L
+                      - generic "vs Baltic Meridian · 0–13" [ref=f1e1480]: L
+                      - generic "vs Saracen Guard · 3–13" [ref=f1e1481]: L
+                      - generic "vs Rust Belt Gaming · 3–13" [ref=f1e1482]: L
+                  - generic [ref=f1e1483]:
+                    - generic [ref=f1e1484]: Danger men
+                    - generic [ref=f1e1485]:
+                      - generic [ref=f1e1486]:
+                        - generic [ref=f1e1487] [cursor=pointer]: Driftlock
+                        - generic [ref=f1e1488]: Sentinel
+                        - generic [ref=f1e1489]: ~70
+                      - generic [ref=f1e1490]:
+                        - generic [ref=f1e1491] [cursor=pointer]: Falconlock
+                        - generic [ref=f1e1492]: Controller
+                        - generic [ref=f1e1493]: ~67
+                      - generic [ref=f1e1494]:
+                        - generic [ref=f1e1495] [cursor=pointer]: Wraithblade
+                        - generic [ref=f1e1496]: Duelist
+                        - generic [ref=f1e1497]: ~66
+                  - generic [ref=f1e1498]:
+                    - text: Your map pool & veto
+                    - generic [ref=f1e1499]:
+                      - generic [ref=f1e1500]:
+                        - generic [ref=f1e1501]: Ban Haven (Kathmandu Apex 20% · you 100%)
+                        - generic [ref=f1e1502]: Pick Bind (you 100% · them 0%)
+                      - text: Team Nexus — season map record (wins / played)
+                      - generic [ref=f1e1503]:
+                        - generic [ref=f1e1504]:
+                          - generic [ref=f1e1505]: Ascent
+                          - generic [ref=f1e1508]: 100%
+                          - generic [ref=f1e1509]: 2/2
+                        - generic [ref=f1e1510]:
+                          - generic [ref=f1e1511]: Bind
+                          - generic [ref=f1e1514]: 100%
+                          - generic [ref=f1e1515]: 4/4
+                        - generic [ref=f1e1516]:
+                          - generic [ref=f1e1517]: Haven
+                          - generic [ref=f1e1520]: 100%
+                          - generic [ref=f1e1521]: 1/1
+                        - generic [ref=f1e1522]:
+                          - generic [ref=f1e1523]: Lotus
+                          - generic [ref=f1e1526]: 50%
+                          - generic [ref=f1e1527]: 1/2
+          - generic [ref=f1e1528]:
+            - generic [ref=f1e1529]:
+              - heading "Match review" [level=2] [ref=f1e1530]
+              - paragraph [ref=f1e1531]: "Last time out — Beat Nordic Frost 13-4. Standout: Vortex (1.90). Off-colour: Ghost (0.77)."
+              - paragraph [ref=f1e1532]: “Team Nexus have put themselves in the title picture from second.”
+              - generic [ref=f1e1533]:
+                - generic [ref=f1e1534]: W
+                - generic [ref=f1e1535]: vs Nordic Frost
+                - generic [ref=f1e1536]: 13–4
+              - generic [ref=f1e1537]:
+                - generic [ref=f1e1538]: ★
+                - text: POTM
+                - generic [ref=f1e1539] [cursor=pointer]: Vortex
+              - generic [ref=f1e1540]:
+                - generic [ref=f1e1541]:
+                  - generic [ref=f1e1542]: What worked
+                  - generic [ref=f1e1543]:
+                    - generic [ref=f1e1544] [cursor=pointer]:
+                      - generic [ref=f1e1545]: Vortex carried
+                      - generic [ref=f1e1546]: Team-high 1.9 average rating.
+                    - generic [ref=f1e1547]:
+                      - generic [ref=f1e1548]: Defense is a wall
+                      - generic [ref=f1e1549]: 5/5 defense rounds won (100%).
+                    - generic [ref=f1e1550]:
+                      - generic [ref=f1e1551]: Attack is clicking
+                      - generic [ref=f1e1552]: 8/12 attack rounds won (67%).
+                - generic [ref=f1e1553]:
+                  - generic [ref=f1e1554]: Where it broke down
+                  - generic [ref=f1e1556] [cursor=pointer]:
+                    - generic [ref=f1e1557]: Ghost off-colour
+                    - generic [ref=f1e1558]: 0.77 average rating across the series.
+                    - generic [ref=f1e1559]: Young with room (proj. 83–99) — a development call, not a bench.
+              - text: What to tweak
+              - generic [ref=f1e1560]: ▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+              - paragraph [ref=f1e1562]: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+            - generic [ref=f1e1563]:
+              - heading "Americas league" [level=2] [ref=f1e1564]
+              - table [ref=f1e1565]:
+                - rowgroup [ref=f1e1566]:
+                  - row [ref=f1e1567]:
+                    - columnheader "#" [ref=f1e1568]
+                    - columnheader "Team" [ref=f1e1569]
+                    - columnheader "W" [ref=f1e1570]
+                    - columnheader "L" [ref=f1e1571]
+                    - columnheader "+/-" [ref=f1e1572]
+                - rowgroup [ref=f1e1573]:
+                  - row [ref=f1e1574]:
+                    - cell "1" [ref=f1e1575]
+                    - cell "Team Vanguard" [ref=f1e1576]
+                    - cell "9" [ref=f1e1577]
+                    - cell "0" [ref=f1e1578]
+                    - cell "+62" [ref=f1e1579]
+                  - row [ref=f1e1580]:
+                    - cell "2" [ref=f1e1581]
+                    - cell "Team Nexus" [ref=f1e1582]
+                    - cell "8" [ref=f1e1583]
+                    - cell "1" [ref=f1e1584]
+                    - cell "+55" [ref=f1e1585]
+                  - row [ref=f1e1586]:
+                    - cell "3" [ref=f1e1587]
+                    - cell "Rust Belt Gaming" [ref=f1e1588]
+                    - cell "6" [ref=f1e1589]
+                    - cell "3" [ref=f1e1590]
+                    - cell "+36" [ref=f1e1591]
+                  - row [ref=f1e1592]:
+                    - cell "4" [ref=f1e1593]
+                    - cell "Saracen Guard" [ref=f1e1594]
+                    - cell "6" [ref=f1e1595]
+                    - cell "3" [ref=f1e1596]
+                    - cell "+28" [ref=f1e1597]
+              - text: Last result
+              - generic [ref=f1e1598]:
+                - generic [ref=f1e1599]: W
+                - generic [ref=f1e1600] [cursor=pointer]: Nordic Frost
+                - generic [ref=f1e1601]: 13–4
+                - img "haven" [ref=f1e1603]
+              - paragraph [ref=f1e1604]: "World #3 · Rep 64 · Fans 311.7K"
+              - button "Full table ▸" [ref=f1e1605] [cursor=pointer]
+          - generic [ref=f1e1606]:
+            - generic [ref=f1e1607]:
+              - heading "Needs you" [level=2] [ref=f1e1608]
+              - generic [ref=f1e1609]:
+                - generic [ref=f1e1610] [cursor=pointer]: ▸ No game plan set for W10
+                - generic [ref=f1e1611] [cursor=pointer]: ▸ 16 unread inbox messages
+                - generic [ref=f1e1612] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f1e1613]: Coach proposed a scrim plan Match · Prep
+                - generic [ref=f1e1614] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f1e1615]: "Vortex: Season MVP Award · In Contention · 3rd · 1.51"
+            - generic [ref=f1e1616]:
+              - heading "News" [level=2] [ref=f1e1617]
+              - generic [ref=f1e1618]:
+                - generic [ref=f1e1619]: "[S1 W10] Team Nexus upgrade Marketing Office to level 1 (150,000 cr)."
+                - generic [ref=f1e1620]: "[S1 W9] Midnight Polders part with Veer and appoint TK9 after a 2-match losing streak."
+                - generic [ref=f1e1621]: "[S1 W9] Hollowhawk (Volga Reign) passes 100 kills this season."
+                - generic [ref=f1e1622]: "[S1 W9] Hollowflare (Volga Reign) passes 200 kills this season."
+                - generic [ref=f1e1623]: "[S1 W9] Staticstrike (Tokyo Drift Six) passes 100 kills this season."
+                - generic [ref=f1e1624]: "[S1 W9] Grimstrike (Solar Flare) passes 100 kills this season."
+                - generic [ref=f1e1625]: "[S1 W9] Emberstep (Solar Flare) passes 100 kills this season."
+                - generic [ref=f1e1626]: "[S1 W9] Wraithveil (Seoul Dynasty Prime) passes 100 kills this season."
+                - generic [ref=f1e1627]: "[S1 W9] Riftstrike (Seoul Dynasty Prime) passes 200 kills this season."
+                - generic [ref=f1e1628]: "[S1 W9] Crimghost (Saracen Guard) passes 100 kills this season."
+                - generic [ref=f1e1629]: "[S1 W9] Frostbyte (Saracen Guard) passes 100 kills this season."
+                - generic [ref=f1e1630]: "[S1 W9] Cipherflare (Patagonia Sur) passes 100 kills this season."
+  - generic [ref=f1e1089]: The response reads confident without feeding the story.
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Dashboard
+    - generic: See what changed, what needs a decision, and what the next fixture demands.
+    - generic: Begin with Needs You, then scan the next fixture and recent form.

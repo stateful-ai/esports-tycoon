@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:21:09.907936+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-roster-recovery",
+    "run-code",
+    "async (page) => await page.evaluate(async()=>{ const r=await fetch(\"/api/players/fa_0/profile\");const d=await r.json();return {status:r.status,keys:Object.keys(d),player:d.player,overview:d.overview}; })"
+  ],
+  "stdout_bytes": 2004,
+  "stderr_bytes": 0
+}

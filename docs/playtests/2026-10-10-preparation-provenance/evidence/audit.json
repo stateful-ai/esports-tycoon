@@ -1,0 +1,223 @@
+{
+  "baseline_actions": 40,
+  "final_actions": 43,
+  "added_actions": [
+    {
+      "index": 40,
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "8",
+        "fixture_id": "s1w8m2am",
+        "id": "56b309304e67d091",
+        "intensity": "light",
+        "map_id": "ascent",
+        "objective": "mental_reset",
+        "opponent_id": "team_sahara_compass",
+        "partner_id": "team_hokkaido_drift",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 41,
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "media_choice",
+      "params": {
+        "choice_id": "keep_internal",
+        "event_id": "841e9532e560ba1e"
+      },
+      "source": "web"
+    },
+    {
+      "index": 42,
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "baseline_prefix_preserved": true,
+  "original_source_unchanged_sha256": "ea97d274868fe1e1f21c24ea8f66e9a3b9807cf0aa271b0f8042d279d6e0147a",
+  "saved_week": 9,
+  "saved_report": {
+    "plan_id": "56b309304e67d091",
+    "team_id": "team_nexus",
+    "fixture_id": "s1w8m2am",
+    "opponent_id": "team_sahara_compass",
+    "partner_id": "team_hokkaido_drift",
+    "map_id": "ascent",
+    "objective": "mental_reset",
+    "intensity": "light",
+    "season": 1,
+    "week": 8,
+    "status": "completed",
+    "finding_code": "composure_ready",
+    "finding": "Squad morale entered at 88.8/100; the group reset with a lighter load.",
+    "evidence": {
+      "own_map_samples": 1,
+      "opponent_map_samples": 2,
+      "partner_map_samples": 1,
+      "own_attack_win_pct": 90.0,
+      "own_defense_win_pct": 33.3,
+      "opponent_attack_win_pct": 51.9,
+      "opponent_defense_win_pct": 44.8,
+      "partner_map_win_pct": 100.0,
+      "scouting_confidence": 0.34,
+      "average_stamina": 70.1,
+      "average_morale": 88.8,
+      "rotation_candidate_id": "echo"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "methodology",
+    "knowledge_gain": 0.67,
+    "stamina_cost": 1.5,
+    "morale_delta": 2.5,
+    "chemistry_delta": 0.3,
+    "artifact_label": "Methodology +0.7",
+    "prep_edge_contribution": 0.0,
+    "dev_suggestion_player_id": "echo",
+    "dev_suggestion": "Map mastery projects Echo as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  "world_usage_events": 57,
+  "world_attempts": 5,
+  "world_results": 5,
+  "pairs": [
+    {
+      "session_id": "b411920c8ec3bd4907792ab17da66838",
+      "request_id": 12,
+      "target": "/api/actions/preparation",
+      "results": [
+        {
+          "schema_version": 1,
+          "session_id": "b411920c8ec3bd4907792ab17da66838",
+          "received_at": "2026-10-10T18:02:34.491855+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 8,
+          "kind": "result",
+          "target": "/api/actions/preparation",
+          "request_id": 12,
+          "outcome": "success",
+          "status": 200,
+          "duration_ms": 30
+        }
+      ]
+    },
+    {
+      "session_id": "b411920c8ec3bd4907792ab17da66838",
+      "request_id": 16,
+      "target": "/api/actions/advance",
+      "results": [
+        {
+          "schema_version": 1,
+          "session_id": "b411920c8ec3bd4907792ab17da66838",
+          "received_at": "2026-10-10T18:02:34.773032+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 8,
+          "kind": "result",
+          "target": "/api/actions/advance",
+          "request_id": 16,
+          "outcome": "http_error",
+          "status": 409,
+          "duration_ms": 30
+        }
+      ]
+    },
+    {
+      "session_id": "91fa8df1cf5f85b37c82d4492eb557ab",
+      "request_id": 10,
+      "target": "/api/actions/media_event",
+      "results": [
+        {
+          "schema_version": 1,
+          "session_id": "91fa8df1cf5f85b37c82d4492eb557ab",
+          "received_at": "2026-10-10T18:04:18.138223+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 8,
+          "kind": "result",
+          "target": "/api/actions/media_event",
+          "request_id": 10,
+          "outcome": "success",
+          "status": 200,
+          "duration_ms": 11
+        }
+      ]
+    },
+    {
+      "session_id": "91fa8df1cf5f85b37c82d4492eb557ab",
+      "request_id": 21,
+      "target": "/api/actions/advance",
+      "results": [
+        {
+          "schema_version": 1,
+          "session_id": "91fa8df1cf5f85b37c82d4492eb557ab",
+          "received_at": "2026-10-10T18:04:42.764579+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 9,
+          "kind": "result",
+          "target": "/api/actions/advance",
+          "request_id": 21,
+          "outcome": "success",
+          "status": 200,
+          "duration_ms": 23930
+        }
+      ]
+    },
+    {
+      "session_id": "24c415485fe46182b1e4c8fed6d5d2a9",
+      "request_id": 14,
+      "target": "/api/actions/save",
+      "results": [
+        {
+          "schema_version": 1,
+          "session_id": "24c415485fe46182b1e4c8fed6d5d2a9",
+          "received_at": "2026-10-10T18:07:04.230156+00:00",
+          "world": "26UHC",
+          "team": "team_nexus",
+          "season": 1,
+          "week": 9,
+          "kind": "result",
+          "target": "/api/actions/save",
+          "request_id": 14,
+          "outcome": "success",
+          "status": 200,
+          "duration_ms": 146
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    "24c415485fe46182b1e4c8fed6d5d2a9",
+    "915a3c6e112b615f8ef29e6f0b5c9278",
+    "91fa8df1cf5f85b37c82d4492eb557ab",
+    "b411920c8ec3bd4907792ab17da66838"
+  ]
+}

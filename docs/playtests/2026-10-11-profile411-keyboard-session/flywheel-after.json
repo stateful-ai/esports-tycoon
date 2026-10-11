@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0268",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Player names now support keyboard inspection",
+    "problem": "Club player names were not Tab stops.",
+    "solution": "Actual13Tabs reached Apex with visible2px teal focus; EnteroneGET, VortexSpaceoneGET; CompanyGhost and nestedGhost alsooneGET each.",
+    "lesson": "Exact411 nativebutton names provide real keyboard entry across played imperative and Preact contexts without campaign decisions.",
+    "confidence": "high",
+    "source": "2026-10-11-profile411-keyboard-session exact3cf2fa1 world26UHC seed2038 S2W7 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0269",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Tournament eligibility and player inspection are separate",
+    "problem": "A profile opener inside checkbox label could also toggle selection.",
+    "solution": "Actual12Tabs reached named Apex checkbox, nextTab reached Apexprofilebutton; EnteroneGET; eightcheckedvalues unchanged.",
+    "lesson": "Separate checkbox labels and native profile siblings preserve distinct focus targets without submitting registration.",
+    "confidence": "high",
+    "source": "2026-10-11-profile411-keyboard-session exact3cf2fa1 world26UHC seed2038 S2W7 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0270",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Market row click expands details separately from profile button",
+    "problem": "Observer incorrectly expected agecell to issue profileGET and finalized premature successful result.",
+    "solution": "Retained10s timeout; appended correction9; freshagecell expandedNeohawkdetails with no API request; keyboardnameEnteroneGET passed.",
+    "lesson": "Read the visible row result before finalizing outcomes; Marketrow expansion and profile opening have distinct behavior.",
+    "confidence": "high",
+    "source": "2026-10-11-profile411-keyboard-session exact3cf2fa1 world26UHC seed2038 S2W7 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "pain-point"
+  }
+]

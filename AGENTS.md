@@ -70,3 +70,7 @@ Quick orientation for any agent:
   CSV, reporting quantitative coverage and gaps with evidence. Keep timestamps
   and subjective observations outside deterministic GameState. Preserve the
   existing pre/post play flywheel loop in `CLAUDE.md`.
+- Follow `/playtest-log` for source provenance: retain actual raw pre/post
+  freezes and HEAD/tree/index evidence; distinguish raw Git blobs from archive
+  or checkout conversion and verified CRLF-only equality. Report snapshot
+  record totals separately from manager-key counts.

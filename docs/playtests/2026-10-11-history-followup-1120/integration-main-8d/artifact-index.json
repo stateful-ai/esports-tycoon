@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/playtests/2026-10-11-history-followup-1120/integration-main-8d/csv-conflict-base.csv",
+    "bytes": 1568755,
+    "sha256": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-followup-1120/integration-main-8d/csv-conflict-ours-candidate1120.csv",
+    "bytes": 1694269,
+    "sha256": "1c852434af5d8c48b0b3f7c9bb6eff3dcc44ad6eeabbb35fad2b33e8296d7590"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-followup-1120/integration-main-8d/csv-conflict-theirs-actualmain1044.csv",
+    "bytes": 1616409,
+    "sha256": "ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-followup-1120/integration-main-8d/csv-conflicted-working-copy.txt",
+    "bytes": 1694342,
+    "sha256": "9c6c64e80d0cc059c53686c423b28b63911917faa444ed1e7a7878a8c6441240"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-followup-1120/integration-main-8d/csv-resolved-frozen1120.csv",
+    "bytes": 1694269,
+    "sha256": "1c852434af5d8c48b0b3f7c9bb6eff3dcc44ad6eeabbb35fad2b33e8296d7590"
+  }
+]

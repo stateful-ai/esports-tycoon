@@ -1,0 +1,7 @@
+{
+  "rows": 9,
+  "only_current_session_analytics_annotations_changed": true,
+  "immutable_player_intents_timestamps_outcomes_preserved": true,
+  "sha256_before": "f32baed615e11bcd7ae5f473008f530d4c459077cccf8a50efab76ee848ef3b3",
+  "sha256_after": "de9df365896c56f12aa2ce466eae4842c8efe7598eee99349ca21274c89cfdec"
+}

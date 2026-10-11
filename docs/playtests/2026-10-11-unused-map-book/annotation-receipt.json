@@ -1,0 +1,35 @@
+{
+  "preannotation_sha256": "79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27",
+  "annotated_sha256": "0f152cb17cf85181bd55f4bba90ee64f09e22b139394645a652062cfb7a22a24",
+  "row_count": 3,
+  "schema_field_count": 21,
+  "unchanged_fields": [
+    "session_id",
+    "step",
+    "started_at_utc",
+    "finished_at_utc",
+    "commit",
+    "working_tree_dirty",
+    "game_version",
+    "model",
+    "effort",
+    "surface",
+    "world_code",
+    "seed",
+    "game_time",
+    "intent",
+    "action",
+    "expected_outcome",
+    "actual_outcome",
+    "result",
+    "evidence"
+  ],
+  "unchanged_field_count": 19,
+  "all_unchanged_fields_equal": true,
+  "only_changed_fields": [
+    "analytics_status",
+    "analytics_evidence"
+  ],
+  "step_2_evidence_remains_empty": true,
+  "scope": "Factual stream annotations only; no timestamps, expectations, subjective outcomes or evidence fields rewritten."
+}
