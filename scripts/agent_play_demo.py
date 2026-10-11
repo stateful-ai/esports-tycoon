@@ -21,7 +21,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from esports_sim.manager import flavor_events, media_events
 from esports_sim.manager.agent_play import AgentWorld, InvalidManagerAction
 from esports_sim.registry import load_all
 
@@ -44,25 +43,16 @@ def scripted_turn(world: AgentWorld, team_id: str, week_index: int) -> list[str]
         r = world.act(team_id, {"kind": "set_scout", "params": {"target": target}})
         lines.append(f"  {team_id}: set_scout -> {r['message']}")
 
-    # Pending events block the vote; resolve them the way a real agent would
-    # (they are surfaced in legal_actions too).
-    pending = flavor_events.pending_for(world.gs, team_id)
-    if pending is not None:
-        world.act(team_id, {
-            "kind": "resolve_flavor",
-            "params": {"event_id": pending.id, "choice_id": pending.choices[0].id},
-        })
-        lines.append(f"  {team_id}: resolved flavor event {pending.id}")
-    pending_media = media_events.pending_for(world.gs, team_id)
-    if pending_media is not None:
-        world.act(team_id, {
-            "kind": "resolve_media",
-            "params": {
-                "event_id": pending_media.id,
-                "choice_id": pending_media.choices[0].id,
-            },
-        })
-        lines.append(f"  {team_id}: resolved media decision {pending_media.id}")
+    # Event choices come only from a fresh manager observation. A prior
+    # decision may change the next event, so refresh before each action.
+    for kind, label in (("resolve_flavor", "flavor event"), ("resolve_media", "media decision")):
+        event = world.observe(team_id)["legal_actions"][kind]
+        if event["enabled"]:
+            world.act(team_id, {
+                "kind": kind,
+                "params": {"event_id": event["event_id"], "choice_id": event["choice_ids"][0]},
+            })
+            lines.append(f"  {team_id}: resolved {label} {event['event_id']}")
 
     vote = world.act(team_id, {"kind": "advance", "params": {}})
     if vote["advanced"]:

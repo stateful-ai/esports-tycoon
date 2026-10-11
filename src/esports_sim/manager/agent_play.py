@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import Any, Iterable, Literal, Mapping
 
 from esports_sim.manager import career, flavor_events, market, media_events, telemetry
 from esports_sim.manager.campaign import WeekReport, advance_week, new_campaign
@@ -42,13 +42,14 @@ from esports_sim.manager.decision_env import (
     validate_manager_action,
 )
 
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import Fixture, GameState
 from esports_sim.registry import GameData
 from esports_sim.registry.rosters import load_roster_pack
 from esports_sim.schemas import Event
 
 __all__ = [
     "AGENT_PLAY_VERSION",
+    "AdvanceSource",
     "OBSERVATION_VERSION",
     "SUPPORTED_ACTIONS",
     "TITLE_KINDS",
@@ -68,6 +69,7 @@ __all__ = [
 ]
 
 AGENT_PLAY_VERSION = 1
+AdvanceSource = Literal["web", "cli", "agent"]
 
 # Chronicle kinds that count as titles, in objective order (the season-capping
 # Champions bracket is the top prize agents play for).
@@ -122,10 +124,21 @@ class WeekTick:
     summaries: dict[str, dict[str, Any]]
 
 
-def seat_week_results(gs: GameState, team_id: str, week: int) -> list[dict[str, Any]]:
-    """This seat's played fixtures for one week, from the seat's viewpoint."""
+def seat_week_results(
+    gs: GameState,
+    team_id: str,
+    week: int,
+    *,
+    fixtures: Iterable[Fixture] | None = None,
+) -> list[dict[str, Any]]:
+    """This seat's played fixtures for one week, from the seat's viewpoint.
+
+    A resolved tick supplies its report fixtures: season rollover replaces
+    ``gs.fixtures`` before the digest is built.
+    """
     out: list[dict[str, Any]] = []
-    for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id)):
+    source = gs.fixtures if fixtures is None else fixtures
+    for f in sorted(source, key=lambda x: (x.week, x.id)):
         if f.week != week or not f.played or team_id not in (f.team_a, f.team_b):
             continue
         opponent = f.team_b if f.team_a == team_id else f.team_a
@@ -180,7 +193,8 @@ def tick_shared_week(
     ready: set[str],
     *,
     events_out: dict[str, list[list[Event]]] | None = None,
-    source: str = "agent",
+    source: AdvanceSource = "agent",
+    sources_by_team: Mapping[str, AdvanceSource] | None = None,
 ) -> WeekTick:
     """Advance the shared world exactly once, after every seat has voted.
 
@@ -190,7 +204,8 @@ def tick_shared_week(
     seat's advance decision, run ``advance_week`` once, and build a per-seat
     digest (reward components, match results, standings movement) so every
     agent learns what the week did to THEM regardless of which request
-    triggered the tick."""
+    triggered the tick. Mixed surfaces supply each seat's accepted vote source;
+    ``source`` remains the default for single-surface in-process callers."""
     humans = sorted(gs.human_team_ids)
     if set(humans) - set(ready):
         raise ValueError("tick_shared_week called before every seat was ready")
@@ -208,10 +223,17 @@ def tick_shared_week(
     # Each seat's ready-up is its own recorded decision (the advance is the
     # RL episode's step boundary) — same ordering as the web endpoint.
     for t in humans:
-        telemetry.record_action(gs, "advance", team_id=t, source=source)
+        seat_source = (
+            sources_by_team.get(t, source) if sources_by_team is not None else source
+        )
+        telemetry.record_action(gs, "advance", team_id=t, source=seat_source)
     features_before = {t: telemetry.state_features(gs, t) for t in humans}
     positions_before = {t: _region_position(gs, t) for t in humans}
 
+    # Replays belong to the latest resolved week. Wait until the ready and
+    # roster checks pass so a rejected vote preserves the previous replay.
+    if events_out is not None:
+        events_out.clear()
     report = advance_week(gs, gd, events_out=events_out)
     # advance_week churns the acting pointer internally; restore the caller's.
     gs.set_acting(previous_acting)
@@ -244,7 +266,7 @@ def tick_shared_week(
             "now_season": gs.season,
             "now_week": gs.week,
             "now_phase": gs.phase,
-            "results": seat_week_results(gs, t, week_before),
+            "results": seat_week_results(gs, t, week_before, fixtures=report.fixtures),
             "income": report.income_by.get(t, 0),
             "expenses": report.expenses_by.get(t, 0),
             "position_before": positions_before[t],

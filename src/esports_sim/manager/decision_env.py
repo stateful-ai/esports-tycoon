@@ -377,7 +377,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     has_space = len(roster) < market.roster_cap(gs, team_id)
     bid_options: list[dict[str, Any]] = []
     buyout_options: list[dict[str, Any]] = []
-    if market_open and has_space:
+    if market_open:
         is_tier1 = gs.teams[team_id].tier == 1
         for tid in sorted(gs.teams):
             if tid == team_id:
@@ -399,14 +399,20 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
                     for o in gs.transfer_offers
                 ):
                     ask = market.transfer_ask(gs, pid)
-                    if team_balance >= ask + wages:
+                    # Human bids only park an offer: roster space is checked
+                    # when the seller accepts. AI bids transfer immediately
+                    # and must pass the execution preconditions now.
+                    can_bid = seller_human or market.can_execute_transfer(
+                        gs, pid, team_id, ask
+                    )[0]
+                    if team_balance >= ask + wages and can_bid:
                         bid_options.append({
                             "player_id": pid,
                             "team_id": tid,
                             "ask": ask,
                             "seller_human": seller_human,
                         })
-                if is_tier1:
+                if is_tier1 and has_space:
                     fee = market.buyout_fee(gs, pid)
                     if fee is not None and team_balance >= fee + wages:
                         buyout_options.append(

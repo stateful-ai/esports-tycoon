@@ -7,6 +7,7 @@ from __future__ import annotations
 import pytest
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from types import SimpleNamespace
 
 fastapi = pytest.importorskip("fastapi")
@@ -65,6 +66,97 @@ def test_agent_state_requires_a_world(lobby):
     with pytest.raises(HTTPException) as err:
         server.agent_state()
     assert err.value.status_code == 409
+
+
+@pytest.mark.parametrize("cached_tick", [True, False])
+def test_accept_job_keeps_last_tick_available_at_new_club(lobby, cached_tick):
+    from esports_sim.manager import career
+
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    old = "team_nexus"
+    other = next(t for t in sorted(game.gs.teams) if t != old and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=other))
+    game.gs.game_mode = "legacy"
+    seat = game.gs.manager_for(old)
+    career.apply_dismissals(game.gs, [seat.id])
+    target = game.gs.career_offers_by[seat.id][0].team_id
+    chronicle_before = deepcopy(game.gs.chronicle)
+
+    # Represent the dismissal week's cached digest without simulating a week.
+    # Historical club references must survive the cache-key move verbatim.
+    digest = {
+        "season": 1, "week": 10, "now_season": 2, "now_week": 1,
+        "done": True, "reward": -1.0,
+        "results": [{"fixture_id": "s1_test", "opponent_id": other, "score": [1, 2]}],
+        "season_champion": {"team_id": old, "team_name": game.gs.teams[old].name, "yours": True},
+    }
+    digest_before = deepcopy(digest)
+    other_digest = {"season": 1, "week": 10, "done": False}
+    game.agent_last_tick = {other: other_digest}
+    if cached_tick:
+        game.agent_last_tick[old] = digest
+    game.tick_seq = 3
+    game.ready.update((old, other))
+
+    _as(lobby, SID_A)
+    moved = server.agent_act(server.AgentActBody(kind="accept_job", params={"team_id": target}))
+    assert moved["ok"] and moved["team_id"] == target
+    assert lobby.membership(SID_A) == (game.code, target)
+    assert game.gs.managers[seat.id].team_id == target
+    assert game.ready == {other}
+    assert old not in game.agent_last_tick
+    assert game.agent_last_tick[other] is other_digest
+    assert game.gs.chronicle[:len(chronicle_before)] == chronicle_before
+    assert game.gs.chronicle[-1].kind == "appointment"
+    assert game.gs.chronicle[-1].team_id == target
+    assert game.gs.chronicle[-1].manager_id == seat.id
+
+    # A fresh request resolves the new lobby binding before reading either API.
+    _as(lobby, SID_A)
+    state = server.agent_state()
+    sync = server.agent_sync()
+    assert state["team_id"] == target
+    assert sync["tick_seq"] == state["sync"]["tick_seq"] == 3
+    expected = digest_before if cached_tick else None
+    assert sync["last_tick"] == state["sync"]["last_tick"] == expected
+    if cached_tick:
+        assert game.agent_last_tick[target] is digest
+        assert digest == digest_before
+    else:
+        assert target not in game.agent_last_tick
+    _as(lobby, SID_B)
+    assert server.agent_sync()["last_tick"] == other_digest
+
+
+def test_rejected_job_does_not_rebind_last_tick(lobby):
+    from esports_sim.manager import career
+
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    old = "team_nexus"
+    game.gs.game_mode = "legacy"
+    seat = game.gs.manager_for(old)
+    career.apply_dismissals(game.gs, [seat.id])
+    digest = {"season": 1, "week": 10, "done": True}
+    game.agent_last_tick[old] = digest
+    game.ready.add(old)
+    before = game.gs.model_dump_json()
+
+    _as(lobby, SID_A)
+    with pytest.raises(HTTPException) as err:
+        server.agent_act(server.AgentActBody(kind="accept_job", params={"team_id": "unknown-club"}))
+    assert err.value.status_code == 422
+    assert game.gs.model_dump_json() == before
+    assert lobby.membership(SID_A) == (game.code, old)
+    assert game.ready == {old}
+    assert game.agent_last_tick == {old: digest}
+    assert game.agent_last_tick[old] is digest
+    assert server.agent_state()["sync"]["last_tick"] == digest
+    assert server.agent_sync()["last_tick"] == digest
 
 
 @pytest.mark.parametrize("pace", ["fast", None, [], {}])
@@ -289,6 +381,10 @@ def test_create_act_vote_and_mixed_human_agent_barrier(lobby, game_data):
     _as(lobby, SID_A)
     report = server.advance()
     assert report["advanced"] is True
+    advances = [a for a in game.gs.action_log if a.kind == "advance"]
+    assert {a.team_id: a.source for a in advances} == {
+        "team_nexus": "web", free: "agent",
+    }
 
     # Both seats now see the resolved week's digest.
     for sid, tid in ((SID_A, "team_nexus"), (SID_B, free)):
@@ -309,3 +405,107 @@ def test_create_act_vote_and_mixed_human_agent_barrier(lobby, game_data):
     assert objective["team_id"] == free
     assert objective["titles"]["total"] == 0
     assert [r["team_id"] for r in objective["rival_seats"]] == ["team_nexus"]
+
+
+@pytest.mark.parametrize("agent_first", [False, True])
+def test_mixed_votes_keep_first_source_through_repeat_and_reset(lobby, agent_first):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    a = "team_nexus"
+    b = next(t for t in sorted(game.gs.teams) if t != a and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=b))
+
+    def vote(sid, agent):
+        _as(lobby, sid)
+        return (server.agent_act(server.AgentActBody(kind="advance"))
+                if agent else server.advance())
+
+    before_log = list(game.gs.action_log)
+    season, week, phase = game.gs.season, game.gs.week, game.gs.phase
+    first_source = "agent" if agent_first else "web"
+    assert not vote(SID_A, agent_first)["advanced"]
+    assert game.ready_sources == {a: first_source}
+    assert game.gs.action_log == before_log  # a pending vote is not a tick decision
+    assert not vote(SID_A, not agent_first)["advanced"]
+    assert game.ready_sources == {a: first_source}
+    assert game.gs.action_log == before_log
+    assert vote(SID_B, not agent_first)["advanced"]
+    advances = [row for row in game.gs.action_log if row.kind == "advance"]
+    assert [row.team_id for row in advances] == sorted([a, b])
+    assert {row.team_id: row.source for row in advances} == {
+        a: first_source, b: "web" if agent_first else "agent",
+    }
+    assert all((row.season, row.week, row.phase) == (season, week, phase)
+               and row.params == {} and row.manager_id for row in advances)
+    assert not game.ready and not game.ready_sources
+
+    # A fresh vote board may use different surfaces; previous-week provenance
+    # cannot follow a seat into its next accepted advance.
+    for tid in (a, b):
+        pending = server.flavor_events.pending_for(game.gs, tid)
+        if pending is not None:
+            server.flavor_events.resolve(game.gs, tid, pending.choices[0].id)
+        pending = server.media_events.pending_for(game.gs, tid)
+        if pending is not None:
+            server.media_events.resolve(game.gs, tid, pending.choices[0].id)
+    assert not vote(SID_A, not agent_first)["advanced"]
+    assert vote(SID_B, agent_first)["advanced"]
+    advances = [row for row in game.gs.action_log if row.kind == "advance"]
+    assert {row.team_id: row.source for row in advances[-2:]} == {
+        a: "web" if agent_first else "agent", b: first_source,
+    }
+    assert not game.ready and not game.ready_sources
+
+
+def test_rejected_short_roster_revokes_source_and_reready_uses_new_surface(lobby):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    a = "team_nexus"
+    b = next(t for t in sorted(game.gs.teams) if t != a and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=b))
+    _as(lobby, SID_A)
+    assert not server.agent_act(server.AgentActBody(kind="advance"))["advanced"]
+    original_roster = list(game.gs.teams[a].player_ids)
+    game.gs.teams[a].player_ids = original_roster[:server.market.ROSTER_MIN - 1]
+    before = game.gs.model_dump_json()
+    with pytest.raises(HTTPException):
+        server.advance()  # rejected before voting: keep the pending vote intact
+    assert game.gs.model_dump_json() == before
+    assert game.ready_sources == {a: "agent"}
+    _as(lobby, SID_B)
+    with pytest.raises(HTTPException):
+        server.advance()  # tick-time revalidation revokes A's old vote and source
+    assert game.ready == {b} and game.ready_sources == {b: "web"}
+    assert not [row for row in game.gs.action_log if row.kind == "advance"]
+    game.gs.teams[a].player_ids = original_roster
+    _as(lobby, SID_A)
+    assert server.advance()["advanced"]
+    assert {row.team_id: row.source for row in game.gs.action_log if row.kind == "advance"} == {
+        a: "web", b: "web",
+    }
+    assert not game.ready and not game.ready_sources
+
+
+def test_vote_source_follows_session_vote_lifetime_on_leave_resume_and_reload(lobby):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=916))
+    game = lobby.games[created["code"]]
+    b = next(t for t in sorted(game.gs.teams) if t != "team_nexus" and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=b))
+    _as(lobby, SID_A)
+    server.agent_act(server.AgentActBody(kind="advance"))
+    server.leave_game()
+    assert game.ready == {"team_nexus"}
+    assert game.ready_sources == {"team_nexus": "agent"}
+    server.resume_game(server.ResumeBody(code=game.code))
+    _as(lobby, SID_A)
+    assert not server.advance()["advanced"]
+    assert game.ready_sources == {"team_nexus": "agent"}
+    reloaded = server._Game(game.gd, game.code)
+    assert not reloaded.ready and not reloaded.ready_sources
+    assert not [row for row in reloaded.gs.action_log if row.kind == "advance"]

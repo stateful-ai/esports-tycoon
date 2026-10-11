@@ -242,6 +242,36 @@ class LearnedManagerModel:
             categorical_weights[head] = _fit_softmax(head_x, head_y, len(labels))
             categorical_labels[head] = labels
 
+        # False is a meaningful demonstration, not a missing categorical value.
+        # Ground the accept mask in the demonstrated offer's public legal row.
+        transfer_examples = []
+        for row in rows:
+            if row["action"]["kind"] != "transfer_offer":
+                continue
+            params = row["action"].get("params", {})
+            if type(params.get("accept")) is not bool:
+                continue
+            offers = row["observation"]["legal_actions"].get("transfer_offer", {}).get("offers", [])
+            offer = next((
+                offer for offer in offers
+                if offer["player_id"] == params.get("player_id")
+                and offer["to_team"] == params.get("to_team")
+            ), None)
+            if offer is None or (params["accept"] and not offer.get("can_accept", False)):
+                continue
+            transfer_examples.append((
+                conditioned_features(row["observation"]), int(params["accept"]),
+                [True, bool(offer.get("can_accept", False))],
+            ))
+        if transfer_examples:
+            categorical_labels["transfer_accept"] = ("false", "true")
+            categorical_weights["transfer_accept"] = _fit_softmax(
+                np.stack([x for x, _, _ in transfer_examples]),
+                np.asarray([label for _, label, _ in transfer_examples]),
+                2,
+                np.asarray([mask for _, _, mask in transfer_examples], dtype=bool),
+            )
+
         scout_examples = [
             (
                 conditioned_features(row["observation"]),
@@ -397,6 +427,20 @@ class LearnedManagerModel:
             raise ValueError("checkpoint action weight shape is incompatible with vocabulary and encoder")
         if not np.isfinite(action_weights).all():
             raise ValueError("checkpoint action weights must be finite")
+        # This optional head is additive: legacy checkpoints omit it entirely.
+        transfer_weights = payload.get("categorical_weights", {}).get("transfer_accept")
+        transfer_labels = payload.get("categorical_labels", {}).get("transfer_accept")
+        if transfer_weights is not None or transfer_labels is not None:
+            try:
+                transfer_weights = np.asarray(transfer_weights, dtype=np.float64)
+            except (ValueError, TypeError) as exc:
+                raise ValueError("checkpoint transfer accept head is incompatible") from exc
+            if (
+                transfer_labels != ["false", "true"]
+                or transfer_weights.shape != (2, feature_count)
+                or not np.isfinite(transfer_weights).all()
+            ):
+                raise ValueError("checkpoint transfer accept head is incompatible")
         return cls(
             action_weights=action_weights,
             action_vocab=vocab,
@@ -430,14 +474,36 @@ def _candidate_rows(obs: dict[str, Any], kind: str) -> list[tuple[str, np.ndarra
     own = {row["id"]: row for row in obs.get("roster", [])}
     free = {row["player_id"]: row for row in obs.get("free_agents", [])}
     staff = {row["id"]: row for row in obs.get("staff_candidates", [])}
+    transfer = {
+        option["player_id"]: option for option in legal.get("options", [])
+    } if kind in ("bid", "buyout") else {}
+    scouted = {
+        row["player_id"]: row for row in (obs.get("opponent") or {}).get("players", [])
+    }
     ids: list[str] = []
-    if "player_ids" in legal:
+    if kind in ("bid", "buyout"):
+        ids = list(transfer)
+    elif "player_ids" in legal:
         ids = list(legal["player_ids"])
     elif "candidate_ids" in legal:
         ids = list(legal["candidate_ids"])
     rows: list[tuple[str, np.ndarray]] = []
-    for cid in ids:
-        if cid in own:
+    for cid in sorted(ids):
+        if cid in transfer:
+            option = transfer[cid]
+            row = scouted.get(cid, {})
+            # Only public mask terms and already-scouted observation rows.
+            # Keep the existing candidate width for older checkpoint heads.
+            values = [
+                float(row.get("perceived_quality", 0.0)) / 100.0,
+                float(row.get("age", 0.0)) / 40.0,
+                float(row.get("asking_salary", 0.0)) / 100_000.0,
+                float(option["ask" if kind == "bid" else "fee"]) / 1_000_000.0,
+                float(option.get("seller_human", False)),
+                float(row.get("progress", 0.0)),
+                0.0, 0.0, 0.0, 0.0,
+            ]
+        elif cid in own:
             row = own[cid]
             values = [
                 row["ca"] / 100.0, row["age"] / 40.0, row["salary"] / 100_000.0,
@@ -507,6 +573,9 @@ class LearnedManagerPolicy:
             return ""
         weight = self.model.candidate_weights.get(kind)
         if weight is None:
+            if kind in ("bid", "buyout"):
+                # Preserve the behavior of checkpoints predating these heads.
+                return obs["legal_actions"][kind]["options"][0]["player_id"]
             return max(rows, key=lambda item: (item[1][0], item[0]))[0]
         return max(rows, key=lambda item: (float(weight @ item[1]), item[0]))[0]
 
@@ -675,15 +744,21 @@ class LearnedManagerPolicy:
                 "principle": "balanced",
             }
         elif kind in ("bid", "buyout"):
-            params = {"player_id": legal["options"][0]["player_id"]}
+            params = {"player_id": self._candidate(obs, kind)}
         elif kind == "transfer_offer":
             offer = legal["offers"][0]
-            # Accept when the move can complete, decline otherwise — both are
-            # legal answers to a live offer.
+            can_accept = bool(offer.get("can_accept", False))
+            weights = self.model.categorical_weights.get("transfer_accept")
+            # Legacy checkpoints retain their deterministic executable-offer
+            # fallback. Learned checkpoints rank only grounded legal answers;
+            # decline remains legal even when acceptance cannot complete.
+            accept = can_accept if weights is None else bool(np.argmax(
+                _softmax(weights @ x, np.asarray([True, can_accept], dtype=bool))
+            ))
             params = {
                 "player_id": offer["player_id"],
                 "to_team": offer["to_team"],
-                "accept": bool(offer.get("can_accept", False)),
+                "accept": accept,
             }
         elif kind == "assignment":
             pid = self._candidate(obs, kind) or legal["player_ids"][0]

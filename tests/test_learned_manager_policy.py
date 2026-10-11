@@ -17,6 +17,7 @@ from esports_sim.manager.learned_manager_policy import (
 from esports_sim.manager.manager_policy import generate_profile
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.rollout import play_policy_week, run_rollout
+from esports_sim.manager.decision_env import OBSERVATION_VERSION
 
 
 def _demonstrations(game_data):
@@ -41,6 +42,55 @@ def test_set_encoder_is_permutation_invariant(game_data):
     shuffled["free_agents"].reverse()
     shuffled["staff_candidates"].reverse()
     assert np.array_equal(encode_observation(obs), encode_observation(shuffled))
+
+
+@pytest.mark.parametrize("kind,cost_key", [("bid", "ask"), ("buyout", "fee")])
+def test_transfer_candidate_head_retains_nonfirst_demonstrated_target(tmp_path, kind, cost_key):
+    profile = generate_profile(124, "transfer-target")
+    options = [
+        {"player_id": "rival-first", "team_id": "seller-a", cost_key: 100_000},
+        {"player_id": "rival-selected", "team_id": "seller-b", cost_key: 600_000},
+    ]
+    obs = {
+        "observation_version": OBSERVATION_VERSION,
+        "features": {}, "season": 1, "week": 1,
+        "manager_profile": profile.to_dict(),
+        "legal_actions": {
+            kind: {"enabled": True, "options": options},
+            "advance": {"enabled": True},
+        },
+    }
+    model = LearnedManagerModel.train([{
+        "observation": obs,
+        "action": {"kind": kind, "params": {"player_id": "rival-selected"}},
+    }])
+    assert kind in model.candidate_weights
+    path = tmp_path / "transfer.json"
+    model.save(path)
+    loaded = LearnedManagerModel.load(path)
+    for checkpoint in (model, loaded):
+        policy = checkpoint.make_policy(profile)
+        assert policy.choose_action(obs) == {
+            "kind": kind, "params": {"player_id": "rival-selected"},
+        }
+        reordered = json.loads(json.dumps(obs))
+        reordered["legal_actions"][kind]["options"].reverse()
+        assert checkpoint.make_policy(profile).choose_action(reordered) == {
+            "kind": kind, "params": {"player_id": "rival-selected"},
+        }
+        # A learned preference cannot emit a target removed from the mask.
+        restricted = json.loads(json.dumps(obs))
+        restricted["legal_actions"][kind]["options"] = [options[0]]
+        assert checkpoint.make_policy(profile).choose_action(restricted)["params"] == {
+            "player_id": "rival-first",
+        }
+
+    # A checkpoint without the additive head retains its prior fallback.
+    legacy = model.clone()
+    legacy.candidate_weights.pop(kind)
+    assert legacy.make_policy(profile).choose_action(obs)["params"] == {
+        "player_id": "rival-first",
+    }
 
 
 def test_training_checkpoint_and_validation_metrics(tmp_path, game_data):

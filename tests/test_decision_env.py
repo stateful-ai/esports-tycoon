@@ -308,6 +308,77 @@ def test_bid_on_human_seller_parks_on_their_desk(game_data):
     assert gs.teams[rival].balance == seller_before + target["ask"]
 
 
+@pytest.mark.parametrize("seller_human", [False, True], ids=["ai-sale", "parked-human-bid"])
+@pytest.mark.parametrize("buyer_full", [False, True], ids=["room", "full"])
+def test_bid_mask_matches_parking_and_immediate_execution(game_data, seller_human, buyer_full):
+    gs = new_campaign(game_data, seed=712)
+    buyer = gs.user_team_id
+    gs.teams[buyer].balance = 5_000_000
+    env = HeadlessManagerEnv(gs, game_data, buyer)
+    # Pick an actually sellable AI target before changing the seller's seat.
+    target = env.observe()["legal_actions"]["bid"]["options"][0]
+    pid, seller = target["player_id"], target["team_id"]
+    if seller_human:
+        gs.human_team_ids.append(seller)
+    cap = market.roster_cap(gs, buyer)
+    while len(gs.teams[buyer].player_ids) < cap - int(not buyer_full):
+        gs.teams[buyer].player_ids.append(gs.free_agent_ids.pop())
+
+    before = gs.model_dump_json()
+    legal = env.observe()["legal_actions"]
+    assert gs.model_dump_json() == before
+    offered = {o["player_id"] for o in legal["bid"]["options"]}
+    assert (pid in offered) == (seller_human or not buyer_full)
+    if buyer_full:
+        assert not legal["buyout"]["enabled"]
+        assert all(o["seller_human"] for o in legal["bid"]["options"])
+        assert legal["bid"]["enabled"] == seller_human
+    if buyer_full and not seller_human:
+        with pytest.raises(InvalidManagerAction, match="roster is full"):
+            env.step({"kind": "bid", "params": {"player_id": pid}})
+        assert gs.model_dump_json() == before
+        return
+
+    buyer_balance = gs.teams[buyer].balance
+    seller_balance = gs.teams[seller].balance
+    result = env.step({"kind": "bid", "params": {"player_id": pid}})
+    assert gs.action_log[-1].kind == "bid"
+    if seller_human:
+        assert "bid sent" in result.message
+        assert pid in gs.teams[seller].player_ids
+        assert pid not in gs.teams[buyer].player_ids
+        assert gs.teams[buyer].balance == buyer_balance
+        assert gs.teams[seller].balance == seller_balance
+        assert pid not in {
+            o["player_id"] for o in env.observe()["legal_actions"]["bid"]["options"]
+        }
+        seller_env = HeadlessManagerEnv(gs, game_data, seller)
+        offer = seller_env.observe()["legal_actions"]["transfer_offer"]["offers"][0]
+        assert offer["player_id"] == pid and offer["to_team"] == buyer
+        assert offer["can_accept"] == (not buyer_full)
+        accept = {"kind": "transfer_offer", "params": {
+            "player_id": pid, "to_team": buyer, "accept": True,
+        }}
+        if buyer_full:
+            parked = gs.model_dump_json()
+            with pytest.raises(InvalidManagerAction, match="roster is full"):
+                seller_env.step(accept)
+            assert gs.model_dump_json() == parked
+            # Make room after parking: acceptance must recheck live capacity.
+            gs.free_agent_ids.append(gs.teams[buyer].player_ids.pop())
+            assert seller_env.observe()["legal_actions"]["transfer_offer"]["offers"][0]["can_accept"]
+        seller_env.step(accept)
+        assert not gs.transfer_offers
+    else:
+        assert "joins" in result.message
+        assert not gs.transfer_offers
+    assert pid in gs.teams[buyer].player_ids
+    assert pid not in gs.teams[seller].player_ids
+    assert len(gs.teams[buyer].player_ids) == cap
+    assert gs.teams[buyer].balance == buyer_balance - target["ask"]
+    assert gs.teams[seller].balance == seller_balance + target["ask"]
+
+
 def test_transfer_offer_answers_are_seller_scoped(game_data):
     gs = new_campaign(game_data, seed=710)
     tid = gs.user_team_id
