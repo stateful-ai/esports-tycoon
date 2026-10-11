@@ -212,6 +212,10 @@ def tick_shared_week(
     features_before = {t: telemetry.state_features(gs, t) for t in humans}
     positions_before = {t: _region_position(gs, t) for t in humans}
 
+    # Replays belong to the latest resolved week. Wait until the ready and
+    # roster checks pass so a rejected vote preserves the previous replay.
+    if events_out is not None:
+        events_out.clear()
     report = advance_week(gs, gd, events_out=events_out)
     # advance_week churns the acting pointer internally; restore the caller's.
     gs.set_acting(previous_acting)

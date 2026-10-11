@@ -226,6 +226,99 @@ def test_last_vote_ticks_once_and_every_seat_gets_a_digest(game_data):
     assert obs["sync"]["tick_seq"] == 1
 
 
+@pytest.mark.parametrize("capture_events", [False, True])
+def test_replays_retain_only_the_latest_resolved_week(game_data, monkeypatch, capture_events):
+    from esports_sim.manager import agent_play
+    from esports_sim.manager.campaign import WeekReport
+    from esports_sim.schemas import Event
+
+    world = AgentWorld.create(
+        game_data, seed=911, n_teams=2, capture_events=capture_events,
+    )
+    a, b = world.team_ids
+    for tid in (a, b):
+        _clear_event_blockers(world, tid)
+    tick_weeks = []
+
+    def resolve_week(gs, gd, *, events_out):
+        week = gs.week
+        tick_weeks.append(week)
+        report = WeekReport(season=gs.season, week=week, phase=gs.phase)
+        # Reuse one fixture id and introduce another per week: both stale
+        # keys and accumulated map logs must disappear. Week 3 has no match.
+        if events_out is not None and week < 3:
+            for fixture_id in ("shared_fixture", f"week_{week}_fixture"):
+                events_out.setdefault(fixture_id, []).append([
+                    Event(type="match.start", tick=week),
+                ])
+        gs.week += 1
+        return report
+
+    monkeypatch.setattr(agent_play, "advance_week", resolve_week)
+    previous_replays = None if not capture_events else {}
+    for week in range(1, 4):
+        assert world.act(a, {"kind": "advance", "params": {}})["advanced"] is False
+        assert world.event_logs == previous_replays
+        assert world.act(a, {"kind": "advance", "params": {}})["advanced"] is False
+        with pytest.raises(InvalidManagerAction):
+            world.act(b, {"kind": "not_an_action", "params": {}})
+        assert world.event_logs == previous_replays
+        assert tick_weeks == list(range(1, week))
+
+        assert world.act(b, {"kind": "advance", "params": {}})["advanced"] is True
+        assert tick_weeks == list(range(1, week + 1))
+        if capture_events:
+            expected = (
+                {fid: [[Event(type="match.start", tick=week)]] for fid in (
+                    "shared_fixture", f"week_{week}_fixture",
+                )}
+                if week < 3 else {}
+            )
+            assert world.event_logs == expected
+            previous_replays = {
+                fid: [list(events) for events in maps]
+                for fid, maps in world.event_logs.items()
+            }
+        else:
+            assert world.event_logs is None
+
+
+def test_rejected_ready_roster_keeps_previous_replays(game_data, monkeypatch):
+    from esports_sim.manager import agent_play
+    from esports_sim.schemas import Event
+
+    world = AgentWorld.create(game_data, seed=911, n_teams=2, capture_events=True)
+    a, b = world.team_ids
+    for tid in (a, b):
+        _clear_event_blockers(world, tid)
+    previous_replays = {"previous_fixture": [[Event(type="match.start", tick=1)]]}
+    world.event_logs.update(previous_replays)
+    tick_calls = []
+
+    def resolve_week(*args, **kwargs):
+        tick_calls.append((args, kwargs))
+        raise AssertionError("a rejected roster must not run the campaign tick")
+
+    monkeypatch.setattr(agent_play, "advance_week", resolve_week)
+    assert world.act(a, {"kind": "advance", "params": {}})["advanced"] is False
+    # The waiting seat is blocked before voting.
+    dropped_b = world.gs.teams[b].player_ids.pop()
+    with pytest.raises(InvalidManagerAction):
+        world.act(b, {"kind": "advance", "params": {}})
+    assert world.event_logs == previous_replays
+    world.gs.teams[b].player_ids.append(dropped_b)
+    # A previously ready seat can become short while waiting. The final
+    # vote must fail revalidation without discarding the last week's replay.
+    world.gs.teams[a].player_ids.pop()
+    with pytest.raises(InvalidManagerAction, match="re-ready once fixed"):
+        world.act(b, {"kind": "advance", "params": {}})
+    assert world.event_logs == previous_replays
+    assert not tick_calls
+    assert world.ready == {b}
+    assert world.tick_seq == 0
+    assert world.gs.week == 1
+
+
 def test_objective_counts_titles_and_sees_rival_trophy_cases(game_data):
     world = AgentWorld.create(game_data, seed=911, n_teams=2)
     gs = world.gs
