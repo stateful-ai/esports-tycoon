@@ -1,0 +1,80 @@
+[
+  {
+    "index": 128,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agent_choices": "null",
+      "agents": "False",
+      "choice_encoding": "json-v1",
+      "default_five": "True",
+      "fixture_id": "",
+      "lineup_ids": "[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]",
+      "map_id": "",
+      "per_map": "False",
+      "player_ids": "null"
+    },
+    "source": "web"
+  },
+  {
+    "index": 129,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "apex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 130,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 131,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "negotiate",
+      "event_id": "2fe2342213a406d2"
+    },
+    "source": "web"
+  },
+  {
+    "index": 132,
+    "season": 2,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

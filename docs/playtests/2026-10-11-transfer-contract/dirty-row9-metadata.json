@@ -1,0 +1,13 @@
+{
+  "row": 9,
+  "working_tree_dirty": "true",
+  "cause": "Untracked zero-byte harness artifact named ({url at dedicated worktree root",
+  "tracked_files_modified": [],
+  "artifact_absolute_path": "C:/Users/aidan/.codex/worktrees/transfer-contract-playtest/ESports Simulator/({url",
+  "evidence": "Post-finalization git status --porcelain returned ?? ({url; Get-Item -LiteralPath resolved this exact leaf with Length 0; exact Remove-Item -LiteralPath removed it; subsequent git status --porcelain empty",
+  "creation_context": "Optional wire-final Playwright eval command used shell quoting that produced this empty artifact; wire-final.txt was empty. Row9 begin sampled actual dirty state while artifact existed.",
+  "restoration": "No tracked files restored; only verified exact untracked zero-byte leaf removed",
+  "limits": "No claim all session clean. Rows1-8 and10 false;row9 true preserved. 425 tracked src/data raw SHA and Git entries unchanged before/after.",
+  "csv_unchanged": true,
+  "report_unchanged": true
+}

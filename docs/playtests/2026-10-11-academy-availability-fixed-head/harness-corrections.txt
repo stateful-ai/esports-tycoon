@@ -1,0 +1,7 @@
+CUA Chrome unavailable and inventory empty; dedicated context created. browser_run_code VM cannot require or dynamic import fs. No gameplay action happened in these failures; initial pending step remains live. Snapshot partition count1 corrected to26 in separate receipt. UTF8 corrected cp1252 read error.
+MCP file access denied owned worktree path (allowed root primary only); bootstrap read locally into bridge, no primary edits and secret-bearing result withheld.
+Bridge globalThis bindings are per-call; inspected browser context inventory and reacquired the isolated context index1/default=false (one about:blank page); recorder state attached to owned page object.
+Step4 response waiter used /api/save; actual wire endpoint differs. Save click occurred once before waiter timeout; inspect owned recorder receipts rather than repeat action.
+Large independent readback exceeded Windows command-line size; retained in functions session and recovered using stdin streaming rather than shell interpolation.
+Plain exec stdin was already EOF, so first streaming writer produced an empty file. Captured result recovered from retained session in bounded literal chunks; original UI actions not repeated.
+Flywheel write kind pain was rejected after two learning entries succeeded; recovered those via recent and wrote only pain-point once, without duplicating successful records.

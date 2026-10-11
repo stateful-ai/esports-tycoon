@@ -1,0 +1,15 @@
+{
+  "verified_at_utc": "2026-10-11T07:46:13.324320+00:00",
+  "verification_kind": "Read-only raw/Git hash, CSV and original JSON/JSONL inspection; no local tests or historical helper execution",
+  "original_artifact_raw_and_Git_byte_matches": 240,
+  "named_row_reference_hashes": 184,
+  "report_reference_hashes": 53,
+  "all_parent_artifact_blobs_unchanged": true,
+  "active_source612_raw_and_Git_tree_equal_tested64": true,
+  "historical_session_source20273_630_paths_separate_from_prior_gate": true,
+  "canonical938_sha256": "58b4200b04c66b0ad005a50aee5c35d6eda43ea9412ad76ddf90c43c56e7a635",
+  "parent885_exact_raw_prefix": true,
+  "docs_only_staged_paths_before_this_receipt": 250,
+  "JSON_format_limit": "Original zero-byte process-list .json renamed/mapped to exact empty.txt bytes. Remaining mapped .json artifacts parse; no process body synthesized",
+  "privacy": "Private auth/session/bootstrap inputs excluded; sanitized identity receipts contain cookie name/fixture hashes, not values; sessions keys in usage reports are integer aggregate counts"
+}

@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-regional-final",
+  "step": 10,
+  "started_at_utc": "2026-10-10T23:26:18.251+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "offline_audit",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W17 playoffs",
+  "intent": "Reconcile final choices, media/preparation effects and omittedprize with retainedquantitativeusage",
+  "action": "Audit exactacceptedrecords andsavedprefixes; exportisolatedreports, preservefinalfixturefor existinggap31owner; flywheelrecord2learnings1pain andcloseownedserver",
+  "expected_outcome": "Fourchoices match exactindices68-71, old68decision/15snapshotprefixesunchanged, finalplansconsumed; browserpairsseparatelycounted; omitted120000 reconcileswithoutfalseupkeepresidual; nativeaudit0 andownedcleanupconfirmed",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

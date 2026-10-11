@@ -1,0 +1,8 @@
+[
+  {
+    "method": "GET",
+    "target": "/api/state",
+    "fulfilled_status": 503,
+    "note": "Browser-route fault injection; server itself remained healthy"
+  }
+]

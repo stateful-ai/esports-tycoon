@@ -1,0 +1,13 @@
+### Browser `development-398-first` opened with pid 33560.
+### Ran Playwright code
+```js
+await page.goto('http://127.0.0.1:8536');
+```
+### Page
+- Page URL: http://127.0.0.1:8536/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T10-21-01-049Z.yml)
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T10-21-00-612Z.log#L1

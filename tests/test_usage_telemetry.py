@@ -242,6 +242,48 @@ def test_rotation_respects_exact_byte_boundary_on_windows(monkeypatch, tmp_path)
     assert b"\r\n" not in row
 
 
+def test_overlay_handlers_and_allowlists_match():
+    import json
+    import shutil
+    import subprocess
+    from esports_sim.web.usage_telemetry import INTERACTIONS
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('Node is required for overlay handler verification')
+    result = subprocess.run([node, 'tests/overlay_usage_frontend_check.cjs'],
+                            check=True, capture_output=True, text=True)
+    assert set(json.loads(result.stdout)) == INTERACTIONS
+
+
+def test_overlay_inspection_counts_have_no_decision_or_duration_semantics(client, tmp_path):
+    import json
+    from esports_sim.web.usage_telemetry import PROFILE_INTERACTIONS, HANDBOOK_INTERACTIONS
+    targets = sorted(PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS)
+    assert client.post('/api/usage/events', json=payload(*[
+        {'kind': 'interaction', 'target': target} for target in targets])).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert report['events'] == {f'interaction:{target}': 1 for target in targets}
+    assert report['attempts'] == report['paired_results'] == 0
+    assert report['visible_ms'] == report['outcomes'] == {}
+    for line in (tmp_path / 'usage/usage.0.jsonl').read_text().splitlines():
+        assert set(json.loads(line)) == {'schema_version', 'session_id', 'received_at',
+                                         'world', 'team', 'season', 'week', 'kind', 'target'}
+
+
+@pytest.mark.parametrize('event', [
+    {'kind': 'interaction', 'target': 'profile/player_open/private-id'},
+    {'kind': 'interaction', 'target': 'profile/player_open', 'player_id': 'private-id'},
+    {'kind': 'interaction', 'target': 'profile/player_open', 'handle': 'private-handle'},
+    {'kind': 'interaction', 'target': 'handbook/section_query'},
+    {'kind': 'interaction', 'target': 'handbook/open', 'query': 'private-text'},
+    {'kind': 'interaction', 'target': 'handbook/open', 'request_id': 1},
+    {'kind': 'interaction', 'target': 'profile/player_open', 'duration_ms': 10},
+    {'kind': 'view', 'target': 'profile/player_open'},
+])
+def test_overlay_capture_rejects_private_payloads_and_wrong_semantics(client, event):
+    assert client.post('/api/usage/events', json=payload(event)).status_code == 422
+
+
 def test_market_search_receipts_are_coarse_counts(client):
     event = {"kind": "interaction", "target": "market/player_search"}
     assert client.post("/api/usage/events", json=payload(event, event)).json()["accepted"]
@@ -269,3 +311,17 @@ def test_market_search_actual_js_callbacks():
     if not node:
         pytest.skip("Node unavailable")
     subprocess.run([node, "tests/market_search_usage_check.cjs"], check=True, capture_output=True)
+
+
+
+def test_market_and_overlay_events_share_one_valid_batch(client):
+    from esports_sim.web.usage_telemetry import INTERACTIONS
+    events = [{'kind': 'interaction', 'target': target} for target in sorted(INTERACTIONS)]
+    events += [{'kind': 'attempt', 'target': '/api/actions/train', 'request_id': 17},
+               {'kind': 'result', 'target': '/api/actions/train', 'request_id': 17,
+                'outcome': 'success'}]
+    assert client.post('/api/usage/events', json=payload(*events)).json()['accepted']
+    report = client.get('/api/usage/report').json()
+    assert all(report['events'][f'interaction:{target}'] == 1 for target in INTERACTIONS)
+    assert report['attempts'] == report['paired_results'] == 1
+    assert report['unmatched_attempts'] == report['orphan_results'] == 0

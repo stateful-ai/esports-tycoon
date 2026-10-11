@@ -1,0 +1,28 @@
+{
+  "runner_pid": 39896,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator",
+  "interpreter": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+  "import": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "started_utc": "2026-10-10T21:12:43.944655+00:00",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "pytest_pid": 40552,
+  "exit_code": 0,
+  "finished_utc": "2026-10-10T21:54:27.541525+00:00",
+  "source_unchanged": true,
+  "tested_parent": "8ce7e505a0d4d07c0afb1916d326d75662be579f",
+  "terminal_summary": "1281 passed in 2501.91s (0:41:41)",
+  "complete_frozen_file_set_and_hashes_verified": 545,
+  "worktree_import_verified": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "stderr_empty": true,
+  "freeze_sha256": "fa3d79fa66b7f723a32452a44fa4e1088680d5b837c3323137f1181b0058ae32",
+  "stdout_sha256": "2daec9e0dc5ee8631bb252988b5ab4cffff4fec570612eb33fdd525fae83d791",
+  "result_sha256": "b78331a298f44b027318f0158b7656e97726b8a67ad8605ee70f3f9cf95e2510",
+  "corrected_csv_sha256": "fc5ae6e4dfe74f31e422b7dacabbba0b7c1d86b111d35b9501002eb3e387bf2f",
+  "five_row_protected_19_fields_verified": true,
+  "raw_save_pair_verified": true
+}

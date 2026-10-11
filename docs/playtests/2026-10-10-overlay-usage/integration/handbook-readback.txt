@@ -1,0 +1,6 @@
+### Result
+"OVR / current ability\nWhat the player can deliver now. Role comfort, confidence, form, and tactics still shape match performance.\nCeiling / potential\nA forecast of a player's likely peak, not a guaran"
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const text=document.getElementById("help-body").innerText.slice(0,200);window.closeHelp();await window.Usage.boundary();return text}');
+```

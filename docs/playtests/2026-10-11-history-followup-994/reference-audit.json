@@ -1,0 +1,284 @@
+{
+  "audited_at_utc": "2026-10-11T08:39:56.664097+00:00",
+  "rows": 12,
+  "named_row_reference_count": 10,
+  "report_reference_count": 6,
+  "references": [
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence/audit.json",
+      "sha256": "9f1fc3c2486e11e9786112814bc76f213cfc5b53ed9862b150671c1bd8c279ba",
+      "byte_count": 18058,
+      "git_blob_sha256": "9f1fc3c2486e11e9786112814bc76f213cfc5b53ed9862b150671c1bd8c279ba",
+      "git_blob_byte_count": 18058
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "1",
+      "field": "analytics_evidence",
+      "historical_reference": "browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/decision-indexed.json",
+      "sha256": "50780870d14f820c690308c16349854a8122cba2ce56d67efa74ec2d8a5f4432",
+      "byte_count": 308,
+      "git_blob_sha256": "50780870d14f820c690308c16349854a8122cba2ce56d67efa74ec2d8a5f4432",
+      "git_blob_byte_count": 308
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "request-pairs.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/request-pairs.json",
+      "sha256": "cd355f4241410562aa7929869813471ec1c45bb8e06b2c6af44dbd7e801d6447",
+      "byte_count": 1939,
+      "git_blob_sha256": "cd355f4241410562aa7929869813471ec1c45bb8e06b2c6af44dbd7e801d6447",
+      "git_blob_byte_count": 1939
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/browser-readback.json",
+      "sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "byte_count": 58450,
+      "git_blob_sha256": "7f51a1978899416ed6e82ff88670f2dd2290b537c52670abfaf24fb434d2c282",
+      "git_blob_byte_count": 58450
+    },
+    {
+      "session_id": "2026-10-11-flavor-served-title",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "request-pairs.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/request-pairs.json",
+      "sha256": "cd355f4241410562aa7929869813471ec1c45bb8e06b2c6af44dbd7e801d6447",
+      "byte_count": 1939,
+      "git_blob_sha256": "cd355f4241410562aa7929869813471ec1c45bb8e06b2c6af44dbd7e801d6447",
+      "git_blob_byte_count": 1939
+    }
+  ],
+  "report_references": [
+    {
+      "report_path": "docs/playtests/2026-10-11-gap40-readiness-loading/REPORT.md",
+      "historical_reference": "failed-capture-method.txt",
+      "published_path": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence/failed-capture-method.txt",
+      "sha256": "30ca0804ab06ae87c9c92a3cad15dd1d1b2f5f98ce8de226e51e7751febefb01",
+      "byte_count": 622,
+      "git_blob_sha256": "30ca0804ab06ae87c9c92a3cad15dd1d1b2f5f98ce8de226e51e7751febefb01",
+      "git_blob_byte_count": 622
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-flavor-served-title/report.md",
+      "historical_reference": "setup-receipt.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/setup-receipt.json",
+      "sha256": "7e3a0188b68a977f3e12351162070c8323536c29eff3f4d9f63aa65695e4ac5c",
+      "byte_count": 606,
+      "git_blob_sha256": "7e3a0188b68a977f3e12351162070c8323536c29eff3f4d9f63aa65695e4ac5c",
+      "git_blob_byte_count": 606
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-flavor-served-title/report.md",
+      "historical_reference": "actions.csv",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/actions.csv",
+      "sha256": "d2764f38768adfc2548c512d41df7e48a269daed73d2b8393c37dea71d2b4046",
+      "byte_count": 3005,
+      "git_blob_sha256": "d2764f38768adfc2548c512d41df7e48a269daed73d2b8393c37dea71d2b4046",
+      "git_blob_byte_count": 3005
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-flavor-served-title/report.md",
+      "historical_reference": "baseline-comparison.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/baseline-comparison.json",
+      "sha256": "559b748afaf3dfe6bfb7613fe0480797290f47af6e2dc6df84b6c6a4fc274f6e",
+      "byte_count": 534,
+      "git_blob_sha256": "559b748afaf3dfe6bfb7613fe0480797290f47af6e2dc6df84b6c6a4fc274f6e",
+      "git_blob_byte_count": 534
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-flavor-served-title/report.md",
+      "historical_reference": "historical-preservation.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/historical-preservation.json",
+      "sha256": "11ecc112263e7113cca1517bb876a6133572f60fcc5fe59fb6ad44ed42774e75",
+      "byte_count": 3946,
+      "git_blob_sha256": "11ecc112263e7113cca1517bb876a6133572f60fcc5fe59fb6ad44ed42774e75",
+      "git_blob_byte_count": 3946
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-flavor-served-title/report.md",
+      "historical_reference": "cleanup-receipt.json",
+      "published_path": "docs/playtests/2026-10-11-flavor-served-title/cleanup-receipt.json",
+      "sha256": "e05cb9af020170e26becd2877c1a6d4c659a06bf7c4b0c2e7923724f12aadb7e",
+      "byte_count": 1319,
+      "git_blob_sha256": "e05cb9af020170e26becd2877c1a6d4c659a06bf7c4b0c2e7923724f12aadb7e",
+      "git_blob_byte_count": 1319
+    }
+  ],
+  "directory_reference_mapping": [
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "1",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "3",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "4",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "5",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "6",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "7",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "8",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence",
+      "qualification": "Original directory-scoped manifest and safe receipts retained; no missing terminal output inferred."
+    }
+  ],
+  "narrative_only_observations": [
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "2",
+      "historical_reference": "",
+      "qualification": "Historical narrative without named receipt; no fabricated capture."
+    }
+  ],
+  "unavailable": [],
+  "execution_qualification": "Readiness step2 blocked capture retained as one unmatched advance attempt, not HTTP rejection or accepted decision. Backend downtime state fetch has original browser requestfailed evidence but no failed-state sidecar event; successful read-only retry does not submit extra advance. Canceled ready-up is not accepted; second real ready-up plus second manager advance produce2 accepted records. Served title is a controlled cached overlay with generation disabled, not live LLM. Raw historical save comparison failed due migration; migrated equality is original retained reconciliation, not fresh determinism gate. No tests/helpers/gameplay rerun.",
+  "privacy": "Private complete source/owner saves, cookie/membership inputs and process launchers excluded; retained automation sources reference private input paths without credential values.",
+  "historical_Git_source_mapping": [
+    {
+      "original_git_ref": "1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7:src/esports_sim/web/server.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-994/historical-source/1851bc48/src/esports_sim/web/server.py",
+      "sha256": "a295159f79ddb1e178720294c4db0d5ba4ae127387cc910bb3083f1ace656bd6",
+      "byte_count": 381934,
+      "source_receipt": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence/tested-git-blobs.json",
+      "qualification": "Exact historical tested Git bytes; current stack source remains tested64 and no current-head gate/CI is inherited."
+    },
+    {
+      "original_git_ref": "1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7:src/esports_sim/web/static/app.js",
+      "published_path": "docs/playtests/2026-10-11-history-followup-994/historical-source/1851bc48/src/esports_sim/web/static/app.js",
+      "sha256": "2bcd08d2695b4144d4d0ea27ca7449eb44ddfa4816c578ef38032d4da09f9ae3",
+      "byte_count": 399851,
+      "source_receipt": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence/tested-git-blobs.json",
+      "qualification": "Exact historical tested Git bytes; current stack source remains tested64 and no current-head gate/CI is inherited."
+    },
+    {
+      "original_git_ref": "1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7:tests/test_web_advance_transition.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-994/historical-source/1851bc48/tests/test_web_advance_transition.py",
+      "sha256": "d1e9c5a90ff19ed515e413327ced6405e699f14ceca1ba841ed175d0ddd0ea87",
+      "byte_count": 1455,
+      "source_receipt": "docs/playtests/2026-10-11-gap40-readiness-loading/evidence/tested-git-blobs.json",
+      "qualification": "Exact historical tested Git bytes; current stack source remains tested64 and no current-head gate/CI is inherited."
+    }
+  ],
+  "original_served_title_dirty_source_mapping": [
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "raw_snapshot_path": "docs/playtests/2026-10-11-flavor-served-title/source/src/esports_sim/web/static/app.js",
+      "sha256": "db156263d04723885f266fa05ce8c79d87535b2367ff7085d4faf3ccfde26612",
+      "bytes": 407890,
+      "historical_parent_dirty": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+      "final_git_ref": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2:src/esports_sim/web/static/app.js",
+      "git_sha256": "3d80cfffee3356c9eeb6aeaf51562c7e138f158bea0baa1f583708b63f9e96d8",
+      "qualification": "Original dirty two-path snapshots and final Git equality. Remaining617 integrated source static qualification is retained root-review evidence, not a new broad before/after runtime freeze."
+    },
+    {
+      "path": "tests/flavor_feedback_check.cjs",
+      "raw_snapshot_path": "docs/playtests/2026-10-11-flavor-served-title/source/tests/flavor_feedback_check.cjs",
+      "sha256": "f4693a6ca44d015f2643a174d71915bccdd6653f2e955d23dc840be73d60500e",
+      "bytes": 3487,
+      "historical_parent_dirty": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+      "final_git_ref": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2:tests/flavor_feedback_check.cjs",
+      "git_sha256": "97af6250ff34cbf9daff22ee4d42b2b9dfd6ecddf8e41f5eb5fd67b4b0f2a9fd",
+      "qualification": "Original dirty two-path snapshots and final Git equality. Remaining617 integrated source static qualification is retained root-review evidence, not a new broad before/after runtime freeze."
+    }
+  ]
+}

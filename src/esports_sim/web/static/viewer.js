@@ -59,8 +59,8 @@ function feedLabel(pid) {
   const icon = src
     ? `<img class="feed-agent" src="${src}" onerror="this.style.display='none'" alt="">`
     : "";
-  if (!name) return `${icon}<b class="feed-name plink" data-pid="${pid}">${handle}</b>`;
-  return `${icon}<b class="feed-name plink" data-pid="${pid}">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
+  if (!name) return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${handle}</button></b>`;
+  return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${name}</button></b> <span class="muted feed-handle">(${handle})</span>`;
 }
 
 const viewerHumanize = (value) => window.humanize
@@ -931,6 +931,48 @@ function getPlayerEls(pid) {
   return e;
 }
 
+// Reuse unchanged event rows so playback does not discard a focused player
+// control. Keep authored HTML separately: an image's onerror can change its DOM.
+function renderFeed(feed, items) {
+  const previous = V._feedEl === feed ? (V._feedRows || []) : [];
+  if (previous.length === items.length && feed.childNodes.length === items.length &&
+      previous.every((row, i) => row.html === items[i].html && feed.childNodes[i] === row.el)) {
+    return;
+  }
+
+  const available = new Map();
+  for (const row of previous) {
+    if (row.el.parentNode !== feed) continue;
+    if (!available.has(row.html)) available.set(row.html, []);
+    available.get(row.html).push(row);
+  }
+  const focused = feed.contains(document.activeElement) ? document.activeElement : null;
+  const rows = items.map(({ html }) => {
+    const reused = available.get(html)?.shift();
+    if (reused) return reused;
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    return { html, el: template.content.firstElementChild };
+  });
+  // Insert additions before existing rows; do not move a row already in place.
+  let next = feed.firstChild;
+  for (const row of rows) {
+    if (row.el === next) next = next.nextSibling;
+    else feed.insertBefore(row.el, next);
+  }
+  while (next) {
+    const removed = next;
+    next = next.nextSibling;
+    removed.remove();
+  }
+  V._feedEl = feed;
+  V._feedRows = rows;
+  // Reordering can blur a retained control in browsers; restore that same node.
+  if (focused && feed.contains(focused) && document.activeElement !== focused) {
+    focused.focus({ preventScroll: true });
+  }
+}
+
 function drawFrame() {
   const round = V.rounds[V.roundIdx];
   const t = V.tick;
@@ -1092,11 +1134,9 @@ function drawFrame() {
       }));
 
   const feed = document.getElementById("v-feed");
-  feed.innerHTML = feedItems
+  renderFeed(feed, feedItems
     .sort((a, b) => a.tick - b.tick)
-    .reverse()
-    .map((it) => it.html)
-    .join("");
+    .reverse());
 
   document.getElementById("v-scrub").max = round.maxTick;
   document.getElementById("v-scrub").value = Math.min(t, round.maxTick);
@@ -1377,7 +1417,7 @@ function buildLineup() {
             : `<span class="lu-icon"></span>`;
           return `<div class="lu-row" data-follow="${pid}" title="Follow ${handleOf(pid)} with the camera (click again to release)">${icon}` +
             `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
-            `<span class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</span></div>`;
+            `<button type="button" class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</button></div>`;
         })
         .join("");
       return `<div class="lu-team"><div class="lu-team-name ${cls} tlink" data-tid="${tid}">${V.names[tid]}</div>${rows}</div>`;
@@ -1455,13 +1495,13 @@ function buildMatchSummary() {
       const cls = r.team_id === V.teamA ? "a" : "b";
       const xdeText = r.xde != null ? ` <span class="muted" style="font-size:0.8em; margin-left: 4px;">(xDE: ${r.xde >= 0 ? "+" : ""}${r.xde.toFixed(2)})</span>` : "";
       return `<div class="v-sum-row"><span class="v-sum-dot ${cls}"></span>` +
-        `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>` +
+        `<button type="button" class="plink" data-pid="${r.player_id}">${r.handle}</button>` +
         `<span class="mono muted">${r.kills}/${r.deaths}${xdeText}</span>` +
         `<b class="mono">${r.rating.toFixed(2)}</b></div>`;
     })
     .join("");
   el.innerHTML =
-    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b class="plink" data-pid="${mvp.player_id}">${mvp.handle}</b>` : ""}</div>` +
+    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b><button type="button" class="plink" data-pid="${mvp.player_id}">${mvp.handle}</button></b>` : ""}</div>` +
     rows;
   side.insertBefore(el, document.getElementById("v-feed"));
 }

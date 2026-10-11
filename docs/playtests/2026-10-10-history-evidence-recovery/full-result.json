@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n",
+    "2"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-10T19:55:54.718860+00:00",
+  "finished_at": "2026-10-10T21:56:41.938594+00:00",
+  "import_path": "C:\\Users\\aidan\\.codex\\worktrees\\playtest-history-evidence-recovery\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "source_files": 612,
+  "source_unchanged": true,
+  "changed_files": [],
+  "base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6"
+}

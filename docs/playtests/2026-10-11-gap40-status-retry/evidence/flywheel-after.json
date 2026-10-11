@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-10-11T07:48:05.270039+00:00",
+  "entries": [
+    {
+      "id": "esports-playtest-0216",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Stopped shared polling needs an actionable retry",
+      "problem": "Stopped shared polling needs an actionable retry",
+      "solution": "Expose retry status and reconnect polling without resubmitting advance",
+      "lesson": "Injected state-poll503 produced enabled Retry status while server-ready flag remained true.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0217",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Status retry must avoid duplicate advance",
+      "problem": "Status retry must avoid duplicate advance",
+      "solution": "Expose retry status and reconnect polling without resubmitting advance",
+      "lesson": "Other manager completed rollover while disconnected; Retry issued no advance POST and reconnected at S2W1 without ticking week2.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0218",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Stale ready state can disguise stopped polling",
+      "problem": "Stale ready state can disguise stopped polling",
+      "solution": "Expose retry status and reconnect polling without resubmitting advance",
+      "lesson": "Waiting from stale server you_ready is misleading after polling failure; preserve a separate retry transport state.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+      "code": "",
+      "tags": [],
+      "kind": "pain-point"
+    }
+  ]
+}

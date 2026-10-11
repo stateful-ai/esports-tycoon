@@ -34,6 +34,7 @@ from esports_sim.manager import (
     knowledge,
     market,
     media_events,
+    mentorship,
     meta,
     narrative,
     preparation,
@@ -759,6 +760,10 @@ def advance_week(
     # mentor_skill. gs.mentorships is empty in hands-off sims, so this is a
     # no-op there and the balance gates stay byte-identical.
     development.apply_mentorship_growth(gs)
+    # Development above owns all weekly ceiling/breakthrough rewards. Settle
+    # the same week's program progress afterwards, including its final week,
+    # without applying the legacy standalone reward channel a second time.
+    mentorship.tick_mentorship(gs, apply_rewards=False)
 
     # 2a''. Agent mastery (F6): a week of maps played on an agent (already
     # folded into gs.player_agent_stats during the match loop), a matching
@@ -3097,6 +3102,8 @@ def _record_meta_era(gs: GameState) -> None:
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
+    from esports_sim.manager import development_path
+    development_path.begin_week(gs)
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
     rng = tree.derive("season", gs.season, "offseason")
@@ -3236,6 +3243,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     for pid in sorted(gs.mentorships):
         if pid not in gs.players or gs.mentorships[pid] not in gs.players:
             del gs.mentorships[pid]
+            gs.mentorship_progress.pop(pid, None)
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).

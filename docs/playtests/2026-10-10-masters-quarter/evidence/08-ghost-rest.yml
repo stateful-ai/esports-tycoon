@@ -1,0 +1,650 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 17 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 989,505 cr
+      - button "Save" [ref=f1e27] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 19" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "19"
+        - button "Match 2" [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market" [ref=f1e21] [cursor=pointer]
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e1683]:
+        - generic [ref=f1e1684]:
+          - generic [ref=f1e1685]: Club
+          - generic [ref=f1e1686]: Team Nexus · 6/10
+          - generic [ref=f1e1687]:
+            - button "Squad" [ref=f1e1688] [cursor=pointer]
+            - button "Development" [ref=f1e1689] [cursor=pointer]
+            - button "Locker Room" [ref=f1e1690] [cursor=pointer]
+            - button "Operations" [ref=f1e1691] [cursor=pointer]
+          - button "Guide" [ref=f1e1692] [cursor=pointer]
+        - generic [ref=f1e1693]:
+          - generic [ref=f1e1694]:
+            - generic [ref=f1e1695]:
+              - heading "Team training focus" [level=2] [ref=f1e1696]
+              - paragraph [ref=f1e1697]: The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+              - generic [ref=f1e1698]:
+                - button "Mechanical" [ref=f1e1699] [cursor=pointer]
+                - button "Tactical" [ref=f1e1700] [cursor=pointer]
+                - button "Mental" [ref=f1e1701] [cursor=pointer]
+                - button "Team" [ref=f1e1702] [cursor=pointer]
+                - button "Rest" [ref=f1e1703] [cursor=pointer]
+              - generic [ref=f1e1704]:
+                - checkbox "Delegate to Coach Keep choosing the weekly focus yourself" [ref=f1e1705]
+                - generic [ref=f1e1706]: Delegate to Coach
+                - generic [ref=f1e1707]: Keep choosing the weekly focus yourself
+            - table [ref=f1e1710]:
+              - rowgroup [ref=f1e1711]:
+                - row [ref=f1e1712]:
+                  - columnheader "Player" [ref=f1e1713] [cursor=pointer]
+                  - columnheader "Age" [ref=f1e1714] [cursor=pointer]
+                  - columnheader "OVR" [ref=f1e1715]
+                  - columnheader "Ceiling" [ref=f1e1716]
+                  - columnheader "Form" [ref=f1e1717]
+                  - columnheader "Confidence" [ref=f1e1718]
+                  - columnheader "Dev focus" [ref=f1e1719] [cursor=pointer]
+                  - columnheader "Language" [ref=f1e1720] [cursor=pointer]
+                  - columnheader "Intensity" [ref=f1e1721] [cursor=pointer]
+                  - columnheader "Mentor" [ref=f1e1722] [cursor=pointer]
+              - rowgroup [ref=f1e1723]:
+                - row [ref=f1e1724] [cursor=pointer]:
+                  - cell "Apex IGL" [ref=f1e1725]:
+                    - generic [ref=f1e1726]: Apex
+                    - generic [ref=f1e1727]: IGL
+                  - cell "26" [ref=f1e1728]
+                  - cell "78.4" [ref=f1e1729]
+                  - cell "★★★½" [ref=f1e1730]
+                  - cell [ref=f1e1731]:
+                    - generic "51" [ref=f1e1732]
+                    - text: ▼
+                  - cell "Confidence shapes duels, peeks, and clutch nerve." [ref=f1e1734]:
+                    - generic "61" [ref=f1e1735]
+                  - cell "rest Recovery" [ref=f1e1737]:
+                    - combobox [ref=f1e1738]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e1740]: Recovery
+                  - cell "choose language" [ref=f1e1741]:
+                    - combobox [disabled] [ref=f1e1742]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "light" [ref=f1e1743]:
+                    - combobox [ref=f1e1744]:
+                      - option "light" [selected]
+                      - option "normal"
+                      - option "intense"
+                  - cell "—" [ref=f1e1745]
+                - row [ref=f1e1746] [cursor=pointer]:
+                  - 'cell "Vortex Aim Demon: raw mechanical menace Heavy streaming" [ref=f1e1747]':
+                    - generic [ref=f1e1748]: Vortex
+                    - 'img "Aim Demon: raw mechanical menace" [ref=f1e1749]'
+                    - generic "Heavy streaming" [ref=f1e1750]: 📺
+                  - cell "22" [ref=f1e1751]
+                  - cell "75.4" [ref=f1e1752]
+                  - cell "★★★" [ref=f1e1753]
+                  - cell [ref=f1e1754]:
+                    - generic "62" [ref=f1e1755]
+                    - text: ▼
+                  - cell [ref=f1e1757]:
+                    - generic "75" [ref=f1e1758]
+                    - text: ▲
+                  - cell "rest Recovery" [ref=f1e1760]:
+                    - combobox [ref=f1e1761]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e1763]: Recovery
+                  - cell "choose language" [ref=f1e1764]:
+                    - combobox [disabled] [ref=f1e1765]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "normal" [ref=f1e1766]:
+                    - combobox [ref=f1e1767]:
+                      - option "light"
+                      - option "normal" [selected]
+                      - option "intense"
+                  - cell "—" [ref=f1e1768]
+                - row [ref=f1e2215] [cursor=pointer]:
+                  - 'cell "Ghost Mentored player Choker: tightens up when it matters most" [ref=f1e1770]':
+                    - generic [ref=f1e1771]: Ghost
+                    - generic "Mentored player" [ref=f1e1772]: 🎓
+                    - 'img "Choker: tightens up when it matters most" [ref=f1e1773]'
+                  - cell "19" [ref=f1e1774]
+                  - cell "77.6" [ref=f1e1775]
+                  - cell "★★★★★" [ref=f1e1776]
+                  - cell [ref=f1e1777]:
+                    - generic "52" [ref=f1e1778]
+                    - text: ▼
+                  - cell [ref=f1e1780]:
+                    - generic "60" [ref=f1e1781]
+                    - text: ▼
+                  - cell "rest Recovery" [ref=f1e2216]:
+                    - combobox [ref=f1e1784]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e2217]: Recovery
+                  - cell "choose language" [ref=f1e1787]:
+                    - combobox [disabled] [ref=f1e1788]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "normal" [ref=f1e1789]:
+                    - combobox [ref=f1e1790]:
+                      - option "light"
+                      - option "normal" [selected]
+                      - option "intense"
+                  - cell "🎓 Apex (teach 73) 0% complete" [ref=f1e1791]:
+                    - combobox [ref=f1e1792]:
+                      - option "no mentor"
+                      - option "🎓 Apex (teach 73)" [selected]
+                      - option "🎓 Slyblade (teach 62)"
+                      - option "🎓 Hollowlock (teach 38)"
+                    - generic [ref=f1e1795]: 0% complete
+                - row [ref=f1e1796] [cursor=pointer]:
+                  - 'cell "Slyblade Clutch Master: wants the round with the game on the line" [ref=f1e1797]':
+                    - generic [ref=f1e1798]: Slyblade
+                    - 'img "Clutch Master: wants the round with the game on the line" [ref=f1e1799]'
+                  - cell "28" [ref=f1e1800]
+                  - cell "72.8" [ref=f1e1801]
+                  - cell "★★★½" [ref=f1e1802]
+                  - cell [ref=f1e1803]:
+                    - generic "55" [ref=f1e1804]
+                    - text: ▼
+                  - cell [ref=f1e1806]:
+                    - generic "62" [ref=f1e1807]
+                    - text: ▲
+                  - cell "rest Recovery" [ref=f1e1809]:
+                    - combobox [ref=f1e1810]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e1812]: Recovery
+                  - cell "choose language" [ref=f1e1813]:
+                    - combobox [disabled] [ref=f1e1814]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "normal" [ref=f1e1815]:
+                    - combobox [ref=f1e1816]:
+                      - option "light"
+                      - option "normal" [selected]
+                      - option "intense"
+                  - cell "—" [ref=f1e1817]
+                - row [ref=f1e1818] [cursor=pointer]:
+                  - 'cell "Echo Clutch Master: wants the round with the game on the line" [ref=f1e1819]':
+                    - generic [ref=f1e1820]: Echo
+                    - 'img "Clutch Master: wants the round with the game on the line" [ref=f1e1821]'
+                  - cell "23" [ref=f1e1822]
+                  - cell "76" [ref=f1e1823]
+                  - cell "★★★" [ref=f1e1824]
+                  - cell [ref=f1e1825]:
+                    - generic "49" [ref=f1e1826]
+                    - text: ▼
+                  - cell "Confidence shapes duels, peeks, and clutch nerve." [ref=f1e1828]:
+                    - generic "64" [ref=f1e1829]
+                  - cell "rest Recovery" [ref=f1e1831]:
+                    - combobox [ref=f1e1832]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e1834]: Recovery
+                  - cell "choose language" [ref=f1e1835]:
+                    - combobox [disabled] [ref=f1e1836]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "light" [ref=f1e1837]:
+                    - combobox [ref=f1e1838]:
+                      - option "light" [selected]
+                      - option "normal"
+                      - option "intense"
+                  - cell "—" [ref=f1e1839]
+                - row [ref=f1e1840] [cursor=pointer]:
+                  - 'cell "Hollowlock Inconsistent: a different player week to week" [ref=f1e1841]':
+                    - generic [ref=f1e1842]: Hollowlock
+                    - 'img "Inconsistent: a different player week to week" [ref=f1e1843]'
+                  - cell "26" [ref=f1e1844]
+                  - cell "63.1" [ref=f1e1845]
+                  - cell "★★" [ref=f1e1846]
+                  - cell [ref=f1e1847]:
+                    - generic "46" [ref=f1e1848]
+                  - cell [ref=f1e1850]:
+                    - generic "54" [ref=f1e1851]
+                    - text: ▲
+                  - cell "rest Recovery" [ref=f1e1853]:
+                    - combobox [ref=f1e1854]:
+                      - option "auto"
+                      - option "mechanical"
+                      - option "tactical"
+                      - option "mental"
+                      - option "team"
+                      - option "language" [disabled]
+                      - option "rest" [selected]
+                    - generic "Recovery pauses practice and restores condition; match learning still counts." [ref=f1e1856]: Recovery
+                  - cell "choose language" [ref=f1e1857]:
+                    - combobox [disabled] [ref=f1e1858]:
+                      - option "choose language" [selected]
+                      - option "AR"
+                      - option "DE"
+                      - option "EN"
+                      - option "ES"
+                      - option "FR"
+                      - option "ID"
+                      - option "JA"
+                      - option "KO"
+                      - option "MS"
+                      - option "PT"
+                      - option "RU"
+                      - option "TH"
+                      - option "TL"
+                      - option "TR"
+                      - option "VI"
+                      - option "ZH"
+                  - cell "normal" [ref=f1e1859]:
+                    - combobox [ref=f1e1860]:
+                      - option "light"
+                      - option "normal" [selected]
+                      - option "intense"
+                  - cell "—" [ref=f1e1861]
+          - generic [ref=f1e1862]:
+            - generic [ref=f1e1863]:
+              - heading "Squad profile" [level=2] [ref=f1e1864]
+              - paragraph [ref=f1e1865]: Average age 24
+              - generic [ref=f1e1866]:
+                - generic [ref=f1e1867]: Youth ≤21
+                - generic [ref=f1e1870]: "1"
+              - generic [ref=f1e1871]:
+                - generic [ref=f1e1872]: Prime 22–26
+                - generic [ref=f1e1875]: "4"
+              - generic [ref=f1e1876]:
+                - generic [ref=f1e1877]: Veteran 27+
+                - generic [ref=f1e1880]: "1"
+            - generic [ref=f1e1881]:
+              - heading "Scouting book" [level=2] [ref=f1e1882]
+              - paragraph [ref=f1e1883]: Balanced
+            - generic [ref=f1e1884]:
+              - heading "Locker room" [level=2] [ref=f1e1885]
+              - paragraph [ref=f1e1886]: No standout duos or feuds.
+              - paragraph [ref=f1e1887]:
+                - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry." [ref=f1e1888]: Comms 58
+                - text: shared languages feed chemistry.
+          - generic [ref=f1e1890]:
+            - generic [ref=f1e1891]:
+              - heading "Future of the Org" [level=2] [ref=f1e1892]
+              - paragraph [ref=f1e1893]: Where the roster is trending — risers, milestones and the prospects behind them.
+            - generic [ref=f1e1894]:
+              - generic [ref=f1e1895]:
+                - heading "Risers" [level=3] [ref=f1e1896]
+                - generic [ref=f1e1897]:
+                  - generic [ref=f1e1898]: Ghost 19
+                  - generic "ability change over the tracked window" [ref=f1e1903]: CA +2.1
+                - generic [ref=f1e1904]:
+                  - generic [ref=f1e1905]: Vortex 22
+                  - generic "ability change over the tracked window" [ref=f1e1910]: CA +0.9
+                - generic [ref=f1e1911]:
+                  - generic [ref=f1e1912]: Echo 23
+                  - generic "ability change over the tracked window" [ref=f1e1917]: CA +0.5
+                - generic [ref=f1e1918]:
+                  - generic [ref=f1e1919]: Slyblade 28
+                  - generic "ability change over the tracked window" [ref=f1e1924]: CA +0.5
+              - heading "Milestones" [level=3] [ref=f1e1926]
+              - generic [ref=f1e1931]:
+                - heading "Academy standouts" [level=3] [ref=f1e1932]
+                - generic [ref=f1e1933]:
+                  - generic [ref=f1e1934]: Nightsurge 17
+                  - generic [ref=f1e1935]: pot 65–99
+                  - generic [ref=f1e1936]: CA 50
+                - generic [ref=f1e1937]:
+                  - generic [ref=f1e1938]: Grimpulse 20
+                  - generic [ref=f1e1939]: pot 63–91
+                  - generic [ref=f1e1940]: CA 48
+                - generic [ref=f1e1941]:
+                  - generic [ref=f1e1942]: Pyroecho 17
+                  - generic [ref=f1e1943]: pot 53–85
+                  - generic [ref=f1e1944]: CA 43
+                - generic [ref=f1e1945]:
+                  - generic [ref=f1e1946]: Nightecho 19
+                  - generic [ref=f1e1947]: pot 57–81
+                  - generic [ref=f1e1948]: CA 49
+                - generic [ref=f1e1949]:
+                  - generic [ref=f1e1950]: Voltflare 22
+                  - generic [ref=f1e1951]: pot 56–75
+                  - generic [ref=f1e1952]: CA 49
+              - generic [ref=f1e1953]:
+                - heading "Prospect updates" [level=3] [ref=f1e1954]
+                - paragraph [ref=f1e1955]: No new scouting movement.
+          - generic [ref=f1e1957]:
+            - heading "Talent pipeline" [level=2] [ref=f1e1958]
+            - paragraph [ref=f1e1959]: The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+            - generic [ref=f1e1960]:
+              - generic [ref=f1e1961]:
+                - heading "Youth intake 0" [level=3] [ref=f1e1962]:
+                  - text: Youth intake
+                  - generic [ref=f1e1963]: "0"
+                - paragraph [ref=f1e1964]: Empty
+              - generic [ref=f1e1965]:
+                - heading "Academy 5" [level=3] [ref=f1e1966]:
+                  - text: Academy
+                  - generic [ref=f1e1967]: "5"
+                - generic [ref=f1e1968]:
+                  - generic [ref=f1e1969]:
+                    - generic [ref=f1e1970]: Nightsurge
+                    - generic [ref=f1e1971]: "17"
+                  - generic [ref=f1e1972]:
+                    - generic [ref=f1e1973]: —
+                    - generic "current ability" [ref=f1e1975]: "50"
+                - generic [ref=f1e1976]:
+                  - generic [ref=f1e1977]:
+                    - generic [ref=f1e1978]: Grimpulse
+                    - generic [ref=f1e1979]: "20"
+                  - generic [ref=f1e1980]:
+                    - generic [ref=f1e1981]: —
+                    - generic "current ability" [ref=f1e1983]: "48"
+                - generic [ref=f1e1984]:
+                  - generic [ref=f1e1985]:
+                    - generic [ref=f1e1986]: Pyroecho
+                    - generic [ref=f1e1987]: "17"
+                  - generic [ref=f1e1988]:
+                    - generic [ref=f1e1989]: —
+                    - generic "current ability" [ref=f1e1991]: "43"
+                - generic [ref=f1e1992]:
+                  - generic [ref=f1e1993]:
+                    - generic [ref=f1e1994]: Nightecho
+                    - generic [ref=f1e1995]: "19"
+                  - generic [ref=f1e1996]:
+                    - generic [ref=f1e1997]: —
+                    - generic "current ability" [ref=f1e1999]: "49"
+                - generic [ref=f1e2000]:
+                  - generic [ref=f1e2001]:
+                    - generic [ref=f1e2002]: Voltflare
+                    - generic [ref=f1e2003]: "22"
+                  - generic [ref=f1e2004]:
+                    - generic [ref=f1e2005]: —
+                    - generic "current ability" [ref=f1e2007]: "49"
+              - generic [ref=f1e2008]:
+                - heading "Bench 1" [level=3] [ref=f1e2009]:
+                  - text: Bench
+                  - generic [ref=f1e2010]: "1"
+                - generic [ref=f1e2011]:
+                  - generic [ref=f1e2012]:
+                    - generic [ref=f1e2013]: Hollowlock
+                    - generic [ref=f1e2014]: "26"
+                  - generic "current ability" [ref=f1e2020]: "63"
+              - generic [ref=f1e2021]:
+                - heading "Starters 5" [level=3] [ref=f1e2022]:
+                  - text: Starters
+                  - generic [ref=f1e2023]: "5"
+                - generic [ref=f1e2024]:
+                  - generic [ref=f1e2025]:
+                    - generic [ref=f1e2026]: Apex
+                    - generic [ref=f1e2027]: "26"
+                  - generic "current ability" [ref=f1e2033]: "78"
+                - generic [ref=f1e2034]:
+                  - generic [ref=f1e2035]:
+                    - generic [ref=f1e2036]: Vortex
+                    - generic [ref=f1e2037]: "22"
+                  - generic "current ability" [ref=f1e2043]: "75"
+                - generic [ref=f1e2044]:
+                  - generic [ref=f1e2045]:
+                    - generic [ref=f1e2046]: Ghost
+                    - generic [ref=f1e2047]: "19"
+                  - generic "current ability" [ref=f1e2053]: "78"
+                - generic [ref=f1e2054]:
+                  - generic [ref=f1e2055]:
+                    - generic [ref=f1e2056]: Slyblade
+                    - generic [ref=f1e2057]: "28"
+                  - generic "current ability" [ref=f1e2063]: "73"
+                - generic [ref=f1e2064]:
+                  - generic [ref=f1e2065]:
+                    - generic [ref=f1e2066]: Echo
+                    - generic [ref=f1e2067]: "23"
+                  - generic "current ability" [ref=f1e2073]: "76"
+          - generic [ref=f1e2075]:
+            - generic [ref=f1e2076]:
+              - generic [ref=f1e2077]:
+                - heading "Development Report" [level=2] [ref=f1e2078]
+                - paragraph [ref=f1e2079]: Season 1 · Week 0 to Week 16
+              - generic [ref=f1e2080]:
+                - generic [ref=f1e2081]: Squad OVR +0.7
+                - generic [ref=f1e2082]: 6 grown
+                - generic [ref=f1e2083]: 0 regressed
+                - generic [ref=f1e2084]: 0 steady
+            - table [ref=f1e2086]:
+              - rowgroup [ref=f1e2087]:
+                - row [ref=f1e2088]:
+                  - columnheader "Player" [ref=f1e2089] [cursor=pointer]
+                  - columnheader "Tracked" [ref=f1e2090] [cursor=pointer]
+                  - columnheader "Start" [ref=f1e2091] [cursor=pointer]
+                  - columnheader "Now" [ref=f1e2092] [cursor=pointer]
+                  - columnheader "Change" [ref=f1e2093] [cursor=pointer]
+                  - columnheader "Skills changed" [ref=f1e2094] [cursor=pointer]
+                  - 'columnheader "Latest week: why it changed" [ref=f1e2095] [cursor=pointer]'
+              - rowgroup [ref=f1e2096]:
+                - row [ref=f1e2097]:
+                  - cell "Ghost" [ref=f1e2098]
+                  - cell "W0–W16 · 17 pts" [ref=f1e2100]
+                  - cell "75.5" [ref=f1e2101]
+                  - cell "77.6" [ref=f1e2102]
+                  - cell "+2.1" [ref=f1e2103]
+                  - cell "Movement +7.2 Aim Precision +5.9 Aim Reactivity +4.3 Utility Usage +3.7 Clutch Factor -2.6 Positioning +2.1 Composure -1.5 Comms Quality +1.1 Game Sense +0.5" [ref=f1e2104]:
+                    - generic [ref=f1e2105]:
+                      - generic "mechanical · 72 to 79.2" [ref=f1e2106]: Movement +7.2
+                      - generic "mechanical · 74 to 79.9" [ref=f1e2107]: Aim Precision +5.9
+                      - generic "mechanical · 76 to 80.3" [ref=f1e2108]: Aim Reactivity +4.3
+                      - generic "tactical · 80 to 83.7" [ref=f1e2109]: Utility Usage +3.7
+                      - generic "mental · 80 to 77.4" [ref=f1e2110]: Clutch Factor -2.6
+                      - generic "tactical · 82 to 84.1" [ref=f1e2111]: Positioning +2.1
+                      - generic "mental · 74 to 72.5" [ref=f1e2112]: Composure -1.5
+                      - generic "team · 60 to 61.1" [ref=f1e2113]: Comms Quality +1.1
+                      - generic "tactical · 85 to 85.5" [ref=f1e2114]: Game Sense +0.5
+                  - cell "Practice +0.11 OVR Matches +0.06 OVR S1 W16 · Mechanical / normal · 2 maps · Settling Mechanical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest Streaming is taking time away from practice Mentorship is accelerating practice Coaching and club support are improving practice" [ref=f1e2115]:
+                    - generic [ref=f1e2116]:
+                      - generic "Aim Precision +0.30; Aim Reactivity +0.30; Movement +0.54" [ref=f1e2117]: Practice +0.11 OVR
+                      - generic "Aim Precision +0.21; Aim Reactivity +0.14; Comms Quality +0.12; Composure +0.03; Game Sense +0.02; Positioning +0.02; Utility Usage +0.03" [ref=f1e2118]: Matches +0.06 OVR
+                    - generic [ref=f1e2119]: S1 W16 · Mechanical / normal · 2 maps · Settling
+                    - generic [ref=f1e2120]: Mechanical practice reinforces skills used in matches
+                    - generic [ref=f1e2121]: Tired legs are reducing practice quality; ease intensity or rest
+                    - generic [ref=f1e2122]: Streaming is taking time away from practice
+                    - generic [ref=f1e2123]: Mentorship is accelerating practice
+                    - generic [ref=f1e2124]: Coaching and club support are improving practice
+                - row [ref=f1e2125]:
+                  - cell "Vortex" [ref=f1e2126]
+                  - cell "W0–W16 · 17 pts" [ref=f1e2128]
+                  - cell "74.5" [ref=f1e2129]
+                  - cell "75.4" [ref=f1e2130]
+                  - cell "+0.9" [ref=f1e2131]
+                  - cell "Aim Precision +3.0 Aim Reactivity +2.0 Comms Quality +1.9 Composure +0.8 Game Sense +0.8 Utility Usage +0.5 Positioning +0.2" [ref=f1e2132]:
+                    - generic [ref=f1e2133]:
+                      - generic "mechanical · 95 to 98" [ref=f1e2134]: Aim Precision +3.0
+                      - generic "mechanical · 92 to 94" [ref=f1e2135]: Aim Reactivity +2.0
+                      - generic "team · 55 to 56.9" [ref=f1e2136]: Comms Quality +1.9
+                      - generic "mental · 70 to 70.8" [ref=f1e2137]: Composure +0.8
+                      - generic "tactical · 72 to 72.8" [ref=f1e2138]: Game Sense +0.8
+                      - generic "tactical · 59 to 59.5" [ref=f1e2139]: Utility Usage +0.5
+                      - generic "tactical · 78 to 78.2" [ref=f1e2140]: Positioning +0.2
+                  - 'cell "Matches +0.04 OVR S1 W16 · Rest / normal · 2 maps · Thriving Individual recovery: practice paused, match experience retained" [ref=f1e2141]':
+                    - generic "Aim Precision +0.02; Aim Reactivity +0.02; Comms Quality +0.18; Composure +0.05; Game Sense +0.04; Positioning +0.01; Utility Usage +0.05" [ref=f1e2143]: Matches +0.04 OVR
+                    - generic [ref=f1e2144]: S1 W16 · Rest / normal · 2 maps · Thriving
+                    - generic [ref=f1e2145]: "Individual recovery: practice paused, match experience retained"
+                - row [ref=f1e2146]:
+                  - cell "Echo" [ref=f1e2147]
+                  - cell "W0–W16 · 17 pts" [ref=f1e2149]
+                  - cell "75.5" [ref=f1e2150]
+                  - cell "76.0" [ref=f1e2151]
+                  - cell "+0.5" [ref=f1e2152]
+                  - cell "Clutch Factor +3.0 Composure +2.0" [ref=f1e2153]:
+                    - generic [ref=f1e2154]:
+                      - generic "mental · 65 to 68" [ref=f1e2155]: Clutch Factor +3.0
+                      - generic "mental · 90 to 92" [ref=f1e2156]: Composure +2.0
+                  - 'cell "No measured skill gains S1 W16 · Rest / light · 2 maps · Settling Individual recovery: practice paused, match experience retained" [ref=f1e2157]':
+                    - generic [ref=f1e2158]: No measured skill gains
+                    - generic [ref=f1e2160]: S1 W16 · Rest / light · 2 maps · Settling
+                    - generic [ref=f1e2161]: "Individual recovery: practice paused, match experience retained"
+                - row [ref=f1e2162]:
+                  - cell "Slyblade" [ref=f1e2163]
+                  - cell "W1–W16 · 16 pts" [ref=f1e2165]
+                  - cell "72.3" [ref=f1e2166]
+                  - cell "72.8" [ref=f1e2167]
+                  - cell "+0.5" [ref=f1e2168]
+                  - cell "Clutch Factor +3.0 Composure +2.0 Positioning +0.1" [ref=f1e2169]:
+                    - generic [ref=f1e2170]:
+                      - generic "mental · 76.4 to 79.4" [ref=f1e2171]: Clutch Factor +3.0
+                      - generic "mental · 63.6 to 65.6" [ref=f1e2172]: Composure +2.0
+                      - generic "tactical · 63.7 to 63.8" [ref=f1e2173]: Positioning +0.1
+                  - 'cell "No measured skill gains S1 W16 · Rest / normal · 2 maps · Thriving Individual recovery: practice paused, match experience retained" [ref=f1e2174]':
+                    - generic [ref=f1e2175]: No measured skill gains
+                    - generic [ref=f1e2177]: S1 W16 · Rest / normal · 2 maps · Thriving
+                    - generic [ref=f1e2178]: "Individual recovery: practice paused, match experience retained"
+                - row [ref=f1e2179]:
+                  - cell "Apex" [ref=f1e2180]
+                  - cell "W0–W16 · 17 pts" [ref=f1e2182]
+                  - cell "78.3" [ref=f1e2183]
+                  - cell "78.4" [ref=f1e2184]
+                  - cell "+0.1" [ref=f1e2185]
+                  - cell "Aim Precision +0.5 Aim Reactivity +0.4" [ref=f1e2186]:
+                    - generic [ref=f1e2187]:
+                      - generic "mechanical · 62 to 62.5" [ref=f1e2188]: Aim Precision +0.5
+                      - generic "mechanical · 60 to 60.4" [ref=f1e2189]: Aim Reactivity +0.4
+                  - 'cell "Matches +0.01 OVR S1 W16 · Rest / light · 2 maps · Thriving Individual recovery: practice paused, match experience retained" [ref=f1e2190]':
+                    - generic "Aim Precision +0.04; Aim Reactivity +0.04" [ref=f1e2192]: Matches +0.01 OVR
+                    - generic [ref=f1e2193]: S1 W16 · Rest / light · 2 maps · Thriving
+                    - generic [ref=f1e2194]: "Individual recovery: practice paused, match experience retained"
+                - row [ref=f1e2195]:
+                  - cell "Hollowlock" [ref=f1e2196]
+                  - cell "W5–W16 · 12 pts" [ref=f1e2198]
+                  - cell "63.0" [ref=f1e2199]
+                  - cell "63.1" [ref=f1e2200]
+                  - cell "+0.1" [ref=f1e2201]
+                  - cell "Positioning +0.9 Aim Precision +0.6" [ref=f1e2202]:
+                    - generic [ref=f1e2203]:
+                      - generic "tactical · 54.1 to 55" [ref=f1e2204]: Positioning +0.9
+                      - generic "mechanical · 51.5 to 52.1" [ref=f1e2205]: Aim Precision +0.6
+                  - 'cell "No measured skill gains S1 W16 · Rest / normal · 0 maps · Settling Individual recovery: practice paused, match experience retained" [ref=f1e2206]':
+                    - generic [ref=f1e2207]: No measured skill gains
+                    - generic [ref=f1e2209]: S1 W16 · Rest / normal · 0 maps · Settling
+                    - generic [ref=f1e2210]: "Individual recovery: practice paused, match experience retained"
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Club
+    - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+    - generic: Name a default five, check condition and confidence, then set team and player training plans.

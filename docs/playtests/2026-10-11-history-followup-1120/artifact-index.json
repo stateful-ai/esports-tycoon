@@ -1,0 +1,407 @@
+[
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\actions-before-analytics.csv",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/actions-before-analytics.csv",
+    "session_relative": "actions-before-analytics.csv",
+    "bytes": 8600,
+    "sha256": "e9268beffcc44bca6a9d567b94fe48520013457e13b3555e6b23be3cb0a4a63d"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\actions.csv",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/actions.csv",
+    "session_relative": "actions.csv",
+    "bytes": 11669,
+    "sha256": "8c61f9bf7a54b12d9390ea3cc85e7befc0fe0e4a27ad146c9581a5d520691045"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\advance-response.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/advance-response.json",
+    "session_relative": "advance-response.json",
+    "bytes": 73326,
+    "sha256": "30735ac9fd4d216e8212b7644b569fffa9a87839e98cf29ede35da61e6879dd3"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\after-advance-public.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/after-advance-public.json",
+    "session_relative": "after-advance-public.json",
+    "bytes": 18176,
+    "sha256": "4577edafa40c08768ab945d12ed70505cde3a64f02a8eacf5dda506483bec362"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\annotation-scope.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/annotation-scope.json",
+    "session_relative": "annotation-scope.json",
+    "bytes": 1297,
+    "sha256": "6ee8932501dcabb1673bc5cf2fb2fcd89fa7d73bc807449e8b61d01982250a82"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\before-public.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/before-public.json",
+    "session_relative": "before-public.json",
+    "bytes": 19139,
+    "sha256": "6d690c9d7ea7217a3483921a27f530a4d3bc4e1754ef4c691e14c4c6775c6715"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\dashboard-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/dashboard-dom.txt",
+    "session_relative": "dashboard-dom.txt",
+    "bytes": 7741,
+    "sha256": "08e103787444f3414aef554b8f8338140e88a1f2bb2ba99d7bd99bf2986c65f4"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-prepend-focus.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-prepend-focus.png",
+    "session_relative": "feed-prepend-focus.png",
+    "bytes": 651927,
+    "sha256": "4b6f679c18cb22d4a26e2762e0114e1e5838acbd10454b0baa596b62a120c173"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-prepend-identity.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-prepend-identity.json",
+    "session_relative": "feed-prepend-identity.json",
+    "bytes": 140548,
+    "sha256": "1b376cd266d7ebb26fae7b0a21cae3bb586ef681a7a7cd5db29d926ee26d0bcb"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-retained-position.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-retained-position.json",
+    "session_relative": "feed-retained-position.json",
+    "bytes": 98,
+    "sha256": "1fedecc0ecdc24396576640e91c71a8e5b405c7cd000f684ddabe31bac1c0cab"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-space-profile.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-space-profile.json",
+    "session_relative": "feed-space-profile.json",
+    "bytes": 15519,
+    "sha256": "5a95c9bf8e24780eebafdfd143c32e057bb59db1d0a271133d60497b626aa183"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-tab-focus.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-tab-focus.json",
+    "session_relative": "feed-tab-focus.json",
+    "bytes": 2108,
+    "sha256": "9911af885dedebfed75036ac57ee39a151aa18eadbd42c548872014200b4cda1"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\feed-tab-focus.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/feed-tab-focus.png",
+    "session_relative": "feed-tab-focus.png",
+    "bytes": 646577,
+    "sha256": "16e9d1498df4af3cf2b2f7a56c34b6180e1928ec18b6e88ee14dbaad3d59472f"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\final-public.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/final-public.json",
+    "session_relative": "final-public.json",
+    "bytes": 18176,
+    "sha256": "4577edafa40c08768ab945d12ed70505cde3a64f02a8eacf5dda506483bec362"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\fixtures-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/fixtures-dom.txt",
+    "session_relative": "fixtures-dom.txt",
+    "bytes": 2299,
+    "sha256": "e2d2c21865bb03b83390ce6dc8d994f38641c71c3c0101876e4607d4009b3bca"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\fixtures.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/fixtures.png",
+    "session_relative": "fixtures.png",
+    "bytes": 199757,
+    "sha256": "ec60f10d0dd04ff56f1399698a5ff516d20c3139a4e1ddded7fb8130167615dd"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\flywheel-after.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/flywheel-after.json",
+    "session_relative": "flywheel-after.json",
+    "bytes": 2557,
+    "sha256": "0b50ad28a824dadcac0d07406d08f5a96e2a8dc5a05f9cacd02b00ae53dc6923"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\flywheel-before.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/flywheel-before.json",
+    "session_relative": "flywheel-before.json",
+    "bytes": 6762,
+    "sha256": "667b69d5ca10194cf8e1107e7c072f4c46d628dfec21ad8d1795fb59083e02eb"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\fullreport-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/fullreport-dom.txt",
+    "session_relative": "fullreport-dom.txt",
+    "bytes": 11634,
+    "sha256": "f64506ec3f88f30fd65e1dbaf01f7d7826679a2de08e717571aaddc976d7c5e0"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\genuine-feed-enter-profile.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/genuine-feed-enter-profile.json",
+    "session_relative": "genuine-feed-enter-profile.json",
+    "bytes": 15523,
+    "sha256": "f3a2f0a3c0efa245ffbdd8c8078b6d41a921d06aed7ec061b09174363370813c"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\genuine-feed-focus.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/genuine-feed-focus.json",
+    "session_relative": "genuine-feed-focus.json",
+    "bytes": 158,
+    "sha256": "10bb788aea725b0bc87c4368bd6e2bb316dd31f27e21db1d90cbcd91ee69c87e"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\genuine-feed-focus.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/genuine-feed-focus.png",
+    "session_relative": "genuine-feed-focus.png",
+    "bytes": 652600,
+    "sha256": "d5cbbf0ac2bc2d42dcd977becbccd738e6f52489f8134f98a95edf4f223e1870"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\genuine-feed-frame-identity.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/genuine-feed-frame-identity.json",
+    "session_relative": "genuine-feed-frame-identity.json",
+    "bytes": 1498212,
+    "sha256": "23ff8dcd1f4161e19da964ff82631775dbb5a9df501bd59773e8d58dada702c4"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\interview-after-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/interview-after-dom.txt",
+    "session_relative": "interview-after-dom.txt",
+    "bytes": 7390,
+    "sha256": "7c6bc2c96d6e8a7cca4995a5062c98f25e1d2ad355ecad45f2a5e6e93bcae2ea"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\interview-before-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/interview-before-dom.txt",
+    "session_relative": "interview-before-dom.txt",
+    "bytes": 8092,
+    "sha256": "cf83eef464c1bfd2c535cd5b9544e5c7c12c62248f74f2218d20dd7948de704d"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\interview-response.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/interview-response.json",
+    "session_relative": "interview-response.json",
+    "bytes": 179,
+    "sha256": "0b6c567b9d1789093c419e5843e5bf8c3944170c431d9c45d9b3fa328a5ae2a2"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\original-agent-manifest.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/original-agent-manifest.json",
+    "session_relative": "original-agent-manifest.json",
+    "bytes": 7923,
+    "sha256": "60904a4e87b40c904a14823766ee80663939cb063535524787cb7ad75475ca0c"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\past-fixture-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/past-fixture-dom.txt",
+    "session_relative": "past-fixture-dom.txt",
+    "bytes": 2485,
+    "sha256": "7cb786411c6ad68a3b227c4cdaca8e9200dee8e0e45ed7146b9a93f1ee988c53"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\past-fixture.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/past-fixture.png",
+    "session_relative": "past-fixture.png",
+    "bytes": 176075,
+    "sha256": "9af5648d417b6ceb11f757b6dddf7a73987e3c061d51852cc4f6ca39e454bb3d"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\paused-seek-round-observations.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/paused-seek-round-observations.json",
+    "session_relative": "paused-seek-round-observations.json",
+    "bytes": 4123,
+    "sha256": "cd467ead240e01aa2476dca8b06d6828586d8b337e7a4e207544ebe815210c1e"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\preadvance-public.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/preadvance-public.json",
+    "session_relative": "preadvance-public.json",
+    "bytes": 18473,
+    "sha256": "b4b7312e7514d870a778d9f210e0c4bd5d2ea3e5d48cc575e34087540c60b108"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\preadvance-roster-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/preadvance-roster-dom.txt",
+    "session_relative": "preadvance-roster-dom.txt",
+    "bytes": 8876,
+    "sha256": "2407d08ba34bd0ecd79da6c45aa971753a41ecb06e7db2c276cef86bbb2cb6d3"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\preadvance-roster-public.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/preadvance-roster-public.json",
+    "session_relative": "preadvance-roster-public.json",
+    "bytes": 63427,
+    "sha256": "5c5ba6d58a2c00e708800d6e414a5b066bf6b97a8dd3a57d6f9081c215c6f686"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\public-responses.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/public-responses.json",
+    "session_relative": "public-responses.json",
+    "bytes": 5481435,
+    "sha256": "7d655658c12577332bbe3b1532a9ec3638828b964b945bb84b2d420b14f58e71"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\reconciliation.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/reconciliation.json",
+    "session_relative": "reconciliation.json",
+    "bytes": 1248,
+    "sha256": "7998858157c4515062bd1dbcfa613b7dba5bdf51aa80758dc19d31dcb2caf6d2"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\replay-open-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/replay-open-dom.txt",
+    "session_relative": "replay-open-dom.txt",
+    "bytes": 1854,
+    "sha256": "261afe75e4c0d7184b6c4d038eab4f9603d1ab7379a7c0cb6049eee1825d316c"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\replay-response.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/replay-response.json",
+    "session_relative": "replay-response.json",
+    "bytes": 3259826,
+    "sha256": "8da14f6532f39997085d0c6939d10d0411cd0d46f8b97ab861752ff7a7898d2f"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\report.md",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/report.md",
+    "session_relative": "report.md",
+    "bytes": 2601,
+    "sha256": "cb10a2db9db98980310bf5795ceb540ca6f965a4f30c91e48e3e32e7d2e98668"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\requests.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/requests.json",
+    "session_relative": "requests.json",
+    "bytes": 13344,
+    "sha256": "afaa02bd1d6f6e3b666dccb71d4765805043f25a876d9303b950644b9325f458"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\result-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/result-dom.txt",
+    "session_relative": "result-dom.txt",
+    "bytes": 7888,
+    "sha256": "6f30c49e6d29c89f2f96b8fde2f4a67e61cb9651ab9fa758eafaa2737490fc62"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\result.png",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/result.png",
+    "session_relative": "result.png",
+    "bytes": 165121,
+    "sha256": "37882007970d0442b0fe21a31c99ec83b0dd7cc38adc08c77166dcb78d00f435"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\root-audit.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/root-audit.json",
+    "session_relative": "root-audit.json",
+    "bytes": 6885,
+    "sha256": "7f36c1459057e9c5c1b3b5c873753b1675f589f34fd0d3271be36035387bbe52"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\root-correction.csv",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/root-correction.csv",
+    "session_relative": "root-correction.csv",
+    "bytes": 1722,
+    "sha256": "dfb743852e27e5af662ee835aefa752cb6fb720a4adec546bbf1cc99aa90ad34"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\root-evidence-manifest.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/root-evidence-manifest.json",
+    "session_relative": "root-evidence-manifest.json",
+    "bytes": 7752,
+    "sha256": "e50f1ed1e9faa1f5de80fa866ccc006e4e854a7a78a8d9c563ace14a8b622328"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\save-response.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/save-response.json",
+    "session_relative": "save-response.json",
+    "bytes": 82,
+    "sha256": "0b43adc69eacf25842e02d3b1a48b44085a277c56404abc2fcaa281301988b83"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\season-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/season-dom.txt",
+    "session_relative": "season-dom.txt",
+    "bytes": 20558,
+    "sha256": "13646e29fa4cad70b0f6d07486a4a2275f84d426b0577d98ddf28d662fb8064a"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\source-after.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/source-after.json",
+    "session_relative": "source-after.json",
+    "bytes": 95623,
+    "sha256": "a4f759c43a5af329ddd9dd73aa4996732cdaa37a667530a1549c9824bbb9932b"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\source-before.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/source-before.json",
+    "session_relative": "source-before.json",
+    "bytes": 95623,
+    "sha256": "a4f759c43a5af329ddd9dd73aa4996732cdaa37a667530a1549c9824bbb9932b"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\step4-correction.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/step4-correction.json",
+    "session_relative": "step4-correction.json",
+    "bytes": 2287,
+    "sha256": "8ca8599bd965eec8cf695a042e1cb5a101b156c9a34d41ddf77ea203bc2b5dc6"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\unchanged-frame-identity.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/unchanged-frame-identity.json",
+    "session_relative": "unchanged-frame-identity.json",
+    "bytes": 58560,
+    "sha256": "01c56611f556939c8a12bebf002471755ab553bee806bd3db222bd5b4783f2d1"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\usage-before.jsonl",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/usage-before.jsonl",
+    "session_relative": "usage-before.jsonl",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\usage-end.jsonl",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/usage-end.jsonl",
+    "session_relative": "usage-end.jsonl",
+    "bytes": 27868,
+    "sha256": "373b6fb7c925ca6341fdaf17e51a33875fcd3120c7df0efa95b218583f85d8c8"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\usage-summary.json",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/usage-summary.json",
+    "session_relative": "usage-summary.json",
+    "bytes": 3000,
+    "sha256": "db5ef447061d76adf2df47f91f94da5d24649027bf9522cb714ddf5a16f8c44b"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session\\wrong-target-recovery-dom.txt",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session/wrong-target-recovery-dom.txt",
+    "session_relative": "wrong-target-recovery-dom.txt",
+    "bytes": 14852,
+    "sha256": "1c97368980562cc9078760b2c7866e9525f37df1a7714b3055eb2e97bf489d1b"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-replay413-411-keyboard-session-root-audit.md",
+    "published": "docs/playtests/2026-10-11-replay413-411-keyboard-session-root-audit.md",
+    "bytes": 3179,
+    "sha256": "4e81a13dbe2910199c10a0a525e119eb8cbe773ba5e74bb22c976fdbe65d6fe7"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\replay413-411-root-receipt-audit.json",
+    "published": "docs/playtests/2026-10-11-history-followup-1120/replay413-411-root-receipt-audit.json",
+    "original_bookkeeping_copy": true,
+    "bytes": 6885,
+    "sha256": "7f36c1459057e9c5c1b3b5c873753b1675f589f34fd0d3271be36035387bbe52"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\replay413-411-1120-append-proof.json",
+    "published": "docs/playtests/2026-10-11-history-followup-1120/replay413-411-1120-append-proof.json",
+    "original_bookkeeping_copy": true,
+    "bytes": 803,
+    "sha256": "6962704ba6fa66033ae9e4b8295cb329b34482a626bd859efa5f463217327f4d"
+  },
+  {
+    "source": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\actions-before-replay413-411-1120.csv",
+    "published": "docs/playtests/2026-10-11-history-followup-1120/actions-before-replay413-411-1120.csv",
+    "original_bookkeeping_copy": true,
+    "bytes": 1681342,
+    "sha256": "ba6da15176aa2611cfbf6545fe8cf39d8cbf0ba459a44cb05ecf497e1a326be4"
+  }
+]

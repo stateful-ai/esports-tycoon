@@ -1,0 +1,319 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 6 · Regular — Team Nexus 2,287,871 cr
+  - button "Save"
+  - combobox:
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 13"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Club Team Nexus · 8/10
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - text: Default five 5/5
+  - button "Save lineup"
+  - table:
+    - rowgroup:
+      - row "★ Player Role Agent Age OVR Ceiling Form Morale Condition Confidence Salary Wks":
+        - columnheader "★"
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Agent"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ceiling"
+        - columnheader "Form"
+        - columnheader "Morale"
+        - columnheader "Condition"
+        - columnheader "Confidence"
+        - columnheader "Salary"
+        - columnheader "Wks"
+        - columnheader
+    - rowgroup:
+      - 'row "★ Apex IGL Clutch Master: wants the round with the game on the line Controller IGL Omen ? 27 79 ★★★★ 52 85 37 59 ▼ 10,500 cr/wk 24w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Apex IGL Clutch Master: wants the round with the game on the line"':
+          - text: Apex IGL
+          - 'img "Clutch Master: wants the round with the game on the line"'
+        - cell "Controller IGL"
+        - cell "Omen ?"
+        - cell "27"
+        - cell "79"
+        - cell "★★★★"
+        - cell "52"
+        - cell "85"
+        - cell "37"
+        - cell "59 ▼"
+        - cell "10,500 cr/wk"
+        - cell "24w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - 'row "★ Vortex Aim Demon: raw mechanical menace Clutch Master: wants the round with the game on the line Heavy streaming Duelist Awper Jett ? 23 76.8 ★★★ 53 ▼ 89 91 64 ▼ 9,200 cr/wk 25w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Vortex Aim Demon: raw mechanical menace Clutch Master: wants the round with the game on the line Heavy streaming"':
+          - text: Vortex
+          - 'img "Aim Demon: raw mechanical menace"'
+          - 'img "Clutch Master: wants the round with the game on the line"'
+          - text: 📺
+        - cell "Duelist Awper"
+        - cell "Jett ?"
+        - cell "23"
+        - cell "76.8"
+        - cell "★★★"
+        - cell "53 ▼"
+        - cell "89"
+        - cell "91"
+        - cell "64 ▼"
+        - cell "9,200 cr/wk"
+        - cell "25w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - 'row "★ Ghost Mentored player Clutch Master: wants the round with the game on the line Choker: tightens up when it matters most Initiator Lurker Sova ? 20 79.2 ★★★★★ 52 ▼ 88 45 57 ▼ 4,500 cr/wk 17w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Ghost Mentored player Clutch Master: wants the round with the game on the line Choker: tightens up when it matters most"':
+          - text: Ghost 🎓
+          - 'img "Clutch Master: wants the round with the game on the line"'
+          - 'img "Choker: tightens up when it matters most"'
+        - cell "Initiator Lurker"
+        - cell "Sova ?"
+        - cell "20"
+        - cell "79.2"
+        - cell "★★★★★"
+        - cell "52 ▼"
+        - cell "88"
+        - cell "45"
+        - cell "57 ▼"
+        - cell "4,500 cr/wk"
+        - cell "17w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - 'row "★ Slyblade Clutch Master: wants the round with the game on the line Duelist Entry Yoru ? 29 72.9 ★★★½ 57 ▼ 92 100 63 ▼ 6,300 cr/wk 35w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Slyblade Clutch Master: wants the round with the game on the line"':
+          - text: Slyblade
+          - 'img "Clutch Master: wants the round with the game on the line"'
+        - cell "Duelist Entry"
+        - cell "Yoru ?"
+        - cell "29"
+        - cell "72.9"
+        - cell "★★★½"
+        - cell "57 ▼"
+        - cell "92"
+        - cell "100"
+        - cell "63 ▼"
+        - cell "6,300 cr/wk"
+        - cell "35w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - 'row "★ Echo Choker: tightens up when it matters most Sentinel Anchor Killjoy ? 24 75.1 ★★★ 49 ▼ 87 29 55 ▼ 7,700 cr/wk 29w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Echo Choker: tightens up when it matters most"':
+          - text: Echo
+          - 'img "Choker: tightens up when it matters most"'
+        - cell "Sentinel Anchor"
+        - cell "Killjoy ?"
+        - cell "24"
+        - cell "75.1"
+        - cell "★★★"
+        - cell "49 ▼"
+        - cell "87"
+        - cell "29"
+        - cell "55 ▼"
+        - cell "7,700 cr/wk"
+        - cell "29w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - 'row "☆ Hollowlock Choker: tightens up when it matters most Inconsistent: a different player week to week bench Controller IGL Harbor 27 62.8 ★★ 47 73 100 56 ▼ 4,000 cr/wk 35w Talk Renew Release"':
+        - cell "☆":
+          - button "☆"
+        - 'cell "Hollowlock Choker: tightens up when it matters most Inconsistent: a different player week to week bench"':
+          - text: Hollowlock
+          - 'img "Choker: tightens up when it matters most"'
+          - 'img "Inconsistent: a different player week to week"'
+          - text: bench
+        - cell "Controller IGL"
+        - cell "Harbor"
+        - cell "27"
+        - cell "62.8"
+        - cell "★★"
+        - cell "47"
+        - cell "73"
+        - cell "100"
+        - cell "56 ▼"
+        - cell "4,000 cr/wk"
+        - cell "35w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - row "☆ Nightsurge Mentored player bench Controller IGL Miks ? 18 52.4 ★★★½ 46 58 64 38 3,100 cr/wk 29w Talk Renew Release":
+        - cell "☆":
+          - button "☆"
+        - cell "Nightsurge Mentored player bench": Nightsurge 🎓 bench
+        - cell "Controller IGL"
+        - cell "Miks ?"
+        - cell "18"
+        - cell "52.4"
+        - cell "★★★½"
+        - cell "46"
+        - cell "58"
+        - cell "64"
+        - cell "38"
+        - cell "3,100 cr/wk"
+        - cell "29w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+      - row "☆ Frostdash bench Controller IGL Astra ? 29 50.7 ★ 50 71 87 51 2,200 cr/wk 64w Talk Renew Release":
+        - cell "☆":
+          - button "☆"
+        - cell "Frostdash bench"
+        - cell "Controller IGL"
+        - cell "Astra ?"
+        - cell "29"
+        - cell "50.7"
+        - cell "★"
+        - cell "50"
+        - cell "71"
+        - cell "87"
+        - cell "51"
+        - cell "2,200 cr/wk"
+        - cell "64w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release" [disabled]
+  - heading "Form & fitness" [level=2]
+  - text: Burnout watch Apex 5 maps 37 sta Echo 5 maps 29 sta Cumulative wins
+  - img "cumulative wins"
+  - text: 2W in 5 played
+  - heading "Squad profile" [level=2]
+  - paragraph: Average age 24.6
+  - text: Youth ≤21 2 Prime 22–26 2 Veteran 27+ 4
+  - heading "Scouting book" [level=2]
+  - paragraph: Balanced
+  - heading "Locker room" [level=2]
+  - paragraph: No standout duos or feuds.
+  - paragraph: Comms 49 shared languages feed chemistry.
+  - heading "Map lineups" [level=2]
+  - paragraph: vs Baltic Meridian · Bo1
+  - text: Bind default Apex · Vortex · Ghost · Slyblade · Echo
+  - button "Edit ▸"
+  - heading "Lineups — vs Baltic Meridian (Bo1)" [level=2]
+  - paragraph: Dress exactly 5 for each map. A map with no pick uses your default five (★).
+  - heading "Default five" [level=3]
+  - button "Apex"
+  - button "Vortex"
+  - button "Ghost"
+  - button "Slyblade"
+  - button "Echo"
+  - button "Hollowlock"
+  - button "Nightsurge"
+  - button "Frostdash"
+  - text: 5/5
+  - button "Save"
+  - button "Clear (auto top-5)"
+  - heading "Bind · default" [level=3]
+  - button "Apex"
+  - button "Vortex"
+  - button "Ghost"
+  - button "Slyblade"
+  - button "Echo"
+  - button "Hollowlock"
+  - button "Nightsurge"
+  - button "Frostdash"
+  - text: 5/5
+  - button "Save"
+- button "Close profile": ✕
+- text: Apex Incumbent Leader Controller IGL IGL US EN 86 age 27 403.1K followers 🎥 balanced · 1,929 cr/wk 45w at club auto · light Team Nexus 24w left · 10,500 cr/wk 72% streams · 126,000 cr release · 340,000 cr buyout · starter · no-transfer
+- button "Rein in streaming…"
+- button "Change role/style…"
+- button "Scout development"
+- text: 79 OVR ★★★½ 89–92 Current ability 100 comfort 93 IGL effectiveness 100 calling experience 80–87 Potential peak forecast 52 Form 85 Morale 37 Condition 59 Confidence drives duels & nerve 222,000 cr Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Badges" [level=3]
+- text: Clutch Master
+- heading "Attributes" [level=3]
+- text: Aim Precision 63 →73.6–82.3 Aim Reactivity 61 →72.1–80.8 Clutch Factor 77 →81.8–90.6 Comms Quality 92 Composure 90 Game Sense 94 Movement 58 →70.3–78.9 Positioning 82 →82–86.7 Tilt Resistance 85 Utility Usage 88
+- heading "Traits" [level=3]
+- text: Calm Shotcaller Veteran
+- heading "Agent pool" [level=3]
+- text: Role comfort 100 Omen 94 Astra 75 Brimstone 73 Clove 70 Viper 69
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- text: "0.80 Rating 0.74 K/D 9 FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 5 matches · 51 / 69 / — K / D / A
+- text: ACS by week Kills &amp; deaths by week K D
+- img "Kills and deaths by week"
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over time CA Conf
+- img "Ability and confidence over time": 79 50
+- paragraph: CA 78.3 to 79.0 over 29 weeks / 403.1K followers
+- text: Season growth Clutch Factor this season
+- img "Clutch Factor trajectory this season": 77.2 77.1
+- button "Clutch Factor 77+0.1 ▲"
+- button "Aim Precision 63+0.1 ▲"
+- button "Aim Reactivity 61+0.1 ▲"
+- button "Comms Quality 920.0 —"
+- button "Composure 900.0 —"
+- button "Game Sense 940.0 —"
+- button "Movement 580.0 —"
+- button "Positioning 820.0 —"
+- heading "Relationships" [level=3]
+- text: Slyblade Neutral Ghost Neutral Vortex Neutral Echo Neutral Hollowlock Neutral Frostdash Neutral Nightsurge Neutral
+- heading "Career" [level=3]
+- text: 2 Seasons 34 Maps 444 Kills 0.85 K/D 0 Honours 0 MVPs 0 All-Star Timeline S1 Apex re-signs with Team Nexus. Apex earns the Clutch Master badge. Memories
+- list:
+  - listitem: "S1: Apex earns the Clutch Master badge."
+  - listitem: "S1: Apex re-signs with Team Nexus."
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Vortex"
+  - option "Ghost"
+  - option "Slyblade"
+  - option "Echo"
+  - option "Hollowlock"
+  - option "Nightsurge"
+  - option "Frostdash"

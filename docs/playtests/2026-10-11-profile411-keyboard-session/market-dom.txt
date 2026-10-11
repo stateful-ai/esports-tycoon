@@ -1,0 +1,199 @@
+- main:
+  - text: Market
+  - button "Players"
+  - button "Scouting"
+  - button "Staff"
+  - text: ~75,202 cr/wk free · stable Mid-split window · Final roster moves close after week 8.
+  - heading "Find a player" [level=2]
+  - textbox "search by handle or real name…"
+  - heading "Free agents — 5" [level=2]
+  - paragraph: Market coverage 0% — estimates only; assign your scout to the market to see ceilings.
+  - text: 🛠️ Filter free agents
+  - button "Show Filters ▾"
+  - table:
+    - rowgroup:
+      - row "Player Role Age OVR Ability Ceiling Languages Stream revenue Asking Swap out":
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ability"
+        - columnheader "Ceiling"
+        - columnheader "Languages"
+        - columnheader "Stream revenue"
+        - columnheader "Asking"
+        - columnheader
+        - columnheader "Swap out"
+    - rowgroup:
+      - row "Neohawk Room fit 50 Duelist Awper 28 ~48 ½–★½ unknown Es En 30 cr/wk 3,000 cr/wk Negotiate… — drop — Swap":
+        - cell "Neohawk Room fit 50":
+          - button "Neohawk"
+          - text: Room fit 50
+        - cell "Duelist Awper"
+        - cell "28"
+        - cell "~48"
+        - cell "½–★½"
+        - cell "unknown"
+        - cell "Es En"
+        - cell "30 cr/wk"
+        - cell "3,000 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Apex (79)"
+            - option "Vortex (77)"
+            - option "Ghost (79)"
+            - option "Slyblade (73)"
+            - option "Echo (75)"
+            - option "Hollowlock (63)"
+            - option "Nightsurge (53)"
+            - option "Frostdash (51)"
+          - button "Swap"
+      - row "Falconflare Room fit 50 Sentinel Anchor 18 ~48 ½–★½ unknown Ko En 0 cr/wk 2,300 cr/wk Negotiate… — drop — Swap":
+        - cell "Falconflare Room fit 50":
+          - button "Falconflare"
+          - text: Room fit 50
+        - cell "Sentinel Anchor"
+        - cell "18"
+        - cell "~48"
+        - cell "½–★½"
+        - cell "unknown"
+        - cell "Ko En"
+        - cell "0 cr/wk"
+        - cell "2,300 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Apex (79)"
+            - option "Vortex (77)"
+            - option "Ghost (79)"
+            - option "Slyblade (73)"
+            - option "Echo (75)"
+            - option "Hollowlock (63)"
+            - option "Nightsurge (53)"
+            - option "Frostdash (51)"
+          - button "Swap"
+      - row "Nightecho Room fit 50 Duelist Awper 19 ~48 ½–★★½ unknown De En Ru 2 cr/wk 2,300 cr/wk Negotiate… — drop — Swap":
+        - cell "Nightecho Room fit 50":
+          - button "Nightecho"
+          - text: Room fit 50
+        - cell "Duelist Awper"
+        - cell "19"
+        - cell "~48"
+        - cell "½–★★½"
+        - cell "unknown"
+        - cell "De En Ru"
+        - cell "2 cr/wk"
+        - cell "2,300 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Apex (79)"
+            - option "Vortex (77)"
+            - option "Ghost (79)"
+            - option "Slyblade (73)"
+            - option "Echo (75)"
+            - option "Hollowlock (63)"
+            - option "Nightsurge (53)"
+            - option "Frostdash (51)"
+          - button "Swap"
+      - row "Grimecho Room fit 50 Sentinel Anchor 27 ~43 ½–★★ unknown Pt En 7 cr/wk 2,400 cr/wk Negotiate… — drop — Swap":
+        - cell "Grimecho Room fit 50":
+          - button "Grimecho"
+          - text: Room fit 50
+        - cell "Sentinel Anchor"
+        - cell "27"
+        - cell "~43"
+        - cell "½–★★"
+        - cell "unknown"
+        - cell "Pt En"
+        - cell "7 cr/wk"
+        - cell "2,400 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Apex (79)"
+            - option "Vortex (77)"
+            - option "Ghost (79)"
+            - option "Slyblade (73)"
+            - option "Echo (75)"
+            - option "Hollowlock (63)"
+            - option "Nightsurge (53)"
+            - option "Frostdash (51)"
+          - button "Swap"
+      - row "Falconstorm Room fit 50 Initiator Support 17 ~40 ½ unknown Ru En 0 cr/wk 1,700 cr/wk Negotiate… — drop — Swap":
+        - cell "Falconstorm Room fit 50":
+          - button "Falconstorm"
+          - text: Room fit 50
+        - cell "Initiator Support"
+        - cell "17"
+        - cell "~40"
+        - cell "½"
+        - cell "unknown"
+        - cell "Ru En"
+        - cell "0 cr/wk"
+        - cell "1,700 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Apex (79)"
+            - option "Vortex (77)"
+            - option "Ghost (79)"
+            - option "Slyblade (73)"
+            - option "Echo (75)"
+            - option "Hollowlock (63)"
+            - option "Nightsurge (53)"
+            - option "Frostdash (51)"
+          - button "Swap"
+  - heading "Squad intelligence" [level=2]
+  - text: duelist 2 controller 4 initiator 1 sentinel 1 flex 0
+  - paragraph: "Weakest: Controller (61.3)"
+  - heading "Signing headroom" [level=2]
+  - text: Weekly net 75,202 cr Affordable wage 75,202 cr/wk stable
+  - heading "Contract watch" [level=2]
+  - button "Wraithmark"
+  - text: Sahara Compass · Sentinel 8w
+  - button "Frostbyte"
+  - text: Saracen Guard · Controller 8w
+  - button "Ironstorm"
+  - text: Coral Sea Drakes · Duelist 6w
+  - button "Ashwing"
+  - text: Seoul Dynasty Prime · Sentinel 7w
+  - button "Ironbyte"
+  - text: Midnight Polders · Initiator 8w
+  - heading "Wonderkids — ≤20" [level=2]
+  - button "Ghost"
+  - text: 20y · Initiator · Team Nexus ★★★★★
+  - button "Ironhawk"
+  - text: 19y · Initiator · Kathmandu Apex ★★★★★
+  - button "Driftlock"
+  - text: 20y · Sentinel · Kathmandu Apex ★★★★★
+  - button "Ironhawk"
+  - text: 19y · Duelist · Midnight Polders ★★★★★
+  - button "Driftshot"
+  - text: 20y · Duelist · Taipei Circuit ★★★★★
+  - button "Frostecho"
+  - text: 18y · Duelist · Sahara Compass ★★★★★
+  - heading "Challengers standouts" [level=2]
+  - button "Driftshot"
+  - text: 20y · Duelist · Taipei Circuit 1.72
+  - button "Karmasnap"
+  - text: 23y · Duelist · Gallic Storm 1.29
+  - button "Grimstep"
+  - text: 18y · Duelist · Azure Vanta 1.26
+  - button "Wraithshot"
+  - text: 20y · Duelist · Volga Reign 1.21
+  - button "Havocflare"
+  - text: 22y · Controller · Taipei Circuit 1.18
+  - heading "Rumour mill" [level=2]
+  - text: Free agent Neohawk (duelist) linked with a move to Team Nexus. Free agent Falconflare (sentinel) linked with a move to Chao Phraya Owls. Free agent Nightecho (duelist) linked with a move to Team Nexus.

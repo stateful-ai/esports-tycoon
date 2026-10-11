@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0198",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Mentor text can select the wrong player",
+    "problem": "Broad row text matched Ghost mentor options for Slyblade/Hollowlock.",
+    "solution": "Preserved partial Ghostauto/rest decisions, then leading identity-cell targeted retry and public per-ID readback.",
+    "lesson": "Validate the player identity cell and unique controls; a200 result alone does not prove intended player selection.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0199",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Recovery versus mental practice is measurable",
+    "problem": "After elimination five starters rested and one benched player trained.",
+    "solution": "Four auto mental plans reported practice; two resting players recovered to100 condition; all0maps.",
+    "lesson": "Use server-authored practice attribution and condition readback; mental focus does not guarantee immediate confidence growth.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0200",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Weekly cash summary still omits a resolved cash difference",
+    "problem": "Bank increased280289 while income127389 minus expenses47100 explains80289.",
+    "solution": "Reproduced existing PR380 gap; retained actual raw report and public finance state instead of opening duplicate.",
+    "lesson": "Check actual bank movement against realized totals; run-rate is a different period and objective-achieved labels do not isolate payout.",
+    "confidence": "high",
+    "source": "2026-10-11-post-champions-recovery 26UHC seed2038 main20273 root unknown runtime; afterplay 2026-10-11T06:58:13.121867+00:00",
+    "code": "",
+    "tags": [
+      "post-champions",
+      "development",
+      "targeting"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -1,0 +1,64 @@
+- button "Back to previous profile": ← Back
+- button "Close profile": ✕
+- text: "Ghost Rookie Initiator Lurker AR ES 90 · EN 88 · PT 31 age 20 242.7K followers 🎥 balanced · 965 cr/wk Mentor:"
+- button "Apex"
+- text: (0%) 129w at club mechanical · light Team Nexus 16w left · 4,500 cr/wk 70% streams · 54,000 cr release · 1,257,000 cr buyout · starter
+- button "Rein in streaming…"
+- button "Change role/style…"
+- button "Make IGL"
+- button "Scout development"
+- text: 79 OVR ★★★½ 80–83 Current ability 100 comfort 86–99 Potential peak forecast 52 Form 79 Morale 36 Condition 55 Confidence drives duels & nerve 297,000 cr Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Badges" [level=3]
+- text: Clutch Master Choker
+- heading "Attributes" [level=3]
+- text: Aim Precision 83 →83.1–91.4 Aim Reactivity 83 →85.3–95 Clutch Factor 81 →80.8–88.7 Comms Quality 62 →83.4–93.1 Composure 76 →77.2–86.7 Game Sense 86 →86–92.4 Movement 82 →83.3–93 Positioning 84 →84.3–90.4 Tilt Resistance 72 →86.6–96.4 Utility Usage 84 →83.8–90.8
+- heading "Traits" [level=3]
+- text: Independent Rookie Underrated
+- heading "Agent pool" [level=3]
+- text: Role comfort 100 Sova 86 KAY/O 72 Fade 69 Gekko 69 Skye 68
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- text: "0.88 Rating 1.01 K/D 9 FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 6 matches · 70 / 69 / — K / D / A
+- text: ACS by week Kills &amp; deaths by week K D
+- img "Kills and deaths by week"
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over time CA Conf
+- img "Ability and confidence over time": 79 50
+- paragraph: CA 75.5 to 79.2 over 30 weeks / 242.7K followers
+- text: Season growth Movement this season
+- img "Movement trajectory this season": 81.8 79.7
+- button "Movement 82+2.1 ▲"
+- button "Aim Precision 83+1.4 ▲"
+- button "Aim Reactivity 83+1.1 ▲"
+- button "Composure 76+0.4 ▲"
+- button "Comms Quality 62+0.2 ▲"
+- button "Game Sense 86+0.2 ▲"
+- button "Clutch Factor 81+0.1 ▲"
+- button "Positioning 84+0.1 ▲"
+- heading "Relationships" [level=3]
+- button "Slyblade Neutral"
+- button "Vortex Neutral"
+- button "Apex Neutral"
+- button "Hollowlock Neutral"
+- button "Echo Neutral"
+- button "Nightsurge Neutral"
+- button "Frostdash Neutral"
+- heading "Career" [level=3]
+- text: 2 Seasons 27 Maps 334 Kills 0.98 K/D 0 Honours 0 MVPs 0 All-Star Timeline S1 Ghost is saddled with the Choker badge. Ghost earns the Clutch Master badge. Memories
+- list:
+  - listitem: "S1: Ghost earns the Clutch Master badge."
+  - listitem: "S1: Ghost is saddled with the Choker badge."
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Apex"
+  - option "Vortex"
+  - option "Slyblade"
+  - option "Echo"
+  - option "Hollowlock"
+  - option "Nightsurge"
+  - option "Frostdash"

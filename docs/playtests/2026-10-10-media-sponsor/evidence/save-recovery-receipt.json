@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"status\":200,\"url\":\"http://127.0.0.1:8478/api/actions/save\",\"body\":{\"ok\":true,\"message\":\"World saved.\"},\"saveLabel\":\"Save\"}\n### Ran Playwright code\n```js\nawait (async (page) => { const receipt = page.waitForResponse(r => r.url().endsWith('/api/actions/save') && r.request().method() === 'POST'); await page.locator('#save-btn').click(); const r = await receipt; return {status:r.status(),url:r.url(),body:await r.json(),saveLabel:await page.locator('#save-btn').innerText()}; })(page);\n```"
+    }
+  ]
+}

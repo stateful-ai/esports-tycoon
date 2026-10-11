@@ -1,0 +1,17 @@
+[
+  {
+    "ProcessId": 29644,
+    "ParentProcessId": 34524,
+    "CommandLine": "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8529 --no-browser"
+  },
+  {
+    "ProcessId": 27812,
+    "ParentProcessId": 29644,
+    "CommandLine": "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8529 --no-browser"
+  },
+  {
+    "ProcessId": 27836,
+    "ParentProcessId": 7612,
+    "CommandLine": "\"C:\\Users\\aidan\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe\" -Command \"try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}\n$taskRoot='C:/Users/aidan/.codex/worktrees/masters-aftermath-playtest/ESports Simulator'; $taskRun=\\\"$taskRoot/runs/playtests/2026-10-11-offseason-rebuild\\\"; $taskProcesses=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'esports_sim --web --port 8529 --no-browser' }; $taskPids=@($taskProcesses | Select-Object -ExpandProperty ProcessId); if($taskPids.Count -lt 1){throw 'No verified owned server process'}; $taskProcesses | Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Json -Depth 3 | Out-File -Encoding utf8 \\\"$taskRun/owned-processes-before-stop.json\\\"; foreach($taskPid in $taskPids){Stop-Process -Id $taskPid -ErrorAction SilentlyContinue}; $taskPort=@(Get-NetTCPConnection -LocalPort 8529 -State Listen -ErrorAction SilentlyContinue); if($taskPort.Count -ne 0){throw 'Owned port still listening'}; @{at_utc=[DateTime]::UtcNow.ToString('o');browser_session='offseason-rebuild';browser_closed=$true;verified_stopped_pids=$taskPids;port=8529;port_absent=$true;user8421_untouched=$true} | ConvertTo-Json | Out-File -Encoding utf8 \\\"$taskRun/cleanup.json\\\"; $env:PYTHONPATH=\\\"$taskRoot/src\\\"; .venv-win/Scripts/python.exe \\\"$taskRoot/scripts/ui_usage_report.py\\\" \\\"$taskRun/saves/usage\\\" | Out-File -Encoding utf8 \\\"$taskRun/usage-report.json\\\"; $taskUsageExit=$LASTEXITCODE; .venv-win/Scripts/python.exe \\\"$taskRoot/scripts/telemetry_report.py\\\" \\\"$taskRun/saves\\\" | Out-File -Encoding utf8 \\\"$taskRun/decision-report.txt\\\"; $taskDecisionExit=$LASTEXITCODE; @{usage_exit=$taskUsageExit;decision_exit=$taskDecisionExit;at_utc=[DateTime]::UtcNow.ToString('o');local_tests_launched=$false} | ConvertTo-Json | Out-File -Encoding utf8 \\\"$taskRun/report-command-exits.json\\\"; Get-Content \\\"$taskRun/report-command-exits.json\\\"; Get-Content \\\"$taskRun/decision-report.txt\\\" -TotalCount 18; Get-Content 'C:/Users/aidan/.codex/worktrees/playtest-history-followup-808/ESports Simulator/docs/playtests/2026-10-11-history-followup-808/staged-byte-verification.json' -TotalCount 40; Get-Content 'C:/Users/aidan/.codex/worktrees/playtest-history-followup-808/ESports Simulator/docs/playtests/2026-10-11-history-followup-808/preparation-audit.json' -TotalCount 45\""
+  }
+]

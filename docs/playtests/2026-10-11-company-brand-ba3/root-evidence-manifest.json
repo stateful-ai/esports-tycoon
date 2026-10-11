@@ -1,0 +1,131 @@
+{
+  "at_utc": "2026-10-11T12:40:11.360100+00:00",
+  "original_manifest_unchanged": true,
+  "allowlist": {
+    "actions.csv": {
+      "bytes": 4927,
+      "sha256": "b83756868c296794d5ff980581e0e391e6cc6f1b3830b8b9b3d2159ea1d2bb9f"
+    },
+    "report.md": {
+      "bytes": 2543,
+      "sha256": "623b4dc2faf38b50563dae42289e8ec34934bbc7c08d1e8124e63d828ebd2b52"
+    },
+    "reconciliation.json": {
+      "bytes": 1683,
+      "sha256": "5432c538f832453a5c853e06fcfa5fb51a8b754fb2b907ce8e61896bc7ca1074"
+    },
+    "decisions-added.json": {
+      "bytes": 322,
+      "sha256": "e449c0d7804c1bf13fa7f13f2b766660352775050f620887a6da2b6ac999a63b"
+    },
+    "source-before.json": {
+      "bytes": 95623,
+      "sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc"
+    },
+    "source-after.json": {
+      "bytes": 95623,
+      "sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc"
+    },
+    "public-readbacks.json": {
+      "bytes": 30149,
+      "sha256": "b591bb0308a3b01e4e507d077ca50c995cbcb8e960bb0cede6846a800903552b"
+    },
+    "contract-summary.json": {
+      "bytes": 266,
+      "sha256": "96bfbcecc21a6821481cb4c5bfb3f5085b03a6ded8ddd0d2dae0adc890f72b2c"
+    },
+    "finance-before.png": {
+      "bytes": 299505,
+      "sha256": "b5fa500d6164f13b46a60d7fdbde20299a70b6da8e254fb2c65b4feb85845184"
+    },
+    "finance-after.png": {
+      "bytes": 284882,
+      "sha256": "b029a3ebfd587e1e0605ecb04822fed7aaa831e12e74281acf79b0271e8e1170"
+    },
+    "flywheel-before.json": {
+      "bytes": 6746,
+      "sha256": "9aa7608f292bc3a74bbb95d54b1fdf19cc27fcc5d793f4ffbf3c3d2f77757bc7"
+    },
+    "flywheel-after.json": {
+      "bytes": 2209,
+      "sha256": "23d582fa7c287a36c49b8dae8bdc360527a03649d20ff44cd46c0c4df6b36e8c"
+    },
+    "shutdown.json": {
+      "bytes": 70,
+      "sha256": "bf5b6d96bdd57d6b46a2a728e30af7f19c49d02e9e2e655798dda000e32ee500"
+    },
+    "brand-ready.txt": {
+      "bytes": 35654,
+      "sha256": "f8c93113126ecbe789fc9998a12ebae8ea72da0cde7190072e53cba35ec442fc"
+    },
+    "facilities-ready.txt": {
+      "bytes": 17156,
+      "sha256": "b067422a9b93e5366f9d215f5c6f4a830192991fd740e10a121cee1a5088e17f"
+    },
+    "upgrade-ready.txt": {
+      "bytes": 17214,
+      "sha256": "76ba9cdf84dcbe65d1ad6e4ad5dfa46e4d3927990cbc42c47e2fd7b466589544"
+    },
+    "finances2.txt": {
+      "bytes": 95,
+      "sha256": "a8a62e045e98e17581669dca42152d9bc1d9c8096e814606fc19c8fc145d58bd"
+    },
+    "finances2-fresh.txt": {
+      "bytes": 14656,
+      "sha256": "d74fc4f6a2db41dbeb2b79d67c4c824fa8d14e76cee5e545af01d407db035098"
+    },
+    "save.txt": {
+      "bytes": 243,
+      "sha256": "49df18a8cb1c39c3d414c95b5dc352e764cbbac38e406ed2d72eb3c3db55d68d"
+    },
+    "final-public.txt": {
+      "bytes": 5859,
+      "sha256": "d701290878ac8a443d83cd4289235f4d78db6024becd8341a5745263696cd76e"
+    },
+    "contract-correct-public.txt": {
+      "bytes": 9032,
+      "sha256": "852ebd43e6fe845f6c93d006b0b67ca76e1f921f31f69881c2ef9b40806abcc8"
+    },
+    "usage-end.jsonl": {
+      "bytes": 9492,
+      "sha256": "b2cff43a57f9f64a842f09a01a04726c07f0b9a04ca34cb90ae1cb72c80df534"
+    },
+    "company-ready.txt": {
+      "bytes": 14558,
+      "sha256": "6df25c4a45f890615fb91ef18b312ab694eda4e44901de2a4afb38856354adfb"
+    },
+    "upgrade-public.txt": {
+      "bytes": 6231,
+      "sha256": "a5251a09045d3fb0daeac5f114fda5e6ce00a123a20a45c3b7b62977d3c7d00e"
+    },
+    "finance-public.txt": {
+      "bytes": 5564,
+      "sha256": "885127de909d016aac503d1dfeaedaee30a5e44a129d558944affa955e8960f9"
+    },
+    "finance-upgraded-public.txt": {
+      "bytes": 5529,
+      "sha256": "50b01bac37b4260ddbb46d1b31d821a16ebee5c407a300fe90cf15914f39ea9d"
+    }
+  },
+  "additional_files": {
+    "safe-manifest.json": {
+      "bytes": 3470,
+      "sha256": "83274e67b25577644d44108b858f24bf96141a95c2b8c740021c0b4f9c47635b"
+    },
+    "root-audit.json": {
+      "bytes": 4957,
+      "sha256": "b866ef10e333a44cb078eab66c827c43e45798d304a53c27be0dfa05d6bdad08"
+    },
+    "root-correction.csv": {
+      "bytes": 1509,
+      "sha256": "12aa8fc2cc2b7d91707cc173e5fb83e4d93a449387f409dae1f18855ff011a22"
+    }
+  },
+  "excluded": [
+    "full private saves",
+    "authentication and sessions",
+    "environment",
+    "server logs",
+    "private harness"
+  ]
+}

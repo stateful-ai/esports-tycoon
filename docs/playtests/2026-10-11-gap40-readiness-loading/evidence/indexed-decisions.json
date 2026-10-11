@@ -1,0 +1,28 @@
+[
+  {
+    "action_log_index": 100,
+    "action": {
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_adriatic_sirens",
+      "team_id": "team_adriatic_sirens",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  },
+  {
+    "action_log_index": 101,
+    "action": {
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  }
+]

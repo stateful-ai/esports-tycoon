@@ -1,0 +1,57 @@
+{
+  "head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "before_decisions": 123,
+  "after_decisions": 124,
+  "decision_prefix_all_fields_order": true,
+  "snapshot_all_fields_order": true,
+  "snapshot_count": 27,
+  "source_count": 425,
+  "source_unchanged": true,
+  "save_before_sha256": "995086370a77290f90c62d02e3770dfeecf46c9ff2697409659f1ae99912d91b",
+  "save_after_sha256": "46291fd1c9adc262568eebf6dd84e2f9f69da6ed6d574d705ea44b2ed4bf3d57",
+  "usage_events": 38,
+  "usage_baseline_events": 0,
+  "request_pairs": [
+    {
+      "request_id": 13,
+      "target": "/api/actions/facility_upgrade",
+      "result": {
+        "schema_version": 1,
+        "session_id": "e41a1dd87bc5c2e5902f9890df8777f7",
+        "received_at": "2026-10-11T12:30:45.411688+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/facility_upgrade",
+        "request_id": 13,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 3
+      }
+    },
+    {
+      "request_id": 19,
+      "target": "/api/actions/save",
+      "result": {
+        "schema_version": 1,
+        "session_id": "e41a1dd87bc5c2e5902f9890df8777f7",
+        "received_at": "2026-10-11T12:31:48.012624+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 19,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 32
+      }
+    }
+  ],
+  "unmatched_attempts": 0,
+  "season": 2,
+  "week": 5
+}

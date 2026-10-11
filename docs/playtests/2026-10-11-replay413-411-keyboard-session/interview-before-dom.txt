@@ -1,0 +1,158 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 7 · Regular — Team Nexus 2,366,434 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 15"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Dashboard S2 · W7 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - text: 2–4 Record -15 rd
+  - button "6th League Americas"
+  - text: L3 Streak
+  - button "2,366,434 cr Balance"
+  - text: 72 Morale
+  - button "74 Condition"
+  - text: W7 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - text: Plan needed Scout elsewhere 1 load risk
+  - button "Match day briefing ▸"
+  - text: Team Nexus 6th · 2–4 VS S2 · W7 Americas League Best of 1 vs Ethan Lopez · Connector Team Vanguard 2nd · 5–1 Today's prep Team Vanguard in W7 Set the five, build the plan, sharpen the week. Assistant coach Review Review the suggested five
+  - paragraph:
+    - button "Apex"
+    - text: rate among your best available options. Confirm the five and any map overrides.
+  - button "Open roster ▸"
+  - text: Head coach Priority Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - text: Analyst Unassigned Put the book on Team Vanguard
+  - paragraph: Your scout is not assigned to Team Vanguard. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - text: Performance Mental Ease the load, keep growth targeted
+  - paragraph: Balance individual intensity against match readiness, then choose the team focus for the week.
+  - button "Development plans ▸"
+  - text: Match intelligence Opponent read, your stakes, maps and run-in
+  - paragraph: Team Nexus arrive on a 3-match losing run. A win would haul Team Nexus back toward the playoff places. Watch Slice — Team Vanguard's form pick at 1.22.
+  - text: Map
+  - figure "lotus":
+    - img "lotus"
+    - text: lotus
+  - text: Run-in W7 Team Vanguard W8 Sahara Compass W9 Nordic Frost W10 Kathmandu Apex W11 Saracen Guard Team Vanguard — last 5 W W W W L Danger men
+  - button "Zenith"
+  - text: Controller ~85
+  - button "Pulse"
+  - text: Duelist ~85
+  - button "Warden"
+  - text: Sentinel ~84 Your map pool & veto Ban Bind (Team Vanguard 100% · you 25%) Pick Ascent (you 100% · them 100%) Team Nexus — season map record (wins / played) Ascent 100% 1/1 Bind 25% 1/4 Lotus 0% 0/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Lost to Baltic Meridian 5-13. Standout: Vortex (1.45). Off-colour: Ghost (0.70)."
+  - paragraph: “3 straight losses have put Team Nexus's approach under review.”
+  - text: L vs Baltic Meridian 5–13 ★ POTM
+  - button "Cipherstrike"
+  - 'img "Aim Demon: raw mechanical menace"'
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - text: What worked
+  - button "Vortex carried"
+  - 'img "Aim Demon: raw mechanical menace"'
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - text: Team-high 1.45 average rating. Where it broke down Pistols lost 0/2 pistol rounds (0%). Defense is leaking 1/6 defense rounds won (17%).
+  - button "Ghost off-colour"
+  - 'img "Clutch Master: wants the round with the game on the line"'
+  - 'img "Choker: tightens up when it matters most"'
+  - text: 0.7 average rating across the series. Young with room (proj. 86–99) — a development call, not a bench. Attack is stalling 4/12 attack rounds won (33%). What to tweak ▸ Set Eco greed to 30 (currently 50) — Save more often so pistol losses do not distort the buy cycle. ▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup. ▸ Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Rust Belt Gaming 6 0 +47":
+        - cell "1"
+        - cell "Rust Belt Gaming"
+        - cell "6"
+        - cell "0"
+        - cell "+47"
+      - row "2 Team Vanguard 5 1 +31":
+        - cell "2"
+        - cell "Team Vanguard"
+        - cell "5"
+        - cell "1"
+        - cell "+31"
+      - row "3 Saracen Guard 4 2 +19":
+        - cell "3"
+        - cell "Saracen Guard"
+        - cell "4"
+        - cell "2"
+        - cell "+19"
+      - row "4 Sahara Compass 3 3 -10":
+        - cell "4"
+        - cell "Sahara Compass"
+        - cell "3"
+        - cell "3"
+        - cell "-10"
+      - row "5 Baltic Meridian 2 4 -11":
+        - cell "5"
+        - cell "Baltic Meridian"
+        - cell "2"
+        - cell "4"
+        - cell "-11"
+      - row "6 Team Nexus 2 4 -15":
+        - cell "6"
+        - cell "Team Nexus"
+        - cell "2"
+        - cell "4"
+        - cell "-15"
+  - text: Last result L Baltic Meridian 5–13
+  - img "bind"
+  - paragraph: "World #32 · Rep 66 · Fans 341.6K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: Team moment
+  - heading "The microphones are waiting for Hollowlock" [level=3]
+  - paragraph: A producer wants a quick interview with Hollowlock before the next match. The question is about Team Nexus's expectations this split.
+  - button "Keep the answer team-first"
+  - button "Set a public target"
+  - button "Decline and keep it internal"
+  - text: ▸ Scout report ready — Slice ▸ No game plan set for W7 ▸ 15 unread inbox messages ▸ Coach proposed a scrim plan Match · Prep ▸ make the regional playoffs Sponsor · At Risk · currently 6th of 8 ▸ make the regional playoffs Sponsor · At Risk · currently 6th of 8
+  - heading "Your calls" [level=2]
+  - text: Last match · Initial plan ▸ Dressed
+  - button "Hollowlock"
+  - text: "over the suggested five — went 0.75 ▸ Sat from the suggestion:"
+  - button "Apex"
+  - text: Last match · Series notes
+  - paragraph: Recorded calls for both teams, including applied between-map responses.
+  - text: "BLM: targeting Vortex."
+  - heading "News" [level=2]
+  - text: "[S2 W6] Prairie Signal part with TK9 and appoint Jhein after a 6-match losing streak. [S2 W6] Vortex (Team Nexus) passes 100 kills this season. [S2 W6] Wraithshot (Volga Reign) passes 100 kills this season. [S2 W6] Falconzero (Tokyo Drift Six) passes 100 kills this season. [S2 W6] Staticstorm (Saracen Guard) passes 100 kills this season. [S2 W6] Frostbyte (Saracen Guard) passes 100 kills this season. [S2 W6] Zephyrpulse (Rust Belt Gaming) passes 100 kills this season. [S2 W6] Grimpulse (Prairie Signal) passes 100 kills this season. [S2 W6] Emberwolf (Phantom Core) passes 100 kills this season. [S2 W6] Crimshot (Patagonia Sur) passes 100 kills this season. [S2 W6] Karmahawk (Outback Sentinels) passes 100 kills this season. [S2 W6] Falconghost (Meridian Cross) passes 100 kills this season. On this day 1yr Team Vanguard win Champions."
+- tooltip "Dashboard See what changed, what needs a decision, and what the next fixture demands. Begin with Needs You, then scan the next fixture and recent form.":
+  - heading "Dashboard" [level=4]
+  - text: See what changed, what needs a decision, and what the next fixture demands. Begin with Needs You, then scan the next fixture and recent form.

@@ -1,0 +1,10 @@
+{
+  "original_json_files_parse": true,
+  "original_empty_stderr_files": [
+    "decision-report.stderr.txt",
+    "usage-report.stderr.txt"
+  ],
+  "secret_value_fields_detected": 0,
+  "private_auth_complete_gap40_away_saves_launchers_excluded": true,
+  "qualification": "Original safe root-scoped receipts inspected only; no new gameplay/helper execution. Telemetry IDs and hash manifests remain evidence, not authentication."
+}
