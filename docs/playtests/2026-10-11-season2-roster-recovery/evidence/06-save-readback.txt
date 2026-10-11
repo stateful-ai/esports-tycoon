@@ -1,0 +1,6 @@
+### Result
+{"season":2,"week":4,"save":{"dirty":false,"autosave_enabled":true,"autosave_every_weeks":1},"dom":"ESPORTSSIM\nSeason 2 · Week 4 · Regular — Team Nexus\n2,494,275 cr\nSave\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide"}
+### Ran Playwright code
+```js
+await (async (page) => await page.evaluate(async()=>{ const s=await (await fetch("/api/state")).json(); return {season:s.season,week:s.week,save:s.save,dom:document.body.innerText.slice(0,200)}; }))(page);
+```

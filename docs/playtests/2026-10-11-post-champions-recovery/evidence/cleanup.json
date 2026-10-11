@@ -1,0 +1,18 @@
+{
+  "browser_closed": true,
+  "listener_absent": true,
+  "browser": "post-champions",
+  "verified_processes": [
+    {
+      "ProcessId": 13348,
+      "ParentProcessId": 25360,
+      "CommandLine": "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8527 --no-browser"
+    },
+    {
+      "ProcessId": 16748,
+      "ParentProcessId": 13348,
+      "CommandLine": "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m esports_sim --web --port 8527 --no-browser"
+    }
+  ],
+  "at_utc": "2026-10-11T06:56:03.3905336Z"
+}

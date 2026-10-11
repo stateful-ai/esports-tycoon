@@ -1,0 +1,9 @@
+async page => {
+ await page.getByRole('button',{name:'Build plan',exact:false}).click();
+ await page.getByRole('button',{name:'Prep',exact:true}).click();
+ await page.getByRole('button',{name:'Accept coach plan',exact:true}).waitFor();
+ console.log(await page.locator('body').innerText());
+ const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/preparation')&&r.request().method()==='POST');
+ await page.getByRole('button',{name:'Accept coach plan',exact:true}).click();
+ console.log(await (await response).text());
+}

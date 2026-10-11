@@ -1,0 +1,7 @@
+# Dated consolidation and runtime qualification - 2026-10-11
+
+The coordinator authorized a NEW main5a74-based finite1044 draft after read-only Git merge-tree evidence showed exact preservation of main source and all finite history. This is a separate delivery candidate, not a merge or retarget of PR394/396/399/403. Those drafts remain unchanged. Their reports retain original dependency statements; this document explains the new consolidation route without claiming the intermediate drafts were merged.
+
+Archived feature-head browser evidence remains scoped to academy679fdb3, development7bee7d7, mentorshipfa6d622 and profile806eb378. The earlier1028 source qualification predates the new supplemental sessions and remains immutable. The new root report provides narrow supplemental acceptance of weekly mentorship progress and first-observation profile/skill feedback. It does not claim runtime acceptance of this publication branch or all current main code. Later current-source identities must be reviewed and gated separately.
+
+Current baseline main5a74f951 publishes765 canonical observations and retains PR371/372 integration qualifications. This candidate adds history only. Merge requires independent root review and fresh exact-head remote CI SUCCESS; no historical result or running draft check substitutes for that requirement. No existing draft is closed, changed or claimed integrated by this publication.

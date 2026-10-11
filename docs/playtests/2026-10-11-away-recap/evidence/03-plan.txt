@@ -1,0 +1,18 @@
+### Result
+{"status":200,"response":{"ok":true,"message":"Game plan confirmed for the next match."},"visible":"ESPORTSSIM\nSeason 2 · Week 2 · Regular — Team Nexus\n2,340,100 cr\nSave •\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide\nWEEKLY\nDASHBOARD\nINBOX16\nMATCH1\nORG\nCLUB\nFACILITIES\nSEASON\nMARKET\nSTATS\nCOMPANY\nMATCH\nS2 · W2 · Regular\nSTRATEGY\nGAME PLAN\nPREP\nGuide\nGame plan confirmed for the next match."}
+### Ran Playwright code
+```js
+await (async page => {
+ await page.getByRole('button',{name:'Game plan',exact:true}).click();
+ for(const [label,value] of [['Pace',70],['Map control',30]]){
+ const row=page.locator('.gp-dial').filter({has:page.getByText(label,{exact:true})});
+ await row.locator('input[type=checkbox]').check();
+ const slider=row.locator('input[type=range]'); await slider.focus();await slider.press('Home');
+ for(let n=0;n<value;n++)await slider.press('ArrowRight');
+ }
+ const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/gameplan')&&r.request().method()==='POST');
+ await page.getByRole('button',{name:'Lock in',exact:false}).click();
+ const res=await response;return {status:res.status(),response:await res.json(),visible:await page.locator('body').innerText()};
+}
+)(page);
+```

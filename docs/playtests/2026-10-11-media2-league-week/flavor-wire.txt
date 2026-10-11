@@ -1,0 +1,6 @@
+### Result
+"[{\"url\":\"/api/actions/preparation\",\"method\":\"POST\",\"body\":\"{\\\"fixture_id\\\":\\\"s2w5m1am\\\",\\\"partner_id\\\":\\\"team_adriatic_sirens\\\",\\\"map_id\\\":\\\"bind\\\",\\\"objective\\\":\\\"mental_reset\\\",\\\"intensity\\\":\\\"light\\\"}\",\"status\":200,\"response\":\"{\\\"ok\\\":true,\\\"message\\\":\\\"Preparation session booked.\\\"}\"},{\"url\":\"/api/actions/advance\",\"method\":\"POST\",\"body\":\"{}\",\"status\":409,\"response\":\"{\\\"detail\\\":\\\"Open Dashboard → Needs you → Team moment and resolve the pending flavor event by choosing a response, then try Advance Week again.\\\"}\"},{\"url\":\"/api/actions/flavor_event\",\"method\":\"POST\",\"body\":\"{\\\"event_id\\\":\\\"f18ff1509b545e6c\\\",\\\"choice_id\\\":\\\"film_grind\\\"}\",\"status\":200,\"response\":\"{\\\"ok\\\":true,\\\"message\\\":\\\"The crew runs long and leaves Nightsurge a little flat.\\\"}\"}]"
+### Ran Playwright code
+```js
+await page.evaluate('() => JSON.stringify(window.__playWire.filter(x=>!x.url.includes("/usage/")))');
+```

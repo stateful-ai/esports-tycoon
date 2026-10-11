@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:52:25.724991+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  return page.locator('tr').filter({hasText:'Nightsurge'}).evaluateAll(rows => rows.map(row=>({text:row.innerText,html:row.outerHTML}))); }"
+  ],
+  "stdout_bytes": 4272,
+  "stderr_bytes": 0
+}

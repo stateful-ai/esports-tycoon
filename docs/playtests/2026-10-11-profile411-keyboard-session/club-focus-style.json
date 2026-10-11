@@ -1,0 +1,6 @@
+{
+  "active": "<button type=\"button\" class=\"plink \" data-pid=\"apex\">Apex</button>",
+  "focusVisible": true,
+  "outline": "rgb(79, 216, 192) solid 2px",
+  "boxShadow": "rgba(79, 216, 192, 0.3) 0px 0px 0px 2px"
+}

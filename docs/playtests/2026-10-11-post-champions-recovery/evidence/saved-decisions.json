@@ -1,0 +1,155 @@
+[
+  {
+    "index": 90,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_training",
+    "params": {
+      "delegate_to_coach": "False",
+      "focus": "mental"
+    },
+    "source": "web"
+  },
+  {
+    "index": 91,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "apex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 92,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "vortex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 93,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 94,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 95,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 96,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "fa_13"
+    },
+    "source": "web"
+  },
+  {
+    "index": 97,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "fa_0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 98,
+    "season": 1,
+    "week": 22,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 99,
+    "season": 1,
+    "week": 23,
+    "phase": "offseason",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "fa_13"
+    },
+    "source": "web"
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "status": "M",
+    "path": ".gitattributes"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/actions.csv"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/brand-ready.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/company-ready.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/contract-correct-public.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/contract-summary.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/decisions-added.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/facilities-ready.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/final-public.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finance-after.png"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finance-before.png"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finance-public.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finance-upgraded-public.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finances2-fresh.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/finances2.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/flywheel-after.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/flywheel-before.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/public-readbacks.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/reconciliation.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/report.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/root-audit.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/root-correction.csv"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/root-evidence-manifest.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/safe-manifest.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/save.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/shutdown.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/source-after.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/source-before.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/upgrade-public.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/upgrade-ready.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-ba3/usage-end.jsonl"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-company-brand-root-audit.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/artifact-index.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/dated-parent-and-runtime-qualification.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/original-append-proof.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/original-root-receipt-audit.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/publication-proof.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/report.md"
+  },
+  {
+    "status": "M",
+    "path": "docs/playtests/actions.csv"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1061/path-inventory.json"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "body": "MATCH\nS1 · W7 · Regular\nSTRATEGY\nGAME PLAN\nPREP\nGuide\nMATCH PREPARATION\n\nCurrent squad condition: Apex 66.5 · Echo 32.5 · Hollowlock 70.4 · Slyblade 65.4 · Ghost 49.5 · Vortex 96.5.\n\nNext: Team Nexus vs Team Vanguard · week 7\n\nSparring partner\nAdriatic Sirens\nAlpine Echo\nAnatolia Forge\nApex Syndicate\nAzure Vanta\nBaltic Meridian\nBayou Kings\nBerlin Wolves\nBusan Tempest\nCascadia Youth\nChao Phraya Owls\nCoral Sea Drakes\nCrimson Order\nGallic Storm\nGhostline\nHarbour City Nine\nHighlands Nine\nHokkaido Drift\nIron Pact\nKathmandu Apex\nKraken Unit\nLisbon Tide\nMekong Vipers\nMeridian Cross\nMidnight Polders\nNordic Frost\nNova Rift\nOutback Sentinels\nPatagonia Sur\nPhantom Core\nPrairie Signal\nRust Belt Gaming\nSahara Compass\nSaracen Guard\nSeoul Dynasty Prime\nSolar Flare\nTaipei Circuit\nTokyo Drift Six\nVolga Reign\nYucatan Ceibas\nPreparation map\nLotus\nSession objective\nAnti Exec\nRetakes\nLineup Test\nMental Reset\nSession intensity\nLight\nNormal\nIntense\n\nSession condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).\n\nThis is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.\n\nBook session\nCOACH PROPOSAL\nAnti Exec on Lotus\n\nPartner: Hokkaido Drift. Intensity: Normal.\n\nSession condition cost: up to 4 points per squad player, including the bench (condition floors at 0).\n\nThis is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.\n\nAccept coach plan\nPrep artifact: bind anti-exec book +0.8 +0.0 EDGE Knowledge +0.77; stamina −1.5.\n\nNo bind sample exists for the opponent; the anti-exec read is provisional.\n\nDev note: Vortex — Vortex has ~7 points of untapped ceiling; a targeted development focus would compound these reps.\nTOURNAMENT SIX\n\nFive starters plus one between-map substitute.\n\nApex\n26 · Starter\nEcho\n23 · Starter\nHollowlock\n26 · Bench\nSlyblade\n28 · Starter\nGhost\n19 · Starter\nVortex\n22 · Starter\nSubmit roster\nSERIES PLAN\n\nSet a between-map response that applies after map one when its condition is met.\n\nNo upcoming best-of-three is on the calendar.",
+  "choices": [
+    {
+      "id": "",
+      "value": "team_hokkaido_drift",
+      "text": "Hokkaido Drift"
+    },
+    {
+      "id": "",
+      "value": "lotus",
+      "text": "Lotus"
+    },
+    {
+      "id": "",
+      "value": "mental_reset",
+      "text": "Mental Reset"
+    },
+    {
+      "id": "",
+      "value": "light",
+      "text": "Light"
+    }
+  ]
+}

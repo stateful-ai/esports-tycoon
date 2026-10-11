@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0237",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Academy promotion needs affiliate depth",
+    "problem": "Enabled Promote failed422 with only5affiliate players.",
+    "solution": "Recruited18yoFrostwire onacademy contract, sentdown, promotedNightsurge with5remaining.",
+    "lesson": "Preserve constraints and expose exact current blocker; an eligible recruitment/send-down path can supply depth.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0238",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Bench practice and affiliate minutes differ",
+    "problem": "Needed useful pathways without changing senior five.",
+    "solution": "Nightsurge0senior maps butpractice+.31OVR/scrims+.01; Frostwire affiliate1map andacademy+.03.",
+    "lesson": "Reconcile exact role/move/contracts and separate senior practice, bench scrims and affiliate reports.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0239",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "First tracked development point implies false flatness",
+    "problem": "SingleW4 snapshot shows0.0/no skillchanges despite positive weekly skills.",
+    "solution": "Retained before51.8/after52.2,practice+.31OVR andthree skills; delegatedsource-onlyPR398.",
+    "lesson": "First observation lacks cumulative comparison; do not present missing baseline as measured no growth.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  }
+]

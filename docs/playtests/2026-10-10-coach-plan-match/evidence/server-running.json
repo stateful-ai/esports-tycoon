@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-10T22:11:40.801927+00:00",
+  "pid": 43620,
+  "port": 8495,
+  "cwd": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-coach-plan-match",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "esports_sim",
+    "--web",
+    "--port",
+    "8495",
+    "--no-browser"
+  ],
+  "package_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\src\\esports_sim\\__init__.py",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "source_paths": 545,
+  "fixture_source": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-next-fixture-development\\saves",
+  "fixture_sha256": "03cbe1eddec3655116f67b06923aacf0124ab9718c643e2f9925bdec4b51122a",
+  "usage_baseline": []
+}

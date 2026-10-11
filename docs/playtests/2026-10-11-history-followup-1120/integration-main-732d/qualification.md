@@ -1,0 +1,3 @@
+Normal merge of frozen PR414 head 344f91af4e1d41a503706a774729d3ac2759b96b and exact actual main 732d21cc4512b702a2e9b9f18a0c096d7e7c20c5. Only .gitattributes conflicted. Resolved by retaining candidate ordered lines and appending the main-only gap40 comment/rules in their original order. All prior candidate history and exact actual main blobs are retained. Canonical 1120-row CSV remains SHA256 1c852434af5d8c48b0b3f7c9bb6eff3dcc44ad6eeabbb35fad2b33e8296d7590.
+
+Historical proof, frozen 344f91af and CI receipts remain unchanged. No new candidate-source gameplay acceptance. Local tests, syntax checks, gates, simulations, validators and analytics were explicitly skipped; remote CI for the resulting head is not qualified by old CI. Later primary 1204-row history is excluded.

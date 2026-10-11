@@ -1,0 +1,606 @@
+{
+  "base": "17a470ff15afb2aac27fb7e8638b9cecd6e012c4",
+  "canonical_rows": 1028,
+  "sessions": 91,
+  "columns": 21,
+  "raw_prefix_bytes": 1591270,
+  "raw_prefix_preserved": true,
+  "canonical_sha256": "ff314b3bc68c641dd3d9bea38afd0ef6194fcc0602d699836d5a2986148b50b7",
+  "original_field_comparisons": 252,
+  "original_shard_fields_preserved": true,
+  "original_map_paths": 117,
+  "original_and_published_hashes_verified": 117,
+  "nested_manifest_entries_verified": 115,
+  "manifest_paths_included": 2,
+  "local_tests_launched": false,
+  "new_player_session": false,
+  "staged_git_bytes_verified": [
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/actions.csv",
+      "sha256": "2db179b6b0613492b71e2999d2b566a3043fdc26a47b7f34639bf7b7683e2766",
+      "bytes": 5712
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/baseline-import-correction.json",
+      "sha256": "9c0e146cc72c6464e38ed6eec4de53f13c31caa48e7bd8712cdfc07b51a6e87e",
+      "bytes": 267
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/01-club.txt",
+      "sha256": "f6323076a5d071e5afc156552699e585e8bc20753b2d14340efa42e6006048f3",
+      "bytes": 10369
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/01-operations.txt",
+      "sha256": "d58511a80f8d59c5173d929ebbf1267e7c41738e4a8ee8acbfa92966a9581738",
+      "bytes": 5825
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/02-pathway-controls.txt",
+      "sha256": "2a059b822dd3616f836653a6be74c81bcd39fc6a4303d86bfe50bc6e23ba9ca4",
+      "bytes": 2828
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/03-nightsurge-profile.txt",
+      "sha256": "21dadee8c1a9dff907f98eac9c217910c6047f4932ad3d79bd11fefac074a7ae",
+      "bytes": 18479
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-independent-readback.txt",
+      "sha256": "e1179dbd7bb7763ab8d028ecaf47fa3c6ba3471512cfc2025a7c411ecd045d78",
+      "bytes": 653348
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-save-recovery.txt",
+      "sha256": "894fe16eff4c11c11f6e674e547bd186e9559043997e29c0929cd0952dbdaba3",
+      "bytes": 16551
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/04-squad-save.txt",
+      "sha256": "8d733153ebbdcef114f84f7b82360c6200ad1dd259aafd5b69f9162b879e1ac2",
+      "bytes": 164
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/05-close-overlay.txt",
+      "sha256": "bc7e9b493db713b509b16fba5438a21d94f8720c178d2f538b8e4d77d57ae4d9",
+      "bytes": 1804
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/05-overlay-dom-readback.txt",
+      "sha256": "9e438d73fb1dacebc10bb62783750bbec2c4e6e0aeb74ba9cef2a5684ca43c67",
+      "bytes": 957
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/06-final-receipt.txt",
+      "sha256": "e064afc2defa078d6751c627a5fdfb8d737ee4da334050f4e2d4a3d094b889b0",
+      "bytes": 15087
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/public-readback.json",
+      "sha256": "568c5b1b8ef2c17e63e638c7d8f04a354a89722a947d6d743d9c3263a08c4b47",
+      "bytes": 116137
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/requests-results.json",
+      "sha256": "44ea1507a1a292a5ee410d6f61eed54f5916181674c652db9756dd8bc5f61331",
+      "bytes": 476989
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/save-after.json",
+      "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+      "bytes": 4832837
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/save-before.json",
+      "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+      "bytes": 4832837
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/usage-baseline/usage.0.jsonl",
+      "sha256": "e52706cfed1ab30c25059eff9624c3d02cdc12a766032322a4d6f6eb9a222235",
+      "bytes": 1091
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/evidence/usage-end/usage.0.jsonl",
+      "sha256": "066902ee94c66eee234069ffb0cd4f526202a0fec338ad16441039ebe00381b6",
+      "bytes": 9856
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/flywheel-before.json",
+      "sha256": "ab30dcd84940d7cc8f72443f441e06412ab6185eca00416652235c138b66c2f4",
+      "bytes": 6164
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/flywheel-recorded.json",
+      "sha256": "fcddc4b3162034272f39b81179e7934567861b763ff5f6dedb052b566a54b804",
+      "bytes": 2720
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/git-and-save-proof.json",
+      "sha256": "932e88a28957773c13472530fc1626dd4aae400b452b9d284315b93c88cc4fb4",
+      "bytes": 207134
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/harness-corrections.txt",
+      "sha256": "630ed0d7ba4942a5ea547dc4111d5dda98d8f4434d50f6c677a03d434049d51d",
+      "bytes": 1383
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/manifest.json",
+      "sha256": "baa244bb7afb3ab1950ddc9c151686ef079d1b6573baaa4f390b0c7490efe329",
+      "bytes": 1073
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/owned-server-pid.txt",
+      "sha256": "ca9de7e0b8a2d2effe1bbaccf6c637ad33c0e8f4993d16befbcab8a95980ac4a",
+      "bytes": 7
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/reconciliation.json",
+      "sha256": "e2885c039da2607a564550a4a891bf06862055eea5c8a598225f9e101b3be3a7",
+      "bytes": 3339
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/report.md",
+      "sha256": "bb60fee0827f6af009f578323aeeb1ed266f57c0254604cdc6da9004ef03278c",
+      "bytes": 4867
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/server-err.txt",
+      "sha256": "db980473977a12068da63b14c87db644c5a19bc1664694b68372f53fb3620612",
+      "bytes": 202
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/server-out.txt",
+      "sha256": "d71a9d01f316cff691547cacf776002777285b3d31757895b97d2106d30f0218",
+      "bytes": 7829
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/shutdown.json",
+      "sha256": "230a4f6657aa50045c08847211aea4176d8a4e5be3833f4946e272f1985511b5",
+      "bytes": 373
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/source-after.json",
+      "sha256": "9f243e3c59e4c91f3f5006d73882d030cc94130ef50cf693cb30a180a2d92e70",
+      "bytes": 104184
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/source-before.json",
+      "sha256": "9f243e3c59e4c91f3f5006d73882d030cc94130ef50cf693cb30a180a2d92e70",
+      "bytes": 104184
+    },
+    {
+      "published": "docs/playtests/2026-10-11-academy-availability-fixed-head/publication-manifest.json",
+      "sha256": "da1c1af520361eb4e68e23572606608a6eb7896b6ae1bacea18d56ae2b7e7141",
+      "bytes": 13886
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/actions.csv",
+      "sha256": "569f87c0331ef6da4f52e435f5b31653c61f925145d25751ffce16db704730f5",
+      "bytes": 5977
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.meta.json",
+      "sha256": "9aa4944de37311721d50c56910073fe4b69923727d50a2f197d811fd6421b4b7",
+      "bytes": 236
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/02-open.txt",
+      "sha256": "3d9af352e021480c928011fe1756987f6d65eb96bb7240b7da90ec411487032d",
+      "bytes": 404
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.meta.json",
+      "sha256": "f81530a3e14ef27d44e8ae01734ead7ea6f435399ef5668150cbfa2726dcf1cf",
+      "bytes": 201
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/03-reload.txt",
+      "sha256": "913cf580b8565cae407d272f4dbf4ff6dd647d0d3666e20fc3f4605c87407e43",
+      "bytes": 202
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.meta.json",
+      "sha256": "2c6bb9012025da9f8ca07f33488e3f54aa85c4f1c4ce36e8ca4ca88652c0f0e5",
+      "bytes": 799
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/04-observer.txt",
+      "sha256": "5393e8770e6cb36b264fc4c56f6eb22cc2edb6af9cbdb5f0c823aa197be80362",
+      "bytes": 5130
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.meta.json",
+      "sha256": "12fbff79a58176a3cb437422950298110066e00a4ea8207ce2027fff4ded8fc3",
+      "bytes": 209
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/05-club.txt",
+      "sha256": "1b643a9737e39bc22195d2bb096dd15109c6026f0f6bc7ec963b77f7107bda44",
+      "bytes": 239
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.meta.json",
+      "sha256": "6daeffef2ad0bdb2d5b5a06e46d1106d557a7dc3e45576aaed3ba1e5d3652300",
+      "bytes": 209
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/06-development.txt",
+      "sha256": "0a0ebe80e48b297c77c5d00a6b316158f1aeb8e1b7db76895680d747c6b55b97",
+      "bytes": 246
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.meta.json",
+      "sha256": "808fedc069d735e43078439d332d825507e242cf7a45da243ffddfb631392a55",
+      "bytes": 593
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/07-report-public.txt",
+      "sha256": "1c742b9ef4e5a911157a998fc90e9e82852c9876b7fe5108a209d6358e2e8c86",
+      "bytes": 3427
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.json",
+      "sha256": "a150b243b4d385d1d5be6558a0b04b0f43542553f264004e3c573597c3a1670b",
+      "bytes": 64074
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.meta.json",
+      "sha256": "f8c148569584d731d4e23ba331a5378d439445e61ed11ff63e52fc66a0c98820",
+      "bytes": 890
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/08-correct-readback.txt",
+      "sha256": "d09e3453081e920198d5f6001e423eeb737c25c56e9a1b763ca79853fca78e3f",
+      "bytes": 33141
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.meta.json",
+      "sha256": "0cfa2ad4be1fce4b47c878a6f2fd4956fa4d146c09aca95d5122ddb58fbfd440",
+      "bytes": 210
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/09-profile.txt",
+      "sha256": "0b6f545a5555ea334a8c2bae937a7bcdcf417399cc3dcae5d7f0e7d74b56c844",
+      "bytes": 256
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.json",
+      "sha256": "c7fbf5c7483bf16f2c933daadff1a7b03a29452f071af686f3cb6946f50e39cd",
+      "bytes": 116931
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.meta.json",
+      "sha256": "8e0927004c9b3046d93c32e5c642ed1950122e795c1a3904e1ee2233e46c719c",
+      "bytes": 476
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/10-profile-readback.txt",
+      "sha256": "2bb1a715cca090d657a4ccaf4e674e1c1888b30fc064dbffd556cabe29c151e9",
+      "bytes": 60848
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.meta.json",
+      "sha256": "7b77a12f6ba60c5ffeb9a7da457a9d985641f65562aad9082b46b4508bbc126c",
+      "bytes": 203
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/11-profile-close.txt",
+      "sha256": "ff855b4796c635f6296e4a559366229d618178a515390682ebdf08aa5a9a0f22",
+      "bytes": 52714
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.meta.json",
+      "sha256": "e574043da9a3ac6edf1f398317fc5172c9ad916b37bec4ba471890681daca7f5",
+      "bytes": 211
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/12-close-profile.txt",
+      "sha256": "72f41cec8773a4209e388171c93d7115a7538ad2906747d6a8007e3b25123e5d",
+      "bytes": 248
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.meta.json",
+      "sha256": "5d7bb16622a13999d16be2a3646d6cec7ff72591d4443264ee0cbdac2e79a420",
+      "bytes": 208
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/13-advance.txt",
+      "sha256": "b65d98b8f240756b8480e021ea7bf8eed1592e8b4568fa806324cf4191d0faa8",
+      "bytes": 376
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.json",
+      "sha256": "c2e761734641c9fccda880ddb181c1a5d5e7f228ce3ec1fa5d7ac3d381d20ae9",
+      "bytes": 134038
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.meta.json",
+      "sha256": "f94d708c8bb5107b2ffb4daf22e9f387f03964b1f965be88f3350c261d366bee",
+      "bytes": 592
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/14-after-advance.txt",
+      "sha256": "40ab5da40476be769b23d641d9f22f8eb39348b76dd28f1bedf81d0e104e804c",
+      "bytes": 69700
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.meta.json",
+      "sha256": "f237ebd3b1cfa353f7f26c5c51aaac8335991d713944f36d94f5c19b8c02a66f",
+      "bytes": 209
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/15-save.txt",
+      "sha256": "b55ea9d8bc2115efc6a29195890b0af95950c387247b2899558eb6d35fbe92ec",
+      "bytes": 271
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.json",
+      "sha256": "0ca7c7c6230b14c61ed0b034ddc28bc7e48413c0bcf3c71bf82a184b24537dcb",
+      "bytes": 182444
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.meta.json",
+      "sha256": "1b8d07854efd481d2ef3cd9425b262605bb76e95667ce67780aa51cd64670332",
+      "bytes": 512
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/16-final-readback.txt",
+      "sha256": "076ad56bfebf4838c10fc0a6fe4356fa3216a5e24a343befe90e1f849e865c99",
+      "bytes": 93705
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.meta.json",
+      "sha256": "5978392185c7da6c97299fd90e2ce1baecc6b9eeb5bc7ebaf0e521607a174400",
+      "bytes": 202
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.stderr.txt",
+      "sha256": "c068e256e5b8e82ed33e826d3bbfd59c425ba2af077aeb95d04be2633f4ce66b",
+      "bytes": 26
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/17-network.txt",
+      "sha256": "4ddc02a05688fe21ec46b5f3cc508b3cf6f2036d8070c16ef3c56aba8a0232fc",
+      "bytes": 7492
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.meta.json",
+      "sha256": "5e2e4fcc2dd8c4ac83bebd78c1df77a524dbc32602b9d8baedc910543990005e",
+      "bytes": 215
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/18-screenshot.txt",
+      "sha256": "e4ba8db93e03565dc3a5de054a9aabb049d4ed994d6899ec80e7eac9bdcb2b6f",
+      "bytes": 413
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.meta.json",
+      "sha256": "d1cebfee2ddcbab6192fb8b62dc5d383bdc603393bf3e33570c174b9b79a7e2b",
+      "bytes": 200
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/19-close.txt",
+      "sha256": "2dc1d3be930c7ea493796ce3f827db64507c9ffeae170efe6c717007329eda45",
+      "bytes": 40
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/console-2026-10-11T10-21-00-612Z.log",
+      "sha256": "23a146d760d88bc74d17ea7c58687e58486a0d79bf0da9e94c8aeac195c4c075",
+      "bytes": 549
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-01-049Z.yml",
+      "sha256": "8b56fed543cdf345e22ff0d211b4281b0bcc5903f20c2568f37964adf05813a9",
+      "bytes": 1025
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-04-563Z.yml",
+      "sha256": "0713b89df38e39dcef7668e7af692ecd92e469b11f55d70f0faf1dfe89b629c2",
+      "bytes": 1069
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-47-855Z.yml",
+      "sha256": "4e56e760fdc4a02dfff4e04b05835571c2ccd4c9433a00bee81c96934d5635fa",
+      "bytes": 22091
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-21-54-994Z.yml",
+      "sha256": "e3abb7c67c2cb2e05f1c1bd05929a08ae3a23b6407c42f6e53e86d86cfb17888",
+      "bytes": 40355
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-22-34-700Z.yml",
+      "sha256": "a70e53ed87cf33f9862a3dc6bb545ed730b0d5666247db139e1d30e595272ff3",
+      "bytes": 52618
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-07-518Z.yml",
+      "sha256": "29186f52a2110464c338193147809e320da4b7d0a439a3cf06be17c289d7eb9b",
+      "bytes": 50365
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-09-598Z.yml",
+      "sha256": "7cb87939d98ca2341226ab19a2890123905da75d3775ae9b6712f987e9665946",
+      "bytes": 50527
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/browser-snapshots/page-2026-10-11T10-23-34-302Z.yml",
+      "sha256": "edfb9f12eff92ee1ea14675126b34f7c216ec37bc0591b71dd8b706faa2afd66",
+      "bytes": 50246
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/development-report.png",
+      "sha256": "a1b0cbd8453ce0d34051bc2f42a1cc3a4eec1411ee8372744c9b77fed3031d11",
+      "bytes": 178186
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/flywheel-after.json",
+      "sha256": "7f32996386686109b282445424af92872864b3b4dab6b690d05dda4d78a19f61",
+      "bytes": 2688
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/flywheel-before.json",
+      "sha256": "ab30dcd84940d7cc8f72443f441e06412ab6185eca00416652235c138b66c2f4",
+      "bytes": 6164
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/identity-restoration.json",
+      "sha256": "97bfab9c7ab7170f2142954ae3ec3651deb1588f5c44663a3f65dc4dd649f4bb",
+      "bytes": 155
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/import-baseline-correction.json",
+      "sha256": "a225ac482ea32721c426f1567e2746e2c7114f13103163a472230241a7c8cbc9",
+      "bytes": 50
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/import-baseline.json",
+      "sha256": "ee5583fe45f0a308bbaf6445b220c49dfe336af33d35686609c55bf7fb98491e",
+      "bytes": 322
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/save-after.json",
+      "sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "bytes": 5102352
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/save-before.json",
+      "sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "bytes": 5102352
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/saved-reconciliation.json",
+      "sha256": "608382e1bfb816d66ac83877a6ea9dd0e5e4d72fcd797a20f9bd40e028adb0e7",
+      "bytes": 294
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/server-close-proof.json",
+      "sha256": "13789a64d77a85539f94a5f839082f87971fe3a641fd3cf4947c506e4f483fba",
+      "bytes": 169
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/source-after.json",
+      "sha256": "df4040222a219b57da0ca7b7ad7a826d4e7dac93acde96bf7f64d318286c9ca4",
+      "bytes": 1013
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/source-before.json",
+      "sha256": "2f46515c988fb02f7d8ac39dcfa037083b019c883bbcf9189a8a8eff0bf615b9",
+      "bytes": 1013
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-after/usage.0.jsonl",
+      "sha256": "357df1c564eea6aea635a32cad19142e87bedeb342e4a2f00a005d553c9498c6",
+      "bytes": 6564
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-before/usage.0.jsonl",
+      "sha256": "2a31d868a84c4ce39056001705e092077d39d04c3888346c7e8007e1a71de89e",
+      "bytes": 2181
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/evidence/usage-reconciliation.json",
+      "sha256": "fa13663869da990143c353705922376cf891498f9e014a67ecb41d719a591914",
+      "bytes": 1087
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/report.md",
+      "sha256": "bf5ca816631150f6be1dcd047286ceb25e8b6ab45e7afba352ef67eceed3abd2",
+      "bytes": 6484
+    },
+    {
+      "published": "docs/playtests/2026-10-11-development-first-observation-398/manifest.json",
+      "sha256": "3741871d1c50709f2c123d62b801e5bb2daf26d4374645320bb3c059a3700ebd",
+      "bytes": 16341
+    }
+  ],
+  "staged_canonical_sha256": "ff314b3bc68c641dd3d9bea38afd0ef6194fcc0602d699836d5a2986148b50b7",
+  "parent_existing_blobs_preserved_except_csv_and_additive_attributes": true
+}

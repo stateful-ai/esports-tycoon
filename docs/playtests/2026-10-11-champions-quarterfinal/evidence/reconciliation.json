@@ -1,0 +1,208 @@
+{
+  "at_utc": "2026-10-11T06:06:55.271744+00:00",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "local_tests_run": false,
+  "source_paths_unchanged": 630,
+  "rows": 9,
+  "outcomes": {
+    "blocked": 2,
+    "met": 5,
+    "partial": 2
+  },
+  "accepted_decisions_before": 81,
+  "accepted_decisions_after": 85,
+  "accepted_prefix_preserved": true,
+  "new_decisions": [
+    {
+      "season": 1,
+      "week": 20,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "20",
+        "fixture_id": "s1cqf1",
+        "id": "95328369c009aada",
+        "intensity": "normal",
+        "map_id": "ascent",
+        "objective": "retakes",
+        "opponent_id": "team_tokyo_drift_six",
+        "partner_id": "team_vanguard",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 20,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s1cqf1",
+        "focus_target": "",
+        "map_control": "30.0",
+        "n_dials": "1",
+        "one_match_lineup": "False",
+        "opponent": "team_tokyo_drift_six",
+        "pace": "",
+        "site_focus": "",
+        "starter_ids": "[]",
+        "team_talk": "",
+        "util_discipline": ""
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 20,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "team_first",
+        "event_id": "c9dae40c294fcea2"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 20,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "snapshot_prefix_preserved": true,
+  "snapshots_before": 19,
+  "snapshots_after": 20,
+  "bank_before": 1749103,
+  "bank_after": 1814812,
+  "net65709_matches_display": true,
+  "preparation": {
+    "plan_id": "95328369c009aada",
+    "team_id": "team_nexus",
+    "fixture_id": "s1cqf1",
+    "opponent_id": "team_tokyo_drift_six",
+    "partner_id": "team_vanguard",
+    "map_id": "ascent",
+    "objective": "retakes",
+    "intensity": "normal",
+    "season": 1,
+    "week": 20,
+    "status": "completed",
+    "finding_code": "retake_gap",
+    "finding": "Defense trails attack on ascent, 50.0% to 54.4% round wins.",
+    "evidence": {
+      "own_map_samples": 7,
+      "opponent_map_samples": 5,
+      "partner_map_samples": 10,
+      "own_attack_win_pct": 54.4,
+      "own_defense_win_pct": 50.0,
+      "opponent_attack_win_pct": 77.2,
+      "opponent_defense_win_pct": 47.1,
+      "partner_map_win_pct": 80.0,
+      "scouting_confidence": 0.0,
+      "average_stamina": 95.8,
+      "average_morale": 93.3,
+      "rotation_candidate_id": "fa_0"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "playbook:ascent",
+    "knowledge_gain": 2.12,
+    "stamina_cost": 4.0,
+    "morale_delta": 0.0,
+    "chemistry_delta": 0.7,
+    "artifact_label": "ascent retake playbook +2.1",
+    "prep_edge_contribution": 0.0064,
+    "dev_suggestion_player_id": "fa_0",
+    "dev_suggestion": "Map mastery projects Hollowlock as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  "match_calls": {
+    "plan_set": true,
+    "dials": {
+      "map_control": 30.0
+    },
+    "base_dials": {
+      "map_control": 50.0
+    },
+    "site_focus": "",
+    "focus_target": "",
+    "team_talk": "",
+    "talk_avg_delta": 0.0,
+    "lineup_override": false,
+    "picked": [],
+    "benched": [],
+    "picked_ratings": {},
+    "prep_edge": 0.505,
+    "prepped_maps_played": [
+      "ascent",
+      "split"
+    ],
+    "prepped_maps_missed": [
+      "lotus"
+    ]
+  },
+  "fixture_results": [
+    {
+      "map": "ascent",
+      "score_a": 13,
+      "score_b": 1,
+      "own_player_ids": [
+        "apex",
+        "echo",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ]
+    },
+    {
+      "map": "split",
+      "score_a": 13,
+      "score_b": 6,
+      "own_player_ids": [
+        "apex",
+        "echo",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ]
+    }
+  ],
+  "usage_events": 71,
+  "usage_worlds": {
+    "lobby": 8,
+    "26UHC": 63
+  },
+  "request_attempts": 6,
+  "paired_results": 6,
+  "http_successes": 5,
+  "http_rejections": 1,
+  "unmatched_requests": 0,
+  "limits": [
+    "Five met/two blocked/two partial classifications preserve original observations; step7 corrects step6 missing consequence preview and step9 corrects step8 interpretation.",
+    "The initial setup failure is outside request telemetry; two stale refs and quote failure happened before HTTP.",
+    "A recorded409 is a rejected request and is not in accepted GameState.action_log.",
+    "Preparation knowledge and map_control were applied, but this single win is not causal evidence or a balance test.",
+    "The unusedLotus label describes historical playbook coverage, not a different booked session; content gap36 owns wording only.",
+    "Visibility slices and receipt context do not measure attention or complete funnels.",
+    "No local pytest or expensive gates ran."
+  ]
+}

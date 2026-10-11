@@ -1,0 +1,154 @@
+{
+  "baseline_actions": 22,
+  "final_actions": 24,
+  "prefix_unchanged": true,
+  "snapshots_unchanged": true,
+  "new_actions": [
+    {
+      "index": 22,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "5",
+        "fixture_id": "s1w5m1am",
+        "id": "fc19e8acb28fc049",
+        "intensity": "intense",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "opponent_id": "team_rust_belt_gaming",
+        "partner_id": "team_alpine_echo",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 23,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "5",
+        "fixture_id": "s1w5m1am",
+        "id": "23f59737f2edfa41",
+        "intensity": "normal",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "opponent_id": "team_rust_belt_gaming",
+        "partner_id": "team_alpine_echo",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    }
+  ],
+  "decision_coverage": "2/2",
+  "outcomes": {
+    "met": 15,
+    "blocked": 2
+  },
+  "usage_events": 54,
+  "usage_kinds": {
+    "session_start": 5,
+    "view": 18,
+    "visible_time": 22,
+    "attempt": 3,
+    "result": 3,
+    "session_end": 3
+  },
+  "browser_errors": [],
+  "mutation_events": [
+    {
+      "schema_version": 1,
+      "session_id": "f2e065960c2a4e03c824b0db9de57ad5",
+      "received_at": "2026-10-10T17:39:52.129565+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 12
+    },
+    {
+      "schema_version": 1,
+      "session_id": "f2e065960c2a4e03c824b0db9de57ad5",
+      "received_at": "2026-10-10T17:39:52.129565+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 12
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0d962e50f53720b49d001bc5683385f3",
+      "received_at": "2026-10-10T17:41:16.941992+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 12
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0d962e50f53720b49d001bc5683385f3",
+      "received_at": "2026-10-10T17:41:16.941992+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 15
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0d962e50f53720b49d001bc5683385f3",
+      "received_at": "2026-10-10T17:41:19.281410+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 16
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0d962e50f53720b49d001bc5683385f3",
+      "received_at": "2026-10-10T17:41:19.281410+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 16,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 36
+    }
+  ],
+  "source_hashes": {
+    "src\\esports_sim\\web\\static\\app.js": "ee419d0e52b41ae9c51db34cbbfec77955bc06c1a3a09afb302990be97204498",
+    "tests\\test_preparation_form_frontend.py": "70f047237b5e36613b95e996c4db8ca3fd681dfa1e1d05cff11b4e6256641570"
+  }
+}

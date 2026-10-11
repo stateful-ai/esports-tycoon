@@ -1,0 +1,11 @@
+# PR375 forward integration, 2026-10-11
+
+Source head before integration: `3f13ccd09256e288e08329d94259a19a1eefc841` (tree `f5e488f6e7b1b2b759944ab7bd4c568e042f2173`). Integrated actual main: `0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b` by a normal two-parent merge.
+
+The two serializer changes and all five original test cases are retained unchanged: known current handle, unknown/removed/empty target fallback, acting-team and exact-player isolation, and repeated-read saved-state purity. The stable profile target remains unchanged. No manager, engine, randomness, browser, save or running-server operation was performed.
+
+Seven add/add evidence conflicts (actions.csv, native-frozen-files.json, native-full-suite.log, native-receipt.json, save-audit-correction.json, save-audit.json, usage-audit.json) differed only by line endings: Git diff with ignore-space-at-eol returned no differences across the full gap29 folder. Resolve using main's already published raw artifact bytes, retaining historical source blobs in the first parent. The report and original observations are unchanged. Canonical actions.csv is inherited from main.
+
+Compatibility follow-up: pending PR422 uses a public report projection that intentionally replaces legacy hidden-potential targets; pending PR423 resolves the handle after that projection and returns null for unavailable players. When those changes land, retain their public projection and shared identity helper. Update this PR's five fixtures to explicitly authored public age evidence and align the absent-handle expectation with null, retaining every behavioral assertion. Do not restore a legacy private selected target or invent a handle for missing players. The original empty-string fallback is a transport detail superseded by PR423's public missing-player behavior.
+
+All local tests, syntax validators, simulations, gates, application reports and hooks were skipped under the user's explicit waiver. Existing native and browser evidence describes the old implementation only and is not acceptance of the new integrated head. Tests are retained but UNRUN on this integration. Prior published-head CI: 3.12 and 3.13 succeeded on 3f13ccd; new-head CI requires independent inspection.

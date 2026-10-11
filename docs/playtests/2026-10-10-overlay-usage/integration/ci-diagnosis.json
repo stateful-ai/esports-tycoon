@@ -1,0 +1,22 @@
+{
+  "head": "28cb13a6cf48ce8937f18ac17f7bc9534eb2d203",
+  "base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "mergeable": false,
+  "mergeable_state": "dirty",
+  "merge_commit_sha": null,
+  "conflicts": [
+    "src/esports_sim/web/static/usage.js",
+    "src/esports_sim/web/usage_telemetry.py",
+    "tests/test_usage_telemetry.py"
+  ],
+  "ci_runs_before_integration": [],
+  "cause": "Main PR359 adds market/player_search to the same allowlists/test tail",
+  "workflow_triggers": [
+    "pull_request",
+    "push/main"
+  ],
+  "workflow_dispatch": false,
+  "github_documentation": "https://docs.github.com/en/actions/how-tos/troubleshoot-workflows",
+  "resolution": "Uncommitted merge preserves both market and overlay targets/tests; new native full gate required",
+  "original_csv_sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f"
+}

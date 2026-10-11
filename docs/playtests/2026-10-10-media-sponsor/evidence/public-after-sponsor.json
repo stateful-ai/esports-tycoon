@@ -1,0 +1,965 @@
+{
+  "state": {
+    "season": 1,
+    "week": 8,
+    "phase": "regular",
+    "window": {
+      "open": true,
+      "kind": "mid_split",
+      "label": "Mid-split window",
+      "detail": "Final roster moves close after week 8.",
+      "closes_week": 8
+    },
+    "roster_readiness": {
+      "ready": true,
+      "reason": "",
+      "count": 6,
+      "minimum": 5,
+      "shortfall": 0
+    },
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 441090,
+      "reputation": 62.3,
+      "fan_count": 304546,
+      "world_rank": 4,
+      "chemistry": 65.3,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "fa_13",
+        "fa_0",
+        "ghost"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 1,
+        "diff": 36
+      }
+    },
+    "next_fixture": {
+      "id": "s1w8m2am",
+      "week": 8,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_sahara_compass",
+      "team_b": "team_nexus",
+      "team_a_name": "Sahara Compass",
+      "team_b_name": "Team Nexus",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "ascent"
+      ],
+      "map_thumbs": {
+        "ascent": "/assets/maps/ascent.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "h2h": {
+        "meetings": 1,
+        "wins": 1,
+        "losses": 0,
+        "streak_team": "team_nexus",
+        "streak_len": 1,
+        "you_lead": true
+      },
+      "preview": [
+        "Team Nexus won the season's only prior meeting.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Frostecho — Sahara Compass's form pick at 1.37."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 4,
+            "wins": 4,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 2,
+            "wins": 1,
+            "win_rate": 50
+          }
+        ],
+        "veto": {
+          "opponent": "Sahara Compass",
+          "ban": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 50,
+            "our_wr": 100
+          },
+          "pick": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 50,
+            "our_wr": 100
+          }
+        }
+      },
+      "opp_manager": {
+        "name": "Mateo Costa",
+        "identity": "Unshakeable"
+      }
+    },
+    "leaders": [
+      {
+        "pid": "team_crimson_order_p2",
+        "handle": "Wraithghost",
+        "team": "Crimson Order",
+        "team_id": "team_crimson_order",
+        "rating": 1.96,
+        "kills": 187
+      },
+      {
+        "pid": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "team": "Outback Sentinels",
+        "team_id": "team_outback_sentinels",
+        "rating": 1.57,
+        "kills": 173
+      },
+      {
+        "pid": "team_seoul_dynasty_prime_p1",
+        "handle": "Riftstrike",
+        "team": "Seoul Dynasty Prime",
+        "team_id": "team_seoul_dynasty_prime",
+        "rating": 1.47,
+        "kills": 160
+      }
+    ],
+    "movers": [],
+    "run_in": [
+      {
+        "week": 8,
+        "opponent": "Sahara Compass",
+        "opponent_id": "team_sahara_compass",
+        "opp_rank": 33,
+        "difficulty": "easy"
+      },
+      {
+        "week": 9,
+        "opponent": "Nordic Frost",
+        "opponent_id": "team_nordic_frost",
+        "opp_rank": 40,
+        "difficulty": "easy"
+      },
+      {
+        "week": 10,
+        "opponent": "Kathmandu Apex",
+        "opponent_id": "team_kathmandu_apex",
+        "opp_rank": 41,
+        "difficulty": "easy"
+      },
+      {
+        "week": 11,
+        "opponent": "Saracen Guard",
+        "opponent_id": "team_saracen_guard",
+        "opp_rank": 17,
+        "difficulty": "easy"
+      },
+      {
+        "week": 12,
+        "opponent": "Rust Belt Gaming",
+        "opponent_id": "team_rust_belt_gaming",
+        "opp_rank": 15,
+        "difficulty": "easy"
+      }
+    ],
+    "on_this_day": [],
+    "debrief": {
+      "result": "Lost to Team Vanguard 9-13",
+      "won": false,
+      "standout": "Vortex (1.48)",
+      "underperformer": "Hollowlock (0.45)"
+    },
+    "last_match_review": {
+      "fixture_id": "s1w7m1am",
+      "won": false,
+      "contested": true,
+      "best_of": 1,
+      "your_maps": 0,
+      "their_maps": 1,
+      "your_rounds": 9,
+      "their_rounds": 13,
+      "opp_id": "team_vanguard",
+      "opp_name": "Team Vanguard",
+      "potm": {
+        "player_id": "pulse",
+        "handle": "Pulse",
+        "badges": [
+          {
+            "id": "aim_demon",
+            "name": "Aim Demon",
+            "emoji": "🎯",
+            "polarity": 1,
+            "blurb": "raw mechanical menace",
+            "kind": "positive",
+            "impact": "While held: +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 2.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/aim_demon.webp",
+            "season": 1
+          }
+        ]
+      },
+      "tier": 0,
+      "tier_label": "box scores only",
+      "momentum_beat": null,
+      "your_calls": {
+        "plan_set": true,
+        "dials": [],
+        "site_focus": null,
+        "focus_target": null,
+        "team_talk": null,
+        "lineup": {
+          "override": false,
+          "followed": false,
+          "picked": [
+            {
+              "player_id": "fa_0",
+              "handle": "Hollowlock",
+              "rating": 0.45
+            }
+          ],
+          "benched": [
+            {
+              "player_id": "echo",
+              "handle": "Echo"
+            }
+          ]
+        },
+        "prep": {
+          "edge": null,
+          "maps_played": [
+            "Lotus"
+          ],
+          "maps_missed": []
+        }
+      },
+      "working": [
+        {
+          "code": "player_std",
+          "category": "player",
+          "tone": "good",
+          "headline": "Vortex carried",
+          "detail": "Team-high 1.48 average rating.",
+          "player_id": "vortex",
+          "handle": "Vortex",
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "atk_side",
+          "category": "attack",
+          "tone": "good",
+          "headline": "Attack is clicking",
+          "detail": "7/12 attack rounds won (58%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        }
+      ],
+      "breaking": [
+        {
+          "code": "player_under",
+          "category": "player",
+          "tone": "bad",
+          "headline": "Hollowlock off-colour",
+          "detail": "0.45 average rating across the series.",
+          "player_id": "fa_0",
+          "handle": "Hollowlock",
+          "site": null,
+          "badges": [
+            {
+              "id": "inconsistent",
+              "name": "Inconsistent",
+              "emoji": "🎲",
+              "polarity": -1,
+              "blurb": "a different player week to week",
+              "kind": "negative",
+              "impact": "While held: -2 Composure.",
+              "decay": "It can fade after 2 seasons without re-qualifying.",
+              "art": "/assets/badges/inconsistent.webp",
+              "season": 1
+            }
+          ],
+          "dev_note": "Near their ceiling (proj. 55–66) — a lineup call."
+        },
+        {
+          "code": "def_side",
+          "category": "defense",
+          "tone": "bad",
+          "headline": "Defense is leaking",
+          "detail": "2/10 defense rounds won (20%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        }
+      ],
+      "levers": [
+        {
+          "code": "player_form",
+          "tab": "roster",
+          "specialty": "team",
+          "on_focus": false,
+          "text": "Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.",
+          "adjustment": null
+        },
+        {
+          "code": "def_setups",
+          "tab": "tactics",
+          "specialty": "tactical",
+          "on_focus": false,
+          "text": "Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.",
+          "adjustment": {
+            "dial": "map_control",
+            "label": "Map control",
+            "current": 50,
+            "target": 30,
+            "at_limit": false,
+            "reason": "Stack more tightly and simplify the defensive setup.",
+            "coach_step": 20,
+            "analyst_precision": 10
+          }
+        }
+      ],
+      "coach": {
+        "present": true,
+        "specialty": "mechanical"
+      },
+      "locked": true,
+      "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+    },
+    "decision_ledger": [],
+    "press": null,
+    "suggested_lineup": {
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "quality": 78,
+          "dressed": true
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "quality": 76,
+          "dressed": true
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "quality": 76,
+          "dressed": false
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "quality": 75,
+          "dressed": true
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "quality": 72,
+          "dressed": true
+        }
+      ],
+      "changed": true
+    },
+    "board": null,
+    "form_trend": [
+      {
+        "n": 1,
+        "week": 1,
+        "wins": 1,
+        "won": true
+      },
+      {
+        "n": 2,
+        "week": 2,
+        "wins": 2,
+        "won": true
+      },
+      {
+        "n": 3,
+        "week": 3,
+        "wins": 3,
+        "won": true
+      },
+      {
+        "n": 4,
+        "week": 4,
+        "wins": 4,
+        "won": true
+      },
+      {
+        "n": 5,
+        "week": 5,
+        "wins": 5,
+        "won": true
+      },
+      {
+        "n": 6,
+        "week": 6,
+        "wins": 6,
+        "won": true
+      },
+      {
+        "n": 7,
+        "week": 7,
+        "wins": 6,
+        "won": false
+      }
+    ],
+    "squad_profile": {
+      "avg_age": 24,
+      "buckets": {
+        "youth": 1,
+        "prime": 4,
+        "veteran": 1
+      },
+      "expiries": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 19,
+          "weeks_left": 37
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 26,
+          "weeks_left": 44
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 22,
+          "weeks_left": 45
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 23,
+          "weeks_left": 49
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 26,
+          "weeks_left": 55
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 28,
+          "weeks_left": 55
+        }
+      ]
+    },
+    "objectives_hub": [
+      {
+        "kind": "sponsor",
+        "label": "win the regional split",
+        "state": "on_track",
+        "detail": "currently 2nd of 8"
+      }
+    ],
+    "rotation": [
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "maps": 7,
+        "starter": true,
+        "stamina": 75,
+        "burnout": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "maps": 7,
+        "starter": true,
+        "stamina": 100,
+        "burnout": false
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "maps": 6,
+        "starter": true,
+        "stamina": 76,
+        "burnout": false
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "maps": 6,
+        "starter": false,
+        "stamina": 55,
+        "burnout": false
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "maps": 6,
+        "starter": true,
+        "stamina": 59,
+        "burnout": false
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "maps": 3,
+        "starter": true,
+        "stamina": 56,
+        "burnout": false
+      }
+    ],
+    "training_focus": "tactical",
+    "training_delegated": false,
+    "focus_options": [
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "rest"
+    ],
+    "news": [
+      "[S1 W8] Team Nexus sign a jersey deal with Streamforge (10,100/wk, objectives: win the regional split → 117,000 for 24 weeks).",
+      "[S1 W8] The manager stands between the player and the criticism.",
+      "[S1 W7] Jinxsurge (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W7] Falconzero (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W7] Cipherpulse (Sahara Compass) passes 100 kills this season.",
+      "[S1 W7] Hollowshot (Phantom Core) passes 100 kills this season.",
+      "[S1 W7] Nightlock (Outback Sentinels) passes 100 kills this season.",
+      "[S1 W7] Falconghost (Meridian Cross) passes 100 kills this season.",
+      "[S1 W7] Hollowsnap (Mekong Vipers) passes 100 kills this season.",
+      "[S1 W7] Grimpulse (Kraken Unit) passes 100 kills this season.",
+      "[S1 W7] Nightsurge (Kraken Unit) passes 100 kills this season.",
+      "[S1 W7] Ashcore (Kathmandu Apex) passes 100 kills this season."
+    ],
+    "scout": {
+      "target": null,
+      "target_name": null,
+      "progress": 0,
+      "cap": 1
+    },
+    "standings_top": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "wins": 7,
+        "losses": 0,
+        "rounds_won": 93,
+        "rounds_lost": 47
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "wins": 6,
+        "losses": 1,
+        "rounds_won": 87,
+        "rounds_lost": 51
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "wins": 4,
+        "losses": 3,
+        "rounds_won": 74,
+        "rounds_lost": 58
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "wins": 4,
+        "losses": 3,
+        "rounds_won": 78,
+        "rounds_lost": 73
+      }
+    ],
+    "champions": [],
+    "transfer_offers": [],
+    "flavor_event": null,
+    "media_event": null,
+    "career": {
+      "mode": "sandbox",
+      "seat": {
+        "id": "mgr_team_nexus",
+        "name": "NXS manager",
+        "team_id": "team_nexus",
+        "archetype": "",
+        "unemployed": false
+      },
+      "contract": null,
+      "offers": [],
+      "blocked": false
+    },
+    "multiplayer": {
+      "mode": "solo",
+      "code": "26UHC",
+      "humans": [
+        {
+          "team_id": "team_nexus",
+          "name": "Team Nexus",
+          "is_you": true
+        }
+      ],
+      "ready": [],
+      "you_ready": false
+    },
+    "save": {
+      "dirty": true,
+      "autosave_enabled": true,
+      "autosave_every_weeks": 1
+    },
+    "promise_pending": false,
+    "scout_shortlist_ready": false,
+    "scrim_proposal_pending": true,
+    "culture_violation_unack": false
+  },
+  "finances": {
+    "balance": 441090,
+    "weekly_payroll": 42200,
+    "marketability": 1.07,
+    "marketability_breakdown": {
+      "score": 1.07,
+      "facility_mult": 1,
+      "reach": 1468146,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.69
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": 0.14
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.07
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.05
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": 0.02
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        }
+      ]
+    },
+    "last_week_income": null,
+    "last_week_expenses": null,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 24,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": null,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 2nd of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": null,
+        "offer": null,
+        "market": [
+          {
+            "brand": "Apex Ergonomics",
+            "slot": "peripheral",
+            "weeks": 18,
+            "expires_week": 8,
+            "upfront": {
+              "signing_bonus": 84000,
+              "weekly": 900,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 5300,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 1700,
+              "per_win": 3400
+            },
+            "objectives": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 15000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 15000,
+                "label": "make the regional playoffs"
+              }
+            ]
+          },
+          {
+            "brand": "Deadzone Desks",
+            "slot": "peripheral",
+            "weeks": 16,
+            "expires_week": 9,
+            "upfront": {
+              "signing_bonus": 112000,
+              "weekly": 800,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 6300,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 2700,
+              "per_win": 3600
+            },
+            "objectives": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 18000,
+                "met": null
+              },
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 18000,
+                "label": "make the regional playoffs"
+              },
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "label": "beat a world top-4 team (per win)"
+              }
+            ]
+          }
+        ],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "stream": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Marketing Office level 1",
+        "objective_labels_deal": []
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Marketing Office level 2",
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [],
+    "commitments": [],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 42200,
+      "staff": 4900,
+      "sponsors_base": 45919,
+      "sponsors_by_slot": {
+        "title": 0,
+        "jersey": 10100,
+        "peripheral": 0
+      },
+      "sponsors_total": 56019,
+      "merch": 3289,
+      "tickets": 2192,
+      "streaming": 5750,
+      "facility_upkeep": 0,
+      "prizes": 0,
+      "income_total": 67250,
+      "expense_total": 47100,
+      "net": 20150
+    },
+    "projection": [
+      {
+        "week": 9,
+        "net": 20150,
+        "balance": 461240
+      },
+      {
+        "week": 10,
+        "net": 20150,
+        "balance": 481390
+      },
+      {
+        "week": 11,
+        "net": 20150,
+        "balance": 501540
+      },
+      {
+        "week": 12,
+        "net": 20150,
+        "balance": 521690
+      },
+      {
+        "week": 13,
+        "net": 20150,
+        "balance": 541840
+      },
+      {
+        "week": 14,
+        "net": 20150,
+        "balance": 561990
+      },
+      {
+        "week": 15,
+        "net": 20150,
+        "balance": 582140
+      },
+      {
+        "week": 16,
+        "net": 20150,
+        "balance": 602290
+      }
+    ]
+  }
+}

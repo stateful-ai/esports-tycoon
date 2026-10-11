@@ -1,0 +1,261 @@
+{
+  "generated_at_utc": "2026-10-11T14:47:53.375074+00:00",
+  "pr": 387,
+  "old_head": "b28fe2783c4b49bd2460b3bd9a322f5f1b91bdde",
+  "actual_main": "8d6315303205e6ebefa425a9015fc5523ccef701",
+  "merge_base": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "merge_content_tree_before_new_proof": "443dcad3612556a7393bb870db3934179fc2cb92",
+  "expected_parents": [
+    "b28fe2783c4b49bd2460b3bd9a322f5f1b91bdde",
+    "8d6315303205e6ebefa425a9015fc5523ccef701"
+  ],
+  "only_conflict": ".gitattributes",
+  "conflict_stages": {
+    "base": "ae825340910c11f15b4386d276ce1311085e03c9",
+    "ours": "cbb08b7020c8243687f16545294333183bc37739",
+    "theirs": "a7367d89a83234568768804a9f8f8f740675e2d5"
+  },
+  "raw_conflicts": {
+    "base": {
+      "sha256": "f43a67706688637640f02972cff8ac328e5305c318d8a73484361d666f9a6ab1",
+      "bytes": 258
+    },
+    "ours": {
+      "sha256": "b38597d1441b60c824953598ab4d19c27b13b467e2be76977b17628d87e1e273",
+      "bytes": 1082
+    },
+    "theirs": {
+      "sha256": "3040b1d38959c7b3747622595b8eff58676f69c300afe3b986e6c870bdb926cf",
+      "bytes": 942
+    },
+    "conflict": {
+      "sha256": "8e8f9fa54bad989e145ce60fd8a8cb3dd88f06636f948d8ecb319816b8126912",
+      "bytes": 1868
+    },
+    "resolution": {
+      "sha256": "4aeac2ca1293c57c1f58f110bbcf68b32ba1fd4bc94be06b640bbc9101120035",
+      "bytes": 1766
+    }
+  },
+  "resolution": "Exact main attributes byte prefix plus union of missing PR lines; no main lines removed.",
+  "all_main_lines_retained": true,
+  "main_nonfeature_entries_preserved": 3538,
+  "old_history_entries_preserved": 2005,
+  "features": [
+    {
+      "path": "src/esports_sim/web/server.py",
+      "added_deleted_lines": 33,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob 436fc3c68edfad84580bc789280c8c44df535e08",
+      "integrated_blob": "100644 blob 11384eab73c15905e4c90f736c1046032035f661"
+    },
+    {
+      "path": "src/esports_sim/web/static/app.css",
+      "added_deleted_lines": 8,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob 7c14d26eefedfd8c7cec0faef26f9ca4f8fa7a79",
+      "integrated_blob": "100644 blob 7c14d26eefedfd8c7cec0faef26f9ca4f8fa7a79"
+    },
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "added_deleted_lines": 69,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob b69b6ab31938d4f05b745c38471f9c60432d61fa",
+      "integrated_blob": "100644 blob da1599c9c6de99d250dcc629b7817f637e270a11"
+    },
+    {
+      "path": "src/esports_sim/web/static/index.html",
+      "added_deleted_lines": 1,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob 9bced764dc86c6369365e191de3fe4770b730393",
+      "integrated_blob": "100644 blob 9bced764dc86c6369365e191de3fe4770b730393"
+    },
+    {
+      "path": "tests/test_advance_transition_frontend.py",
+      "added_deleted_lines": 70,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob 2b57ad0d76d2a730ae9c37073f008f0c5ecc8ce6",
+      "integrated_blob": "100644 blob 2b57ad0d76d2a730ae9c37073f008f0c5ecc8ce6"
+    },
+    {
+      "path": "tests/test_web_advance_transition.py",
+      "added_deleted_lines": 34,
+      "exact_original_delta": true,
+      "old_blob": "100644 blob 7b4fd1fbdf160b43e991802476452b34783c8151",
+      "integrated_blob": "100644 blob 7b4fd1fbdf160b43e991802476452b34783c8151"
+    }
+  ],
+  "canonical": {
+    "rows": 1044,
+    "fields": 21,
+    "sha256": "ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249",
+    "blob": "100644 blob cb486f7fa373e10c5ef230cb6cfa48a40541a8ab",
+    "raw_and_git_exact": true,
+    "duplicate_keys": 0
+  },
+  "owned_rows": [
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "1",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "2",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "3",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "4",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "5",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "6",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "7",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-readiness-loading",
+      "step": "8",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "1",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "2",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "3",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "4",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "5",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "6",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "1",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "2",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "3",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "4",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "5",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-rollover",
+      "step": "6",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "1",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "2",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "3",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "4",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "5",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-shared-ready",
+      "step": "6",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "1",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "2",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "3",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "4",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "5",
+      "all_21_fields_equal": true
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "6",
+      "all_21_fields_equal": true
+    }
+  ],
+  "local_validation": "Static Git/blob/hash/CSV/source review only. User explicitly prohibited every local test, syntax/native check, simulation, gate, analytics command and browser runtime.",
+  "runtime_evidence": "Original dated browser receipts unchanged; no fresh integrated runtime acceptance claimed.",
+  "primary_and_server": "Dirty primary checkout/index and server8421 untouched."
+}

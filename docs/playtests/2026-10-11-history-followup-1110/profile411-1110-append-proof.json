@@ -1,0 +1,17 @@
+{
+  "at_utc": "2026-10-11T13:44:30.867509+00:00",
+  "canonical_rows": 1110,
+  "sessions": 100,
+  "columns": 21,
+  "canonical_sha256": "ba6da15176aa2611cfbf6545fe8cf39d8cbf0ba459a44cb05ecf497e1a326be4",
+  "prior1100_raw_prefix_all_fields_exact": true,
+  "original9rows_all189fields_exact": true,
+  "root_separate21fields_exact": true,
+  "safe_files": 57,
+  "played_head": "3cf2fa1a61030683cd79d125a108275b11be3c31",
+  "original_shard_sha256": "5e0b32df637a7bc4753d89e6d15e4ccbbc65420a6b8f2daa585c5040e7ac10c4",
+  "observed_request_pairs": "1/1",
+  "new_accepted_decisions": 0,
+  "local_tests_launched": false,
+  "finite_PR4101079_unchanged": true
+}

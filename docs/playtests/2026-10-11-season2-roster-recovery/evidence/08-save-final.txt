@@ -1,0 +1,6 @@
+### Result
+{"season":2,"week":4,"save":{"dirty":false,"autosave_enabled":true,"autosave_every_weeks":1},"debrief":{"result":"Beat Kathmandu Apex 13-9","won":true,"standout":"Vortex (1.42)","underperformer":"Echo (0.70)"},"dom":"ISION THIS SEASON\n53.2\n51.2\n\nNo measurable attribute movement yet this season.\n\nRELATIONSHIPS\nSlyblade\nNEUTRAL\nEcho\nNEUTRAL\nGhost\nNEUTRAL\nVortex\nNEUTRAL\nApex\nNEUTRAL\nCAREER\n1\nSEASONS\n12\nMAPS\n99\nKILLS\n0.60\nK/D\n0\nHONOURS\n0\nMVPS\n0\nALL-STAR\nTIMELINE\nS1\nTeam Nexus sign Hollowlock.\nHollowlock is saddled with the Inconsistent badge.\nThe manager stands between the player and the criticism.\nHollowlock is saddled with the Choker badge.\nMEMORIES\nS1: Hollowlock is saddled with the Choker badge.\nS1: Hollowlock is saddled with the Inconsistent badge.\nS1: The manager stands between the player and the criticism.\nS1: Team Nexus sign Hollowlock.\nCOMPARE\ncompare with a teammate…\nApex\nVortex\nGhost\nSlyblade\nEcho"}
+### Ran Playwright code
+```js
+await (async (page) => await page.evaluate(async()=>{ const s=await (await fetch("/api/state")).json(); return {season:s.season,week:s.week,save:s.save,debrief:s.debrief,dom:document.body.innerText.slice(-700)}; }))(page);
+```

@@ -1,0 +1,129 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e26]: Season 1 · Week 9 · Regular — Team Nexus
+      - generic [ref=f1e27]: 461,864 cr
+      - button "Save" [ref=f1e28] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e7] [cursor=pointer]
+      - button "🛠️" [ref=f1e8] [cursor=pointer]
+      - button "🔇" [ref=f1e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e10] [cursor=pointer]: Guide
+    - navigation [ref=f1e11]:
+      - generic "Weekly" [ref=f1e12]:
+        - button "Dashboard 1" [ref=f1e30] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f1e31]: "1"
+        - button "Inbox 15" [ref=f1e32] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e33]: "15"
+        - button "Match 2" [ref=f1e34] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e35]: "2"
+      - generic "Org" [ref=f1e17]:
+        - button "Club" [ref=f1e19] [cursor=pointer]
+        - button "Facilities" [ref=f1e20] [cursor=pointer]
+        - button "Season" [ref=f1e21] [cursor=pointer]
+        - button "Market" [ref=f1e22] [cursor=pointer]
+        - button "Stats" [ref=f1e23] [cursor=pointer]
+        - button "Company" [ref=f1e24] [cursor=pointer]
+    - main [ref=f1e25]:
+      - generic [ref=f1e407]:
+        - generic [ref=f1e408]:
+          - generic [ref=f1e409]: Club
+          - generic [ref=f1e410]: S1 · W9
+          - generic [ref=f1e411]:
+            - button "Squad" [ref=f1e412] [cursor=pointer]
+            - button "Development" [ref=f1e413] [cursor=pointer]
+            - button "Locker Room" [ref=f1e414] [cursor=pointer]
+            - button "Operations" [ref=f1e415] [cursor=pointer]
+          - button "Guide" [ref=f1e416] [cursor=pointer]
+        - generic [ref=f1e418]:
+          - heading "Locker Room" [level=2] [ref=f1e419]
+          - paragraph [ref=f1e420]: Check the squad hierarchy, cliques, duos, feuds and manager promises.
+          - generic [ref=f1e421]:
+            - generic [ref=f1e422]:
+              - heading "Team Leaders" [level=3] [ref=f1e423]
+              - generic [ref=f1e425]:
+                - generic [ref=f1e426]: Apex
+                - generic [ref=f1e427]: Incumbent Leader
+            - generic [ref=f1e429]:
+              - heading "Influential" [level=3] [ref=f1e430]
+              - generic [ref=f1e432]:
+                - generic [ref=f1e433]: Vortex
+                - generic [ref=f1e434]: Key Influencer
+            - generic [ref=f1e436]:
+              - heading "Core & Rookies" [level=3] [ref=f1e437]
+              - generic [ref=f1e438]:
+                - generic [ref=f1e439]:
+                  - generic [ref=f1e440]: Ghost
+                  - generic [ref=f1e441]: Rookie
+                - generic [ref=f1e443]:
+                  - generic [ref=f1e444]: Slyblade
+                  - generic [ref=f1e445]: Core
+                - generic [ref=f1e447]:
+                  - generic [ref=f1e448]: Echo
+                  - generic [ref=f1e449]: Core
+                - generic [ref=f1e451]:
+                  - generic [ref=f1e452]: Hollowlock
+                  - generic [ref=f1e453]: Core
+            - generic [ref=f1e455]:
+              - heading "Rebels & Outcasts" [level=3] [ref=f1e456]
+              - paragraph [ref=f1e458]: None
+          - generic [ref=f1e459]:
+            - heading "Relationships & Cliques" [level=2] [ref=f1e460]
+            - generic [ref=f1e461]:
+              - generic [ref=f1e462]:
+                - heading "Duos Active" [level=3] [ref=f1e463]:
+                  - text: Duos
+                  - generic [ref=f1e464]: Active
+                - paragraph [ref=f1e465]: No close duos in the squad.
+              - generic [ref=f1e466]:
+                - heading "Feuds Tension" [level=3] [ref=f1e467]:
+                  - text: Feuds
+                  - generic [ref=f1e468]: Tension
+                - paragraph [ref=f1e469]: No active feuds in the squad.
+          - generic [ref=f1e470]:
+            - heading "Promises" [level=2] [ref=f1e471]
+            - paragraph [ref=f1e472]: Monitor active manager promises, kept/broken history and morale/chemistry outcomes.
+            - generic [ref=f1e473]:
+              - heading "Active Promises" [level=3] [ref=f1e474]
+              - generic [ref=f1e475]:
+                - generic [ref=f1e476]:
+                  - generic [ref=f1e477]:
+                    - strong [ref=f1e478]: Echo
+                    - text: ": Play Time"
+                  - generic [ref=f1e479]:
+                    - paragraph [ref=f1e480]: "Target: 5 dressed-week credits (60% of the original 8-week promise, rounded up)."
+                    - paragraph [ref=f1e481]: "Progress: 3 accumulated dressed-week credits; 5 required. 2 more needed."
+                    - paragraph [ref=f1e482]: "Final scheduled evaluation: after 2 more weekly evaluations. It can break earlier if the required credits become unreachable. If not dressed next evaluation, it breaks then."
+                    - paragraph [ref=f1e483]: "Next evaluation: if dressed, 4 accumulated credits (promise stays active); if not dressed, 3 credits (promise broken)."
+                    - paragraph [ref=f1e484]: "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits."
+                  - generic [ref=f1e485]: Progress toward dressed-week requirement
+                - generic [ref=f1e488]:
+                  - generic [ref=f1e489]:
+                    - strong [ref=f1e490]: Apex
+                    - text: ": Play Time"
+                  - generic [ref=f1e491]:
+                    - paragraph [ref=f1e492]: "Target: 5 dressed-week credits (60% of the reconstructed 8-week target basis, rounded up)."
+                    - paragraph [ref=f1e493]: "Progress: 5 accumulated dressed-week credits; 5 required. Target reached."
+                    - paragraph [ref=f1e494]: "Final scheduled evaluation: at the next weekly evaluation."
+                    - paragraph [ref=f1e495]: "Next evaluation: if dressed, 6 accumulated credits (promise kept); if not dressed, 5 credits (promise kept)."
+                    - paragraph [ref=f1e496]: "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits."
+                  - generic [ref=f1e497]: Progress toward dressed-week requirement
+            - generic [ref=f1e500]:
+              - heading "Promise History" [level=3] [ref=f1e501]
+              - paragraph [ref=f1e502]: No resolved promise history.
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Club
+    - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+    - generic: Name a default five, check condition and confidence, then set team and player training plans.

@@ -1,0 +1,151 @@
+[
+  {
+    "id": "esports-playtest-0106",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Read-only review usage not retained",
+    "problem": "New browser correction generated no additional retained usage records",
+    "solution": "Preserve step10 intent/screens/public readback and mark usage unverified",
+    "lesson": "No retained usage cannot prove an absent player attempt",
+    "confidence": "medium",
+    "source": "PR358 review browser8466 copied26UHC seed2038 S1W5; session step10; report.md correction",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14",
+      "review"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0105",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Unrounded threshold at scouting boundary",
+    "problem": "Rounded49.9% depth becomes50% displayed",
+    "solution": "Evaluate readiness on raw progress; display rounding stays cosmetic",
+    "lesson": "A displayed rounded percentage must not grant an unlock",
+    "confidence": "medium",
+    "source": "PR358 review browser8466 copied26UHC seed2038 S1W5; session step10; report.md correction",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14",
+      "review"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0104",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Readiness must match the actionable scouting unlock",
+    "problem": "Playbook confidence85% made depth34% guidance ready while actual counter reads remained hidden",
+    "solution": "Use raw depth>=50% for readiness and retain measured playbook separately",
+    "lesson": "Presentation readiness should be compared with the consumer unlock contract",
+    "confidence": "medium",
+    "source": "PR358 review browser8466 copied26UHC seed2038 S1W5; session step10; report.md correction",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "scouting",
+      "gap14",
+      "review"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0103",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Worktree loss can erase playtest history",
+    "problem": "Original uncommitted checkout lost git metadata and five of eight original CSVrows.",
+    "solution": "Preserve remnants and exact surviving transcript rows, mark history gap, and perform fresh prelogged acceptance.",
+    "lesson": "Never reconstruct missing intent timestamps from request receipt times; fresh independent session provides complete current evidence.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0102",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Recovery evidence distinguishes rejection from accepted actions",
+    "problem": "Recovery attempts require evidence beyond saved decisions.",
+    "solution": "Match request IDs in retained usage and compare exact27actionprefix with29actionend.",
+    "lesson": "This repeat produced2of2accepted decisions and3of3paired requests, with unchanged old action and snapshot prefixes.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0101",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor409 recovery follows visible dashboard labels",
+    "problem": "Old recovery text pointed to removed Action required.",
+    "solution": "Follow Dashboard then Needs you then Team moment and select Make it playful.",
+    "lesson": "Frozen recovered source browser reverified409 without state change, existing response200, then retryAdvance200 W6 to W7.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0100",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Visible team moment blocker retained an obsolete heading",
+    "problem": "Player could not find the error-directed Action required section while the prompt lived under Needs you.",
+    "solution": "Use the accurate Dashboard recovery route and explicit retry instruction.",
+    "lesson": "One seed2038 world26UHC W6 recovery was verified; this short UI session does not establish event balance.",
+    "confidence": "high",
+    "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser",
+      "gap18"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0099",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Rejected advances and accepted choices use separate evidence streams",
+    "problem": "A409 is a player attempt but never an accepted decision.",
+    "solution": "Compare27-action baseline against29-action end save and join usage request IDs.",
+    "lesson": "Two accepted actions match exact indexed decisions; two409s match browser usage only, with unchanged APIstate at each rejection.",
+    "confidence": "high",
+    "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser",
+      "gap18"
+    ],
+    "kind": "learning"
+  }
+]

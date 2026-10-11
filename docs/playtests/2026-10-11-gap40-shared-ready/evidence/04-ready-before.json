@@ -1,0 +1,661 @@
+{
+  "season": 1,
+  "week": 23,
+  "phase": "offseason",
+  "window": {
+    "open": true,
+    "kind": "offseason",
+    "label": "Offseason market",
+    "detail": "All signings and transfers are open."
+  },
+  "advance_transition": {
+    "label": "Start Season 2",
+    "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+  },
+  "roster_readiness": {
+    "ready": true,
+    "reason": "",
+    "count": 6,
+    "minimum": 5,
+    "shortfall": 0
+  },
+  "user_team": {
+    "id": "team_nexus",
+    "name": "Team Nexus",
+    "tag": "NXS",
+    "logo": "/assets/logos/logo_1.webp",
+    "region": "americas",
+    "balance": 2266822,
+    "reputation": 66.5,
+    "fan_count": 333918,
+    "world_rank": 4,
+    "chemistry": 63.8,
+    "captain_id": "apex",
+    "player_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "starter_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo"
+    ],
+    "record": {
+      "wins": 11,
+      "losses": 3,
+      "diff": 69
+    }
+  },
+  "next_fixture": null,
+  "leaders": [
+    {
+      "pid": "team_crimson_order_p2",
+      "handle": "Wraithghost",
+      "team": "Crimson Order",
+      "team_id": "team_crimson_order",
+      "rating": 1.65,
+      "kills": 334
+    },
+    {
+      "pid": "team_outback_sentinels_p2",
+      "handle": "Karmahawk",
+      "team": "Outback Sentinels",
+      "team_id": "team_outback_sentinels",
+      "rating": 1.53,
+      "kills": 337
+    },
+    {
+      "pid": "team_ghostline_p2",
+      "handle": "Zephyrsurge",
+      "team": "Ghostline",
+      "team_id": "team_ghostline",
+      "rating": 1.39,
+      "kills": 289
+    }
+  ],
+  "movers": [
+    {
+      "pid": "vortex",
+      "handle": "Vortex",
+      "delta": 0.3
+    }
+  ],
+  "run_in": [],
+  "on_this_day": [],
+  "debrief": {
+    "result": "Lost to Team Vanguard 1-2",
+    "won": false,
+    "standout": "Vortex (1.06)",
+    "underperformer": "Echo (0.63)"
+  },
+  "last_match_review": {
+    "fixture_id": "s1csf0",
+    "won": false,
+    "contested": true,
+    "best_of": 3,
+    "your_maps": 1,
+    "their_maps": 2,
+    "your_rounds": 26,
+    "their_rounds": 34,
+    "opp_id": "team_vanguard",
+    "opp_name": "Team Vanguard",
+    "potm": {
+      "player_id": "slice",
+      "handle": "Slice",
+      "badges": [
+        {
+          "id": "aim_demon",
+          "name": "Aim Demon",
+          "emoji": "\ud83c\udfaf",
+          "polarity": 1,
+          "blurb": "raw mechanical menace",
+          "kind": "positive",
+          "impact": "Applied when earned (while held): +2 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 1.1.",
+          "decay": "It can fade after 2 seasons without re-qualifying.",
+          "art": "/assets/badges/aim_demon.webp",
+          "season": 1
+        }
+      ]
+    },
+    "tier": 0,
+    "tier_label": "box scores only",
+    "momentum_beat": null,
+    "your_calls": {
+      "plan_set": true,
+      "dials": [
+        {
+          "key": "aggression",
+          "label": "Aggression",
+          "planned": 30,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "map_control",
+          "label": "Map control",
+          "planned": 70,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "pace",
+          "label": "Pace",
+          "planned": 30,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "util_discipline",
+          "label": "Utility discipline",
+          "planned": 70,
+          "base": 50,
+          "impact_delta": null
+        }
+      ],
+      "site_focus": null,
+      "focus_target": null,
+      "team_talk": null,
+      "lineup": null,
+      "prep": {
+        "edge": null,
+        "maps_played": [
+          "Haven",
+          "Ascent",
+          "Lotus"
+        ],
+        "maps_missed": []
+      }
+    },
+    "working": [],
+    "breaking": [
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "headline": "Echo off-colour",
+        "detail": "0.63 average rating across the series.",
+        "player_id": "echo",
+        "handle": "Echo",
+        "site": null,
+        "badges": [
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "\u2744\ufe0f",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.4.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          },
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "\ud83e\udd76",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          }
+        ],
+        "dev_note": "Young with room (proj. 65\u201380) \u2014 a development call, not a bench."
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "headline": "Defense is leaking",
+        "detail": "14/36 defense rounds won (39%).",
+        "player_id": null,
+        "handle": null,
+        "site": null,
+        "badges": []
+      }
+    ],
+    "levers": [
+      {
+        "code": "player_form",
+        "tab": "roster",
+        "specialty": "team",
+        "on_focus": false,
+        "text": "Echo is off-colour but still developing \u2014 set their dev focus or pair a mentor on the Roster screen.",
+        "adjustment": null
+      },
+      {
+        "code": "def_setups",
+        "tab": "tactics",
+        "specialty": "tactical",
+        "on_focus": false,
+        "text": "Set Map control to 30 (currently 50) \u2014 Stack more tightly and simplify the defensive setup.",
+        "adjustment": {
+          "dial": "map_control",
+          "label": "Map control",
+          "current": 50,
+          "target": 30,
+          "at_limit": false,
+          "reason": "Stack more tightly and simplify the defensive setup.",
+          "coach_step": 20,
+          "analyst_precision": 10
+        }
+      }
+    ],
+    "coach": {
+      "present": true,
+      "specialty": "mechanical"
+    },
+    "locked": true,
+    "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+  },
+  "decision_ledger": [
+    {
+      "kind": "training",
+      "verdict": "paid_off",
+      "text": "Training call (mental): focused skills moved +0.14 avg this week vs +0.04 in a typical week.",
+      "signal": 0.692,
+      "season": 1,
+      "week": 22,
+      "subject": "training|mental|22"
+    }
+  ],
+  "press": null,
+  "suggested_lineup": {
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "quality": 79,
+        "dressed": true
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "quality": 78,
+        "dressed": true
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "quality": 76,
+        "dressed": true
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "quality": 76,
+        "dressed": true
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "quality": 73,
+        "dressed": true
+      }
+    ],
+    "changed": false
+  },
+  "board": null,
+  "form_trend": [
+    {
+      "n": 1,
+      "week": 1,
+      "wins": 1,
+      "won": true
+    },
+    {
+      "n": 2,
+      "week": 2,
+      "wins": 2,
+      "won": true
+    },
+    {
+      "n": 3,
+      "week": 3,
+      "wins": 3,
+      "won": true
+    },
+    {
+      "n": 4,
+      "week": 4,
+      "wins": 4,
+      "won": true
+    },
+    {
+      "n": 5,
+      "week": 5,
+      "wins": 5,
+      "won": true
+    },
+    {
+      "n": 6,
+      "week": 6,
+      "wins": 6,
+      "won": true
+    },
+    {
+      "n": 7,
+      "week": 7,
+      "wins": 6,
+      "won": false
+    },
+    {
+      "n": 8,
+      "week": 8,
+      "wins": 7,
+      "won": true
+    },
+    {
+      "n": 9,
+      "week": 9,
+      "wins": 8,
+      "won": true
+    },
+    {
+      "n": 10,
+      "week": 10,
+      "wins": 9,
+      "won": true
+    },
+    {
+      "n": 11,
+      "week": 11,
+      "wins": 10,
+      "won": true
+    },
+    {
+      "n": 12,
+      "week": 12,
+      "wins": 10,
+      "won": false
+    },
+    {
+      "n": 13,
+      "week": 13,
+      "wins": 11,
+      "won": true
+    },
+    {
+      "n": 14,
+      "week": 14,
+      "wins": 11,
+      "won": false
+    },
+    {
+      "n": 15,
+      "week": 15,
+      "wins": 12,
+      "won": true
+    },
+    {
+      "n": 16,
+      "week": 16,
+      "wins": 12,
+      "won": false
+    },
+    {
+      "n": 17,
+      "week": 17,
+      "wins": 13,
+      "won": true
+    },
+    {
+      "n": 18,
+      "week": 18,
+      "wins": 13,
+      "won": false
+    },
+    {
+      "n": 19,
+      "week": 20,
+      "wins": 14,
+      "won": true
+    },
+    {
+      "n": 20,
+      "week": 21,
+      "wins": 14,
+      "won": false
+    }
+  ],
+  "squad_profile": {
+    "avg_age": 24.0,
+    "buckets": {
+      "youth": 1,
+      "prime": 4,
+      "veteran": 1
+    },
+    "expiries": [
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "weeks_left": 22
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "weeks_left": 29
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "weeks_left": 30
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "weeks_left": 34
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 26,
+        "weeks_left": 40
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 28,
+        "weeks_left": 40
+      }
+    ]
+  },
+  "objectives_hub": [
+    {
+      "kind": "award",
+      "label": "Vortex: Top Fragger",
+      "state": "in contention",
+      "detail": "2nd \u00b7 673"
+    },
+    {
+      "kind": "award",
+      "label": "Vortex: Opening King",
+      "state": "in contention",
+      "detail": "3rd \u00b7 111"
+    },
+    {
+      "kind": "award",
+      "label": "Vortex: Clutch Merchant",
+      "state": "in contention",
+      "detail": "3rd \u00b7 14"
+    }
+  ],
+  "rotation": [
+    {
+      "id": "fa_13",
+      "handle": "Slyblade",
+      "maps": 30,
+      "starter": true,
+      "stamina": 82,
+      "burnout": false
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "maps": 30,
+      "starter": true,
+      "stamina": 90,
+      "burnout": false
+    },
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "maps": 29,
+      "starter": true,
+      "stamina": 92,
+      "burnout": false
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "maps": 28,
+      "starter": true,
+      "stamina": 92,
+      "burnout": false
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "maps": 21,
+      "starter": true,
+      "stamina": 100,
+      "burnout": false
+    },
+    {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "maps": 12,
+      "starter": false,
+      "stamina": 100,
+      "burnout": false
+    }
+  ],
+  "training_focus": "mental",
+  "training_delegated": false,
+  "focus_options": [
+    "mechanical",
+    "tactical",
+    "mental",
+    "team",
+    "rest"
+  ],
+  "news": [
+    "[S1 W22] Zephyrzero (Rust Belt Gaming) passes 300 kills this season.",
+    "[S1 W22] Havocflare (Rust Belt Gaming) passes 300 kills this season.",
+    "[S1 W22] [CHAMP_FINAL] Team Vanguard beat Rust Belt Gaming, 3-1.",
+    "[S1 W22] Team Vanguard win CHAMPIONS \u2014 Season 1 world champions (1,000,000 cr)!",
+    "[S1 W22] Slyecho re-signs with Yucatan Ceibas at 3,500/wk.",
+    "[S1 W22] Wraithshot re-signs with Volga Reign at 3,800/wk.",
+    "[S1 W22] Frostpulse re-signs with Taipei Circuit at 4,400/wk.",
+    "[S1 W22] Slyflare re-signs with Coral Sea Drakes at 5,700/wk.",
+    "[S1 W22] Nightrush re-signs with Chao Phraya Owls at 5,700/wk.",
+    "[S1 W22] Slymark re-signs with Apex Syndicate at 5,000/wk.",
+    "[S1 W22] Jinxshot re-signs with Apex Syndicate at 3,900/wk.",
+    "[S1 W22] OrbitCast are courting the stream slot (9,400/wk steady, alternatives available). On the table until week 24."
+  ],
+  "scout": {
+    "target": "player:slice",
+    "target_name": "Slice",
+    "progress": 1.0,
+    "cap": 1.0
+  },
+  "standings_top": [
+    {
+      "team_id": "team_vanguard",
+      "name": "Team Vanguard",
+      "wins": 13,
+      "losses": 1,
+      "rounds_won": 181,
+      "rounds_lost": 99
+    },
+    {
+      "team_id": "team_nexus",
+      "name": "Team Nexus",
+      "wins": 11,
+      "losses": 3,
+      "rounds_won": 172,
+      "rounds_lost": 103
+    },
+    {
+      "team_id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming",
+      "wins": 10,
+      "losses": 4,
+      "rounds_won": 158,
+      "rounds_lost": 103
+    },
+    {
+      "team_id": "team_saracen_guard",
+      "name": "Saracen Guard",
+      "wins": 8,
+      "losses": 6,
+      "rounds_won": 157,
+      "rounds_lost": 131
+    }
+  ],
+  "champions": [
+    {
+      "season": 1,
+      "team_id": "team_vanguard",
+      "team_name": "Team Vanguard"
+    }
+  ],
+  "transfer_offers": [],
+  "flavor_event": null,
+  "media_event": null,
+  "career": {
+    "mode": "sandbox",
+    "seat": {
+      "id": "mgr_team_nexus",
+      "name": "NXS manager",
+      "team_id": "team_nexus",
+      "archetype": "",
+      "unemployed": false
+    },
+    "contract": null,
+    "offers": [],
+    "blocked": false
+  },
+  "multiplayer": {
+    "mode": "shared",
+    "code": "SHRD4",
+    "humans": [
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "is_you": true
+      },
+      {
+        "team_id": "team_adriatic_sirens",
+        "name": "Adriatic Sirens",
+        "is_you": false
+      }
+    ],
+    "ready": [
+      "team_nexus"
+    ],
+    "you_ready": true
+  },
+  "save": {
+    "dirty": true,
+    "autosave_enabled": true,
+    "autosave_every_weeks": 1
+  },
+  "promise_pending": false,
+  "scout_shortlist_ready": false,
+  "scrim_proposal_pending": false,
+  "culture_violation_unack": false
+}

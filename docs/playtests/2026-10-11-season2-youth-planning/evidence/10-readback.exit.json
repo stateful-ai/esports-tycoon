@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:53:54.403964+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  const response=await page.request.get(new URL('/api/roster/team_nexus',page.url()).href); const roster=await response.json();  return {status:response.status(),plans:roster.players.map(p=>({id:p.id,dev_focus:p.dev_focus,training_intensity:p.training_intensity,learning_language:p.learning_language,starter:p.starter})),dom:await page.locator('tr').filter({has:page.locator('td span.plink[data-pid=\"team_kraken_unit_p0\"]')}).innerText()}; }"
+  ],
+  "stdout_bytes": 1632,
+  "stderr_bytes": 0
+}
