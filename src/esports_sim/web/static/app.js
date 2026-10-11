@@ -925,6 +925,7 @@ async function refresh() {
 function updateAdvanceTransition(s) {
   const transition = s?.advance_transition;
   const btn = $("#advance-btn"), notice = $("#advance-notice");
+  if (!s?.multiplayer?.you_ready && !mpPolling) mpPollingRetry = false;
   // The ready response refreshes state before polling starts. Server readiness
   // must preserve Waiting during that interval as well as during polling.
   btn.textContent = mpPollingRetry ? "Retry status ▸"

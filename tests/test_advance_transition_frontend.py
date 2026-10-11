@@ -48,8 +48,23 @@ console.log(JSON.stringify(labels));
 
 
 def test_retry_status_reconnects_without_resubmitting_advance():
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node is required for frontend verification")
     source = (Path(__file__).resolve().parents[1] / "src/esports_sim/web/static/app.js").read_text(encoding="utf-8")
-    retry = re.search(r"if \(mpPollingRetry\) \{(.*?)\n  \}", source, re.S).group(1)
-    assert "pollForAdvance(prevWeek)" in retry
-    assert "return;" in retry
-    assert "api(" not in retry
+    handler = re.search(r'\$\("#advance-btn"\)\.onclick = async \(\) => \{.*?\n\};', source, re.S).group()
+    script = """
+const button = {disabled: false};
+const $ = () => button;
+const App = {state: {week: 23}};
+const mpPollingRetry = true;
+const events = [];
+function pollForAdvance(week) {events.push(['poll', week]);}
+function updateAdvanceTransition() {events.push(['paint']);}
+function showWeekLoading() {throw Error('Retry must not start an advance');}
+async function api() {throw Error('Retry must not submit a decision');}
+""" + handler + """
+button.onclick().then(() => console.log(JSON.stringify({disabled:button.disabled, events})));
+"""
+    actual = json.loads(subprocess.check_output([node, "-e", script], text=True, encoding="utf-8"))
+    assert actual == {"disabled": True, "events": [["poll", 23], ["paint"]]}
