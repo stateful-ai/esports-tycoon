@@ -1,0 +1,70 @@
+[
+  {
+    "index": 75,
+    "season": 1,
+    "week": 18,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_scout",
+    "params": {
+      "target": "player:slice"
+    },
+    "source": "web"
+  },
+  {
+    "index": 76,
+    "season": 1,
+    "week": 18,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "series_directive",
+    "params": {
+      "clear": "False",
+      "fixture_id": "s1msf0",
+      "response": "stabilize",
+      "substitute_in": "fa_0",
+      "substitute_out": "ghost",
+      "trigger": "after_loss"
+    },
+    "source": "web"
+  },
+  {
+    "index": 77,
+    "season": 1,
+    "week": 18,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1msf0",
+      "focus_target": "slice",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_vanguard",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 78,
+    "season": 1,
+    "week": 18,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]
