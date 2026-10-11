@@ -13,7 +13,7 @@ from esports_sim.manager.development_path import report_view
 from esports_sim.manager.state import DevSnap
 from esports_sim.schemas import Player
 from esports_sim.schemas.common import Playstyle, Role
-from esports_sim.schemas.player import DevelopmentWeek
+from esports_sim.schemas.player import BadgeDevelopmentEvent, DevelopmentWeek
 from esports_sim.web import server
 
 
@@ -89,6 +89,11 @@ def test_owned_weekly_sources_are_authoritative_private_and_separate_from_stats(
     p.development_progress.latest = DevelopmentWeek(
         season=2, week=4, focus="tactical", intensity="light", maps=0,
         practice_gains={"aim_precision": 0.31}, scrim_gains={"aim_precision": 0.01},
+        badge_tracking=True, badge_gains={"aim_precision": -0.5},
+        badge_events=[
+            BadgeDevelopmentEvent(badge="clutch_master", action="earned", skills={"aim_precision": 0.5}),
+            BadgeDevelopmentEvent(badge="choker", action="lost", skills={"aim_precision": -1.0}),
+        ],
         factors=["Stored practice feedback"], career_event="Stored career event",
     )
     gs = SimpleNamespace(season=2, players={"p": p}, dev_history={"p": [snap()]},
@@ -100,6 +105,16 @@ def test_owned_weekly_sources_are_authoritative_private_and_separate_from_stats(
     assert own["development_latest_week"] == report_view(p)
     assert own["development_latest_week"]["maps"] == 0
     assert own["development_latest_week"]["sources"]["practice_gains"]["overall_gain"] == 0.31
+    assert own["development_latest_week"]["sources"]["badge_gains"] == {
+        "overall_gain": -0.5, "skills": {"aim_precision": -0.5},
+    }
+    assert own["development_latest_week"]["badge_tracking"] is True
+    assert own["development_latest_week"]["badge_events"] == [
+        {"badge": "clutch_master", "action": "earned", "name": "Clutch Master",
+         "skills": {"aim_precision": 0.5}, "overall_gain": 0.5},
+        {"badge": "choker", "action": "lost", "name": "Choker",
+         "skills": {"aim_precision": -1.0}, "overall_gain": -1.0},
+    ]
     rival = server._profile_charts(gs, "p", False)
     for key in ("development", "development_comparison", "season_growth", "development_latest_week"):
         assert rival[key] is None
@@ -107,3 +122,16 @@ def test_owned_weekly_sources_are_authoritative_private_and_separate_from_stats(
     assert server._profile_charts(gs, "p", True)["development_latest_week"] is None
     monkeypatch.setattr(server.staff_mod, "analytics_tier", lambda _: 2)
     assert server._profile_charts(gs, "p", False)["performance"] == []
+
+
+@pytest.mark.parametrize("tracked", [False, True])
+def test_profile_preserves_legacy_badge_attribution_vs_tracked_zero(tracked, monkeypatch):
+    p = Player(id="p", handle="Nightsurge", role=Role.DUELIST,
+               playstyle=Playstyle.ENTRY, attributes={"aim_precision": 60})
+    p.development_progress.latest = DevelopmentWeek(season=2, week=4, badge_tracking=tracked)
+    gs = SimpleNamespace(season=2, players={"p": p}, dev_history={}, stat_history={})
+    monkeypatch.setattr(server.staff_mod, "analytics_tier", lambda _: 0)
+    latest = server._profile_charts(gs, "p", True)["development_latest_week"]
+    assert latest["badge_tracking"] is tracked
+    assert latest["badge_events"] == []
+    assert latest["sources"]["badge_gains"] == {"overall_gain": 0.0, "skills": {}}

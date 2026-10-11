@@ -229,7 +229,8 @@ const LatestDevelopmentWeek = ({ week, labelMap }) => {
   const sources = [
     ["practice_gains", "Practice"], ["match_gains", "Senior matches"],
     ["scrim_gains", "Bench scrims"], ["event_gains", "Career events"],
-  ];
+    ["badge_gains", "Badges"],
+  ].filter(([key]) => key !== "badge_gains" || week.badge_tracking || (week.badge_events || []).length);
   return html`
     <div class="pf-growth">
       <div class="pf-career-sub muted">Latest recorded week · S${week.season} W${week.week}</div>
@@ -254,6 +255,14 @@ const LatestDevelopmentWeek = ({ week, labelMap }) => {
           ).join(" / ")}</p>`;
         })}
       </details>
+      ${(week.badge_events || []).length
+        ? week.badge_events.map((event, i) => {
+          const skills = Object.entries(event.skills || {}).map(([aid, gain]) =>
+            `${(labelMap && labelMap[aid]) || humanize(aid)} ${gain > 0 ? "+" : ""}${pfNum(gain, 2)}`
+          ).join(" / ");
+          return html`<p key=${i} class="pf-season-line">Badge ${event.action}: ${event.name} · ${event.overall_gain > 0 ? "+" : ""}${pfNum(event.overall_gain, 2)} OVR · ${skills || "No current ability change"}</p>`;
+        })
+        : html`<p class="pf-season-line muted">${week.badge_tracking ? "No badge changes this week" : "Badge attribution unavailable for this saved week"}</p>`}
       ${(week.factors || []).map((factor, i) => html`<p key=${i} class="pf-season-line muted">${factor}</p>`)}
       ${week.career_event && html`<p class="pf-season-line">${week.career_event}</p>`}
     </div>
