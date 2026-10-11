@@ -6185,7 +6185,7 @@ async function openNegotiation(target) {
     <h2>${title} — ${plink(target.id, neg.handle)}</h2>` +
     (neg.kind === "renew"
       ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w ·
-        ${neg.current_terms.stream_share}% streams · ${money(neg.current_terms.release_fee)} release ·
+        player keeps ${neg.current_terms.stream_share}% of streaming revenue · ${money(neg.current_terms.release_fee)} release ·
         ${neg.current_terms.buyout ? money(neg.current_terms.buyout) + " buyout" : "no buyout"} ·
         ${esc(humanize(neg.current_terms.role))}${neg.current_terms.no_transfer ? " · no-transfer clause" : ""}.</p>`
       : "");
@@ -6205,7 +6205,7 @@ async function openNegotiation(target) {
   const paint = () => {
     demand.innerHTML = `<div class="contract-bubble player"><span class="microlabel">${esc(neg.handle)}</span>
       ${esc(neg.opening_line)}<div class="contract-ask"><b>${money(neg.demand_salary)}/wk</b> · ${neg.demand_weeks}w ·
-      ${neg.demand_stream_share}% streams · ${money(neg.demand_release_fee)} release ·
+      player keeps ${neg.demand_stream_share}% of streaming revenue · ${money(neg.demand_release_fee)} release ·
       ${neg.demand_buyout ? money(neg.demand_buyout) + " buyout" : "no buyout"}${neg.demand_no_transfer ? " · no-transfer clause" : ""}</div></div>`;
     rounds.textContent = `${neg.rounds_left} offer${neg.rounds_left !== 1 ? "s" : ""} before they walk away.`;
   };
@@ -6229,7 +6229,7 @@ async function openNegotiation(target) {
   }
   const sL = el("label", "row"); sL.append(el("span", "", "Salary/wk: "), sal);
   const wL = el("label", "row"); wL.append(el("span", "", "Weeks: "), wks);
-  const stL = el("label", "row"); stL.append(el("span", "", "Player keeps streaming: "), stream, el("span", "muted", "%"));
+  const stL = el("label", "row"); stL.append(el("span", "", "Player's streaming revenue share: "), stream, el("span", "muted", "%"));
   const rfL = el("label", "row"); rfL.append(el("span", "", "Release fee: "), releaseFee);
   const boL = el("label", "row"); boL.append(el("span", "", "Buyout for other teams: "), buyout);
   const ntL = el("label", "row"); ntL.append(el("span", "", "No-transfer clause: "), ntc);

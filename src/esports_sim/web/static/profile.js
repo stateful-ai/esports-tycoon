@@ -554,7 +554,7 @@ const PlayerProfile = ({ data }) => {
 
   const contractDetail = ov.contract_terms;
   const contractTerms = (!p.is_free_agent && contractDetail)
-    ? `${contractDetail.stream_share}% streams · ${money(contractDetail.release_fee)} release · ` +
+    ? `player keeps ${contractDetail.stream_share}% of streaming revenue · ${money(contractDetail.release_fee)} release · ` +
       `${contractDetail.buyout ? money(contractDetail.buyout) + " buyout" : "no buyout"} · ${contractDetail.roster_role}` +
       `${contractDetail.no_transfer ? " · no-transfer" : ""}`
     : "";
@@ -651,7 +651,7 @@ const PlayerProfile = ({ data }) => {
               <span class="pill" title="social reach">${fmtFollowers(p.followers)} followers</span>
             `}
             ${p.stream_load != null && p.stream_load > 5 && html`
-              <span class="pill" title=${`org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
+              <span class="pill" title=${`Streaming workload: ${p.stream_status} · org cut ${money(p.stream_income)}/wk · development multiplier from streaming: ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
             `}
             ${p.mentor_id && html`
               <span class="pill" title=${`Mentored by ${p.mentor_handle || humanize(p.mentor_id)}`}>
