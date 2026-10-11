@@ -1,0 +1,48 @@
+{
+  "at_utc": "2026-10-11T19:21:14.826255+00:00",
+  "head": "cde009e5221b5cd4f90af8d49d9395004a6c7e3d",
+  "tree": "addcdcebba03621eb11d95dda25187fb56eb25d8",
+  "base": "0194b426f9c141591959443f44e092ed873e5df4",
+  "origin_heads": [
+    "cac7dca470d86499c634f9fc863161d1f11e84b8",
+    "a02bb81f4f9747e82e7a03608e290204673c4125",
+    "98120f82031c1f4726c7e16b8b2214e71dd3ea27",
+    "f2346cd3c26d1f9776c907574c1591277393a9ee"
+  ],
+  "actual_chain": [
+    "9806febe6a8d84227219fb338bf8e98212d4dbfb",
+    "dbc071cca485c66f03dc0ee88fcf8c15e231bf25",
+    "bee71f9e691c7e65017f1c08e90c40671e26f027",
+    "cde009e5221b5cd4f90af8d49d9395004a6c7e3d"
+  ],
+  "normal_single_parent_chain": true,
+  "first_three_computed_merge_trees_exact": true,
+  "final_stats_feature_delta_exact_except_three_reviewed_union_conflicts": true,
+  "both_server_interaction_families_exact_union": true,
+  "both_overlay_allowlist_families_exact_union": true,
+  "all_Match_and_Stats_tests_exact_retained": true,
+  "all_other_main_blobs_modes_and_CSV_exact": true,
+  "paths": [
+    "docs/dashboard-competition-tier.md",
+    "docs/matchday-briefing-usage-change.md",
+    "docs/ui-usage-telemetry.md",
+    "src/esports_sim/web/server.py",
+    "src/esports_sim/web/static/app.js",
+    "src/esports_sim/web/static/usage.js",
+    "src/esports_sim/web/usage_telemetry.py",
+    "tests/matchday_usage_frontend_check.cjs",
+    "tests/overlay_usage_frontend_check.cjs",
+    "tests/stats_competition_usage_check.cjs",
+    "tests/test_api_contract.py",
+    "tests/test_dashboard_competition.py",
+    "tests/test_dashboard_competition_frontend.py",
+    "tests/test_matchday_samples.py",
+    "tests/test_usage_telemetry.py"
+  ],
+  "pre_campaign_meta_match_review_raw_exact_prior": true,
+  "pre_auth_companion_raw_exact": true,
+  "no_old_usage_copied": true,
+  "clean_candidate": true,
+  "local_tests_launched": false,
+  "new_gameplay_yet": false
+}

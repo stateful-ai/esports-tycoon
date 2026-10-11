@@ -1,0 +1,49 @@
+{
+  "phase": "end",
+  "base_url": "http://127.0.0.1:8567",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "bytes": 12660,
+      "served_sha256": "89c6bb75d260a6336ea26e162cd61dc6f0feefadb1116749b3a0309e54653d15",
+      "disk_sha256": "89c6bb75d260a6336ea26e162cd61dc6f0feefadb1116749b3a0309e54653d15"
+    },
+    {
+      "path": "/app.js",
+      "status": 200,
+      "bytes": 412456,
+      "served_sha256": "495a69bd847a909dafb4570f4ef8c4be84c2d9b4837a58ec791391c3b37a3900",
+      "disk_sha256": "495a69bd847a909dafb4570f4ef8c4be84c2d9b4837a58ec791391c3b37a3900"
+    },
+    {
+      "path": "/draft.js",
+      "status": 200,
+      "bytes": 19008,
+      "served_sha256": "ef2f05910a158214d3a1a939cfe4290a5e8f1242217db518f8aff28189567efa",
+      "disk_sha256": "ef2f05910a158214d3a1a939cfe4290a5e8f1242217db518f8aff28189567efa"
+    },
+    {
+      "path": "/profile.js",
+      "status": 200,
+      "bytes": 100994,
+      "served_sha256": "8bc70cb7482164db7c99dd3ac5abb78ed6dcb8f04dc57a1f33b8e29d2c2a25b9",
+      "disk_sha256": "8bc70cb7482164db7c99dd3ac5abb78ed6dcb8f04dc57a1f33b8e29d2c2a25b9"
+    },
+    {
+      "path": "/inbox.js",
+      "status": 200,
+      "bytes": 22689,
+      "served_sha256": "e75f580eb5fa55042e19c4e37fd6851811dc8cbc973e221f510aeb497fabe083",
+      "disk_sha256": "e75f580eb5fa55042e19c4e37fd6851811dc8cbc973e221f510aeb497fabe083"
+    },
+    {
+      "path": "/usage.js",
+      "status": 200,
+      "bytes": 4262,
+      "served_sha256": "e6be9514e53f661f8506aad1b7dd54aec654dbe36020c3a061da02ae5eaebdbd",
+      "disk_sha256": "e6be9514e53f661f8506aad1b7dd54aec654dbe36020c3a061da02ae5eaebdbd"
+    }
+  ],
+  "note": "Static bytes only; no cookies, game API, report command, or browser operation"
+}

@@ -1,0 +1,488 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 4 · Regular — Azure Vanta
+  - generic: 203,015 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 8":
+      - text: Inbox
+      - generic: "8"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Club
+  - generic: Azure Vanta · 5/10
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - heading "Team training focus" [level=2]
+  - paragraph: The squad-wide focus for the week. Players on “auto” follow it; the per-player plans below override it.
+  - button "Mechanical"
+  - button "Tactical"
+  - button "Mental"
+  - button "Team"
+  - button "Rest"
+  - checkbox "Delegate to Coach Keep choosing the weekly focus yourself"
+  - generic: Delegate to Coach
+  - generic: Keep choosing the weekly focus yourself
+  - paragraph: "Tip: a 6-man roster is advised for tournaments (register a bench)."
+  - table:
+    - rowgroup:
+      - row "Player Age OVR Ceiling Form Confidence Dev focus Language Intensity Mentor":
+        - columnheader "Player"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ceiling"
+        - columnheader "Form"
+        - columnheader "Confidence"
+        - columnheader "Dev focus"
+        - columnheader "Language"
+        - columnheader "Intensity"
+        - columnheader "Mentor"
+    - rowgroup:
+      - row "Jinxghost IGL 22 50 ★★½ ▼ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Jinxghost IGL":
+          - generic: Jinxghost
+          - generic: IGL
+        - cell "22"
+        - cell "50"
+        - cell "★★½"
+        - cell "▼":
+          - generic "54"
+          - text: ▼
+        - cell "▲":
+          - generic "51"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Fatigue is reducing learning. A lighter plan or recovery week can help.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Wraithpulse 17 54.6 ★★ ▲ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Wraithpulse":
+          - generic: Wraithpulse
+        - cell "17"
+        - cell "54.6"
+        - cell "★★"
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Fatigue is reducing learning. A lighter plan or recovery week can help.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Hollowdash 17 46.2 ★★★ ▲ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Hollowdash":
+          - generic: Hollowdash
+        - cell "17"
+        - cell "46.2"
+        - cell "★★★"
+        - cell "▲":
+          - generic "61"
+          - text: ▲
+        - cell "▲":
+          - generic "53"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Fatigue is reducing learning. A lighter plan or recovery week can help.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Riftwolf 21 46.2 ★★★ ▼ ▲ auto Game Sense, Utility Usage, Positioning choose language normal —":
+        - cell "Riftwolf":
+          - generic: Riftwolf
+        - cell "21"
+        - cell "46.2"
+        - cell "★★★"
+        - cell "▼":
+          - generic "51"
+          - text: ▼
+        - cell "▲":
+          - generic "52"
+          - text: ▲
+        - cell "auto Game Sense, Utility Usage, Positioning":
+          - combobox:
+            - option "auto" [selected]
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest"
+          - generic "Fatigue is reducing learning. A lighter plan or recovery week can help.": Game Sense, Utility Usage, Positioning
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "normal":
+          - combobox:
+            - option "light"
+            - option "normal" [selected]
+            - option "intense"
+        - cell "—"
+      - row "Zephyrblade 20 41.2 ★½ ▲ ▲ rest Recovery choose language light —":
+        - cell "Zephyrblade":
+          - generic: Zephyrblade
+        - cell "20"
+        - cell "41.2"
+        - cell "★½"
+        - cell "▲":
+          - generic "47"
+          - text: ▲
+        - cell "▲":
+          - generic "51"
+          - text: ▲
+        - cell "rest Recovery":
+          - combobox:
+            - option "auto"
+            - option "mechanical"
+            - option "tactical"
+            - option "mental"
+            - option "team"
+            - option "language" [disabled]
+            - option "rest" [selected]
+          - generic "Recovery pauses practice and restores condition; match learning still counts.": Recovery
+        - cell "choose language":
+          - combobox [disabled]:
+            - option "choose language" [selected]
+            - option "AR"
+            - option "DE"
+            - option "EN"
+            - option "ES"
+            - option "FR"
+            - option "ID"
+            - option "JA"
+            - option "KO"
+            - option "MS"
+            - option "PT"
+            - option "RU"
+            - option "TH"
+            - option "TL"
+            - option "TR"
+            - option "VI"
+            - option "ZH"
+        - cell "light":
+          - combobox:
+            - option "light" [selected]
+            - option "normal"
+            - option "intense"
+        - cell "—"
+  - heading "Squad profile" [level=2]
+  - paragraph: Average age 19.4
+  - generic: Youth ≤21
+  - generic: "4"
+  - generic: Prime 22–26
+  - generic: "1"
+  - generic: Veteran 27+
+  - generic: "0"
+  - heading "Scouting book" [level=2]
+  - paragraph: Balanced
+  - heading "Locker room" [level=2]
+  - paragraph: No standout duos or feuds.
+  - paragraph:
+    - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry.": Comms 31
+    - text: shared languages feed chemistry.
+  - heading "Future of the Org" [level=2]
+  - paragraph: Where the roster is trending — risers, milestones and the prospects behind them.
+  - heading "Risers" [level=3]
+  - generic: Wraithpulse 17
+  - generic "ability change over the tracked window": CA +1.3
+  - generic: Hollowdash 17
+  - generic "ability change over the tracked window": CA +1.2
+  - generic: Riftwolf 21
+  - generic "ability change over the tracked window": CA +0.8
+  - heading "Milestones" [level=3]
+  - heading "Academy standouts" [level=3]
+  - paragraph: Quiet week in the academy.
+  - heading "Prospect updates" [level=3]
+  - paragraph: No new scouting movement.
+  - heading "Talent pipeline" [level=2]
+  - paragraph: The path from intake to the starting five — trajectory sparklines are ability over recent snapshots.
+  - heading "Youth intake 0" [level=3]:
+    - text: Youth intake
+    - generic: "0"
+  - paragraph: Empty
+  - heading "Academy 0" [level=3]:
+    - text: Academy
+    - generic: "0"
+  - paragraph: Empty
+  - heading "Bench 0" [level=3]:
+    - text: Bench
+    - generic: "0"
+  - paragraph: Empty
+  - heading "Starters 5" [level=3]:
+    - text: Starters
+    - generic: "5"
+  - generic: Jinxghost
+  - generic: "22"
+  - generic "current ability": "50"
+  - generic: Wraithpulse
+  - generic: "17"
+  - generic "current ability": "55"
+  - generic: Hollowdash
+  - generic: "17"
+  - generic "current ability": "46"
+  - generic: Riftwolf
+  - generic: "21"
+  - generic "current ability": "46"
+  - generic: Zephyrblade
+  - generic: "20"
+  - generic "current ability": "41"
+  - heading "Development Report" [level=2]
+  - paragraph: Season 1 · Week 0 to Week 3
+  - generic: Compared OVR +0.8 · 5 players
+  - generic: 5 grown
+  - generic: 0 regressed
+  - generic: 0 steady
+  - table:
+    - rowgroup:
+      - 'row "Player Tracked Start Now Change Skills changed Latest week: why it changed"':
+        - columnheader "Player"
+        - columnheader "Tracked"
+        - columnheader "Start"
+        - columnheader "Now"
+        - columnheader "Change"
+        - columnheader "Skills changed"
+        - 'columnheader "Latest week: why it changed"'
+    - rowgroup:
+      - row "Wraithpulse W0–W3 · 4 pts 53.3 54.6 +1.3 Positioning +3.8 Utility Usage +3.7 Game Sense +2.6 Aim Precision +1.3 Aim Reactivity +1.0 Comms Quality +0.5 Composure +0.2 Practice +0.17 OVR Matches +0.18 OVR S1 W3 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+        - cell "Wraithpulse":
+          - generic: Wraithpulse
+        - cell "W0–W3 · 4 pts"
+        - cell "53.3"
+        - cell "54.6"
+        - cell "+1.3"
+        - cell "Positioning +3.8 Utility Usage +3.7 Game Sense +2.6 Aim Precision +1.3 Aim Reactivity +1.0 Comms Quality +0.5 Composure +0.2":
+          - generic "tactical · 45.9 to 49.7": Positioning +3.8
+          - generic "tactical · 45.8 to 49.5": Utility Usage +3.7
+          - generic "tactical · 51.6 to 54.2": Game Sense +2.6
+          - generic "mechanical · 56.6 to 57.9": Aim Precision +1.3
+          - generic "mechanical · 57 to 58": Aim Reactivity +1.0
+          - generic "team · 53.8 to 54.3": Comms Quality +0.5
+          - generic "mental · 55.3 to 55.5": Composure +0.2
+        - cell "Practice +0.17 OVR Matches +0.18 OVR S1 W3 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+          - generic "Game Sense +0.48; Positioning +0.37; Utility Usage +0.86": Practice +0.17 OVR
+          - generic "Aim Precision +0.67; Aim Reactivity +0.46; Comms Quality +0.20; Composure +0.10; Game Sense +0.08; Positioning +0.08; Utility Usage +0.20": Matches +0.18 OVR
+          - generic: S1 W3 · Tactical / normal · 1 maps · Thriving
+          - generic: Strong match performances are accelerating learning
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Tired legs are reducing practice quality; ease intensity or rest
+      - row "Hollowdash W0–W3 · 4 pts 45.0 46.2 +1.2 Utility Usage +4.5 Game Sense +2.4 Positioning +1.9 Aim Precision +1.0 Aim Reactivity +0.9 Comms Quality +0.4 Composure +0.1 Practice +0.22 OVR Matches +0.11 OVR S1 W3 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches":
+        - cell "Hollowdash":
+          - generic: Hollowdash
+        - cell "W0–W3 · 4 pts"
+        - cell "45.0"
+        - cell "46.2"
+        - cell "+1.2"
+        - cell "Utility Usage +4.5 Game Sense +2.4 Positioning +1.9 Aim Precision +1.0 Aim Reactivity +0.9 Comms Quality +0.4 Composure +0.1":
+          - generic "tactical · 33.4 to 37.9": Utility Usage +4.5
+          - generic "tactical · 42.5 to 44.9": Game Sense +2.4
+          - generic "tactical · 48.4 to 50.3": Positioning +1.9
+          - generic "mechanical · 59.6 to 60.6": Aim Precision +1.0
+          - generic "mechanical · 44.5 to 45.4": Aim Reactivity +0.9
+          - generic "team · 37.6 to 38": Comms Quality +0.4
+          - generic "mental · 45.2 to 45.3": Composure +0.1
+        - cell "Practice +0.22 OVR Matches +0.11 OVR S1 W3 · Tactical / normal · 1 maps · Thriving Strong match performances are accelerating learning Tactical practice reinforces skills used in matches":
+          - generic "Game Sense +0.51; Positioning +0.55; Utility Usage +1.10": Practice +0.22 OVR
+          - generic "Aim Precision +0.37; Aim Reactivity +0.38; Comms Quality +0.15; Composure +0.04; Game Sense +0.06; Positioning +0.02; Utility Usage +0.08": Matches +0.11 OVR
+          - generic: S1 W3 · Tactical / normal · 1 maps · Thriving
+          - generic: Strong match performances are accelerating learning
+          - generic: Tactical practice reinforces skills used in matches
+      - row "Riftwolf W0–W3 · 4 pts 45.4 46.2 +0.8 Positioning +3.6 Utility Usage +1.7 Game Sense +1.5 Aim Precision +0.6 Aim Reactivity +0.4 Comms Quality +0.2 Practice +0.14 OVR Matches +0.08 OVR S1 W3 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+        - cell "Riftwolf":
+          - generic: Riftwolf
+        - cell "W0–W3 · 4 pts"
+        - cell "45.4"
+        - cell "46.2"
+        - cell "+0.8"
+        - cell "Positioning +3.6 Utility Usage +1.7 Game Sense +1.5 Aim Precision +0.6 Aim Reactivity +0.4 Comms Quality +0.2":
+          - generic "tactical · 35.9 to 39.5": Positioning +3.6
+          - generic "tactical · 48.9 to 50.6": Utility Usage +1.7
+          - generic "tactical · 53 to 54.5": Game Sense +1.5
+          - generic "mechanical · 42.4 to 43": Aim Precision +0.6
+          - generic "mechanical · 32 to 32.4": Aim Reactivity +0.4
+          - generic "team · 48.7 to 48.9": Comms Quality +0.2
+        - cell "Practice +0.14 OVR Matches +0.08 OVR S1 W3 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+          - generic "Game Sense +0.37; Positioning +0.76; Utility Usage +0.28": Practice +0.14 OVR
+          - generic "Aim Precision +0.17; Aim Reactivity +0.14; Comms Quality +0.10; Composure +0.02; Game Sense +0.12; Positioning +0.04; Utility Usage +0.18": Matches +0.08 OVR
+          - generic: S1 W3 · Tactical / normal · 1 maps · Settling
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Tired legs are reducing practice quality; ease intensity or rest
+      - 'row "Zephyrblade W0–W3 · 4 pts 40.8 41.2 +0.4 Game Sense +1.7 Utility Usage +0.8 Aim Precision +0.6 Positioning +0.6 Aim Reactivity +0.3 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1 Matches +0.04 OVR S1 W3 · Rest / light · 1 maps · Settling Individual recovery: practice paused, match experience retained"':
+        - cell "Zephyrblade":
+          - generic: Zephyrblade
+        - cell "W0–W3 · 4 pts"
+        - cell "40.8"
+        - cell "41.2"
+        - cell "+0.4"
+        - cell "Game Sense +1.7 Utility Usage +0.8 Aim Precision +0.6 Positioning +0.6 Aim Reactivity +0.3 Clutch Factor +0.1 Comms Quality +0.1 Composure +0.1":
+          - generic "tactical · 32.8 to 34.5": Game Sense +1.7
+          - generic "tactical · 42.3 to 43.1": Utility Usage +0.8
+          - generic "mechanical · 36.7 to 37.3": Aim Precision +0.6
+          - generic "tactical · 56.2 to 56.8": Positioning +0.6
+          - generic "mechanical · 42.9 to 43.2": Aim Reactivity +0.3
+          - generic "mental · 35.8 to 35.9": Clutch Factor +0.1
+          - generic "team · 40.6 to 40.7": Comms Quality +0.1
+          - generic "mental · 44.6 to 44.7": Composure +0.1
+        - 'cell "Matches +0.04 OVR S1 W3 · Rest / light · 1 maps · Settling Individual recovery: practice paused, match experience retained"':
+          - generic "Aim Precision +0.22; Aim Reactivity +0.13; Comms Quality +0.03; Composure +0.02; Game Sense +0.03; Positioning +0.02": Matches +0.04 OVR
+          - generic: S1 W3 · Rest / light · 1 maps · Settling
+          - generic: "Individual recovery: practice paused, match experience retained"
+      - row "Jinxghost W0–W3 · 4 pts 49.7 50.0 +0.3 Utility Usage +1.7 Positioning +0.7 Aim Precision +0.4 Aim Reactivity +0.4 Practice +0.05 OVR Matches +0.01 OVR S1 W3 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+        - cell "Jinxghost":
+          - generic: Jinxghost
+        - cell "W0–W3 · 4 pts"
+        - cell "49.7"
+        - cell "50.0"
+        - cell "+0.3"
+        - cell "Utility Usage +1.7 Positioning +0.7 Aim Precision +0.4 Aim Reactivity +0.4":
+          - generic "tactical · 49.1 to 50.8": Utility Usage +1.7
+          - generic "tactical · 56 to 56.7": Positioning +0.7
+          - generic "mechanical · 30.5 to 30.9": Aim Precision +0.4
+          - generic "mechanical · 32.1 to 32.5": Aim Reactivity +0.4
+        - cell "Practice +0.05 OVR Matches +0.01 OVR S1 W3 · Tactical / normal · 1 maps · Settling Tactical practice reinforces skills used in matches Tired legs are reducing practice quality; ease intensity or rest":
+          - generic "Positioning +0.17; Utility Usage +0.37": Practice +0.05 OVR
+          - generic "Aim Precision +0.05; Aim Reactivity +0.02; Composure +0.01; Positioning +0.02; Utility Usage +0.05": Matches +0.01 OVR
+          - generic: S1 W3 · Tactical / normal · 1 maps · Settling
+          - generic: Tactical practice reinforces skills used in matches
+          - generic: Tired legs are reducing practice quality; ease intensity or rest
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.

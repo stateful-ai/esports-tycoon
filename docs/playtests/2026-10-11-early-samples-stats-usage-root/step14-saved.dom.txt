@@ -1,0 +1,227 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 4 · Regular — Azure Vanta
+  - generic: 203,015 cr
+  - button "Save" [active]
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 8":
+      - text: Inbox
+      - generic: "8"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W4 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 1–2
+  - generic: Record
+  - generic: "-12 rd"
+  - button "5th League EMEA Challengers (Tier 2)":
+    - generic: 5th
+    - generic: League
+    - generic: EMEA Challengers (Tier 2)
+  - button "203,015 cr Balance":
+    - generic: 203,015 cr
+    - generic: Balance
+  - generic: "65"
+  - generic: Morale
+  - button "48 Condition":
+    - generic: "48"
+    - generic: Condition
+  - text: W4 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Azure Vanta
+  - generic: 5th · 1–2
+  - generic: VS
+  - generic: S1 · W4
+  - generic: Emea League
+  - generic: Best of 1
+  - generic: Highlands Nine
+  - generic: 3rd · 1–2
+  - generic: Today's prep
+  - generic: Highlands Nine in W4
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Highlands Nine
+  - paragraph: Your scout is not assigned to Highlands Nine. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Hollowdash's development plan
+  - paragraph: Hollowdash moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: A win would haul Azure Vanta back toward the playoff places. Watch Pyroveil — Highlands Nine's form pick at 1.22.
+  - generic: Map
+  - figure "split":
+    - img "split"
+    - generic: split
+  - generic: Danger men
+  - generic: Lunardash
+  - generic: Controller
+  - generic: ~58
+  - generic: Falconflare
+  - generic: Initiator
+  - generic: ~57
+  - generic: Blitzcore
+  - generic: Sentinel
+  - generic: ~54
+  - generic: Playstyle
+  - generic: Balanced
+  - generic: C-heavy attack
+  - text: Your map pool & veto
+  - generic: Ban Lotus (Highlands Nine 100% · you 100%)
+  - generic: Pick Lotus (you 100% · them 100%)
+  - text: Azure Vanta — season map record (wins / played)
+  - generic: Lotus
+  - generic: 100%
+  - generic: 1/1
+  - generic: Bind
+  - generic: 0%
+  - generic: 0/1
+  - generic: Haven
+  - generic: 0%
+  - generic: 0/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Beat Patagonia Sur 13-8. Standout: Wraithpulse (1.59). Off-colour: Jinxghost (0.51)."
+  - generic: W
+  - generic: vs Patagonia Sur
+  - generic: 13–8
+  - generic: ★
+  - text: POTM
+  - generic: Wraithpulse
+  - generic: What worked
+  - generic: Out-fragging the opponent
+  - generic: 197 ACS vs 137 — a 59-point gap.
+  - generic: Wraithpulse carried
+  - generic: Team-high 1.59 average rating.
+  - generic: Stealing gun rounds
+  - generic: 5/5 under-gunned rounds won.
+  - generic: Defense is a wall
+  - generic: 6/9 defense rounds won (67%).
+  - generic: Where it broke down
+  - generic: Pistols lost
+  - generic: 0/2 pistol rounds (0%).
+  - generic: Jinxghost off-colour
+  - generic: 0.51 average rating across the series.
+  - generic: Young with room (proj. 58–75) — a development call, not a bench.
+  - generic: Losing the opening duels
+  - generic: 6/21 first bloods (29%).
+  - generic: Deaths going untraded
+  - generic: 14/51 deaths traded (27%).
+  - paragraph: Hire a coach for tailored fixes.
+  - heading "EMEA Challengers (Tier 2)" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Taipei Circuit 3 0 +24":
+        - cell "1"
+        - cell "Taipei Circuit"
+        - cell "3"
+        - cell "0"
+        - cell "+24"
+      - row "2 Prairie Signal 3 0 +18":
+        - cell "2"
+        - cell "Prairie Signal"
+        - cell "3"
+        - cell "0"
+        - cell "+18"
+      - row "3 Highlands Nine 1 2 +2":
+        - cell "3"
+        - cell "Highlands Nine"
+        - cell "1"
+        - cell "2"
+        - cell "+2"
+      - row "4 Bayou Kings 1 2 -4":
+        - cell "4"
+        - cell "Bayou Kings"
+        - cell "1"
+        - cell "2"
+        - cell "-4"
+      - row "5 Azure Vanta 1 2 -12":
+        - cell "5"
+        - cell "Azure Vanta"
+        - cell "1"
+        - cell "2"
+        - cell "-12"
+  - paragraph: "World #32 · Rep 52 · Fans 34.1K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: ▸ No game plan set for W4
+  - generic: ▸ 8 unread inbox messages
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "Your calls" [level=2]
+  - text: Last match · Initial plan
+  - generic: ▸ Focused prep on Blitzsnap
+  - generic: ▸ Focused the room — confidence +1.8 per starter
+  - generic: "▸ Preparation: prep edge +0.80 applied"
+  - text: Decisions settled
+  - generic: paid off
+  - text: "Game plan hunted Blitzsnap: 0.64 rating in the series vs 0.90 season form."
+  - heading "News" [level=2]
+  - generic: "[S1 W3] Solar Flare part with Diego Janssen and appoint NorthernLights after a 2-match losing streak."
+  - generic: "[S1 W3] Cascadia Youth part with Ravi Andersen and appoint Arthur Fischer after a 2-match losing streak."
+  - generic: "[S1 W3] #17 Crimson Order stumble against #27 Lisbon Tide (13-4)."
+  - generic: "[S1 W3] Patagonia Sur fall 13-8; lotus decided it. Wraithpulse finished at 1.59."
+  - generic: "[S1 W3] Bayou Kings sign Hollowflare (support) for 5,600/wk."
+  - generic: "[S1 W3] Bayou Kings release Cipherwing (severance 32,000 cr)."
+  - generic: "[S1 W3] Anatolia Forge sign Wraithzero (entry) for 4,500/wk."
+  - generic: "[S1 W3] TRANSFER: Hollowzero joins Outback Sentinels from Anatolia Forge for 231,000 cr."
+  - generic: "[S1 W3] NovaTech Peripherals's peripheral offer left the table."
+  - generic: "[S1 W2] Iron Pact part with Arthur Fischer and appoint Veer after a 2-match losing streak."
+  - generic: "[S1 W2] Ghostline part with Victor Tanaka and appoint Liam Nakamura after a 2-match losing streak."
+  - generic: "[S1 W2] #15 Highlands Nine stumble against #23 Bayou Kings (11-13)."
+- generic: World saved.
+- tooltip "Save Save your campaign":
+  - heading "Save" [level=4]
+  - generic: Save your campaign
