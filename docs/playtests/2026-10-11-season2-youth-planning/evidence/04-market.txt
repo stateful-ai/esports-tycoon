@@ -1,0 +1,10 @@
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Open Market' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:8537/
+- Page Title: esports-sim
+- Console: 2 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T09-48-29-123Z.yml)

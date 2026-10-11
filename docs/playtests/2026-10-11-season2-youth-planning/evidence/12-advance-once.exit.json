@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:55:27.030773+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  await page.evaluate(()=>{window.__season2YouthAdvance=[];});  page.on('response',async response=>{   if(response.request().method()==='POST' && response.url().endsWith('/api/actions/advance')){    const record={url:response.url(),status:response.status(),request:response.request().postDataJSON(),result:await response.json()};    await page.evaluate(record=>{window.__season2YouthAdvance.push(record);},record);   }  });  const button=page.getByRole('button',{name:'Advance Week \u25b8',exact:true});if(await button.count()!==1)throw new Error('Expected one Advance control');  await button.click();return {clicked_once:true,response_observer_registered:true,dom:await page.locator('body').innerText()}; }"
+  ],
+  "stdout_bytes": 7008,
+  "stderr_bytes": 0
+}

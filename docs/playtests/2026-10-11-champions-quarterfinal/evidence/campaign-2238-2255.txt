@@ -1,0 +1,19 @@
+src/esports_sim/manager/campaign.py
+2238: 
+2239:         map_plans = dict(plans)
+2240:         for tid, response in sorted(active_series_responses.items()):
+2241:             map_plans[tid] = _between_map_plan(gs, tid, map_plans[tid], response)
+2242:         seed = tree.derive_seed(
+2243:             "season", gs.season, "week", f.week, "fixture", f.id, "map", map_index
+2244:         )
+2245:         dressed = {
+2246:             f.team_a: dressed_for(gs, f.team_a, f, map_id),
+2247:             f.team_b: dressed_for(gs, f.team_b, f, map_id),
+2248:         }
+2249:         for tid in dressed_union:
+2250:             dressed_union[tid].update(dressed[tid])
+2251:         map_gd = _dressed_gamedata(gs, rt_gd, dressed)
+2252:         res = simulate_match_result(
+2253:             map_gd, f.team_a, f.team_b, map_id, seed, plans=map_plans or None
+2254:         )
+2255:         for tid in (f.team_a, f.team_b):

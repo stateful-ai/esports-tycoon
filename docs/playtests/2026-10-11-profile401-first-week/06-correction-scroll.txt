@@ -1,0 +1,6 @@
+### Result
+["LATEST RECORDED WEEK · S2 W4\n\nRest · Normal · 0 senior maps this week · Settling\n\nPRACTICE 0.00 OVR\nSENIOR MATCHES 0.00 OVR\nBENCH SCRIMS 0.00 OVR\nCAREER EVENTS 0.00 OVR\nBADGES 0.00 OVR\nLatest-week skill breakdown\n\nNo badge changes this week\n\nIndividual recovery: practice paused, match experience retained","SEASON 2 SKILL GROWTH · S2 W0 TO S2 W4\nAIM PRECISION THIS SEASON\n53.2\n51.2\n\nNo measurable attribute movement between these observations."]
+### Ran Playwright code
+```js
+await (async page => { await page.getByText("No measurable attribute movement between these observations.",{exact:true}).scrollIntoViewIfNeeded(); return await page.locator(".pf-growth").allInnerTexts(); })(page);
+```

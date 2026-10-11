@@ -1,0 +1,7 @@
+{
+  "inert": true,
+  "ariaHidden": "true",
+  "classes": "overlay hidden",
+  "active": "<body>\n\n<div id=\"app-wrapper\">\n  <header id=\"topbar\">\n    <div class=\"brand\">ESPORTS<span>SIM</span></div>\n    <div id=\"context\" class=\"context\">Season 2 · Week 6 · Regular  —  Team Nexus</div>\n    <div class=\"spacer\"></div>\n    <div id=\"balance\" class=\"balance mono\">2,287,871 cr</div>\n    <span id=\"mp-chip\" class=\"pill hidden\" title=\"Shared campai",
+  "descendantFocus": false
+}

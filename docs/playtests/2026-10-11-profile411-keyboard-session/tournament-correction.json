@@ -1,0 +1,7 @@
+{
+  "correctsStep": 4,
+  "actualTabCount": 12,
+  "checkboxValuesEqual": true,
+  "wholeHtmlEqual": false,
+  "reason": "Every checkbox acquired an empty style attribute during focus animation; checked/disabled values did not change"
+}

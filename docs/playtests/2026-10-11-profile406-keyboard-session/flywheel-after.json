@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0265",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Closed profile leaves keyboard focus order",
+    "problem": "Retained faded overlay controls could receive focus after closure.",
+    "solution": "Opened Apex, Tab focused a live control, Escape closed; Company click and eighty actual Tabs had zero hidden-profile stops.",
+    "lesson": "Exact9d makes closed profile inert and aria-hidden and releases descendant focus immediately; observed Company navigation passes.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0266",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Nested profile navigation preserves Career opener",
+    "problem": "Content updates and Back must retain the original valid opener.",
+    "solution": "Keyboard-opened Career; visible Team and Vortex links; Back twice and keyboard Close returned same Career button.",
+    "lesson": "Valid connected visible enabled Career opener survives nested async profile updates and Back; native player opener restoration remains unplayed.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0267",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Club player profile names lack keyboard semantics",
+    "problem": "All fifteen visible player openers are plain spans without tabindex or role; eighty Tab presses stop at none.",
+    "solution": "Retained all markup and actual Tab trace; used visible pointer opening to isolate closed-profile behavior; root assigned separate fix.",
+    "lesson": "Closed-overlay improvement does not enable keyboard-only roster inspection; player entry controls need keyboard semantics.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -151,13 +151,15 @@ def state_features(gs: "GameState", team_id: str) -> dict[str, float]:
     previous = gs.acting_team_id
     gs.set_acting(team_id)
     try:
+        team_staff = gs.staff_by.get(team_id, {})
+        scout_progress = gs.scout_progress_by.get(team_id, {})
         staff_q = {
-            role: float(staff_effects.overall(m)) for role, m in sorted(gs.staff.items())
+            role: float(staff_effects.overall(m)) for role, m in sorted(team_staff.items())
         }
-        facilities = dict(gs.facilities)
+        facilities = dict(gs.facilities_by.get(team_id, {}))
         payroll = sum(p.salary for p in roster) + staff.weekly_cost(gs)
-        scout_mean = mean(gs.scout_progress.values()) if gs.scout_progress else 0.0
-        n_sponsor_deals = float(len(gs.sponsor_slots))
+        scout_mean = mean(scout_progress.values()) if scout_progress else 0.0
+        n_sponsor_deals = float(len(gs.sponsor_slots_by.get(team_id, {})))
     finally:
         gs.set_acting(previous)
 

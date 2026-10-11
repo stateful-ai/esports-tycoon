@@ -1,0 +1,146 @@
+{
+  "before_decisions": 120,
+  "after_decisions": 123,
+  "actions_added": [
+    {
+      "season": 2,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "fa_12"
+      },
+      "source": "web"
+    },
+    {
+      "season": 2,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "32000",
+        "no_transfer": "False",
+        "player_id": "fa_12",
+        "release_fee": "16000",
+        "role": "bench",
+        "salary": "2000",
+        "status": "countered",
+        "stream_share": "70",
+        "weeks": "65"
+      },
+      "source": "web"
+    },
+    {
+      "season": 2,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "32000",
+        "no_transfer": "False",
+        "player_id": "fa_12",
+        "release_fee": "16000",
+        "role": "bench",
+        "salary": "2200",
+        "status": "accepted",
+        "stream_share": "70",
+        "weeks": "65"
+      },
+      "source": "web"
+    }
+  ],
+  "decision_prefix_all_fields_order": true,
+  "snapshot_all_fields_order": true,
+  "snapshot_count": 27,
+  "source_count": 425,
+  "source_unchanged": true,
+  "save_before_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+  "save_after_sha256": "995086370a77290f90c62d02e3770dfeecf46c9ff2697409659f1ae99912d91b",
+  "usage_events": 40,
+  "request_pairs": [
+    {
+      "request_id": 11,
+      "target": "/api/negotiation",
+      "result": {
+        "schema_version": 1,
+        "session_id": "5f36a7ac29d8f952dda9162d33f0c58d",
+        "received_at": "2026-10-11T11:51:18.325134+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/negotiation",
+        "request_id": 11,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 3
+      }
+    },
+    {
+      "request_id": 12,
+      "target": "/api/negotiation",
+      "result": {
+        "schema_version": 1,
+        "session_id": "5f36a7ac29d8f952dda9162d33f0c58d",
+        "received_at": "2026-10-11T11:51:46.607516+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/negotiation",
+        "request_id": 12,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 4
+      }
+    },
+    {
+      "request_id": 13,
+      "target": "/api/negotiation",
+      "result": {
+        "schema_version": 1,
+        "session_id": "5f36a7ac29d8f952dda9162d33f0c58d",
+        "received_at": "2026-10-11T11:52:13.583808+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/negotiation",
+        "request_id": 13,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 3
+      }
+    },
+    {
+      "request_id": 20,
+      "target": "/api/actions/save",
+      "result": {
+        "schema_version": 1,
+        "session_id": "5f36a7ac29d8f952dda9162d33f0c58d",
+        "received_at": "2026-10-11T11:54:16.139961+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 20,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 43
+      }
+    }
+  ],
+  "unmatched_attempts": 0,
+  "usage_baseline_events": 0
+}

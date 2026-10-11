@@ -1,0 +1,1 @@
+{"detail":"affiliate must retain at least 5 players"}

@@ -1,0 +1,358 @@
+{
+  "balance": 2266822,
+  "weekly_payroll": 42200,
+  "marketability": 1.04,
+  "marketability_breakdown": {
+    "score": 1.04,
+    "facility_mult": 1.05,
+    "reach": 1966278,
+    "drivers": [
+      {
+        "key": "reputation",
+        "label": "Reputation",
+        "contrib": 0.73
+      },
+      {
+        "key": "stars",
+        "label": "Star power",
+        "contrib": 0.11
+      },
+      {
+        "key": "reach",
+        "label": "Social reach",
+        "contrib": 0.1
+      },
+      {
+        "key": "fans",
+        "label": "Fanbase",
+        "contrib": 0.06
+      },
+      {
+        "key": "results",
+        "label": "Results",
+        "contrib": 0.0
+      },
+      {
+        "key": "international",
+        "label": "International run",
+        "contrib": 0.0
+      },
+      {
+        "key": "sentiment",
+        "label": "Community mood",
+        "contrib": -0.0
+      }
+    ]
+  },
+  "last_week_income": null,
+  "last_week_expenses": null,
+  "sponsor": null,
+  "sponsor_offer": null,
+  "slots": {
+    "title": {
+      "deal": {
+        "name": "Polar Compute",
+        "kind": "steady",
+        "signing_bonus": 0,
+        "weekly": 41300,
+        "per_win": 0,
+        "weeks_left": 24,
+        "objectives": [
+          {
+            "kind": "win_split",
+            "bonus": 424000,
+            "met": false
+          },
+          {
+            "kind": "make_masters",
+            "bonus": 445000,
+            "met": true
+          }
+        ]
+      },
+      "offer": null,
+      "market": [],
+      "rep_gate": 55.0,
+      "unlocked": true,
+      "locked_reason": null,
+      "objective_labels_deal": [
+        {
+          "kind": "win_split",
+          "bonus": 424000,
+          "met": false,
+          "label": "win the regional split",
+          "status": {
+            "state": "on_track",
+            "detail": "currently 3rd of 8"
+          }
+        },
+        {
+          "kind": "make_masters",
+          "bonus": 445000,
+          "met": true,
+          "label": "qualify for Masters",
+          "status": {
+            "state": "on_track",
+            "detail": "currently 3rd of 8"
+          }
+        }
+      ]
+    },
+    "jersey": {
+      "deal": {
+        "name": "Streamforge",
+        "kind": "steady",
+        "signing_bonus": 0,
+        "weekly": 10100,
+        "per_win": 0,
+        "weeks_left": 9,
+        "objectives": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": false
+          }
+        ]
+      },
+      "offer": null,
+      "market": [],
+      "rep_gate": 0.0,
+      "unlocked": true,
+      "locked_reason": null,
+      "objective_labels_deal": [
+        {
+          "kind": "win_split",
+          "bonus": 117000,
+          "met": false,
+          "label": "win the regional split",
+          "status": {
+            "state": "on_track",
+            "detail": "currently 3rd of 8"
+          }
+        }
+      ]
+    },
+    "peripheral": {
+      "deal": {
+        "name": "Redline Chairs",
+        "kind": "upfront",
+        "signing_bonus": 106000,
+        "weekly": 1800,
+        "per_win": 0,
+        "weeks_left": 12,
+        "objectives": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 12600,
+            "met": true
+          }
+        ]
+      },
+      "offer": null,
+      "market": [],
+      "rep_gate": 0.0,
+      "unlocked": true,
+      "locked_reason": null,
+      "objective_labels_deal": [
+        {
+          "kind": "make_playoffs",
+          "bonus": 12600,
+          "met": true,
+          "label": "make the regional playoffs",
+          "status": {
+            "state": "on_track",
+            "detail": "currently 3rd of 8"
+          }
+        }
+      ]
+    },
+    "stream": {
+      "deal": {
+        "name": "OrbitCast",
+        "kind": "steady",
+        "signing_bonus": 0,
+        "weekly": 9400,
+        "per_win": 0,
+        "weeks_left": 22,
+        "objectives": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 43000,
+            "met": null
+          }
+        ]
+      },
+      "offer": null,
+      "market": [],
+      "rep_gate": 0.0,
+      "unlocked": true,
+      "locked_reason": null,
+      "objective_labels_deal": [
+        {
+          "kind": "make_playoffs",
+          "bonus": 43000,
+          "met": null,
+          "label": "make the regional playoffs",
+          "status": {
+            "state": "on_track",
+            "detail": "currently 3rd of 8"
+          }
+        }
+      ]
+    },
+    "apparel": {
+      "deal": null,
+      "offer": null,
+      "market": [],
+      "rep_gate": 0.0,
+      "unlocked": false,
+      "locked_reason": "requires Marketing Office level 2",
+      "objective_labels_deal": []
+    }
+  },
+  "demands": [
+    {
+      "id": "0981f9afb97a945c",
+      "brand": "Streamforge",
+      "slot": "jersey",
+      "kind": "field_rookie",
+      "fixture_id": "s1w11m2am",
+      "opponent_id": "team_saracen_guard",
+      "player_id": "ghost",
+      "issued_season": 1,
+      "issued_week": 10,
+      "deadline_week": 11,
+      "reward": 20200,
+      "penalty": 10100,
+      "status": "met",
+      "resolved_season": 1,
+      "resolved_week": 11,
+      "label": "Field the named rookie",
+      "requirement": "Play Ghost against Saracen Guard",
+      "detail": "Ghost is age 20 with 21 career maps (rookie limit: 10).",
+      "opponent_name": "Saracen Guard",
+      "player_name": "Ghost",
+      "relation": 51.0,
+      "can_respond": false
+    }
+  ],
+  "commitments": [
+    {
+      "id": "0981f9afb97a945c",
+      "brand": "Streamforge",
+      "slot": "jersey",
+      "label": "Field the named rookie",
+      "requirement": "Play Ghost against Saracen Guard",
+      "detail": "Ghost is age 20 with 21 career maps (rookie limit: 10).",
+      "deadline_week": 11,
+      "opponent_name": "Saracen Guard",
+      "reward": 20200,
+      "penalty": 10100,
+      "status": "met",
+      "resolved_season": 1,
+      "resolved_week": 11,
+      "relation_delta": 5.0
+    }
+  ],
+  "facilities": {
+    "training_center": {
+      "level": 0,
+      "max_level": 3,
+      "next_cost": 150000,
+      "upkeep": 0
+    },
+    "analytics_suite": {
+      "level": 0,
+      "max_level": 3,
+      "next_cost": 150000,
+      "upkeep": 0
+    },
+    "marketing_office": {
+      "level": 1,
+      "max_level": 3,
+      "next_cost": 350000,
+      "upkeep": 1500
+    },
+    "recovery_suite": {
+      "level": 0,
+      "max_level": 3,
+      "next_cost": 150000,
+      "upkeep": 0
+    },
+    "strategy_lab": {
+      "level": 0,
+      "max_level": 3,
+      "next_cost": 150000,
+      "upkeep": 0
+    },
+    "team_house": {
+      "level": 0,
+      "max_level": 3,
+      "next_cost": 150000,
+      "upkeep": 0
+    }
+  },
+  "breakdown": {
+    "salaries": 42200,
+    "staff": 4900,
+    "sponsors_base": 48582,
+    "sponsors_by_slot": {
+      "title": 41300,
+      "jersey": 10100,
+      "peripheral": 1800,
+      "stream": 9400,
+      "apparel": 0
+    },
+    "sponsors_total": 111182,
+    "merch": 2604,
+    "tickets": 1736,
+    "streaming": 8968,
+    "facility_upkeep": 1500,
+    "prizes": 0,
+    "income_total": 124490,
+    "expense_total": 48600,
+    "net": 75890
+  },
+  "projection": [
+    {
+      "week": 2,
+      "net": 75890,
+      "balance": 2342712
+    },
+    {
+      "week": 3,
+      "net": 75890,
+      "balance": 2418602
+    },
+    {
+      "week": 4,
+      "net": 75890,
+      "balance": 2494492
+    },
+    {
+      "week": 5,
+      "net": 75890,
+      "balance": 2570382
+    },
+    {
+      "week": 6,
+      "net": 75890,
+      "balance": 2646272
+    },
+    {
+      "week": 7,
+      "net": 75890,
+      "balance": 2722162
+    },
+    {
+      "week": 8,
+      "net": 75890,
+      "balance": 2798052
+    },
+    {
+      "week": 9,
+      "net": 75890,
+      "balance": 2873942
+    }
+  ]
+}

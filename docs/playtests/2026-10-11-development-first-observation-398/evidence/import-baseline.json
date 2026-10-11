@@ -1,0 +1,9 @@
+{
+  "season": 2,
+  "week": 5,
+  "actions": 120,
+  "note": "Byte-copy of root synthetic save. Browser import/bootstrap is session setup, not a current-head advance or evidence of acceptance.",
+  "seed": 2038,
+  "snapshots": 1,
+  "input_sha256": "699C475C39B34CFC49748D0FE774F0EA8E753AC675CD36FC3EA5D82D27E8996F"
+}

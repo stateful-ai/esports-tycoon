@@ -1,0 +1,158 @@
+### Page
+- Page URL: http://127.0.0.1:8525/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 22 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 1,986,533 cr
+      - button "Save" [ref=f1e3124] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "18"
+        - button "Match" [ref=f1e1421] [cursor=pointer]
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market 1" [ref=f1e1497] [cursor=pointer]:
+          - text: Market
+          - generic [ref=f1e1498]: "1"
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e4251]:
+        - generic [ref=f1e4252]:
+          - generic [ref=f1e4253]: Season
+          - generic [ref=f1e4254]: S1 · W22 · Playoffs
+          - generic [ref=f1e4255]:
+            - button "League" [ref=f1e4256] [cursor=pointer]
+            - button "Fixtures" [ref=f1e4257] [cursor=pointer]
+            - button "Playoffs" [ref=f1e4258] [cursor=pointer]
+            - button "Records" [ref=f1e4259] [cursor=pointer]
+          - button "Guide" [ref=f1e4260] [cursor=pointer]
+        - generic [ref=f1e4261]:
+          - generic [ref=f1e4262]:
+            - generic [ref=f1e4264]:
+              - button "My matches" [ref=f1e4265] [cursor=pointer]
+              - button "All" [ref=f1e4266] [cursor=pointer]
+              - button "Americas" [ref=f1e4267] [cursor=pointer]
+              - button "Emea" [ref=f1e4268] [cursor=pointer]
+              - button "Pacific" [ref=f1e4269] [cursor=pointer]
+            - group [ref=f1e4270]:
+              - heading "Played weeks — 20 weeks" [level=2] [ref=f1e4272]:
+                - text: Played weeks
+                - generic [ref=f1e4273]: — 20 weeks
+              - group [ref=f1e4285]:
+                - generic "Week 21 · 1 match" [ref=f1e4286]
+                - generic [ref=f1e4287]:
+                  - generic [ref=f1e4288]: Champions semi
+                  - generic [ref=f1e4289]: Team Vanguard vs Team Nexus
+                  - generic [ref=f1e4291]: 2–1
+                  - button [ref=f1e4292] [cursor=pointer]:
+                    - img "haven" [ref=f1e4293]
+                    - text: Haven 8–13 ▶
+                  - button [ref=f1e4294] [cursor=pointer]:
+                    - img "ascent" [ref=f1e4295]
+                    - text: Ascent 13–6 ▶
+                  - button [ref=f1e4296] [cursor=pointer]:
+                    - img "lotus" [ref=f1e4297]
+                    - text: Lotus 13–7 ▶
+                  - generic [ref=f1e4298]:
+                    - generic [ref=f1e4299]: ★
+                    - text: POTM
+                    - generic [ref=f1e4300]: Slice
+                    - generic [ref=f1e4301]: 1.51 · 73K
+                - generic [ref=f1e4302]:
+                  - generic [ref=f1e4303]: "veto:"
+                  - generic [ref=f1e4304]:
+                    - img "split" [ref=f1e4305]
+                    - text: VGD ban split
+                  - generic [ref=f1e4306]:
+                    - img "bind" [ref=f1e4307]
+                    - text: NXS ban bind
+                  - generic [ref=f1e4308]:
+                    - img "haven" [ref=f1e4309]
+                    - text: VGD pick haven
+                  - generic [ref=f1e4310]:
+                    - img "ascent" [ref=f1e4311]
+                    - text: NXS pick ascent
+                  - generic [ref=f1e4312]:
+                    - img "lotus" [ref=f1e4313]
+                    - text: decider lotus
+                - generic [ref=f1e4314]:
+                  - generic [ref=f1e4315]: "series notes:"
+                  - generic [ref=f1e4316]: "VGD: targeting Vortex."
+                  - generic [ref=f1e4317]: "VGD: stabilize response after map 1."
+                  - generic [ref=f1e4318]: "NXS: stabilize response after map 2."
+              - group [ref=f1e4319]:
+                - generic "Week 20 · 1 match" [ref=f1e4320]
+              - group [ref=f1e4321]:
+                - generic "Week 18 · 1 match" [ref=f1e4322]
+              - group [ref=f1e4323]:
+                - generic "Week 17 · 1 match" [ref=f1e4324]
+              - group [ref=f1e4325]:
+                - generic "Week 16 · 1 match" [ref=f1e4326]
+              - group [ref=f1e4327]:
+                - generic "Week 15 · 1 match" [ref=f1e4328]
+              - group [ref=f1e4329]:
+                - generic "Week 14 · 1 match" [ref=f1e4330]
+              - group [ref=f1e4331]:
+                - generic "Week 13 · 1 match" [ref=f1e4332]
+              - group [ref=f1e4333]:
+                - generic "Week 12 · 1 match" [ref=f1e4334]
+              - group [ref=f1e4335]:
+                - generic "Week 11 · 1 match" [ref=f1e4336]
+              - group [ref=f1e4337]:
+                - generic "Week 10 · 1 match" [ref=f1e4338]
+              - group [ref=f1e4339]:
+                - generic "Week 9 · 1 match" [ref=f1e4340]
+              - group [ref=f1e4341]:
+                - generic "Week 8 · 1 match" [ref=f1e4342]
+              - group [ref=f1e4343]:
+                - generic "Week 7 · 1 match" [ref=f1e4344]
+              - group [ref=f1e4345]:
+                - generic "Week 6 · 1 match" [ref=f1e4346]
+              - group [ref=f1e4347]:
+                - generic "Week 5 · 1 match" [ref=f1e4348]
+              - group [ref=f1e4349]:
+                - generic "Week 4 · 1 match" [ref=f1e4350]
+              - group [ref=f1e4351]:
+                - generic "Week 3 · 1 match" [ref=f1e4352]
+              - group [ref=f1e4353]:
+                - generic "Week 2 · 1 match" [ref=f1e4354]
+              - group [ref=f1e4355]:
+                - generic "Week 1 · 1 match" [ref=f1e4356]
+          - generic [ref=f1e4275]:
+            - heading "This week" [level=2] [ref=f1e4276]
+            - paragraph [ref=f1e4277]: No fixture scheduled for you.
+            - text: Across the league
+            - generic [ref=f1e4280]:
+              - generic [ref=f1e4281]: CHAMPI
+              - generic [ref=f1e4282]: Team Vanguard
+              - generic [ref=f1e4283]: vs
+              - generic [ref=f1e4284]: Rust Belt Gaming
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Season
+    - generic: Track the table, schedule, playoff cut, records, and the rest of the league.
+    - generic: Use Fixtures for timing and League for the playoff race; team names open full profiles.
+```

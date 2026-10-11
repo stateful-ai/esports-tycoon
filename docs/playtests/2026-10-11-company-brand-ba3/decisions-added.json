@@ -1,0 +1,17 @@
+[
+  {
+    "index": 123,
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "facility_upgrade",
+    "params": {
+      "cost": "350000",
+      "facility": "marketing_office",
+      "level": "2"
+    },
+    "source": "web"
+  }
+]

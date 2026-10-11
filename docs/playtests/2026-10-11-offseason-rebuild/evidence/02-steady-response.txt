@@ -1,0 +1,2 @@
+### Error
+Error: Sponsor control not unique

@@ -81,7 +81,7 @@ const badgeIconMarkup = (bd) => {
    profile-overlay link via one delegated listener — these helpers are the ONE
    way to render a linked name, so coverage and affordance can't drift. */
 const plink = (id, text, cls = "") =>
-  id ? `<span class="plink ${cls}" data-pid="${esc(id)}">${esc(text)}</span>` : esc(text);
+  id ? `<button type="button" class="plink ${cls}" data-pid="${esc(id)}">${esc(text)}</button>` : esc(text);
 const tlink = (id, text, cls = "") =>
   id ? `<span class="tlink ${cls}" data-tid="${esc(id)}">${esc(text)}</span>` : esc(text);
 const slink = (id, text, cls = "") =>
@@ -258,23 +258,40 @@ function helpGlossaryMarkup() {
   ).join("")}</div><div class="help-note"><b>Hover for detail</b><span>Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.</span></div>`;
 }
 
+let helpUsageSection = null;
+
+function recordHelpSection(section) {
+  const overlay = document.getElementById("help");
+  if (!overlay || overlay.classList.contains("hidden") || helpUsageSection === section) return;
+  helpUsageSection = section;
+  window.Usage?.interaction(`handbook/section_${section.replace("-", "_")}`);
+}
+
 function renderHelp(section = "first-week", selected = App.tab) {
   const body = document.getElementById("help-body");
   if (!body) return;
+  section = ["first-week", "screens", "glossary"].includes(section) ? section : "first-week";
   document.querySelectorAll("[data-help-section]").forEach((button) => {
     button.classList.toggle("active", button.dataset.helpSection === section);
   });
   body.innerHTML = section === "screens"
     ? helpScreensMarkup(selected)
     : section === "glossary" ? helpGlossaryMarkup() : helpFirstWeekMarkup();
+  recordHelpSection(section);
 }
 
 function openHelp(section = "first-week", selected = App.tab, automatic = false) {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!document.getElementById("help-body")) return;
+  const opening = overlay.classList.contains("hidden");
   overlay.dataset.automatic = automatic ? "true" : "false";
-  renderHelp(section, selected);
   overlay.classList.remove("hidden");
+  if (opening) {
+    helpUsageSection = null;
+    window.Usage?.interaction("handbook/open");
+  }
+  renderHelp(section, selected);
   overlay.setAttribute("aria-hidden", "false");
   overlay.querySelector("[data-help-section].active")?.focus();
 }
@@ -282,6 +299,8 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
 function closeHelp() {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!overlay.classList.contains("hidden")) window.Usage?.interaction("handbook/close");
+  helpUsageSection = null;
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
@@ -896,6 +915,9 @@ async function deleteWorld(world) {
 async function refresh() {
   App.state = await api("/api/state");
   const s = App.state;
+  // Only fresh status may cancel retry; failure rendering uses cached state.
+  if (!s?.multiplayer?.you_ready && !mpPolling) mpPollingRetry = false;
+  updateAdvanceTransition(s);
   // Fantasy draft in progress: the draft screen (draft.js) IS the app until
   // the last pick resolves — rosters are mid-build, so no tab makes sense.
   if (s.draft_active) {
@@ -915,9 +937,35 @@ async function refresh() {
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
+  resumeSharedAdvance(s);
   refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
   maybeShowFirstWeekHelp(s);
+}
+
+// A ready seat may be loaded without this page having submitted advance.
+// Resume status observation before making its primary control available.
+function resumeSharedAdvance(s) {
+  if (s.multiplayer?.you_ready && !mpPolling && !mpPollingRetry) {
+    $("#advance-btn").disabled = true;
+    pollForAdvance(s.week);
+    updateAdvanceTransition(s);
+  }
+}
+
+// The server describes the campaign branch; the client only paints its copy.
+function updateAdvanceTransition(s) {
+  const transition = s?.advance_transition;
+  const btn = $("#advance-btn"), notice = $("#advance-notice");
+  // Server readiness must preserve Waiting during ready-seat reload as well
+  // as during polling.
+  btn.textContent = mpPollingRetry ? "Retry status ▸"
+    : s?.multiplayer?.you_ready || mpPolling ? "Waiting… ⏳"
+    : `${transition?.label || "Advance Week"} ▸`;
+  notice.textContent = transition?.notice || "";
+  notice.classList.toggle("hidden", !transition?.notice);
+  if (transition?.notice) btn.setAttribute("aria-describedby", "advance-notice");
+  else btn.removeAttribute("aria-describedby");
 }
 
 // Topbar save controls: the explicit Save button (dot = unsaved changes)
@@ -1156,8 +1204,37 @@ async function clubOps(v, sub) {
   // Academy: the affiliate is a real tier-2 team with real results and minutes.
   const ac = el("div", "card ws-6");
   const a = d.academy;
+  const academyContext = `${App.mp?.code || "local"}:${a.parent_id}`;
   ac.innerHTML = `<h2>Academy <span class="pill">level ${a.level}</span></h2>` +
-    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}. Promotions and send-downs obey the market window.</p>`;
+    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}.</p>` +
+    `<p class="muted">${esc(a.movement_detail)}</p>`;
+  if (App.academyMoveError?.context === academyContext) {
+    const error = el("p", "alert");
+    error.setAttribute("role", "alert");
+    error.textContent = App.academyMoveError.message;
+    ac.appendChild(error);
+  }
+  const moveButton = (p, direction, label) => {
+    const availability = p[direction];
+    const b = el("button", "btn btn-sm", label);
+    b.disabled = !availability.allowed;
+    b.title = availability.allowed ? label : availability.reason;
+    b.onclick = async () => {
+      b.disabled = true;
+      try {
+        const r = await api("/api/actions/academy_move", { player_id: p.id, direction });
+        App.academyMoveError = null;
+        toast(r.message);
+      } catch (error) {
+        App.academyMoveError = {
+          context: academyContext,
+          message: `Academy move failed: ${error.message || "Request failed. Please try again."}`,
+        };
+      }
+      refresh();
+    };
+    return b;
+  };
   if (a.next_upgrade_cost) {
     const up = el("button", "btn btn-sm", `Upgrade · ${money(a.next_upgrade_cost)}`);
     up.onclick = async () => { const r = await api("/api/actions/academy_upgrade", {}); toast(r.message); refresh(); };
@@ -1167,22 +1244,20 @@ async function clubOps(v, sub) {
   for (const p of a.roster || []) {
     const row = el("div", "entity");
     row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
-    const b = el("button", "btn btn-sm", "Promote");
-    b.disabled = !p.owned;
-    b.title = p.owned ? "Promote to the first team" : "Another parent organization holds this pathway";
-    b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "promote" }); toast(r.message); refresh(); };
-    row.appendChild(b); academyRows.appendChild(row);
+    row.appendChild(moveButton(p, "promote", "Promote"));
+    academyRows.appendChild(row);
+    if (!p.promote.allowed) academyRows.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.promote.reason)}`));
   }
   ac.appendChild(academyRows);
-  const eligibleDown = (d.registration.players || []).filter((p) => p.age <= 23);
+  const eligibleDown = a.send_down_roster || [];
   if (eligibleDown.length) {
     ac.appendChild(el("p", "microlabel", "First team pathways"));
     for (const p of eligibleDown) {
       const row = el("div", "entity");
       row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))}</span>`;
-      const b = el("button", "btn btn-sm", "Send down");
-      b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "send_down" }); toast(r.message); refresh(); };
-      row.appendChild(b); ac.appendChild(row);
+      row.appendChild(moveButton(p, "send_down", "Send down"));
+      ac.appendChild(row);
+      if (!p.send_down.allowed) ac.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.send_down.reason)}`));
     }
   }
   ws.appendChild(ac);
@@ -1452,14 +1527,9 @@ async function clubOps(v, sub) {
       const activeGrid = el("div", "row", null);
       activeGrid.style.cssText = "display:flex; flex-wrap:wrap; gap:12px;";
       for (const prom of active) {
-        const duration = prom.initial_duration || 1;
-        const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+        const assessment = prom.play_time_assessment;
+        const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
         const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
-        
-        let progressInfo = "";
-        if (prom.promise_type === "play_time") {
-          progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-        }
         
         const card = el("div", "card ws-4", null);
         card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
@@ -1467,10 +1537,14 @@ async function clubOps(v, sub) {
           `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
           `<span style="font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${esc(humanize(prom.promise_type))}</span>` +
         `</div>` +
-        `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
-        `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
-          `<span>Progress</span><span>${prom.weeks_left} weeks left</span>` +
-        `</div>` +
+        (assessment ?
+          `<div class="promise-assessment" style="font-size:0.9em; margin:6px 0;">` +
+            `<p>${esc(assessment.target_label)}</p><p>${esc(assessment.progress_label)}</p>` +
+            `<p>${esc(assessment.deadline_label)}</p><p>${esc(assessment.next_evaluation_label)}</p>` +
+            `<p class="muted">${esc(assessment.counting_label)}</p></div>` :
+          `<div style="font-size:0.9em; margin:6px 0;">Target: ${esc(prom.target_value ?? "N/A")}</div>` +
+          `<div class="muted">${prom.weeks_left} weeks left</div>`) +
+        `<div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>` +
         `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;">` +
           `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
         `</div>`;
@@ -2286,7 +2360,7 @@ async function dashboard(v) {
           for (const p of points) {
             const note = p.dev_note ? `<span class="es-review-d muted">${esc(p.dev_note)}</span>` : "";
             const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
-              `<b class="es-review-h">${esc(p.headline)}${badgeStrip(p.badges)}</b>` +
+              `<b class="es-review-h">${p.player_id ? plink(p.player_id, p.headline) : esc(p.headline)}${badgeStrip(p.badges)}</b>` +
               `<span class="es-review-d muted">${esc(p.detail)}</span>` + note);
             if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
             list.appendChild(pt);
@@ -2425,8 +2499,9 @@ async function dashboard(v) {
   // its own ledger rendering.
   {
     const yc = lmr && lmr.contested ? lmr.your_calls : null;
+    const seriesNotes = lmr && lmr.contested ? (lmr.series_notes || []) : [];
     const ledger = s.decision_ledger || [];
-    if (yc || ledger.length) {
+    if (yc || seriesNotes.length || ledger.length) {
       const card = el("div", "card");
       card.appendChild(el("h2", "", "Your calls"));
       if (yc) {
@@ -2468,14 +2543,23 @@ async function dashboard(v) {
         if (yc.prep) {
           const bits = [];
           if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
-          if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
-          if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+          if ((yc.prep.maps_played || []).length) bits.push(`stored book on ${yc.prep.maps_played.map(esc).join(", ")} (played)`);
+          if ((yc.prep.maps_missed || []).length) bits.push(`stored book on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
           if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
-          card.appendChild(el("span", "es-scout-lab muted", "Last match"));
+          card.appendChild(el("span", "es-scout-lab muted", "Last match · Initial plan"));
           card.appendChild(yl);
         }
+      }
+      if (seriesNotes.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "Last match · Series notes"));
+        card.appendChild(el("p", "muted", "Recorded calls for both teams, including applied between-map responses."));
+        const notes = el("div", "es-review-calls");
+        for (const note of seriesNotes) {
+          notes.appendChild(el("div", "es-review-call", `${esc(note)}`));
+        }
+        card.appendChild(notes);
       }
       if (ledger.length) {
         card.appendChild(el("span", "es-scout-lab muted", "Decisions settled"));
@@ -3471,10 +3555,11 @@ function developmentReportCard(report) {
   card.innerHTML = `<div class="dev-report-head">
       <div><h2>Development Report</h2><p class="muted">Season ${report.season} · ${range}</p></div>
       <div class="dev-report-summary">
-        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">Squad OVR ${signed(report.overall_delta)}</span>
+        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">${report.overall_delta == null ? "OVR comparison unavailable" : `Compared OVR ${signed(report.overall_delta)} · ${report.compared_players} players`}</span>
         <span class="chip tone-good">${report.grown} grown</span>
         <span class="chip tone-bad">${report.regressed} regressed</span>
         <span class="chip">${report.steady} steady</span>
+        ${report.first_observations ? `<span class="chip">${report.first_observations} first observation${report.first_observations === 1 ? "" : "s"}</span>` : ""}
       </div>
     </div>`;
 
@@ -3508,14 +3593,16 @@ function developmentReportCard(report) {
     }).join(" ");
     if (!p.attribute_tracking) {
       changes = '<span class="muted">Skill tracking starts with the next snapshot</span>';
+    } else if (!p.comparison_available) {
+      changes = '<span class="muted">First observation — no earlier skill comparison</span>';
     } else if (!changes) {
       changes = '<span class="muted">No skill changes of 0.1 or more</span>';
     }
     body.appendChild(el("tr", "", `<td><b>${plink(p.id, p.handle)}</b></td>
-      <td class="muted">W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts</td>
+      <td class="muted">${p.comparison_available ? `W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts` : `First observation · W${p.end_week}`}</td>
       <td class="num">${Number(p.overall_start).toFixed(1)}</td>
       <td class="num">${Number(p.overall_current).toFixed(1)}</td>
-      <td class="num"><span class="${tone}">${signed(p.overall_delta)}</span></td>
+      <td class="num"><span class="${tone}">${p.comparison_available ? signed(p.overall_delta) : "No earlier comparison"}</span></td>
       <td><div class="dev-change-list">${changes}</div></td><td class="dev-week-feedback">${feedback}</td>`));
   }
   table.appendChild(body);
@@ -3810,10 +3897,18 @@ async function tacticsPrep(ws) {
   rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides.</p>`;
   const chosen = new Set(d.registration.player_ids || []);
   for (const p of d.registration.players) {
-    const lab = el("label", "entity");
+    const row = el("div", "entity");
     const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
+    cb.id = `registration-${p.id}`;
+    cb.setAttribute("aria-label", `${p.handle} tournament eligibility`);
     cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`)); rc.appendChild(lab);
+    const lab = el("label", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`);
+    lab.htmlFor = cb.id;
+    // Keep label/row selection separate from the native profile button.
+    row.onclick = (e) => {
+      if (!e.target.closest("button, input, label")) cb.click();
+    };
+    row.append(cb, el("span", "entity-name", plink(p.id, p.handle)), lab); rc.appendChild(row);
   }
   if (!d.registration.locked) {
     const save = el("button", "btn btn-primary", "Submit roster");
@@ -5212,7 +5307,7 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
                   <tr key=${p.id}>
                     <td>
                       <img class="portrait" src=${p.portrait} alt="" />
-                      <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                      <b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b>
                       ${p.real_name && html`<span class="muted"> ${p.real_name}</span>`}
                       ${p.languages && p.languages.length > 0 && html`
                         <div class="es-langs">
@@ -5464,7 +5559,7 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
             <tr key=${p.id} onClick=${(e) => handleRowClick(e, p.id)} style=${{ cursor: 'pointer' }}>
               <td>
                 <img class="portrait" src=${p.portrait} alt="" />
-                <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                <b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b>
                 ${p.locker_room_fit && (() => {
                   const fit = p.locker_room_fit;
                   return html`
@@ -5629,7 +5724,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Suggested signings</h2>
             ${targets.map(tgt => html`
               <div class="entity" key=${tgt.id}>
-                <span class="entity-name"><b class="plink" data-pid=${tgt.id}>${tgt.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${tgt.id}>${tgt.handle}</button></b></span>
                 <span class="entity-meta">${humanize(tgt.role)}</span>
                 <b class="entity-num">
                   ${tgt.quality}
@@ -5645,14 +5740,14 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Contract watch</h2>
             ${(cw.expiring_own || []).map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">yours · ${humanize(p.role)}</span>
                 <b class="entity-num trend-down">${p.weeks_left}w</b>
               </div>
             `)}
             ${(cw.market_watch || []).map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   <span class="tlink" data-tid=${p.team_id}>${p.team}</span> · ${humanize(p.role)}
                 </span>
@@ -5667,7 +5762,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Wonderkids <span class="muted" style=${{ fontWeight: 400 }}>— ≤20</span></h2>
             ${wk.map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
@@ -5682,7 +5777,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Challengers standouts</h2>
             ${chal.map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
@@ -6185,7 +6280,7 @@ async function openNegotiation(target) {
     <h2>${title} — ${plink(target.id, neg.handle)}</h2>` +
     (neg.kind === "renew"
       ? `<p class="muted">Current deal: <b>${money(neg.current_salary)}/wk</b>, ${neg.contract_weeks_left}w ·
-        ${neg.current_terms.stream_share}% streams · ${money(neg.current_terms.release_fee)} release ·
+        player keeps ${neg.current_terms.stream_share}% of streaming revenue · ${money(neg.current_terms.release_fee)} release ·
         ${neg.current_terms.buyout ? money(neg.current_terms.buyout) + " buyout" : "no buyout"} ·
         ${esc(humanize(neg.current_terms.role))}${neg.current_terms.no_transfer ? " · no-transfer clause" : ""}.</p>`
       : "");
@@ -6205,7 +6300,7 @@ async function openNegotiation(target) {
   const paint = () => {
     demand.innerHTML = `<div class="contract-bubble player"><span class="microlabel">${esc(neg.handle)}</span>
       ${esc(neg.opening_line)}<div class="contract-ask"><b>${money(neg.demand_salary)}/wk</b> · ${neg.demand_weeks}w ·
-      ${neg.demand_stream_share}% streams · ${money(neg.demand_release_fee)} release ·
+      player keeps ${neg.demand_stream_share}% of streaming revenue · ${money(neg.demand_release_fee)} release ·
       ${neg.demand_buyout ? money(neg.demand_buyout) + " buyout" : "no buyout"}${neg.demand_no_transfer ? " · no-transfer clause" : ""}</div></div>`;
     rounds.textContent = `${neg.rounds_left} offer${neg.rounds_left !== 1 ? "s" : ""} before they walk away.`;
   };
@@ -6229,7 +6324,7 @@ async function openNegotiation(target) {
   }
   const sL = el("label", "row"); sL.append(el("span", "", "Salary/wk: "), sal);
   const wL = el("label", "row"); wL.append(el("span", "", "Weeks: "), wks);
-  const stL = el("label", "row"); stL.append(el("span", "", "Player keeps streaming: "), stream, el("span", "muted", "%"));
+  const stL = el("label", "row"); stL.append(el("span", "", "Player's streaming revenue share: "), stream, el("span", "muted", "%"));
   const rfL = el("label", "row"); rfL.append(el("span", "", "Release fee: "), releaseFee);
   const boL = el("label", "row"); boL.append(el("span", "", "Buyout for other teams: "), buyout);
   const ntL = el("label", "row"); ntL.append(el("span", "", "No-transfer clause: "), ntc);
@@ -7372,7 +7467,7 @@ const BrandMovementCard = ({ moves }) => {
             const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
             const text = m.player_id
               ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
-                  `<span class="plink" data-pid="${esc(m.player_id)}">$1</span>`)
+                  `<button type="button" class="plink" data-pid="${esc(m.player_id)}">$1</button>`)
               : m.text;
             const teamPill = m.team_tag ? `<span class="pill">${tlink(m.team_id, m.team_tag)}</span> ` : "";
             return html`
@@ -7624,10 +7719,10 @@ const FinancesTab = ({ onOpenBrand }) => {
                       <div>
                         <b>
                           ${d.kind === "field_rookie" ? html`
-                            Play <span data-pid=${d.player_id}>${d.player_name}</span>
-                            against <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Play${" "}<button type="button" class="plink" data-pid=${d.player_id}>${d.player_name}</button>${" "}
+                            against${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           ` : html`
-                            Beat rivals <span data-tid=${d.opponent_id}>${d.opponent_name}</span>
+                            Beat rivals${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           `}
                         </b>
                       </div>
@@ -7835,18 +7930,12 @@ const FinancesTab = ({ onOpenBrand }) => {
                   <td>Base sponsorship</td>
                   <td class="num">${money(b.sponsors_base)}</td>
                 </tr>
-                <tr>
-                  <td>Title sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.title || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Jersey sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Peripheral sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td>
-                </tr>
+                ${Object.entries(b.sponsors_by_slot).map(([slot, amount]) => html`
+                  <tr>
+                    <td>${humanize(slot)} sponsor</td>
+                    <td class="num">${money(amount)}</td>
+                  </tr>
+                `)}
                 <tr>
                   <td>Merchandise</td>
                   <td class="num">${money(b.merch)}</td>
@@ -8121,14 +8210,15 @@ window.closeTalk = closeTalk;
 /* -- advance week ------------------------------------------------------------------ */
 
 let mpPolling = false;
+let mpPollingRetry = false;
 let weekLoadingTimer = null;
 
-function showWeekLoading({ simAhead = false } = {}) {
+function showWeekLoading({ simAhead = false, transition = App.state?.advance_transition } = {}) {
   const overlay = $("#week-loading");
-  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : "Advancing week";
+  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : (transition?.loading_title || "Advancing week");
   $("#week-loading-detail").textContent = simAhead
     ? "Running up to four full league weeks. The sim will stop as soon as something needs you."
-    : "Resolving fixtures across the league, then settling training, scouting, and finances.";
+    : (transition?.loading_detail || "Resolving the campaign transition.");
   const started = performance.now();
   $("#week-loading-time").textContent = "0s";
   overlay.classList.remove("hidden");
@@ -8148,6 +8238,14 @@ function hideWeekLoading() {
 $("#advance-btn").onclick = async () => {
   $("#advance-btn").disabled = true;
   const prevWeek = App.state?.week;
+  const prevSeason = App.state?.season;
+  if (mpPollingRetry) {
+    // Reconnect to the pending ready-up. Sending advance again could tick a
+    // second week if the shared world moved while status was unavailable.
+    pollForAdvance(prevWeek, prevSeason);
+    updateAdvanceTransition(App.state);
+    return;
+  }
   showWeekLoading();
   try {
     const rep = await api("/api/actions/advance", {});
@@ -8155,8 +8253,10 @@ $("#advance-btn").onclick = async () => {
       // Shared game: you're ready, but the week waits for the others.
       $("#advance-btn").textContent = "Waiting… ⏳";
       toast("Ready — waiting for: " + rep.waiting_on.join(", "));
+      // Capture the pending calendar and own readiness before refresh can
+      // fail or observe a rollover. Its failure must not permit another POST.
+      pollForAdvance(prevWeek, prevSeason);
       await refresh(); // reflect your ready state in the chip
-      pollForAdvance(prevWeek);
       return; // stay disabled; pollForAdvance re-enables when the week ticks
     }
     // Refresh FIRST so the dashboard behind the reveal (and the reveal's
@@ -8203,24 +8303,27 @@ $("#simahead-btn").onclick = async () => {
 
 // While waiting for other managers to ready up, poll the shared world until the
 // week actually advances, then drop the waiting player into the new week.
-function pollForAdvance(prevWeek) {
+function pollForAdvance(prevWeek, prevSeason = App.state?.season) {
   if (mpPolling) return;
   mpPolling = true;
+  mpPollingRetry = false;
   const tick = async () => {
     let s;
     try {
       s = await api("/api/state");
     } catch {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      mpPollingRetry = true;
+      updateAdvanceTransition(App.state);
       $("#advance-btn").disabled = false;
+      toast("Shared status unavailable. Click Retry status to reconnect.");
       return;
     }
     App.state = s;
     updateMpChip(s.multiplayer);
-    if (s.week !== prevWeek) {
+    if (s.week !== prevWeek || s.season !== prevSeason) {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      updateAdvanceTransition(s);
       $("#advance-btn").disabled = false;
       // Show the played week's report (results + replay buttons) — the
       // manager whose ready-up ticked the world got it from advance();
@@ -8235,6 +8338,16 @@ function pollForAdvance(prevWeek) {
         toast(`Week ${s.week} — everyone advanced.`);
       }
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+      return;
+    }
+    if (!s.multiplayer?.you_ready) {
+      // Readiness is transient server state and may clear on restart. The
+      // unchanged calendar means this is cancellation, not a completed tick.
+      mpPolling = false;
+      updateAdvanceTransition(s);
+      $("#advance-btn").disabled = false;
+      await refresh();
+      toast("Your ready status was cleared. Review the campaign, then advance when ready.");
       return;
     }
     setTimeout(tick, 2500);

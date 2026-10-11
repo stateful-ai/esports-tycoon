@@ -1,0 +1,22 @@
+[
+  {
+    "path": "docs/playtests/2026-10-11-history-consolidated-1079/integration-main-8a/attributes-conflict-base.txt",
+    "bytes": 258,
+    "sha256": "f43a67706688637640f02972cff8ac328e5305c318d8a73484361d666f9a6ab1"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-consolidated-1079/integration-main-8a/attributes-conflict-ours.txt",
+    "bytes": 1155,
+    "sha256": "8a10f73d3110e6386a9912463c61a95a30dc1be270f866f4868fe3c83a585651"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-consolidated-1079/integration-main-8a/attributes-conflict-theirs.txt",
+    "bytes": 405,
+    "sha256": "510e57c508f2cecbdda0db51af1cc0a97b91080862c2580d9afa57cf90848509"
+  },
+  {
+    "path": "docs/playtests/2026-10-11-history-consolidated-1079/integration-main-8a/attributes-conflict-working-copy.txt",
+    "bytes": 1401,
+    "sha256": "2b0033edf4bd8fc6ebff6669157c6bf953fa65919bc656baa762c9397da57e7a"
+  }
+]

@@ -211,6 +211,56 @@ def academy_view(gs: "GameState", parent_tid: str) -> dict[str, Any]:
     }
 
 
+def academy_view_for_club(
+    gs: "GameState", parent_tid: str, *, window_check: WindowCheck
+) -> dict[str, Any]:
+    """Augment the shared view for web controls using their required window check.
+
+    Keep these UI-only fields out of academy_view: decision_env embeds that
+    original projection in its versioned manager observation contract.
+    """
+    view = academy_view(gs, parent_tid)
+    view["send_down_roster"] = []
+    view["movement_detail"] = "Organization has no academy affiliate."
+    affiliate_tid = view["affiliate_id"]
+    if affiliate_tid is None:
+        return view
+
+    parent = gs.teams[parent_tid]
+    affiliate = gs.teams[affiliate_tid]
+    for row in view["roster"]:
+        allowed, reason = can_move(
+            gs, parent_tid, row["id"], "promote", window_check=window_check
+        )
+        row["promote"] = {"allowed": allowed, "reason": reason}
+    for pid in sorted(parent.player_ids):
+        player = gs.players.get(pid)
+        if player is None or player.age > ACADEMY_MAX_AGE:
+            continue
+        allowed, reason = can_move(
+            gs, parent_tid, pid, "send_down", window_check=window_check
+        )
+        view["send_down_roster"].append(
+            {
+                "id": pid,
+                "handle": player.handle,
+                "age": player.age,
+                "role": player.roster_role,
+                "send_down": {"allowed": allowed, "reason": reason},
+            }
+        )
+    roster_min, roster_max = _roster_limits()
+    view["movement_detail"] = (
+        f"Affiliate: {len(affiliate.player_ids)} players; first team: "
+        f"{len(parent.player_ids)}. Each must retain at least {roster_min} players "
+        f"and can hold up to {roster_max}. Promotion needs spare affiliate depth "
+        "and a first-team slot. An eligible first-team send-down can add affiliate "
+        f"depth; only players age {ACADEMY_MAX_AGE} or younger can be sent down. "
+        "Both moves require an open market window."
+    )
+    return view
+
+
 def upgrade(gs: "GameState", parent_tid: str) -> tuple[bool, str]:
     """Invest one tier in scouting reach, intake slots, and coaching gains."""
     if affiliate_for(gs, parent_tid) is None:

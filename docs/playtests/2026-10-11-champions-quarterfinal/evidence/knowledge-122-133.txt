@@ -1,0 +1,13 @@
+src/esports_sim/manager/knowledge.py
+122: def prep_bonus(gs: GameState, tid: str, opp: str, map_ids: list[str]) -> float:
+123:     """The knowledge share of a game plan's prep edge: the org's book on
+124:     the maps being played plus its book on this exact opponent. Small by
+125:     construction; the engine's PREP_EDGE_CAP clamps the total."""
+126:     playbook = 0.0
+127:     if map_ids:
+128:         playbook = sum(
+129:             get(gs, tid, f"playbook:{m}") for m in map_ids
+130:         ) / len(map_ids)
+131:     anti = get(gs, tid, f"antistrat:{opp}")
+132:     return playbook * EDGE_PER_PLAYBOOK + anti * EDGE_PER_ANTISTRAT
+133: 
