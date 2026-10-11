@@ -3802,6 +3802,13 @@ async function tactics(v) {
    Scrim/bootcamp booking, tournament-six registration and the between-map
    series card. Reads /api/club (these are campaign-layer prep systems);
    moved out of Club · Operations so match prep has a single home. */
+function preparationDevPlayerLabel(report) {
+  if (!report.dev_suggestion_player_id) return "";
+  return (report.dev_suggestion_handle
+    ? plink(report.dev_suggestion_player_id, report.dev_suggestion_handle)
+    : "Former player") + " — ";
+}
+
 function hydratePreparationForm(pr, controls) {
   const plan = pr.current;
   // A booking belongs to one fixture. Ignore stale or unavailable choices as
@@ -3887,7 +3894,7 @@ async function tacticsPrep(ws) {
     }
     if (pr.last.dev_suggestion) {
       pc.appendChild(el("div", "newsline prep-dev-hint",
-        `<b>Dev note:</b> ${pr.last.dev_suggestion_player_id ? plink(pr.last.dev_suggestion_player_id, pr.last.dev_suggestion_handle || humanize(pr.last.dev_suggestion_player_id)) + " — " : ""}${esc(pr.last.dev_suggestion)}`));
+        `<b>Dev note:</b> ${preparationDevPlayerLabel(pr.last)}${esc(pr.last.dev_suggestion)}`));
     }
   }
   ws.appendChild(pc);
