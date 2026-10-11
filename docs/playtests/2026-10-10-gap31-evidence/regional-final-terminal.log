@@ -1,0 +1,39 @@
+{
+  "surface": "direct-http API, not browser",
+  "complete_GS_equal": true,
+  "byte_equal": true,
+  "patched_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "baseline_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "accepted_decisions_before": 71,
+  "accepted_decisions_after": 72,
+  "decision_prefix_equal": true,
+  "new_actions": [
+    {
+      "season": 1,
+      "week": 16,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "snapshot_streams": {
+    "mgr_team_nexus": {
+      "before": 15,
+      "after": 16,
+      "prefix_equal": true
+    }
+  }
+}
+{
+  "income": 231036,
+  "expenses": 47100,
+  "bank_before": 805569,
+  "bank_after": 989505,
+  "notes": [
+    "Masters begins next week.",
+    "Team Nexus received 120,000 cr in tournament prize income this week (included in reported income)."
+  ]
+}

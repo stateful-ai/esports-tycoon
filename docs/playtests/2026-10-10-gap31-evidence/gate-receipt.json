@@ -1,0 +1,19 @@
+{
+  "runner_pid": 29132,
+  "pytest_pid": 38084,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n",
+    "2"
+  ],
+  "started_at": "2026-10-10T22:43:48.524038+00:00",
+  "status": "completed",
+  "exit_code": 0,
+  "completed_at": "2026-10-11T00:28:24.462579+00:00",
+  "freeze_unchanged": true,
+  "frozen_file_count": 625
+}

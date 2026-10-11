@@ -1,0 +1,26 @@
+{
+  "correction_to": "state-comparison.json telemetry_snaps:1 is manager_stream_count, not weekly snapshot count",
+  "manager_stream_count": 1,
+  "streams": [
+    {
+      "team": "mgr_team_nexus",
+      "before_snapshot_count": 13,
+      "after_snapshot_count": 14,
+      "prefix_identical": true,
+      "added_snapshot_count": 1
+    }
+  ],
+  "accepted_decision_prefix_equal": true,
+  "new_actions": [
+    {
+      "season": 1,
+      "week": 14,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ]
+}

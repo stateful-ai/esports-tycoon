@@ -1,0 +1,33 @@
+{
+  "surface": "diagnostic controlled fixture, not player session",
+  "seed": 2038,
+  "rows": [
+    {
+      "team": "team_azure_vanta",
+      "actual_prize_delta": 25000,
+      "base_income": 40727,
+      "reported_income": 65727,
+      "note": [
+        "Azure Vanta received 25,000 cr in tournament prize income this week (included in reported income)."
+      ]
+    },
+    {
+      "team": "team_anatolia_forge",
+      "actual_prize_delta": 25000,
+      "base_income": 38316,
+      "reported_income": 63316,
+      "note": [
+        "Anatolia Forge received 25,000 cr in tournament prize income this week (included in reported income)."
+      ]
+    },
+    {
+      "team": "team_busan_tempest",
+      "actual_prize_delta": 25000,
+      "base_income": 39521,
+      "reported_income": 64521,
+      "note": [
+        "Busan Tempest received 25,000 cr in tournament prize income this week (included in reported income)."
+      ]
+    }
+  ]
+}

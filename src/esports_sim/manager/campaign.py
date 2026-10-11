@@ -909,7 +909,11 @@ def advance_week(
 
     _cp.mark("market_scouting")
 
-    # 5. Phase transitions.
+    # 5. Phase transitions. The only balance mutations in this block are
+    # resolved prize payouts (Challengers, regional placement/playoffs,
+    # Masters and Champions). Capture the actual credits so reporting shares
+    # the payout truth without duplicating any prize ladder or paying again.
+    before_prizes = {tid: gs.teams[tid].balance for tid in sorted(gs.human_team_ids)}
     def veto_for(a: str, b: str) -> tuple[list[str], list[str]]:
         return veto_bo3(
             sorted(gd.maps),
@@ -1272,6 +1276,17 @@ def advance_week(
             report.notes.append(
                 f"{champ.name} are world champions. Offseason next week."
             )
+
+    for tid, balance in before_prizes.items():
+        prize_income = gs.teams[tid].balance - balance
+        if prize_income:
+            report.income_by[tid] = report.income_by.get(tid, 0) + prize_income
+            report.notes.append(
+                f"{gs.teams[tid].name} received {prize_income:,} cr in tournament "
+                "prize income this week (included in reported income)."
+            )
+    # Prize payouts happen after the ordinary-finance mirror above.
+    report.user_income = report.income_by.get(primary, 0)
 
     _cp.mark("transitions")
 
