@@ -1,0 +1,14 @@
+{
+  "prior_head": "72561d919b7c49792af309c1f6581d669ac768c7",
+  "prior_tree": "ab6dcee819d67d2d46d70f1e3866236406c6fd17",
+  "other_parent": "2e83a1b281f212404c28fe42f153a8287ca76e04",
+  "other_pr": 373,
+  "conflicts": [
+    "src/esports_sim/app/cli.py"
+  ],
+  "resolution": "Retain PR373 signed income, expenses label and facility upkeep detail. PR380 named prize notes and actual payout observation remain unchanged.",
+  "regression": "UNRUN: observe weekly_settlement.income instead of legacy weekly_tick net; exercise nonzero facility upkeep, expense and upkeep fields per manager, preserve all payout delta, primary mirroring, repeat-read and GameState/report purity assertions.",
+  "raw_history": "No historical raw files modified; normal parents retain all variants. Canonical actions.csv unchanged.",
+  "local_execution": "No local tests, validators, CJS, simulation/gates, application reports, hooks or gameplay actions executed. Explicit user waiver.",
+  "remote_ci": "New exact-head CI required after push. Root owns final review and merge."
+}

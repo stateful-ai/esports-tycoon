@@ -15,6 +15,8 @@ def test_resolved_prizes_reconcile_all_manager_incomes(monkeypatch, phase):
     gs = campaign.new_campaign(gd, seed=2038)
     regions = [gs.standings_order(str(r)) for r in gs.league_regions]
     gs.human_team_ids = [t for region in regions for t in region]
+    for tid in gs.human_team_ids:
+        gs.facilities_by[tid] = {"training_center": 1}
     gs.fixtures = []
     gs.week = 14 if phase == "placement" else 20
     gs.phase = "regular" if phase in ("placement", "none") else "playoffs"
@@ -58,23 +60,30 @@ def test_resolved_prizes_reconcile_all_manager_incomes(monkeypatch, phase):
         expected.update(dict(zip(ids, amounts)))
 
     ordinary = defaultdict(int)
+    ordinary_expenses = defaultdict(int)
+    upkeep = {}
     original_finance = campaign.apply_weekly_finance
     def finance(team, *args, **kwargs):
         result = original_finance(team, *args, **kwargs)
         ordinary[team.id] += result[0]
+        ordinary_expenses[team.id] += result[1]
         return result
     monkeypatch.setattr(campaign, "apply_weekly_finance", finance)
-    for name in ("settle_demands", "weekly_tick"):
+    for name in ("settle_demands", "weekly_settlement"):
         original = getattr(sponsors, name)
         def wrap(gs, *args, _original=original, **kwargs):
             tid = gs.acting_team_id
             result = _original(gs, *args, **kwargs)
-            ordinary[tid] += result
+            if isinstance(result, sponsors.WeeklySettlement):
+                ordinary[tid] += result.income
+                upkeep[tid] = result.facility_upkeep
+            else:
+                ordinary[tid] += result
             return result
         monkeypatch.setattr(sponsors, name, wrap)
 
     # Observe exactly the phase-transition boundary, independently of weekly
-    # expenses (including the separate facility-upkeep reporting defect).
+    # expenses. Sponsorship income and facility upkeep are separate categories.
     before, after = {}, {}
     original_ranks, original_solvency = campaign._update_world_ranks, economy.check_solvency
     def ranks(gs):
@@ -90,11 +99,15 @@ def test_resolved_prizes_reconcile_all_manager_incomes(monkeypatch, phase):
     for tid in gs.human_team_ids:
         assert after[tid] - before[tid] == expected[tid]
         assert report.income_by[tid] == ordinary[tid] + expected[tid]
+        assert upkeep[tid] > 0
+        assert report.facility_upkeep_by[tid] == upkeep[tid]
+        assert report.expenses_by[tid] == ordinary_expenses[tid] + upkeep[tid]
         award_notes = [n for n in report.notes if n.startswith(gs.teams[tid].name + " received ")]
         assert len(award_notes) == bool(expected[tid])
         if expected[tid]:
             assert f"{expected[tid]:,} cr" in award_notes[0]
     assert report.user_income == report.income_by[gs.user_team_id]
+    assert report.user_expenses == report.expenses_by[gs.user_team_id]
     state_before = gs.model_dump_json()
     report_before = repr(report)
     monkeypatch.setattr(server, "S", SimpleNamespace(prev_positions={}))
@@ -102,5 +115,7 @@ def test_resolved_prizes_reconcile_all_manager_incomes(monkeypatch, phase):
         first = server._report_view(report, gs, tid)
         assert first == server._report_view(report, gs, tid)
         assert first["user_income"] == ordinary[tid] + expected[tid]
+        assert first["user_expenses"] == ordinary_expenses[tid] + upkeep[tid]
+        assert first["user_facility_upkeep"] == upkeep[tid]
     assert gs.model_dump_json() == state_before
     assert repr(report) == report_before

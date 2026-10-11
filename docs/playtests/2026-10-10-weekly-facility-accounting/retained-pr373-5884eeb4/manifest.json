@@ -1,0 +1,121 @@
+{
+  "pr": 373,
+  "original_head": "5884eeb4f1663630b725deaa43cc98897f35e489",
+  "integrated_main": "0401b8a810cdcd75aae7ba6cdd8fe3d22c2fb96b",
+  "resolution": "Canonical conflict paths retain actual main blobs; original PR conflict blobs preserved byte-exact under retained-pr373-5884eeb4.",
+  "local_execution": "No tests, validators, simulations, gates, hooks, application reports or playtests run; explicit user waiver.",
+  "files": [
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/actions.csv",
+      "pr_blob": "85f06c53c347c5d946fcc0c50a62f0456fbc6bcb",
+      "main_blob": "9fa30df77879873a08f9c827b5677f16ed754753",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\actions.csv",
+      "retained_blob": "85f06c53c347c5d946fcc0c50a62f0456fbc6bcb"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/audit.json",
+      "pr_blob": "3f720014abf6155227ee403b1751f4662903c6ff",
+      "main_blob": "97e4ead105ebf20e79b67b51490e3191b0bbfdf9",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\audit.json",
+      "retained_blob": "3f720014abf6155227ee403b1751f4662903c6ff"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/baseline-comparison.json",
+      "pr_blob": "3e887b17b9520a8fdd2f9285f520b74263775b89",
+      "main_blob": "51d491a273edb5ee7810d7e555db6ce7c54cf7c7",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\baseline-comparison.json",
+      "retained_blob": "3e887b17b9520a8fdd2f9285f520b74263775b89"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/pytest.log",
+      "pr_blob": "b7eea0a7be350da2c2d97e75b14d837f2887e29d",
+      "main_blob": "fc4d3d47e3b931df37758d80527cffea6fecd32d",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\gate\\pytest.log",
+      "retained_blob": "b7eea0a7be350da2c2d97e75b14d837f2887e29d"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/source-post.json",
+      "pr_blob": "cd06e60fc9c97ed414b9ab5cbe9a3bc7e84fd97e",
+      "main_blob": "46dadb4939ab3b18adbe30a0ac6162df46990927",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\gate\\source-post.json",
+      "retained_blob": "cd06e60fc9c97ed414b9ab5cbe9a3bc7e84fd97e"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/source-pre.json",
+      "pr_blob": "cd06e60fc9c97ed414b9ab5cbe9a3bc7e84fd97e",
+      "main_blob": "46dadb4939ab3b18adbe30a0ac6162df46990927",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\gate\\source-pre.json",
+      "retained_blob": "cd06e60fc9c97ed414b9ab5cbe9a3bc7e84fd97e"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/gate/status.json",
+      "pr_blob": "bf90ec3d50619f38770f4127891613ddc8e88ec2",
+      "main_blob": "a42f5e7410c20a1da49258f4b075d942ec8b3f35",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\gate\\status.json",
+      "retained_blob": "bf90ec3d50619f38770f4127891613ddc8e88ec2"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/receipt.json",
+      "pr_blob": "68dffbd30393f40064365aabcc8967d426b9f884",
+      "main_blob": "df9bd3c4814e0f7497dab4fe651b645e11070aac",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\receipt.json",
+      "retained_blob": "68dffbd30393f40064365aabcc8967d426b9f884"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/cli-revision/rendered-output.txt",
+      "pr_blob": "14e89ecc7391f51e74c9101e255e0ec3b7f5c9fb",
+      "main_blob": "51c752fa994700ebaaceac5cae3dc78dfbafe7e7",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\cli-revision\\rendered-output.txt",
+      "retained_blob": "14e89ecc7391f51e74c9101e255e0ec3b7f5c9fb"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/decisions.json",
+      "pr_blob": "8581ff2aaa76fbd476e8850a222b92261b400c89",
+      "main_blob": "67d4a1f669f09cca92f42a44e25c63c2485794e9",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\decisions.json",
+      "retained_blob": "8581ff2aaa76fbd476e8850a222b92261b400c89"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/pytest.log",
+      "pr_blob": "72fc20e08ed710f861b7c33ff01ab03e12536dac",
+      "main_blob": "4762c18215df05696c3a29acfa42a1722fc06b2a",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\gate\\pytest.log",
+      "retained_blob": "72fc20e08ed710f861b7c33ff01ab03e12536dac"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/source-post.json",
+      "pr_blob": "55bf787ae73abe182f38671fc9752f8ad6bf31d2",
+      "main_blob": "f85b18ac7d13d3f6176f619d7865ba6e0dfe2ea3",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\gate\\source-post.json",
+      "retained_blob": "55bf787ae73abe182f38671fc9752f8ad6bf31d2"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/source-pre.json",
+      "pr_blob": "55bf787ae73abe182f38671fc9752f8ad6bf31d2",
+      "main_blob": "f85b18ac7d13d3f6176f619d7865ba6e0dfe2ea3",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\gate\\source-pre.json",
+      "retained_blob": "55bf787ae73abe182f38671fc9752f8ad6bf31d2"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/gate/status.json",
+      "pr_blob": "830023d4d7542e56aaabb40c88565e06655ab3fb",
+      "main_blob": "382a3fa72e15e8bd886f2d40950fc54a7b8b0696",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\gate\\status.json",
+      "retained_blob": "830023d4d7542e56aaabb40c88565e06655ab3fb"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/public-accounting.json",
+      "pr_blob": "3d43cea574f9030c074b4838dbfd7526e9118262",
+      "main_blob": "270635c72b623aa3696ce90d37637a1f315e9654",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\public-accounting.json",
+      "retained_blob": "3d43cea574f9030c074b4838dbfd7526e9118262"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-weekly-facility-accounting/usage-events.json",
+      "pr_blob": "0d6fd7564b74211ac81dead09a9136d5e294198a",
+      "main_blob": "1c8bfff8b8df1dd877cd6f17295db6c2e63e668e",
+      "retained_path": "docs\\playtests\\2026-10-10-weekly-facility-accounting\\retained-pr373-5884eeb4\\usage-events.json",
+      "retained_blob": "0d6fd7564b74211ac81dead09a9136d5e294198a"
+    }
+  ]
+}
