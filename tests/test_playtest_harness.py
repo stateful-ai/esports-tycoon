@@ -381,74 +381,131 @@ def test_the_snapshot_script_collects_toasts() -> None:
 # ── advance_week must not call a moved week a failure ───────────────────
 
 
-class _FakeObserver:
-    """Just enough PlaytestSession to exercise the advance_week verdict."""
+class _AdvanceClock:
+    """A clock advanced only by the fake page's waits, never wall time."""
 
-    def __init__(self, before: str, after: str, busy: bool) -> None:
-        self._contexts = [before, after]
+    def __init__(self) -> None:
+        self.now = 0.0
+
+    def monotonic(self) -> float:
+        return self.now
+
+
+class _AdvancePage:
+    """Supply browser observations without implementing any verdict logic."""
+
+    def __init__(self, before: str, after: str, busy: bool, clock: _AdvanceClock) -> None:
+        self.contexts = iter((before, after))
         self.busy = busy
-        self.verdict: tuple[bool, str] | None = None
+        self.clock = clock
+        self.clicks: list[tuple[str, int]] = []
+        self.waits: list[int] = []
+        self.context_reads = 0
+        self.overlay_reads = 0
+        self.busy_reads = 0
 
-    def _context(self) -> str:
-        return self._contexts.pop(0) if self._contexts else ""
+    def evaluate(self, script: str):  # noqa: ANN201 - fake browser returns mixed values
+        if script == OPEN_OVERLAYS_SCRIPT:
+            self.overlay_reads += 1
+            return []
+        if "document.getElementById('context')" in script:
+            self.context_reads += 1
+            return next(self.contexts)
+        if "vis('week-loading') || vis('week-reveal')" in script:
+            self.busy_reads += 1
+            return self.busy
+        raise AssertionError(f"unexpected browser script: {script}")
 
-    def observe(self, action, *, ok=True, message=""):  # noqa: ANN001
-        self.verdict = (ok, message)
-        return self.verdict
+    def click(self, selector: str, *, timeout: int) -> None:
+        self.clicks.append((selector, timeout))
 
-
-def _verdict(before: str, after: str, busy: bool) -> tuple[bool, str]:
-    """Replicate advance_week's decision, the part that had the bug.
-
-    The real method needs a live browser; this pins the LOGIC that decides
-    success, which is what regressed. A reveal overlay outliving the tick
-    (`busy`) is a normal state a player dismisses, not a failed advance.
-    """
-    moved = bool(before) and bool(after) and after != before
-    if not moved:
-        detail = f"still {after!r}" if after else "the screen reports no week at all"
-        if busy:
-            detail += " (the week overlay never cleared, so the tick may still be running)"
-        return False, f"the week did not move — {detail}."
-    message = f"{before} -> {after}"
-    if busy:
-        message += " (the week reveal is still open — read it, then `close`)"
-    return True, message
+    def wait_for_timeout(self, ms: int) -> None:
+        self.waits.append(ms)
+        self.clock.now += ms / 1000
 
 
-def test_a_week_that_moved_is_a_success_even_with_the_reveal_open() -> None:
-    """The bug: week 1 -> 2 with HTTP 200 was reported as "did not move".
+@pytest.fixture
+def advance_observation(monkeypatch, tmp_path):
+    """Run the shipped method; replace only browser, clock, and observation I/O."""
+    from esports_sim.playtest import session as session_module
 
-    `advance_week` failed whenever the week-reveal overlay was still visible,
-    but that overlay is dismissed by the PLAYER, so it routinely outlives the
-    tick. The advance had worked; the harness said it had not, and printed the
-    post-advance week while claiming nothing had changed.
-    """
-    ok, message = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=True)
-    assert ok, "a week that moved must not be reported as a failure"
-    assert "Week 1 -> Season 1 - Week 2" in message
-    assert "reveal is still open" in message, "the open reveal should still be mentioned"
+    def run(before: str, after: str, *, busy: bool):
+        clock = _AdvanceClock()
+        page = _AdvancePage(before, after, busy, clock)
+        session = session_module.PlaytestSession(
+            run_dir=tmp_path, base_url="http://unused", chromium="unused",
+        )
+        session._page = page
+        monkeypatch.setattr(session_module, "time", clock)
+        observations = []
+
+        def observe(action: str, *, ok: bool = True, message: str = ""):
+            observation = session_module.Observation(
+                step=1, action=action, ok=ok, message=message, snapshot={},
+            )
+            observations.append(observation)
+            return observation
+
+        monkeypatch.setattr(session, "observe", observe)
+        result = session.advance_week(timeout_ms=1000)
+
+        # Prove this exercised the click/poll/readback path and returned its
+        # observation, rather than testing a separate copy of the verdict.
+        assert observations == [result]
+        assert result.action == "advance_week"
+        assert page.clicks == [("#advance-btn", 8000)]
+        assert page.context_reads == 2
+        assert page.overlay_reads == 1
+        assert page.busy_reads == (2 if busy else 1)
+        assert page.waits == ([500, 500] if busy else [])
+        return result
+
+    return run
 
 
-def test_a_week_that_moved_cleanly_says_so() -> None:
-    ok, message = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=False)
-    assert ok
-    assert "reveal" not in message
+def test_a_week_that_moved_is_a_success_even_with_the_reveal_open(advance_observation) -> None:
+    """An open player-dismissed reveal must not negate a completed advance."""
+    result = advance_observation("Season 1 - Week 1", "Season 1 - Week 2", busy=True)
+    assert result.ok, "a week that moved must not be reported as a failure"
+    assert "Week 1 -> Season 1 - Week 2" in result.message
+    assert "reveal is still open" in result.message
+    assert "did not move" not in result.message
 
 
-def test_a_week_that_really_did_not_move_still_fails() -> None:
-    ok, message = _verdict("Season 1 - Week 2", "Season 1 - Week 2", busy=False)
-    assert not ok
-    assert "did not move" in message
+def test_a_week_that_moved_cleanly_says_so(advance_observation) -> None:
+    result = advance_observation("Season 1 - Week 1", "Season 1 - Week 2", busy=False)
+    assert result.ok
+    assert result.message == "Season 1 - Week 1 -> Season 1 - Week 2"
 
 
-def test_a_stuck_tick_is_named_as_such() -> None:
-    ok, message = _verdict("Season 1 - Week 2", "Season 1 - Week 2", busy=True)
-    assert not ok
-    assert "never cleared" in message
+def test_a_week_that_really_did_not_move_still_fails(advance_observation) -> None:
+    result = advance_observation("Season 1 - Week 2", "Season 1 - Week 2", busy=False)
+    assert not result.ok
+    assert "did not move" in result.message
+    assert "still 'Season 1 - Week 2'" in result.message
+    assert "never cleared" not in result.message
 
 
-def test_the_failure_message_never_contradicts_itself() -> None:
-    """It used to read "did not move — still 'Week 2'" after moving to week 2."""
-    _, moved_msg = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=True)
-    assert "did not move" not in moved_msg
+def test_a_stuck_tick_is_named_as_such(advance_observation) -> None:
+    result = advance_observation("Season 1 - Week 2", "Season 1 - Week 2", busy=True)
+    assert not result.ok
+    assert "did not move" in result.message
+    assert "never cleared" in result.message
+
+
+@pytest.mark.parametrize(
+    ("before", "after"),
+    [("", "Season 1 - Week 2"), ("Season 1 - Week 1", ""), ("", "")],
+    ids=["missing-before", "missing-after", "missing-both"],
+)
+@pytest.mark.parametrize("busy", [False, True], ids=["clear", "busy"])
+def test_missing_week_context_cannot_claim_a_success(
+    advance_observation, before: str, after: str, busy: bool,
+) -> None:
+    result = advance_observation(before, after, busy=busy)
+    assert not result.ok
+    assert "did not move" in result.message
+    assert "reveal is still open" not in result.message
+    if not after:
+        assert "the screen reports no week at all" in result.message
+    assert ("never cleared" in result.message) == busy
