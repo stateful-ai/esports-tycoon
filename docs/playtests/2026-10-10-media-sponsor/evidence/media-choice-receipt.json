@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"status\":200,\"body\":{\"ok\":true,\"message\":\"The manager stands between the player and the criticism.\",\"effects\":{\"sentiment\":3,\"sponsor_relation\":0,\"trust\":8}}}\n### Ran Playwright code\n```js\nawait (async (page) => { const receipt = page.waitForResponse(r => r.url().endsWith('/api/actions/media_event') && r.request().method() === 'POST'); await page.getByRole('button', { name: 'Defend the player publicly', exact: true }).click(); const r = await receipt; return {status:r.status(),body:await r.json()}; })(page);\n```"
+    }
+  ]
+}

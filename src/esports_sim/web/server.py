@@ -803,14 +803,14 @@ def _badge_views(p: Player) -> list[dict]:
         bid = pb.id
         ability_parts = [
             f"{float(delta):+g} {humanize_identifier(attr)}"
-            for attr, delta in sorted((b.get("ca") or {}).items())
+            for attr, delta in sorted(pb.applied.items())
         ]
         impact = (
-            "While held: " + ", ".join(ability_parts) + "."
-            if ability_parts else "This badge has no temporary attribute effect."
+            "Applied when earned (while held): " + ", ".join(ability_parts) + "."
+            if ability_parts else "No temporary attribute change recorded when earned."
         )
-        if float(b.get("pa", 0.0)) > 0:
-            impact += f" Earning it permanently raised potential by {float(b['pa']):g}."
+        if pb.pa_applied > 0:
+            impact += f" Earning it permanently raised potential by {pb.pa_applied:g}."
         decay_seasons = int(b.get("decay_seasons", 0))
         decay = (
             f"It can fade after {decay_seasons} season"
@@ -6311,6 +6311,11 @@ def set_lineup(body: LineupBody) -> dict:
         me = gs.acting_team_id
         team = gs.teams[me]
         roster = set(team.player_ids)
+        # Validate the complete request before applying any part of it. A
+        # rejected mixed request must not leave an unrecorded agent change.
+        new = None
+        default_picks = None
+        map_picks = None
         if body.agents is not None:
             new: dict[str, str] = {}
             for pid, aid in body.agents.items():
@@ -6321,14 +6326,13 @@ def set_lineup(body: LineupBody) -> dict:
                 if aid not in S.gd.agents:
                     raise HTTPException(422, f"unknown agent {aid}")
                 new[pid] = aid
-            team.lineup.agents = new
         if body.lineup_ids is not None:
             picks = [pid for pid in body.lineup_ids if pid in roster]
             if len(picks) > market.ROSTER_SIZE:
                 raise HTTPException(
                     422, f"a lineup is at most {market.ROSTER_SIZE}"
                 )
-            team.lineup_ids = picks
+            default_picks = picks
         if body.player_ids is not None:
             if not (body.fixture_id and body.map_id):
                 raise HTTPException(
@@ -6339,7 +6343,13 @@ def set_lineup(body: LineupBody) -> dict:
                 raise HTTPException(
                     422, f"dress exactly {market.ROSTER_SIZE} players for a map"
                 )
-            gs.map_lineups[f"{me}|{body.fixture_id}|{body.map_id}"] = picks
+            map_picks = picks
+        if new is not None:
+            team.lineup.agents = new
+        if default_picks is not None:
+            team.lineup_ids = default_picks
+        if map_picks is not None:
+            gs.map_lineups[f"{me}|{body.fixture_id}|{body.map_id}"] = map_picks
         telemetry.record_action(
             gs, "set_lineup",
             {
@@ -6348,6 +6358,10 @@ def set_lineup(body: LineupBody) -> dict:
                 "per_map": bool(body.player_ids is not None),
                 "fixture_id": body.fixture_id or "",
                 "map_id": body.map_id or "",
+                "choice_encoding": "json-v1",
+                "agent_choices": json.dumps(new, sort_keys=True, separators=(",", ":")),
+                "lineup_ids": json.dumps(default_picks, separators=(",", ":")),
+                "player_ids": json.dumps(map_picks, separators=(",", ":")),
             },
         )
         S.save()
@@ -6694,6 +6708,11 @@ def set_gameplan(body: GamePlanBody) -> dict:
                 "site_focus": body.site_focus or "",
                 "focus_target": body.focus_target or "",
                 "one_match_lineup": bool(starters),
+                "choice_encoding": "json-v1",
+                "starter_ids": json.dumps(gs.game_plan.starter_ids, separators=(",", ":")),
+                "team_talk": gs.game_plan.team_talk or "",
+                **{k: "" if getattr(gs.game_plan, k) is None else getattr(gs.game_plan, k)
+                   for k in _PLAN_DIAL_FIELDS},
             },
         )
         S.save()
@@ -7385,7 +7404,8 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Advance Week again.",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
@@ -7509,7 +7529,8 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Sim Ahead again.",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(

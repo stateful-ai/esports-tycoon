@@ -8,6 +8,7 @@ from esports_sim.manager import preparation
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.state import GameState, TeamMapStats
 from esports_sim.rng import RngTree
+from esports_sim.schemas.player import MapMastery
 
 
 @pytest.fixture()
@@ -239,3 +240,66 @@ def test_proposal_preview_is_read_only_and_uses_acting_human_club(campaign: Game
     assert proposal["condition_cost"] == 0.0
     assert "expected_edge" not in proposal
     assert gs.model_dump_json() == before
+
+
+@pytest.mark.parametrize("objective", preparation.OBJECTIVES)
+def test_rotation_advice_is_a_map_mastery_projection_without_scrim_results(
+    campaign: GameState, objective: str
+) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    fixture, _, partner, map_id = _booking_parts(gs)
+    gs.week = fixture.week
+    gs.teams[tid].player_ids.extend(sorted(gs.free_agent_ids)[:2])
+    roster = sorted(gs.teams[tid].player_ids)
+    gs.teams[tid].lineup_ids = roster[:5]
+    bench = roster[5:]
+    assert bench
+    candidate = bench[-1]
+    for pid in bench:
+        gs.players[pid].map_pool = [MapMastery(map_id=map_id, mastery=10.0)]
+    gs.players[candidate].map_pool = [MapMastery(map_id=map_id, mastery=90.0)]
+    before_stats = gs.model_dump(mode="json")["player_stats"]
+    plan = preparation.schedule(gs, tid, fixture.id, partner, map_id, objective, "light")
+    report = preparation._resolve(gs, plan, None)
+
+    assert report.evidence.rotation_candidate_id == candidate
+    assert report.dev_suggestion_player_id == candidate
+    assert "Map mastery projects" in report.dev_suggestion
+    assert gs.players[candidate].handle in report.dev_suggestion
+    assert "no scrim performance was measured" in report.dev_suggestion
+    assert "pushed the starters" not in report.dev_suggestion
+    assert gs.model_dump(mode="json")["player_stats"] == before_stats
+    if objective == "lineup_test":
+        assert report.finding_code == "rotation_candidate"
+        assert "Map mastery projects" in report.finding
+        assert "no scrim performance was measured" in report.finding
+    else:
+        assert "bench option" not in report.finding
+
+
+def test_lineup_review_without_bench_does_not_claim_a_measured_confirmation(
+    campaign: GameState,
+) -> None:
+    gs = campaign
+    tid = gs.user_team_id
+    gs.teams[tid].player_ids = gs.teams[tid].player_ids[:5]
+    gs.teams[tid].lineup_ids = list(gs.teams[tid].player_ids)
+    fixture, _, partner, map_id = _booking_parts(gs)
+    plan = preparation.schedule(gs, tid, fixture.id, partner, map_id, "lineup_test", "light")
+    report = preparation._resolve(gs, plan, None)
+    assert report.evidence.rotation_candidate_id == ""
+    assert report.finding_code == "lineup_confirmed"  # preserve saved code compatibility
+    assert "No eligible bench alternative was available" in report.finding
+    assert "no scrim performance was measured" in report.finding
+    assert "lineup review" in report.artifact_label
+
+
+def test_loading_historical_preparation_preserves_its_original_advice() -> None:
+    report = preparation.PrepReport(
+        plan_id="old", team_id="team", fixture_id="fixture", opponent_id="opponent",
+        partner_id="partner", map_id="lotus", objective="mental_reset", intensity="light",
+        season=1, week=7, dev_suggestion_player_id="echo",
+        dev_suggestion="Echo pushed the starters on lotus; a focused development block could make that rotation real.",
+    )
+    assert preparation.PrepReport.model_validate_json(report.model_dump_json()) == report

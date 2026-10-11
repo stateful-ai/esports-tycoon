@@ -1,0 +1,220 @@
+{
+  "recent": [
+    {
+      "id": "esports-playtest-0100",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Visible team moment blocker retained an obsolete heading",
+      "problem": "Player could not find the error-directed Action required section while the prompt lived under Needs you.",
+      "solution": "Use the accurate Dashboard recovery route and explicit retry instruction.",
+      "lesson": "One seed2038 world26UHC W6 recovery was verified; this short UI session does not establish event balance.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0099",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Rejected advances and accepted choices use separate evidence streams",
+      "problem": "A409 is a player attempt but never an accepted decision.",
+      "solution": "Compare27-action baseline against29-action end save and join usage request IDs.",
+      "lesson": "Two accepted actions match exact indexed decisions; two409s match browser usage only, with unchanged APIstate at each rejection.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0098",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Pending flavor recovery owns the visible Dashboard route",
+      "problem": "Advance409 pointed to removed Action required section.",
+      "solution": "Name Dashboard, Needs you and Team moment in both advance controls.",
+      "lesson": "Recovery copy must use current rendered section names; existing Dashboard navigation and inline choices recovered W6 to W7.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0097",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Flavor blocker names an obsolete section",
+      "problem": "Advance409 says Actionrequired but visibleDashboard owning section is Needsyou",
+      "solution": "Root retained rejection and successfulchoice/retry, assignedgap18gpt6.1medium ownPR",
+      "lesson": "Recovery guidance should name the current visible navigation and section",
+      "confidence": "medium",
+      "source": "Browser8471 world26UHC seed2038 S1W6-W7 docs/playtests/2026-10-08-contract-renewal-recovery/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "renewal",
+        "recovery",
+        "flavor",
+        "telemetry"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0096",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Recovery remains visible while lineup and performance differ",
+      "problem": "Low condition and a team win can obscure individual outcomes",
+      "solution": "Ghostbench25.5to49.5/maps5stays; EchoplaysRestLight21.5to32.5; HollowHarbor replay0.62despite13-7win",
+      "lesson": "Read recovery, actual participation and individual performance separately; one run does not establish causal balance",
+      "confidence": "medium",
+      "source": "Browser8471 world26UHC seed2038 S1W6-W7 docs/playtests/2026-10-08-contract-renewal-recovery/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "renewal",
+        "recovery",
+        "flavor",
+        "telemetry"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0095",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Accepted renewal clauses and promises need independent readback",
+      "problem": "Acceptance toast shows only salary/duration",
+      "solution": "Vortex profile confirms all six clauses and new60percentplay-time promise; nextweek47to46contract and dressed0to1",
+      "lesson": "Verify clauses immediately and promise progress after resolution; acceptance does not guarantee future promise fulfillment",
+      "confidence": "medium",
+      "source": "Browser8471 world26UHC seed2038 S1W6-W7 docs/playtests/2026-10-08-contract-renewal-recovery/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "renewal",
+        "recovery",
+        "flavor",
+        "telemetry"
+      ],
+      "kind": "learning"
+    }
+  ],
+  "search": [
+    {
+      "id": "esports-playtest-0100",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Visible team moment blocker retained an obsolete heading",
+      "problem": "Player could not find the error-directed Action required section while the prompt lived under Needs you.",
+      "solution": "Use the accurate Dashboard recovery route and explicit retry instruction.",
+      "lesson": "One seed2038 world26UHC W6 recovery was verified; this short UI session does not establish event balance.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0099",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Rejected advances and accepted choices use separate evidence streams",
+      "problem": "A409 is a player attempt but never an accepted decision.",
+      "solution": "Compare27-action baseline against29-action end save and join usage request IDs.",
+      "lesson": "Two accepted actions match exact indexed decisions; two409s match browser usage only, with unchanged APIstate at each rejection.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0098",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Pending flavor recovery owns the visible Dashboard route",
+      "problem": "Advance409 pointed to removed Action required section.",
+      "solution": "Name Dashboard, Needs you and Team moment in both advance controls.",
+      "lesson": "Recovery copy must use current rendered section names; existing Dashboard navigation and inline choices recovered W6 to W7.",
+      "confidence": "high",
+      "source": "2026-10-08-flavor-hint browser8472 world26UHC seed2038 W6-W7; docs/playtests/2026-10-08-flavor-hint",
+      "code": "",
+      "tags": [
+        "flavor",
+        "recovery",
+        "browser",
+        "gap18"
+      ],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0097",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Flavor blocker names an obsolete section",
+      "problem": "Advance409 says Actionrequired but visibleDashboard owning section is Needsyou",
+      "solution": "Root retained rejection and successfulchoice/retry, assignedgap18gpt6.1medium ownPR",
+      "lesson": "Recovery guidance should name the current visible navigation and section",
+      "confidence": "medium",
+      "source": "Browser8471 world26UHC seed2038 S1W6-W7 docs/playtests/2026-10-08-contract-renewal-recovery/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "renewal",
+        "recovery",
+        "flavor",
+        "telemetry"
+      ],
+      "kind": "pain-point"
+    },
+    {
+      "id": "esports-playtest-0096",
+      "ts": "2026-10-08",
+      "domain": "esports-playtest",
+      "topic": "Recovery remains visible while lineup and performance differ",
+      "problem": "Low condition and a team win can obscure individual outcomes",
+      "solution": "Ghostbench25.5to49.5/maps5stays; EchoplaysRestLight21.5to32.5; HollowHarbor replay0.62despite13-7win",
+      "lesson": "Read recovery, actual participation and individual performance separately; one run does not establish causal balance",
+      "confidence": "medium",
+      "source": "Browser8471 world26UHC seed2038 S1W6-W7 docs/playtests/2026-10-08-contract-renewal-recovery/report.md",
+      "code": "26UHC",
+      "tags": [
+        "browser",
+        "renewal",
+        "recovery",
+        "flavor",
+        "telemetry"
+      ],
+      "kind": "learning"
+    }
+  ]
+}

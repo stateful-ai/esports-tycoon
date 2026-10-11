@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Error\nError: Not Found\n    at api (http://127.0.0.1:8467/app.js:140:13)\n    at async eval (eval at <anonymous> (eval at evaluate (:368:30)), <anonymous>:1:103)\n    at async eval (eval at evaluate (:368:30), <anonymous>:4:30)\n    at async <anonymous>:394:30\n### Page\n- Page URL: http://127.0.0.1:8467/\n- Page Title: esports-sim\n- Console: 1 errors, 0 warnings\n### Events\n- New console entries: .playwright-mcp\\console-2026-10-08T20-58-43-794Z.log#L1"
+    }
+  ],
+  "isError": true
+}

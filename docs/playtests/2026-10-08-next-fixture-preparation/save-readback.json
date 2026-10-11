@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"save\": {\n    \"dirty\": false,\n    \"autosave_enabled\": true,\n    \"autosave_every_weeks\": 1\n  },\n  \"time\": [\n    1,\n    4\n  ],\n  \"balance\": 392801,\n  \"rosterCount\": 5,\n  \"apex\": [\n    {\n      \"salary\": 10500,\n      \"weeks\": 48,\n      \"intensity\": \"light\"\n    }\n  ],\n  \"ghost\": [\n    {\n      \"mentor\": \"apex\",\n      \"progress\": 0\n    }\n  ],\n  \"echo\": [\n    {\n      \"badges\": [\n        {\n          \"id\": \"clutch_master\",\n          \"name\": \"Clutch Master\",\n          \"emoji\": \"❄️\",\n          \"polarity\": 1,\n          \"blurb\": \"wants the round with the game on the line\",\n          \"kind\": \"positive\",\n          \"impact\": \"While held: +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 2.\",\n          \"decay\": \"It can fade after 2 seasons without re-qualifying.\",\n          \"art\": \"/assets/badges/clutch_master.webp\",\n          \"season\": 1\n        }\n      ],\n      \"overall\": 76\n    }\n  ]\n}\n### Ran Playwright code\n```js\nawait page.evaluate('async () => {const s=await api(\\'/api/state\\'); const r=await api(\\'/api/roster/team_nexus\\');return {save:s.save,time:[s.season,s.week],balance:r.team.balance,rosterCount:r.players.length,apex:r.players.filter(p=>p.id===\\'apex\\').map(p=>({salary:p.salary,weeks:p.contract_weeks_left,intensity:p.training_intensity})),ghost:r.players.filter(p=>p.id===\\'ghost\\').map(p=>({mentor:p.mentor_id,progress:p.mentor_progress})),echo:r.players.filter(p=>p.id===\\'echo\\').map(p=>({badges:p.badges,overall:p.overall}))};}');\n```"
+    }
+  ]
+}

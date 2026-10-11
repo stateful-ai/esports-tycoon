@@ -240,3 +240,32 @@ def test_rotation_respects_exact_byte_boundary_on_windows(monkeypatch, tmp_path)
     assert store.paths()[1].exists()
     assert all(path.stat().st_size <= store.max_bytes for path in store.paths() if path.exists())
     assert b"\r\n" not in row
+
+
+def test_market_search_receipts_are_coarse_counts(client):
+    event = {"kind": "interaction", "target": "market/player_search"}
+    assert client.post("/api/usage/events", json=payload(event, event)).json()["accepted"]
+    report = client.get("/api/usage/report").json()
+    assert report["events"] == {"interaction:market/player_search": 2}
+    assert report["attempts"] == report["paired_results"] == 0
+
+
+@pytest.mark.parametrize("event", [
+    {"kind": "interaction", "target": "market/player_search/secret"},
+    {"kind": "interaction", "target": "market/search"},
+    *[{"kind": "interaction", "target": "market/player_search", field: value}
+      for field, value in [("query", "secret"), ("handle", "secret"), ("player_id", "secret"),
+                           ("selector", "secret"), ("label", "secret"), ("url", "secret"),
+                           ("request_id", 1), ("outcome", "success"), ("duration_ms", 1)]],
+])
+def test_market_search_rejects_values_and_unknown_targets(client, event):
+    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
+
+
+def test_market_search_actual_js_callbacks():
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("Node unavailable")
+    subprocess.run([node, "tests/market_search_usage_check.cjs"], check=True, capture_output=True)

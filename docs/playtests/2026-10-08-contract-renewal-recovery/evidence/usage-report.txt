@@ -1,0 +1,59 @@
+{
+  "attempts": 11,
+  "events": {
+    "attempt:/api/actions/advance": 2,
+    "attempt:/api/actions/dev_plan": 4,
+    "attempt:/api/actions/flavor_event": 1,
+    "attempt:/api/actions/lineup": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 2,
+    "interaction:week/full_report_open": 1,
+    "replay:close": 1,
+    "replay:open": 1,
+    "result:/api/actions/advance": 2,
+    "result:/api/actions/dev_plan": 4,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/lineup": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 2,
+    "session_start:": 1,
+    "view:club/development": 1,
+    "view:club/squad": 2,
+    "view:dashboard": 3,
+    "view:lobby": 1,
+    "view:replay": 1,
+    "visible_time:club/development": 9,
+    "visible_time:club/squad": 51,
+    "visible_time:dashboard": 25,
+    "visible_time:lobby": 1,
+    "visible_time:replay": 3
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "19793c50ffc6b80b3c9102a22a558c8d": 1214993
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 4,
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/lineup:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 2
+  },
+  "paired_results": 11,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 117670,
+    "club/squad": 728876,
+    "dashboard": 351171,
+    "lobby": 112,
+    "replay": 32174
+  },
+  "world_events": {
+    "26UHC": 123
+  }
+}

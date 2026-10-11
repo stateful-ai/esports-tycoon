@@ -1,0 +1,127 @@
+{
+  "registration": {
+    "player_ids": [
+      "apex",
+      "vortex",
+      "fa_13",
+      "fa_0",
+      "ghost",
+      "echo"
+    ],
+    "locked": false,
+    "limit": 6,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 26,
+        "role": "starter"
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 23,
+        "role": "starter"
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 26,
+        "role": "bench"
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 28,
+        "role": "starter"
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 19,
+        "role": "starter"
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 22,
+        "role": "starter"
+      }
+    ]
+  },
+  "starter_ids": [
+    "apex",
+    "vortex",
+    "fa_13",
+    "fa_0",
+    "ghost"
+  ],
+  "plan_roster": [
+    {
+      "player_id": "apex",
+      "handle": "Apex",
+      "role": "controller",
+      "playstyle": "igl",
+      "overall": 78.3,
+      "stamina": 66.5,
+      "form": 58.1,
+      "confidence": 61.3,
+      "is_starter": true
+    },
+    {
+      "player_id": "echo",
+      "handle": "Echo",
+      "role": "sentinel",
+      "playstyle": "anchor",
+      "overall": 76,
+      "stamina": 32.5,
+      "form": 54.1,
+      "confidence": 64,
+      "is_starter": false
+    },
+    {
+      "player_id": "fa_0",
+      "handle": "Hollowlock",
+      "role": "controller",
+      "playstyle": "igl",
+      "overall": 63,
+      "stamina": 70.4,
+      "form": 38.5,
+      "confidence": 46.7,
+      "is_starter": true
+    },
+    {
+      "player_id": "fa_13",
+      "handle": "Slyblade",
+      "role": "duelist",
+      "playstyle": "entry",
+      "overall": 72.3,
+      "stamina": 65.4,
+      "form": 59.5,
+      "confidence": 64.2,
+      "is_starter": true
+    },
+    {
+      "player_id": "ghost",
+      "handle": "Ghost",
+      "role": "initiator",
+      "playstyle": "lurker",
+      "overall": 76.3,
+      "stamina": 49.5,
+      "form": 58.7,
+      "confidence": 64.8,
+      "is_starter": true
+    },
+    {
+      "player_id": "vortex",
+      "handle": "Vortex",
+      "role": "duelist",
+      "playstyle": "awper",
+      "overall": 74.7,
+      "stamina": 96.5,
+      "form": 67.7,
+      "confidence": 66.9,
+      "is_starter": true
+    }
+  ]
+}

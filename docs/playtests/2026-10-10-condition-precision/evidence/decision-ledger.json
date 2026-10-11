@@ -1,0 +1,625 @@
+[
+  {
+    "index": 0,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "release",
+    "params": {
+      "player_id": "phantom"
+    },
+    "source": "web"
+  },
+  {
+    "index": 1,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "fa_13"
+    },
+    "source": "web"
+  },
+  {
+    "index": 2,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "180000",
+      "no_transfer": "True",
+      "player_id": "fa_13",
+      "release_fee": "76000",
+      "role": "starter",
+      "salary": "6300",
+      "status": "accepted",
+      "stream_share": "71",
+      "weeks": "62"
+    },
+    "source": "web"
+  },
+  {
+    "index": 3,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "vortex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 4,
+    "season": 1,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 5,
+    "season": 1,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "release",
+    "params": {
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 6,
+    "season": 1,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 7,
+    "season": 1,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "400000",
+      "no_transfer": "False",
+      "player_id": "echo",
+      "release_fee": "92000",
+      "role": "starter",
+      "salary": "7700",
+      "status": "accepted",
+      "stream_share": "72",
+      "weeks": "55"
+    },
+    "source": "web"
+  },
+  {
+    "index": 8,
+    "season": 1,
+    "week": 2,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 9,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "apex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 10,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "340000",
+      "no_transfer": "True",
+      "player_id": "apex",
+      "release_fee": "126000",
+      "role": "starter",
+      "salary": "10500",
+      "status": "accepted",
+      "stream_share": "72",
+      "weeks": "49"
+    },
+    "source": "web"
+  },
+  {
+    "index": 11,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "mentor",
+    "params": {
+      "mentor_id": "apex",
+      "protege_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 12,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "auto",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "apex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 13,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "fixture_id": "s1w3m3am",
+      "focus_target": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_kathmandu_apex",
+      "site_focus": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 14,
+    "season": 1,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 15,
+    "season": 1,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "1",
+      "created_week": "4",
+      "fixture_id": "s1w4m2am",
+      "id": "50fadd1cec4334f7",
+      "intensity": "light",
+      "map_id": "bind",
+      "objective": "anti_exec",
+      "opponent_id": "team_saracen_guard",
+      "partner_id": "team_adriatic_sirens",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 16,
+    "season": 1,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_scout_directive",
+    "params": {
+      "directive": "scout_opponents",
+      "lane": "pro"
+    },
+    "source": "web"
+  },
+  {
+    "index": 17,
+    "season": 1,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "fa_13"
+    },
+    "source": "web"
+  },
+  {
+    "index": 18,
+    "season": 1,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "pass",
+      "event_id": "f2a5627fa7271ddf"
+    },
+    "source": "web"
+  },
+  {
+    "index": 19,
+    "season": 1,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 20,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "fa_0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 21,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "126000",
+      "no_transfer": "False",
+      "player_id": "fa_0",
+      "release_fee": "28000",
+      "role": "bench",
+      "salary": "4000",
+      "status": "accepted",
+      "stream_share": "70",
+      "weeks": "58"
+    },
+    "source": "web"
+  },
+  {
+    "index": 22,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "False",
+      "default_five": "True",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  {
+    "index": 23,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "apex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 24,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "True",
+      "default_five": "False",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  {
+    "index": 25,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "fixture_id": "s1w5m1am",
+      "focus_target": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_rust_belt_gaming",
+      "site_focus": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 26,
+    "season": 1,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 27,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "vortex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 28,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "442000",
+      "no_transfer": "False",
+      "player_id": "vortex",
+      "release_fee": "110000",
+      "role": "starter",
+      "salary": "9200",
+      "status": "accepted",
+      "stream_share": "74",
+      "weeks": "47"
+    },
+    "source": "web"
+  },
+  {
+    "index": 29,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 30,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "echo"
+    },
+    "source": "web"
+  },
+  {
+    "index": 31,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 32,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 33,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "False",
+      "default_five": "True",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  {
+    "index": 34,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "let_loose",
+      "event_id": "39e83f39373aa3ea"
+    },
+    "source": "web"
+  },
+  {
+    "index": 35,
+    "season": 1,
+    "week": 6,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  },
+  {
+    "index": 36,
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_lineup",
+    "params": {
+      "agents": "False",
+      "default_five": "True",
+      "fixture_id": "",
+      "map_id": "",
+      "per_map": "False"
+    },
+    "source": "web"
+  },
+  {
+    "index": 37,
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "1",
+      "created_week": "7",
+      "fixture_id": "s1w7m1am",
+      "id": "7b1240954b4b6a24",
+      "intensity": "light",
+      "map_id": "lotus",
+      "objective": "mental_reset",
+      "opponent_id": "team_vanguard",
+      "partner_id": "team_hokkaido_drift",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 38,
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "fixture_id": "s1w7m1am",
+      "focus_target": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_vanguard",
+      "site_focus": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 39,
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

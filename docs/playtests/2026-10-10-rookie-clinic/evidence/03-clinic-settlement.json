@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"status\":200,\"request\":{\"event_id\":\"8f43d112fb4700ed\",\"choice_id\":\"small_group\"},\"body\":{\"ok\":true,\"message\":\"The limited turnout is noted, but quickly forgotten.\"},\"dashboard\":\"ESPORTSSIM\\nSeason 1 · Week 12 · Regular — Team Nexus\\n482,260 cr\\nSave •\\nAutosave off\\nEvery week\\nEvery 2 weeks\\nEvery 3 weeks\\nEvery 5 weeks\\nEvery 8 weeks\\nCampaigns\\nAdvance Week ▸\\nSim ahead ▸▸\\n🛠️\\n🔇\\nGuide\\nWEEKLY\\nDASHBOARD\\nINBOX19\\nMATCH2\\nORG\\nCLUB\\nFACILITIES\\nSEASON\\nMARKET\\nSTATS\\nCOMPANY\\nThe limited turnout is noted, but quickly forgotten.\\nDASHBOARD\\nSee what changed, what needs a decision, and what the next fixture demands.\\nBegin with Needs You, then scan the next fixture and recent form.\"}\n### Ran Playwright code\n```js\nawait (async(page)=>{const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/flavor_event')&&r.request().method()==='POST'); await page.getByRole('button',{name:'Send a small group',exact:true}).click(); const result=await response; const body=await result.json(); await page.getByRole('heading',{name:'A community clinic asks for Team Nexus',exact:true}).waitFor({state:'detached',timeout:8000}); return {status:result.status(),request:result.request().postDataJSON(),body,dashboard:await page.locator('body').innerText()};})(page);\n```"
+    }
+  ]
+}

@@ -3487,7 +3487,7 @@ function developmentReportCard(report) {
   const body = el("tbody");
   for (const p of report.players) {
     const week = p.latest_week;
-    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events", badge_gains: "Badges" };
     const sourceText = week ? Object.entries(week.sources || {})
       .filter(([, source]) => Object.values(source.skills || {}).some((gain) => gain !== 0))
       .map(([key, source]) => {
@@ -3714,6 +3714,16 @@ async function tactics(v) {
    Scrim/bootcamp booking, tournament-six registration and the between-map
    series card. Reads /api/club (these are campaign-layer prep systems);
    moved out of Club · Operations so match prep has a single home. */
+function hydratePreparationForm(pr, controls) {
+  const plan = pr.current;
+  // A booking belongs to one fixture. Ignore stale or unavailable choices as
+  // a whole, so the form never silently assembles a different booked session.
+  if (!plan || !pr.fixture || plan.fixture_id !== pr.fixture.id) return;
+  if (!Object.entries(controls).every(([key, control]) =>
+    Array.from(control.options).some(option => option.value === plan[key]))) return;
+  for (const [key, control] of Object.entries(controls)) control.value = plan[key];
+}
+
 async function tacticsPrep(ws) {
   const d = await api("/api/club");
 
@@ -3724,7 +3734,7 @@ async function tacticsPrep(ws) {
   const costText = (cost) => `Session condition cost: up to ${esc(cost)} points per squad player, including the bench (condition floors at 0).`;
   const recoveryText = "This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.";
   if (pr.participants?.length) {
-    pc.appendChild(el("p", "muted", `Current squad condition: ${pr.participants.map((p) => `${esc(p.handle)} ${esc(p.condition)}`).join(" · ")}.`));
+    pc.appendChild(el("p", "muted", `Current squad condition: ${pr.participants.map((p) => `${esc(p.handle)} ${Number(p.condition).toFixed(1)}`).join(" · ")}.`));
   }
   if (!pr.fixture) {
     pc.appendChild(el("p", "muted", "No fixture is available to prepare for."));
@@ -3738,6 +3748,7 @@ async function tacticsPrep(ws) {
     for (const x of pr.objectives) { const o = el("option", "", humanize(x)); o.value = x; obj.appendChild(o); }
     const intensity = el("select", "sel-sm");
     for (const x of pr.intensities) { const o = el("option", "", humanize(x)); o.value = x; intensity.appendChild(o); }
+    hydratePreparationForm(pr, { partner_id: partner, map_id: map, objective: obj, intensity });
     const form = el("div", "row prep-controls");
     for (const [name, control] of [["Sparring partner", partner], ["Preparation map", map], ["Session objective", obj], ["Session intensity", intensity]]) {
       const label = el("label", "prep-control");
@@ -3795,13 +3806,13 @@ async function tacticsPrep(ws) {
 
   // Tournament roster registration.
   const rc = el("div", "card ws-6");
-  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Five starters plus one between-map substitute.</p>`;
+  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides.</p>`;
   const chosen = new Set(d.registration.player_ids || []);
   for (const p of d.registration.players) {
     const lab = el("label", "entity");
     const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
     cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${humanize(p.role)}`)); rc.appendChild(lab);
+    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`)); rc.appendChild(lab);
   }
   if (!d.registration.locked) {
     const save = el("button", "btn btn-primary", "Submit roster");
@@ -5093,12 +5104,20 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const timerRef = useRef(null);
+  const userSearchRef = useRef(false);
+  const inputRef = useRef(null);
 
   const performSearch = async (q) => {
+    // Tab navigation can detach the Preact root without running its cleanup.
+    if (!inputRef.current?.isConnected) return;
+    const userTriggered = userSearchRef.current;
+    userSearchRef.current = false;
     if (q.trim().length < 2) {
       setResults([]);
       return;
     }
+    // Request initiation only; never transmit the query or imply a result.
+    if (userTriggered) window.Usage?.interaction("market/player_search");
     setLoading(true);
     try {
       const r = await api("/api/market/search?q=" + encodeURIComponent(q.trim()));
@@ -5121,8 +5140,15 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       if (timerRef.current) clearTimeout(timerRef.current);
+      userSearchRef.current = true;
       performSearch(query);
     }
+  };
+
+  const handleInput = (e) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    userSearchRef.current = true;
+    setQuery(e.target.value);
   };
 
   const handleBuyout = async (p) => {
@@ -5141,10 +5167,11 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
       <h2>Find a player</h2>
       <div class="row">
         <input 
-          class="field mono player-search-input" 
+          class="field mono player-search-input"
+          ref=${inputRef}
           placeholder="search by handle or real name…" 
           value=${query}
-          onInput=${(e) => setQuery(e.target.value)}
+          onInput=${handleInput}
           onKeyDown=${handleKeyDown}
         />
       </div>
@@ -8404,7 +8431,7 @@ function showReport(rep) {
     const card = el("section", "card weekly-development");
     card.appendChild(el("h2", "", `Squad development · Season ${development.season} · Week ${development.week}`));
     card.appendChild(el("p", "muted", "Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision."));
-    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events" };
+    const sourceLabels = { practice_gains: "Practice", match_gains: "Matches", scrim_gains: "Bench scrims", event_gains: "Career events", badge_gains: "Badges" };
     for (const p of development.players || []) {
       const week = p.attribution;
       const measured = p.measured;
@@ -8416,12 +8443,17 @@ function showReport(rep) {
           const skills = Object.entries(source.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${signedGain(gain, 2)}`).join(" · ");
           return `<div><b>${esc(sourceLabels[key] || humanize(key))} ${esc(amount)}</b><span class="muted"> · ${esc(skills)}</span></div>`;
         }).join("");
+      const badgeEvidence = (week.badge_events || []).map((event) => {
+        const skills = Object.entries(event.skills || {}).map(([aid, gain]) => `${humanize(aid)} ${signedGain(gain, 2)}`).join(" · ");
+        return `<div>Badge ${esc(event.action)}: ${esc(event.name)} · ${esc(signedGain(event.overall_gain, 2))} OVR${skills ? ` · ${esc(skills)}` : " · No current ability change"}</div>`;
+      }).join("") || `<div class="muted">${week.badge_tracking ? "No badge changes this week" : "Badge attribution unavailable for this saved week"}</div>`;
       const rating = measured
         ? `OVR ${Number(measured.overall_start).toFixed(1)} → ${Number(measured.overall_current).toFixed(1)} (${signedGain(measured.overall_delta, 1)})`
         : "Weekly OVR comparison unavailable";
       card.appendChild(el("div", "newsline", `<b>${plink(p.id, p.handle)}</b> <span class="muted">${esc(rating)}</span>
         <div>${esc(humanize(week.focus))} / ${esc(humanize(week.intensity))} · ${week.maps} ${week.maps === 1 ? "map" : "maps"}</div>
         ${sources || '<div class="muted">No measured skill gains</div>'}
+        ${badgeEvidence}
         ${(week.factors || []).map((text) => `<div class="muted">${esc(text)}</div>`).join("")}
         ${week.career_event ? `<div>${esc(week.career_event)}</div>` : ""}`));
     }

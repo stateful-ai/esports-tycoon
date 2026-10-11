@@ -1,0 +1,73 @@
+{
+  "played_pages": [
+    "d3f3343bef30bcce760cafead99389f9",
+    "de01bdb904a70257f00495ea28f3d69e"
+  ],
+  "played_page_events": 97,
+  "all_retained_events": 200,
+  "excluded_world_null_pages": 2,
+  "excluded_world_null_events": 103,
+  "pairs": [
+    {
+      "attempt_index": 25,
+      "result_index": 26,
+      "target": "/api/negotiation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 37,
+      "result_index": 38,
+      "target": "/api/negotiation",
+      "request_id": 13,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 84,
+      "result_index": 86,
+      "target": "/api/actions/advance",
+      "request_id": 31,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 93,
+      "result_index": 94,
+      "target": "/api/actions/save",
+      "request_id": 38,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "interactions": [
+    {
+      "index": 20,
+      "schema_version": 1,
+      "session_id": "d3f3343bef30bcce760cafead99389f9",
+      "received_at": "2026-10-08T19:13:17.086576+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "interaction",
+      "target": "market/player_search"
+    },
+    {
+      "index": 90,
+      "schema_version": 1,
+      "session_id": "d3f3343bef30bcce760cafead99389f9",
+      "received_at": "2026-10-08T19:27:32.073935+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 3,
+      "kind": "interaction",
+      "target": "week/full_report_open"
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "note": "Two actual resume pages retained, including initial navigation before final reload; failed-setup and unrelated lobby pages excluded. No stream proves cancelled native-dialog intent."
+}

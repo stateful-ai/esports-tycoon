@@ -1,0 +1,105 @@
+{
+  "world": "26UHC",
+  "played_pages": [
+    "62ba7591a4e39b8b32d8682d57cdfce5",
+    "66ec7cd62bde70815d4e34966e59fa2e"
+  ],
+  "retained_events": 110,
+  "all_events": 110,
+  "request_pairs": [
+    {
+      "attempt_index": 17,
+      "result_index": 18,
+      "target": "/api/negotiation",
+      "request_id": 15,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 22,
+      "result_index": 23,
+      "target": "/api/negotiation",
+      "request_id": 17,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 33,
+      "result_index": 34,
+      "target": "/api/actions/lineup",
+      "request_id": 30,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 40,
+      "result_index": 41,
+      "target": "/api/actions/dev_plan",
+      "request_id": 36,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 60,
+      "result_index": 61,
+      "target": "/api/actions/lineup",
+      "request_id": 49,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 65,
+      "result_index": 66,
+      "target": "/api/actions/gameplan",
+      "request_id": 53,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 88,
+      "result_index": 90,
+      "target": "/api/actions/advance",
+      "request_id": 57,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 91,
+      "result_index": 92,
+      "target": "/api/roster",
+      "request_id": 60,
+      "outcome": "http_error",
+      "status": 404
+    },
+    {
+      "attempt_index": 106,
+      "result_index": 107,
+      "target": "/api/actions/save",
+      "request_id": 69,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "views": {
+    "lobby": 2,
+    "dashboard": 2,
+    "club/squad": 2,
+    "market/players": 1,
+    "club/development": 2,
+    "tactics/strategy": 2,
+    "tactics/prep": 1,
+    "tactics/gameplan": 2,
+    "replay": 1
+  },
+  "interactions": {
+    "week/full_report_open": 1
+  },
+  "replay": {
+    "open": 1,
+    "close": 1
+  },
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "bounded_best_effort": true,
+  "note": "Seven accepted decisions versus nine browser pairs: Save outside ledger and an erroneous diagnostic /api/roster read404. Two page sessions from startup reconnect, no other world. Draft changes and refused selectors do not count as accepted decisions. Usage receipt span is not attention or complete funnel."
+}

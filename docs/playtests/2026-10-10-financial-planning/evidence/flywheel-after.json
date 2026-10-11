@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0125",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Sponsor packages visibly change run rate before settlement",
+    "problem": "Need reliable recurring income before an offer expires",
+    "solution": "Choose steady41300 and verify active37-week contract, unchanged bank and net21734->63034; after one tick verify36weeks",
+    "lesson": "The same visible package persists through Save/reload; future win/objective income is not guaranteed",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0126",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Facility requirements must use the visible department name",
+    "problem": "Finance locks and upgrade News call Media Department Marketing Office",
+    "solution": "Match the displayed Stream-unlock benefit, build150000, and read back level/upkeep and newly open slot",
+    "lesson": "The correct department unlocked Stream but naming friction is real; gap24 delegated without changing internal keys",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0127",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Expose upkeep as a weekly expense",
+    "problem": "Real settlement hides1500 facility upkeep in reported income, while live Finance shows it as expense",
+    "solution": "Compare observed bank/report/live breakdown; inspect settlement code after choices and delegate gross classification fix",
+    "lesson": "Net cash is correct; reported gross income/expense is misleading, not an unpaid upkeep defect. Gap25 preserves mechanics; gap26 separately fixes actual visible Ghostagainst spacing",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "pain-point"
+  }
+]

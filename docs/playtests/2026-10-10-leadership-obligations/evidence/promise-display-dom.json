@@ -1,0 +1,12 @@
+[
+  {
+    "text": "Target: 60 · Dressed 5 weeks",
+    "html": "<div style=\"font-size:0.9em; margin:6px 0;\">Target: 60 · Dressed 5 weeks</div>",
+    "parent": "<div class=\"card ws-4\" style=\"padding: 10px; background: var(--es-color-bg-alt, #0b0e14); border: 1px solid var(--es-color-border, #1f2a3d); border-radius: 4px;\"><div><strong><span class=\"plink \" data-pid=\"echo\">Echo</span></strong>: <span style=\"font-size:0.85em; color:var(--es-color-accent, #00f0ff);\">Play Time</span></div><div style=\"font-size:0.9em; margin:6px 0;\">Target: 60 · Dressed 5 weeks</div><div style=\"display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;\"><span>Progress</span><span>1 weeks left</span></div><div class=\"pf-hbar\" style=\"height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;\"><i style=\"display:block; height:100%; width:13%; background:var(--es-color-accent, #00f0ff); border-radius:3px;\"></i></div></div>"
+  },
+  {
+    "text": "Target: 60 · Dressed 5 weeks",
+    "html": "<div style=\"font-size:0.9em; margin:6px 0;\">Target: 60 · Dressed 5 weeks</div>",
+    "parent": "<div class=\"card ws-4\" style=\"padding: 10px; background: var(--es-color-bg-alt, #0b0e14); border: 1px solid var(--es-color-border, #1f2a3d); border-radius: 4px;\"><div><strong><span class=\"plink \" data-pid=\"apex\">Apex</span></strong>: <span style=\"font-size:0.85em; color:var(--es-color-accent, #00f0ff);\">Play Time</span></div><div style=\"font-size:0.9em; margin:6px 0;\">Target: 60 · Dressed 5 weeks</div><div style=\"display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;\"><span>Progress</span><span>2 weeks left</span></div><div class=\"pf-hbar\" style=\"height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;\"><i style=\"display:block; height:100%; width:25%; background:var(--es-color-accent, #00f0ff); border-radius:3px;\"></i></div></div>"
+  }
+]

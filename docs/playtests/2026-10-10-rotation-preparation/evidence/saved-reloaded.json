@@ -1,0 +1,1037 @@
+{
+  "state": {
+    "season": 1,
+    "week": 8,
+    "phase": "regular",
+    "window": {
+      "open": true,
+      "kind": "mid_split",
+      "label": "Mid-split window",
+      "detail": "Final roster moves close after week 8.",
+      "closes_week": 8
+    },
+    "roster_readiness": {
+      "ready": true,
+      "reason": "",
+      "count": 6,
+      "minimum": 5,
+      "shortfall": 0
+    },
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 441090,
+      "reputation": 62.3,
+      "fan_count": 304546,
+      "world_rank": 4,
+      "chemistry": 65.3,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "fa_13",
+        "fa_0",
+        "ghost"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 1,
+        "diff": 36
+      }
+    },
+    "next_fixture": {
+      "id": "s1w8m2am",
+      "week": 8,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_sahara_compass",
+      "team_b": "team_nexus",
+      "team_a_name": "Sahara Compass",
+      "team_b_name": "Team Nexus",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "ascent"
+      ],
+      "map_thumbs": {
+        "ascent": "/assets/maps/ascent.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "h2h": {
+        "meetings": 1,
+        "wins": 1,
+        "losses": 0,
+        "streak_team": "team_nexus",
+        "streak_len": 1,
+        "you_lead": true
+      },
+      "preview": [
+        "Team Nexus won the season's only prior meeting.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Frostecho — Sahara Compass's form pick at 1.37."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 4,
+            "wins": 4,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 2,
+            "wins": 1,
+            "win_rate": 50
+          }
+        ],
+        "veto": {
+          "opponent": "Sahara Compass",
+          "ban": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 50,
+            "our_wr": 100
+          },
+          "pick": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 50,
+            "our_wr": 100
+          }
+        }
+      },
+      "opp_manager": {
+        "name": "Mateo Costa",
+        "identity": "Unshakeable"
+      }
+    },
+    "leaders": [
+      {
+        "pid": "team_crimson_order_p2",
+        "handle": "Wraithghost",
+        "team": "Crimson Order",
+        "team_id": "team_crimson_order",
+        "rating": 1.96,
+        "kills": 187
+      },
+      {
+        "pid": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "team": "Outback Sentinels",
+        "team_id": "team_outback_sentinels",
+        "rating": 1.57,
+        "kills": 173
+      },
+      {
+        "pid": "team_seoul_dynasty_prime_p1",
+        "handle": "Riftstrike",
+        "team": "Seoul Dynasty Prime",
+        "team_id": "team_seoul_dynasty_prime",
+        "rating": 1.47,
+        "kills": 160
+      }
+    ],
+    "movers": [],
+    "run_in": [
+      {
+        "week": 8,
+        "opponent": "Sahara Compass",
+        "opponent_id": "team_sahara_compass",
+        "opp_rank": 33,
+        "difficulty": "easy"
+      },
+      {
+        "week": 9,
+        "opponent": "Nordic Frost",
+        "opponent_id": "team_nordic_frost",
+        "opp_rank": 40,
+        "difficulty": "easy"
+      },
+      {
+        "week": 10,
+        "opponent": "Kathmandu Apex",
+        "opponent_id": "team_kathmandu_apex",
+        "opp_rank": 41,
+        "difficulty": "easy"
+      },
+      {
+        "week": 11,
+        "opponent": "Saracen Guard",
+        "opponent_id": "team_saracen_guard",
+        "opp_rank": 17,
+        "difficulty": "easy"
+      },
+      {
+        "week": 12,
+        "opponent": "Rust Belt Gaming",
+        "opponent_id": "team_rust_belt_gaming",
+        "opp_rank": 15,
+        "difficulty": "easy"
+      }
+    ],
+    "on_this_day": [],
+    "debrief": {
+      "result": "Lost to Team Vanguard 9-13",
+      "won": false,
+      "standout": "Vortex (1.48)",
+      "underperformer": "Hollowlock (0.45)"
+    },
+    "last_match_review": {
+      "fixture_id": "s1w7m1am",
+      "won": false,
+      "contested": true,
+      "best_of": 1,
+      "your_maps": 0,
+      "their_maps": 1,
+      "your_rounds": 9,
+      "their_rounds": 13,
+      "opp_id": "team_vanguard",
+      "opp_name": "Team Vanguard",
+      "potm": {
+        "player_id": "pulse",
+        "handle": "Pulse",
+        "badges": [
+          {
+            "id": "aim_demon",
+            "name": "Aim Demon",
+            "emoji": "🎯",
+            "polarity": 1,
+            "blurb": "raw mechanical menace",
+            "kind": "positive",
+            "impact": "While held: +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 2.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/aim_demon.webp",
+            "season": 1
+          }
+        ]
+      },
+      "tier": 0,
+      "tier_label": "box scores only",
+      "momentum_beat": {
+        "player_id": "slice",
+        "tone": "hot",
+        "rounds": 12,
+        "start_round": 10,
+        "end_round": 21,
+        "peak": 0.45,
+        "handle": "Slice",
+        "text": "got hot mid-map (12-round run)."
+      },
+      "your_calls": {
+        "plan_set": true,
+        "dials": [],
+        "site_focus": null,
+        "focus_target": null,
+        "team_talk": null,
+        "lineup": {
+          "override": false,
+          "followed": false,
+          "picked": [
+            {
+              "player_id": "fa_0",
+              "handle": "Hollowlock",
+              "rating": 0.45
+            }
+          ],
+          "benched": [
+            {
+              "player_id": "echo",
+              "handle": "Echo"
+            }
+          ]
+        },
+        "prep": {
+          "edge": null,
+          "maps_played": [
+            "Lotus"
+          ],
+          "maps_missed": []
+        }
+      },
+      "working": [
+        {
+          "code": "player_std",
+          "category": "player",
+          "tone": "good",
+          "headline": "Vortex carried",
+          "detail": "Team-high 1.48 average rating.",
+          "player_id": "vortex",
+          "handle": "Vortex",
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "atk_side",
+          "category": "attack",
+          "tone": "good",
+          "headline": "Attack is clicking",
+          "detail": "7/12 attack rounds won (58%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        }
+      ],
+      "breaking": [
+        {
+          "code": "player_under",
+          "category": "player",
+          "tone": "bad",
+          "headline": "Hollowlock off-colour",
+          "detail": "0.45 average rating across the series.",
+          "player_id": "fa_0",
+          "handle": "Hollowlock",
+          "site": null,
+          "badges": [
+            {
+              "id": "inconsistent",
+              "name": "Inconsistent",
+              "emoji": "🎲",
+              "polarity": -1,
+              "blurb": "a different player week to week",
+              "kind": "negative",
+              "impact": "While held: -2 Composure.",
+              "decay": "It can fade after 2 seasons without re-qualifying.",
+              "art": "/assets/badges/inconsistent.webp",
+              "season": 1
+            }
+          ],
+          "dev_note": "Near their ceiling (proj. 55–66) — a lineup call."
+        },
+        {
+          "code": "def_side",
+          "category": "defense",
+          "tone": "bad",
+          "headline": "Defense is leaking",
+          "detail": "2/10 defense rounds won (20%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        }
+      ],
+      "levers": [
+        {
+          "code": "player_form",
+          "tab": "roster",
+          "specialty": "team",
+          "on_focus": false,
+          "text": "Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.",
+          "adjustment": null
+        },
+        {
+          "code": "def_setups",
+          "tab": "tactics",
+          "specialty": "tactical",
+          "on_focus": false,
+          "text": "Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.",
+          "adjustment": {
+            "dial": "map_control",
+            "label": "Map control",
+            "current": 50,
+            "target": 30,
+            "at_limit": false,
+            "reason": "Stack more tightly and simplify the defensive setup.",
+            "coach_step": 20,
+            "analyst_precision": 10
+          }
+        }
+      ],
+      "coach": {
+        "present": true,
+        "specialty": "mechanical"
+      },
+      "locked": true,
+      "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+    },
+    "decision_ledger": [],
+    "press": null,
+    "suggested_lineup": {
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "quality": 78,
+          "dressed": true
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "quality": 76,
+          "dressed": true
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "quality": 76,
+          "dressed": false
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "quality": 75,
+          "dressed": true
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "quality": 72,
+          "dressed": true
+        }
+      ],
+      "changed": true
+    },
+    "board": null,
+    "form_trend": [
+      {
+        "n": 1,
+        "week": 1,
+        "wins": 1,
+        "won": true
+      },
+      {
+        "n": 2,
+        "week": 2,
+        "wins": 2,
+        "won": true
+      },
+      {
+        "n": 3,
+        "week": 3,
+        "wins": 3,
+        "won": true
+      },
+      {
+        "n": 4,
+        "week": 4,
+        "wins": 4,
+        "won": true
+      },
+      {
+        "n": 5,
+        "week": 5,
+        "wins": 5,
+        "won": true
+      },
+      {
+        "n": 6,
+        "week": 6,
+        "wins": 6,
+        "won": true
+      },
+      {
+        "n": 7,
+        "week": 7,
+        "wins": 6,
+        "won": false
+      }
+    ],
+    "squad_profile": {
+      "avg_age": 24,
+      "buckets": {
+        "youth": 1,
+        "prime": 4,
+        "veteran": 1
+      },
+      "expiries": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 19,
+          "weeks_left": 37
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 26,
+          "weeks_left": 44
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 22,
+          "weeks_left": 45
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 23,
+          "weeks_left": 49
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 26,
+          "weeks_left": 55
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 28,
+          "weeks_left": 55
+        }
+      ]
+    },
+    "objectives_hub": [],
+    "rotation": [
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "maps": 7,
+        "starter": true,
+        "stamina": 75,
+        "burnout": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "maps": 7,
+        "starter": true,
+        "stamina": 100,
+        "burnout": false
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "maps": 6,
+        "starter": true,
+        "stamina": 76,
+        "burnout": false
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "maps": 6,
+        "starter": false,
+        "stamina": 55,
+        "burnout": false
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "maps": 6,
+        "starter": true,
+        "stamina": 59,
+        "burnout": false
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "maps": 3,
+        "starter": true,
+        "stamina": 56,
+        "burnout": false
+      }
+    ],
+    "training_focus": "tactical",
+    "training_delegated": false,
+    "focus_options": [
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "rest"
+    ],
+    "news": [
+      "[S1 W7] Jinxsurge (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W7] Falconzero (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W7] Cipherpulse (Sahara Compass) passes 100 kills this season.",
+      "[S1 W7] Hollowshot (Phantom Core) passes 100 kills this season.",
+      "[S1 W7] Nightlock (Outback Sentinels) passes 100 kills this season.",
+      "[S1 W7] Falconghost (Meridian Cross) passes 100 kills this season.",
+      "[S1 W7] Hollowsnap (Mekong Vipers) passes 100 kills this season.",
+      "[S1 W7] Grimpulse (Kraken Unit) passes 100 kills this season.",
+      "[S1 W7] Nightsurge (Kraken Unit) passes 100 kills this season.",
+      "[S1 W7] Ashcore (Kathmandu Apex) passes 100 kills this season.",
+      "[S1 W7] Cipherlock (Iron Pact) passes 100 kills this season.",
+      "[S1 W7] Blitzstrike (Hokkaido Drift) passes 100 kills this season."
+    ],
+    "scout": {
+      "target": null,
+      "target_name": null,
+      "progress": 0,
+      "cap": 1
+    },
+    "standings_top": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "wins": 7,
+        "losses": 0,
+        "rounds_won": 93,
+        "rounds_lost": 47
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "wins": 6,
+        "losses": 1,
+        "rounds_won": 87,
+        "rounds_lost": 51
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "wins": 4,
+        "losses": 3,
+        "rounds_won": 74,
+        "rounds_lost": 58
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "wins": 4,
+        "losses": 3,
+        "rounds_won": 78,
+        "rounds_lost": 73
+      }
+    ],
+    "champions": [],
+    "transfer_offers": [],
+    "flavor_event": null,
+    "media_event": {
+      "id": "841e9532e560ba1e",
+      "season": 1,
+      "week": 8,
+      "team_id": "team_nexus",
+      "type_id": "defend_player",
+      "title": "Round Eleven asks if Hollowlock is letting Team Nexus down",
+      "prompt": "The criticism is grounded in a difficult run for Hollowlock. Choose whether to absorb it, amplify standards, or keep the response private.",
+      "player_id": "fa_0",
+      "fixture_id": "",
+      "choices": [
+        {
+          "id": "defend_publicly",
+          "label": "Defend the player publicly",
+          "impact": "Player trust and fan sentiment rise; sponsors absorb some controversy."
+        },
+        {
+          "id": "demand_response",
+          "label": "Set a public performance standard",
+          "impact": "Sponsors like the accountability; player trust falls."
+        },
+        {
+          "id": "keep_internal",
+          "label": "Keep the response inside the room",
+          "impact": "Small trust protection; supporters read the silence cautiously."
+        }
+      ],
+      "outlet": "Round Eleven"
+    },
+    "career": {
+      "mode": "sandbox",
+      "seat": {
+        "id": "mgr_team_nexus",
+        "name": "NXS manager",
+        "team_id": "team_nexus",
+        "archetype": "",
+        "unemployed": false
+      },
+      "contract": null,
+      "offers": [],
+      "blocked": false
+    },
+    "multiplayer": {
+      "mode": "solo",
+      "code": "26UHC",
+      "humans": [
+        {
+          "team_id": "team_nexus",
+          "name": "Team Nexus",
+          "is_you": true
+        }
+      ],
+      "ready": [],
+      "you_ready": false
+    },
+    "save": {
+      "dirty": false,
+      "autosave_enabled": true,
+      "autosave_every_weeks": 1
+    },
+    "promise_pending": false,
+    "scout_shortlist_ready": false,
+    "scrim_proposal_pending": true,
+    "culture_violation_unack": false
+  },
+  "players": [
+    {
+      "id": "apex",
+      "starter": true,
+      "stamina": 76,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "vortex",
+      "starter": true,
+      "stamina": 100,
+      "dev_focus": "rest",
+      "training_intensity": "normal"
+    },
+    {
+      "id": "ghost",
+      "starter": true,
+      "stamina": 59,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "fa_13",
+      "starter": true,
+      "stamina": 74.9,
+      "dev_focus": "rest",
+      "training_intensity": "normal"
+    },
+    {
+      "id": "echo",
+      "starter": false,
+      "stamina": 55,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "fa_0",
+      "starter": true,
+      "stamina": 55.900000000000006,
+      "dev_focus": "auto",
+      "training_intensity": "normal"
+    }
+  ],
+  "preparation": {
+    "current": null,
+    "last": {
+      "plan_id": "7b1240954b4b6a24",
+      "team_id": "team_nexus",
+      "fixture_id": "s1w7m1am",
+      "opponent_id": "team_vanguard",
+      "partner_id": "team_hokkaido_drift",
+      "map_id": "lotus",
+      "objective": "mental_reset",
+      "intensity": "light",
+      "season": 1,
+      "week": 7,
+      "status": "completed",
+      "finding_code": "composure_ready",
+      "finding": "Squad morale entered at 91.2/100; the group reset with a lighter load.",
+      "evidence": {
+        "own_map_samples": 1,
+        "opponent_map_samples": 3,
+        "partner_map_samples": 4,
+        "own_attack_win_pct": 83.3,
+        "own_defense_win_pct": 100,
+        "opponent_attack_win_pct": 66.7,
+        "opponent_defense_win_pct": 60.5,
+        "partner_map_win_pct": 100,
+        "scouting_confidence": 0.34,
+        "average_stamina": 63.5,
+        "average_morale": 91.2,
+        "rotation_candidate_id": "echo"
+      },
+      "participant_ids": [
+        "apex",
+        "echo",
+        "fa_0",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ],
+      "knowledge_key": "methodology",
+      "knowledge_gain": 0.72,
+      "stamina_cost": 1.5,
+      "morale_delta": 2,
+      "chemistry_delta": 0.3,
+      "artifact_label": "Methodology +0.7",
+      "prep_edge_contribution": 0,
+      "dev_suggestion_player_id": "echo",
+      "dev_suggestion": "Echo pushed the starters on lotus; a focused development block could make that rotation real."
+    },
+    "proposal": {
+      "id": "0f8cfe2b556a9b19",
+      "team_id": "team_nexus",
+      "fixture_id": "s1w8m2am",
+      "opponent_id": "team_sahara_compass",
+      "partner_id": "team_crimson_order",
+      "map_id": "ascent",
+      "objective": "retakes",
+      "intensity": "normal",
+      "created_season": 1,
+      "created_week": 8,
+      "partner_name": "Crimson Order",
+      "condition_cost": 4
+    },
+    "condition_costs": {
+      "light": 1.5,
+      "normal": 4,
+      "intense": 7.5
+    },
+    "participants": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "condition": 76
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "condition": 55
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "condition": 55.900000000000006
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "condition": 74.9
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "condition": 59
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "condition": 100
+      }
+    ],
+    "fixture": {
+      "id": "s1w8m2am",
+      "week": 8,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_sahara_compass",
+      "team_b": "team_nexus",
+      "team_a_name": "Sahara Compass",
+      "team_b_name": "Team Nexus",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "ascent"
+      ],
+      "map_thumbs": {
+        "ascent": "/assets/maps/ascent.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": []
+    },
+    "opponent_id": "team_sahara_compass",
+    "maps": [
+      "ascent"
+    ],
+    "partners": [
+      {
+        "id": "team_adriatic_sirens",
+        "name": "Adriatic Sirens"
+      },
+      {
+        "id": "team_alpine_echo",
+        "name": "Alpine Echo"
+      },
+      {
+        "id": "team_anatolia_forge",
+        "name": "Anatolia Forge"
+      },
+      {
+        "id": "team_apex_syndicate",
+        "name": "Apex Syndicate"
+      },
+      {
+        "id": "team_azure_vanta",
+        "name": "Azure Vanta"
+      },
+      {
+        "id": "team_baltic_meridian",
+        "name": "Baltic Meridian"
+      },
+      {
+        "id": "team_bayou_kings",
+        "name": "Bayou Kings"
+      },
+      {
+        "id": "team_berlin_wolves",
+        "name": "Berlin Wolves"
+      },
+      {
+        "id": "team_busan_tempest",
+        "name": "Busan Tempest"
+      },
+      {
+        "id": "team_cascadia_youth",
+        "name": "Cascadia Youth"
+      },
+      {
+        "id": "team_chao_phraya_owls",
+        "name": "Chao Phraya Owls"
+      },
+      {
+        "id": "team_coral_sea_drakes",
+        "name": "Coral Sea Drakes"
+      },
+      {
+        "id": "team_crimson_order",
+        "name": "Crimson Order"
+      },
+      {
+        "id": "team_gallic_storm",
+        "name": "Gallic Storm"
+      },
+      {
+        "id": "team_ghostline",
+        "name": "Ghostline"
+      },
+      {
+        "id": "team_harbour_city_nine",
+        "name": "Harbour City Nine"
+      },
+      {
+        "id": "team_highlands_nine",
+        "name": "Highlands Nine"
+      },
+      {
+        "id": "team_hokkaido_drift",
+        "name": "Hokkaido Drift"
+      },
+      {
+        "id": "team_iron_pact",
+        "name": "Iron Pact"
+      },
+      {
+        "id": "team_kathmandu_apex",
+        "name": "Kathmandu Apex"
+      },
+      {
+        "id": "team_kraken_unit",
+        "name": "Kraken Unit"
+      },
+      {
+        "id": "team_lisbon_tide",
+        "name": "Lisbon Tide"
+      },
+      {
+        "id": "team_mekong_vipers",
+        "name": "Mekong Vipers"
+      },
+      {
+        "id": "team_meridian_cross",
+        "name": "Meridian Cross"
+      },
+      {
+        "id": "team_midnight_polders",
+        "name": "Midnight Polders"
+      },
+      {
+        "id": "team_nordic_frost",
+        "name": "Nordic Frost"
+      },
+      {
+        "id": "team_nova_rift",
+        "name": "Nova Rift"
+      },
+      {
+        "id": "team_outback_sentinels",
+        "name": "Outback Sentinels"
+      },
+      {
+        "id": "team_patagonia_sur",
+        "name": "Patagonia Sur"
+      },
+      {
+        "id": "team_phantom_core",
+        "name": "Phantom Core"
+      },
+      {
+        "id": "team_prairie_signal",
+        "name": "Prairie Signal"
+      },
+      {
+        "id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming"
+      },
+      {
+        "id": "team_saracen_guard",
+        "name": "Saracen Guard"
+      },
+      {
+        "id": "team_seoul_dynasty_prime",
+        "name": "Seoul Dynasty Prime"
+      },
+      {
+        "id": "team_solar_flare",
+        "name": "Solar Flare"
+      },
+      {
+        "id": "team_taipei_circuit",
+        "name": "Taipei Circuit"
+      },
+      {
+        "id": "team_tokyo_drift_six",
+        "name": "Tokyo Drift Six"
+      },
+      {
+        "id": "team_vanguard",
+        "name": "Team Vanguard"
+      },
+      {
+        "id": "team_volga_reign",
+        "name": "Volga Reign"
+      },
+      {
+        "id": "team_yucatan_ceibas",
+        "name": "Yucatan Ceibas"
+      }
+    ],
+    "objectives": [
+      "anti_exec",
+      "retakes",
+      "lineup_test",
+      "mental_reset"
+    ],
+    "intensities": [
+      "light",
+      "normal",
+      "intense"
+    ]
+  },
+  "body": "ESPORTSSIM\nSeason 1 · Week 8 · Regular — Team Nexus\n441,090 cr\nSave\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide\nWEEKLY\nDASHBOARD1\nINBOX15\nMATCH2\nORG\nCLUB\nFACILITIES\nSEASON\nMARKET\nSTATS\nCOMPANY\nDASHBOARD\nS1 · W8 · Regular\nGuide\nCareer ▸\n6–1\nRECORD\n+36 rd\n2nd\nLEAGUE\nAmericas\nL1\nSTREAK\n441,090 cr\nBALANCE\n89\nMORALE\n70\nCONDITION\nW8 · STAFF BRIEFING\nMATCH DAY\n\nEverything to settle before you advance the week.\n\nPLAN NEEDED\nSCOUT ELSEWHERE\nSQUAD READY\nMatch day briefing ▸\nTeam Nexus\n2nd · 6–1\nVS\nS1 · W8\nAMERICAS LEAGUE\nBEST OF 1\nVS MATEO COSTA · UNSHAKEABLE\nSahara Compass\n6th · 2–5\nTODAY'S PREP\nSahara Compass in W8\nSet the five, build the plan, sharpen the week.\nASSISTANT COACH\nREVIEW\nReview the suggested five\n\nEcho rate among your best available options. Confirm the five and any map overrides.\n\nOpen roster ▸\nHEAD COACH\nPRIORITY\nTurn the brief into a game plan\n\nNo opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.\n\nBuild plan ▸\nANALYST\nUNASSIGNED\nPut the book on Sahara Compass\n\nYour scout is not assigned to Sahara Compass. Switch coverage if this match is the priority.\n\nScouting desk ▸\nPERFORMANCE\nTACTICAL\nAlign development with Tactical\n\nSet the weekly team focus, then make sure individual focus and intensity support the players who need the work.\n\nDevelopment plans ▸\nMATCH INTELLIGENCE\nOpponent read, your stakes, maps and run-in\nHead-to-head this season: 1–0 (you lead)\n\nTeam Nexus won the season's only prior meeting. Three points here tighten Team Nexus's grip on a top-four berth. Watch Frostecho — Sahara Compass's form pick at 1.37.\n\nMAP\nASCENT\nRUN-IN\nW8 Sahara Compass\nW9 Nordic Frost\nW10 Kathmandu Apex\nW11 Saracen Guard\nW12 Rust Belt Gaming\nSAHARA COMPASS — LAST 5\nL\nW\nW\nL\nL\nDANGER MEN\nWraithmark\nSENTINEL\n~76\nFrostecho\nDUELIST\n~66\nEmberzero\nINITIATOR\n~64\nYOUR MAP POOL & VETO\nBan Ascent (Sahara Compass 50% · you 100%)\nPick Ascent (you 100% · them 50%)\nTEAM NEXUS — SEASON MAP RECORD (WINS / PLAYED)\nAscent\n100%\n1/1\nBind\n100%\n4/4\nLotus\n50%\n1/2\nMATCH REVIEW\n\nLast time out — Lost to Team Vanguard 9-13. Standout: Vortex (1.48). Off-colour: Hollowlock (0.45).\n\nL\nvs Team Vanguard\n9–13\n★\nPOTM\nPulse\nHOT\nSlice got hot mid-map (12-round run).\nWHAT WORKED\nVortex carried\nTeam-high 1.48 average rating.\nAttack is clicking\n7/12 attack rounds won (58%).\nWHERE IT BROKE DOWN\nHollowlock off-colour \n0.45 average rating across the series.\nNear their ceiling (proj. 55–66) — a lineup call.\nDefense is leaking\n2/10 defense rounds won (20%).\nWHAT TO TWEAK\n▸ Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.\n▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.\n\nA stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).\n\nAMERICAS LEAGUE\n#\tTEAM\tW\tL\t+/-\n1\tTeam Vanguard\t7\t0\t+46\n2\tTeam Nexus\t6\t1\t+36\n3\tRust Belt Gaming\t4\t3\t+16\n4\tSaracen Guard\t4\t3\t+5\nLAST RESULT\nL\nTeam Vanguard\n9–13\n\nWorld #4 · Rep 62 · Fans 304.5K\n\nFull table ▸\nNEEDS YOU\nHIGH-STAKES MEDIA · ROUND ELEVEN\nRound Eleven asks if Hollowlock is letting Team Nexus down\n\nThe criticism is grounded in a difficult run for Hollowlock. Choose whether to absorb it, amplify standards, or keep the response private.\n\nDefend the player publicly\nPlayer trust and fan sentiment rise; sponsors absorb some controversy.\nSet a public performance standard\nSponsors like the accountability; player trust falls.\nKeep the response inside the room\nSmall trust protection; supporters read the silence cautiously.\n▸ No game plan set for W8\n▸ 15 unread inbox messages\n▸ Coach proposed a scrim plan Match · Prep\nYOUR CALLS\nLAST MATCH\n▸ Dressed Hollowlock over the suggested five — went 0.45\n▸ Sat from the suggestion: Echo\n▸ Preparation: book on Lotus\nNEWS\n[S1 W7] Jinxsurge (Tokyo Drift Six) passes 100 kills this season.\n[S1 W7] Falconzero (Tokyo Drift Six) passes 100 kills this season.\n[S1 W7] Cipherpulse (Sahara Compass) passes 100 kills this season.\n[S1 W7] Hollowshot (Phantom Core) passes 100 kills this season.\n[S1 W7] Nightlock (Outback Sentinels) passes 100 kills this season.\n[S1 W7] Falconghost (Meridian Cross) passes 100 kills this season.\n[S1 W7] Hollowsnap (Mekong Vipers) passes 100 kills this season.\n[S1 W7] Grimpulse (Kraken Unit) passes 100 kills this season.\n[S1 W7] Nightsurge (Kraken Unit) passes 100 kills this season.\n[S1 W7] Ashcore (Kathmandu Apex) passes 100 kills this season.\n[S1 W7] Cipherlock (Iron Pact) passes 100 kills this season.\n[S1 W7] Blitzstrike (Hokkaido Drift) passes 100 kills this season."
+}

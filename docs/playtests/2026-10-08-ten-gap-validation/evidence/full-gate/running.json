@@ -1,0 +1,34 @@
+{
+  "commit": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "combined_tree": "d30335a0bb36792d723dc38cb4b788dc8438e851",
+  "source_sha256": {
+    "src/esports_sim/manager/market.py": "9be7b35aa559bfcdbc8fdd4f7afe9b57f098036d3e9cadfe0e8f7b1703cdd7b9",
+    "src/esports_sim/schemas/team.py": "88b22e604c703a6c688a7b82fbbcb05da7f845b65349d3831236886d6c7c4b5a",
+    "src/esports_sim/web/server.py": "7701804fad0c9602c57f6e9b21dc7b7c2b193916845b10201481b637233a445c",
+    "src/esports_sim/web/static/app.js": "a4f980dc188424bf1b39ca1ab0ad5fdbd579935c26423eb5ef932a078f1f7049",
+    "src/esports_sim/web/static/usage.js": "afafc055e4f36a3f7ce332c5741512542fd63e0d40d8c9874217218dc20b460e",
+    "src/esports_sim/web/usage_telemetry.py": "f85b7927b2dc55e9b6ba7c8225e9170fdb825e5abd5c9869bba63a1b53d78d46",
+    "tests/development_feedback_check.cjs": "57ea2c36bfa8df0615b65546c12dc265ec66b44d40037874865dc9113b56a4a8",
+    "tests/market_search_usage_check.cjs": "66467e3278ba91933940274c09199206812278fa0f0d8572757efd9081e815f2",
+    "tests/test_dashboard_roster_readiness.py": "979bf7a0c5f720e1e6ff8ecc73b34e529d2c02199e707d94ec4419b4a42af198",
+    "tests/test_development_feedback_frontend.py": "e0d993869be54359e63d31f2c7358ca2413d378cf0a30ecb494d37b648c68152",
+    "tests/test_release_cost.py": "0d5214a9eb6a385fcd4c8c6cd7101740b0da25e957737cb72b6117d180cfe322",
+    "tests/test_review_current_roster.py": "7451786b43d84300fbdaf1466fb25e54e882ffc024015a46485e2dbd03210ea2",
+    "tests/test_usage_telemetry.py": "38abadd6cb97db785f878ee4b8fa4a83aaed99935e763b3b262cffdfe561539f",
+    "tests/test_web_advance_roster_recovery.py": "8ac3cca199e35239f12ea638585136748ac3027d182941919be48ddae9697b44",
+    "tests/test_web_replay_identity.py": "eba73dc01c410b45ecd00cc4ab4b50b296797582a4e14f32fa5ed1de9c6aabbf",
+    "tests/test_weekly_development_report.py": "3d075f6fa41262a8bbf97f52f586dd999dd9a5ece80ebcb6861ad6fa815e1373",
+    "tests/usage_frontend_check.cjs": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064"
+  },
+  "git_filtered_blobs_match_tree": true,
+  "preserved_five_session_csv_sha256": "d7fbe578c4405bff1f02e3cfd56b2750b30fcd767a9cacb232a88f8b8813f93d",
+  "pid": 3396,
+  "started_at_utc": "2026-10-08T18:59:46.768010+00:00",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n2"
+  ]
+}
