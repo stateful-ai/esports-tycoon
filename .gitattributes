@@ -11,3 +11,5 @@ docs/playtests/2026-10-11-gap40-ready-reload/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-ready-reload/actions.csv -text -whitespace
 docs/playtests/2026-10-11-gap40-readiness-loading/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-readiness-loading/actions.csv -text -whitespace
+# Immutable gap37 receipts: committed bytes must match the recorded SHA256s.
+docs/playtests/gap37-between-map-debrief/** -text

@@ -1,0 +1,6 @@
+### Result
+{"status":200,"request":{"slot":"stream","accept":true,"brand":"OrbitCast","structure":"steady"},"body":{"ok":true,"message":"signed with OrbitCast (stream, steady)"}}
+### Ran Playwright code
+```js
+await (async page => { const b=page.getByRole('button',{name:'steady: 9,400 cr/wk',exact:true}); await b.waitFor(); if(await b.count()!==1)throw Error('Sponsor control not unique'); const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/sponsor')&&r.request().method()==='POST'); await b.click(); const r=await response; return {status:r.status(),request:r.request().postDataJSON(),body:await r.json()}; })(page);
+```

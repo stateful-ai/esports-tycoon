@@ -1,0 +1,16 @@
+[
+  {
+    "index": 55,
+    "season": 1,
+    "week": 12,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "small_group",
+      "event_id": "8f43d112fb4700ed"
+    },
+    "source": "web"
+  }
+]

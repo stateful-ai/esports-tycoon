@@ -1,0 +1,53 @@
+{
+  "correction_recorded_at_utc": "2026-10-11T01:35:36.830845+00:00",
+  "finding_id": 4239862183,
+  "corrected_from_head": "3fb3e17f17e1a9a5f4488f74934ae0caebd4c339",
+  "original_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/08-save.json",
+  "current_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/08-save-response-body-not-captured.txt",
+  "byte_count": 1,
+  "raw_hex": "0a",
+  "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "original_HEAD_blob_equals_current_raw_and_index": true,
+  "original_manifests_retained_unchanged": true,
+  "canonical765_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "canonical_observations_unchanged": true,
+  "request_pair": {
+    "session_id": "84db04ab5c999e5551d3e307df818747",
+    "request_id": 22,
+    "target": "/api/actions/save",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "84db04ab5c999e5551d3e307df818747",
+        "received_at": "2026-10-10T21:55:25.016002+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 13,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 22
+      },
+      {
+        "schema_version": 1,
+        "session_id": "84db04ab5c999e5551d3e307df818747",
+        "received_at": "2026-10-10T21:55:25.016002+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 13,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 22,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 47
+      }
+    ]
+  },
+  "post_reload_public_state_week": 13,
+  "evidence_limit": "Save response body was not captured; one newline is a failed/empty capture artifact, not JSON or an API response. Retained request/result and post-reload public state are independent evidence.",
+  "all612_raw_source_unchanged": true,
+  "source_git_tree_matches_prior_tested64": true,
+  "local_tests_launched": false
+}

@@ -1,0 +1,19 @@
+{
+  "decision_prefix": 55,
+  "accepted_decisions": 1,
+  "csv_accepted_decision_matches": 1,
+  "accepted_coverage": "1/1",
+  "csv_rows": 4,
+  "usage_events": 18,
+  "page_sessions": 2,
+  "complete_request_pairs": 2,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "save_sha256": "cc518817796c95051d132dc19c9cf7ddce59fb1c49c03e462478d3d80448e190",
+  "raw_historical_baseline_save_exact_bytes": false,
+  "migrated_baseline_save_exact_bytes": true,
+  "telemetry_snapshots_unchanged": true,
+  "historical_files_unchanged": 26,
+  "local_tests": "UNRUN (explicit user instruction)",
+  "expensive_gates": "UNRUN (explicit user instruction)"
+}

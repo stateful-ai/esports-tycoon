@@ -1,0 +1,61 @@
+{
+  "csv_rows": 3,
+  "csv_accepted_decision_intents": 0,
+  "saved_decision_count": 50,
+  "saved_decision_delta": 0,
+  "saved_campaign_sha256": "15c57edcea6c3c38d8f10120dd60e3be105ac5d58f5c9ead76f315a1107717dc",
+  "retained_usage_rows": 16,
+  "usage_counts": [
+    {
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "count": 1
+    },
+    {
+      "kind": "result",
+      "target": "/api/actions/save",
+      "count": 1
+    },
+    {
+      "kind": "session_start",
+      "target": "",
+      "count": 2
+    },
+    {
+      "kind": "view",
+      "target": "company/finances",
+      "count": 2
+    },
+    {
+      "kind": "view",
+      "target": "dashboard",
+      "count": 2
+    },
+    {
+      "kind": "view",
+      "target": "lobby",
+      "count": 2
+    },
+    {
+      "kind": "visible_time",
+      "target": "company/finances",
+      "count": 2
+    },
+    {
+      "kind": "visible_time",
+      "target": "dashboard",
+      "count": 2
+    },
+    {
+      "kind": "visible_time",
+      "target": "lobby",
+      "count": 2
+    }
+  ],
+  "gaps": [
+    "Read-only profile clicks are not separately instrumented",
+    "Initial failed inspection may have no retained usage flush",
+    "No accepted-decision coverage denominator for navigation-only acceptance"
+  ],
+  "original_save_sha256": "15c57edcea6c3c38d8f10120dd60e3be105ac5d58f5c9ead76f315a1107717dc"
+}

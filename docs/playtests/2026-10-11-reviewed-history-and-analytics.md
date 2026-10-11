@@ -1,0 +1,29 @@
+# Reviewed gameplay history and analytics
+
+Recorded 2026-10-11T08:52:51.711326+00:00.
+
+The append-only [actions.csv](actions.csv) contains994 unique attempts across87 sessions (SHA256 `21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631`). Each row preserves the pre-action intention and expectation, action, observed outcome, timestamps, tested commit/dirty status, game version, runtime metadata, surface, world/seed and game time. Original partial, blocked and unexpected outcomes remain recorded. Primary checkout64ee is distinct from the played worktree20273 and individual fix acceptance builds.
+
+The persistent method is documented in [playtest-log](../../.claude/skills/playtest-log/SKILL.md) and required by [AGENTS.md](../../AGENTS.md). Exact runtime metadata is preserved when exposed; root model/effort stays `unknown (not exposed)`. Explicitly configured gap owners use `gpt-6.1-sol` with `medium` effort. The user suspended local test/gate execution; no new local pytest, native handler or simulation gate was run in this review wave.
+
+## Latest player session
+
+[Season2 preparation](2026-10-11-season2-preparation/report.md) played the copied26UHC world, seed2038, source20273, game0.0.1, S2W2 toW3. Eight intentions produced5 met and3 partial outcomes. Normal Ascent/anti-exec preparation and Pace70/MapControl30 plan were independently read back; TeamNexus won13-3 away against NordicFrost. Knowledge+1.56, stamina-4 and Ascent book+1.6 were exposed; the plan was consumed. Income123401 minus expenses47100 raised bank2340100 to2416401. Ghost mechanical/light development exposed practice+0.11 and match+0.05 with mentorship. Rested players had no ordinary practice gains. Inbox separately explains Hollowlock's wrist event; the evidence does not establish that rest or accepted preparation caused the injury or victory.
+
+Saved action prefix107 and snapshot prefix24 are exact; final110/25. All3 new accepted decisions are reconciled by index, kind, parameters, team, source and game time. Four browser request pairs succeeded200, including Save outside accepted decisions. Retained78 usage events include7 coarse views and59 visibility events. Failed locators lack individual capture; one interaction event does not establish complete control coverage. The original step7 telemetry-kind error remains in the CSV and is corrected by step8.
+
+## Reviewed fixes and bounded acceptance
+
+[PR392](https://github.com/stateful-ai/esports-tycoon/pull/392) corrects away-user recap score perspective; the reproduced same fixture now says13-3 rather than3-13. The broader65 added regression cases are unrun locally. The independent source/receipt audit verified425 tracked source/data paths and24 safe original receipts; unavailable original Advance observer stdout and individual report exits remain explicitly unverified.
+
+[PR387](https://github.com/stateful-ai/esports-tycoon/pull/387) distinguishes offseason rollover, restores status polling after ready-page reload, provides actionable poll retry, cancels waiting when actual backend restart clears readiness, and uses server-authored loading copy. Latest acceptance preserves8 observations,36 new raw receipts and1917 frozen paths. Two accepted advances are separate from canceled ready-up. Four successful pairs and one unmatched attempt are retained. Actual connection refusal is browser requestfailed evidence, with no fabricated failed-state sidecar event.
+
+[PR370](https://github.com/stateful-ai/esports-tycoon/pull/370) preserves the actually displayed cached flavor title in the settlement receipt. Controlled cached-overlay acceptance has4 rows, one accepted decision and two successful request pairs. Only two changed paths received the new before/after freeze;617 remaining integrated source paths were checked statically. Gameplay equals the explicitly migrated historical baseline; raw historical save equality is false. This is not a live LLM generation or fresh determinism gate.
+
+[PR366](https://github.com/stateful-ai/esports-tycoon/pull/366) and [PR369](https://github.com/stateful-ai/esports-tycoon/pull/369) are integrated against main300462da. Their5/6 feature deltas,617 current raw/Git paths and926 published historical blobs were independently verified. Original report/native validation remains archived and historical; these integrations had no new gameplay acceptance or local tests. Current root reviews were posted and confirmed.
+
+## Quantitative coverage and remaining limits
+
+CSV annotations are590 `recorded`,348 `not_instrumented`,50 `unverified`,1 historical `missing`, and5 blank. These labels combine explicitly identified accepted-decision and coarse browser-usage evidence; their ratio is not a complete funnel metric. The historical missing mentorship row remains evidence of the original omission although it was separately fixed. Read-only profile/Handbook coverage is being added through PR369; it is not claimed present on the original root played build. Visibility measures exposure, not attention. Best-effort sidecars can drop events; blocked clicks, canceled confirmations and failed observer scripts are not automatically recorded HTTP failures.
+
+Actual remote main remains300462da with765 canonical rows;22 reviewed merge receipts exist. The local994 file preserves the exact remote765 raw prefix. [PR394](https://github.com/stateful-ai/esports-tycoon/pull/394) consolidates the reviewed pending history-only snapshots into one prospective765-to994 publication. Intermediate808/885/938/957/982 snapshots and reports remain historical evidence; they have not been falsely reported as actual merges. Current integration, independent root review, fresh exact-head CI and current findings are required before merge. Gameplay fixes retain separate PRs. Owned acceptance servers are closed, user8421 remains untouched, and primary user files/staging are preserved.

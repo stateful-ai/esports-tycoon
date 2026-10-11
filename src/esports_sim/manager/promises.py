@@ -1,12 +1,103 @@
 from __future__ import annotations
 import hashlib
 import inspect
+import math
 import sys
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from esports_sim.manager.state import GameState
     from esports_sim.schemas.promise import ManagerPromise
+
+
+def _play_time_duration(gs: GameState, promise: ManagerPromise, *, ticking: bool = False) -> int:
+    """Original window, including the evaluator's legacy-save reconstruction.
+
+    During evaluation weeks_left has already been decremented. Read-only views
+    call before that decrement, so omit its compensating +1.
+    """
+    if promise.initial_duration > 0:
+        return promise.initial_duration
+    curr_week = getattr(gs, "week", 1)
+    curr_season = getattr(gs, "season", 1)
+    try:
+        from esports_sim.manager.schedule import regular_season_weeks
+        n_weeks = regular_season_weeks(gs.teams_per_region) if hasattr(gs, "teams_per_region") else 12
+    except Exception:
+        n_weeks = 12
+    weeks_passed = max(0, curr_week - promise.created_week + (curr_season - promise.created_season) * n_weeks)
+    return promise.weeks_left + weeks_passed + int(ticking)
+
+
+def _play_time_requirement(duration: int, target_value: str | int | None) -> tuple[int, int]:
+    target = target_value if target_value is not None else 100
+    if isinstance(target, str):
+        try:
+            target = int(target)
+        except ValueError:
+            target = 100
+    return target, math.ceil(duration * target / 100.0)
+
+
+def _play_time_result(dressed: int, remaining: int, required: int) -> str:
+    if dressed + remaining < required:
+        return "broken"
+    if remaining <= 0:
+        return "kept" if dressed >= required else "broken"
+    return "active"
+
+
+def play_time_assessment(gs: GameState, promise: ManagerPromise) -> dict | None:
+    """Pure public assessment using the same target, credit and deadline rules.
+
+    Resolved promises retain their recorded outcome; their weeks_left is a
+    history-retention timer, not a deadline. Unknown types remain untouched.
+    Repeating an active promise resets evaluations left, but keeps its target
+    basis and accumulated credits. Credits are not a fraction of a window.
+    ``window_weeks`` remains an alias for the evaluator's target basis, never
+    the current deadline or an inferred total period after repeat promises.
+    """
+    if promise.promise_type != "play_time" or promise.status != "active":
+        return None
+    duration = _play_time_duration(gs, promise)
+    target, required = _play_time_requirement(duration, promise.target_value)
+    dressed = promise.dressed_count
+    needed = max(0, required - dressed)
+    remaining = promise.weeks_left
+    fulfillment = min(100, max(0, round(dressed / required * 100))) if required > 0 else 100
+    next_dressed = _play_time_result(dressed + 1, remaining - 1, required)
+    next_benched = _play_time_result(dressed, remaining - 1, required)
+    target_basis = (f"original {duration}-week promise" if promise.initial_duration > 0
+                    else f"reconstructed {duration}-week target basis")
+    deadline = (
+        "Final scheduled evaluation: at the next weekly evaluation."
+        if remaining <= 1 else f"Final scheduled evaluation: after {remaining} more weekly evaluations."
+    )
+    if remaining > 1 and needed:
+        deadline += " It can break earlier if the required credits become unreachable."
+        if next_benched == "broken":
+            deadline += " If not dressed next evaluation, it breaks then."
+        if next_dressed == "broken":
+            deadline += " Even if dressed next evaluation, it breaks then."
+    outcomes = {"active": "promise stays active", "kept": "promise kept", "broken": "promise broken"}
+    return {
+        "window_weeks": duration,
+        "target_basis_weeks": duration,
+        "target_basis_inferred": promise.initial_duration <= 0,
+        "target_percent": target,
+        "required_dressed_weeks": required,
+        "dressed_weeks": dressed,
+        "additional_dressed_weeks_needed": needed,
+        "evaluations_left": remaining,
+        "fulfillment_percent": fulfillment,
+        "next_dressed_status": next_dressed,
+        "next_not_dressed_status": next_benched,
+        "target_label": f"Target: {required} dressed-week credits ({target}% of the {target_basis}, rounded up).",
+        "progress_label": f"Progress: {dressed} accumulated dressed-week credits; {required} required. " + (f"{needed} more needed." if needed else "Target reached."),
+        "deadline_label": deadline,
+        "counting_label": "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits.",
+        "next_evaluation_label": f"Next evaluation: if dressed, {dressed + 1} accumulated credits ({outcomes[next_dressed]}); if not dressed, {dressed} credits ({outcomes[next_benched]}).",
+    }
 
 def create_promise(
     gs: GameState,
@@ -39,6 +130,10 @@ def create_promise(
                 break
 
     if existing is not None:
+        # Freeze a migrated play-time target before changing the remaining
+        # time used by the evaluator's legacy duration reconstruction.
+        if existing.promise_type == "play_time" and existing.initial_duration <= 0:
+            existing.initial_duration = _play_time_duration(gs, existing)
         existing.weeks_left = duration
         return existing
 
@@ -168,41 +263,16 @@ def weekly_tick(gs: GameState, week_dressed: dict[str, set[str]]) -> None:
 
         if promise.promise_type == "play_time":
             if promise.initial_duration <= 0:
-                curr_week = getattr(gs, "week", 1)
-                curr_season = getattr(gs, "season", 1)
-                p_week = promise.created_week
-                p_season = promise.created_season
-                try:
-                    from esports_sim.manager.schedule import regular_season_weeks
-                    n_weeks = regular_season_weeks(gs.teams_per_region) if hasattr(gs, "teams_per_region") else 12
-                except Exception:
-                    n_weeks = 12
-                weeks_passed = max(0, curr_week - p_week + (curr_season - p_season) * n_weeks)
-                promise.initial_duration = promise.weeks_left + weeks_passed + 1
+                promise.initial_duration = _play_time_duration(gs, promise, ticking=True)
 
             played = week_dressed.get(promise.team_id, set())
             if promise.player_id in played:
                 promise.dressed_count += 1
 
-            # Compute required dressed weeks
-            target = promise.target_value if promise.target_value is not None else 100
-            if isinstance(target, str):
-                try:
-                    target = int(target)
-                except ValueError:
-                    target = 100
-            
-            D = promise.initial_duration
-            import math
-            R = math.ceil(D * target / 100.0)
-
-            dressed_count = promise.dressed_count
-            weeks_left = promise.weeks_left
-
-            if dressed_count + weeks_left < R:
-                resolve_promise(gs, promise, success=False)
-            elif weeks_left <= 0:
-                resolve_promise(gs, promise, success=(dressed_count >= R))
+            _, required = _play_time_requirement(promise.initial_duration, promise.target_value)
+            outcome = _play_time_result(promise.dressed_count, promise.weeks_left, required)
+            if outcome != "active":
+                resolve_promise(gs, promise, success=(outcome == "kept"))
 
         elif promise.promise_type == "make_captain":
             team = gs.teams.get(promise.team_id)

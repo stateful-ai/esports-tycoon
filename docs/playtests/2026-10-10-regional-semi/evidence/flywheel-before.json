@@ -1,0 +1,157 @@
+[
+  {
+    "id": "esports-playtest-0148",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Final-league stakes and prize reporting omit current context",
+    "problem": "Understand already-secured qualification and a133060bank increase",
+    "solution": "Compare OUT teams and last calendar with preview, then resolved-week report with balances",
+    "lesson": "Gap30 secured seeding assigned. Gap31 missing70000second-place income assigned; separateexisting373omits100upkeep. Current-week projected run-rate explicitly not a historical ledger",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0147",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Decision choices and browser request usage are separate evidence",
+    "problem": "Quantify the controlled rotation without treating saves as decisions",
+    "solution": "Match old prefixes and exact chosen IDs separately from session/request IDs",
+    "lesson": "63->65 accepted decisions and13->14 snapshots; gameplan plus advance matched. Browser retains4success pairs including2Save; read-only overlay coverage still qualified",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0146",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "One-match five is independent of the standing lineup",
+    "problem": "Rest Ghost without permanently dropping him from starters",
+    "solution": "Lock five named players, save/reload, advance once and inspect actual replay participants",
+    "lesson": "Accepted gameplan exact IDs include Hollowlock and exclude Ghost; replay confirms all five, report Hollowlock1map/Ghost0; standing five unchanged and plan consumed. Nexus lost11-13; no causal win claim",
+    "confidence": "high",
+    "source": "2026-10-10-one-match-rotation main64ee15f browser8496 world26UHC seed2038 W14-W15",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "one-match-lineup",
+      "qualification",
+      "finance",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0145",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation development labels expose internal stable IDs",
+    "problem": "Clickable Dev note displays FA0 beside Hollowlock prose and roster",
+    "solution": "Preserve full screenshot/DOM and assign narrow known-player handle serialization/profile-target fix",
+    "lesson": "Current main report lacks dev_suggestion_handle; app falls back to humanizing fa_0. Gap29 assigned GPT6.1-sol/medium, no correction shipped yet. Stale Save reference failure is separate harness friction",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0144",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Coach booking, game plan and weekly development are distinct",
+    "problem": "Track preparation cost without attributing all weekly condition change to it",
+    "solution": "Read booking, save reload and completed preparation report plus weekly source attribution",
+    "lesson": "Normal Retakes consumed its one-fixture booking, saved cost4 and knowledge1.95; Ghost practice+0.37/matches+0.06 while bench Hollowlock recovered67.9->87.9. Condition includes training/recovery and match load",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0143",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Winning does not imply a focused plan succeeded",
+    "problem": "Assess the selected target independently of the team result",
+    "solution": "Compare explicit target outcome and baseline season form after advancing once",
+    "lesson": "Nexus won13-3 but Cipherstrike1.53 exceeded season1.22; UI marks focus backfired. This descriptive comparison is not a causal estimate. Refocus separately reports confidence-3 per starter",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0142",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Shortened snapshots can create false missing-player findings",
+    "problem": "Root misread a tail and initially claimed Ghost missing from agent-lock controls",
+    "solution": "Keep initial error rows, append full-DOM and public-response corrections, and require complete evidence before assigning a gap",
+    "lesson": "Ghost was always present; full roster locks differ from standing-five selection. Windows quoting/defaultencoding and display-name versus stable-ID audit failures are harness errors, not game failures",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0141",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Resting bench players preserve recovery semantics",
+    "problem": "Check that zero minutes and zero skill gains are explained",
+    "solution": "Choose individual rest for Hollowlock and inspect weekly report and saved decision fa_0",
+    "lesson": "Rest/normal zero maps has no measured skill gains and a recovery explanation; UI nickname must map to stable player ID fa_0 in audit",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]

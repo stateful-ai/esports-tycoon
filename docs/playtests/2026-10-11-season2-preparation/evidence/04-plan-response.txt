@@ -1,0 +1,6 @@
+### Result
+{"status":200,"request":{"site_focus":null,"focus_target":null,"starter_ids":[],"team_talk":null,"aggression":null,"pace":70,"util_discipline":null,"eco_greed":null,"map_control":30},"body":{"ok":true,"message":"Game plan confirmed for the next match."}}
+### Ran Playwright code
+```js
+await (async page => { for (const [name,value] of [['Pace',70],['Map control',30]]) { const row=page.locator('.gp-dial').filter({has:page.getByText(name,{exact:true})}); if(await row.count()!==1) throw Error('Dial not unique'); await row.locator('input[type=checkbox]').check(); const range=row.locator('input[type=range]'); await range.press(value===70?'End':'Home'); for(let i=0;i<30;i++) await range.press(value===70?'ArrowLeft':'ArrowRight'); if(await range.inputValue()!==String(value)) throw Error('Wrong dial value'); } const response=page.waitForResponse(r=>r.url().endsWith('/api/actions/gameplan')&&r.request().method()==='POST'); await page.getByRole('button',{name:'Lock in game plan',exact:true}).click(); const r=await response; return {status:r.status(),request:r.request().postDataJSON(),body:await r.json()}; })(page);
+```

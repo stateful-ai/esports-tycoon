@@ -1,0 +1,102 @@
+{
+  "audited_at_utc": "2026-10-10T22:20:01.910579+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "baseline_actions": 60,
+  "final_actions": 63,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 3,
+    "accepted": 3
+  },
+  "snapshot_prefix_unchanged": true,
+  "snapshots_before_after": [
+    12,
+    13
+  ],
+  "bank_before_after": [
+    544898,
+    608307
+  ],
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "469249d0bacbcf4fcccb88ea889a7228ffc422aed4aafc87cfed8d5ddfed0b29",
+  "usage_events_at_audit": 66,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 10,
+    "visible_time": 40,
+    "session_end": 2,
+    "attempt": 5,
+    "result": 5,
+    "interaction": 1
+  },
+  "request_pairs": 5,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "requests": [
+    {
+      "target": "/api/actions/preparation",
+      "session_id": "a70d8a7444efe81df025c7f0092646ec",
+      "request_id": 12
+    },
+    {
+      "target": "/api/actions/gameplan",
+      "session_id": "a70d8a7444efe81df025c7f0092646ec",
+      "request_id": 18
+    },
+    {
+      "target": "/api/actions/save",
+      "session_id": "a70d8a7444efe81df025c7f0092646ec",
+      "request_id": 21
+    },
+    {
+      "target": "/api/actions/advance",
+      "session_id": "2faf333fad9a9228e7a60df71d08c4b0",
+      "request_id": 10
+    },
+    {
+      "target": "/api/actions/save",
+      "session_id": "2faf333fad9a9228e7a60df71d08c4b0",
+      "request_id": 27
+    }
+  ],
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 33296,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 38428,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8495",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 43620,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8495",
+        "--no-browser"
+      ]
+    }
+  ],
+  "confirmed_gap29": "Dev note FA0 rather than known handle Hollowlock; assigned separate6.1-sol medium owner",
+  "limits": "Only controlled retained session;3accepted decisions5successful UI pairs including2Save outside decision vocabulary. Advance usage receipt carries post-actionW14 while accepted decision records pre-actionW13; timestamps receipt not click time. Best-effort visibility does not measure attention/full funnels. Read-only full report and prep/player inspection lack dedicated overlay capture on tested main64. Stale Save ref blocked before sending request; not HTTP rejection. Win not caused/proven by prep."
+}
