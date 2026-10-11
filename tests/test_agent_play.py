@@ -61,6 +61,45 @@ def test_create_seats_every_team_and_validates_picks(game_data):
         AgentWorld.create(game_data, seed=910, n_teams=0)
 
 
+@pytest.mark.parametrize("action", [
+    {"kind": "set_tactics", "params": {"pace": "fast"}},
+    {"kind": "set_tactics", "params": {"pace": None}},
+    {"kind": "set_lineup", "params": {"player_ids": None}},
+    {"kind": "set_lineup", "params": {"player_ids": [{}, {}, {}, {}, {}]}},
+    {"kind": "negotiate_offer", "params": {"salary": [], "weeks": 10}},
+    {"kind": "advance", "params": []},
+    None,
+])
+def test_malformed_direct_actions_reject_without_mutation(game_data, action):
+    world = AgentWorld.create(game_data, seed=920, n_teams=2)
+    before = world.gs.model_dump_json()
+    with pytest.raises(InvalidManagerAction):
+        world.act(world.team_ids[0], action)
+    assert world.gs.model_dump_json() == before
+    assert not world.ready
+    assert not world.last_tick
+    assert world.tick_seq == 0
+
+
+@pytest.mark.parametrize("accept", ["false", "true", 0, 1, None, [], {}])
+def test_direct_transfer_requires_boolean_and_retains_live_offer(game_data, accept):
+    from esports_sim.manager.state import TransferOffer
+
+    world = AgentWorld.create(game_data, seed=921, n_teams=2)
+    seller, buyer = world.team_ids
+    pid = world.gs.teams[seller].player_ids[0]
+    world.gs.transfer_offers.append(TransferOffer(
+        player_id=pid, from_team=seller, to_team=buyer,
+        fee=10_000, expires_week=world.gs.week + 2,
+    ))
+    before = world.gs.model_dump_json()
+    with pytest.raises(InvalidManagerAction, match="JSON boolean"):
+        world.act(seller, {"kind": "transfer_offer", "params": {
+            "player_id": pid, "to_team": buyer, "accept": accept,
+        }})
+    assert world.gs.model_dump_json() == before
+
+
 def test_observation_is_json_safe_and_carries_sync_and_objective(game_data):
     world = AgentWorld.create(game_data, seed=911, n_teams=2)
     a, b = world.team_ids

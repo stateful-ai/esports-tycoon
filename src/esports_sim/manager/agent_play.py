@@ -39,6 +39,7 @@ from esports_sim.manager.decision_env import (
     HeadlessManagerEnv,
     InvalidManagerAction,
     manager_observation,
+    validate_manager_action,
 )
 
 from esports_sim.manager.state import GameState
@@ -648,7 +649,7 @@ class AgentWorld:
         digest of that week lands in its next ``observe()`` under
         ``sync.last_tick``."""
         env = self._env(team_id)
-        kind = str(action.get("kind", ""))
+        kind, _params = validate_manager_action(action)
         if kind != "advance":
             step = env.step(action)
             # accept_job moves the seat to a new club (legacy worlds); the
