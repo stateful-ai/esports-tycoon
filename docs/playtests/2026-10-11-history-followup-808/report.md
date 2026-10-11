@@ -52,3 +52,10 @@ current-head remote CI and independent review are required for publication.
 
 See preparation-audit.json, reference-audit.json and source-and-prefix-proof.json
 for full source paths, complete hashes, recovery limits and the freeze boundary.
+
+
+## Integration qualification (2026-10-11)
+
+Root confirmed PR377 merged at `300462da2ae10a55c6106918c9de209638f85406` and authorized integration to main. This candidate now merges that exact authoritative main, retaining the original 808-row CSV SHA256 `29ff8f6ae1674d72d6fd72edf0fefbe5ebf8cf5e8a7702ff753346fc88d2875a`, all 995 prior documentation blobs and raw bytes, 180 raw artifact mappings and 90 named references. Two named source references now resolve through exact historical Git archives described in the integration audit; the active source paths have changed on main. The previous merge barrier is satisfied.
+
+`integration-qualification.json` records the current 618-file source manifest and 15 source/configuration path changes from the original candidate. Active non-playtest Git contents equal authoritative main. The retained 612-file freeze and 1274-passed native gate remain historical proof for tested64; they do not cover the integrated source. No local tests, gameplay or historical acceptance helpers were run. New-head remote CI and root independent review remain required. Existing missing terminal-output qualifications remain unchanged.
