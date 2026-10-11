@@ -896,6 +896,7 @@ async function deleteWorld(world) {
 async function refresh() {
   App.state = await api("/api/state");
   const s = App.state;
+  updateAdvanceTransition(s);
   // Fantasy draft in progress: the draft screen (draft.js) IS the app until
   // the last pick resolves — rosters are mid-build, so no tab makes sense.
   if (s.draft_active) {
@@ -918,6 +919,17 @@ async function refresh() {
   refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
   maybeShowFirstWeekHelp(s);
+}
+
+// The server describes the campaign branch; the client only paints its copy.
+function updateAdvanceTransition(s) {
+  const transition = s?.advance_transition;
+  const btn = $("#advance-btn"), notice = $("#advance-notice");
+  if (!mpPolling) btn.textContent = `${transition?.label || "Advance Week"} ▸`;
+  notice.textContent = transition?.notice || "";
+  notice.classList.toggle("hidden", !transition?.notice);
+  if (transition?.notice) btn.setAttribute("aria-describedby", "advance-notice");
+  else btn.removeAttribute("aria-describedby");
 }
 
 // Topbar save controls: the explicit Save button (dot = unsaved changes)
@@ -8212,7 +8224,7 @@ function pollForAdvance(prevWeek) {
       s = await api("/api/state");
     } catch {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      updateAdvanceTransition(App.state);
       $("#advance-btn").disabled = false;
       return;
     }
@@ -8220,7 +8232,7 @@ function pollForAdvance(prevWeek) {
     updateMpChip(s.multiplayer);
     if (s.week !== prevWeek) {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      updateAdvanceTransition(s);
       $("#advance-btn").disabled = false;
       // Show the played week's report (results + replay buttons) — the
       // manager whose ready-up ticked the world got it from advance();

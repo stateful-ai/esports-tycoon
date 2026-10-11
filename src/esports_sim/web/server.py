@@ -2147,6 +2147,20 @@ def _needs_you_flags(gs: GameState, tid: str) -> dict:
     }
 
 
+def _advance_transition(gs: GameState) -> dict:
+    """Describe the next tick's branch without mutating the campaign."""
+    if gs.phase == "offseason":
+        return {
+            "label": f"Start Season {gs.season + 1}",
+            "notice": (
+                f"Next advance completes the offseason and starts Season {gs.season + 1}, "
+                "Week 1. Season-end changes resolve; ordinary weekly training, "
+                "sponsor income and payroll do not run on this transition."
+            ),
+        }
+    return {"label": "Advance Week", "notice": ""}
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -2216,6 +2230,7 @@ def state() -> dict:
             "week": gs.week,
             "phase": gs.phase,
             "window": market.market_window_status(gs),
+            "advance_transition": _advance_transition(gs),
             "roster_readiness": {
                 "ready": roster_ready,
                 "reason": roster_reason,
