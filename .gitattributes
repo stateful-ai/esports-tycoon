@@ -1,5 +1,21 @@
 # Preserve whitespace inside quoted source stage labels in the research CSV.
 data/research/war-history/map_context.csv -whitespace
+
+# Preserve exact original raw playtest receipts and append-only CSV bytes.
+docs/playtests/actions.csv -text
+docs/playtests/2026-10-11-academy-availability-fixed-head/** -text
+docs/playtests/2026-10-11-development-first-observation-398/** -text
+docs/playtests/2026-10-11-history-followup-1028/original-root-audit.json -text
+docs/playtests/2026-10-11-fixed-head-sessions-and-analytics.md -text
+
+docs/playtests/2026-10-11-history-consolidated-1044/** -text
+docs/playtests/2026-10-11-mentorship-profile-supplemental-and-analytics.md -text
+
+# Immutable gap37 receipts: committed bytes must match the recorded SHA256s.
+docs/playtests/gap37-between-map-debrief/** -text
+
+# Preserve the exact captured Windows receipt bytes for away-recap acceptance.
+docs/playtests/2026-10-11-away-recap/evidence/** -text -whitespace
 # Keep gap40 acceptance receipt hashes equal to the raw captured bytes.
 docs/playtests/2026-10-11-gap40-rollover/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-rollover/actions.csv -text -whitespace
@@ -11,5 +27,3 @@ docs/playtests/2026-10-11-gap40-ready-reload/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-ready-reload/actions.csv -text -whitespace
 docs/playtests/2026-10-11-gap40-readiness-loading/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-readiness-loading/actions.csv -text -whitespace
-# Immutable gap37 receipts: committed bytes must match the recorded SHA256s.
-docs/playtests/gap37-between-map-debrief/** -text

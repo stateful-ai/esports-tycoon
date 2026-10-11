@@ -1,0 +1,10 @@
+### Ran Playwright code
+```js
+await page.getByRole('combobox').nth(4).selectOption('rest');
+```
+### Page
+- Page URL: http://127.0.0.1:8537/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T09-16-04-753Z.yml)

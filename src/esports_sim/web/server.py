@@ -2722,6 +2722,10 @@ def matchday() -> dict:
         }
 
 
+def _academy_move_window(gs: GameState, team_id: str) -> tuple[bool, str]:
+    return market.market_move_allowed(gs, team_id, emergency_ok=False)
+
+
 def _club_view(gs: GameState) -> dict:
     tid = gs.acting_team_id
     team = gs.teams[tid]
@@ -2761,7 +2765,9 @@ def _club_view(gs: GameState) -> dict:
         series_management.starting_five(gs, tid, series_fixture)
         if series_fixture else []
     )
-    academy_view = academy.academy_view(gs, tid)
+    academy_view = academy.academy_view_for_club(
+        gs, tid, window_check=_academy_move_window
+    )
     return {
         "market_window": market.market_window_status(gs),
         "academy": academy_view,
@@ -2824,9 +2830,7 @@ def academy_move(body: AcademyMoveBody) -> dict:
             gs.acting_team_id,
             body.player_id,
             body.direction,
-            window_check=lambda state, team_id: market.market_move_allowed(
-                state, team_id, emergency_ok=False
-            ),
+            window_check=_academy_move_window,
         )
         if not ok:
             raise HTTPException(422, msg)
@@ -3563,7 +3567,8 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
     This is a pure read of stored development snapshots. Attribute deltas are
     only emitted when both endpoints contain that attribute, which lets an old
     save begin tracking cleanly without pretending its current values were the
-    season-opening baseline.
+    season-opening baseline. A first observation establishes a baseline, not a
+    measured zero change; latest-week attribution remains independently useful.
     """
     from esports_sim.manager.development_path import report_view
 
@@ -3576,10 +3581,17 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
         if not snaps:
             continue
         first, last = snaps[0], snaps[-1]
-        delta = round(last.ca - first.ca, 1)
-        status = "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        comparison_available = len(snaps) >= 2 and first.week < last.week
+        delta = round(last.ca - first.ca, 1) if comparison_available else None
+        status = (
+            "first_observation" if not comparison_available else
+            "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        )
         changes = []
-        for aid in sorted(set(first.attributes) & set(last.attributes)):
+        comparable_attributes = (
+            set(first.attributes) & set(last.attributes) if comparison_available else set()
+        )
+        for aid in sorted(comparable_attributes):
             change = round(last.attributes[aid] - first.attributes[aid], 1)
             if abs(change) < 0.1:
                 continue
@@ -3599,6 +3611,7 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "start_week": first.week,
             "end_week": last.week,
             "tracked_points": len(snaps),
+            "comparison_available": comparison_available,
             "overall_start": first.ca,
             "overall_current": last.ca,
             "overall_delta": delta,
@@ -3607,13 +3620,18 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "changes": changes,
             "latest_week": report_view(p),
         })
-    rows.sort(key=lambda row: (-row["overall_delta"], row["handle"].lower(), row["id"]))
-    deltas = [row["overall_delta"] for row in rows]
+    rows.sort(key=lambda row: (
+        not row["comparison_available"], -(row["overall_delta"] or 0),
+        row["handle"].lower(), row["id"],
+    ))
+    deltas = [row["overall_delta"] for row in rows if row["comparison_available"]]
     return {
         "season": gs.season,
         "start_week": min((row["start_week"] for row in rows), default=None),
         "end_week": max((row["end_week"] for row in rows), default=None),
-        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else 0.0,
+        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else None,
+        "compared_players": len(deltas),
+        "first_observations": sum(not row["comparison_available"] for row in rows),
         "grown": sum(row["status"] == "grown" for row in rows),
         "regressed": sum(row["status"] == "regressed" for row in rows),
         "steady": sum(row["status"] == "steady" for row in rows),
@@ -8143,6 +8161,65 @@ def _profile_splits(gs: GameState, pid: str) -> dict | None:
     }
 
 
+def _profile_development_comparison(snaps: list) -> dict:
+    """Describe stored endpoints without treating observation count as time.
+
+    Histories can span seasons, skip weeks, or contain same-week snapshots.
+    Cross-season endpoints are comparable, but do not imply a known elapsed
+    week count. A single dated point cannot establish measured flat growth.
+    """
+    ordered = sorted(snaps, key=lambda s: (s.season, s.week))
+    first = ordered[0] if ordered else None
+    last = ordered[-1] if ordered else None
+    available = bool(first and (first.season, first.week) < (last.season, last.week))
+    delta = round(last.ca - first.ca, 1) if available else None
+    status = (
+        "no_observations" if first is None else
+        "first_observation" if not available else
+        "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+    )
+    return {
+        "comparison_available": available,
+        "status": status,
+        "tracked_points": len(ordered),
+        "start": {"season": first.season, "week": first.week, "ca": first.ca} if first else None,
+        "end": {"season": last.season, "week": last.week, "ca": last.ca} if last else None,
+        "elapsed_weeks": last.week - first.week if available and first.season == last.season else None,
+        "overall_delta": delta,
+    }
+
+
+def _profile_season_growth(gs: GameState, pid: str) -> dict:
+    """Current-season skill endpoints, retaining old saves' missing attributes.
+
+    Attribute tracking may start later than CA tracking. Use the first and
+    last attributed snapshots and compare only their shared attribute keys.
+    No values are backfilled from the player's present attributes.
+    """
+    snaps = sorted(
+        (s for s in gs.dev_history.get(pid, []) if s.season == gs.season and s.attributes),
+        key=lambda s: s.week,
+    )
+    comparison = _profile_development_comparison(snaps)
+    changes = []
+    if comparison["comparison_available"]:
+        first, last = snaps[0], snaps[-1]
+        changes = [
+            {"key": aid, "delta": round(last.attributes[aid] - first.attributes[aid], 1),
+             "value": last.attributes[aid]}
+            for aid in sorted(set(first.attributes) & set(last.attributes))
+        ]
+        changes.sort(key=lambda item: (-abs(item["delta"]), item["key"]))
+    return {
+        "season": gs.season,
+        "comparison": comparison,
+        "series": [s.model_dump() for s in snaps],
+        "changes": changes,
+        "attribute_comparison_available": bool(changes),
+        "has_measurable_change": any(abs(item["delta"]) >= 0.1 for item in changes),
+    }
+
+
 def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     """Time-series for the profile trend charts. Performance series needs
     an analytics department (tier 2+); the development series (ability,
@@ -8156,7 +8233,14 @@ def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     dev = (
         [s.model_dump() for s in gs.dev_history.get(pid, [])] if own else None
     )
-    return {"performance": perf, "development": dev, "analytics_tier": tier}
+    from esports_sim.manager.development_path import report_view
+
+    return {
+        "performance": perf, "development": dev, "analytics_tier": tier,
+        "development_comparison": _profile_development_comparison(gs.dev_history.get(pid, [])) if own else None,
+        "season_growth": _profile_season_growth(gs, pid) if own else None,
+        "development_latest_week": report_view(gs.players[pid]) if own else None,
+    }
 
 
 def _profile_weekly(gs: GameState, pid: str) -> list[dict]:

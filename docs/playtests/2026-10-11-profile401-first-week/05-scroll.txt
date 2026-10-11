@@ -1,0 +1,5 @@
+### Error
+TimeoutError: locator.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByText('No measurable CA change between these observations')[22m
+
