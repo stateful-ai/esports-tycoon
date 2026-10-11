@@ -916,9 +916,20 @@ async function refresh() {
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
+  resumeSharedAdvance(s);
   refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
   maybeShowFirstWeekHelp(s);
+}
+
+// A ready seat may be loaded without this page having submitted advance.
+// Resume status observation before making its primary control available.
+function resumeSharedAdvance(s) {
+  if (s.multiplayer?.you_ready && !mpPolling && !mpPollingRetry) {
+    $("#advance-btn").disabled = true;
+    pollForAdvance(s.week);
+    updateAdvanceTransition(s);
+  }
 }
 
 // The server describes the campaign branch; the client only paints its copy.
