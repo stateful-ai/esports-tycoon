@@ -11,6 +11,8 @@ from esports_sim.manager.state import (
     MediaCommitment,
     MediaDecision,
     MediaEvent,
+    MediaEffectChange,
+    MediaEffects,
 )
 from esports_sim.rng.tree import RngTree
 
@@ -177,18 +179,79 @@ def trust(gs: "GameState", team_id: str, player_id: str) -> float:
 def _apply(
     gs: "GameState", team_id: str, player_id: str,
     sentiment_delta: float, sponsor_delta: float, trust_delta: float,
-) -> float:
+) -> MediaEffects:
+    sentiment_before = gs.sentiment(team_id)
     gs.team_sentiment[team_id] = round(
         min(100.0, max(0.0, gs.sentiment(team_id) + sentiment_delta)), 1
     )
+    brand_changes = []
     for brand in _active_brands(gs, team_id):
+        before = gs.sponsor_relations_by.get(team_id, {}).get(brand, 50.0)
         sponsors.nudge_relation(gs, brand, sponsor_delta, team_id=team_id)
+        after = gs.sponsor_relations_by[team_id][brand]
+        brand_changes.append(_change(brand, brand, before, after))
     targets = [player_id] if player_id else sorted(gs.teams[team_id].player_ids)
     book = gs.manager_player_trust_by.setdefault(team_id, {})
+    player_changes = []
     for pid in targets:
         if pid in gs.players:
+            before = book.get(pid, 50.0)
             book[pid] = round(min(100.0, max(0.0, book.get(pid, 50.0) + trust_delta)), 1)
-    return sponsor_delta if _active_brands(gs, team_id) else 0.0
+            player_changes.append(_change(pid, gs.players[pid].handle, before, book[pid]))
+    return MediaEffects(
+        sentiment=_change(team_id, "Community sentiment", sentiment_before, gs.sentiment(team_id)),
+        player_trust=player_changes,
+        sponsor_relations=brand_changes,
+    )
+
+
+def _change(key: str, label: str, before: float, after: float) -> MediaEffectChange:
+    return MediaEffectChange(id=key, label=label, before=before, after=after,
+                             delta=round(after - before, 1))
+
+
+def _signed(value: float) -> str:
+    return f"{value:+g}"
+
+
+def effect_feedback(effects: MediaEffects) -> str:
+    """Server-authored measured values; no client arithmetic or hidden maths."""
+    def measured(change: MediaEffectChange) -> str:
+        return f"{change.label} {_signed(change.delta)} ({change.before:g} -> {change.after:g})"
+
+    return "; ".join([
+        measured(effects.sentiment),
+        "Player trust: " + (", ".join(map(measured, effects.player_trust)) or "no current player affected"),
+        "Sponsor relations: " + (", ".join(map(measured, effects.sponsor_relations)) or "no active sponsor affected"),
+    ]) + "."
+
+
+def decision_feedback(decision: MediaDecision) -> list[str]:
+    lines = []
+    immediate, settled = decision.immediate_effects, decision.settlement_effects
+    lines.append("Immediate MEDIA effect: " + effect_feedback(immediate) if immediate else
+                 "Immediate MEDIA effect: measured changes unavailable for this older record.")
+    if settled:
+        lines.append("Result settlement MEDIA effect: " + effect_feedback(settled))
+    elif decision.settlement:
+        lines.append("Result settlement MEDIA effect: measured changes unavailable for this older record.")
+    if immediate and settled:
+        # Sum only MEDIA deltas. Weekly sentiment and roster changes between
+        # phases must not be attributed to this decision.
+        def totals(field: str) -> str:
+            grouped: dict[str, tuple[str, float]] = {}
+            for phase in (immediate, settled):
+                for change in getattr(phase, field):
+                    total = grouped.get(change.id, (change.label, 0.0))[1]
+                    grouped[change.id] = (change.label, round(total + change.delta, 1))
+            return ", ".join(f"{label} {_signed(value)}" for _, (label, value) in sorted(grouped.items())) or "no target affected"
+        sentiment = round(immediate.sentiment.delta + settled.sentiment.delta, 1)
+        lines.append(f"Cumulative MEDIA contribution: Community sentiment {_signed(sentiment)}; "
+                     f"Player trust: {totals('player_trust')}; Sponsor relations: {totals('sponsor_relations')}. "
+                     "Includes only this choice and its result settlement.")
+    elif settled and not immediate:
+        lines.append("Cumulative MEDIA contribution unavailable: the immediate effect was not measured.")
+    return lines
 
 
 def pending_for(gs: "GameState", team_id: str | None = None) -> MediaEvent | None:
@@ -207,9 +270,10 @@ def resolve(
     if key not in _EFFECTS:
         return False, "That media response has no consequence configured.", {}
     summary, sent, sponsor, trust_delta = _EFFECTS[key]
-    actual_sponsor = _apply(
+    measured = _apply(
         gs, team_id, event.player_id, sent, sponsor, trust_delta
     )
+    actual_sponsor = sponsor if measured.sponsor_relations else 0.0
     decision = MediaDecision(
         event_id=event.id,
         season=event.season,
@@ -223,6 +287,7 @@ def resolve(
         sentiment_delta=sent,
         sponsor_delta=actual_sponsor,
         trust_delta=trust_delta,
+        immediate_effects=measured,
     )
     history = gs.media_history_by.setdefault(team_id, [])
     history.append(decision)
@@ -250,10 +315,11 @@ def resolve(
     from esports_sim.manager import culture
 
     culture.register_choice(gs, team_id, "media", event.type_id, choice_id, event.player_id)
+    feedback = summary + " Immediate MEDIA effect: " + effect_feedback(measured)
     if announce:
-        gs.push_news(summary)
+        gs.push_news(feedback)
     del gs.media_events_by[team_id]
-    return True, summary, {
+    return True, feedback, {
         "sentiment": sent, "sponsor_relation": actual_sponsor, "trust": trust_delta
     }
 
@@ -276,7 +342,8 @@ def settle_commitments(gs: "GameState", report) -> None:
         else:
             deltas = (2.0, 1.0, 2.0) if won else (-1.0, 0.0, 1.0)
         sent, sponsor, trust_delta = deltas
-        actual_sponsor = _apply(gs, team_id, "", sent, sponsor, trust_delta)
+        measured = _apply(gs, team_id, "", sent, sponsor, trust_delta)
+        actual_sponsor = sponsor if measured.sponsor_relations else 0.0
         result = "won" if won else "lost"
         settlement = (
             f"The public derby stance is settled: {gs.teams[team_id].name} {result}, "
@@ -288,8 +355,9 @@ def settle_commitments(gs: "GameState", report) -> None:
                 decision.sentiment_delta += sent
                 decision.sponsor_delta += actual_sponsor
                 decision.trust_delta += trust_delta
+                decision.settlement_effects = measured
                 break
-        gs.push_news(settlement)
+        gs.push_news(settlement + " Result settlement MEDIA effect: " + effect_feedback(measured))
         del gs.media_commitments_by[team_id]
 
 
@@ -344,7 +412,8 @@ def view(gs: "GameState", team_id: str) -> dict:
         if team_id in gs.media_events_by else None,
         "commitment": gs.media_commitments_by.get(team_id).model_dump(mode="json")
         if team_id in gs.media_commitments_by else None,
-        "history": [row.model_dump(mode="json") for row in gs.media_history_by.get(team_id, [])[-5:]],
+        "history": [{**row.model_dump(mode="json"), "effect_feedback": decision_feedback(row)}
+                    for row in gs.media_history_by.get(team_id, [])[-5:]],
         "player_trust": roster,
         "cooldown_weeks": max(
             0, COOLDOWN_WEEKS - (_stamp(gs) - gs.media_last_week_by.get(team_id, -10_000))

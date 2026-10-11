@@ -1,0 +1,229 @@
+{
+  "source_sha256": "7ed0ae942affd1e1da074e1f88c6075435735bb2d5dacf4c34378627bf3f2cae",
+  "source_unchanged": true,
+  "saved_sha256": "44ccae63adaaeba5c3bc5e123dddf479eaa79def0806611a1b8c33cecd4d0434",
+  "world": "G32M1",
+  "seed": 2038,
+  "baseline_decisions": 68,
+  "final_decisions": 70,
+  "baseline_snapshot_entries": 15,
+  "final_snapshot_entries": 16,
+  "accepted_prefix_preserved": true,
+  "decision_coverage": {
+    "matched": 2,
+    "accepted_in_session": 2
+  },
+  "accepted": [
+    {
+      "index": 68,
+      "season": 1,
+      "week": 16,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "media_choice",
+      "params": {
+        "choice_id": "respect_rival",
+        "event_id": "d2c6ee7fa625f074"
+      },
+      "source": "web"
+    },
+    {
+      "index": 69,
+      "season": 1,
+      "week": 16,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "retained_world_usage": {
+    "visible_time": 34,
+    "session_end": 3,
+    "session_start": 3,
+    "view": 13,
+    "attempt": 3,
+    "result": 3
+  },
+  "request_pairs": [
+    {
+      "target": "/api/actions/media_event",
+      "request_id": 18,
+      "result": 200,
+      "attempt_received": "2026-10-10T23:31:52.834594+00:00",
+      "result_received": "2026-10-10T23:31:52.834594+00:00"
+    },
+    {
+      "target": "/api/actions/advance",
+      "request_id": 29,
+      "result": 200,
+      "attempt_received": "2026-10-10T23:33:02.402084+00:00",
+      "result_received": "2026-10-10T23:33:02.402084+00:00"
+    },
+    {
+      "target": "/api/actions/save",
+      "request_id": 11,
+      "result": 200,
+      "attempt_received": "2026-10-10T23:34:08.358878+00:00",
+      "result_received": "2026-10-10T23:34:08.358878+00:00"
+    }
+  ],
+  "media_record": {
+    "event_id": "d2c6ee7fa625f074",
+    "season": 1,
+    "week": 16,
+    "team_id": "team_nexus",
+    "type_id": "derby_expectations",
+    "choice_id": "respect_rival",
+    "player_id": "",
+    "fixture_id": "s1amfinal",
+    "summary": "The manager backs the group without dismissing the rival.",
+    "sentiment_delta": 0.0,
+    "sponsor_delta": 0.0,
+    "trust_delta": 4.0,
+    "settlement": "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight.",
+    "immediate_effects": {
+      "sentiment": {
+        "id": "team_nexus",
+        "label": "Community sentiment",
+        "before": 54.8,
+        "after": 55.8,
+        "delta": 1.0
+      },
+      "player_trust": [
+        {
+          "id": "apex",
+          "label": "Apex",
+          "before": 50.0,
+          "after": 53.0,
+          "delta": 3.0
+        },
+        {
+          "id": "echo",
+          "label": "Echo",
+          "before": 50.0,
+          "after": 53.0,
+          "delta": 3.0
+        },
+        {
+          "id": "fa_0",
+          "label": "Hollowlock",
+          "before": 58.0,
+          "after": 61.0,
+          "delta": 3.0
+        },
+        {
+          "id": "fa_13",
+          "label": "Slyblade",
+          "before": 50.0,
+          "after": 53.0,
+          "delta": 3.0
+        },
+        {
+          "id": "ghost",
+          "label": "Ghost",
+          "before": 50.0,
+          "after": 53.0,
+          "delta": 3.0
+        },
+        {
+          "id": "vortex",
+          "label": "Vortex",
+          "before": 50.0,
+          "after": 53.0,
+          "delta": 3.0
+        }
+      ],
+      "sponsor_relations": [
+        {
+          "id": "Polar Compute",
+          "label": "Polar Compute",
+          "before": 52.0,
+          "after": 52.0,
+          "delta": 0.0
+        },
+        {
+          "id": "Streamforge",
+          "label": "Streamforge",
+          "before": 57.0,
+          "after": 57.0,
+          "delta": 0.0
+        }
+      ]
+    },
+    "settlement_effects": {
+      "sentiment": {
+        "id": "team_nexus",
+        "label": "Community sentiment",
+        "before": 55.8,
+        "after": 54.8,
+        "delta": -1.0
+      },
+      "player_trust": [
+        {
+          "id": "apex",
+          "label": "Apex",
+          "before": 53.0,
+          "after": 54.0,
+          "delta": 1.0
+        },
+        {
+          "id": "echo",
+          "label": "Echo",
+          "before": 53.0,
+          "after": 54.0,
+          "delta": 1.0
+        },
+        {
+          "id": "fa_0",
+          "label": "Hollowlock",
+          "before": 61.0,
+          "after": 62.0,
+          "delta": 1.0
+        },
+        {
+          "id": "fa_13",
+          "label": "Slyblade",
+          "before": 53.0,
+          "after": 54.0,
+          "delta": 1.0
+        },
+        {
+          "id": "ghost",
+          "label": "Ghost",
+          "before": 53.0,
+          "after": 54.0,
+          "delta": 1.0
+        },
+        {
+          "id": "vortex",
+          "label": "Vortex",
+          "before": 53.0,
+          "after": 54.0,
+          "delta": 1.0
+        }
+      ],
+      "sponsor_relations": [
+        {
+          "id": "Polar Compute",
+          "label": "Polar Compute",
+          "before": 52.0,
+          "after": 52.0,
+          "delta": 0.0
+        },
+        {
+          "id": "Streamforge",
+          "label": "Streamforge",
+          "before": 57.0,
+          "after": 57.0,
+          "delta": 0.0
+        }
+      ]
+    }
+  },
+  "commitment_consumed": true,
+  "limits": "Bounded usage is a retained visibility/request proxy, not a complete funnel or attention duration. Stale-reference save did not send HTTP."
+}

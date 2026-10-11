@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 36
+SCHEMA_VERSION = 37
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -546,6 +546,11 @@ def _migrate_v35_to_v36(data: dict) -> dict:
     return data
 
 
+def _migrate_v36_to_v37(data: dict) -> dict:
+    """v37 measures MEDIA phases. Defaults deliberately leave old phases unknown."""
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -582,6 +587,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     33: _migrate_v33_to_v34,
     34: _migrate_v34_to_v35,
     35: _migrate_v35_to_v36,
+    36: _migrate_v36_to_v37,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1547,6 +1553,26 @@ class MediaCommitment(BaseModel):
     player_id: str = ""
 
 
+class MediaEffectChange(BaseModel):
+    """One measured target, captured around the MEDIA mutation only."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    before: float
+    after: float
+    delta: float
+
+
+class MediaEffects(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentiment: MediaEffectChange
+    player_trust: list[MediaEffectChange] = Field(default_factory=list)
+    sponsor_relations: list[MediaEffectChange] = Field(default_factory=list)
+
+
 class MediaDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1563,6 +1589,11 @@ class MediaDecision(BaseModel):
     sponsor_delta: float = 0.0
     trust_delta: float = 0.0
     settlement: str = ""
+    # None means this save predates measurement; nominal deltas above cannot
+    # reconstruct clamped history. An old pending promise may still gain an
+    # independently measured settlement after loading.
+    immediate_effects: MediaEffects | None = None
+    settlement_effects: MediaEffects | None = None
 
 
 class DraftPick(BaseModel):
