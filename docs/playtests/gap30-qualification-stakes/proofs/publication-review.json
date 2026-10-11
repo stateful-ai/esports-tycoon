@@ -1,0 +1,38 @@
+{
+  "verified_at_utc": "2026-10-11T01:42:34.732871+00:00",
+  "gap": 30,
+  "native": {
+    "exit_code": 0,
+    "source_freeze_matches": true,
+    "changed_source_files": [],
+    "started_at_utc": "2026-10-10T22:38:02.033319+00:00",
+    "finished_at_utc": "2026-10-11T00:24:43.629295+00:00",
+    "native_python": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator",
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-n2"
+    ]
+  },
+  "terminal": "1289 passed in 6399.11s (1:46:39)",
+  "frozen_paths": 626,
+  "pre_post_current_exact": true,
+  "complete_runtime_scope": true,
+  "local_tests_launched": false,
+  "saved_state_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "complete_saved_state_byte_identical": true,
+  "accepted_decisions": 63,
+  "snapshots": 13,
+  "usage_total": 32,
+  "world_usage": 28,
+  "usage_pair15_independently_verified": true,
+  "limits": "Read-only browser acceptance plus Save; no accepted campaign decision added. Historical retained view counts are coarse visibility evidence, not exact intent or complete attention.",
+  "scoped_rows": 4,
+  "scoped_csv_sha256": "760fdd7ee505a003c510ad1892937aaf3403eb111e1959599ff4cd323b8acc4c",
+  "outcomes": {
+    "met": 4
+  }
+}

@@ -567,8 +567,8 @@ def test_match_preview_named_subject_preserves_default_and_state():
     named = match_preview(gs, gs.fixtures[-1], "nxs", named_subject=True)
     assert generic == ["They arrive on a 2-match winning run.",
                        "They've won all 2 meetings this season.",
-                       "Three points here tighten their grip on a top-four berth."]
+                       "They have already secured a top-four playoff berth; this match counts toward the final league order and playoff seeding."]
     assert named == ["Nexus arrive on a 2-match winning run.",
                      "Nexus have won all 2 meetings this season.",
-                     "Three points here tighten Nexus's grip on a top-four berth."]
+                     "Nexus have already secured a top-four playoff berth; this match counts toward the final league order and playoff seeding."]
     assert gs.model_dump_json() == before
