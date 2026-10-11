@@ -2726,6 +2726,19 @@ def _academy_move_window(gs: GameState, team_id: str) -> tuple[bool, str]:
     return market.market_move_allowed(gs, team_id, emergency_ok=False)
 
 
+def _prep_report_identity(gs: GameState, report: dict | None) -> dict | None:
+    """Attach the current public handle without altering the saved report.
+
+    Keep the historical ID for attribution. A removed player has no live
+    profile to link, so the client receives a null handle instead of an ID
+    masquerading as a display name.
+    """
+    if report is None:
+        return None
+    player = gs.players.get(report.get("dev_suggestion_player_id", ""))
+    return {**report, "dev_suggestion_handle": player.handle if player else None}
+
+
 def _club_view(gs: GameState) -> dict:
     tid = gs.acting_team_id
     team = gs.teams[tid]
@@ -2734,6 +2747,7 @@ def _club_view(gs: GameState) -> dict:
     if fixture is not None:
         opponent = fixture.team_b if fixture.team_a == tid else fixture.team_a
     prep = preparation.view(gs, tid)
+    prep["last"] = _prep_report_identity(gs, prep["last"])
     partners = [
         {"id": other, "name": gs.teams[other].name}
         for other in sorted(gs.teams)
@@ -6551,16 +6565,17 @@ def _last_prep_artifact(gs: GameState, tid: str) -> dict | None:
     label = getattr(rep, "artifact_label", "") or ""
     if not label:
         return None
-    return {
+    public = preparation.public_report(gs, rep)
+    return _prep_report_identity(gs, {
         "season": rep.season,
         "week": rep.week,
         "artifact_label": label,
         "prep_edge_contribution": round(
             getattr(rep, "prep_edge_contribution", 0.0), 3
         ),
-        "dev_suggestion": getattr(rep, "dev_suggestion", "") or "",
-        "dev_suggestion_player_id": getattr(rep, "dev_suggestion_player_id", "") or "",
-    }
+        "dev_suggestion": public["dev_suggestion"],
+        "dev_suggestion_player_id": public["dev_suggestion_player_id"],
+    })
 
 
 @app.get("/api/gameplan")

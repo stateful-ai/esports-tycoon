@@ -536,6 +536,75 @@ def test_read_screens_never_move_the_world(world: str) -> None:
     assert ops.get_state(world) == before
 
 
+@pytest.mark.parametrize("identity", ["current", "renamed", "transferred", "removed", "empty", "legacy"])
+def test_club_preparation_adds_public_handle_without_expanding_policy_observation(
+    world: str, monkeypatch: pytest.MonkeyPatch, identity: str
+) -> None:
+    from copy import deepcopy
+
+    from esports_sim.manager.preparation import PrepReport
+
+    session = ops._session(world)
+    gs, tid = session.gs, session.env.team_id
+    pids = sorted(gs.teams[tid].player_ids)
+    player = gs.players[pids[0]]
+    pid, handle = player.id, player.handle
+    if identity == "renamed":
+        player.handle = handle = 'Current & "public" handle'
+    elif identity == "transferred":
+        gs.teams[tid].player_ids.remove(pid)
+        other = next(t for t in sorted(gs.teams) if t != tid)
+        gs.teams[other].player_ids.append(pid)
+    elif identity in ("removed", "empty"):
+        pid, handle = ("missing-player" if identity == "removed" else ""), None
+    report = PrepReport(
+        plan_id="mcp-identity", team_id=tid, fixture_id="fixture",
+        opponent_id=tid, partner_id=tid, map_id="bind", objective="anti_exec",
+        intensity="light", season=gs.season, week=gs.week,
+        participant_ids=pids, dev_suggestion_player_id=pid,
+        dev_suggestion="At age 19, this participant is a youth development option.",
+        dev_suggestion_basis="age",
+    )
+    if identity == "legacy":
+        for participant in pids:
+            gs.players[participant].age = 25
+        player.age = 19
+        report.dev_suggestion_player_id = pids[-1]
+        report.dev_suggestion = "Private target has ~21 points of untapped ceiling."
+        report.dev_suggestion_basis = ""
+    gs.preparation_reports_by[tid] = report
+    saved_report = report.model_dump_json()
+    # Warm unrelated lazy defaults before freezing the state and observation.
+    ops.get_club(world)
+    manager_observation = ops.manager_observation
+    observation = manager_observation(gs, ops._gamedata(), tid)
+    before_observation = deepcopy(observation)
+    before_state = gs.model_dump_json()
+    monkeypatch.setattr(ops, "manager_observation", lambda *args: observation)
+    prep = ops.get_club(world)["preparation"]
+    assert prep["last"] == {
+        **before_observation["club"]["preparation"]["last"],
+        "dev_suggestion_handle": handle,
+    }
+    assert prep["last"]["dev_suggestion_player_id"] == pid
+    assert "dev_suggestion_handle" not in observation["club"]["preparation"]["last"]
+    assert observation == before_observation
+    assert gs.model_dump_json() == before_state
+    assert report.model_dump_json() == saved_report
+    if identity == "legacy":
+        assert "~21" not in prep["last"]["dev_suggestion"]
+        assert "Private target" not in prep["last"]["dev_suggestion"]
+        for participant in pids:
+            gs.players[participant].potential = 99 if participant != pid else 1
+        # Use the real observation again to check the privacy counterfactual.
+        monkeypatch.setattr(ops, "manager_observation", manager_observation)
+        assert ops.get_club(world)["preparation"] == prep
+
+
+def test_club_preparation_without_report_keeps_null(world: str) -> None:
+    assert ops.get_club(world)["preparation"]["last"] is None
+
+
 def test_standings_and_results_agree_after_a_week(world: str) -> None:
     digest = ops.advance_week(world)
     won = digest["your_matches"][0]["result"] == "win"
