@@ -13,3 +13,5 @@ docs/playtests/2026-10-11-mentorship-profile-supplemental-and-analytics.md -text
 
 # Immutable gap37 receipts: committed bytes must match the recorded SHA256s.
 docs/playtests/gap37-between-map-debrief/** -text
+
+docs/playtests/2026-10-11-transfer-contract-root-audit.md -text
