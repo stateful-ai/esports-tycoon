@@ -38,3 +38,15 @@ docs/playtests/2026-10-11-profile411-keyboard-session-root-audit.md -text
 
 docs/playtests/2026-10-11-replay413-411-keyboard-session/** -text
 docs/playtests/2026-10-11-replay413-411-keyboard-session-root-audit.md -text
+
+# Keep gap40 acceptance receipt hashes equal to the raw captured bytes.
+docs/playtests/2026-10-11-gap40-rollover/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-rollover/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-shared-ready/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-shared-ready/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-status-retry/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-status-retry/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-ready-reload/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-ready-reload/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-readiness-loading/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-readiness-loading/actions.csv -text -whitespace
