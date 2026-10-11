@@ -2743,12 +2743,13 @@ def draft_prefs(body: DraftPrefsBody) -> dict:
 
 def _danger_men(gs: GameState, tid: str, n: int = 3) -> list[dict]:
     """A side's top-rated players this season (public box-score facts, the
-    same season stats the league leaders read): mean rating over >=3 maps.
-    Empty early in a season — the client hides the block."""
+    same season aggregates the Stats screen reads). Any played map is a
+    sample; flag fewer than three maps rather than hiding public results.
+    Keep current roster membership, including sampled bench players."""
     ids = set(gs.teams[tid].player_ids) if tid in gs.teams else set()
     rows = [
         (pid, st) for pid, st in sorted(gs.player_stats.items())
-        if pid in ids and st.maps >= 3 and pid in gs.players
+        if pid in ids and st.maps > 0 and pid in gs.players
     ]
     rows.sort(key=lambda kv: (-kv[1].rating, kv[0]))
     return [
@@ -2758,6 +2759,7 @@ def _danger_men(gs: GameState, tid: str, n: int = 3) -> list[dict]:
             "role": str(gs.players[pid].role),
             "rating": round(st.rating, 2),
             "maps": int(st.maps),
+            "sample_note": "Early sample" if st.maps < 3 else None,
         }
         for pid, st in rows[:n]
     ]
