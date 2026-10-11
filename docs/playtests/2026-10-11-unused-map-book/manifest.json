@@ -1,0 +1,117 @@
+{
+  "mapping": [
+    {
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\actions.csv",
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\actions.csv",
+      "source_sha256": "79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27",
+      "published_sha256": "79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27",
+      "transform": "none; exact bytes"
+    },
+    {
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\audit.json",
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\audit.json",
+      "source_sha256": "2f4f55d2009fba7ba599191f2d860ab99deec71b83801756872812bf89063f90",
+      "published_sha256": "2f4f55d2009fba7ba599191f2d860ab99deec71b83801756872812bf89063f90",
+      "transform": "none; exact bytes"
+    },
+    {
+      "source": "C:\\Users\\aidan\\.codex\\sessions\\2026\\10\\10\\rollout-2026-10-10T23-02-15-01a1298e-0472-7071-8033-ed9c96988589.jsonl",
+      "source_line": 179,
+      "source_line_sha256": "b7fb04774f7cf355ee46cb4864f4ffb94a86695907e81a6330e99f433cc91ccd",
+      "captured_at_utc": "2026-10-11T06:04:41.896Z",
+      "title": "Read settled Dashboard map-book attribution",
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\dashboard-dom.txt",
+      "published_sha256": "9cf64dbc5c6a37745114440fbec75fea62e2b48e92177604487958d34a69d4aa",
+      "transform": "exact original tool text; excerpt where the original call filtered DOM; no retrospective browser run"
+    },
+    {
+      "source": "C:\\Users\\aidan\\.codex\\sessions\\2026\\10\\10\\rollout-2026-10-10T23-02-15-01a1298e-0472-7071-8033-ed9c96988589.jsonl",
+      "source_line": 212,
+      "source_line_sha256": "a5ef3b7df76cf0bfb74d14685f33266e71111afa2b0712fb398f2d071a2379b2",
+      "captured_at_utc": "2026-10-11T06:05:12.911Z",
+      "title": "Read resolved preparation on Prep subsection",
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\prep-dom-excerpt.txt",
+      "published_sha256": "f12d5688ef4bf466ebac7178a3d28c49f9dd2fb3001af848ae25e75691aa5068",
+      "transform": "exact original tool text; excerpt where the original call filtered DOM; no retrospective browser run"
+    },
+    {
+      "source": "C:\\Users\\aidan\\.codex\\sessions\\2026\\10\\10\\rollout-2026-10-10T23-02-15-01a1298e-0472-7071-8033-ed9c96988589.jsonl",
+      "source_line": 222,
+      "source_line_sha256": "4b4e677fce57810df26b50ae0cc164db3f6abeb90ddd60235f2978c93707316d",
+      "captured_at_utc": "2026-10-11T06:05:22.884Z",
+      "title": "Save only the copied acceptance career",
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\save-dom-excerpt.txt",
+      "published_sha256": "2644fbd3ad2854015cb327564bc9eb9f6f2e367e1fb2b0d732602437485746a5",
+      "transform": "exact original tool text; excerpt where the original call filtered DOM; no retrospective browser run"
+    },
+    {
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\saves\\usage\\usage.0.jsonl",
+      "source_sha256": "b1c8079a4a8bfa76e7126b6d23b87a507b22ed6abdbf20021940b3186e0a33b4",
+      "source_line_numbers": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97
+      ],
+      "source_line_sha256": [
+        "d36d8ea6a779817563ace98b896b25cdef29892fab9d50efa134d992a0fe114c",
+        "2350d43b5daa12ae1afc14f36e86527a055ab279b8e57f462be36fe62ede4f6e",
+        "8938d1ff00dd0ea43ebc400d93d12297681e441a14bf0af410830ecb377e640e",
+        "d722c112e14194f8ab2c56d3fac1847dd9b53afcee88c00158dc2b5c182b79db",
+        "6194b6507dc4f0eee5736a5312d0531666c00adbe28092254acc725813752007",
+        "91c5408f71b3e540bc8a976cfab300163b5867294cdcc35f4c3ba51cec511b59",
+        "eb740a180abcba1713d7f56276622837ad869636a37f982c7ddadc09712843d9",
+        "81bd3627ba25f3bff7bb79fcad486f9aa51cb67b5dbb23b5af8fc45ccf3102cc",
+        "abcd84f0372e086576d6fb51cc9ec90ce703e85a2391986fa8e4817c2480ed9c",
+        "6261827cb9b2034e4f1893399cfc5fed7d326106ceb96611b1d142db0b360382",
+        "1d9616449ad26d6466c6d30eb8b460b775dd1287f5e501df312319c63e4f1ecb",
+        "65614a05c635adeb39caeb0fa443b22bfaf0bcf98bfdfba229a0781b8b6cc1cf",
+        "3fcbe8f85c4a0968b78b8c2ba20329f1c6ffa23d4f0e588708065be6b155dd50",
+        "1b60265d25ae3e8d84534551ca24db653eb0c3d22d272da4d5a08bc85f9d48d4",
+        "011667243acbf4a9723fe4eeca5c78f95cc2d4fffec9009771f9c8ff36feb1ea",
+        "649f07fc108f357fdc36fb83c3423d8756cf38aa0be62919e35700ca413b3cf3",
+        "b7502045f807331fc9ec880b10fd3c3876aaf0066b9263c106512a396af0cc2b",
+        "3fc6fb217ac657eab80f72205b07c76cc4c6ce22e21bdce5621fb02c38431bf7",
+        "fd551240f94ab29d1769381d4502ba94f2683e3859be07a49ced15c9d7394506"
+      ],
+      "published": "docs\\playtests\\2026-10-11-unused-map-book\\usage.sanitized.jsonl",
+      "published_sha256": "fff30a49f73f793a28c266af68d96921c59bfc54a67ec98b49789127c3f52090",
+      "transform": "select fresh acceptance session; redact session_id; all other event fields retained"
+    }
+  ],
+  "save_comparison": "docs/playtests/2026-10-11-unused-map-book/save-comparison.json",
+  "usage_counts_at_publication": {
+    "('session_start', '')": 1,
+    "('view', 'lobby')": 1,
+    "('visible_time', 'lobby')": 1,
+    "('view', 'dashboard')": 1,
+    "('visible_time', 'dashboard')": 2,
+    "('view', 'tactics/strategy')": 1,
+    "('visible_time', 'tactics/strategy')": 2,
+    "('view', 'tactics/prep')": 1,
+    "('attempt', '/api/actions/save')": 1,
+    "('result', '/api/actions/save')": 1,
+    "('visible_time', 'tactics/prep')": 7
+  },
+  "limits": [
+    "No screenshots were captured in the original acceptance session.",
+    "Prep and Save receipts are the original filtered DOM excerpts, not complete DOM snapshots.",
+    "audit.json retains the earlier audit snapshot; raw usage includes subsequent visible-time slices before owned server shutdown.",
+    "The canonical CSV is not edited by this publication; actions.csv is the exact original three-row shard."
+  ]
+}

@@ -26,8 +26,33 @@ the copied sidecar history. Retained evidence: one lobby view, one Dashboard
 view, one strategy view, one Prep view, and one Save attempt/result pair.
 Visible-time events are visibility proxies. No gameplay request or fixture
 advance was made in this acceptance session. Session CSV and audit JSON are in
-`runs/playtests/2026-10-11-unused-map-book/`, supplied to root for sequential
-append; the canonical CSV was not edited here.
+the [exact three-row shard](2026-10-11-unused-map-book/actions.csv), supplied to
+root for sequential append; the canonical CSV was not edited here. Its SHA256
+is `79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27`.
+
+Durable original receipts are published alongside the shard:
+
+- [Dashboard DOM](2026-10-11-unused-map-book/dashboard-dom.txt): exact original
+  browser tool text, extracted from the retained acceptance transcript.
+- [Prep DOM excerpt](2026-10-11-unused-map-book/prep-dom-excerpt.txt) and
+  [Save DOM excerpt](2026-10-11-unused-map-book/save-dom-excerpt.txt): exact
+  original filtered tool text. These were not full DOM captures.
+- [Original audit](2026-10-11-unused-map-book/audit.json) and
+  [complete local save comparison hashes](2026-10-11-unused-map-book/save-comparison.json).
+  Full saves remain local; only comparison scope and hashes are published.
+- [Original own-session usage](2026-10-11-unused-map-book/usage.sanitized.jsonl):
+  session identifier redacted; other raw event fields retained. Seven final
+  Prep visible-time slices include four after the original audit's three.
+- [Source-to-publication manifest](2026-10-11-unused-map-book/manifest.json):
+  source paths, exact original transcript line hashes, timestamps, transformation
+  scope, published hashes, and instrumentation limits.
+
+No screenshots were captured during the original acceptance session. No browser
+actions were replayed for this publication. The original CSV timestamps,
+expectations, outcomes and fields remain unchanged. Historical acceptance used
+the dirty base recorded in the CSV; the initial published source head was
+`c0b6459e6d27eaf0b8e30a82bc312b8a5b657d61`, whose CI was queued at handoff.
+This evidence-only follow-up needs its own fresh CI result.
 
 Flywheel inheritance used the eight most recent esports-playtest findings.
 After play, records 0182/0183 capture stored-book versus session attribution and
