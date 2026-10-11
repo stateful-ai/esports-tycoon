@@ -59,8 +59,8 @@ function feedLabel(pid) {
   const icon = src
     ? `<img class="feed-agent" src="${src}" onerror="this.style.display='none'" alt="">`
     : "";
-  if (!name) return `${icon}<b class="feed-name plink" data-pid="${pid}">${handle}</b>`;
-  return `${icon}<b class="feed-name plink" data-pid="${pid}">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
+  if (!name) return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${handle}</button></b>`;
+  return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${name}</button></b> <span class="muted feed-handle">(${handle})</span>`;
 }
 
 const viewerHumanize = (value) => window.humanize
@@ -1417,7 +1417,7 @@ function buildLineup() {
             : `<span class="lu-icon"></span>`;
           return `<div class="lu-row" data-follow="${pid}" title="Follow ${handleOf(pid)} with the camera (click again to release)">${icon}` +
             `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
-            `<span class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</span></div>`;
+            `<button type="button" class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</button></div>`;
         })
         .join("");
       return `<div class="lu-team"><div class="lu-team-name ${cls} tlink" data-tid="${tid}">${V.names[tid]}</div>${rows}</div>`;
@@ -1495,13 +1495,13 @@ function buildMatchSummary() {
       const cls = r.team_id === V.teamA ? "a" : "b";
       const xdeText = r.xde != null ? ` <span class="muted" style="font-size:0.8em; margin-left: 4px;">(xDE: ${r.xde >= 0 ? "+" : ""}${r.xde.toFixed(2)})</span>` : "";
       return `<div class="v-sum-row"><span class="v-sum-dot ${cls}"></span>` +
-        `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>` +
+        `<button type="button" class="plink" data-pid="${r.player_id}">${r.handle}</button>` +
         `<span class="mono muted">${r.kills}/${r.deaths}${xdeText}</span>` +
         `<b class="mono">${r.rating.toFixed(2)}</b></div>`;
     })
     .join("");
   el.innerHTML =
-    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b class="plink" data-pid="${mvp.player_id}">${mvp.handle}</b>` : ""}</div>` +
+    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b><button type="button" class="plink" data-pid="${mvp.player_id}">${mvp.handle}</button></b>` : ""}</div>` +
     rows;
   side.insertBefore(el, document.getElementById("v-feed"));
 }

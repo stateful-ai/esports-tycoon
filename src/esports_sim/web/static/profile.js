@@ -707,7 +707,7 @@ const PlayerProfile = ({ data }) => {
             `}
             ${p.mentor_id && html`
               <span class="pill" title=${`Mentored by ${p.mentor_handle || humanize(p.mentor_id)}`}>
-                Mentor: <span class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</span>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
+                Mentor: <button type="button" class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</button>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
               </span>
             `}
             ${p.tenure_weeks != null && p.tenure_weeks >= 26 && html`
@@ -1160,9 +1160,9 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Relationships</h3>
           <div class="pf-chips">
             ${rels.map((r, i) => html`
-              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
+              <button type="button" key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
                 ${r.handle ?? "—"}<span class="pf-rel-kind">${humanize(r.arc || r.kind || "")}</span>
-              </span>
+              </button>
             `)}
           </div>
         </div>
@@ -1451,7 +1451,7 @@ const TeamProfile = ({ data }) => {
             <tbody>
               ${players.map((pl) => html`
                 <tr key=${pl.pid} class="pf-rrow plink" data-pid=${pl.pid}>
-                  <td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
+                  <td><b><button type="button" class="plink" data-pid=${pl.pid}>${pl.handle ?? "—"}</button></b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
                   <td>${pl.role && html`<span class="pill">${humanize(pl.role)}</span>`}</td>
                   <td class="num">${pfNum(pl.matches)}</td>
                   <td class="num">${pfNum(pl.kd, 2)}</td>
@@ -1504,13 +1504,13 @@ const TeamProfile = ({ data }) => {
           <div class="pf-chips">
             ${chem.bonds.map((b, i) => html`
               <span key=${`bond-${i}`} class="pf-rel-chip rel-duo">
-                <span class="plink" data-pid=${b.a_id}>${b.a}</span> + <span class="plink" data-pid=${b.b_id}>${b.b}</span>
+                <button type="button" class="plink" data-pid=${b.a_id}>${b.a}</button> + <button type="button" class="plink" data-pid=${b.b_id}>${b.b}</button>
                 <span class="pf-rel-kind">${Math.round(b.strength)}</span>
               </span>
             `)}
             ${chem.frictions.map((f, i) => html`
               <span key=${`fric-${i}`} class="pf-rel-chip rel-feud">
-                <span class="plink" data-pid=${f.a_id}>${f.a}</span> + <span class="plink" data-pid=${f.b_id}>${f.b}</span>
+                <button type="button" class="plink" data-pid=${f.a_id}>${f.a}</button> + <button type="button" class="plink" data-pid=${f.b_id}>${f.b}</button>
                 <span class="pf-rel-kind">${Math.round(f.strength)}</span>
               </span>
             `)}
@@ -1531,7 +1531,7 @@ const TeamProfile = ({ data }) => {
                 <span class="pf-arcline-text">
                   ${a.text}${" "}
                   ${(a.pids || []).map((pid, j) => html`
-                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</span>
+                    <button type="button" key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</button>
                   `)}
                 </span>
               </div>
@@ -1553,7 +1553,7 @@ const TeamProfile = ({ data }) => {
               const support = d.support_bonus > 0 ? html` · support +${d.support_bonus.toFixed(1)}` : "";
               return html`
                 <div key=${d.id} class="pf-dev-row">
-                  <span class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</span>
+                  <button type="button" class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</button>
                   <span class="muted pf-dev-meta" title=${d.curve_read}>${d.age}y · CA ${d.ca} · peak ${ceilTxt}${above}${support}${teach}</span>
                   <span class="pf-dev-bar"><span class="pf-dev-fill" style=${{ width: `${d.progress_pct}%`, '--target-width': `${d.progress_pct}%` }}></span></span>
                   <span class=${`mono ${acls}`}>${d.progress_pct}% ${arrow}</span>
