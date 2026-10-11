@@ -68,6 +68,44 @@ def test_agent_state_requires_a_world(lobby):
     assert err.value.status_code == 409
 
 
+def test_http_league_includes_joined_challengers_and_tier2_only_regions(lobby):
+    from fastapi.testclient import TestClient
+    from esports_sim.manager.agent_play import league_view
+
+    client = TestClient(server.app)
+    created = client.post("/api/agent/create", headers={"X-Esports-Sid": SID_A},
+                          json={"team_id": "team_nexus", "seed": 941})
+    assert created.status_code == 200
+    code = created.json()["code"]
+    game = lobby.games[code]
+    gs = game.gs
+    # Leave two tiers in Americas, but remove tier one from EMEA.
+    for team in gs.teams.values():
+        if team.tier == 1 and str(team.region) == "emea":
+            team.region = gs.teams["team_nexus"].region
+    tid = next(t for t in sorted(gs.teams)
+               if gs.teams[t].tier == 2 and str(gs.teams[t].region) == "americas")
+    joined = client.post("/api/agent/join", headers={"X-Esports-Sid": SID_B},
+                         json={"code": code, "team_id": tid})
+    assert joined.status_code == 200
+    before = gs.model_dump_json()
+    expected = league_view(gs)
+    for sid in (SID_A, SID_B, SID_B):
+        response = client.get("/api/agent/league", headers={"X-Esports-Sid": sid})
+        assert response.status_code == 200
+        view = response.json()
+        assert view == expected
+        assert "emea" not in view["regions"]
+        assert {(t["tier"], t["region"]) for t in view["tables"]} >= {
+            (1, "americas"), (2, "americas"), (2, "emea"),
+        }
+        own = next(t for t in view["tables"] if t["tier"] == 2 and t["region"] == "americas")
+        assert [r["team_id"] for r in own["rows"]] == gs.standings_order("americas", tier=2)
+        assert any(r["team_id"] == tid and r["human"] for r in own["rows"])
+        assert any(not r["human"] for r in own["rows"])
+        assert gs.model_dump_json() == before
+
+
 @pytest.mark.parametrize("cached_tick", [True, False])
 def test_accept_job_keeps_last_tick_available_at_new_club(lobby, cached_tick):
     from esports_sim.manager import career

@@ -446,14 +446,20 @@ def objective_view(gs: GameState, team_id: str) -> dict[str, Any]:
 
 
 def league_view(gs: GameState) -> dict[str, Any]:
-    """The whole league at a glance: tables, postseason, titles, seats."""
+    """Public league context; ``regions`` retains its tier-one-only contract.
+
+    ``tables`` includes both competitions, ordered by tier then region, so a
+    Challengers seat can find its own table and its AI opponents as well.
+    """
     regions: dict[str, list[dict[str, Any]]] = {}
-    region_names = sorted(
-        {str(t.region) for t in gs.teams.values() if t.tier == 1}
+    tables: list[dict[str, Any]] = []
+    competitions = {1: "regional", 2: "challengers"}
+    table_keys = sorted(
+        {(t.tier, str(t.region)) for t in gs.teams.values() if t.tier in competitions}
     )
-    for region in region_names:
+    for tier, region in table_keys:
         rows = []
-        for pos, tid in enumerate(gs.standings_order(region, tier=1), start=1):
+        for pos, tid in enumerate(gs.standings_order(region, tier=tier), start=1):
             rec = gs.standings.get(tid)
             rows.append(
                 {
@@ -466,13 +472,21 @@ def league_view(gs: GameState) -> dict[str, Any]:
                     "human": gs.is_human(tid),
                 }
             )
-        regions[region] = rows
+        tables.append({
+            "region": region,
+            "tier": tier,
+            "competition": competitions[tier],
+            "rows": rows,
+        })
+        if tier == 1:
+            regions[region] = rows
     return {
         "agent_play_version": AGENT_PLAY_VERSION,
         "season": gs.season,
         "week": gs.week,
         "phase": gs.phase,
         "regions": regions,
+        "tables": tables,
         "postseason_fixtures": _postseason_fixtures(gs),
         "masters_seeds": list(gs.masters_seeds),
         "champions_seeds": list(gs.champions_seeds),

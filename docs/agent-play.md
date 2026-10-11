@@ -40,9 +40,16 @@ scoreboard a harness scores seats on:
 }
 ```
 
-`GET /api/agent/league` gives the league-wide read: every region table (with
-`human: true` marking externally controlled seats), the postseason bracket,
-the full titles timeline, and champions history. Suggested harness scoring:
+`GET /api/agent/league` (or `AgentWorld.league()`) gives the league-wide read:
+`regions` preserves the original region-to-tier-one-rows mapping. The additive
+`tables` list includes both tier-one regional leagues and tier-two Challengers,
+including regions with only Challengers clubs. Each table has `region`, `tier`,
+`competition` (`regional` or `challengers`), and `rows`; tables are ordered by
+tier then region. Rows use the campaign standings tiebreakers and expose only
+`position`, `team_id`, `team_name`, `wins`, `losses`, `round_diff`, and `human`
+(true for externally controlled seats). To find a club's table, select the
+table whose rows contain its `team_id`. This read also includes the postseason
+bracket, full titles timeline, and champions history. Suggested harness scoring:
 `champions` first, `masters` second, `regional` third (that is also the
 in-fiction prestige order).
 
