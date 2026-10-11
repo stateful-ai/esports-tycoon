@@ -81,7 +81,7 @@ const badgeIconMarkup = (bd) => {
    profile-overlay link via one delegated listener — these helpers are the ONE
    way to render a linked name, so coverage and affordance can't drift. */
 const plink = (id, text, cls = "") =>
-  id ? `<span class="plink ${cls}" data-pid="${esc(id)}">${esc(text)}</span>` : esc(text);
+  id ? `<button type="button" class="plink ${cls}" data-pid="${esc(id)}">${esc(text)}</button>` : esc(text);
 const tlink = (id, text, cls = "") =>
   id ? `<span class="tlink ${cls}" data-tid="${esc(id)}">${esc(text)}</span>` : esc(text);
 const slink = (id, text, cls = "") =>
@@ -2285,7 +2285,7 @@ async function dashboard(v) {
           for (const p of points) {
             const note = p.dev_note ? `<span class="es-review-d muted">${esc(p.dev_note)}</span>` : "";
             const pt = el("div", "es-review-pt " + (p.tone === "good" ? "good" : "bad"),
-              `<b class="es-review-h">${esc(p.headline)}${badgeStrip(p.badges)}</b>` +
+              `<b class="es-review-h">${p.player_id ? plink(p.player_id, p.headline) : esc(p.headline)}${badgeStrip(p.badges)}</b>` +
               `<span class="es-review-d muted">${esc(p.detail)}</span>` + note);
             if (p.player_id) pt.dataset.pid = p.player_id;  // whole row -> profile
             list.appendChild(pt);
@@ -3819,10 +3819,18 @@ async function tacticsPrep(ws) {
   rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides.</p>`;
   const chosen = new Set(d.registration.player_ids || []);
   for (const p of d.registration.players) {
-    const lab = el("label", "entity");
+    const row = el("div", "entity");
     const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
+    cb.id = `registration-${p.id}`;
+    cb.setAttribute("aria-label", `${p.handle} tournament eligibility`);
     cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`)); rc.appendChild(lab);
+    const lab = el("label", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`);
+    lab.htmlFor = cb.id;
+    // Keep label/row selection separate from the native profile button.
+    row.onclick = (e) => {
+      if (!e.target.closest("button, input, label")) cb.click();
+    };
+    row.append(cb, el("span", "entity-name", plink(p.id, p.handle)), lab); rc.appendChild(row);
   }
   if (!d.registration.locked) {
     const save = el("button", "btn btn-primary", "Submit roster");
@@ -5221,7 +5229,7 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
                   <tr key=${p.id}>
                     <td>
                       <img class="portrait" src=${p.portrait} alt="" />
-                      <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                      <b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b>
                       ${p.real_name && html`<span class="muted"> ${p.real_name}</span>`}
                       ${p.languages && p.languages.length > 0 && html`
                         <div class="es-langs">
@@ -5473,7 +5481,7 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
             <tr key=${p.id} onClick=${(e) => handleRowClick(e, p.id)} style=${{ cursor: 'pointer' }}>
               <td>
                 <img class="portrait" src=${p.portrait} alt="" />
-                <b class="plink" data-pid=${p.id}>${p.handle}</b>
+                <b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b>
                 ${p.locker_room_fit && (() => {
                   const fit = p.locker_room_fit;
                   return html`
@@ -5638,7 +5646,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Suggested signings</h2>
             ${targets.map(tgt => html`
               <div class="entity" key=${tgt.id}>
-                <span class="entity-name"><b class="plink" data-pid=${tgt.id}>${tgt.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${tgt.id}>${tgt.handle}</button></b></span>
                 <span class="entity-meta">${humanize(tgt.role)}</span>
                 <b class="entity-num">
                   ${tgt.quality}
@@ -5654,14 +5662,14 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Contract watch</h2>
             ${(cw.expiring_own || []).map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">yours · ${humanize(p.role)}</span>
                 <b class="entity-num trend-down">${p.weeks_left}w</b>
               </div>
             `)}
             ${(cw.market_watch || []).map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   <span class="tlink" data-tid=${p.team_id}>${p.team}</span> · ${humanize(p.role)}
                 </span>
@@ -5676,7 +5684,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Wonderkids <span class="muted" style=${{ fontWeight: 400 }}>— ≤20</span></h2>
             ${wk.map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
@@ -5691,7 +5699,7 @@ const PlayerRecruitment = ({ data, triggerRefresh }) => {
             <h2>Challengers standouts</h2>
             ${chal.map(p => html`
               <div class="entity" key=${p.id}>
-                <span class="entity-name"><b class="plink" data-pid=${p.id}>${p.handle}</b></span>
+                <span class="entity-name"><b><button type="button" class="plink" data-pid=${p.id}>${p.handle}</button></b></span>
                 <span class="entity-meta">
                   ${p.age}y · ${humanize(p.role)} · <span class="tlink" data-tid=${p.team_id}>${p.team}</span>
                 </span>
@@ -7381,7 +7389,7 @@ const BrandMovementCard = ({ moves }) => {
             const [label, tone] = KIND_BADGE[m.kind] || [m.kind, ""];
             const text = m.player_id
               ? m.text.replace(/^([\w' .-]+?)(?= joins| re-signs| retires|\.)/,
-                  `<span class="plink" data-pid="${esc(m.player_id)}">$1</span>`)
+                  `<button type="button" class="plink" data-pid="${esc(m.player_id)}">$1</button>`)
               : m.text;
             const teamPill = m.team_tag ? `<span class="pill">${tlink(m.team_id, m.team_tag)}</span> ` : "";
             return html`
@@ -7633,7 +7641,7 @@ const FinancesTab = ({ onOpenBrand }) => {
                       <div>
                         <b>
                           ${d.kind === "field_rookie" ? html`
-                            Play${" "}<span data-pid=${d.player_id}>${d.player_name}</span>${" "}
+                            Play${" "}<button type="button" class="plink" data-pid=${d.player_id}>${d.player_name}</button>${" "}
                             against${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
                           ` : html`
                             Beat rivals${" "}<span data-tid=${d.opponent_id}>${d.opponent_name}</span>
