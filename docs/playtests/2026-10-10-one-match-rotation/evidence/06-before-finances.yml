@@ -1,0 +1,123 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]: ESPORTSSIM
+      - generic [ref=f2e26]: Season 1 · Week 15 · Playoffs — Team Nexus
+      - generic [ref=f2e27]: 741,367 cr
+      - button "Save" [ref=f2e28] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f2e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f2e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f2e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f2e7] [cursor=pointer]
+      - button "🛠️" [ref=f2e8] [cursor=pointer]
+      - button "🔇" [ref=f2e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f2e10] [cursor=pointer]: Guide
+    - navigation [ref=f2e11]:
+      - generic "Weekly" [ref=f2e12]:
+        - button "Dashboard" [ref=f2e14] [cursor=pointer]
+        - button "Inbox 20" [ref=f2e1610] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f2e31]: "20"
+        - button "Match 2" [ref=f2e1611] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f2e33]: "2"
+      - generic "Org" [ref=f2e17]:
+        - button "Club" [ref=f2e19] [cursor=pointer]
+        - button "Facilities" [ref=f2e20] [cursor=pointer]
+        - button "Season" [ref=f2e21] [cursor=pointer]
+        - button "Market" [ref=f2e22] [cursor=pointer]
+        - button "Stats" [ref=f2e23] [cursor=pointer]
+        - button "Company" [ref=f2e24] [cursor=pointer]
+    - main [ref=f2e25]:
+      - generic [ref=f2e2127]:
+        - generic [ref=f2e2128]:
+          - generic [ref=f2e2129]: Season
+          - generic [ref=f2e2130]: S1 · W15 · Playoffs
+          - generic [ref=f2e2131]:
+            - button "League" [ref=f2e2132] [cursor=pointer]
+            - button "Fixtures" [ref=f2e2133] [cursor=pointer]
+            - button "Playoffs" [ref=f2e2134] [cursor=pointer]
+            - button "Records" [ref=f2e2135] [cursor=pointer]
+          - button "Guide" [ref=f2e2136] [cursor=pointer]
+        - generic [ref=f2e2137]:
+          - generic [ref=f2e2138]:
+            - generic [ref=f2e2140]:
+              - button "My matches" [ref=f2e2141] [cursor=pointer]
+              - button "All" [ref=f2e2142] [cursor=pointer]
+              - button "Americas" [ref=f2e2143] [cursor=pointer]
+              - button "Emea" [ref=f2e2144] [cursor=pointer]
+              - button "Pacific" [ref=f2e2145] [cursor=pointer]
+            - generic [ref=f2e2146]:
+              - heading "Week 15 — this week" [level=2] [ref=f2e2147]
+              - generic [ref=f2e2148]:
+                - generic [ref=f2e2149]: semifinal
+                - generic [ref=f2e2150]: Team Nexus vs Rust Belt Gaming
+              - generic [ref=f2e2152]:
+                - generic [ref=f2e2153]: "veto:"
+                - generic [ref=f2e2154]:
+                  - img "bind" [ref=f2e2155]
+                  - text: NXS ban bind
+                - generic [ref=f2e2156]:
+                  - img "haven" [ref=f2e2157]
+                  - text: RBG ban haven
+                - generic [ref=f2e2158]:
+                  - img "lotus" [ref=f2e2159]
+                  - text: NXS pick lotus
+                - generic [ref=f2e2160]:
+                  - img "ascent" [ref=f2e2161]
+                  - text: RBG pick ascent
+                - generic [ref=f2e2162]:
+                  - img "split" [ref=f2e2163]
+                  - text: decider split
+            - group [ref=f2e2164]:
+              - heading "Played weeks — 14 weeks" [level=2] [ref=f2e2166]:
+                - text: Played weeks
+                - generic [ref=f2e2167]: — 14 weeks
+          - generic [ref=f2e2169]:
+            - heading "This week" [level=2] [ref=f2e2170]
+            - generic [ref=f2e2171]:
+              - generic [ref=f2e2172]: W15
+              - generic [ref=f2e2173]: vs Rust Belt Gaming
+              - generic [ref=f2e2174]: Bo3 · semifinal
+            - text: Across the league
+            - generic [ref=f2e2176]:
+              - generic [ref=f2e2177]:
+                - generic [ref=f2e2178]: semifi
+                - generic [ref=f2e2179]: Team Vanguard
+                - generic [ref=f2e2180]: vs
+                - generic [ref=f2e2181]: Saracen Guard
+              - generic [ref=f2e2182]:
+                - generic [ref=f2e2183]: semifi
+                - generic [ref=f2e2184]: Team Nexus
+                - generic [ref=f2e2185]: vs
+                - generic [ref=f2e2186]: Rust Belt Gaming
+              - generic [ref=f2e2187]:
+                - generic [ref=f2e2188]: semifi
+                - generic [ref=f2e2189]: Meridian Cross
+                - generic [ref=f2e2190]: vs
+                - generic [ref=f2e2191]: Bayou Kings
+              - generic [ref=f2e2192]:
+                - generic [ref=f2e2193]: semifi
+                - generic [ref=f2e2194]: Tokyo Drift Six
+                - generic [ref=f2e2195]: vs
+                - generic [ref=f2e2196]: Adriatic Sirens
+              - generic [ref=f2e2197]:
+                - generic [ref=f2e2198]: semifi
+                - generic [ref=f2e2199]: Solar Flare
+                - generic [ref=f2e2200]: vs
+                - generic [ref=f2e2201]: Seoul Dynasty Prime
+              - generic [ref=f2e2202]:
+                - generic [ref=f2e2203]: semifi
+                - generic [ref=f2e2204]: Coral Sea Drakes
+                - generic [ref=f2e2205]: vs
+                - generic [ref=f2e2206]: Alpine Echo
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Season
+    - generic: Track the table, schedule, playoff cut, records, and the rest of the league.
+    - generic: Use Fixtures for timing and League for the playoff race; team names open full profiles.

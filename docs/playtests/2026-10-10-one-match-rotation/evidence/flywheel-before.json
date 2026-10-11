@@ -1,0 +1,152 @@
+[
+  {
+    "id": "esports-playtest-0145",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation development labels expose internal stable IDs",
+    "problem": "Clickable Dev note displays FA0 beside Hollowlock prose and roster",
+    "solution": "Preserve full screenshot/DOM and assign narrow known-player handle serialization/profile-target fix",
+    "lesson": "Current main report lacks dev_suggestion_handle; app falls back to humanizing fa_0. Gap29 assigned GPT6.1-sol/medium, no correction shipped yet. Stale Save reference failure is separate harness friction",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0144",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Coach booking, game plan and weekly development are distinct",
+    "problem": "Track preparation cost without attributing all weekly condition change to it",
+    "solution": "Read booking, save reload and completed preparation report plus weekly source attribution",
+    "lesson": "Normal Retakes consumed its one-fixture booking, saved cost4 and knowledge1.95; Ghost practice+0.37/matches+0.06 while bench Hollowlock recovered67.9->87.9. Condition includes training/recovery and match load",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0143",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Winning does not imply a focused plan succeeded",
+    "problem": "Assess the selected target independently of the team result",
+    "solution": "Compare explicit target outcome and baseline season form after advancing once",
+    "lesson": "Nexus won13-3 but Cipherstrike1.53 exceeded season1.22; UI marks focus backfired. This descriptive comparison is not a causal estimate. Refocus separately reports confidence-3 per starter",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0142",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Shortened snapshots can create false missing-player findings",
+    "problem": "Root misread a tail and initially claimed Ghost missing from agent-lock controls",
+    "solution": "Keep initial error rows, append full-DOM and public-response corrections, and require complete evidence before assigning a gap",
+    "lesson": "Ghost was always present; full roster locks differ from standing-five selection. Windows quoting/defaultencoding and display-name versus stable-ID audit failures are harness errors, not game failures",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0141",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Resting bench players preserve recovery semantics",
+    "problem": "Check that zero minutes and zero skill gains are explained",
+    "solution": "Choose individual rest for Hollowlock and inspect weekly report and saved decision fa_0",
+    "lesson": "Rest/normal zero maps has no measured skill gains and a recovery explanation; UI nickname must map to stable player ID fa_0 in audit",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0140",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Practice and match gains remain visible after defeat",
+    "problem": "Judge young-player development without assuming that winning is necessary",
+    "solution": "Advance one week and read separate practice and match source attribution before and after Save",
+    "lesson": "The loss9-13 coexists with Ghost practice+0.30 and matches+0.04OVR; report separately marks mentorship support and struggling form. This is observed attribution, not a counterfactual estimate",
+    "confidence": "high",
+    "source": "2026-10-10-next-fixture-development main64ee15f browser8494 world26UHC seed2038 W12-W13",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "recovery",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0139",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration gap escaped initial coverage tests",
+    "problem": "First regression suite covered only modern pro directive",
+    "solution": "Add actual schema32 migration/load cases including negative targets",
+    "lesson": "Legacy values need their own acceptance and contract cases",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0138",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration guidance survives persistence",
+    "problem": "Migration clears old target but keeps the active lane",
+    "solution": "Use browser Save and native restart public readback in two isolated worlds",
+    "lesson": "Initial in-memory guidance is insufficient for persistence acceptance",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "learning"
+  }
+]

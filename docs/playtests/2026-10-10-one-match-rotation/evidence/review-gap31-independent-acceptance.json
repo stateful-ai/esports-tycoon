@@ -1,0 +1,21 @@
+{
+  "verified_at_utc": "2026-10-10T22:49:34.674799+00:00",
+  "original_files": {
+    "patched": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\playtests\\2026-10-10-gap31-regional-prize\\saves\\campaign_f2977bf6e97d789a.json",
+    "baseline": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\runs\\gap31\\baseline\\saves\\campaign_f2977bf6e97d789a.json"
+  },
+  "complete_raw_save_equal": true,
+  "sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+  "report_income": {
+    "baseline": 110160,
+    "patched": 180160
+  },
+  "same_expenses": 47100,
+  "same_bank": 741367,
+  "manager_streams": 1,
+  "weekly_snapshot_count": 14,
+  "actual_report_wrapper": [
+    "report"
+  ],
+  "limits": "Acceptance/report comparison only; full native gate still pending; known100upkeep omitted on both variants separately owned373."
+}
