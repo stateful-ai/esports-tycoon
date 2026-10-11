@@ -56,6 +56,13 @@ source/data/UI files; every hash was checked unchanged after browser play.
 The later receipt commit adds documentation only. This qualifies the current
 head's code against that tested freeze; it does not claim earlier test gates.
 
+The source manifest hashes physical Windows checkout bytes. Directly comparing
+those raw hashes with Git blob hashes exposed CRLF checkout conversion, rather
+than source changes. [source-blob-verification.json](source-blob-verification.json)
+independently verifies every tested Git blob against the receipt head and maps
+raw checkout hashes to either identical bytes or CRLF-normalized blob bytes.
+Receipt files have -text attributes and their committed raw hashes were checked.
+
 The serializer resolves notes using review fixture ID, season, week and both
 team IDs (either fixture orientation). Missing fixtures, older-season reviews,
 different weeks/teams/IDs, empty notes, and legacy fixture defaults yield an
