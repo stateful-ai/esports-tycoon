@@ -1906,6 +1906,7 @@ let pfOverlayEl = null;
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
+let pfOpener = null; // original focus target across loading and profile navigation
 
 function pfNavTo(entry, opts) {
   const replace = !!(opts && opts.replace);
@@ -1948,6 +1949,7 @@ function pfEnsureOverlay() {
 
 function pfShow(vnode) {
   const ov = pfEnsureOverlay();
+  if (!isProfileOpen()) pfOpener = document.activeElement;
   const body = ov.querySelector("#profile-body");
   render(vnode, body);
   ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
@@ -1958,6 +1960,8 @@ function pfShow(vnode) {
 }
 
 function closeProfile() {
+  const opener = pfOpener;
+  pfOpener = null;
   pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
@@ -1969,6 +1973,13 @@ function closeProfile() {
     pfOverlayEl.setAttribute("aria-hidden", "true");
     pfOverlayEl.classList.add("hidden");
     pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
+  }
+  // A mutation may have replaced the opener or made it unavailable.
+  if (opener instanceof HTMLElement && opener !== document.body
+      && opener.isConnected && !opener.matches(":disabled")
+      && !opener.closest("[inert]") && opener.getClientRects().length
+      && getComputedStyle(opener).visibility === "visible") {
+    try { opener.focus({ preventScroll: true }); } catch {}
   }
 }
 
