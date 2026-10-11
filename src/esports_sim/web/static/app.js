@@ -4869,12 +4869,16 @@ function seasonLeague(ws, data, league, power) {
   // Head-to-head matrix: each team's series record vs every other this season.
   const mx = league?.h2h_matrix;
   if (mx && mx.teams.length > 1) {
+    // Standings already carry the public tags; name prefixes can collide.
+    const tags = new Map((data?.regions || []).flatMap((reg) =>
+      [...(reg.rows || []), ...(reg.tier2_rows || [])].map((tm) => [tm.id, tm.tag])));
+    const label = (tm) => tm.tag || tags.get(tm.team_id) || tm.name;
     const c = el("div", "card");
     c.appendChild(el("h2", "", `Head-to-head <span class="muted" style="font-weight:400">— series record</span>`));
     const scroll = el("div", "card-scroll");
     const wrap = el("div", "es-h2hm-wrap");
     const t = el("table", "es-h2hm");
-    const head = mx.teams.map((tm) => `<th title="${esc(tm.name)}">${esc(tm.name.slice(0, 3).toUpperCase())}</th>`).join("");
+    const head = mx.teams.map((tm) => `<th scope="col" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">${esc(label(tm))}</th>`).join("");
     t.innerHTML = `<thead><tr><th></th>${head}</tr></thead>`;
     const tb = el("tbody");
     mx.rows.forEach((row, i) => {
@@ -4884,8 +4888,16 @@ function seasonLeague(ws, data, league, power) {
         const cls = cell.w > cell.l ? "good" : cell.w < cell.l ? "bad" : "";
         return `<td class="${cls}">${cell.w}-${cell.l}</td>`;
       }).join("");
-      tb.appendChild(el("tr", "",
-        `<th class="es-h2hm-row">${tlink(row.team_id, mx.teams[i].name.slice(0, 3).toUpperCase())}</th>${cells}`));
+      const tm = mx.teams[i];
+      const tr = el("tr", "",
+        `<th class="es-h2hm-row" scope="row" title="${esc(tm.name)}" aria-label="${esc(tm.name)}">` +
+        `${tlink(row.team_id, label(tm))}</th>${cells}`);
+      const link = tr.querySelector("[data-tid]");
+      if (link) {
+        link.setAttribute("title", tm.name);
+        link.setAttribute("aria-label", tm.name);
+      }
+      tb.appendChild(tr);
     });
     t.appendChild(tb);
     wrap.appendChild(t);
