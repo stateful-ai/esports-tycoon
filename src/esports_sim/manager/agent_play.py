@@ -42,7 +42,7 @@ from esports_sim.manager.decision_env import (
     validate_manager_action,
 )
 
-from esports_sim.manager.state import GameState
+from esports_sim.manager.state import Fixture, GameState
 from esports_sim.registry import GameData
 from esports_sim.registry.rosters import load_roster_pack
 from esports_sim.schemas import Event
@@ -122,10 +122,21 @@ class WeekTick:
     summaries: dict[str, dict[str, Any]]
 
 
-def seat_week_results(gs: GameState, team_id: str, week: int) -> list[dict[str, Any]]:
-    """This seat's played fixtures for one week, from the seat's viewpoint."""
+def seat_week_results(
+    gs: GameState,
+    team_id: str,
+    week: int,
+    *,
+    fixtures: Iterable[Fixture] | None = None,
+) -> list[dict[str, Any]]:
+    """This seat's played fixtures for one week, from the seat's viewpoint.
+
+    A resolved tick supplies its report fixtures: season rollover replaces
+    ``gs.fixtures`` before the digest is built.
+    """
     out: list[dict[str, Any]] = []
-    for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id)):
+    source = gs.fixtures if fixtures is None else fixtures
+    for f in sorted(source, key=lambda x: (x.week, x.id)):
         if f.week != week or not f.played or team_id not in (f.team_a, f.team_b):
             continue
         opponent = f.team_b if f.team_a == team_id else f.team_a
@@ -244,7 +255,7 @@ def tick_shared_week(
             "now_season": gs.season,
             "now_week": gs.week,
             "now_phase": gs.phase,
-            "results": seat_week_results(gs, t, week_before),
+            "results": seat_week_results(gs, t, week_before, fixtures=report.fixtures),
             "income": report.income_by.get(t, 0),
             "expenses": report.expenses_by.get(t, 0),
             "position_before": positions_before[t],
