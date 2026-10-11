@@ -1,0 +1,302 @@
+[
+  {
+    "frame": 0,
+    "at": 192076.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 1,
+    "at": 192079.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 2,
+    "at": 192082.5,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 3,
+    "at": 192085.8999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 4,
+    "at": 192090,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 5,
+    "at": 192093.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 6,
+    "at": 192096.59999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 7,
+    "at": 192099.79999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 8,
+    "at": 192103.8999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 9,
+    "at": 192106.8999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 10,
+    "at": 192110.19999999925,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 11,
+    "at": 192114.29999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 12,
+    "at": 192117.59999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 13,
+    "at": 192120.8999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 14,
+    "at": 192124.19999999925,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 15,
+    "at": 192128.29999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 16,
+    "at": 192131.79999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 17,
+    "at": 192136.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 18,
+    "at": 192140.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 19,
+    "at": 192143,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 20,
+    "at": 192146.79999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 21,
+    "at": 192150.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 22,
+    "at": 192153.3999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 23,
+    "at": 192156.8999999985,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 24,
+    "at": 192159.79999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 25,
+    "at": 192163,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 26,
+    "at": 192166.19999999925,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 27,
+    "at": 192169.59999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 28,
+    "at": 192173.29999999702,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  },
+  {
+    "frame": 29,
+    "at": 192176.09999999776,
+    "connected": true,
+    "sameActive": true,
+    "insideFeed": false,
+    "scrub": "18",
+    "round": "Round 2 · ATK Team Nexus",
+    "feed": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>"
+  }
+]

@@ -1,0 +1,617 @@
+{
+  "status": 200,
+  "url": "http://127.0.0.1:8552/api/players/zenith/profile",
+  "body": {
+    "player": {
+      "id": "zenith",
+      "handle": "Zenith",
+      "age": 28,
+      "role": "controller",
+      "team_id": "team_vanguard",
+      "team_name": "Team Vanguard",
+      "team_logo": "/assets/logos/logo_6.webp",
+      "portrait": "/assets/portraits/controller_0.webp",
+      "is_user_team": false,
+      "is_free_agent": false,
+      "can_talk": false,
+      "hierarchy_role": "incumbent_leader",
+      "mentor_id": null,
+      "mentor_handle": null,
+      "mentor_progress": null,
+      "promises": [],
+      "tenure_weeks": 55,
+      "transfer_ask": 461000,
+      "seller_stance": "not for sale",
+      "ask_breakdown": [
+        {
+          "label": "base value",
+          "delta": 195000
+        },
+        {
+          "label": "sporting importance",
+          "delta": 39000
+        },
+        {
+          "label": "replacement scarcity",
+          "delta": 58000
+        },
+        {
+          "label": "audience revenue",
+          "delta": 78000
+        },
+        {
+          "label": "revenue dependence",
+          "delta": 23000
+        },
+        {
+          "label": "club pillar",
+          "delta": 68000
+        }
+      ],
+      "followers": 1132074,
+      "stream_load": 78.6,
+      "stream_status": "heavy streamer",
+      "stream_income": 7474,
+      "stream_growth_mult": 0.72,
+      "can_rein_streaming": false,
+      "can_change_assignment": false,
+      "can_assign_igl": false,
+      "is_igl": true,
+      "confidence": null,
+      "is_starter": true,
+      "dev_focus": null,
+      "training_intensity": null,
+      "country": "AR",
+      "languages": [
+        {
+          "lang": "es",
+          "level": 93
+        },
+        {
+          "lang": "en",
+          "level": 43
+        }
+      ]
+    },
+    "overview": {
+      "ovr": null,
+      "ovr_stars": null,
+      "current_ability_band": [
+        89.6,
+        99
+      ],
+      "comfort": null,
+      "igl_experience": null,
+      "igl_effectiveness": null,
+      "potential": "starter-elite",
+      "potential_stars": null,
+      "potential_band": null,
+      "skill_ceilings": null,
+      "form": null,
+      "morale": null,
+      "condition": null,
+      "market_value": 195000,
+      "salary": 14000,
+      "contract_weeks": 27,
+      "contract_terms": {
+        "stream_share": 72,
+        "release_fee": 168000,
+        "buyout": 1188000,
+        "no_transfer": false,
+        "roster_role": "starter"
+      },
+      "playstyle": "igl",
+      "fogged": true
+    },
+    "traits": [
+      {
+        "name": "cerebral",
+        "desc": "",
+        "revealed": true
+      }
+    ],
+    "badges": [
+      {
+        "id": "big_game_player",
+        "name": "Big-Game Player",
+        "emoji": "🏆",
+        "polarity": 1,
+        "blurb": "turns up when the lights are brightest",
+        "kind": "positive",
+        "impact": "Applied when earned (while held): +2 Clutch Factor, +2 Composure. Earning it permanently raised potential by 0.9.",
+        "decay": "It can fade after 2 seasons without re-qualifying.",
+        "art": "/assets/badges/big_game_player.webp",
+        "season": 1
+      }
+    ],
+    "attributes": [
+      {
+        "key": "aim_precision",
+        "label": "Aim Precision",
+        "value": null,
+        "band": "strong",
+        "description": "How tight the crosshair placement is at range. Dominates first-bullet accuracy on rifles and long-range Op duels."
+      },
+      {
+        "key": "aim_reactivity",
+        "label": "Aim Reactivity",
+        "value": null,
+        "band": "strong",
+        "description": "Reaction speed + flick repeatability. Matters for peek duels, clutch flicks, re-fragging teammates who die mid-trade."
+      },
+      {
+        "key": "clutch_factor",
+        "label": "Clutch Factor",
+        "value": null,
+        "band": "strong",
+        "description": "Performance uplift in 1vX and late-round situations. Stacks on top of raw aim; two players with identical mechanics can have wildly different clutch win rates."
+      },
+      {
+        "key": "comms_quality",
+        "label": "Comms Quality",
+        "value": null,
+        "band": "elite",
+        "description": "Signal-to-noise of callouts. High comms_quality improves teammates' observation fidelity — they \"see\" enemies earlier via calls."
+      },
+      {
+        "key": "composure",
+        "label": "Composure",
+        "value": null,
+        "band": "elite",
+        "description": "Steadiness under ult-heavy rounds, match points, final maps. Modulates how well the player executes *planned* strats under pressure."
+      },
+      {
+        "key": "game_sense",
+        "label": "Game Sense",
+        "value": null,
+        "band": "elite",
+        "description": "Reads the enemy mid-round. Higher game_sense shortens the latency between a teammate dying and correctly repositioning."
+      },
+      {
+        "key": "movement",
+        "label": "Movement",
+        "value": null,
+        "band": "strong",
+        "description": "Counter-strafing, jiggle peeks, bunny-hop defusing. Higher movement reduces the accuracy penalty of strafe-shots and helps first-peek timing."
+      },
+      {
+        "key": "positioning",
+        "label": "Positioning",
+        "value": null,
+        "band": "elite",
+        "description": "How often the player is in the right angle for the situation. Reduces the chance of dying to crossfires and increases the odds of an anchor holding a site 1vN."
+      },
+      {
+        "key": "tilt_resistance",
+        "label": "Tilt Resistance",
+        "value": null,
+        "band": "elite",
+        "description": "How much performance degrades after losing rounds / pistols / duels. Low tilt_resistance is a volatility multiplier on a match."
+      },
+      {
+        "key": "utility_usage",
+        "label": "Utility Usage",
+        "value": null,
+        "band": "elite",
+        "description": "Precision of smokes, molly placements, recon dart lineups. Scales the *effect* of utility, not just whether it's thrown."
+      }
+    ],
+    "agents": [
+      {
+        "agent_id": "omen",
+        "name": "Omen",
+        "icon": "/assets/agents/omen.webp",
+        "mastery": 95,
+        "role": "controller"
+      },
+      {
+        "agent_id": "brimstone",
+        "name": "Brimstone",
+        "icon": "/assets/agents/brimstone.webp",
+        "mastery": 80,
+        "role": "controller"
+      },
+      {
+        "agent_id": "harbor",
+        "name": "Harbor",
+        "icon": "/assets/agents/harbor.webp",
+        "mastery": 80,
+        "role": "controller"
+      },
+      {
+        "agent_id": "astra",
+        "name": "Astra",
+        "icon": "/assets/agents/astra.webp",
+        "mastery": 77.3,
+        "role": "controller"
+      },
+      {
+        "agent_id": "viper",
+        "name": "Viper",
+        "icon": "/assets/agents/viper.webp",
+        "mastery": 75.1,
+        "role": "controller"
+      },
+      {
+        "agent_id": "miks",
+        "name": "Miks",
+        "icon": "/assets/agents/miks.webp",
+        "mastery": 73.9,
+        "role": "controller"
+      },
+      {
+        "agent_id": "clove",
+        "name": "Clove",
+        "icon": "/assets/agents/clove.webp",
+        "mastery": 72.1,
+        "role": "controller"
+      },
+      {
+        "agent_id": "breach",
+        "name": "Breach",
+        "icon": "/assets/agents/breach.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "chamber",
+        "name": "Chamber",
+        "icon": "/assets/agents/chamber.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "cypher",
+        "name": "Cypher",
+        "icon": "/assets/agents/cypher.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "deadlock",
+        "name": "Deadlock",
+        "icon": "/assets/agents/deadlock.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "fade",
+        "name": "Fade",
+        "icon": "/assets/agents/fade.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "gekko",
+        "name": "Gekko",
+        "icon": "/assets/agents/gekko.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "kayo",
+        "name": "KAY/O",
+        "icon": "/assets/agents/kayo.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "killjoy",
+        "name": "Killjoy",
+        "icon": "/assets/agents/killjoy.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "raze",
+        "name": "Raze",
+        "icon": "/assets/agents/raze.webp",
+        "mastery": 60,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "reyna",
+        "name": "Reyna",
+        "icon": "/assets/agents/reyna.webp",
+        "mastery": 60,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "sage",
+        "name": "Sage",
+        "icon": "/assets/agents/sage.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "skye",
+        "name": "Skye",
+        "icon": "/assets/agents/skye.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "sova",
+        "name": "Sova",
+        "icon": "/assets/agents/sova.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "tejo",
+        "name": "Tejo",
+        "icon": "/assets/agents/tejo.webp",
+        "mastery": 60,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "vyse",
+        "name": "Vyse",
+        "icon": "/assets/agents/vyse.webp",
+        "mastery": 60,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "waylay",
+        "name": "Waylay",
+        "icon": "/assets/agents/waylay.webp",
+        "mastery": 60,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "yoru",
+        "name": "Yoru",
+        "icon": "/assets/agents/yoru.webp",
+        "mastery": 60,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "jett",
+        "name": "Jett",
+        "icon": "/assets/agents/jett.webp",
+        "mastery": 58.7,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "iso",
+        "name": "Iso",
+        "icon": "/assets/agents/iso.webp",
+        "mastery": 58.3,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "neon",
+        "name": "Neon",
+        "icon": "/assets/agents/neon.webp",
+        "mastery": 58.1,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "phoenix",
+        "name": "Phoenix",
+        "icon": "/assets/agents/phoenix.webp",
+        "mastery": 4.5,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "veto",
+        "name": "Veto",
+        "icon": "/assets/agents/veto.webp",
+        "mastery": 0,
+        "role": "sentinel"
+      }
+    ],
+    "season": {
+      "matches": 7,
+      "kills": 77,
+      "deaths": 81,
+      "kd": 0.95,
+      "first_kills": 7,
+      "rating": 0.87,
+      "analytics_tier": 0,
+      "assists": null,
+      "acs": null,
+      "hs_pct": null,
+      "first_deaths": null,
+      "fk_fd": null,
+      "clutches": null,
+      "clutch_1v1": null,
+      "clutch_1v2": null,
+      "clutch_1v3": null,
+      "kast_pct": null,
+      "trade_kills": null,
+      "eco_kills": null,
+      "save_kills": null,
+      "pistol_kills": null,
+      "multikills": null,
+      "aces": null,
+      "kills_by_weapon": null,
+      "xduel_expected_wins": null,
+      "xduel_actual_wins": null,
+      "xde": null
+    },
+    "weekly": [
+      {
+        "season": 2,
+        "week": 1,
+        "opponent": "Baltic Meridian",
+        "result": "W",
+        "kills": 6,
+        "deaths": 6,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 2,
+        "opponent": "Sahara Compass",
+        "result": "W",
+        "kills": 9,
+        "deaths": 10,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 3,
+        "opponent": "Nordic Frost",
+        "result": "W",
+        "kills": 13,
+        "deaths": 10,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 4,
+        "opponent": "Kathmandu Apex",
+        "result": "W",
+        "kills": 10,
+        "deaths": 7,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 5,
+        "opponent": "Saracen Guard",
+        "result": "W",
+        "kills": 10,
+        "deaths": 12,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 6,
+        "opponent": "Rust Belt Gaming",
+        "result": "L",
+        "kills": 10,
+        "deaths": 18,
+        "acs": null
+      },
+      {
+        "season": 2,
+        "week": 7,
+        "opponent": "Team Nexus",
+        "result": "W",
+        "kills": 19,
+        "deaths": 18,
+        "acs": null
+      }
+    ],
+    "splits": null,
+    "charts": {
+      "performance": null,
+      "development": null,
+      "analytics_tier": 0
+    },
+    "relationships": [],
+    "arcs": [],
+    "scouting": {
+      "progress": 0.34,
+      "active": false,
+      "guidance": null,
+      "guidance_unlock": 0.25,
+      "bonus_mult": 1.05,
+      "report": {
+        "player_id": "zenith",
+        "own_player": false,
+        "handle": "Zenith",
+        "age": 28,
+        "role": "controller",
+        "playstyle": "igl",
+        "ca_stars": [
+          3.5,
+          5
+        ],
+        "current_ability_projection": [
+          89.6,
+          99
+        ],
+        "comfort": 100,
+        "pa_stars": [
+          3,
+          5
+        ],
+        "pa_projection": [
+          75.2,
+          95.8
+        ],
+        "traits": [
+          {
+            "id": "cerebral",
+            "blurb": ""
+          }
+        ],
+        "traits_hidden": 2,
+        "strengths": [],
+        "weaknesses": [],
+        "ceiling_reads": [],
+        "agent_comfort": [
+          {
+            "agent_id": "omen",
+            "mastery": 95
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 80
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 80
+          }
+        ],
+        "style_read": "",
+        "mental_read": "",
+        "curve_read": "",
+        "training_hint": null,
+        "verdict": "",
+        "progress": 0.34
+      }
+    },
+    "career": [],
+    "career_totals": {
+      "maps": 43,
+      "kills": 454,
+      "deaths": 506,
+      "kd": 0.9,
+      "first_kills": 53,
+      "clutches": 12,
+      "seasons": 2,
+      "honours": 1,
+      "mvps": 0,
+      "all_stars": 0
+    },
+    "career_arc": [
+      {
+        "season": 1,
+        "events": [
+          {
+            "kind": "badge",
+            "text": "Zenith earns the Big-Game Player badge."
+          },
+          {
+            "kind": "award",
+            "text": "Team Vanguard wins Best Defensive Team (62% defensive round win rate)."
+          }
+        ]
+      }
+    ],
+    "honours": [
+      {
+        "season": 1,
+        "award": "Best Defensive Team",
+        "detail": "62% defensive round win rate"
+      }
+    ],
+    "epithet": "Decorated pro",
+    "memories": [
+      "S1: Team Vanguard wins Best Defensive Team (62% defensive round win rate).",
+      "S1: Zenith earns the Big-Game Player badge."
+    ]
+  },
+  "requests": [
+    {
+      "url": "http://127.0.0.1:8552/api/players/zenith/profile",
+      "status": 200,
+      "method": "GET",
+      "at": "2026-10-11T14:01:33.764Z"
+    }
+  ]
+}
