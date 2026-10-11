@@ -1930,6 +1930,8 @@ function pfEnsureOverlay() {
   const ov = document.createElement("div");
   ov.id = "profile";
   ov.className = "overlay hidden";
+  ov.inert = true;
+  ov.setAttribute("aria-hidden", "true");
   ov.innerHTML =
     `<div class="panel pf-panel">` +
     `<button class="pf-back btn btn-sm hidden" aria-label="Back to previous profile">← Back</button>` +
@@ -1951,6 +1953,8 @@ function pfShow(vnode) {
   ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
   body.scrollTop = 0;
   ov.classList.remove("hidden");
+  ov.inert = false;
+  ov.removeAttribute("aria-hidden");
 }
 
 function closeProfile() {
@@ -1958,6 +1962,11 @@ function closeProfile() {
   pfCurrent = null;
   pfSeq++;
   if (pfOverlayEl) {
+    // The fade keeps this subtree displayed; closed controls must leave focus
+    // and the accessibility tree immediately, even while opacity animates.
+    if (pfOverlayEl.contains(document.activeElement)) document.activeElement.blur();
+    pfOverlayEl.inert = true;
+    pfOverlayEl.setAttribute("aria-hidden", "true");
     pfOverlayEl.classList.add("hidden");
     pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
   }
