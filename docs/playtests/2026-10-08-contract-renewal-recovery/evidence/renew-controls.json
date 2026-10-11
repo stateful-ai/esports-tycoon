@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"row\": \"★\\tVortex\\tDUELIST AWPER\\tJETT ?\\t22\\t74.7\\t★★★\\t\\n70\\n\\t\\n74\\n\\t\\n86\\n\\t\\n64\\n▲\\n\\t7,000 cr/wk\\t3w\\t\\nTalk\\nRenew\\nRelease\",\n  \"buttons\": [\n    {\n      \"text\": \"★\",\n      \"act\": \"star\",\n      \"html\": \"<button class=\\\"btn btn-sm starter-toggle active\\\" data-act=\\\"star\\\" title=\\\"starter / bench\\\">★</button>\"\n    },\n    {\n      \"text\": \"Talk\",\n      \"act\": \"talk\",\n      \"html\": \"<button class=\\\"btn btn-sm\\\" data-act=\\\"talk\\\">Talk</button>\"\n    },\n    {\n      \"text\": \"Renew\",\n      \"act\": \"renew\",\n      \"html\": \"<button class=\\\"btn btn-sm\\\" data-act=\\\"renew\\\">Renew</button>\"\n    },\n    {\n      \"text\": \"Release\",\n      \"act\": \"release\",\n      \"html\": \"<button class=\\\"btn btn-sm\\\" data-act=\\\"release\\\" disabled=\\\"\\\" title=\\\"Closed until the mid-split window in week 7.\\\">Release</button>\"\n    }\n  ]\n}\n### Ran Playwright code\n```js\nawait page.evaluate('() => {const r=[...document.querySelectorAll(\\'main tr\\')].find(x=>x.querySelector(\\'[data-pid=\"vortex\"]\\'));return {row:r?.innerText,buttons:[...(r?.querySelectorAll(\\'button\\')||[])].map(b=>({text:b.innerText,act:b.dataset.act,html:b.outerHTML}))}}');\n```"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+
+seed 2026
+  S1: 258 maps | blowout(<=2) 14.0% | close(>=8) 42.2% | top team 13/82 wins
+  S2: 258 maps | blowout(<=2) 16.7% | close(>=8) 37.2% | top team 13/82 wins
+  S3: 258 maps | blowout(<=2) 16.3% | close(>=8) 33.3% | top team 14/82 wins
+
+band: blowout <= 32%, close >= 24% per season
+snowball gate OK

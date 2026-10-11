@@ -1,0 +1,63 @@
+{
+  "attempts": 6,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/flavor_event": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/lineup": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/actions/sponsor_demand": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/lineup": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/actions/sponsor_demand": 1,
+    "session_end:": 3,
+    "session_start:": 4,
+    "view:club/squad": 2,
+    "view:company/finances": 3,
+    "view:dashboard": 5,
+    "view:lobby": 4,
+    "view:tactics/gameplan": 2,
+    "view:tactics/strategy": 1,
+    "visible_time:club/squad": 13,
+    "visible_time:company/finances": 16,
+    "visible_time:dashboard": 13,
+    "visible_time:lobby": 4,
+    "visible_time:tactics/gameplan": 7,
+    "visible_time:tactics/strategy": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "13fe5a5a29fa2298d0ade5c79e66b7a3": 0,
+    "5e241e5cbf9a580890ecaed4fd13c588": 239006,
+    "af48d7d26e2e17b1b30ada6c76c938f2": 245760,
+    "f9b959a1b56507817cab6707e1dc6537": 75003
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/lineup:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/actions/sponsor_demand:success": 1
+  },
+  "paired_results": 6,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/squad": 170103,
+    "company/finances": 199930,
+    "dashboard": 154975,
+    "lobby": 252,
+    "tactics/gameplan": 79436,
+    "tactics/strategy": 14770
+  },
+  "world_events": {
+    "26UHC": 92
+  }
+}

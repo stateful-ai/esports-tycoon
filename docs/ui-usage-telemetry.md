@@ -46,3 +46,20 @@ unmatched attempts/orphan results, and malformed lines. Rotation may explain
 unmatched records. It does not expose raw records or inspect hidden game state.
 Inspect the sidecar alongside deterministic `action_log` for decision evidence;
 usage attempt parameters are intentionally unavailable.
+
+Market player search uses the closed `interaction:market/player_search` bucket.
+One receipt means the visible Find a player control initiated a user-triggered
+search with at least two trimmed characters, after its 250 ms debounce or an
+explicit Enter submission. Rapid typing replaces the pending timer; Enter
+cancels that timer and repeated Enter submissions count again. Clearing or
+short input, initial rendering, programmatic state updates, and a detached
+control do not count. Navigating before initiation suppresses the detached
+control's timer; navigating after initiation does not retract a receipt.
+This bucket excludes the separate Scouting deep-dive search control.
+
+The event carries only its kind and closed target, never query text, player
+handles/names/IDs, labels, selectors, URLs, or arbitrary values. It counts
+request initiation, including requests that fail or return no matches; it
+does not establish successful results, attention, accepted decisions, or a
+complete search-to-negotiation funnel. Existing bounded queue and loss limits
+apply. Keep deterministic decisions and coarse control counts separate.

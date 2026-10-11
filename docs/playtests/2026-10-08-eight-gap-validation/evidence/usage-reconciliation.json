@@ -1,0 +1,168 @@
+{
+  "played_pages": [
+    "17d96d2400028c5c5be50b8aaecefed7"
+  ],
+  "played_page_events": 110,
+  "all_retained_events": 155,
+  "excluded_lobby_pages": 1,
+  "excluded_lobby_events": 45,
+  "pairs": [
+    {
+      "attempt_index": 6,
+      "result_index": 8,
+      "target": "/api/new",
+      "request_id": 4,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 16,
+      "result_index": 17,
+      "target": "/api/actions/release",
+      "request_id": 14,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 20,
+      "result_index": 21,
+      "target": "/api/actions/advance",
+      "request_id": 19,
+      "outcome": "http_error",
+      "status": 409
+    },
+    {
+      "attempt_index": 29,
+      "result_index": 30,
+      "target": "/api/negotiation",
+      "request_id": 22,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 32,
+      "result_index": 33,
+      "target": "/api/negotiation",
+      "request_id": 23,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 40,
+      "result_index": 41,
+      "target": "/api/actions/dev_plan",
+      "request_id": 30,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 47,
+      "result_index": 49,
+      "target": "/api/actions/advance",
+      "request_id": 35,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 61,
+      "result_index": 62,
+      "target": "/api/actions/release",
+      "request_id": 44,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 105,
+      "result_index": 106,
+      "target": "/api/actions/save",
+      "request_id": 78,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "interactions": [
+    {
+      "index": 4,
+      "retained_index": 9,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:09:06.157882+00:00",
+      "world": null,
+      "team": null,
+      "season": null,
+      "week": null,
+      "kind": "interaction",
+      "target": "lobby/seed_change"
+    },
+    {
+      "index": 24,
+      "retained_index": 35,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:10:36.156747+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "interaction",
+      "target": "market/player_search"
+    },
+    {
+      "index": 52,
+      "retained_index": 72,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:13:06.158668+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "interaction",
+      "target": "week/full_report_open"
+    }
+  ],
+  "replay_events": [
+    {
+      "index": 86,
+      "retained_index": 118,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:16:21.165372+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "replay",
+      "target": "open"
+    },
+    {
+      "index": 91,
+      "retained_index": 125,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:16:51.157218+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "replay",
+      "target": "pause"
+    },
+    {
+      "index": 95,
+      "retained_index": 132,
+      "schema_version": 1,
+      "session_id": "17d96d2400028c5c5be50b8aaecefed7",
+      "received_at": "2026-10-08T18:17:36.157328+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 2,
+      "kind": "replay",
+      "target": "close"
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "note": "CLI default auto-opened an extra lobby page. Excluded it; future launches must use --no-browser."
+}

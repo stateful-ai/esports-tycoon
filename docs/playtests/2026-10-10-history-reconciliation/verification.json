@@ -1,0 +1,20 @@
+{
+  "original_saved_decisions_verified": [
+    27,
+    28
+  ],
+  "old_action_prefix_unchanged": true,
+  "old_snapshot_prefix_unchanged": true,
+  "old_csv_unchanged": true,
+  "missing_original_steps": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "new_rows": 1,
+  "isolated_csv_sha256": "df3403ea60caabbbb3ec8701bb98ac65f6a145f6660792a7ae4f61082b41817e",
+  "source_csv_sha256": "28727b469a2d6bcc8a79440a1c14b190bac002d3dd2b6b33eef0e7fd3e7fd6a2",
+  "root_review": "Independent raw-save readback; no new gameplay or usage event and no old test exit inferred"
+}

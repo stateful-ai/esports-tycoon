@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"mainText\": \"CLUB\\nTeam Nexus · 4/10\\nSQUAD\\nDEVELOPMENT\\nLOCKER ROOM\\nOPERATIONS\\nGuide\\n\\n⚠ You need 5 players to advance the week — sign 1 more.\\n\\nPLAYER\\tROLE\\tAGENT\\tAGE\\tOVR\\tCEILING\\tFORM\\tMORALE\\tCONDITION\\tCONFIDENCE\\tSALARY\\tWKS\\t\\nApex IGL\\tCONTROLLER IGL\\tOMEN ?\\t26\\t78.3\\t★★★½\\t\\n66\\n▲\\n\\t\\n76\\n\\t\\n66\\n\\t\\n53\\n▲\\n\\t8,000 cr/wk\\t2w\\t\\nTalk\\nRenew\\nRelease\\n\\nVortex\\tDUELIST AWPER\\tJETT ?\\t22\\t74.5\\t★★★\\t\\n78\\n\\t\\n59\\n\\t\\n43\\n\\t\\n53\\n▲\\n\\t7,000 cr/wk\\t7w\\t\\nTalk\\nRenew\\nRelease\\n\\nGhost\\tINITIATOR LURKER\\tSOVA ?\\t19\\t75.7\\t★★★★★\\t\\n69\\n▼\\n\\t\\n82\\n\\t\\n79\\n\\t\\n53\\n▲\\n\\t4,500 cr/wk\\t43w\\t\\nTalk\\nRenew\\nRelease\\n\\nSlyblade\\tDUELIST ENTRY\\tYORU ?\\t28\\t72.3\\t★★★½\\t\\n52\\n\\t\\n81\\n\\t\\n60\\n\\t\\n52\\n\\t6,300 cr/wk\\t61w\\t\\nTalk\\nRenew\\nRelease\\nSQUAD PROFILE\\n\\nAverage age 23.8\\n\\nYouth ≤21\\n1\\nPrime 22–26\\n2\\nVeteran 27+\\n1\\nSCOUTING BOOK\\n\\nBalanced\\n\\nLOCKER ROOM\\n\\nNo standout duos or feuds.\\n\\nCOMMS 78 shared languages feed chemistry.\"\n}\n### Ran Playwright code\n```js\nawait page.evaluate('() => ({mainText:document.querySelector(\\'main\\').innerText})');\n```"
+    }
+  ]
+}

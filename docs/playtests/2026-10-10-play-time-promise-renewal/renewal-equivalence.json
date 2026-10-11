@@ -1,0 +1,276 @@
+{
+  "comparison_baseline": "042d86d",
+  "published_head": "3220db1fe28aecfa294072d4e831d3e723e0302c",
+  "mechanical_function_source_unchanged_vs_published": {
+    "_play_time_duration": "3d9cbf8e6d0b9a14e66dd03f9a9fa5951d40cbc0b9b85387e1f03e76e6bc0cec",
+    "_play_time_requirement": "ce722834af848d1f1fa5431ef3e1b360525090e8c6aaa3e47ee7166ea04d0528",
+    "_play_time_result": "f2c4e590ac837bc5a0e3c42872cc5c57365e75909ff1106e905ae682d03a378e",
+    "create_promise": "4cc3a8ab45fd784585fd565f775e212af2d1842732d51893c5806ee8b7b1fa7d",
+    "resolve_promise": "a588fd4c475283162044f2370a4ed73e443ca895a97adf32a4342251ad1ff1e6",
+    "weekly_tick": "0bc848e021605c2c3b05d80a391987d5e890ba065e67fdec588f0be24e1b666a"
+  },
+  "renewal_traces": [
+    {
+      "reset_duration": 1,
+      "played_pattern": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": true,
+          "status": "kept",
+          "credits": 4,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    },
+    {
+      "reset_duration": 1,
+      "played_pattern": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": false,
+          "status": "kept",
+          "credits": 3,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    },
+    {
+      "reset_duration": 4,
+      "played_pattern": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": true,
+          "status": "active",
+          "credits": 4,
+          "remaining": 3,
+          "basis": 4
+        },
+        {
+          "evaluation": 2,
+          "dressed": true,
+          "status": "active",
+          "credits": 5,
+          "remaining": 2,
+          "basis": 4
+        },
+        {
+          "evaluation": 3,
+          "dressed": false,
+          "status": "active",
+          "credits": 5,
+          "remaining": 1,
+          "basis": 4
+        },
+        {
+          "evaluation": 4,
+          "dressed": false,
+          "status": "kept",
+          "credits": 5,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    },
+    {
+      "reset_duration": 4,
+      "played_pattern": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 3,
+          "basis": 4
+        },
+        {
+          "evaluation": 2,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 2,
+          "basis": 4
+        },
+        {
+          "evaluation": 3,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 1,
+          "basis": 4
+        },
+        {
+          "evaluation": 4,
+          "dressed": false,
+          "status": "kept",
+          "credits": 3,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    },
+    {
+      "reset_duration": 6,
+      "played_pattern": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": true,
+          "status": "active",
+          "credits": 4,
+          "remaining": 5,
+          "basis": 4
+        },
+        {
+          "evaluation": 2,
+          "dressed": true,
+          "status": "active",
+          "credits": 5,
+          "remaining": 4,
+          "basis": 4
+        },
+        {
+          "evaluation": 3,
+          "dressed": false,
+          "status": "active",
+          "credits": 5,
+          "remaining": 3,
+          "basis": 4
+        },
+        {
+          "evaluation": 4,
+          "dressed": false,
+          "status": "active",
+          "credits": 5,
+          "remaining": 2,
+          "basis": 4
+        },
+        {
+          "evaluation": 5,
+          "dressed": false,
+          "status": "active",
+          "credits": 5,
+          "remaining": 1,
+          "basis": 4
+        },
+        {
+          "evaluation": 6,
+          "dressed": false,
+          "status": "kept",
+          "credits": 5,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    },
+    {
+      "reset_duration": 6,
+      "played_pattern": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "trace": [
+        {
+          "evaluation": 1,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 5,
+          "basis": 4
+        },
+        {
+          "evaluation": 2,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 4,
+          "basis": 4
+        },
+        {
+          "evaluation": 3,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 3,
+          "basis": 4
+        },
+        {
+          "evaluation": 4,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 2,
+          "basis": 4
+        },
+        {
+          "evaluation": 5,
+          "dressed": false,
+          "status": "active",
+          "credits": 3,
+          "remaining": 1,
+          "basis": 4
+        },
+        {
+          "evaluation": 6,
+          "dressed": false,
+          "status": "kept",
+          "credits": 3,
+          "remaining": 4,
+          "basis": 4
+        }
+      ],
+      "full_GameState_byte_identical": true
+    }
+  ],
+  "trace_count": 6,
+  "compared_full_states": 28
+}

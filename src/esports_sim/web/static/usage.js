@@ -60,7 +60,7 @@
     if (target === "open") { replayReturn = current; view("replay"); }
     if (target === "close") view(replayReturn || "dashboard");
   }
-  const interactions = new Set(["lobby/seed_change", "week/full_report_open"]);
+  const interactions = new Set(["lobby/seed_change", "week/full_report_open", "market/player_search"]);
   function interaction(target) {
     if (interactions.has(target)) emit({kind: "interaction", target});
   }

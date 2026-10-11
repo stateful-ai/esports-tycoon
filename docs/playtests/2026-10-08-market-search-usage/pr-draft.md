@@ -1,0 +1,7 @@
+Count initiated Market player searches without retaining query text
+
+The Market Players search control previously initiated read-only search requests without a dedicated usage count. Record the closed `interaction:market/player_search` target when a valid visible search starts through debounce or Enter, with no query or player text in its payload. Coalesce rapid typing, cancel pending Enter timers, and suppress callbacks after the control detaches.
+
+Validation: 41 focused tests passed; extracted actual JavaScript callbacks and Node syntax checks passed; fresh full unfiltered pytest -q -n2 completed with 1213 passed (6315.94 seconds), exit 0. Isolated browser acceptance observed exactly two initiated searches and two new receipts, zero page errors, and no raw query fields. The append-only 18-row report preserves blocked and unexpected attempts and reconciles zero gameplay decisions separately from usage receipts.
+
+PR #350 is merged; its hooks and tests are inherited from base 26b9281 and absent from this isolated diff. Original browser acceptance is attributed to the preserved pre-rebase build; extracted PlayerSearch callbacks remain identical. All six frozen source/test SHA-256 hashes and Git blobs match the green publication gate; no source/test edits followed it. Terminal proof is preserved in docs/playtests/2026-10-08-market-search-usage/publication-full.log and publication-full-result.json.

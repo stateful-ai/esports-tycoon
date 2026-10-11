@@ -1,0 +1,15 @@
+{
+  "rows": 12,
+  "results": {
+    "blocked": 1,
+    "met": 8,
+    "unexpected": 2,
+    "partial": 1
+  },
+  "annotations_only_changed": true,
+  "request_pairs": 5,
+  "all_pairs_success200": true,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "csv_sha256": "e8bc025e19a560807a2940a53264c0c044d202f9484764bca566bcac7821c835"
+}

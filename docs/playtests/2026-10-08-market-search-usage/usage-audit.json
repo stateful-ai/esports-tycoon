@@ -1,0 +1,9 @@
+{
+  "retained_rows": 38,
+  "search_receipts": 3,
+  "by_page_session": {
+    "76f68ae3f7eb7b903918ea5afa8cb4e7": 1,
+    "03b2463322f58ed1aaf43915cab55a97": 2
+  },
+  "privacy": "Search receipts contain only existing envelope fields plus kind and closed target; raw queries and entity fields absent"
+}

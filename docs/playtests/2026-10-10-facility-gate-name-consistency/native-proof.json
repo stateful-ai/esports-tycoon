@@ -1,0 +1,20 @@
+{
+  "writer_pid": 29612,
+  "python": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\facility-gate-name-consistency",
+  "import_path": "C:\\Users\\aidan\\.codex\\worktrees\\facility-gate-name-consistency\\src\\esports_sim\\__init__.py",
+  "head": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-n2"
+  ],
+  "started": 1791660619.4993742,
+  "pytest_pid": 37020,
+  "exit_code": 0,
+  "finished": 1791668230.8760293,
+  "freeze_equal": true,
+  "changed_files": []
+}
