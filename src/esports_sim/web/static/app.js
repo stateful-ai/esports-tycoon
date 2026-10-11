@@ -2424,8 +2424,9 @@ async function dashboard(v) {
   // its own ledger rendering.
   {
     const yc = lmr && lmr.contested ? lmr.your_calls : null;
+    const seriesNotes = lmr && lmr.contested ? (lmr.series_notes || []) : [];
     const ledger = s.decision_ledger || [];
-    if (yc || ledger.length) {
+    if (yc || seriesNotes.length || ledger.length) {
       const card = el("div", "card");
       card.appendChild(el("h2", "", "Your calls"));
       if (yc) {
@@ -2467,14 +2468,23 @@ async function dashboard(v) {
         if (yc.prep) {
           const bits = [];
           if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
-          if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
-          if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+          if ((yc.prep.maps_played || []).length) bits.push(`stored book on ${yc.prep.maps_played.map(esc).join(", ")} (played)`);
+          if ((yc.prep.maps_missed || []).length) bits.push(`stored book on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
           if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
-          card.appendChild(el("span", "es-scout-lab muted", "Last match"));
+          card.appendChild(el("span", "es-scout-lab muted", "Last match · Initial plan"));
           card.appendChild(yl);
         }
+      }
+      if (seriesNotes.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "Last match · Series notes"));
+        card.appendChild(el("p", "muted", "Recorded calls for both teams, including applied between-map responses."));
+        const notes = el("div", "es-review-calls");
+        for (const note of seriesNotes) {
+          notes.appendChild(el("div", "es-review-call", `${esc(note)}`));
+        }
+        card.appendChild(notes);
       }
       if (ledger.length) {
         card.appendChild(el("span", "es-scout-lab muted", "Decisions settled"));

@@ -1347,6 +1347,14 @@ def _last_match_review(
     tier = staff_mod.analytics_tier(gs)
     opp = gs.teams.get(review.opp_id)
     potm = gs.players.get(review.potm_id) if review.potm_id else None
+    # Fixtures belong to the current season. A retained review from an older
+    # season must never borrow notes from a later fixture with the same id.
+    fixture = next(
+        (f for f in gs.fixtures if f.id == review.fixture_id
+         and gs.season == review.season and f.week == review.week
+         and {f.team_a, f.team_b} == {review.team_id, review.opp_id}),
+        None,
+    )
 
     out: dict = {
         "fixture_id": review.fixture_id,
@@ -1371,6 +1379,7 @@ def _last_match_review(
         "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
         "momentum_beat": None,
         "your_calls": _review_your_calls(gs, review, tier),
+        "series_notes": list(fixture.series_notes) if fixture is not None else [],
     }
     logs = (event_logs or {}).get(review.fixture_id, [])
     if logs:
