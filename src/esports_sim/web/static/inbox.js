@@ -393,6 +393,9 @@ async function inbox(v) {
     const row = el("div", "inbox-item" + (it.unread ? " unread" : ""));
 
     const rowHead = el("div", "inbox-row-head");
+    rowHead.setAttribute("role", "button");
+    rowHead.tabIndex = 0;
+    rowHead.setAttribute("aria-expanded", "false");
     const chip = el("span", `inbox-cat cat-${cat}`);
     chip.textContent = INBOX_CAT_LABEL[cat] || inboxLabel(cat);
     const title = el("span", "inbox-title");
@@ -404,6 +407,10 @@ async function inbox(v) {
     row.appendChild(rowHead);
 
     const body = el("div", "inbox-body collapsed");
+    // The collapse animation leaves descendants in the DOM. Keep its links
+    // and action buttons out of keyboard/accessibility navigation until open.
+    body.inert = true;
+    body.setAttribute("aria-hidden", "true");
     const text = el("div", "inbox-body-text");
     text.textContent = it.body || "";           // textContent preserves newlines
     body.appendChild(text);
@@ -423,11 +430,20 @@ async function inbox(v) {
       if (want === open) return;
       open = want;
       body.classList.toggle("collapsed", !open);
+      body.inert = !open;
+      body.setAttribute("aria-hidden", String(!open));
+      rowHead.setAttribute("aria-expanded", String(open));
       row.classList.toggle("open", open);
       // Expanding an unread item marks it read on the server.
       if (open) await markItemRead(it, row);
     };
     rowHead.onclick = () => setOpen(!open);
+    rowHead.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(!open);
+      }
+    };
     if (it.id != null) rowCtl.set(it.id, { row, openRow: () => setOpen(true) });
     return row;
   }

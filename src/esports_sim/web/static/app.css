@@ -1033,6 +1033,10 @@ svg.iso .plabel { font-size: 2.4px; }
   color: var(--es-color-text-secondary, var(--es-color-text-secondary));
   line-height: var(--es-leading-normal, 1.45);
 }
+.inbox-row-head[role="button"]:focus-visible {
+  outline: 2px solid var(--es-color-accent);
+  outline-offset: -2px;
+}
 .inbox-goto { margin-top: var(--es-space-1, 2px); }
 .inbox-empty { padding: var(--es-space-6, 18px) var(--es-space-2, 4px); }
 /* Actionable empty state: a short confirmation plus next-step links. */

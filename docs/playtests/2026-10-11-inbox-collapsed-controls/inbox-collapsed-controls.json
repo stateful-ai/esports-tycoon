@@ -1,0 +1,26 @@
+[
+  {
+    "bodyClass": "inbox-body collapsed",
+    "bodyStyle": {
+      "ariaHidden": null,
+      "inertAttribute": null,
+      "maxHeight": "0px",
+      "opacity": "0",
+      "pointerEvents": "none"
+    },
+    "itemHTML": "<div class=\"inbox-item unread\"><div class=\"inbox-row-head\"><span class=\"inbox-cat cat-board\">Board</span><span class=\"inbox-title\">Apex's contract expires in 2 weeks</span><span class=\"inbox-week mono muted\">W1</span><span class=\"inbox-dot\"></span></div><div class=\"inbox-body collapsed\"><div class=\"inbox-body-text\">Apex (igl, age 26) has 2 week(s) left on a 8,000/wk deal.\nRenew from the roster screen before they walk to free agency.</div><button class=\"btn btn-sm inbox-goto\">Open Roster</button></div></div>",
+    "text": "Open Roster"
+  },
+  {
+    "bodyClass": "inbox-body collapsed",
+    "bodyStyle": {
+      "ariaHidden": null,
+      "inertAttribute": null,
+      "maxHeight": "0px",
+      "opacity": "0",
+      "pointerEvents": "none"
+    },
+    "itemHTML": "<div class=\"inbox-item unread\"><div class=\"inbox-row-head\"><span class=\"inbox-cat cat-development\">Development</span><span class=\"inbox-title\">Coach proposes a scrim on lotus</span><span class=\"inbox-week mono muted\">W1</span><span class=\"inbox-dot\"></span></div><div class=\"inbox-body collapsed\"><div class=\"inbox-body-text\">Coach recommends a anti-execute scrim on lotus before Team Vanguard, partnering with Crimson Order.\nAccept to book it in one click.</div><button class=\"btn btn-sm inbox-goto\">Open Tactics</button><div class=\"inbox-actions\"><button class=\"btn btn-sm btn-primary\">Book scrim</button></div></div></div>",
+    "text": "Open Tactics"
+  }
+]
