@@ -23,3 +23,6 @@ docs/playtests/2026-10-11-media2-league-week-root-audit.md -text
 
 docs/playtests/2026-10-11-apparel-signing/** -text
 docs/playtests/2026-10-11-apparel-signing-root-audit.md -text
+
+# Preserve the exact captured Windows receipt bytes for away-recap acceptance.
+docs/playtests/2026-10-11-away-recap/evidence/** -text -whitespace
