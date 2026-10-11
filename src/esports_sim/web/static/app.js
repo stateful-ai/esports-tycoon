@@ -1903,16 +1903,24 @@ async function dashboard(v) {
     fix ? api("/api/gameplan").catch(() => null) : Promise.resolve(null),
   ]);
 
-  // League position + record + region for any broadcast (tier-1) team.
+  // League position + record + region, in each server-ordered competition.
   const posOf = {}, recOf = {}, regionOf = {};
   if (table) {
     for (const reg of table.regions) {
-      reg.rows.forEach((row, i) => {
-        posOf[row.id] = i + 1;
-        recOf[row.id] = `${row.wins}–${row.losses}`;
-        regionOf[row.id] = reg.region;
-      });
+      for (const rows of [reg.rows ?? [], reg.tier2_rows ?? []]) {
+        rows.forEach((row, i) => {
+          posOf[row.id] = i + 1;
+          recOf[row.id] = `${row.wins}–${row.losses}`;
+          regionOf[row.id] = reg.region;
+        });
+      }
     }
+  }
+  const competition = s.competition_table;
+  for (const [i, row] of (competition?.rows ?? []).entries()) {
+    posOf[row.id] = i + 1;
+    recOf[row.id] = `${row.wins}–${row.losses}`;
+    regionOf[row.id] = competition.region;
   }
 
   // A team's played fixtures, oldest → newest (recent form + streak).
@@ -1991,7 +1999,7 @@ async function dashboard(v) {
   }
   if (posOf[myId]) {
     tiles.appendChild(statTile("League", ordinal(posOf[myId]), {
-      sub: cap(regionOf[myId] || me.region || ""),
+      sub: competition?.label || cap(regionOf[myId] || me.region || ""),
       onClick: () => dashGoTab("standings"),
       tooltip: "<h4>League Standing</h4><div class='tooltip-desc'>Your current position in the regional league standings. Click to view the full Season table.</div>"
     }));
@@ -2580,18 +2588,10 @@ async function dashboard(v) {
   // 5c. League snapshot: the mini-table plus your last result, one card at
   // the bottom of the main column. Season owns the full results list and
   // Stats owns the rating leaders.
-  let rows = null;
-  if (table) {
-    const reg = table.regions.find((r) => r.is_user) || table.regions[0];
-    rows = reg ? reg.rows : [];
-  } else if ((s.standings_top ?? []).length) {
-    rows = s.standings_top.map((r) => ({
-      id: r.team_id, name: r.name, wins: r.wins, losses: r.losses, diff: r.diff,
-    }));
-  }
+  const rows = competition?.rows ?? [];
   {
     const card = el("div", "card");
-    card.appendChild(el("h2", "", `${cap(regionOf[myId] || me.region || "")} league`));
+    card.appendChild(el("h2", "", competition?.label || "Competition standings"));
     if (rows && rows.length) {
       const t = el("table");
       t.dataset.nosort = "1";
@@ -2618,6 +2618,8 @@ async function dashboard(v) {
       }
       t.appendChild(tb);
       card.appendChild(t);
+    } else {
+      card.appendChild(el("p", "muted", "No standings available for your competition yet."));
     }
     // Last result folded in (the old Recent results card is gone — Season
     // owns the full list).
