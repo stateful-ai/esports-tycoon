@@ -1,0 +1,29 @@
+[
+  {
+    "index": 58,
+    "season": 1,
+    "week": 12,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "fa_0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 59,
+    "season": 1,
+    "week": 12,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]
