@@ -1,0 +1,550 @@
+{
+  "season": 1,
+  "week": 8,
+  "balance": 441090,
+  "starter_ids": [
+    "apex",
+    "vortex",
+    "fa_13",
+    "fa_0",
+    "ghost"
+  ],
+  "players": [
+    {
+      "id": "apex",
+      "stamina": 76,
+      "starter": true,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "vortex",
+      "stamina": 100,
+      "starter": true,
+      "dev_focus": "rest",
+      "training_intensity": "normal"
+    },
+    {
+      "id": "ghost",
+      "stamina": 59,
+      "starter": true,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "fa_13",
+      "stamina": 74.9,
+      "starter": true,
+      "dev_focus": "rest",
+      "training_intensity": "normal"
+    },
+    {
+      "id": "echo",
+      "stamina": 55,
+      "starter": false,
+      "dev_focus": "rest",
+      "training_intensity": "light"
+    },
+    {
+      "id": "fa_0",
+      "stamina": 55.900000000000006,
+      "starter": true,
+      "dev_focus": "auto",
+      "training_intensity": "normal"
+    }
+  ],
+  "development": {
+    "season": 1,
+    "start_week": 0,
+    "end_week": 7,
+    "overall_delta": 0.3,
+    "grown": 3,
+    "regressed": 0,
+    "steady": 3,
+    "players": [
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "start_week": 0,
+        "end_week": 7,
+        "tracked_points": 8,
+        "overall_start": 75.5,
+        "overall_current": 76.4,
+        "overall_delta": 0.9,
+        "status": "grown",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "utility_usage",
+            "name": "Utility Usage",
+            "category": "tactical",
+            "start": 80,
+            "current": 83.6,
+            "delta": 3.6
+          },
+          {
+            "id": "positioning",
+            "name": "Positioning",
+            "category": "tactical",
+            "start": 82,
+            "current": 84,
+            "delta": 2
+          },
+          {
+            "id": "aim_precision",
+            "name": "Aim Precision",
+            "category": "mechanical",
+            "start": 74,
+            "current": 75.4,
+            "delta": 1.4
+          },
+          {
+            "id": "aim_reactivity",
+            "name": "Aim Reactivity",
+            "category": "mechanical",
+            "start": 76,
+            "current": 77,
+            "delta": 1
+          },
+          {
+            "id": "comms_quality",
+            "name": "Comms Quality",
+            "category": "team",
+            "start": 60,
+            "current": 60.5,
+            "delta": 0.5
+          },
+          {
+            "id": "game_sense",
+            "name": "Game Sense",
+            "category": "tactical",
+            "start": 85,
+            "current": 85.4,
+            "delta": 0.4
+          },
+          {
+            "id": "clutch_factor",
+            "name": "Clutch Factor",
+            "category": "mental",
+            "start": 80,
+            "current": 80.1,
+            "delta": 0.1
+          },
+          {
+            "id": "composure",
+            "name": "Composure",
+            "category": "mental",
+            "start": 74,
+            "current": 74.1,
+            "delta": 0.1
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "rest",
+          "intensity": "light",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.06,
+              "skills": {
+                "aim_precision": 0.3,
+                "aim_reactivity": 0.15,
+                "comms_quality": 0.1,
+                "game_sense": 0.01,
+                "positioning": 0.02,
+                "utility_usage": 0.01
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        }
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "start_week": 0,
+        "end_week": 7,
+        "tracked_points": 8,
+        "overall_start": 75.5,
+        "overall_current": 76,
+        "overall_delta": 0.5,
+        "status": "grown",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "clutch_factor",
+            "name": "Clutch Factor",
+            "category": "mental",
+            "start": 65,
+            "current": 68,
+            "delta": 3
+          },
+          {
+            "id": "composure",
+            "name": "Composure",
+            "category": "mental",
+            "start": 90,
+            "current": 92,
+            "delta": 2
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "rest",
+          "intensity": "light",
+          "maps": 0,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        }
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "start_week": 0,
+        "end_week": 7,
+        "tracked_points": 8,
+        "overall_start": 74.5,
+        "overall_current": 74.7,
+        "overall_delta": 0.2,
+        "status": "grown",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "comms_quality",
+            "name": "Comms Quality",
+            "category": "team",
+            "start": 55,
+            "current": 55.7,
+            "delta": 0.7
+          },
+          {
+            "id": "composure",
+            "name": "Composure",
+            "category": "mental",
+            "start": 70,
+            "current": 70.6,
+            "delta": 0.6
+          },
+          {
+            "id": "game_sense",
+            "name": "Game Sense",
+            "category": "tactical",
+            "start": 72,
+            "current": 72.6,
+            "delta": 0.6
+          },
+          {
+            "id": "utility_usage",
+            "name": "Utility Usage",
+            "category": "tactical",
+            "start": 59,
+            "current": 59.3,
+            "delta": 0.3
+          },
+          {
+            "id": "positioning",
+            "name": "Positioning",
+            "category": "tactical",
+            "start": 78,
+            "current": 78.1,
+            "delta": 0.1
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "rest",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "comms_quality": 0.11,
+                "composure": 0.01,
+                "game_sense": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        }
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "start_week": 0,
+        "end_week": 7,
+        "tracked_points": 8,
+        "overall_start": 78.3,
+        "overall_current": 78.3,
+        "overall_delta": 0,
+        "status": "steady",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "aim_precision",
+            "name": "Aim Precision",
+            "category": "mechanical",
+            "start": 62,
+            "current": 62.2,
+            "delta": 0.2
+          },
+          {
+            "id": "aim_reactivity",
+            "name": "Aim Reactivity",
+            "category": "mechanical",
+            "start": 60,
+            "current": 60.1,
+            "delta": 0.1
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "rest",
+          "intensity": "light",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "aim_precision": 0.03,
+                "aim_reactivity": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        }
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "start_week": 5,
+        "end_week": 7,
+        "tracked_points": 3,
+        "overall_start": 63,
+        "overall_current": 63,
+        "overall_delta": 0,
+        "status": "steady",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "positioning",
+            "name": "Positioning",
+            "category": "tactical",
+            "start": 54.1,
+            "current": 54.6,
+            "delta": 0.5
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "positioning": 0.1
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {
+                "aim_precision": 0.01
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.03,
+              "skills": {
+                "positioning": 0.3
+              }
+            }
+          },
+          "factors": [
+            "Tired legs are reducing practice quality; ease intensity or rest",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        }
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "start_week": 1,
+        "end_week": 7,
+        "tracked_points": 7,
+        "overall_start": 72.3,
+        "overall_current": 72.3,
+        "overall_delta": 0,
+        "status": "steady",
+        "attribute_tracking": true,
+        "changes": [
+          {
+            "id": "positioning",
+            "name": "Positioning",
+            "category": "tactical",
+            "start": 63.7,
+            "current": 63.8,
+            "delta": 0.1
+          }
+        ],
+        "latest_week": {
+          "season": 1,
+          "week": 7,
+          "focus": "rest",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        }
+      }
+    ]
+  },
+  "preparation": {
+    "plan_id": "7b1240954b4b6a24",
+    "team_id": "team_nexus",
+    "fixture_id": "s1w7m1am",
+    "opponent_id": "team_vanguard",
+    "partner_id": "team_hokkaido_drift",
+    "map_id": "lotus",
+    "objective": "mental_reset",
+    "intensity": "light",
+    "season": 1,
+    "week": 7,
+    "status": "completed",
+    "finding_code": "composure_ready",
+    "finding": "Squad morale entered at 91.2/100; the group reset with a lighter load.",
+    "evidence": {
+      "own_map_samples": 1,
+      "opponent_map_samples": 3,
+      "partner_map_samples": 4,
+      "own_attack_win_pct": 83.3,
+      "own_defense_win_pct": 100,
+      "opponent_attack_win_pct": 66.7,
+      "opponent_defense_win_pct": 60.5,
+      "partner_map_win_pct": 100,
+      "scouting_confidence": 0.34,
+      "average_stamina": 63.5,
+      "average_morale": 91.2,
+      "rotation_candidate_id": "echo"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "methodology",
+    "knowledge_gain": 0.72,
+    "stamina_cost": 1.5,
+    "morale_delta": 2,
+    "chemistry_delta": 0.3,
+    "artifact_label": "Methodology +0.7",
+    "prep_edge_contribution": 0,
+    "dev_suggestion_player_id": "echo",
+    "dev_suggestion": "Echo pushed the starters on lotus; a focused development block could make that rotation real."
+  }
+}

@@ -1,0 +1,185 @@
+ESPORTSSIM
+Season 1 · Week 7 · Regular — Team Nexus
+431,159 cr
+Save •
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Advance Week ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+WEEKLY
+DASHBOARD
+INBOX13
+MATCH2
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET
+STATS
+COMPANY
+CLUB
+Team Nexus · 6/10
+SQUAD
+DEVELOPMENT
+LOCKER ROOM
+OPERATIONS
+Guide
+DEFAULT FIVE
+5/5
+Save lineup
+★	PLAYER	ROLE	AGENT	AGE	OVR	CEILING	FORM	MORALE	CONDITION	CONFIDENCE	SALARY	WKS
+★	Apex IGL	CONTROLLER IGL	OMEN ?	26	78.3	★★★½
+58
+▲
+
+96
+
+67
+
+61
+▲
+	10,500 cr/wk	45w
+Talk
+Renew
+Release
+
+★	Vortex	DUELIST AWPER	JETT ?	22	74.7	★★★
+68
+▼
+
+85
+
+97
+
+67
+▲
+	9,200 cr/wk	46w
+Talk
+Renew
+Release
+
+★	Ghost 🎓	INITIATOR LURKER	SOVA ?	19	76.3	★★★★★
+59
+
+98
+
+50
+
+65
+	4,500 cr/wk	38w
+Talk
+Renew
+Release
+
+★	Slyblade	DUELIST ENTRY	YORU ?	28	72.3	★★★½
+60
+▲
+
+100
+
+65
+
+64
+▲
+	6,300 cr/wk	56w
+Talk
+Renew
+Release
+
+☆	Echo  BENCH	SENTINEL ANCHOR	KILLJOY ?	23	76	★★★
+54
+▼
+
+95
+
+33
+
+64
+▲
+	7,700 cr/wk	50w
+Talk
+Renew
+Release
+
+★	Hollowlock 	CONTROLLER IGL	HARBOR	26	63	★★
+39
+▲
+
+74
+
+70
+
+47
+▲
+	4,000 cr/wk	56w
+Talk
+Renew
+Release
+FORM & FITNESS
+BURNOUT WATCH
+Echo
+6 maps
+32 sta
+CUMULATIVE WINS6W in 6 played
+SQUAD PROFILE
+
+Average age 24
+
+Youth ≤21
+1
+Prime 22–26
+4
+Veteran 27+
+1
+SCOUTING BOOK
+
+Balanced
+
+LOCKER ROOM
+
+No standout duos or feuds.
+
+COMMS 58 shared languages feed chemistry.
+
+MAP LINEUPS
+
+vs Team Vanguard · Bo1
+
+LOTUS
+DEFAULT
+Apex · Vortex · Slyblade · Hollowlock · Ghost
+Edit ▸
+LINEUPS — VS TEAM VANGUARD (BO1)
+
+Dress exactly 5 for each map. A map with no pick uses your default five (★).
+
+Default five
+Apex
+Vortex
+Ghost
+Slyblade
+Echo
+Hollowlock
+5/5
+Save
+Clear (auto top-5)
+Lotus · default
+Apex
+Vortex
+Ghost
+Slyblade
+Echo
+Hollowlock
+5/5
+Save
+CLUB
+Manage the squad, weekly development, locker room, academy, and staff delegation.
+Name a default five, check condition and confidence, then set team and player training plans.

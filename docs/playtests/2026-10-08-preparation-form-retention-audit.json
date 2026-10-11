@@ -1,0 +1,152 @@
+{
+  "base_actions": 20,
+  "final_actions": 22,
+  "baseline_prefix_equal": true,
+  "new_actions": [
+    {
+      "index": 20,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "5",
+        "fixture_id": "s1w5m1am",
+        "id": "fc19e8acb28fc049",
+        "intensity": "intense",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "opponent_id": "team_rust_belt_gaming",
+        "partner_id": "team_alpine_echo",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 21,
+      "season": 1,
+      "week": 5,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "5",
+        "fixture_id": "s1w5m1am",
+        "id": "23f59737f2edfa41",
+        "intensity": "normal",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "opponent_id": "team_rust_belt_gaming",
+        "partner_id": "team_alpine_echo",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    }
+  ],
+  "telemetry_snapshots_unchanged": true,
+  "snapshot_count": 4,
+  "final_plan": {
+    "id": "23f59737f2edfa41",
+    "team_id": "team_nexus",
+    "fixture_id": "s1w5m1am",
+    "opponent_id": "team_rust_belt_gaming",
+    "partner_id": "team_alpine_echo",
+    "map_id": "bind",
+    "objective": "mental_reset",
+    "intensity": "normal",
+    "created_season": 1,
+    "created_week": 5
+  },
+  "usage_count": 35,
+  "usage_kinds": {
+    "session_start": 2,
+    "view": 8,
+    "visible_time": 17,
+    "attempt": 3,
+    "result": 3,
+    "session_end": 2
+  },
+  "page_sessions": 2,
+  "mutation_events": [
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/preparation",
+      "request_id": 16,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/preparation",
+      "request_id": 16,
+      "outcome": "success",
+      "status": 200,
+      "page": 1
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 12,
+      "page": 2
+    },
+    {
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 5,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "page": 2
+    }
+  ],
+  "errors": [],
+  "source_hashes": {
+    "src\\esports_sim\\web\\static\\app.js": "91f7f1de3b92795c29881599f15bb3c3031ce2f187679598bf7cd3d22a0ad8bb",
+    "tests\\test_preparation_form_frontend.py": "3113528eabd260413594b79318a4b7eb9a0eb84708a444ddaeb62c8db46239be"
+  },
+  "csv_outcomes": {
+    "met": 14,
+    "blocked": 2
+  }
+}

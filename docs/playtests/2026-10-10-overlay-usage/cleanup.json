@@ -1,0 +1,23 @@
+{
+  "port_listeners": [],
+  "gate_processes": [
+    {
+      "ProcessId": 12516,
+      "ParentProcessId": 31404,
+      "Name": "python3.13.exe",
+      "CommandLine": "\"C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe\" \"C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\runs\\overlay-usage\\gate.py\" --worker"
+    },
+    {
+      "ProcessId": 30704,
+      "ParentProcessId": 12516,
+      "Name": "python.exe",
+      "CommandLine": "\"C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe\" -m pytest -q -n2"
+    }
+  ],
+  "server_processes": [],
+  "frozen_source_unchanged": true,
+  "browser_close_result": "Browser overlay-usage closed; subsequent playwright-cli list reports no browsers for this CLI task workspace",
+  "server_stop_result": "Sent Ctrl-C to owned exec session 55359 after PID/port ownership verification; session terminated with exit 1",
+  "verified_at_utc": "2026-10-10T19:23:46.318951+00:00",
+  "gate_receipt_exists": false
+}

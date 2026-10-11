@@ -1,0 +1,23 @@
+{
+  "started_at_utc": "2026-10-10T18:04:17.467998+00:00",
+  "runner_pid": 3984,
+  "source_freeze_sha256": "703a39db83eb79e160d4acb0dc3da9e304d3365a8844ac0f1146727559a88635",
+  "base_head": "121e55ed36e5538eeee80a2c17c656a8021ccf22",
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "superseded_log": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator\\docs\\playtests\\2026-10-08-flavor-hint\\full-pytest.log",
+  "superseded_exit_code": null,
+  "source_files_verified_before": 606,
+  "imported_package": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "pytest_pid": 3056,
+  "pytest_exit_code": 0,
+  "source_files_verified_after": 606,
+  "source_unchanged": true,
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-10T19:10:00.313118+00:00"
+}

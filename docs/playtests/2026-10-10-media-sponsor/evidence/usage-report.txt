@@ -1,0 +1,50 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/media_event": 1,
+    "attempt:/api/actions/save": 2,
+    "attempt:/api/actions/sponsor": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/media_event": 1,
+    "result:/api/actions/save": 2,
+    "result:/api/actions/sponsor": 1,
+    "session_end:": 2,
+    "session_start:": 3,
+    "view:company/brand": 2,
+    "view:company/finances": 3,
+    "view:dashboard": 4,
+    "view:lobby": 3,
+    "visible_time:company/brand": 5,
+    "visible_time:company/finances": 15,
+    "visible_time:dashboard": 26,
+    "visible_time:lobby": 3
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "697a54022c78ac0a7dcf5c94552f1de6": 0,
+    "9d52f52eb3597f2e2690b8b4ab334cd2": 273252,
+    "a3aaa4234b8fed0eca5e03193544b3ef": 262969
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/media_event:success": 1,
+    "/api/actions/save:success": 2,
+    "/api/actions/sponsor:success": 1
+  },
+  "paired_results": 5,
+  "retention_bytes": 8388608,
+  "sessions": 3,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "company/brand": 62837,
+    "company/finances": 164582,
+    "dashboard": 353628,
+    "lobby": 190
+  },
+  "world_events": {
+    "26UHC": 77
+  }
+}

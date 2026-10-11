@@ -1,0 +1,1 @@
+{"recorded_at_utc": "2026-10-10T20:28:05.664508+00:00", "error": "UnicodeDecodeError: cp1252 byte0x81 in saved JSON", "scope": "Initial offline inspection before any comparison or count", "recovery": "Read UTF8 explicitly; failed step13 preserved"}
