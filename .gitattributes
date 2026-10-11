@@ -26,3 +26,12 @@ docs/playtests/2026-10-11-apparel-signing-root-audit.md -text
 
 # Preserve the exact captured Windows receipt bytes for away-recap acceptance.
 docs/playtests/2026-10-11-away-recap/evidence/** -text -whitespace
+
+docs/playtests/2026-10-11-fatigue-rotation-recovery/** -text
+docs/playtests/2026-10-11-fatigue-rotation-recovery-root-audit.md -text
+
+docs/playtests/2026-10-11-profile406-keyboard-session/** -text
+docs/playtests/2026-10-11-profile406-keyboard-session-root-audit.md -text
+
+docs/playtests/2026-10-11-profile411-keyboard-session/** -text
+docs/playtests/2026-10-11-profile411-keyboard-session-root-audit.md -text
