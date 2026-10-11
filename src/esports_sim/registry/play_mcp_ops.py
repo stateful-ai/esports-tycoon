@@ -2239,6 +2239,17 @@ def get_club(code: str) -> dict[str, Any]:
         session.gs, _gamedata(), session.env.team_id
     )
     with _acting(session) as gs:
+        # Enrich only the playing surface, after the shared observation has
+        # projected legacy reports onto public evidence. Learned policies keep
+        # their existing observation contract and historical IDs stay intact.
+        prep = dict(observation["club"]["preparation"])
+        report = prep["last"]
+        if report is not None:
+            player = gs.players.get(report.get("dev_suggestion_player_id", ""))
+            prep["last"] = {
+                **report,
+                "dev_suggestion_handle": player.handle if player else None,
+            }
         return {
             "staff": {
                 role: {
@@ -2253,7 +2264,7 @@ def get_club(code: str) -> dict[str, Any]:
             "facilities": facilities.menu_view(gs),
             "academy": observation["club"]["academy"],
             "culture": observation["club"]["culture"],
-            "preparation": observation["club"]["preparation"],
+            "preparation": prep,
             "delegation": observation["club"]["delegation"],
         }
 
