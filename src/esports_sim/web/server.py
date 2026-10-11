@@ -4909,7 +4909,8 @@ def finances() -> dict:
                 "rep_gate": cfg["rep_gate"],
                 "unlocked": facility_ok and team.reputation >= cfg["rep_gate"],
                 "locked_reason": (
-                    f"requires Marketing Office level {cfg['unlock']}"
+                    f"requires {facilities_mod.facility_label('marketing_office')} "
+                    f"level {cfg['unlock']}"
                     if not facility_ok
                     else f"requires reputation {cfg['rep_gate']:.0f}"
                     if team.reputation < cfg["rep_gate"]
