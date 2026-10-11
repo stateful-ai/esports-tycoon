@@ -34,3 +34,19 @@ All tests, validators, simulations, analytics commands and browser acceptance
 are **UNRUN**, per explicit user instruction to skip all local tests. Root
 review and future genuine browser acceptance remain required; this document
 does not claim runtime verification or completed gates.
+
+## Remote CI collection repair
+
+Remote workflow `38156130139` on original head
+`eaac8f3852f737ae3eab2f1e1f07ccdcd0854da4` completed Python 3.12 with
+`1473 passed, 4 skipped, 1 error`; the error was collection of
+`tests/test_inbox_read_usage.py`, whose top-level `test_usage_telemetry`
+import could not resolve. The repository already makes `tests` a package via
+`tests/__init__.py`, so the shared Client and payload helpers now use the
+package-qualified `tests.test_usage_telemetry` import. No Python path changes,
+helper duplication, telemetry hooks, or gameplay changes accompany this repair.
+
+All local tests, collection checks, validators, simulations, gates and reports
+remain UNRUN at the user's explicit instruction. The failed old-head remote run
+and prior root browser acceptance are historical evidence; neither confirms
+that the repaired head passes CI. Root review and new-head remote CI are pending.

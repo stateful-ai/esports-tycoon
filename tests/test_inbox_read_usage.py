@@ -6,7 +6,7 @@ import pytest
 from fastapi import FastAPI
 
 from esports_sim.web.usage_telemetry import install_usage_routes
-from test_usage_telemetry import Client, payload
+from tests.test_usage_telemetry import Client, payload
 
 pytestmark = pytest.mark.web
 
