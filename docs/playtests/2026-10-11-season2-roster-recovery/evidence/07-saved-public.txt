@@ -1,0 +1,6 @@
+### Result
+{"season":2,"week":4,"save":{"dirty":false,"autosave_enabled":true,"autosave_every_weeks":1},"roster_readiness":{"ready":true,"reason":"","count":6,"minimum":5,"shortfall":0},"debrief":{"result":"Beat Kathmandu Apex 13-9","won":true,"standout":"Vortex (1.42)","underperformer":"Echo (0.70)"}}
+### Ran Playwright code
+```js
+await (async (page) => await page.evaluate(async()=>{ const s=await (await fetch("/api/state")).json(); return {season:s.season,week:s.week,save:s.save,roster_readiness:s.roster_readiness,debrief:s.debrief}; }))(page);
+```

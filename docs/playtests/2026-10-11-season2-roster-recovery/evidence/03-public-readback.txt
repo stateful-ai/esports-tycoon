@@ -1,0 +1,10 @@
+### Ran Playwright code
+```js
+await (async (page) => { const p=await page.evaluate(async()=>{ const r=await fetch("/api/roster"); const d=await r.json(); return {status:r.status,keys:Object.keys(d),players:(d.players||d.roster||[]).map(x=>({id:x.id,name:x.name,stamina:x.stamina,dev_focus:x.dev_focus,training_intensity:x.training_intensity,streaming_commitment:x.streaming_commitment,streaming_pct:x.streaming_pct}))}; }); console.log(JSON.stringify(p)); })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8537/
+- Page Title: esports-sim
+- Console: 1 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T09-13-22-741Z.log#L2
