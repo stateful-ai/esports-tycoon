@@ -1,0 +1,154 @@
+[
+  {
+    "id": "esports-playtest-0133",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement hides realized social effect",
+    "problem": "The clinic resolves with narrative feedback only and unchanged headline indicators",
+    "solution": "Capture actual200 response and later public screens; separately audit the saved social change and assign scoped reporting-only gap28",
+    "lesson": "Narrative result alone does not show the realized sentiment change. Preserve future-outcome secrecy while exposing already-applied effects after choice",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0132",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Individual plan updates preserve their other settings",
+    "problem": "Verify focus and intensity independently after two UI requests",
+    "solution": "Read selected Mechanical/Normal/Apex values after explicit Save and reload, then compare every persisted player record",
+    "lesson": "The two accepted dev-plan records preserve mentor and all other player fields; player plans match their own IDs",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0131",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Rest explains why practice pauses",
+    "problem": "Follow development advice for the young starter without treating zero mentor progress as a defect",
+    "solution": "Read recovery tooltip, latest-week source attribution and existing Apex mentorship before choosing Mechanical/Normal",
+    "lesson": "Ghost retained measured match experience on Rest/light; current recovery explains paused practice. Setting an active plan does not immediately grow skills",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0130",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Distinguish control behavior and later verification from initial expectations",
+    "problem": "Roster row expands detail rather than profile; reload returns Dashboard and premature readback claimed persistence too early",
+    "solution": "Use Ghost name link, reopen Club after reload, append step8 timing correction and preserve UTF8 audit failure13",
+    "lesson": "Visible readbacks support settings only once actually observed; existing overlay telemetry/spacing/accounting agents cover repeated known gaps",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0129",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Exact choice capture supports real-play auditing",
+    "problem": "Coarse lineup flags did not identify the selected five in earlier builds",
+    "solution": "Save Lotus five and Map control30 on main64, compare network parameters, saved accepted indices51/52 and independent public readback",
+    "lesson": "json-v1 telemetry retains playerIDs and each dial selection while leaving consumed one-match plans to the campaign lifecycle",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0128",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Rookie sponsorship resolves from visible participation",
+    "problem": "Understand whether accepting an obligation guarantees the reward",
+    "solution": "Accept Ghost request, inspect career9maps and selected Lotus five, then verify1map/HONORED/relation52to57 after advance",
+    "lesson": "Acceptance alone left the bank unchanged; actual participation honored the20200 request. A short run does not establish causality of the win",
+    "confidence": "high",
+    "source": "2026-10-10-sponsor-obligation main64ee15f browser8489 world26UHC seed2038 W11-W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "sponsors",
+      "lineup",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0127",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Expose upkeep as a weekly expense",
+    "problem": "Real settlement hides1500 facility upkeep in reported income, while live Finance shows it as expense",
+    "solution": "Compare observed bank/report/live breakdown; inspect settlement code after choices and delegate gross classification fix",
+    "lesson": "Net cash is correct; reported gross income/expense is misleading, not an unpaid upkeep defect. Gap25 preserves mechanics; gap26 separately fixes actual visible Ghostagainst spacing",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0126",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Facility requirements must use the visible department name",
+    "problem": "Finance locks and upgrade News call Media Department Marketing Office",
+    "solution": "Match the displayed Stream-unlock benefit, build150000, and read back level/upkeep and newly open slot",
+    "lesson": "The correct department unlocked Stream but naming friction is real; gap24 delegated without changing internal keys",
+    "confidence": "high",
+    "source": "2026-10-10-financial-planning main042 browser8485 world26UHC seed2038 W10-W11",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "finance",
+      "sponsors",
+      "facilities"
+    ],
+    "kind": "learning"
+  }
+]

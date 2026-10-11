@@ -1,0 +1,372 @@
+{
+  "season": 1,
+  "week": 1,
+  "phase": "regular",
+  "development": {
+    "season": 1,
+    "week": 1,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "aim_precision": 0.03,
+                "aim_reactivity": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Strong match performances are accelerating learning",
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 78.3,
+          "overall_current": 78.3,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "phantom",
+        "handle": "Phantom",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.5,
+              "skills": {
+                "game_sense": 1.16,
+                "positioning": 1.08,
+                "utility_usage": 2.75
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.03,
+              "skills": {
+                "comms_quality": 0.11,
+                "composure": 0.03,
+                "game_sense": 0.04,
+                "positioning": 0.04,
+                "utility_usage": 0.03
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Strong match performances are accelerating learning",
+            "Tactical practice reinforces skills used in matches",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 65.1,
+          "overall_current": 65.6,
+          "overall_delta": 0.5
+        }
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.5,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {
+                "utility_usage": 0.01
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Tired legs are reducing practice quality; ease intensity or rest",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 74.5,
+          "overall_current": 74.5,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.04,
+              "skills": {
+                "positioning": 0.11,
+                "utility_usage": 0.27
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "aim_precision": 0.02,
+                "aim_reactivity": 0.01,
+                "clutch_factor": 0.01,
+                "composure": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.5,
+          "overall_delta": 0.0
+        }
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "id": "s1w1m1am",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nexus",
+      "team_b": "team_tokyo_drift_six",
+      "team_a_name": "Team Nexus",
+      "team_b_name": "Tokyo Drift Six",
+      "rivalry": null,
+      "potm": {
+        "player_id": "phantom",
+        "handle": "Phantom",
+        "rating": 2.01,
+        "kills": 20,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_nexus",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 13,
+          "score_b": 1,
+          "winner_id": "team_nexus",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "apex",
+              "kills": 14,
+              "deaths": 4,
+              "rating": 1.52
+            },
+            {
+              "player_id": "echo",
+              "kills": 12,
+              "deaths": 11,
+              "rating": 1.08
+            },
+            {
+              "player_id": "ghost",
+              "kills": 5,
+              "deaths": 3,
+              "rating": 0.68
+            },
+            {
+              "player_id": "phantom",
+              "kills": 20,
+              "deaths": 7,
+              "rating": 2.01
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p0",
+              "kills": 5,
+              "deaths": 14,
+              "rating": 0.44
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p1",
+              "kills": 15,
+              "deaths": 11,
+              "rating": 1.24
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p2",
+              "kills": 2,
+              "deaths": 10,
+              "rating": 0.31
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p3",
+              "kills": 2,
+              "deaths": 12,
+              "rating": 0.2
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p4",
+              "kills": 5,
+              "deaths": 13,
+              "rating": 0.48
+            },
+            {
+              "player_id": "vortex",
+              "kills": 9,
+              "deaths": 4,
+              "rating": 0.94
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

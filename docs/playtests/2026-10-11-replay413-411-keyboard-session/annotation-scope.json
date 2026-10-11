@@ -1,0 +1,69 @@
+{
+  "before_sha256": "e9268beffcc44bca6a9d567b94fe48520013457e13b3555e6b23be3cb0a4a63d",
+  "after_sha256": "8c61f9bf7a54b12d9390ea3cc85e7befc0fe0e4a27ad146c9581a5d520691045",
+  "changes": [
+    {
+      "step": "1",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "2",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "3",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "4",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "5",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "6",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "7",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "8",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    },
+    {
+      "step": "9",
+      "fields": [
+        "analytics_status",
+        "analytics_evidence"
+      ]
+    }
+  ]
+}

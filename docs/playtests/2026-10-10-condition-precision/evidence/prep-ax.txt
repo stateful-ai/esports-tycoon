@@ -1,0 +1,160 @@
+Browser tab: 1, Title: "esports-sim", URL: "http://127.0.0.1:8477/".
+1 AXWebArea esports-sim, URL: 127.0.0.1:8477/
+	2 container app-wrapper
+		3 container topbar
+			4 container
+				5 text ESPORTS SIM
+			6 text Season 1 · Week 8 · Regular — Team Nexus
+			7 text 441,090 cr
+			8 button Save, Help: Save your campaign, ID: save-btn
+			9 pop up button (collapsed, settable) Description: Choose how often the campaign saves automatically. When off, save it yourself., Value: Every week, ID: autosave-sel, Secondary Actions: Expand
+				10 menu
+					11 Autosave off
+					12 (selected) Every week
+					13 Every 2 weeks
+					14 Every 3 weeks
+					15 Every 5 weeks
+					16 Every 8 weeks
+			17 button Campaigns, Help: Return to your campaign list. This career will be waiting there., ID: worlds-btn
+			18 button Advance Week ▸, ID: advance-btn
+			19 button Sim ahead ▸▸, Help: Sim up to 4 weeks under your delegation settings — stops the moment something needs you, ID: simahead-btn
+			20 checkbox 🛠️, Help: Roster editor: open correction controls on player and team profiles, Value: 0, ID: admin-toggle
+			21 checkbox 🔇, Help: Sound: off, Value: 0, ID: audio-toggle
+			22 button Description: Open manager handbook, Help: Open the manager handbook and first-week guide, ID: help-open
+		23 container tabs
+			24 container Weekly
+				25 text WEEKLY
+				26 button DASHBOARD 1
+					27 text DASHBOARD
+					28 text 1
+				29 button INBOX 15
+					30 text INBOX
+					31 text 15
+				32 button MATCH 2
+					33 text MATCH
+					34 text 2
+			35 container Org
+				36 text ORG
+				37 button CLUB
+				38 button FACILITIES
+				39 button SEASON
+				40 button MARKET
+				41 button STATS
+				42 button COMPANY
+		43 container view
+			44 text MATCH S1 · W8 · Regular
+			45 button STRATEGY
+			46 button GAME PLAN
+			47 button PREP
+			48 button Guide
+			49 heading MATCH PREPARATION, Value: 2
+				50 text MATCH PREPARATION
+			51 text Current squad condition: Apex 76.0 · Echo 55.0 · Hollowlock 55.9 · Slyblade 74.9 · Ghost 59.0 · Vortex 100.0.
+			52 text Next: Sahara Compass vs Team Nexus · week 8
+			53 container
+				54 text Sparring partner
+				55 pop up button (collapsed, settable) Sparring partner, Value: Adriatic Sirens, Secondary Actions: Expand
+					56 menu
+						57 (selected) Adriatic Sirens
+						58 Alpine Echo
+						59 Anatolia Forge
+						60 Apex Syndicate
+						61 Azure Vanta
+						62 Baltic Meridian
+						63 Bayou Kings
+						64 Berlin Wolves
+						65 Busan Tempest
+						66 Cascadia Youth
+						67 Chao Phraya Owls
+						68 Coral Sea Drakes
+						69 Crimson Order
+						70 Gallic Storm
+						71 Ghostline
+						72 Harbour City Nine
+						73 Highlands Nine
+						74 Hokkaido Drift
+						75 Iron Pact
+						76 Kathmandu Apex
+						77 Kraken Unit
+						78 Lisbon Tide
+						79 Mekong Vipers
+						80 Meridian Cross
+						81 Midnight Polders
+						82 Nordic Frost
+						83 Nova Rift
+						84 Outback Sentinels
+						85 Patagonia Sur
+						86 Phantom Core
+						87 Prairie Signal
+						88 Rust Belt Gaming
+						89 Saracen Guard
+						90 Seoul Dynasty Prime
+						91 Solar Flare
+						92 Taipei Circuit
+						93 Tokyo Drift Six
+						94 Team Vanguard
+						95 Volga Reign
+						96 Yucatan Ceibas
+			97 container
+				98 text Preparation map
+				99 pop up button (collapsed, settable) Preparation map, Value: Ascent, Secondary Actions: Expand
+					100 menu
+						101 (selected) Ascent
+			102 container
+				103 text Session objective
+				104 pop up button (collapsed, settable) Session objective, Value: Anti Exec, Secondary Actions: Expand
+					105 menu
+						106 (selected) Anti Exec
+						107 Retakes
+						108 Lineup Test
+						109 Mental Reset
+			110 container
+				111 text Session intensity
+				112 pop up button (collapsed, settable) Session intensity, Value: Light, Secondary Actions: Expand
+					113 menu
+						114 (selected) Light
+						115 Normal
+						116 Intense
+			117 text Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0).
+			118 text This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+			119 button Book session
+			120 text COACH PROPOSAL
+			121 text Retakes on Ascent
+			122 container
+				123 text Partner:  Crimson Order . Intensity:  Normal .
+			124 text Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0).
+			125 text This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+			126 button Accept coach plan
+			127 container
+				128 text Prep artifact:  Methodology +0.7  +0.0 EDGE Knowledge +0.72; stamina −1.5.
+			129 text Squad morale entered at 91.2/100; the group reset with a lighter load.
+			130 container
+				131 text Dev note: Echo  — Echo pushed the starters on lotus; a focused development block could make that rotation real.
+			132 heading TOURNAMENT SIX, Value: 2
+				133 text TOURNAMENT SIX
+			134 text Five starters plus one between-map substitute.
+			135 container
+				136 checkbox (settable, integer) Description: Apex 26 · Starter, Value: 1
+				137 text Apex 26 · Starter
+			138 container
+				139 checkbox (settable, integer) Description: Echo 23 · Starter, Value: 1
+				140 text Echo 23 · Starter
+			141 container
+				142 checkbox (settable, integer) Description: Hollowlock 26 · Bench, Value: 1
+				143 text Hollowlock 26 · Bench
+			144 container
+				145 checkbox (settable, integer) Description: Slyblade 28 · Starter, Value: 1
+				146 text Slyblade 28 · Starter
+			147 container
+				148 checkbox (settable, integer) Description: Ghost 19 · Starter, Value: 1
+				149 text Ghost 19 · Starter
+			150 container
+				151 checkbox (settable, integer) Description: Vortex 22 · Starter, Value: 1
+				152 text Vortex 22 · Starter
+			153 button Submit roster
+			154 heading SERIES PLAN, Value: 2
+				155 text SERIES PLAN
+			156 text Set a between-map response that applies after map one when its condition is met.
+			157 text No upcoming best-of-three is on the calendar.
+
+The focused UI element is 1 AXWebArea esports-sim, URL: 127.0.0.1:8477/

@@ -794,7 +794,7 @@ def _develop_employed_member(member: StaffMember) -> None:
 
 
 def weekly_cost(gs: GameState) -> int:
-    return sum(m.salary for m in gs.staff.values())
+    return sum(m.salary for m in gs.staff_by.get(gs.acting_team_id, {}).values())
 
 
 def coach_multiplier(gs: GameState, focus: str | None = None) -> float:
@@ -830,7 +830,7 @@ def coach_prep_bonus(gs: GameState, team_id: str, tactics=None) -> float:
 
 def scout_multiplier(gs: GameState) -> float:
     """Scouting speed multiplier: up to ~1.9 with an elite analyst."""
-    analyst = gs.staff.get("analyst")
+    analyst = gs.staff_by.get(gs.acting_team_id, {}).get("analyst")
     if analyst is None:
         return 1.0
     score = staff_effects.role_effect_score(analyst)

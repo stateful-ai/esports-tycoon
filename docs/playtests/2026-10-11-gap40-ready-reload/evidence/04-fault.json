@@ -1,0 +1,7 @@
+[
+  {
+    "target": "/api/state",
+    "fulfilled_status": 503,
+    "note": "Intentional browser-route fault; healthy server"
+  }
+]

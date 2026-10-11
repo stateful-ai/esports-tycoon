@@ -1,0 +1,208 @@
+### Page
+- Page URL: http://127.0.0.1:8510/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]: ESPORTSSIM
+      - generic [ref=f2e26]: Season 1 · Week 17 · Playoffs — Team Nexus
+      - generic [ref=f2e27]: 989,505 cr
+      - button "Save" [ref=f2e1697] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f2e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f2e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f2e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f2e7] [cursor=pointer]
+      - button "🛠️" [ref=f2e8] [cursor=pointer]
+      - button "🔇" [ref=f2e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f2e10] [cursor=pointer]: Guide
+    - navigation [ref=f2e11]:
+      - generic "Weekly" [ref=f2e12]:
+        - button "Dashboard" [ref=f2e1171] [cursor=pointer]
+        - button "Inbox 19" [ref=f2e32] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f2e33]: "19"
+        - button "Match 2" [ref=f2e34] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f2e35]: "2"
+      - generic "Org" [ref=f2e17]:
+        - button "Club" [ref=f2e19] [cursor=pointer]
+        - button "Facilities" [ref=f2e20] [cursor=pointer]
+        - button "Season" [ref=f2e21] [cursor=pointer]
+        - button "Market" [ref=f2e22] [cursor=pointer]
+        - button "Stats" [ref=f2e23] [cursor=pointer]
+        - button "Company" [ref=f2e24] [cursor=pointer]
+    - main [ref=f2e25]:
+      - generic [ref=f2e1698]:
+        - generic [ref=f2e1699]:
+          - generic [ref=f2e1700]: Club
+          - generic [ref=f2e1701]: S1 · W17
+          - generic [ref=f2e1702]:
+            - button "Squad" [ref=f2e1703] [cursor=pointer]
+            - button "Development" [ref=f2e1704] [cursor=pointer]
+            - button "Locker Room" [ref=f2e1705] [cursor=pointer]
+            - button "Operations" [ref=f2e1706] [cursor=pointer]
+          - button "Guide" [ref=f2e1707] [cursor=pointer]
+        - generic [ref=f2e1708]:
+          - heading "Tournament lock" [level=3] [ref=f2e1709]
+          - paragraph [ref=f2e1710]: Playoff rosters are frozen until the offseason.
+        - generic [ref=f2e1711]:
+          - generic [ref=f2e1712]:
+            - heading "Academy level 1" [level=2] [ref=f2e1713]:
+              - text: Academy
+              - generic [ref=f2e1714]: level 1
+            - paragraph [ref=f2e1715]: "Affiliate: Kraken Unit. Promotions and send-downs obey the market window."
+            - button "Upgrade · 300,000 cr" [ref=f2e1716] [cursor=pointer]
+            - generic [ref=f2e1717]:
+              - generic [ref=f2e1718]:
+                - generic [ref=f2e1719]: Nightsurge
+                - generic [ref=f2e1720]: 17 · Controller · CA 49.9 / PA 64.5–99
+                - button "Promote" [ref=f2e1721] [cursor=pointer]
+              - generic [ref=f2e1722]:
+                - generic [ref=f2e1723]: Grimpulse
+                - generic [ref=f2e1724]: 20 · Duelist · CA 48 / PA 62.8–90.9
+                - button "Promote" [ref=f2e1725] [cursor=pointer]
+              - generic [ref=f2e1726]:
+                - generic [ref=f2e1727]: Pyroecho
+                - generic [ref=f2e1728]: 17 · Initiator · CA 43.1 / PA 53.1–84.5
+                - button "Promote" [ref=f2e1729] [cursor=pointer]
+              - generic [ref=f2e1730]:
+                - generic [ref=f2e1731]: Nightecho
+                - generic [ref=f2e1732]: 19 · Sentinel · CA 48.5 / PA 56.5–81.4
+                - button "Promote" [ref=f2e1733] [cursor=pointer]
+              - generic [ref=f2e1734]:
+                - generic [ref=f2e1735]: Voltflare
+                - generic [ref=f2e1736]: 22 · Duelist · CA 49.1 / PA 56–75.2
+                - button "Promote" [ref=f2e1737] [cursor=pointer]
+            - paragraph [ref=f2e1738]: First team pathways
+            - generic [ref=f2e1739]:
+              - generic [ref=f2e1740]: Echo
+              - generic [ref=f2e1741]: 23 · Starter
+              - button "Send down" [ref=f2e1742] [cursor=pointer]
+            - generic [ref=f2e1743]:
+              - generic [ref=f2e1744]: Ghost
+              - generic [ref=f2e1745]: 19 · Starter
+              - button "Send down" [ref=f2e1746] [cursor=pointer]
+            - generic [ref=f2e1747]:
+              - generic [ref=f2e1748]: Vortex
+              - generic [ref=f2e1749]: 22 · Starter
+              - button "Send down" [ref=f2e1750] [cursor=pointer]
+          - generic [ref=f2e1751]:
+            - heading "Staff responsibilities" [level=2] [ref=f2e1752]
+            - paragraph [ref=f2e1753]: Delegate repeatable work; staff return only exceptions and the prospect alerts you request.
+            - generic [ref=f2e1754]:
+              - checkbox [ref=f2e1755]
+              - generic [ref=f2e1756]: Delegate weekly training to coach
+              - generic [ref=f2e1757]: Roster-aware focus; rests the squad when needed
+            - generic [ref=f2e1758]:
+              - checkbox [ref=f2e1759]
+              - generic [ref=f2e1760]: Renew core starters automatically
+              - generic [ref=f2e1761]: salary band
+              - spinbutton [ref=f2e1762]: "800"
+              - spinbutton [ref=f2e1763]: "8000"
+              - generic [ref=f2e1764]: weeks left ≤
+              - spinbutton [ref=f2e1765]: "8"
+            - generic [ref=f2e1766]:
+              - checkbox [ref=f2e1767]
+              - generic [ref=f2e1768]: Scout all
+              - combobox [ref=f2e1769]:
+                - option "Americas"
+                - option "Emea"
+                - option "Pacific" [selected]
+                - option "China"
+              - combobox [ref=f2e1770]:
+                - option "Duelist"
+                - option "Controller"
+                - option "Initiator" [selected]
+                - option "Sentinel"
+                - option "Flex"
+              - generic [ref=f2e1771]: age ≤
+              - spinbutton [ref=f2e1772]: "21"
+              - generic [ref=f2e1773]: alert
+              - combobox [ref=f2e1774]:
+                - option "All Matches"
+                - option "Shortlist"
+                - option "Tier1 Ready" [selected]
+            - button "Save staff policies" [ref=f2e1775] [cursor=pointer]
+            - paragraph [ref=f2e1776]: 0 players match the current scouting rule.
+            - generic [ref=f2e1777]: "Last run: 0 renewals · 0 alerts · 0 exceptions."
+          - generic [ref=f2e1778]:
+            - heading "Media trust" [level=2] [ref=f2e1779]
+            - paragraph [ref=f2e1780]: Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.
+            - generic [ref=f2e1781]:
+              - generic [ref=f2e1782]: Apex 54
+              - generic [ref=f2e1783]: Echo 54
+              - generic [ref=f2e1784]: Hollowlock 62
+              - generic [ref=f2e1785]: Slyblade 54
+              - generic [ref=f2e1786]: Ghost 54
+              - generic [ref=f2e1787]: Vortex 54
+            - generic [ref=f2e1788]:
+              - text: Defend Player · The manager stands between the player and the criticism.
+              - generic [ref=f2e1789]: "Immediate MEDIA effect: measured changes unavailable for this older record."
+            - generic [ref=f2e1790]:
+              - text: Derby Expectations · The manager backs the group without dismissing the rival.
+              - generic [ref=f2e1791]: "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight."
+              - generic [ref=f2e1792]: "Immediate MEDIA effect: Community sentiment +1 (54.8 -> 55.8); Player trust: Apex +3 (50 -> 53), Echo +3 (50 -> 53), Hollowlock +3 (58 -> 61), Slyblade +3 (50 -> 53), Ghost +3 (50 -> 53), Vortex +3 (50 -> 53); Sponsor relations: Polar Compute +0 (52 -> 52), Streamforge +0 (57 -> 57)."
+              - generic [ref=f2e1793]: "Result settlement MEDIA effect: Community sentiment -1 (55.8 -> 54.8); Player trust: Apex +1 (53 -> 54), Echo +1 (53 -> 54), Hollowlock +1 (61 -> 62), Slyblade +1 (53 -> 54), Ghost +1 (53 -> 54), Vortex +1 (53 -> 54); Sponsor relations: Polar Compute +0 (52 -> 52), Streamforge +0 (57 -> 57)."
+              - generic [ref=f2e1794]: "Cumulative MEDIA contribution: Community sentiment +0; Player trust: Apex +4, Echo +4, Hollowlock +4, Slyblade +4, Ghost +4, Vortex +4; Sponsor relations: Polar Compute +0, Streamforge +0. Includes only this choice and its result settlement."
+          - generic [ref=f2e1795]:
+            - heading "Culture & leadership" [level=2] [ref=f2e1796]
+            - generic [ref=f2e1797]:
+              - generic [ref=f2e1798]: overall 58.3
+              - generic [ref=f2e1799]: cohesion 55.8
+              - generic [ref=f2e1800]: leadership 70.8
+              - generic [ref=f2e1801]: stability 44.7
+            - generic [ref=f2e1802]:
+              - combobox [ref=f2e1803]:
+                - option "Apex · 74.1" [selected]
+                - option "Echo · 62.9"
+                - option "Hollowlock · 58.6"
+                - option "Slyblade · 63.6"
+                - option "Ghost · 63.2"
+                - option "Vortex · 60.1"
+              - combobox [ref=f2e1804]:
+                - option "Apex · 74.1"
+                - option "Echo · 62.9" [selected]
+                - option "Hollowlock · 58.6"
+                - option "Slyblade · 63.6"
+                - option "Ghost · 63.2"
+                - option "Vortex · 60.1"
+              - combobox [ref=f2e1805]:
+                - option "Apex · 74.1"
+                - option "Echo · 62.9"
+                - option "Hollowlock · 58.6"
+                - option "Slyblade · 63.6"
+                - option "Ghost · 63.2" [selected]
+                - option "Vortex · 60.1"
+              - combobox [ref=f2e1806]:
+                - option "Balanced" [selected]
+                - option "Accountability"
+                - option "Player Led"
+                - option "Development"
+            - button "Set leadership group" [ref=f2e1807] [cursor=pointer]
+            - paragraph [ref=f2e1808]: Culture session
+            - generic [ref=f2e1809]:
+              - button "Accountability" [ref=f2e1810] [cursor=pointer]
+              - button "Player Led" [ref=f2e1811] [cursor=pointer]
+              - button "Reset" [ref=f2e1812] [cursor=pointer]
+              - button "Welcome" [ref=f2e1813] [cursor=pointer]
+            - paragraph [ref=f2e1814]: Culture session
+            - generic [ref=f2e1815]:
+              - heading "Team identity uncommitted" [level=3] [ref=f2e1816]:
+                - text: Team identity
+                - generic [ref=f2e1817]: uncommitted
+              - paragraph [ref=f2e1818]: A committed identity is a promise the locker room holds you to. Choices that betray it cost trust, chemistry and morale; choices that honor it deepen conviction.
+              - paragraph [ref=f2e1819]: Commit to Balanced to make it a stated identity. "Balanced" stays uncommitted.
+              - button "Commit to this identity" [disabled] [ref=f2e1820]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Club
+    - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+    - generic: Name a default five, check condition and confidence, then set team and player training plans.
+```

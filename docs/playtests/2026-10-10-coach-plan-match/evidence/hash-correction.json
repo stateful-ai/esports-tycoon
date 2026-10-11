@@ -1,0 +1,16 @@
+{
+  "corrected_at_utc": "2026-10-10T22:23:22.820380+00:00",
+  "original_audit_sha256": "4263875ed3064e83afa4a0089e2ed739eec3d97cdd0ac73d0df36615f33b3448",
+  "original_audit_retained": true,
+  "field": "end_save_sha256",
+  "original_mislabeled_value": "469249d0bacbcf4fcccb88ea889a7228ffc422aed4aafc87cfed8d5ddfed0b29",
+  "original_value_is_actually_sha256_of": "saves\\usage\\usage.0.jsonl",
+  "corrected_campaign_path": "saves\\campaign_f2977bf6e97d789a.json",
+  "corrected_campaign_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "whole_action_prefix_60_preserved": true,
+  "final_decisions": 63,
+  "snapshot_prefix_12_preserved": true,
+  "final_snapshots": 13,
+  "original_source_fixture_unchanged": true,
+  "reason": "Evidence-copy loop reused p, so final sha(p) hashed JSONL rather than campaign; actual earlier save assertions used parsed campaign data correctly. Original raw receipt and observations retained."
+}

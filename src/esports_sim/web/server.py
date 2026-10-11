@@ -141,6 +141,13 @@ _CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 _SESSIONS_PATH = SAVE_DIR / "sessions.json"
 
 
+def _promise_view(gs: GameState, promise) -> dict:
+    view = promise.model_dump()
+    view["play_time_assessment"] = promises.play_time_assessment(gs, promise)
+    view["time_remaining_percent"] = min(100, max(0, round(promise.weeks_left / (promise.initial_duration or 1) * 100)))
+    return view
+
+
 def _save_path_for(code: str) -> Path:
     digest = hashlib.blake2b(code.encode(), digest_size=8).hexdigest()
     return SAVE_DIR / f"campaign_{digest}.json"
@@ -797,14 +804,14 @@ def _badge_views(p: Player) -> list[dict]:
         bid = pb.id
         ability_parts = [
             f"{float(delta):+g} {humanize_identifier(attr)}"
-            for attr, delta in sorted((b.get("ca") or {}).items())
+            for attr, delta in sorted(pb.applied.items())
         ]
         impact = (
-            "While held: " + ", ".join(ability_parts) + "."
-            if ability_parts else "This badge has no temporary attribute effect."
+            "Applied when earned (while held): " + ", ".join(ability_parts) + "."
+            if ability_parts else "No temporary attribute change recorded when earned."
         )
-        if float(b.get("pa", 0.0)) > 0:
-            impact += f" Earning it permanently raised potential by {float(b['pa']):g}."
+        if pb.pa_applied > 0:
+            impact += f" Earning it permanently raised potential by {pb.pa_applied:g}."
         decay_seasons = int(b.get("decay_seasons", 0))
         decay = (
             f"It can fade after {decay_seasons} season"
@@ -873,7 +880,7 @@ def _player_view(p: Player, gs: GameState, fog: float = 0.0) -> dict:
     mentor_id = gs.mentorships.get(p.id) if hasattr(gs, "mentorships") else None
     mentor_progress = gs.mentorship_progress.get(p.id) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
     mentor = gs.players.get(mentor_id) if mentor_id else None
-    player_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
+    player_promises = [_promise_view(gs, prom) for prom in gs.promises if prom.player_id == p.id] if hasattr(gs, "promises") else []
 
     attrs = {
         k: _fogged(gs, p.id, k, v, fog) for k, v in sorted(p.attributes.items())
@@ -1341,6 +1348,14 @@ def _last_match_review(
     tier = staff_mod.analytics_tier(gs)
     opp = gs.teams.get(review.opp_id)
     potm = gs.players.get(review.potm_id) if review.potm_id else None
+    # Fixtures belong to the current season. A retained review from an older
+    # season must never borrow notes from a later fixture with the same id.
+    fixture = next(
+        (f for f in gs.fixtures if f.id == review.fixture_id
+         and gs.season == review.season and f.week == review.week
+         and {f.team_a, f.team_b} == {review.team_id, review.opp_id}),
+        None,
+    )
 
     out: dict = {
         "fixture_id": review.fixture_id,
@@ -1365,6 +1380,7 @@ def _last_match_review(
         "tier_label": staff_mod.ANALYTICS_TIER_LABEL.get(tier, ""),
         "momentum_beat": None,
         "your_calls": _review_your_calls(gs, review, tier),
+        "series_notes": list(fixture.series_notes) if fixture is not None else [],
     }
     logs = (event_logs or {}).get(review.fixture_id, [])
     if logs:
@@ -2148,6 +2164,32 @@ def _needs_you_flags(gs: GameState, tid: str) -> dict:
     }
 
 
+def _advance_transition(gs: GameState) -> dict:
+    """Describe the next tick's branch without mutating the campaign."""
+    if gs.phase == "offseason":
+        return {
+            "label": f"Start Season {gs.season + 1}",
+            "loading_title": f"Season {gs.season + 1} transition",
+            "loading_detail": (
+                f"Completing the offseason and preparing Season {gs.season + 1}, Week 1. "
+                "Ordinary weekly training, sponsor income and payroll do not run."
+            ),
+            "notice": (
+                f"Next advance completes the offseason and starts Season {gs.season + 1}, "
+                "Week 1. Season-end changes resolve; ordinary weekly training, "
+                "sponsor income and payroll do not run on this transition."
+            ),
+        }
+    return {
+        "label": "Advance Week", "notice": "",
+        "loading_title": "Advancing week",
+        "loading_detail": (
+            "Resolving fixtures across the league, then settling training, "
+            "scouting, and finances."
+        ),
+    }
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -2217,6 +2259,7 @@ def state() -> dict:
             "week": gs.week,
             "phase": gs.phase,
             "window": market.market_window_status(gs),
+            "advance_transition": _advance_transition(gs),
             "roster_readiness": {
                 "ready": roster_ready,
                 "reason": roster_reason,
@@ -2264,7 +2307,9 @@ def state() -> dict:
             "scout": {
                 "target": scout_target,
                 "target_name": scout_label,
-                "progress": gs.scout_progress.get(scout_target or "", 0.0),
+                "progress": gs.scout_progress_by.get(gs.acting_team_id, {}).get(
+                    scout_target or "", 0.0
+                ),
                 "cap": scout_cap,
             },
             "standings_top": [
@@ -2678,6 +2723,10 @@ def matchday() -> dict:
         }
 
 
+def _academy_move_window(gs: GameState, team_id: str) -> tuple[bool, str]:
+    return market.market_move_allowed(gs, team_id, emergency_ok=False)
+
+
 def _club_view(gs: GameState) -> dict:
     tid = gs.acting_team_id
     team = gs.teams[tid]
@@ -2717,7 +2766,9 @@ def _club_view(gs: GameState) -> dict:
         series_management.starting_five(gs, tid, series_fixture)
         if series_fixture else []
     )
-    academy_view = academy.academy_view(gs, tid)
+    academy_view = academy.academy_view_for_club(
+        gs, tid, window_check=_academy_move_window
+    )
     return {
         "market_window": market.market_window_status(gs),
         "academy": academy_view,
@@ -2780,9 +2831,7 @@ def academy_move(body: AcademyMoveBody) -> dict:
             gs.acting_team_id,
             body.player_id,
             body.direction,
-            window_check=lambda state, team_id: market.market_move_allowed(
-                state, team_id, emergency_ok=False
-            ),
+            window_check=_academy_move_window,
         )
         if not ok:
             raise HTTPException(422, msg)
@@ -3010,7 +3059,8 @@ def promise_action(body: PromiseBody) -> dict:
                 target_value=60, duration=6, source="bench_demand",
             )
             handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
-            msg = f"You promised {handle} regular minutes."
+            assessment = promises.play_time_assessment(gs, pr)
+            msg = f"You promised {handle} playing time. {assessment['target_label']} {assessment['deadline_label']}"
         elif body.kind == "captaincy":
             pr = promises.offer_from_leadership(gs, tid, body.player_id)
             handle = gs.players[body.player_id].handle if body.player_id in gs.players else body.player_id
@@ -3355,7 +3405,7 @@ def roster(team_id: str) -> dict:
             "roster_max": market.roster_cap(gs, team_id),
             "upcoming": upcoming,
             "hierarchy": locker_room.calculate_hierarchy(gs, team_id),
-            "promises": [p.model_dump() for p in gs.promises if p.team_id == team_id] if hasattr(gs, "promises") else [],
+            "promises": [_promise_view(gs, p) for p in gs.promises if p.team_id == team_id] if hasattr(gs, "promises") else [],
             "relationships": relationships.duos_and_feuds(gs, team_id),
             "dev_focus_options": DEV_FOCUS_OPTIONS,
             "intensity_options": INTENSITY_OPTIONS,
@@ -3518,7 +3568,8 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
     This is a pure read of stored development snapshots. Attribute deltas are
     only emitted when both endpoints contain that attribute, which lets an old
     save begin tracking cleanly without pretending its current values were the
-    season-opening baseline.
+    season-opening baseline. A first observation establishes a baseline, not a
+    measured zero change; latest-week attribution remains independently useful.
     """
     from esports_sim.manager.development_path import report_view
 
@@ -3531,10 +3582,17 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
         if not snaps:
             continue
         first, last = snaps[0], snaps[-1]
-        delta = round(last.ca - first.ca, 1)
-        status = "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        comparison_available = len(snaps) >= 2 and first.week < last.week
+        delta = round(last.ca - first.ca, 1) if comparison_available else None
+        status = (
+            "first_observation" if not comparison_available else
+            "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        )
         changes = []
-        for aid in sorted(set(first.attributes) & set(last.attributes)):
+        comparable_attributes = (
+            set(first.attributes) & set(last.attributes) if comparison_available else set()
+        )
+        for aid in sorted(comparable_attributes):
             change = round(last.attributes[aid] - first.attributes[aid], 1)
             if abs(change) < 0.1:
                 continue
@@ -3554,6 +3612,7 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "start_week": first.week,
             "end_week": last.week,
             "tracked_points": len(snaps),
+            "comparison_available": comparison_available,
             "overall_start": first.ca,
             "overall_current": last.ca,
             "overall_delta": delta,
@@ -3562,13 +3621,18 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "changes": changes,
             "latest_week": report_view(p),
         })
-    rows.sort(key=lambda row: (-row["overall_delta"], row["handle"].lower(), row["id"]))
-    deltas = [row["overall_delta"] for row in rows]
+    rows.sort(key=lambda row: (
+        not row["comparison_available"], -(row["overall_delta"] or 0),
+        row["handle"].lower(), row["id"],
+    ))
+    deltas = [row["overall_delta"] for row in rows if row["comparison_available"]]
     return {
         "season": gs.season,
         "start_week": min((row["start_week"] for row in rows), default=None),
         "end_week": max((row["end_week"] for row in rows), default=None),
-        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else 0.0,
+        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else None,
+        "compared_players": len(deltas),
+        "first_observations": sum(not row["comparison_available"] for row in rows),
         "grown": sum(row["status"] == "grown" for row in rows),
         "regressed": sum(row["status"] == "regressed" for row in rows),
         "steady": sum(row["status"] == "steady" for row in rows),
@@ -3748,7 +3812,7 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
             "label": career.GOAL_LABELS.get(seat.contract.goal, humanize_identifier(seat.contract.goal)),
             "state": st["state"], "detail": st["detail"],
         })
-    for slot, deal in sorted(gs.sponsor_slots.items()):
+    for slot, deal in sorted(gs.sponsor_slots_by.get(tid, {}).items()):
         if deal is None:
             continue
         for ob in deal.objectives:
@@ -4887,7 +4951,8 @@ def finances() -> dict:
                 "rep_gate": cfg["rep_gate"],
                 "unlocked": facility_ok and team.reputation >= cfg["rep_gate"],
                 "locked_reason": (
-                    f"requires Marketing Office level {cfg['unlock']}"
+                    f"requires {facilities_mod.facility_label('marketing_office')} "
+                    f"level {cfg['unlock']}"
                     if not facility_ok
                     else f"requires reputation {cfg['rep_gate']:.0f}"
                     if team.reputation < cfg["rep_gate"]
@@ -4909,8 +4974,9 @@ def finances() -> dict:
             }
 
         facilities = {}
+        owned_facilities = gs.facilities_by.get(gs.acting_team_id, {})
         for name in economy.FACILITY_NAMES:
-            level = gs.facilities.get(name, 0)
+            level = owned_facilities.get(name, 0)
             facilities[name] = {
                 "level": level,
                 "max_level": economy.FACILITY_MAX_LEVEL,
@@ -7374,7 +7440,8 @@ def advance() -> dict:
         if pending is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Advance Week again.",
             )
         pending_media = media_events.pending_for(gs, me)
         if pending_media is not None:
@@ -7498,7 +7565,8 @@ def sim_ahead_action(body: SimAheadBody | None = None) -> dict:
         if flavor_events.pending_for(gs, me) is not None:
             raise HTTPException(
                 409,
-                "resolve the pending flavor event in Action required before advancing",
+                "Open Dashboard → Needs you → Team moment and resolve the pending "
+                "flavor event by choosing a response, then try Sim Ahead again.",
             )
         if media_events.pending_for(gs, me) is not None:
             raise HTTPException(
@@ -8071,6 +8139,65 @@ def _profile_splits(gs: GameState, pid: str) -> dict | None:
     }
 
 
+def _profile_development_comparison(snaps: list) -> dict:
+    """Describe stored endpoints without treating observation count as time.
+
+    Histories can span seasons, skip weeks, or contain same-week snapshots.
+    Cross-season endpoints are comparable, but do not imply a known elapsed
+    week count. A single dated point cannot establish measured flat growth.
+    """
+    ordered = sorted(snaps, key=lambda s: (s.season, s.week))
+    first = ordered[0] if ordered else None
+    last = ordered[-1] if ordered else None
+    available = bool(first and (first.season, first.week) < (last.season, last.week))
+    delta = round(last.ca - first.ca, 1) if available else None
+    status = (
+        "no_observations" if first is None else
+        "first_observation" if not available else
+        "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+    )
+    return {
+        "comparison_available": available,
+        "status": status,
+        "tracked_points": len(ordered),
+        "start": {"season": first.season, "week": first.week, "ca": first.ca} if first else None,
+        "end": {"season": last.season, "week": last.week, "ca": last.ca} if last else None,
+        "elapsed_weeks": last.week - first.week if available and first.season == last.season else None,
+        "overall_delta": delta,
+    }
+
+
+def _profile_season_growth(gs: GameState, pid: str) -> dict:
+    """Current-season skill endpoints, retaining old saves' missing attributes.
+
+    Attribute tracking may start later than CA tracking. Use the first and
+    last attributed snapshots and compare only their shared attribute keys.
+    No values are backfilled from the player's present attributes.
+    """
+    snaps = sorted(
+        (s for s in gs.dev_history.get(pid, []) if s.season == gs.season and s.attributes),
+        key=lambda s: s.week,
+    )
+    comparison = _profile_development_comparison(snaps)
+    changes = []
+    if comparison["comparison_available"]:
+        first, last = snaps[0], snaps[-1]
+        changes = [
+            {"key": aid, "delta": round(last.attributes[aid] - first.attributes[aid], 1),
+             "value": last.attributes[aid]}
+            for aid in sorted(set(first.attributes) & set(last.attributes))
+        ]
+        changes.sort(key=lambda item: (-abs(item["delta"]), item["key"]))
+    return {
+        "season": gs.season,
+        "comparison": comparison,
+        "series": [s.model_dump() for s in snaps],
+        "changes": changes,
+        "attribute_comparison_available": bool(changes),
+        "has_measurable_change": any(abs(item["delta"]) >= 0.1 for item in changes),
+    }
+
+
 def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     """Time-series for the profile trend charts. Performance series needs
     an analytics department (tier 2+); the development series (ability,
@@ -8084,7 +8211,14 @@ def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     dev = (
         [s.model_dump() for s in gs.dev_history.get(pid, [])] if own else None
     )
-    return {"performance": perf, "development": dev, "analytics_tier": tier}
+    from esports_sim.manager.development_path import report_view
+
+    return {
+        "performance": perf, "development": dev, "analytics_tier": tier,
+        "development_comparison": _profile_development_comparison(gs.dev_history.get(pid, [])) if own else None,
+        "season_growth": _profile_season_growth(gs, pid) if own else None,
+        "development_latest_week": report_view(gs.players[pid]) if own else None,
+    }
 
 
 def _profile_weekly(gs: GameState, pid: str) -> list[dict]:
@@ -8197,7 +8331,7 @@ def player_profile(pid: str) -> dict:
         mentor_id = gs.mentorships.get(pid) if hasattr(gs, "mentorships") else None
         mentor_progress = gs.mentorship_progress.get(pid) if (hasattr(gs, "mentorship_progress") and mentor_id) else None
         mentor = gs.players.get(mentor_id) if mentor_id else None
-        active_promises = [prom.model_dump() for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
+        active_promises = [_promise_view(gs, prom) for prom in gs.promises if prom.player_id == pid and prom.status == "active"] if hasattr(gs, "promises") else []
 
         st = gs.player_stats.get(pid)
         if st is not None:

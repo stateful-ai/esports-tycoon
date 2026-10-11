@@ -1,0 +1,173 @@
+{
+  "before_decisions": 107,
+  "after_decisions": 110,
+  "new_decisions": [
+    {
+      "index": 107,
+      "record": {
+        "season": 2,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "set_preparation",
+        "params": {
+          "created_season": "2",
+          "created_week": "2",
+          "fixture_id": "s2w2m3am",
+          "id": "f87c94062f1b5da1",
+          "intensity": "normal",
+          "map_id": "ascent",
+          "objective": "anti_exec",
+          "opponent_id": "team_nordic_frost",
+          "partner_id": "team_adriatic_sirens",
+          "team_id": "team_nexus"
+        },
+        "source": "web"
+      }
+    },
+    {
+      "index": 108,
+      "record": {
+        "season": 2,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "set_game_plan",
+        "params": {
+          "aggression": "",
+          "choice_encoding": "json-v1",
+          "eco_greed": "",
+          "fixture_id": "s2w2m3am",
+          "focus_target": "",
+          "map_control": "30.0",
+          "n_dials": "2",
+          "one_match_lineup": "False",
+          "opponent": "team_nordic_frost",
+          "pace": "70.0",
+          "site_focus": "",
+          "starter_ids": "[]",
+          "team_talk": "",
+          "util_discipline": ""
+        },
+        "source": "web"
+      }
+    },
+    {
+      "index": 109,
+      "record": {
+        "season": 2,
+        "week": 2,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "advance",
+        "params": {},
+        "source": "web"
+      }
+    }
+  ],
+  "fixture": {
+    "id": "s2w2m3am",
+    "week": 2,
+    "stage": "regular",
+    "bracket": "league",
+    "tier": 1,
+    "best_of": 1,
+    "team_a": "team_nordic_frost",
+    "team_b": "team_nexus",
+    "maps": [
+      "ascent"
+    ],
+    "veto": [],
+    "played": true,
+    "results": [
+      {
+        "map_id": "ascent",
+        "seed": 8778269409847741947,
+        "score_a": 3,
+        "score_b": 13,
+        "winner_id": "team_nexus",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 11,
+            "deaths": 9,
+            "rating": 0.95
+          },
+          {
+            "player_id": "echo",
+            "kills": 13,
+            "deaths": 11,
+            "rating": 1.21
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 15,
+            "deaths": 8,
+            "rating": 1.34
+          },
+          {
+            "player_id": "ghost",
+            "kills": 19,
+            "deaths": 7,
+            "rating": 1.63
+          },
+          {
+            "player_id": "team_lisbon_tide_p3",
+            "kills": 10,
+            "deaths": 13,
+            "rating": 0.84
+          },
+          {
+            "player_id": "team_nordic_frost_p0",
+            "kills": 6,
+            "deaths": 13,
+            "rating": 0.61
+          },
+          {
+            "player_id": "team_nordic_frost_p1",
+            "kills": 20,
+            "deaths": 15,
+            "rating": 1.39
+          },
+          {
+            "player_id": "team_nordic_frost_p2",
+            "kills": 8,
+            "deaths": 15,
+            "rating": 0.59
+          },
+          {
+            "player_id": "team_nordic_frost_p4",
+            "kills": 4,
+            "deaths": 15,
+            "rating": 0.29
+          },
+          {
+            "player_id": "vortex",
+            "kills": 13,
+            "deaths": 13,
+            "rating": 0.97
+          }
+        ]
+      }
+    ],
+    "winner_id": "team_nexus",
+    "series_notes": []
+  },
+  "news": [
+    "[S2 W2] 13-3 win over Nordic Frost. Ghost finished at 1.63."
+  ],
+  "usage_events": 36,
+  "usage_kind_counts": {
+    "attempt": 4,
+    "result": 4,
+    "session_end": 1,
+    "session_start": 2,
+    "view": 8,
+    "visible_time": 17
+  },
+  "source_manifest_unchanged": true,
+  "source_manifest_sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7"
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0271",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Replay feed retains native keyboard focus",
+    "problem": "Repeated playback rendering replaced feed buttons and lost focus.",
+    "solution": "Actual Tab reached Omen; observed same connected focused node for240 animation frames with unchanged feed and154 frames through two new prepended events; Enter andSpace each one GET200.",
+    "lesson": "Composed413 and411 retained player DOM focus across unchanged frames and actual prepend when the row remained in feed.",
+    "confidence": "high",
+    "source": "2026-10-11-replay413-411-keyboard-session composed308640af world26UHC seed2038 S2W7 toW8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "replay",
+      "keyboard",
+      "focus"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0272",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Replay acceptance distinguishes source composition",
+    "problem": "Native feed buttons and renderer fix belong to separate PRs.",
+    "solution": "Private normal Git merge created308640af tree7e3e2e86;425 source files and index frozen before andafter; played only composedhead.",
+    "lesson": "Runtime proof applies to actual composed tree; it does not certify either originalPR in isolation.",
+    "confidence": "high",
+    "source": "2026-10-11-replay413-411-keyboard-session composed308640af world26UHC seed2038 S2W7 toW8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "replay",
+      "keyboard",
+      "focus"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0273",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Resumed worlds lack old replay event logs",
+    "problem": "Copied save exposes past results but server memory contains no old event logs; no reachableReplay on pastfixture.",
+    "solution": "Kept blocked row; authorized visible one-week advance produced fresh fixture and memory replay; first wrong Refocus-player Tab and premature claim retained with correctionrow.",
+    "lesson": "Keep blocked or wrong-target attempts immutable and validate activeElement insidefeed before claiming focus evidence.",
+    "confidence": "high",
+    "source": "2026-10-11-replay413-411-keyboard-session composed308640af world26UHC seed2038 S2W7 toW8 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "replay",
+      "keyboard",
+      "focus"
+    ],
+    "kind": "pain-point"
+  }
+]

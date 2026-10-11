@@ -1,0 +1,482 @@
+[
+  {
+    "tag": "BUTTON",
+    "text": "Facilities",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Season",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Market1",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Stats",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Company",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Squad",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Development",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Locker Room",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Operations",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Guide",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Save lineup",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "★",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "★",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "📺",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "★",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "🎓",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "★",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "★",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "☆",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "☆",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SPAN",
+    "text": "🎓",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "☆",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Talk",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Renew",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Edit ▸",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Apex",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Vortex",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Ghost",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Slyblade",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Echo",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Hollowlock",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Nightsurge",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Frostdash",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Save",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Clear (auto top-5)",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Apex",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Vortex",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Ghost",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Slyblade",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Echo",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Hollowlock",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Nightsurge",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Frostdash",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Save",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BODY",
+    "text": "\n\n\n  \n    ESPORTSSIM\n    Season 2 · Week 6 · Regular  —  Team Nexus\n    \n  ",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Save",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "SELECT",
+    "text": "\n      Autosave off\n      Every week\n      Every 2 weeks\n      Every 3 week",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Campaigns",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Advance Week ▸",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Sim ahead ▸▸",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "🛠️",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "🔇",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Guide",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Dashboard1",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Inbox13",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Match2",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Club",
+    "pid": null,
+    "inProfile": false
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "parent404": "c11967d13fd7e646a4017c835a3eaa5cb4069073",
+  "actualmain_at_rootaudit": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "main_composition_preview_tree": "5052199b51b0060b7d5b39bc636bd8cd1dd18fdf",
+  "preview_main_source_retained": true,
+  "actualintegration_claimed": false,
+  "rows": 1054,
+  "sessions": 94,
+  "columns": 21,
+  "canonical_sha256": "4e450200cf6ea727a256934d59b19fd0cc55f9056841e2412b61ab795e211059",
+  "parent1044_rawprefix_bytes": 1616409,
+  "parent1044_rawprefix_preserved": true,
+  "original_fields_verified": 210,
+  "original_nine_session_rows_raw_sha256": "47a343930923ac832f940a8d9d3f26b8263350b20486e1731fda844e4178ef0e",
+  "original_nine_rawprefix_preserved": true,
+  "safe_artifact_paths": 29,
+  "all_staged_raw_artifact_hashes_exact": true,
+  "archived_source_Git_entries_verified": 425,
+  "parentexistingblobs_preserved_except_csv_and_narrowattrs": true,
+  "local_tests_run": false,
+  "new_browser_game_session": false,
+  "fresh_root_review_and_exacthead_remoteCI_success_required": true
+}

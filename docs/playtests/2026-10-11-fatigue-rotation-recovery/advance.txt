@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async (page) => {const response=page.waitForResponse(r=>r.url().endsWith("/api/actions/advance")&&r.request().method()==="POST",{timeout:60000});await page.getByRole("button",{name:"Advance Week ▸",exact:true}).click();await response;})(page);
+```

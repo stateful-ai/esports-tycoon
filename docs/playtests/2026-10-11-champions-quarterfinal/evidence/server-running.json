@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-11T05:55:44.697648+00:00",
+  "pid": 3868,
+  "port": 8519,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\masters-aftermath-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-champions-quarterfinal",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "esports_sim",
+    "--web",
+    "--port",
+    "8519",
+    "--no-browser"
+  ],
+  "package_path": "C:\\Users\\aidan\\.codex\\worktrees\\masters-aftermath-playtest\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "fixture_source": "C:\\Users\\aidan\\.codex\\worktrees\\masters-aftermath-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-masters-aftermath\\saves\\campaign_f2977bf6e97d789a.json",
+  "fixture_sha256": "631e5dbd5b2c0a4dd859a8145862a621f1680f9385c6d1c03b332194995b2f53",
+  "source_paths": 630,
+  "usage_baseline": []
+}

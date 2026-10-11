@@ -47,12 +47,16 @@ def weekly_news(gs: GameState, report, week_kills: dict[str, int]) -> None:
     _milestones(gs, week_kills)
 
 
-def _series_score(f) -> str:
+def _series_score(f, team_id: str | None = None) -> str:
+    """Fixture-order score by default; put a named participant first."""
     if f.best_of > 1:
         a, b = f.map_score
-        return f"{a}-{b}"
-    r = f.results[0]
-    return f"{r.score_a}-{r.score_b}"
+    else:
+        r = f.results[0]
+        a, b = r.score_a, r.score_b
+    if team_id == f.team_b:
+        a, b = b, a
+    return f"{a}-{b}"
 
 
 def _star_line(stats_list) -> tuple[str, float, int] | None:
@@ -428,7 +432,7 @@ def _user_recap(gs: GameState, f, stats_list) -> None:
     won = f.winner_id == gs.user_team_id
     opp_id = f.team_b if f.team_a == gs.user_team_id else f.team_a
     opp = gs.teams[opp_id].name
-    score = _series_score(f)
+    score = _series_score(f, gs.user_team_id)
     rng = _rng(gs.seed, gs.season, gs.week, f.id, "recap")
 
     star = _star_line(stats_list)

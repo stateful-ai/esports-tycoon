@@ -1,0 +1,61 @@
+[
+  {
+    "index": 60,
+    "season": 1,
+    "week": 13,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "1",
+      "created_week": "13",
+      "fixture_id": "s1w13m0am",
+      "id": "80fbcb4ca478f81e",
+      "intensity": "normal",
+      "map_id": "lotus",
+      "objective": "retakes",
+      "opponent_id": "team_baltic_meridian",
+      "partner_id": "team_hokkaido_drift",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 61,
+    "season": 1,
+    "week": 13,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1w13m0am",
+      "focus_target": "team_baltic_meridian_p1",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_baltic_meridian",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "focus",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 62,
+    "season": 1,
+    "week": 13,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

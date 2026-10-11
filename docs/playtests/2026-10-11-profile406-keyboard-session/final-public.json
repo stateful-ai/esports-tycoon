@@ -1,0 +1,686 @@
+{
+  "season": 2,
+  "week": 6,
+  "phase": "regular",
+  "window": {
+    "open": false,
+    "kind": "closed",
+    "label": "Window closed",
+    "detail": "Closed until the mid-split window in week 7.",
+    "next_open_week": 7
+  },
+  "roster_readiness": {
+    "ready": true,
+    "reason": "",
+    "count": 8,
+    "minimum": 5,
+    "shortfall": 0
+  },
+  "user_team": {
+    "id": "team_nexus",
+    "name": "Team Nexus",
+    "tag": "NXS",
+    "logo": "/assets/logos/logo_1.webp",
+    "region": "americas",
+    "balance": 2287871,
+    "reputation": 66.6,
+    "fan_count": 341634,
+    "world_rank": 28,
+    "chemistry": 59.6,
+    "captain_id": "apex",
+    "player_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0",
+      "team_kraken_unit_p0",
+      "fa_12"
+    ],
+    "starter_ids": [
+      "apex",
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo"
+    ],
+    "record": {
+      "wins": 2,
+      "losses": 3,
+      "diff": -7
+    }
+  },
+  "next_fixture": {
+    "id": "s2w6m0am",
+    "week": 6,
+    "stage": "regular",
+    "best_of": 1,
+    "team_a": "team_nexus",
+    "team_b": "team_baltic_meridian",
+    "team_a_name": "Team Nexus",
+    "team_b_name": "Baltic Meridian",
+    "rivalry": null,
+    "potm": null,
+    "maps": [
+      "bind"
+    ],
+    "map_thumbs": {
+      "bind": "/assets/maps/bind.webp"
+    },
+    "veto": [],
+    "series_notes": [],
+    "played": false,
+    "winner_id": null,
+    "map_score": [
+      0,
+      0
+    ],
+    "results": [],
+    "preview": [
+      "Team Nexus arrive on a 2-match losing run.",
+      "A win would haul Team Nexus back toward the playoff places.",
+      "Watch Cipherstrike — Baltic Meridian's form pick at 1.32."
+    ],
+    "map_pool": {
+      "team_id": "team_nexus",
+      "team_name": "Team Nexus",
+      "maps": [
+        {
+          "map": "Ascent",
+          "map_id": "ascent",
+          "played": 1,
+          "wins": 1,
+          "win_rate": 100
+        },
+        {
+          "map": "Bind",
+          "map_id": "bind",
+          "played": 3,
+          "wins": 1,
+          "win_rate": 33
+        },
+        {
+          "map": "Lotus",
+          "map_id": "lotus",
+          "played": 1,
+          "wins": 0,
+          "win_rate": 0
+        }
+      ],
+      "veto": {
+        "opponent": "Baltic Meridian",
+        "ban": {
+          "map": "Ascent",
+          "map_id": "ascent",
+          "their_wr": 100,
+          "our_wr": 100
+        },
+        "pick": {
+          "map": "Bind",
+          "map_id": "bind",
+          "their_wr": 0,
+          "our_wr": 33
+        }
+      }
+    },
+    "opp_manager": {
+      "name": "Andre Santos",
+      "identity": "Custodian"
+    }
+  },
+  "leaders": [
+    {
+      "pid": "team_harbour_city_nine_p0",
+      "handle": "Riftbyte",
+      "team": "Harbour City Nine",
+      "team_id": "team_harbour_city_nine",
+      "rating": 1.56,
+      "kills": 109
+    },
+    {
+      "pid": "team_rust_belt_gaming_p1",
+      "handle": "Zephyrpulse",
+      "team": "Rust Belt Gaming",
+      "team_id": "team_rust_belt_gaming",
+      "rating": 1.51,
+      "kills": 97
+    },
+    {
+      "pid": "team_crimson_order_p2",
+      "handle": "Wraithghost",
+      "team": "Crimson Order",
+      "team_id": "team_crimson_order",
+      "rating": 1.51,
+      "kills": 108
+    }
+  ],
+  "movers": [],
+  "run_in": [
+    {
+      "week": 6,
+      "opponent": "Baltic Meridian",
+      "opponent_id": "team_baltic_meridian",
+      "opp_rank": 33,
+      "difficulty": "easy"
+    },
+    {
+      "week": 7,
+      "opponent": "Team Vanguard",
+      "opponent_id": "team_vanguard",
+      "opp_rank": 3,
+      "difficulty": "hard"
+    },
+    {
+      "week": 8,
+      "opponent": "Sahara Compass",
+      "opponent_id": "team_sahara_compass",
+      "opp_rank": 20,
+      "difficulty": "easy"
+    },
+    {
+      "week": 9,
+      "opponent": "Nordic Frost",
+      "opponent_id": "team_nordic_frost",
+      "opp_rank": 36,
+      "difficulty": "easy"
+    },
+    {
+      "week": 10,
+      "opponent": "Kathmandu Apex",
+      "opponent_id": "team_kathmandu_apex",
+      "opp_rank": 39,
+      "difficulty": "easy"
+    }
+  ],
+  "on_this_day": [
+    {
+      "seasons_ago": 1,
+      "season": 1,
+      "text": "Team Vanguard win Champions."
+    }
+  ],
+  "debrief": {
+    "result": "Lost to Rust Belt Gaming 3-13",
+    "won": false,
+    "standout": "Vortex (1.08)",
+    "underperformer": "Echo (0.50)"
+  },
+  "last_match_review": {
+    "fixture_id": "s2w5m1am",
+    "won": false,
+    "contested": true,
+    "best_of": 1,
+    "your_maps": 0,
+    "their_maps": 1,
+    "your_rounds": 3,
+    "their_rounds": 13,
+    "opp_id": "team_rust_belt_gaming",
+    "opp_name": "Rust Belt Gaming",
+    "potm": {
+      "player_id": "team_rust_belt_gaming_p1",
+      "handle": "Zephyrpulse",
+      "badges": [
+        {
+          "id": "aim_demon",
+          "name": "Aim Demon",
+          "emoji": "🎯",
+          "polarity": 1,
+          "blurb": "raw mechanical menace",
+          "kind": "positive",
+          "impact": "Applied when earned (while held): +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 1.2.",
+          "decay": "It can fade after 2 seasons without re-qualifying.",
+          "art": "/assets/badges/aim_demon.webp",
+          "season": 2
+        }
+      ]
+    },
+    "tier": 0,
+    "tier_label": "box scores only",
+    "momentum_beat": null,
+    "your_calls": null,
+    "series_notes": [
+      "RBG: targeting Slyblade."
+    ],
+    "working": [],
+    "breaking": [
+      {
+        "code": "pistol",
+        "category": "pistol",
+        "tone": "bad",
+        "headline": "Pistols lost",
+        "detail": "0/2 pistol rounds (0%).",
+        "player_id": null,
+        "handle": null,
+        "site": null,
+        "badges": []
+      },
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "headline": "Echo off-colour",
+        "detail": "0.5 average rating across the series.",
+        "player_id": "echo",
+        "handle": "Echo",
+        "site": null,
+        "badges": [
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "🥶",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          }
+        ],
+        "dev_note": "Near their ceiling (proj. 66–80) — a lineup call."
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "headline": "Defense is leaking",
+        "detail": "3/12 defense rounds won (25%).",
+        "player_id": null,
+        "handle": null,
+        "site": null,
+        "badges": []
+      }
+    ],
+    "levers": [
+      {
+        "code": "pistol_prep",
+        "tab": "tactics",
+        "specialty": "tactical",
+        "on_focus": false,
+        "text": "Set Eco greed to 30 (currently 50) — Save more often so pistol losses do not distort the buy cycle.",
+        "adjustment": {
+          "dial": "eco_greed",
+          "label": "Eco greed",
+          "current": 50,
+          "target": 30,
+          "at_limit": false,
+          "reason": "Save more often so pistol losses do not distort the buy cycle.",
+          "coach_step": 20,
+          "analyst_precision": 10
+        }
+      },
+      {
+        "code": "player_form",
+        "tab": "roster",
+        "specialty": "team",
+        "on_focus": false,
+        "text": "Echo is off-colour — consider a bench or agent swap on the Roster screen.",
+        "adjustment": null
+      },
+      {
+        "code": "def_setups",
+        "tab": "tactics",
+        "specialty": "tactical",
+        "on_focus": false,
+        "text": "Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.",
+        "adjustment": {
+          "dial": "map_control",
+          "label": "Map control",
+          "current": 50,
+          "target": 30,
+          "at_limit": false,
+          "reason": "Stack more tightly and simplify the defensive setup.",
+          "coach_step": 20,
+          "analyst_precision": 10
+        }
+      }
+    ],
+    "coach": {
+      "present": true,
+      "specialty": "mechanical"
+    },
+    "locked": true,
+    "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+  },
+  "decision_ledger": [],
+  "press": null,
+  "suggested_lineup": {
+    "players": [
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "quality": 79,
+        "dressed": true
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "quality": 79,
+        "dressed": true
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "quality": 77,
+        "dressed": true
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "quality": 75,
+        "dressed": true
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "quality": 73,
+        "dressed": true
+      }
+    ],
+    "changed": false
+  },
+  "board": null,
+  "form_trend": [
+    {
+      "n": 1,
+      "week": 1,
+      "wins": 0,
+      "won": false
+    },
+    {
+      "n": 2,
+      "week": 2,
+      "wins": 1,
+      "won": true
+    },
+    {
+      "n": 3,
+      "week": 3,
+      "wins": 2,
+      "won": true
+    },
+    {
+      "n": 4,
+      "week": 4,
+      "wins": 2,
+      "won": false
+    },
+    {
+      "n": 5,
+      "week": 5,
+      "wins": 2,
+      "won": false
+    }
+  ],
+  "squad_profile": {
+    "avg_age": 24.6,
+    "buckets": {
+      "youth": 2,
+      "prime": 2,
+      "veteran": 4
+    },
+    "expiries": [
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "age": 20,
+        "weeks_left": 17
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "age": 27,
+        "weeks_left": 24
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "age": 23,
+        "weeks_left": 25
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "age": 24,
+        "weeks_left": 29
+      },
+      {
+        "id": "team_kraken_unit_p0",
+        "handle": "Nightsurge",
+        "age": 18,
+        "weeks_left": 29
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "age": 27,
+        "weeks_left": 35
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "age": 29,
+        "weeks_left": 35
+      },
+      {
+        "id": "fa_12",
+        "handle": "Frostdash",
+        "age": 29,
+        "weeks_left": 64
+      }
+    ]
+  },
+  "objectives_hub": [
+    {
+      "kind": "sponsor",
+      "label": "make the regional playoffs",
+      "state": "at_risk",
+      "detail": "currently 5th of 8"
+    },
+    {
+      "kind": "sponsor",
+      "label": "make the regional playoffs",
+      "state": "at_risk",
+      "detail": "currently 5th of 8"
+    }
+  ],
+  "rotation": [
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "maps": 5,
+      "starter": true,
+      "stamina": 37,
+      "burnout": true
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "maps": 5,
+      "starter": true,
+      "stamina": 29,
+      "burnout": true
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "maps": 5,
+      "starter": true,
+      "stamina": 44,
+      "burnout": false
+    },
+    {
+      "id": "fa_13",
+      "handle": "Slyblade",
+      "maps": 5,
+      "starter": true,
+      "stamina": 100,
+      "burnout": false
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "maps": 5,
+      "starter": true,
+      "stamina": 91,
+      "burnout": false
+    },
+    {
+      "id": "team_kraken_unit_p0",
+      "handle": "Nightsurge",
+      "maps": 3,
+      "starter": false,
+      "stamina": 64,
+      "burnout": false
+    },
+    {
+      "id": "fa_12",
+      "handle": "Frostdash",
+      "maps": 0,
+      "starter": false,
+      "stamina": 86,
+      "burnout": false
+    },
+    {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "maps": 0,
+      "starter": false,
+      "stamina": 100,
+      "burnout": false
+    }
+  ],
+  "training_focus": "mental",
+  "training_delegated": false,
+  "focus_options": [
+    "mechanical",
+    "tactical",
+    "mental",
+    "team",
+    "rest"
+  ],
+  "news": [
+    "[S2 W6] Team Nexus sign a apparel deal with GG Threads (5,900/wk, objectives: make the regional playoffs → 16,000 for 21 weeks).",
+    "[S2 W5] Slyecho (Chao Phraya Owls) passes 100 kills this season.",
+    "[S2 W5] Driftshot (Taipei Circuit) passes 100 kills this season.",
+    "[S2 W5] Karmawire (Solar Flare) passes 100 kills this season.",
+    "[S2 W5] Zephyrdash (Seoul Dynasty Prime) passes 100 kills this season.",
+    "[S2 W5] Riftstrike (Seoul Dynasty Prime) passes 100 kills this season.",
+    "[S2 W5] Crimrush (Nordic Frost) passes 100 kills this season.",
+    "[S2 W5] Ironhawk (Midnight Polders) passes 100 kills this season.",
+    "[S2 W5] Ironstrike (Hokkaido Drift) passes 100 kills this season.",
+    "[S2 W5] Riftbyte (Harbour City Nine) passes 100 kills this season.",
+    "[S2 W5] Zephyrsurge (Ghostline) passes 100 kills this season.",
+    "[S2 W5] Wraithghost (Crimson Order) passes 100 kills this season."
+  ],
+  "scout": {
+    "target": "player:slice",
+    "target_name": "Slice",
+    "progress": 1,
+    "cap": 1
+  },
+  "standings_top": [
+    {
+      "team_id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming",
+      "wins": 5,
+      "losses": 0,
+      "rounds_won": 65,
+      "rounds_lost": 22
+    },
+    {
+      "team_id": "team_vanguard",
+      "name": "Team Vanguard",
+      "wins": 5,
+      "losses": 0,
+      "rounds_won": 65,
+      "rounds_lost": 30
+    },
+    {
+      "team_id": "team_saracen_guard",
+      "name": "Saracen Guard",
+      "wins": 3,
+      "losses": 2,
+      "rounds_won": 57,
+      "rounds_lost": 50
+    },
+    {
+      "team_id": "team_sahara_compass",
+      "name": "Sahara Compass",
+      "wins": 3,
+      "losses": 2,
+      "rounds_won": 60,
+      "rounds_lost": 58
+    }
+  ],
+  "champions": [
+    {
+      "season": 1,
+      "team_id": "team_vanguard",
+      "team_name": "Team Vanguard"
+    }
+  ],
+  "transfer_offers": [],
+  "flavor_event": {
+    "id": "2fe2342213a406d2",
+    "season": 2,
+    "week": 6,
+    "team_id": "team_nexus",
+    "player_id": "",
+    "type_id": "brand_shoot",
+    "title": "A sponsor wants a quick Team Nexus shoot",
+    "prompt": "A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.",
+    "choices": [
+      {
+        "id": "take_shoot",
+        "label": "Take the shoot"
+      },
+      {
+        "id": "negotiate",
+        "label": "Ask for a leaner setup"
+      },
+      {
+        "id": "pass",
+        "label": "Pass on the campaign"
+      }
+    ],
+    "ai": false
+  },
+  "media_event": null,
+  "career": {
+    "mode": "sandbox",
+    "seat": {
+      "id": "mgr_team_nexus",
+      "name": "NXS manager",
+      "team_id": "team_nexus",
+      "archetype": "",
+      "unemployed": false
+    },
+    "contract": null,
+    "offers": [],
+    "blocked": false
+  },
+  "multiplayer": {
+    "mode": "solo",
+    "code": "26UHC",
+    "humans": [
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "is_you": true
+      }
+    ],
+    "ready": [],
+    "you_ready": false
+  },
+  "save": {
+    "dirty": false,
+    "autosave_enabled": true,
+    "autosave_every_weeks": 1
+  },
+  "promise_pending": false,
+  "scout_shortlist_ready": false,
+  "scrim_proposal_pending": true,
+  "culture_violation_unack": false
+}

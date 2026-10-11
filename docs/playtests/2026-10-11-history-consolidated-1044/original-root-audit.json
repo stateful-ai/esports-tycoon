@@ -1,0 +1,873 @@
+{
+  "at_utc": "2026-10-11T11:15:27.991736+00:00",
+  "rows_before": 1028,
+  "rows_after": 1044,
+  "sessions_after": 93,
+  "columns": 21,
+  "previous_sha256": "ff314b3bc68c641dd3d9bea38afd0ef6194fcc0602d699836d5a2986148b50b7",
+  "canonical_sha256": "ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249",
+  "old_raw_prefix_preserved": true,
+  "appended_rows": 16,
+  "copied_paths": 124,
+  "artifact_map": [
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-inspect.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.exit.json",
+      "bytes": 746,
+      "sha256": "5f4871a3dddef80e20ac8abd603f234e712f6caa68b5333cda0c34b38b67539c"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-inspect.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-inspect.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-inspect.txt",
+      "bytes": 519,
+      "sha256": "7d41fa161b49d1575edfebfa9776f082094c60c8bae163ab2cb1be7b31f959a9"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-loaded.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.exit.json",
+      "bytes": 278,
+      "sha256": "33a3e98152beab0007709a98d2dc544074eaed42cce454b733f8e6ba70ea5adb"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-loaded.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-loaded.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-loaded.txt",
+      "bytes": 223,
+      "sha256": "c60a06cdfdee613698b44b93d58f2449a083710302284097df319ddc45b2394c"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-open.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.exit.json",
+      "bytes": 278,
+      "sha256": "c8e9f236ad4112dd081709630afeaf8dc3b5d78eb21aebb5a85b1a44d63b0ff1"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-open.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-open.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-open.txt",
+      "bytes": 406,
+      "sha256": "749d96fff29b09c0807ffa37e2f7ee3a816483043df540fd5a2f31b0ea44892c"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-snapshot.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.exit.json",
+      "bytes": 252,
+      "sha256": "0bd39dd29626ec94bb35bc7c9020a549b6b775a48090b0914cda1713c544c56b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-snapshot.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-snapshot.txt",
+      "bytes": 17474,
+      "sha256": "be52e2c680c562bdbaf5bde804101f12422e9fd563bf382daa3e7f6613f3ef29"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-state.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.exit.json",
+      "bytes": 760,
+      "sha256": "c8f93ff829011d8e1206f510a470670dcd70e1583fc1a327e7cec7310214a697"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-state.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\02-state.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/02-state.txt",
+      "bytes": 125,
+      "sha256": "5e1e4de5a5e4b535c22f62291bcf519f6e15190321466f66eba052e88c7077fa"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\03-choice.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.exit.json",
+      "bytes": 602,
+      "sha256": "47711296398f73bd2ecf92bb8cf3604ef4a721756c369098195135394d898c8b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\03-choice.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\03-choice.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/03-choice.txt",
+      "bytes": 636,
+      "sha256": "32ced6dab98587a5a83817f04540a81b7c50fc96273140236accd6e23035969c"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-club.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.exit.json",
+      "bytes": 263,
+      "sha256": "c29a1902127755534120cfc4fd9174242574f0e59b6bbf91b840c699e0340da3"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-club.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-club.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-club.txt",
+      "bytes": 239,
+      "sha256": "3c5f8c96405905bd33386faa29648d3356fddc051867ecc55abbe2936bc8236e"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-development.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.exit.json",
+      "bytes": 264,
+      "sha256": "2a54530befb24b14f540da100cbe98a6403d9a18f02364055b12bea71fe7fb0f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-development.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-development.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-development.txt",
+      "bytes": 246,
+      "sha256": "01c0b39bfa8bdba76ca2d660a3aeb9fa2e782eed216ca301db54a6c563fe81be"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-programs.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.exit.json",
+      "bytes": 330,
+      "sha256": "33278a378b22280cc7d701d4c038aeedad9a32249b639c87023b50b3255ef5a4"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-programs.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-programs.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-programs.txt",
+      "bytes": 6158,
+      "sha256": "d2e9536d367240bc5605bd39e96a91ec01bcfa72093180ddb44dbb49b4e36f52"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-roster.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.exit.json",
+      "bytes": 252,
+      "sha256": "c9bba63439255cee07971d20f557d436af6cf0a8c8f41a1597b74f30a20de2c0"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-roster.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\04-roster.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/04-roster.txt",
+      "bytes": 22182,
+      "sha256": "3fe0cb7bbb3e3faf430805a6d34de7b5f31a54ddd3eb92c58b1fff57d344549d"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\05-advance.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.exit.json",
+      "bytes": 615,
+      "sha256": "ff4f8213608dd330d421407541ce5de3c5d320f844989799f51cb30ad041fe5f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\05-advance.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\05-advance.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/05-advance.txt",
+      "bytes": 40284,
+      "sha256": "660b37e12ee585644f2d8cbeae9d5050914e449705780ce73c00c4e59bdf5bde"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-development.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.exit.json",
+      "bytes": 403,
+      "sha256": "d48d55fa5d89d6c9fb169339e72f46af3ab16202f3858559b16f36c77f408845"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-development.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-development.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-development.txt",
+      "bytes": 6307,
+      "sha256": "2d96da2b08690b28be375ec181c45151d9bf49bff711655e9b7fbfa7956b85ec"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-reveal.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.exit.json",
+      "bytes": 252,
+      "sha256": "215ffe0058e94d221a7129354cd6ab5723514abcc5b797ef99a9d4a69c0060ea"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-reveal.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\06-reveal.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/06-reveal.txt",
+      "bytes": 42065,
+      "sha256": "a9e71041921c8212a2b20c1a3c8433778cba0046a43bc0255ca6ecf5cf81777f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\07-save.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.exit.json",
+      "bytes": 600,
+      "sha256": "286d87adf9911867f77ebdc4b5088a775d53ab61e8be0feb0d314900dfce8c58"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\07-save.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\07-save.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/07-save.txt",
+      "bytes": 519,
+      "sha256": "c0df622247d7631ec1572cfc74190e0b34a2a3693bd644989953a4cfd35103f1"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-console.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.exit.json",
+      "bytes": 265,
+      "sha256": "1affc9d45705c26a18be4c99222c7fc688991fb06dcd20340f38023775b18dad"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-console.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-console.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-console.txt",
+      "bytes": 55,
+      "sha256": "d0e5634bb0c1271965327ad2ac18107af18fa7da6d2c9ce13e03eeda6cb603db"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-club-report.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.exit.json",
+      "bytes": 515,
+      "sha256": "5602ab66cc988be38b5e9c220b81f9d769237b0b5dd765fa8fc87cbefeb332bd"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-club-report.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-club-report.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-club-report.txt",
+      "bytes": 77671,
+      "sha256": "eb3109839b802943839126681822f0bc3ebb96b677e73f5d3c5a51cc9ee97832"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-corrected.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.exit.json",
+      "bytes": 852,
+      "sha256": "3ed0f50a0b80ac929047bc140d6e8dbb4b9bc64e140a2af281588455be36ae10"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-corrected.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-corrected.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-corrected.txt",
+      "bytes": 45313,
+      "sha256": "7d55c11086d6e9b69129b945f07d769072854e4c01df6d7f2bba7d595ff7fa1e"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-readback.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.exit.json",
+      "bytes": 827,
+      "sha256": "6ce48f72059e8927978411f572e9d13fcce62e820e58bf989b9629e9fbd5b777"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-readback.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-public-readback.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-public-readback.txt",
+      "bytes": 56,
+      "sha256": "ad72bac110d8604d7fe05021dd541827d959c3d162806294e56a7e9a01375f74"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-screenshot.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.exit.json",
+      "bytes": 254,
+      "sha256": "faeb92ad4c9bb301eadb55e73ff6a0aa4ecc35824f901b70fdc90ac071e2f4ae"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-screenshot.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\08-screenshot.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/08-screenshot.txt",
+      "bytes": 331,
+      "sha256": "87c5e39a65ed225343e5c56b3da37d079774b0ba4c7845feb364eb4a4da7fffa"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\09-close.exit.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.exit.json",
+      "bytes": 249,
+      "sha256": "208d74d3bfd64f42ec9c1f7cf1a6235a5188630e5b6b0b8aef77ff3a73a796ca"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\09-close.stderr.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\09-close.txt",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/09-close.txt",
+      "bytes": 42,
+      "sha256": "43fb85d523c46f2da6b07122bb234f737389079f6ab7aa18fd2dec3cb4f999fd"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\actions.csv",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/actions.csv",
+      "bytes": 8678,
+      "sha256": "cdebcaded6e7a63a983e48c7492a522fe220619420c21e1b6e97c01b32fa44fb"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\console-initial.log",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/console-initial.log",
+      "bytes": 138,
+      "sha256": "c4fe77d620213b7aedea08c61883c5d21731fad5aa7ab39703ad22b550b18e93"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\development-w6.png",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/development-w6.png",
+      "bytes": 178789,
+      "sha256": "6d3ec37f8615d8a4220d5a9ba3c24d1741182cf4914e0e33bd72097ec312856b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\flywheel-after-local.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/flywheel-after-local.json",
+      "bytes": 1379,
+      "sha256": "199a9b11a2fe9f49f525ae278ed7107a72990d0f51ff72084dcd3e6f4cb4b787"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\flywheel-before.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/flywheel-before.json",
+      "bytes": 5996,
+      "sha256": "82fb64061dc5a8f3c0f631bef78b38d9f97404397b57d296839778769cb13b3b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\harness-failures.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/harness-failures.json",
+      "bytes": 1333,
+      "sha256": "45f88dca37b0412226cb7c2c342c2e20440044a16a8c83324bf99e521e44b4cf"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\new-decisions.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/new-decisions.json",
+      "bytes": 489,
+      "sha256": "eb2742da4fca67b54a07fa16a653a1cf74b5988081f343a4095f80fcd4959482"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\profile-ghost.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/profile-ghost.json",
+      "bytes": 18852,
+      "sha256": "9ccec1090ee969ed7e1bf68327b3a811b591a5adf8a1a0427e9b27f5030e4d91"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\profile-team_kraken_unit_p0.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/profile-team_kraken_unit_p0.json",
+      "bytes": 9794,
+      "sha256": "e748687c3aea10a8c282c355fa0d6feba7303580878d1275fe3d46442e2ab332"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\public-report.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/public-report.json",
+      "bytes": 35099,
+      "sha256": "7e834a77758795ea808d87607abdbbb0c774a785690960f82b8745d8249eb5a9"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\public-roster.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/public-roster.json",
+      "bytes": 32868,
+      "sha256": "bcfbd93cca584062c40ad93444fbdb6ed2bd77f3aa6084cce3f47c8174170b1b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\public-state.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/public-state.json",
+      "bytes": 10410,
+      "sha256": "7e8c6c8f5e09b85d39788d5a4c39ff45d8d2513cdbcdbf7bf18d131a08311852"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\reconciliation.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/reconciliation.json",
+      "bytes": 7324,
+      "sha256": "838cddfe6c5fa423922def7c5f593639eab30b2576dcd5fb46c82caf14c32cbc"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\report.md",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/report.md",
+      "bytes": 3717,
+      "sha256": "098475b28efee24cffa06495db884ab7066efafca2d62d529108e07a9b09e5bb"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\save-after.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/save-after.json",
+      "bytes": 5318284,
+      "sha256": "7020ff7d9e542161068f882159bd0332f445fc7e8b4599805849a352f88a92ef"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\save-before.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/save-before.json",
+      "bytes": 5102352,
+      "sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\server-stop-receipt.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/server-stop-receipt.json",
+      "bytes": 476,
+      "sha256": "6d6d6c8fcfe0eacd7dc51279fcf8c9e7f698aef838223109b67921f87cb6a5c9"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-after\\src\\esports_sim\\manager\\campaign.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/campaign.py",
+      "bytes": 144699,
+      "sha256": "328575aa9763ed2fd98a837684742f7ea7a80dce3990e60f7d0dfaf2453a7e2b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-after\\src\\esports_sim\\manager\\decision_env.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/decision_env.py",
+      "bytes": 45766,
+      "sha256": "9dfabd9565e4b5e8e721596dbe70bbc160d7aa98fa8b7ca020fddd8d89a94b50"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-after\\src\\esports_sim\\manager\\mentorship.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-after/src/esports_sim/manager/mentorship.py",
+      "bytes": 5854,
+      "sha256": "40cd65f392e12dc1ce43245db6468021bb6536e26a651aaff1a6adc751339485"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-before\\src\\esports_sim\\manager\\campaign.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/campaign.py",
+      "bytes": 144699,
+      "sha256": "328575aa9763ed2fd98a837684742f7ea7a80dce3990e60f7d0dfaf2453a7e2b"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-before\\src\\esports_sim\\manager\\decision_env.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/decision_env.py",
+      "bytes": 45766,
+      "sha256": "9dfabd9565e4b5e8e721596dbe70bbc160d7aa98fa8b7ca020fddd8d89a94b50"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-before\\src\\esports_sim\\manager\\mentorship.py",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-before/src/esports_sim/manager/mentorship.py",
+      "bytes": 5854,
+      "sha256": "40cd65f392e12dc1ce43245db6468021bb6536e26a651aaff1a6adc751339485"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-freeze-after.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-freeze-after.json",
+      "bytes": 105411,
+      "sha256": "f4c54b850083ff728149e97497af05e4a8c9a6a902ca37535719de3b9fd100b2"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\source-freeze-before.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/source-freeze-before.json",
+      "bytes": 105411,
+      "sha256": "f4c54b850083ff728149e97497af05e4a8c9a6a902ca37535719de3b9fd100b2"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\usage-events.jsonl",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/usage-events.jsonl",
+      "bytes": 11092,
+      "sha256": "0e64459ba2df8b85c673ee915cb881284373012723251d1969b3b9cc73d6cf03"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\mentorship-weekly-lifecycle\\ESports Simulator\\runs\\playtests\\2026-10-11-mentor400-week-progress\\publication-manifest.json",
+      "published": "docs/playtests/2026-10-11-mentor400-week-progress/publication-manifest.json",
+      "bytes": 14076,
+      "sha256": "abcbae4564b93874b28f93ff41debe893e337a4ddef3a598c8d1591835d056ad"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\report.md",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/report.md",
+      "bytes": 5781,
+      "sha256": "2a3beabdb02e84d8cd3f10e34220ab6c38e9575ac19d75abad80e6d465a761a8"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\actions.csv",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/actions.csv",
+      "bytes": 5700,
+      "sha256": "148104107dd0ff161732dbf73d7fdab886f243c2f1001d2e2b44691191e0563f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\source-before.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/source-before.json",
+      "bytes": 95694,
+      "sha256": "97f6c279534a65f49f099e7e73f8d1fa2c41d809df7644c448429c5a5388a358"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\source-after.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/source-after.json",
+      "bytes": 95694,
+      "sha256": "97f6c279534a65f49f099e7e73f8d1fa2c41d809df7644c448429c5a5388a358"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\save-before.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/save-before.json",
+      "bytes": 5102352,
+      "sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\save-after.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/save-after.json",
+      "bytes": 5102352,
+      "sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\server-running.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/server-running.json",
+      "bytes": 459,
+      "sha256": "6dd8a634841361c6cd382413a18443ed1a55b63093555b4bfd971a7224fc7932"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\public-readbacks.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/public-readbacks.json",
+      "bytes": 127318,
+      "sha256": "9d6fbcb849290231c44be38be171fee9baad6413286b08f1117546d33e487351"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\wire-events.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/wire-events.json",
+      "bytes": 39013,
+      "sha256": "5cf9b79187bb8f2bd89f621a5fc74ceff15072e049b63393acbbf2bbb4fe66ca"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\usage-baseline.jsonl",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/usage-baseline.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\usage-end.raw.jsonl",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/usage-end.raw.jsonl",
+      "bytes": 6342,
+      "sha256": "00e5a5706c3ec50dc1a61a30137d2c86379961c7bb71b7e2e1a779d2bdd10084"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\reconciliation.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/reconciliation.json",
+      "bytes": 973,
+      "sha256": "fd6a35a896d4f6930b278cc549d96a088c0a52c6e712d12dfdced337d5610705"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\cleanup.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/cleanup.json",
+      "bytes": 264,
+      "sha256": "d304d80df7f727f7bcb5c06342060916a9221691f6c8f6b76c10454a77d1e783"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\flywheel-before.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/flywheel-before.json",
+      "bytes": 6980,
+      "sha256": "c7cb53fda1a7032a8e8889eea4b54b41745949223bb0469a45c780bb83d1d8af"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\flywheel-after.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/flywheel-after.json",
+      "bytes": 2755,
+      "sha256": "5b2f7d14f02527770bc8ec943a452f62c25420573a540abecd94bb0f4bcd1e27"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\nightsurge-first-observation.png",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-first-observation.png",
+      "bytes": 191185,
+      "sha256": "7d25689abd3f31272e202435257a62bb63fd752d9cf78c228c3783e6c1a1f6cc"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\nightsurge-skill-breakdown.png",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-skill-breakdown.png",
+      "bytes": 192290,
+      "sha256": "991f2cb7ee63d11bcaa476962f45218fb9b242de702a9088b9f8410cda65bfc6"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\nightsurge-expanded-visible.png",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/nightsurge-expanded-visible.png",
+      "bytes": 161609,
+      "sha256": "bc87bf99dc3e9e789eb2c28eb01ce977c2306e685a76782a4c163b67219d86e0"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\hollowlock-measured-flat.png",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/hollowlock-measured-flat.png",
+      "bytes": 189789,
+      "sha256": "57ab0ea155140b4fdf78625e119e4678d2dedd1830110d9c18eee5eae6b6598a"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\hollowlock-season-skills-flat.png",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/hollowlock-season-skills-flat.png",
+      "bytes": 155421,
+      "sha256": "dd45f09a5123b81bafc1c2208cc86832ab84bfb0f21c8ac545a8099097e6fde5"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\01-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/01-snapshot.txt",
+      "bytes": 16932,
+      "sha256": "869c4b98a37bcaf2d36c0282e749488439dcf6011988993d200feb341b9eed7f"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\02-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/02-snapshot.txt",
+      "bytes": 21458,
+      "sha256": "7fe2066b9b43470cfffc989bd3db8b5fdca2f9f9a5db986003af1ddc5863bc21"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\02-public-dom.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/02-public-dom.txt",
+      "bytes": 1041,
+      "sha256": "7e7b6db512bcfc8f110768ac5cbc95b825fad9e7b4b19776e8ce5cbf58801980"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\03-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/03-snapshot.txt",
+      "bytes": 34391,
+      "sha256": "738530d3e3c90b620584373e0f166b1f78f63fab15d9facce5f06ce54661c69a"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\03-development-visible.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/03-development-visible.txt",
+      "bytes": 1147,
+      "sha256": "db24c4647f94784f918ed3097a99a73512f385b9343491036b80a43a40177117"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\04-readback.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/04-readback.txt",
+      "bytes": 44521,
+      "sha256": "d612c22dbebff1f5fd2ae48a7aec0918340284b95a42d2d8364b50d7ab052505"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\04-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/04-snapshot.txt",
+      "bytes": 34589,
+      "sha256": "6cb84a3018c1dbba9ddb4d52a3e379ed60817d9992d82bc14a8d8d4898adfc53"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\04-scroll.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/04-scroll.txt",
+      "bytes": 972,
+      "sha256": "38d4b3480d64178e88fd8f35f7267c73696474cc7c4584ec11184f3c8f8ab8bf"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\05-snapshot.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/05-snapshot.txt",
+      "bytes": 35265,
+      "sha256": "85c7fb6bd3c9086b393725f86ab1fca2ed3ddbf744b4595e897c32c8e046ae5c"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\05-readback.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/05-readback.txt",
+      "bytes": 20104,
+      "sha256": "ab27ed1a5159d00c7d5b2f470f3f75544b743f44ae202a06abeb58c6ccfc7f1d"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\05-scroll.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/05-scroll.txt",
+      "bytes": 182,
+      "sha256": "75712166ec0bdf201376d9f983dd8091731af6173caf6b930942593cb4db2d88"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\06-correction-scroll.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/06-correction-scroll.txt",
+      "bytes": 731,
+      "sha256": "88a2b7d3b95f48213af84b6a10dbd216059b9ac72ea24330b158dc420c152f95"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\07-save.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/07-save.txt",
+      "bytes": 528,
+      "sha256": "9f942c6806cc39d0919d5d019d6df8a688083138cd34abdc77f6c6632e7fd7c3"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\07-wire.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/07-wire.txt",
+      "bytes": 29973,
+      "sha256": "3ccd5fc1c1ac278b7893b9648480768f662b025a3d43135d9aa8a08c053e1e28"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\07-console.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/07-console.txt",
+      "bytes": 180,
+      "sha256": "9d13212a407fd267617cfd2783101176903b7c32e711733f02e6f2b8e379d201"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\07-browser-close.txt",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/07-browser-close.txt",
+      "bytes": 40,
+      "sha256": "5c8876188b463e5304bc825db8b999cf3c136c2a721a12f956451209a5cc7f21"
+    },
+    {
+      "original": "C:\\Users\\aidan\\.codex\\worktrees\\profile-development-comparison\\ESports Simulator\\runs\\playtests\\2026-10-11-profile401-first-week\\evidence-allowlist.json",
+      "published": "docs/playtests/2026-10-11-profile401-first-week/evidence-allowlist.json",
+      "bytes": 1297,
+      "sha256": "63bbc1f213cbc9e9dda4a657d168be5dc6df51d7c1232bbc2d7b272613295349"
+    }
+  ],
+  "sessions": [
+    {
+      "session": "2026-10-11-mentor400-week-progress",
+      "head": "fa6d622ca685dae9ab7a74cc6cb46c9977fdf812",
+      "rows": 9,
+      "source_paths_verified": 425,
+      "save_before_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "save_after_sha256": "7020ff7d9e542161068f882159bd0332f445fc7e8b4599805849a352f88a92ef",
+      "accepted_decisions_before": 120,
+      "accepted_decisions_after": 122,
+      "snapshots_before": 27,
+      "snapshots_after": 28,
+      "accepted_prefix_preserved": true,
+      "new_decisions": [
+        {
+          "season": 2,
+          "week": 5,
+          "phase": "regular",
+          "manager_id": "mgr_team_nexus",
+          "team_id": "team_nexus",
+          "kind": "flavor_choice",
+          "params": {
+            "choice_id": "film_grind",
+            "event_id": "f18ff1509b545e6c"
+          },
+          "source": "web"
+        },
+        {
+          "season": 2,
+          "week": 5,
+          "phase": "regular",
+          "manager_id": "mgr_team_nexus",
+          "team_id": "team_nexus",
+          "kind": "advance",
+          "params": {},
+          "source": "web"
+        }
+      ],
+      "usage_events": 43,
+      "usage_kinds": {
+        "session_start": 2,
+        "view": 5,
+        "visible_time": 29,
+        "session_end": 1,
+        "attempt": 3,
+        "result": 3
+      },
+      "paired_requests": [
+        {
+          "target": "/api/actions/flavor_event",
+          "request_id": 10,
+          "status": 200
+        },
+        {
+          "target": "/api/actions/advance",
+          "request_id": 21,
+          "status": 200
+        },
+        {
+          "target": "/api/actions/save",
+          "request_id": 25,
+          "status": 200
+        }
+      ],
+      "result_counts": {
+        "blocked": 1,
+        "partial": 4,
+        "met": 4
+      },
+      "all_original_21_fields_preserved": true,
+      "manifest_sha256": "abcbae4564b93874b28f93ff41debe893e337a4ddef3a598c8d1591835d056ad",
+      "local_tests_launched": false
+    },
+    {
+      "session": "2026-10-11-profile401-first-week",
+      "head": "806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca",
+      "rows": 7,
+      "source_paths_verified": 425,
+      "save_before_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "save_after_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "accepted_decisions_before": 120,
+      "accepted_decisions_after": 120,
+      "snapshots_before": 27,
+      "snapshots_after": 27,
+      "accepted_prefix_preserved": true,
+      "new_decisions": [],
+      "usage_events": 27,
+      "usage_kinds": {
+        "session_start": 1,
+        "view": 3,
+        "visible_time": 21,
+        "attempt": 1,
+        "result": 1
+      },
+      "paired_requests": [
+        {
+          "target": "/api/actions/save",
+          "request_id": 13,
+          "status": 200
+        }
+      ],
+      "result_counts": {
+        "met": 6,
+        "partial": 1
+      },
+      "all_original_21_fields_preserved": true,
+      "manifest_sha256": "63bbc1f213cbc9e9dda4a657d168be5dc6df51d7c1232bbc2d7b272613295349",
+      "local_tests_launched": false
+    }
+  ],
+  "actual_main": "5a74f951291214ff30bde165f398a5062619655e",
+  "remote_canonical_rows": 765,
+  "publication_pending": true,
+  "local_tests_launched": false,
+  "audit_harness_correction": "Initial read-only inspection used default cp1252 for a UTF8 synthetic save and failed decoding; corrected to explicit UTF8. No game actions or files mutated by that failed inspection."
+}

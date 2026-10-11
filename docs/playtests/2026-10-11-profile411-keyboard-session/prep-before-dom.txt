@@ -1,0 +1,199 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 7 · Regular — Team Nexus 2,366,434 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 15"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Match S2 · W7 · Regular
+  - button "Strategy"
+  - button "Game plan"
+  - button "Prep"
+  - button "Guide"
+  - heading "Match preparation" [level=2]
+  - paragraph: "Current squad condition: Apex 62.0 · Echo 41.0 · Hollowlock 100.0 · Frostdash 87.5 · Slyblade 100.0 · Ghost 35.5 · Nightsurge 68.0 · Vortex 100.0."
+  - paragraph: "Next: Team Nexus vs Team Vanguard · week 7"
+  - text: Sparring partner
+  - combobox "Sparring partner":
+    - option "Adriatic Sirens" [selected]
+    - option "Alpine Echo"
+    - option "Anatolia Forge"
+    - option "Apex Syndicate"
+    - option "Azure Vanta"
+    - option "Baltic Meridian"
+    - option "Bayou Kings"
+    - option "Berlin Wolves"
+    - option "Busan Tempest"
+    - option "Cascadia Youth"
+    - option "Chao Phraya Owls"
+    - option "Coral Sea Drakes"
+    - option "Crimson Order"
+    - option "Gallic Storm"
+    - option "Ghostline"
+    - option "Harbour City Nine"
+    - option "Highlands Nine"
+    - option "Hokkaido Drift"
+    - option "Iron Pact"
+    - option "Kathmandu Apex"
+    - option "Kraken Unit"
+    - option "Lisbon Tide"
+    - option "Mekong Vipers"
+    - option "Meridian Cross"
+    - option "Midnight Polders"
+    - option "Nordic Frost"
+    - option "Nova Rift"
+    - option "Outback Sentinels"
+    - option "Patagonia Sur"
+    - option "Phantom Core"
+    - option "Prairie Signal"
+    - option "Rust Belt Gaming"
+    - option "Sahara Compass"
+    - option "Saracen Guard"
+    - option "Seoul Dynasty Prime"
+    - option "Solar Flare"
+    - option "Taipei Circuit"
+    - option "Tokyo Drift Six"
+    - option "Volga Reign"
+    - option "Yucatan Ceibas"
+  - text: Preparation map
+  - combobox "Preparation map":
+    - option "Lotus" [selected]
+  - text: Session objective
+  - combobox "Session objective":
+    - option "Anti Exec" [selected]
+    - option "Retakes"
+    - option "Lineup Test"
+    - option "Mental Reset"
+  - text: Session intensity
+  - combobox "Session intensity":
+    - option "Light" [selected]
+    - option "Normal"
+    - option "Intense"
+  - paragraph: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Book session"
+  - text: Coach proposal Anti Exec on Lotus
+  - paragraph: "Partner: Hokkaido Drift. Intensity: Normal."
+  - paragraph: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+  - paragraph: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+  - button "Accept coach plan"
+  - text: "Prep artifact: Methodology +0.7 +0.0 edge Knowledge +0.67; stamina −1.5."
+  - paragraph: Squad morale entered at 82.0/100; the group reset without changing the game plan.
+  - text: "Dev note:"
+  - button "FA 0"
+  - text: — Map mastery projects Hollowlock as a bench option for bind; no scrim performance was measured. Consider a focused development block before trying that rotation.
+  - heading "Tournament six" [level=2]
+  - paragraph: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+  - checkbox "Apex tournament eligibility" [checked]
+  - button "Apex"
+  - text: "27 · Promised squad role: Starter"
+  - checkbox "Echo tournament eligibility" [checked]
+  - button "Echo"
+  - text: "24 · Promised squad role: Starter"
+  - checkbox "Hollowlock tournament eligibility" [checked]
+  - button "Hollowlock"
+  - text: "27 · Promised squad role: Bench"
+  - checkbox "Frostdash tournament eligibility"
+  - button "Frostdash"
+  - text: "29 · Promised squad role: Bench"
+  - checkbox "Slyblade tournament eligibility" [checked]
+  - button "Slyblade"
+  - text: "29 · Promised squad role: Starter"
+  - checkbox "Ghost tournament eligibility" [checked]
+  - button "Ghost"
+  - text: "20 · Promised squad role: Starter"
+  - checkbox "Nightsurge tournament eligibility"
+  - button "Nightsurge"
+  - text: "18 · Promised squad role: Bench"
+  - checkbox "Vortex tournament eligibility" [checked]
+  - button "Vortex"
+  - text: "23 · Promised squad role: Starter"
+  - button "Submit roster"
+  - heading "Series plan" [level=2]
+  - paragraph: Set a between-map response that applies after map one when its condition is met.
+  - paragraph: No upcoming best-of-three is on the calendar.
+- button "Close profile": ✕
+- text: "Ghost Rookie Initiator Lurker AR ES 90 · EN 88 · PT 31 age 20 242.7K followers 🎥 balanced · 965 cr/wk Mentor:"
+- button "Apex"
+- text: (0%) 129w at club mechanical · light Team Nexus 16w left · 4,500 cr/wk 70% streams · 54,000 cr release · 1,257,000 cr buyout · starter
+- button "Rein in streaming…"
+- button "Change role/style…"
+- button "Make IGL"
+- button "Scout development"
+- text: 79 OVR ★★★½ 80–83 Current ability 100 comfort 86–99 Potential peak forecast 52 Form 79 Morale 36 Condition 55 Confidence drives duels & nerve 297,000 cr Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Badges" [level=3]
+- text: Clutch Master Choker
+- heading "Attributes" [level=3]
+- text: Aim Precision 83 →83.1–91.4 Aim Reactivity 83 →85.3–95 Clutch Factor 81 →80.8–88.7 Comms Quality 62 →83.4–93.1 Composure 76 →77.2–86.7 Game Sense 86 →86–92.4 Movement 82 →83.3–93 Positioning 84 →84.3–90.4 Tilt Resistance 72 →86.6–96.4 Utility Usage 84 →83.8–90.8
+- heading "Traits" [level=3]
+- text: Independent Rookie Underrated
+- heading "Agent pool" [level=3]
+- text: Role comfort 100 Sova 86 KAY/O 72 Fade 69 Gekko 69 Skye 68
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- text: "0.88 Rating 1.01 K/D 9 FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 6 matches · 70 / 69 / — K / D / A
+- text: ACS by week Kills &amp; deaths by week K D
+- img "Kills and deaths by week"
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over time CA Conf
+- img "Ability and confidence over time": 79 50
+- paragraph: CA 75.5 to 79.2 over 30 weeks / 242.7K followers
+- text: Season growth Movement this season
+- img "Movement trajectory this season": 81.8 79.7
+- button "Movement 82+2.1 ▲"
+- button "Aim Precision 83+1.4 ▲"
+- button "Aim Reactivity 83+1.1 ▲"
+- button "Composure 76+0.4 ▲"
+- button "Comms Quality 62+0.2 ▲"
+- button "Game Sense 86+0.2 ▲"
+- button "Clutch Factor 81+0.1 ▲"
+- button "Positioning 84+0.1 ▲"
+- heading "Relationships" [level=3]
+- button "Slyblade Neutral"
+- button "Vortex Neutral"
+- button "Apex Neutral"
+- button "Hollowlock Neutral"
+- button "Echo Neutral"
+- button "Nightsurge Neutral"
+- button "Frostdash Neutral"
+- heading "Career" [level=3]
+- text: 2 Seasons 27 Maps 334 Kills 0.98 K/D 0 Honours 0 MVPs 0 All-Star Timeline S1 Ghost is saddled with the Choker badge. Ghost earns the Clutch Master badge. Memories
+- list:
+  - listitem: "S1: Ghost earns the Clutch Master badge."
+  - listitem: "S1: Ghost is saddled with the Choker badge."
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Apex"
+  - option "Vortex"
+  - option "Slyblade"
+  - option "Echo"
+  - option "Hollowlock"
+  - option "Nightsurge"
+  - option "Frostdash"

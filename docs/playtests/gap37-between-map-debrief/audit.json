@@ -1,0 +1,44 @@
+{
+  "tested_head": "a2ca33fe28d56a67b04ce7d17d126f673bf36d1d",
+  "source_paths_unchanged": 430,
+  "before_save_sha256": "9f66e859da37c117077091eeaa4fda946ab04af42bef01c74e7a552d069324c8",
+  "after_save_sha256": "9f66e859da37c117077091eeaa4fda946ab04af42bef01c74e7a552d069324c8",
+  "complete_save_byte_identical": true,
+  "before_after_season_week": [
+    1,
+    22
+  ],
+  "accepted_decisions_before": 90,
+  "accepted_decisions_after": 90,
+  "new_accepted_decisions": 0,
+  "team_snapshots_before": 21,
+  "team_snapshots_after": 21,
+  "action_log_identical": true,
+  "telemetry_snaps_identical": true,
+  "fixture_id": "s1csf0",
+  "series_notes": [
+    "VGD: targeting Vortex.",
+    "VGD: stabilize response after map 1.",
+    "NXS: stabilize response after map 2."
+  ],
+  "usage_baseline": [],
+  "raw_events": 18,
+  "main_session_ids": [
+    "9cde334b07551e09dee24156da3658a3"
+  ],
+  "main_session_events": 14,
+  "bootstrap_events": 4,
+  "main_event_counts": {
+    "session_start": 1,
+    "view": 4,
+    "visible_time": 7,
+    "attempt": 1,
+    "result": 1
+  },
+  "save_request_ids": [
+    12
+  ],
+  "usage_coverage_rows": 3,
+  "decision_instrumented_rows": 0,
+  "csv_first19_fields_preserved": true
+}

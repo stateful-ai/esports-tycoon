@@ -1,0 +1,138 @@
+[
+  {
+    "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+    "request_id": 17,
+    "target": "/api/actions/flavor_event",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:41:59.589384+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/flavor_event",
+        "request_id": 17
+      },
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:41:59.589384+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/flavor_event",
+        "request_id": 17,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 4
+      }
+    ]
+  },
+  {
+    "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+    "request_id": 28,
+    "target": "/api/actions/dev_plan",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:26.383378+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/dev_plan",
+        "request_id": 28
+      },
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:26.383378+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/dev_plan",
+        "request_id": 28,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 5
+      }
+    ]
+  },
+  {
+    "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+    "request_id": 30,
+    "target": "/api/actions/dev_plan",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:26.396697+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/dev_plan",
+        "request_id": 30
+      },
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:26.396697+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/dev_plan",
+        "request_id": 30,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 2
+      }
+    ]
+  },
+  {
+    "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+    "request_id": 32,
+    "target": "/api/actions/save",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:51.101111+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 32
+      },
+      {
+        "schema_version": 1,
+        "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+        "received_at": "2026-10-10T20:43:51.101111+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 32,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 42
+      }
+    ]
+  }
+]

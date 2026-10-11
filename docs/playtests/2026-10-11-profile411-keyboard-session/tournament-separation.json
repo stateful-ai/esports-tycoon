@@ -1,0 +1,213 @@
+{
+  "before": [
+    {
+      "id": "registration-apex",
+      "checked": true,
+      "disabled": false,
+      "label": "Apex tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-apex\" aria-label=\"Apex tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"apex\">Apex</button></span><label class=\"entity-meta\" for=\"registration-apex\">27 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-echo",
+      "checked": true,
+      "disabled": false,
+      "label": "Echo tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-echo\" aria-label=\"Echo tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"echo\">Echo</button></span><label class=\"entity-meta\" for=\"registration-echo\">24 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-fa_0",
+      "checked": true,
+      "disabled": false,
+      "label": "Hollowlock tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_0\" aria-label=\"Hollowlock tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_0\">Hollowlock</button></span><label class=\"entity-meta\" for=\"registration-fa_0\">27 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-fa_12",
+      "checked": false,
+      "disabled": false,
+      "label": "Frostdash tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_12\" aria-label=\"Frostdash tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_12\">Frostdash</button></span><label class=\"entity-meta\" for=\"registration-fa_12\">29 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-fa_13",
+      "checked": true,
+      "disabled": false,
+      "label": "Slyblade tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_13\" aria-label=\"Slyblade tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_13\">Slyblade</button></span><label class=\"entity-meta\" for=\"registration-fa_13\">29 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-ghost",
+      "checked": true,
+      "disabled": false,
+      "label": "Ghost tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-ghost\" aria-label=\"Ghost tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"ghost\">Ghost</button></span><label class=\"entity-meta\" for=\"registration-ghost\">20 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-team_kraken_unit_p0",
+      "checked": false,
+      "disabled": false,
+      "label": "Nightsurge tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-team_kraken_unit_p0\" aria-label=\"Nightsurge tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"team_kraken_unit_p0\">Nightsurge</button></span><label class=\"entity-meta\" for=\"registration-team_kraken_unit_p0\">18 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-vortex",
+      "checked": true,
+      "disabled": false,
+      "label": "Vortex tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-vortex\" aria-label=\"Vortex tournament eligibility\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"vortex\">Vortex</button></span><label class=\"entity-meta\" for=\"registration-vortex\">23 · Promised squad role: Starter</label></div>"
+    }
+  ],
+  "trace": [
+    {
+      "id": "",
+      "text": "Strategy",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Game plan",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Prep",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Guide",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Adriatic SirensAlpine EchoAnatolia ForgeApex SyndicateAzure VantaBaltic Meridian",
+      "tag": "SELECT",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Lotus",
+      "tag": "SELECT",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Anti ExecRetakesLineup TestMental Reset",
+      "tag": "SELECT",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "LightNormalIntense",
+      "tag": "SELECT",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Book session",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "Accept coach plan",
+      "tag": "BUTTON",
+      "pid": null,
+      "label": null
+    },
+    {
+      "id": "",
+      "text": "FA 0",
+      "tag": "BUTTON",
+      "pid": "fa_0",
+      "label": null
+    },
+    {
+      "id": "registration-apex",
+      "text": "",
+      "tag": "INPUT",
+      "pid": null,
+      "label": "Apex tournament eligibility"
+    }
+  ],
+  "siblingFocus": {
+    "id": "",
+    "tag": "BUTTON",
+    "pid": "apex",
+    "type": "button",
+    "text": "Apex",
+    "focusVisible": true
+  },
+  "after": [
+    {
+      "id": "registration-apex",
+      "checked": true,
+      "disabled": false,
+      "label": "Apex tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-apex\" aria-label=\"Apex tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"apex\">Apex</button></span><label class=\"entity-meta\" for=\"registration-apex\">27 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-echo",
+      "checked": true,
+      "disabled": false,
+      "label": "Echo tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-echo\" aria-label=\"Echo tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"echo\">Echo</button></span><label class=\"entity-meta\" for=\"registration-echo\">24 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-fa_0",
+      "checked": true,
+      "disabled": false,
+      "label": "Hollowlock tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_0\" aria-label=\"Hollowlock tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_0\">Hollowlock</button></span><label class=\"entity-meta\" for=\"registration-fa_0\">27 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-fa_12",
+      "checked": false,
+      "disabled": false,
+      "label": "Frostdash tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_12\" aria-label=\"Frostdash tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_12\">Frostdash</button></span><label class=\"entity-meta\" for=\"registration-fa_12\">29 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-fa_13",
+      "checked": true,
+      "disabled": false,
+      "label": "Slyblade tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-fa_13\" aria-label=\"Slyblade tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"fa_13\">Slyblade</button></span><label class=\"entity-meta\" for=\"registration-fa_13\">29 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-ghost",
+      "checked": true,
+      "disabled": false,
+      "label": "Ghost tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-ghost\" aria-label=\"Ghost tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"ghost\">Ghost</button></span><label class=\"entity-meta\" for=\"registration-ghost\">20 · Promised squad role: Starter</label></div>"
+    },
+    {
+      "id": "registration-team_kraken_unit_p0",
+      "checked": false,
+      "disabled": false,
+      "label": "Nightsurge tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-team_kraken_unit_p0\" aria-label=\"Nightsurge tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"team_kraken_unit_p0\">Nightsurge</button></span><label class=\"entity-meta\" for=\"registration-team_kraken_unit_p0\">18 · Promised squad role: Bench</label></div>"
+    },
+    {
+      "id": "registration-vortex",
+      "checked": true,
+      "disabled": false,
+      "label": "Vortex tournament eligibility",
+      "html": "<div class=\"entity\"><input type=\"checkbox\" id=\"registration-vortex\" aria-label=\"Vortex tournament eligibility\" style=\"\"><span class=\"entity-name\"><button type=\"button\" class=\"plink \" data-pid=\"vortex\">Vortex</button></span><label class=\"entity-meta\" for=\"registration-vortex\">23 · Promised squad role: Starter</label></div>"
+    }
+  ],
+  "checkboxesEqual": false
+}

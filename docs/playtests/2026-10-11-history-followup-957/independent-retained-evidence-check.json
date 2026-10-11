@@ -1,0 +1,36 @@
+{
+  "verification": "Read-only saved JSON/JSONL and original audit receipts; no tests/helpers/gameplay",
+  "root_saved_state_checks": [
+    {
+      "session": "2026-10-11-season2-opener",
+      "original_full_saved_action_prefix": 104,
+      "new_saved_decisions": 3,
+      "paired200requests": 4,
+      "retained_usage_events": 59,
+      "snapshot_prefix_preserved": true,
+      "qualification": "Independent original sanitized full saved-state/JSONL equality; no helper execution"
+    }
+  ],
+  "gap40_retained_receipt_checks": [
+    {
+      "session": "2026-10-11-gap40-rollover",
+      "original_tested_source": "6f8a114741a2d0000e05168bf3faf7118fc4a8ac",
+      "source_freeze_files": 1803,
+      "raw_before_after_freezes_identical": true,
+      "retained_accepted_delta": 1,
+      "retained_usage_events": 14,
+      "paired200requests": 2,
+      "qualification": "Retained original audit/public/indexed receipts only. Full owner saves/source-save contents/auth excluded; accepted prefix and whole-save claims remain original audit evidence, not independently republished full save or new validation of currentPR387. Local tests/expensive gates UNRUN."
+    },
+    {
+      "session": "2026-10-11-gap40-shared-ready",
+      "original_tested_source": "4fee846e9a582ba5cb6c5e2fcf91518d9bda21df",
+      "source_freeze_files": 1827,
+      "raw_before_after_freezes_identical": true,
+      "retained_accepted_delta": 2,
+      "retained_usage_events": 38,
+      "paired200requests": 4,
+      "qualification": "Retained original audit/public/indexed receipts only. Full owner saves/source-save contents/auth excluded; accepted prefix and whole-save claims remain original audit evidence, not independently republished full save or new validation of currentPR387. Local tests/expensive gates UNRUN."
+    }
+  ]
+}

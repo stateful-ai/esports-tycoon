@@ -1,0 +1,277 @@
+{
+  "allowlist": [
+    {
+      "path": "actions.csv",
+      "bytes": 12296,
+      "sha256": "5e0b32df637a7bc4753d89e6d15e4ccbbc65420a6b8f2daa585c5040e7ac10c4"
+    },
+    {
+      "path": "actions-before-analytics.csv",
+      "bytes": 8705,
+      "sha256": "39fdfd61b27cbb3c5dc263aa0a3d5259af622ead3634dd6f9680abd80e177639"
+    },
+    {
+      "path": "annotation-scope.json",
+      "bytes": 874,
+      "sha256": "236a9c36dfb74f2d75d18e455918bad10787c42e6540337d3090972274dee562"
+    },
+    {
+      "path": "report.md",
+      "bytes": 5863,
+      "sha256": "65dc27e7bf45b8f951391da807b5e58d18c419d4f9688ffcaca55e1a449d2860"
+    },
+    {
+      "path": "reconciliation.json",
+      "bytes": 1914,
+      "sha256": "887064f86f7bce1ad6cf09b8567606c2fff2f87ce50aa65d3da73da7947c5a12"
+    },
+    {
+      "path": "before-public.json",
+      "bytes": 19139,
+      "sha256": "6d690c9d7ea7217a3483921a27f530a4d3bc4e1754ef4c691e14c4c6775c6715"
+    },
+    {
+      "path": "final-public.json",
+      "bytes": 19139,
+      "sha256": "6d690c9d7ea7217a3483921a27f530a4d3bc4e1754ef4c691e14c4c6775c6715"
+    },
+    {
+      "path": "final-dom.txt",
+      "bytes": 7290,
+      "sha256": "23ef84aa066ca94c52d39b2b4517db5563e0020d70c8092e2f438e3496e079e7"
+    },
+    {
+      "path": "final-company.png",
+      "bytes": 324020,
+      "sha256": "6ab507dbcd75b3e8df76e504c1bb5c611924055e90ccf2179da336e5a8ba7e59"
+    },
+    {
+      "path": "requests.json",
+      "bytes": 8287,
+      "sha256": "f7cafbaa7aac21e719a13b99bbb71cee2b51eed377b69c3f669805a43a377db7"
+    },
+    {
+      "path": "profile-responses.json",
+      "bytes": 303432,
+      "sha256": "4237187889ede531312cec19182907c25b9b33a1846225d87f9df652726c7f56"
+    },
+    {
+      "path": "club-tab-trace.json",
+      "bytes": 1143,
+      "sha256": "7483e9ed4a1833d689a58f6ce8566c1a247ade13c052babd845a2ba1b429291d"
+    },
+    {
+      "path": "club-openers.json",
+      "bytes": 3145,
+      "sha256": "6585a4b5a217b663650c0060b9dde81d9ab0d7b2daf77139547226575d81c41a"
+    },
+    {
+      "path": "club-focus-style.json",
+      "bytes": 216,
+      "sha256": "778c48f1cdb1292f2748b43dc833f0b523f23dee48bb5c7efaf44af2c24b1156"
+    },
+    {
+      "path": "club-apex-focused.png",
+      "bytes": 278691,
+      "sha256": "4e39793a1a3860d50b313d091ebb15e8e8451dfcf1ba956a932ac2d9ce6173bb"
+    },
+    {
+      "path": "club-focused-dom.txt",
+      "bytes": 9660,
+      "sha256": "e15fe1dd62a1283144d9aed8677e68f8840c417a02cf3e923eeb30173b8595a4"
+    },
+    {
+      "path": "club-enter-requests.json",
+      "bytes": 149,
+      "sha256": "9d5d3be49a45e8374d9af1d453cc5be4d9a42d126028288a58de279fb7dd63e2"
+    },
+    {
+      "path": "apex-open-dom.txt",
+      "bytes": 2954,
+      "sha256": "266b5b714205f9385879b7c432f5463a31b345cc2e1945f101476495833a3d95"
+    },
+    {
+      "path": "club-space-tab-trace.json",
+      "bytes": 545,
+      "sha256": "98a60989cbf8f98c5fe43710110ea36cb4a699280ba7f38ba71187bc16820457"
+    },
+    {
+      "path": "club-space-requests.json",
+      "bytes": 151,
+      "sha256": "babfb2658a2e9295beabe3b9839a582b288e9bf37cd1084828f00a94a0bd8047"
+    },
+    {
+      "path": "nested-tab-trace.json",
+      "bytes": 1921,
+      "sha256": "f7ff8fc7ac6a124544f2002698e369a19f0674caaf95d4e2d805e86e843679e4"
+    },
+    {
+      "path": "nested-relationship-focus.png",
+      "bytes": 177527,
+      "sha256": "6ee8f456c49ce19d27ba1ba76c3ac8287e2b29d605be90d218cd290805730e83"
+    },
+    {
+      "path": "nested-relationship-requests.json",
+      "bytes": 150,
+      "sha256": "3727a22524224a99dabb718d283fd268c972d00349baf73e7b1c694f06f8526f"
+    },
+    {
+      "path": "nested-ghost-dom.txt",
+      "bytes": 3097,
+      "sha256": "fd5f22fb8c455309557f6fdb834cbd6c511093e1a489b47b7cc5dffb835f18dc"
+    },
+    {
+      "path": "company-tab-trace.json",
+      "bytes": 267,
+      "sha256": "2120d16b1d5862afb08031368faa95b20b8a77d8c9b066635f3ef63184e27c64"
+    },
+    {
+      "path": "company-focused-dom.txt",
+      "bytes": 9409,
+      "sha256": "2254a28837d6fa101e52f545df7efb98f2f9eab5441b22ef78f7d15454e9c948"
+    },
+    {
+      "path": "company-ghost-focused.png",
+      "bytes": 289510,
+      "sha256": "d3668b2bbe50ea5d92bf571d7a0b2b0b217d8a4e8ce96ec0458a5b6d5f239ea3"
+    },
+    {
+      "path": "company-space-requests.json",
+      "bytes": 150,
+      "sha256": "b8bbb7f2748e2bbfa05132e006459a3c9459fa4a3edf1a6f60018ae406424ae4"
+    },
+    {
+      "path": "prep-before-dom.txt",
+      "bytes": 8954,
+      "sha256": "74831b051484bd8c9319c5a672c4f9bfc64cf2b4fb39765f8090c822edc9446a"
+    },
+    {
+      "path": "tournament-separation.json",
+      "bytes": 9876,
+      "sha256": "d792ef5bf7659d03ea08409339245f9a3c495c6a432e4d5138cb00cd8da993b8"
+    },
+    {
+      "path": "tournament-profile-focused.png",
+      "bytes": 241607,
+      "sha256": "69fc3ba1357e4699c50db933f2de2820734102a2a173602d2a1c53b4dc7723ae"
+    },
+    {
+      "path": "tournament-profile-requests.json",
+      "bytes": 149,
+      "sha256": "0050333e06e9462a21360786efb4b68464110d57efda8ea7f19688d4c79aad74"
+    },
+    {
+      "path": "tournament-correction.json",
+      "bytes": 232,
+      "sha256": "1c05b6cc6f04a6deabb71f46e1cfc6912da837f4a6c547a9a5e52771b4805ccd"
+    },
+    {
+      "path": "team-table-dom.txt",
+      "bytes": 3465,
+      "sha256": "0435a551b74cf00dc222318b334649a720f7fcfc54b930a304a0ff7f3e703990"
+    },
+    {
+      "path": "team-row-tab-trace.json",
+      "bytes": 597,
+      "sha256": "6a37762ad160520d393100f6074890c4bb99ada35e43107ea87ea26c5d309095"
+    },
+    {
+      "path": "team-row-focus.png",
+      "bytes": 155615,
+      "sha256": "f93e0d7c2254205ecdec8bbb0aafce6c6bf690a7468caa08077ec6e28c87df85"
+    },
+    {
+      "path": "team-row-requests.json",
+      "bytes": 151,
+      "sha256": "6054c68e0a1a8e0d19e55ce5fb5493f71e7124cb93f07c7910df98254de7a06a"
+    },
+    {
+      "path": "market-tab-trace.json",
+      "bytes": 703,
+      "sha256": "0c4674af6459e5be3c10aa02c0a888de7333d6c0196d47e65acf13e08380d1fe"
+    },
+    {
+      "path": "market-dom.txt",
+      "bytes": 7389,
+      "sha256": "dd3d9a8160079e7fa049c8ec7677f2a221d07ab5e21a7c3afe10513e0aff22c2"
+    },
+    {
+      "path": "market-player-focused.png",
+      "bytes": 285439,
+      "sha256": "b63db433e1b706421f1cb1063f2b76b88ce157354207ffa6c2a60bc6de0787c8"
+    },
+    {
+      "path": "market-enter-requests.json",
+      "bytes": 150,
+      "sha256": "54209dc3cd5cba6e0becdde3eb81a60a834f0890d9ded10ab7edfe8baa0c5c31"
+    },
+    {
+      "path": "market-row-correction.json",
+      "bytes": 6520,
+      "sha256": "6c8c9647548f95538c348ab55b289922e40a0305c566af66ab60e21a13242e07"
+    },
+    {
+      "path": "market-expanded-dom.txt",
+      "bytes": 9690,
+      "sha256": "53cb6f5bd6d83a3620e34caf0c7e989f38ed04ba090ad32680a843cb1f940bc5"
+    },
+    {
+      "path": "market-row-expanded.png",
+      "bytes": 288882,
+      "sha256": "742cfc6312b4487b73dfa10d06dc35f753f250137b18eb41fbc29b536a1b9294"
+    },
+    {
+      "path": "save-response.json",
+      "bytes": 82,
+      "sha256": "0b43adc69eacf25842e02d3b1a48b44085a277c56404abc2fcaa281301988b83"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 95623,
+      "sha256": "ac655a6e216f7a5a691fd5cc0af77ea783705d77c152baf1b3cd8321f624b6f2"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 95623,
+      "sha256": "ac655a6e216f7a5a691fd5cc0af77ea783705d77c152baf1b3cd8321f624b6f2"
+    },
+    {
+      "path": "startup-proof.json",
+      "bytes": 404,
+      "sha256": "17bdaf9759eaa4f2c6ff3b2a7426837dc46a6f4b2eae2b0695d32955e19c2059"
+    },
+    {
+      "path": "shutdown.json",
+      "bytes": 134,
+      "sha256": "582cf8d97fadd2f42a81db9b9cd3b17b1503a5faeab9149e2e21f38a0eb4b45e"
+    },
+    {
+      "path": "usage-before.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "usage-end.jsonl",
+      "bytes": 9819,
+      "sha256": "0a50062e82d43366d3712f3e0eeab2ccbc11ca73c6da33c1a4acc7120847a07a"
+    },
+    {
+      "path": "flywheel-before.json",
+      "bytes": 6785,
+      "sha256": "80dbcab1d0c4bc028fc9bcbdc672e7a6a781a633f2e3bc9c21bbbb3c8236085f"
+    },
+    {
+      "path": "flywheel-after.json",
+      "bytes": 2468,
+      "sha256": "b94388cd9072381499ba4e10109a926f3c43b257810041dca30c24637f57cf0e"
+    }
+  ],
+  "exclude": [
+    "fullprivate baseline/final saves",
+    "saves directory",
+    "auth sessions",
+    "harnesses",
+    "server.log"
+  ],
+  "copyPolicy": "Only exact allowlisted files; never recursive copy"
+}

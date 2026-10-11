@@ -1,0 +1,39 @@
+{
+  "recovered_at": "2026-10-10",
+  "world": "26UHC",
+  "seed": 2038,
+  "before_actions": 27,
+  "after_actions": 29,
+  "prefix_unchanged": true,
+  "before_snapshots": 5,
+  "after_snapshots": 6,
+  "snapshot_prefix_unchanged": true,
+  "added_actions": [
+    {
+      "index": 27,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "let_loose",
+        "event_id": "39e83f39373aa3ea"
+      },
+      "source": "web"
+    },
+    {
+      "index": 28,
+      "season": 1,
+      "week": 6,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "limits": "Recovered directly from retained before/end saves. Original source fixture hash check is reported in original report, not reverified here."
+}

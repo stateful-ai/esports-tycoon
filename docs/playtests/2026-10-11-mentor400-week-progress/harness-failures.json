@@ -1,0 +1,34 @@
+{
+  "automatic_review": {
+    "blocked_action": "Combined logging/server-launch/browser command before execution",
+    "verbatim_stated_reason": "blocked by policy",
+    "additional_reason": "No more specific reason supplied",
+    "resolution": "Split authorized bookkeeping and dedicated owned8539 launch; scoped launch succeeded"
+  },
+  "cua": {
+    "verbatim_error": "Browser is not available: chrome",
+    "inventory": {
+      "apps": [],
+      "browsers": []
+    },
+    "resolution": "Parent-authorized unique Playwright CLI session"
+  },
+  "observer": {
+    "verbatim_error": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.",
+    "selector": "#main",
+    "actual_main_id": "view",
+    "resolution": "Inspected actual UI; no gameplay mutation retried"
+  },
+  "public_readback": {
+    "verbatim_error": "TypeError: apiRequestContext.get: Invalid URL",
+    "resolution": "Absolute public read-only URL"
+  },
+  "utf8_readback": {
+    "verbatim_error": "UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 1848: character maps to <undefined>",
+    "resolution": "Explicit UTF8 audit read"
+  },
+  "wire_observer": {
+    "retained_rows": 0,
+    "limit": "CLI globalThis did not persist; individual pre-click response waits and raw usage paired IDs are evidence"
+  }
+}

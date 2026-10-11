@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-10-11T08:18:15.661468+00:00",
+  "entries": [
+    {
+      "id": "esports-playtest-0228",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Backend restart cancels transient ready state",
+      "problem": "Backend restart cancels transient ready state",
+      "solution": "Treat lost readiness as cancellation and render server-owned transition loading copy",
+      "lesson": "Actual restart left same S1W23 with ready=false; status retry canceled polling and restored enabled season action.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-readiness-loading seed2038 RSET4 tested1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0229",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Offseason loading needs the same server transition facts",
+      "problem": "Offseason loading needs the same server transition facts",
+      "solution": "Treat lost readiness as cancellation and render server-owned transition loading copy",
+      "lesson": "Actual pending rollover overlay matched server loading_title/detail and explicitly excluded ordinary weekly processing.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-readiness-loading seed2038 RSET4 tested1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+      "code": "",
+      "tags": [],
+      "kind": "learning"
+    },
+    {
+      "id": "esports-playtest-0230",
+      "ts": "2026-10-11",
+      "domain": "esports-playtest",
+      "topic": "Waiting for a calendar change can lock a canceled seat",
+      "problem": "Waiting for a calendar change can lock a canceled seat",
+      "solution": "Treat lost readiness as cancellation and render server-owned transition loading copy",
+      "lesson": "A successful same-calendar status response with ready=false must end observation and return the manager to review/re-ready.",
+      "confidence": "high",
+      "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-readiness-loading seed2038 RSET4 tested1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+      "code": "",
+      "tags": [],
+      "kind": "pain-point"
+    }
+  ]
+}

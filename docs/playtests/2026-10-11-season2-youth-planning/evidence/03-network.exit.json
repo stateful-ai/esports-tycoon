@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-10-11T09:46:54.726686+00:00",
+  "exit_code": 1,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "network"
+  ],
+  "stdout_bytes": 7492,
+  "stderr_bytes": 26
+}

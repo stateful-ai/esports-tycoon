@@ -1,0 +1,6 @@
+### Result
+{"url":"http://127.0.0.1:8539/api/actions/flavor_event","status":200,"body":"{\"ok\":true,\"message\":\"The crew runs long and leaves Nightsurge a little flat.\"}","request":"{\"event_id\":\"f18ff1509b545e6c\",\"choice_id\":\"film_grind\"}"}
+### Ran Playwright code
+```js
+await (async (page) => { const response = page.waitForResponse(r=>r.url().includes("/api/actions/") && r.request().method()==="POST"); await page.getByRole("button",{name:"Film the practice-room grind",exact:true}).click(); const r=await response; return {url:r.url(),status:r.status(),body:await r.text(),request:r.request().postData()}; })(page);
+```
