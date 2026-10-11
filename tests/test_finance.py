@@ -395,6 +395,39 @@ def test_cash_projection_matches_breakdown_first_week(campaign: GameState) -> No
     assert rows[-1]["balance"] >= campaign.teams[team_id].balance
 
 
+def test_all_sponsor_slots_run_rate_matches_projection_without_mutating_save(campaign: GameState) -> None:
+    campaign.standings[campaign.user_team_id] = TeamRecord(wins=3, losses=1)
+    campaign.sponsor_slots = {
+        slot: SponsorDeal(
+            name=f"Brand-{slot}", kind="performance", weekly=1_000 * (index + 1),
+            per_win=400, weeks_left=1 if slot == "stream" else 2,
+        )
+        for index, slot in enumerate(sponsors.SLOT_ORDER)
+    }
+    before = campaign.model_dump_json()
+    breakdown = economy.weekly_breakdown(campaign, staff_cost=500)
+    projection = economy.cash_projection(campaign, staff_cost=500, weeks=3)
+    assert list(breakdown["sponsors_by_slot"]) == list(sponsors.SLOT_ORDER)
+    assert breakdown["sponsors_by_slot"] == {
+        slot: 1_000 * (index + 1) + 300
+        for index, slot in enumerate(sponsors.SLOT_ORDER)
+    }
+    assert breakdown["sponsors_total"] == breakdown["sponsors_base"] + 16_500
+    assert projection[0]["net"] == breakdown["net"]
+    assert projection[1]["net"] == breakdown["net"] - 4_300
+    assert projection[2]["net"] == breakdown["net"] - 16_500
+    assert campaign.model_dump_json() == before
+
+
+def test_run_rate_includes_empty_slots_and_excludes_expired_deals(campaign: GameState) -> None:
+    campaign.sponsor_slots = {
+        "apparel": SponsorDeal(name="Expired", kind="steady", weekly=8_000, weeks_left=0),
+    }
+    breakdown = economy.weekly_breakdown(campaign)
+    assert breakdown["sponsors_by_slot"] == dict.fromkeys(sponsors.SLOT_ORDER, 0)
+    assert economy.cash_projection(campaign, weeks=1)[0]["net"] == breakdown["net"]
+
+
 # ---------------------------------------------------------------------------
 # apply_weekly_finance stays backward compatible + adds revenue depth
 

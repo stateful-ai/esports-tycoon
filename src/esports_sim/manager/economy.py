@@ -253,9 +253,6 @@ def facility_wellbeing_bonus(gs: GameState, team_id: str | None = None) -> float
 # ---------------------------------------------------------------------------
 # Itemized breakdown + projection (user org only; feeds the finances tab)
 
-_SLOTS: tuple[str, ...] = ("title", "jersey", "peripheral")
-
-
 def _user_win_rate(gs: GameState) -> float:
     record = gs.standings.get(gs.acting_team_id)
     if not record or (record.wins + record.losses) == 0:
@@ -274,6 +271,9 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     that function's docstring. Every component here matches what actually
     lands on the user's balance each week either way.
     """
+    # sponsors imports economy, so resolve its canonical slot order lazily.
+    from esports_sim.manager.sponsors import SLOT_ORDER
+
     team = gs.teams[gs.acting_team_id]
     roster = gs.roster(gs.acting_team_id)
     win_rate = _user_win_rate(gs)
@@ -285,10 +285,10 @@ def weekly_breakdown(gs: GameState, staff_cost: int = 0) -> dict:
     sponsors_by_slot = {
         slot: (
             deal.weekly + int(deal.per_win * win_rate)
-            if (deal := gs.sponsor_slots.get(slot))
+            if (deal := gs.sponsor_slots.get(slot)) and deal.weeks_left > 0
             else 0
         )
-        for slot in _SLOTS
+        for slot in SLOT_ORDER
     }
     sponsors_total = base_sponsor + sum(sponsors_by_slot.values())
     upkeep = facility_weekly_upkeep(gs.facilities)

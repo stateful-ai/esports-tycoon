@@ -7835,18 +7835,12 @@ const FinancesTab = ({ onOpenBrand }) => {
                   <td>Base sponsorship</td>
                   <td class="num">${money(b.sponsors_base)}</td>
                 </tr>
-                <tr>
-                  <td>Title sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.title || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Jersey sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Peripheral sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td>
-                </tr>
+                ${Object.entries(b.sponsors_by_slot).map(([slot, amount]) => html`
+                  <tr>
+                    <td>${humanize(slot)} sponsor</td>
+                    <td class="num">${money(amount)}</td>
+                  </tr>
+                `)}
                 <tr>
                   <td>Merchandise</td>
                   <td class="num">${money(b.merch)}</td>

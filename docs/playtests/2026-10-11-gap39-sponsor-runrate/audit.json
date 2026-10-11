@@ -1,0 +1,43 @@
+{
+  "surface": "Browser CLI Company/save acceptance plus supplemental GET-only HTTP readback",
+  "before_actions": 104,
+  "after_actions": 104,
+  "action_log_unchanged": true,
+  "before_snapshots": 23,
+  "after_snapshots": 23,
+  "snapshots_unchanged": true,
+  "state_changes": [],
+  "breakdown": {
+    "salaries": 42200,
+    "staff": 4900,
+    "sponsors_base": 48582,
+    "sponsors_by_slot": {
+      "title": 41300,
+      "jersey": 10100,
+      "peripheral": 1800,
+      "stream": 9400,
+      "apparel": 0
+    },
+    "sponsors_total": 111182,
+    "merch": 2604,
+    "tickets": 1736,
+    "streaming": 8968,
+    "facility_upkeep": 1500,
+    "prizes": 0,
+    "income_total": 124490,
+    "expense_total": 48600,
+    "net": 75890
+  },
+  "projection_first": {
+    "week": 2,
+    "net": 75890,
+    "balance": 2342712
+  },
+  "browser_usage_retained": 33,
+  "browser_request_targets": [
+    "/api/actions/save",
+    "/api/actions/save"
+  ],
+  "original_save_sha256": "68d1cb1ff58813416eb23c92caf94d1c8046e7286e111fa4682155ad7e778663",
+  "copied_save_sha256": "68d1cb1ff58813416eb23c92caf94d1c8046e7286e111fa4682155ad7e778663"
+}

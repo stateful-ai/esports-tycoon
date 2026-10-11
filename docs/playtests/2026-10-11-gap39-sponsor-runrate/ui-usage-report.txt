@@ -1,0 +1,39 @@
+{
+  "attempts": 1,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 3,
+    "view:company/finances": 1,
+    "view:dashboard": 1,
+    "view:lobby": 3,
+    "visible_time:company/finances": 5,
+    "visible_time:dashboard": 1,
+    "visible_time:lobby": 19
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "39fdcc5ac360cb9a6ce82702b23ee164": 59995,
+    "3e5a5d1e432c55b4efc522d8dad11993": 0,
+    "b2d03b099c0b49c7a71335345a694940": 0,
+    "f91e7e22ad266d12c2ce5562e276a21e": 224973
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 1,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "company/finances": 68483,
+    "dashboard": 6496,
+    "lobby": 258084
+  },
+  "world_events": {
+    "26UHC": 15,
+    "lobby": 21
+  }
+}
