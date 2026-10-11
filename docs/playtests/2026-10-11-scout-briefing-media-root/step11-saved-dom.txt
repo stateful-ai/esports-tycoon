@@ -1,0 +1,210 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 3 · Regular — Azure Vanta
+  - generic: 184,625 cr
+  - button "Save" [active]
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox 6":
+      - text: Inbox
+      - generic: "6"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W3 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 0–2
+  - generic: Record
+  - generic: "-17 rd"
+  - button "184,625 cr Balance":
+    - generic: 184,625 cr
+    - generic: Balance
+  - generic: "60"
+  - generic: Morale
+  - button "56 Condition":
+    - generic: "56"
+    - generic: Condition
+  - text: W3 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: 50% scouted
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Azure Vanta
+  - generic: VS
+  - generic: S1 · W3
+  - generic: Emea League
+  - generic: Best of 1
+  - generic: Patagonia Sur
+  - generic: Today's prep
+  - generic: Patagonia Sur in W3
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: 50% / 85% playbook
+  - generic: Review the intel on Patagonia Sur
+  - paragraph: Standing pro lane covers this fixture. Scouting depth 50%; playbook read 85%. Review verified reads before finalizing the plan.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Hollowdash's development plan
+  - paragraph: Hollowdash moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: Azure Vanta arrive on a 2-match losing run. A win would haul Azure Vanta back toward the playoff places.
+  - generic: Map
+  - figure "lotus":
+    - img "lotus"
+    - generic: lotus
+  - generic: Danger men
+  - generic: Ironwing
+  - generic: Sentinel
+  - generic: ~47
+  - generic: Crimstep
+  - generic: Initiator
+  - generic: ~47
+  - generic: Slypulse
+  - generic: Duelist
+  - generic: ~43
+  - generic: Playstyle
+  - generic: Compact
+  - generic: holds passive angles · stacks tight and hits as five
+  - text: Your map pool & veto
+  - text: Azure Vanta — season map record (wins / played)
+  - generic: Bind
+  - generic: 0%
+  - generic: 0/1
+  - generic: Haven
+  - generic: 0%
+  - generic: 0/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Lost to Prairie Signal 5-13. Standout: Hollowdash (1.39). Off-colour: Zephyrblade (0.45)."
+  - paragraph: “Azure Vanta are down in fifth and running out of easy weeks.”
+  - generic: L
+  - generic: vs Prairie Signal
+  - generic: 5–13
+  - generic: ★
+  - text: POTM
+  - generic: Staticecho
+  - generic: What worked
+  - generic: Hollowdash clutched duels
+  - generic: 18/14 duels won (+4.3 xDE).
+  - generic: Hollowdash carried
+  - generic: Team-high 1.39 average rating.
+  - generic: Clutch when it counts
+  - generic: 2/14 last-alive rounds won.
+  - generic: Utility on point
+  - generic: 6/84 abilities whiffed (7%).
+  - generic: Where it broke down
+  - generic: Pistols lost
+  - generic: 0/2 pistol rounds (0%).
+  - generic: Being out-fragged
+  - generic: 167 ACS vs 228 — a 61-point gap.
+  - generic: Zephyrblade off-colour
+  - generic: 0.45 average rating across the series.
+  - generic: Young with room (proj. 40–67) — a development call, not a bench.
+  - generic: Defense is leaking
+  - generic: 3/12 defense rounds won (25%).
+  - generic: Attack is stalling
+  - generic: 2/6 attack rounds won (33%).
+  - paragraph: Hire a coach for tailored fixes.
+  - heading "Emea league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Nova Rift 2 0 +9":
+        - cell "1"
+        - cell "Nova Rift"
+        - cell "2"
+        - cell "0"
+        - cell "+9"
+      - row "2 Mumbai Meteors 1 1 +7":
+        - cell "2"
+        - cell "Mumbai Meteors"
+        - cell "1"
+        - cell "1"
+        - cell "+7"
+      - row "3 Solar Flare 1 1 +4":
+        - cell "3"
+        - cell "Solar Flare"
+        - cell "1"
+        - cell "1"
+        - cell "+4"
+      - row "4 Anatolia Forge 1 1 0":
+        - cell "4"
+        - cell "Anatolia Forge"
+        - cell "1"
+        - cell "1"
+        - cell "0"
+  - paragraph: "World #41 · Rep 51 · Fans 33.3K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: ▸ No game plan set for W3
+  - generic: ▸ 6 unread inbox messages
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "Your calls" [level=2]
+  - text: Last match · Initial plan
+  - generic: ▸ Focused prep on Staticdash
+  - generic: ▸ Focused the room — confidence +1.7 per starter
+  - generic: "▸ Preparation: prep edge +0.80 applied"
+  - heading "News" [level=2]
+  - generic: "[S1 W2] Iron Pact part with Arthur Fischer and appoint Veer after a 2-match losing streak."
+  - generic: "[S1 W2] Ghostline part with Victor Tanaka and appoint Liam Nakamura after a 2-match losing streak."
+  - generic: "[S1 W2] #15 Highlands Nine stumble against #23 Bayou Kings (11-13)."
+  - generic: "[S1 W2] 5-13 against Prairie Signal. They found the better answers. Staticecho put up 32 kills (2.31). On disciplined, utility-perfect retakes."
+  - generic: "[S1 W2] #22 Sahara Compass stumble against #25 Adriatic Sirens (9-13)."
+  - generic: "[S1 W2] Gallic Storm sign Ironblade (igl) for 5,900/wk."
+  - generic: "[S1 W2] Gallic Storm release Blitzcore (severance 30,000 cr)."
+  - generic: "[S1 W2] Vortex re-signs with Team Nexus at 7,700/wk."
+  - generic: "[S1 W1] 4-13 loss to Taipei Circuit on bind. Top rating: Grimwolf, 1.33."
+  - generic: "[S1 W1] Bayou Kings sign Lunarshot (igl) for 6,500/wk."
+  - generic: "[S1 W1] Bayou Kings release Ironcore (severance 36,000 cr)."
+  - generic: "[S1 W1] Cascadia Youth sign Frostwolf (awper) for 7,200/wk."
+- generic: World saved.
+- tooltip "Save Save your campaign":
+  - heading "Save" [level=4]
+  - generic: Save your campaign
