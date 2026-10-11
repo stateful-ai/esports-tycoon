@@ -157,9 +157,10 @@ def test_unknown_targets_fail_loudly_rather_than_silently(session: PlaytestSessi
 @pytest.mark.parametrize("surface", ["main", "overlay", "blocked"])
 def test_profile_uses_only_visible_active_surface_and_escaped_ref(session, tmp_path, surface):
     # An isolated page exercises the actual injected selector without changing
-    # the shared campaign or its player browser.
-    page = session.page.context.new_page()
-    try:
+    # the shared campaign or its player browser. It needs its own CONTEXT:
+    # session.page is the browser's owner page, and new_page() on that context
+    # raises "Please use browser.new_context()".
+    with session.isolated_page() as page:
         page.set_content('''<div id="view"><button id="hidden" style="display:none">Hidden</button>
             <button id="main">Main</button></div>
             <div class="overlay" id="lower"><button id="behind">Behind</button></div>
@@ -183,8 +184,6 @@ def test_profile_uses_only_visible_active_surface_and_escaped_ref(session, tmp_p
         clicked = page.evaluate('document.body.dataset.clicked || ""')
         assert observation.ok == (surface != "blocked")
         assert clicked == {"main": "main", "overlay": "active", "blocked": ""}[surface]
-    finally:
-        page.close()
 
 
 def test_zz_advancing_a_week_moves_the_campaign(session: PlaytestSession):
