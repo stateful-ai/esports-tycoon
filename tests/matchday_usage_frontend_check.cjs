@@ -13,7 +13,11 @@ function el(tag, classes = '', html = '') {
     get childElementCount() { return children.length; }};
 }
 let overlay = el('div', 'hidden');
-const fixture = {fixture: {stage: 'regular', week: 3, best_of: 3},
+const fixture = {fixture: {stage: 'regular', week: 3, best_of: 3,
+  map_pool: {team_name: 'Private You', maps: [], fixture: {
+    opponent: 'PRIVATE_THEM', veto_locked: true, veto: ['PRIVATE_VETO'],
+    maps: [{map: 'PRIVATE_MAP', ours: {played: 2, wins: 1, win_rate: 50},
+      theirs: {played: 0, wins: 0, win_rate: null}}]}}},
   you: {id: 'PRIVATE_YOU', name: 'Private You'}, them: {id: 'PRIVATE_THEM', name: 'Private Them'}};
 const context = {window: {addEventListener() {}}, document: {hidden: false, addEventListener() {}},
   crypto: require('node:crypto').webcrypto, performance: {now: () => 0},
@@ -25,6 +29,12 @@ const context = {window: {addEventListener() {}}, document: {hidden: false, addE
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('src/esports_sim/web/static/usage.js', 'utf8'), context);
 const source = fs.readFileSync('src/esports_sim/web/static/app.js', 'utf8');
+// Load the production shared renderer too: openMatchday calls it even when
+// there is no map pool. A stub would conceal missing fixture-map rendering.
+const fixtureMapStart = source.indexOf('function fixtureMapRead(board, mp) {');
+const fixtureMapEnd = source.indexOf('\nfunction toast(', fixtureMapStart);
+assert(fixtureMapStart >= 0 && fixtureMapEnd > fixtureMapStart);
+vm.runInContext(source.slice(fixtureMapStart, fixtureMapEnd), context);
 vm.runInContext(source.slice(source.indexOf('let matchdayUsageOpen = false;'),
   source.indexOf('// Legacy career: the job-market takeover panel')), context);
 async function take() {
@@ -38,10 +48,16 @@ function button(text) {
   const find = node => node.tag === 'button' && node.html.startsWith(text) ? node : node.children.map(find).find(Boolean);
   return find(overlay);
 }
+function renderedText(node = overlay) {
+  return [node.html, ...node.children.map(renderedText)].join('\n');
+}
 (async () => {
   context.closeMatchday(); assert.deepEqual(await take(), []);
   await context.openMatchday();
   assert.equal(overlay.classList.contains('hidden'), false);
+  assert(renderedText().includes('Series maps — veto locked'));
+  assert(renderedText().includes('PRIVATE_VETO'));
+  assert(renderedText().includes('PRIVATE_MAP — you 50% (1/2) · PRIVATE_THEM no season maps played'));
   assert.deepEqual(await take(), ['matchday/briefing_open']);
   await context.openMatchday(); assert.deepEqual(await take(), []); // visible refresh
   overlay.onclick({target: {}}); assert.deepEqual(await take(), []); // content click
@@ -57,6 +73,17 @@ function button(text) {
   assert.deepEqual(await take(), ['matchday/briefing_open', 'matchday/briefing_close']);
   context.api = async () => ({...fixture, plan_set: true});
   await context.openMatchday(); button('Review game plan').onclick();
+  assert.deepEqual(await take(), ['matchday/briefing_open', 'matchday/briefing_close']);
+  context.api = async () => ({...fixture, fixture: {...fixture.fixture,
+    map_pool: {maps: [], fixture: {opponent: 'PRIVATE_THEM', veto_locked: false, veto: [], maps: []}}}});
+  await context.openMatchday();
+  assert(renderedText().includes('Scheduled maps'));
+  button('Continue').onclick();
+  assert.deepEqual(await take(), ['matchday/briefing_open', 'matchday/briefing_close']);
+  context.api = async () => ({...fixture, fixture: {...fixture.fixture, map_pool: null}});
+  await context.openMatchday();
+  assert(renderedText().includes('No map record yet this season.'));
+  button('Continue').onclick();
   assert.deepEqual(await take(), ['matchday/briefing_open', 'matchday/briefing_close']);
   context.api = async () => ({fixture: null});
   await context.openMatchday(); button('Close').onclick();
