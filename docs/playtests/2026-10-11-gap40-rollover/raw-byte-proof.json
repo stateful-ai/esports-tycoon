@@ -1,12 +1,12 @@
 {
-  "receipt_count": 19,
+  "receipt_count": 20,
   "all_raw_equals_staged_git_blob": true,
   "scope": "Original receipt paths in manifest; proof file excluded from self-hashing",
   "receipts": [
     {
       "path": "docs/playtests/2026-10-11-gap40-rollover/actions.csv",
-      "sha256": "24255d6bf100312846a58efe299502bea3445c7c872f121174cc5ada78994277",
-      "bytes": 4273,
+      "sha256": "a3c62be9f2d26e85dfa4b6c3f652039d1ac282c2f5712538ab7fccc95f72b928",
+      "bytes": 4364,
       "raw_equals_staged_git_blob": true
     },
     {
@@ -115,6 +115,12 @@
       "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/visible-body.txt",
       "sha256": "c6729cb0084a7f1c2f74d2b5df48bcbcd36cb10cb96d27fd67878137a464b8d2",
       "bytes": 3063,
+      "raw_equals_staged_git_blob": true
+    },
+    {
+      "path": "docs/playtests/2026-10-11-gap40-rollover/evidence/actions-before-analytics-correction.csv",
+      "sha256": "24255d6bf100312846a58efe299502bea3445c7c872f121174cc5ada78994277",
+      "bytes": 4273,
       "raw_equals_staged_git_blob": true
     }
   ]
