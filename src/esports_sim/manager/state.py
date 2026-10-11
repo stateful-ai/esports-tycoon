@@ -21,7 +21,7 @@ from esports_sim.schemas import FutureProspect, Player, Team, ManagerPromise, Ha
 from esports_sim.schemas.common import Region
 from esports_sim.manager.preparation import PrepPlan, PrepReport
 
-SCHEMA_VERSION = 37
+SCHEMA_VERSION = 38
 
 # Save migrations, keyed by the schema_version they upgrade FROM. Each takes
 # the raw parsed dict and returns it bumped one version forward. Add-a-field
@@ -551,6 +551,12 @@ def _migrate_v36_to_v37(data: dict) -> dict:
     return data
 
 
+def _migrate_v37_to_v38(data: dict) -> dict:
+    """Tier meta starts empty: historical global totals lack tier identity."""
+    data.setdefault("map_meta_stats_by_tier", {})
+    return data
+
+
 _MIGRATIONS: dict[int, "callable"] = {
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
@@ -588,6 +594,7 @@ _MIGRATIONS: dict[int, "callable"] = {
     34: _migrate_v34_to_v35,
     35: _migrate_v35_to_v36,
     36: _migrate_v36_to_v37,
+    37: _migrate_v37_to_v38,
 }
 
 REGULAR_PRIZES = [250_000, 180_000, 140_000, 110_000, 90_000, 70_000, 55_000, 45_000]
@@ -1740,6 +1747,11 @@ class GameState(BaseModel):
     team_map_stats: dict[str, dict[str, TeamMapStats]] = Field(default_factory=dict)
     # Aggregate observations from completed maps, never gated by scouting.
     map_meta_stats: dict[str, MapMetaStats] = Field(default_factory=dict)
+    # Fixture-tier identity captured at completion, independent of transfers.
+    # Older saves retain global totals but cannot reconstruct scoped picks/dials.
+    map_meta_stats_by_tier: dict[str, dict[str, MapMetaStats]] = Field(
+        default_factory=dict
+    )
     # Time-series (SURVIVE season rollover, capped): performance points for
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)

@@ -6928,7 +6928,7 @@ async function stats(v) {
   const [data, racesResp, metaResp, perf] = await Promise.all([
     api("/api/stats" + qs),
     sub === "races" ? api("/api/races").catch(() => null) : Promise.resolve(null),
-    sub === "meta" ? api("/api/meta").catch(() => null) : Promise.resolve(null),
+    sub === "meta" ? api(`/api/meta?league_tier=${lgTier}`).catch(() => null) : Promise.resolve(null),
     sub === "history" ? api("/api/perf").catch(() => null) : Promise.resolve(null),
   ]);
   const tier = data.analytics.tier;
@@ -7102,6 +7102,7 @@ function statsRaces(ws, data, racesResp) {
    click closure guards on isConnected (a dropped row means "recreate", not
    "collapse"). */
 function statsMeta(ws, data, metaResp, tier) {
+  const competition = data.league_tier === 2 ? "Challengers" : "Top flight";
   const main = el("div", "ws-8 ws-col");
   const rail = el("div", "ws-4 ws-col");
   ws.appendChild(main);
@@ -7109,11 +7110,11 @@ function statsMeta(ws, data, metaResp, tier) {
 
   if (metaResp && (metaResp.tier_list?.length || metaResp.latest_patch)) {
     const mc = el("div", "card");
-    mc.appendChild(el("h2", "", "Agent meta"));
+    mc.appendChild(el("h2", "", `Agent meta — ${competition}`));
     const lp = metaResp.latest_patch;
     if (lp) {
       mc.appendChild(el("p", "muted",
-        `Patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
+        `Global patch ${esc(lp.version)} (S${lp.season} W${lp.week}) — ${esc(lp.lines.join("; "))}`));
     }
     const patched = metaResp.patched_agents || [];
     if (patched.length) {
@@ -7135,13 +7136,22 @@ function statsMeta(ws, data, metaResp, tier) {
           `<span class="es-meta-track"><span class="es-meta-fill" style="width:${w}%"></span></span>` +
           `<span class="mono muted">${a.pick_rate}%</span>`));
       }
-      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked this season"));
+      mc.appendChild(el("span", "es-scout-lab muted", "Most-picked in recorded competition maps this season"));
       mc.appendChild(list);
+    } else {
+      mc.appendChild(el("p", "muted", "No competition agent sample recorded yet."));
     }
     main.appendChild(mc);
   } else {
     main.appendChild(el("div", "card",
-      `<h2>Agent meta</h2><p class="muted">No meta data compiled yet.</p>`));
+      `<h2>Agent meta — ${competition}</h2><p class="muted">No competition agent sample recorded yet.</p>`));
+  }
+
+  if (metaResp?.sample) {
+    const sample = metaResp.sample;
+    main.appendChild(el("p", "muted",
+      `${competition}: ${sample.completed_team_maps} completed team maps; agent and tactic samples recorded for ${sample.recorded_team_maps}.` +
+      (sample.legacy_team_maps ? ` ${sample.legacy_team_maps} older team maps have no competition agent or tactic record.` : "")));
   }
 
   const mapTrends = metaResp?.map_trends || [];
@@ -7151,12 +7161,12 @@ function statsMeta(ws, data, metaResp, tier) {
   };
   if (mapTrends.length) {
     const trends = el("div", "card");
-    trends.innerHTML = `<h2>Map trends</h2><p class="muted">Public league data from completed maps. Use it to match the field or prepare a counter; team-specific plans remain scouting intel.</p>`;
+    trends.innerHTML = `<h2>Map trends — ${competition}</h2><p class="muted">Public competition data from completed maps. Agent picks and tactics use the recorded sample; older map counts remain visible.</p>`;
     const grid = el("div", "es-map-meta-grid");
     for (const trend of mapTrends) {
       const agents = trend.agents.length
         ? trend.agents.map((a) => `${esc(a.name)} <span class="muted">${a.pick_rate}%</span>`).join(" · ")
-        : "No agent picks yet";
+        : "No competition agent sample recorded";
       const tactics = trend.tactics.map((t) =>
         `<span class="es-map-meta-dial"><b>${esc(dialLabels[t.key] || t.key)}</b> ${t.average}</span>`
       ).join("");
@@ -7164,16 +7174,19 @@ function statsMeta(ws, data, metaResp, tier) {
         <div class="es-map-meta-head">${mapThumb(trend.map_id, "sm")}<b>${esc(humanize(trend.map_id))}</b>
           <span class="mono muted">${trend.team_maps} team maps</span></div>
         <div><span class="muted">Top agents</span> ${agents}</div>
-        <div class="es-map-meta-dials">${tactics}</div>
-        <span class="muted">Most focused site: ${esc(trend.site_focus)}</span>`));
+        <div class="es-map-meta-dials">${tactics || "No competition tactic sample recorded"}</div>
+        <span class="muted">Recorded sample: ${trend.recorded_team_maps ?? trend.team_maps} team maps${trend.site_focus ? ` · Most focused site: ${esc(trend.site_focus)}` : ""}</span>`));
     }
     trends.appendChild(grid);
     main.appendChild(trends);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Map trends — ${competition}</h2><p class="muted">No completed competition maps yet.</p>`));
   }
 
   if (data.teams.length) {
     const tc = el("div", "card");
-    tc.innerHTML = `<h2>Team tendencies</h2>` +
+    tc.innerHTML = `<h2>Team tendencies — ${competition}</h2>` +
       (tier >= 2 ? `<p class="muted">Click a team row for its per-map record.</p>` : "");
     const t = el("table");
     t.innerHTML = `<thead><tr><th>Team</th><th class="num">Maps</th>
@@ -7212,11 +7225,14 @@ function statsMeta(ws, data, metaResp, tier) {
     t.appendChild(tb);
     tc.appendChild(t);
     main.appendChild(tc);
+  } else {
+    main.appendChild(el("div", "card",
+      `<h2>Team tendencies — ${competition}</h2><p class="muted">No competition team sample yet.</p>`));
   }
 
   if ((data.patches ?? []).length) {
     const pc = el("div", "card");
-    pc.innerHTML = `<h2>Patch notes</h2>
+    pc.innerHTML = `<h2>Global patch notes</h2>
       <p class="muted">The meta moves twice a season — mid-split and over the break.
       Rosters built around a nerfed kit feel it.</p>`;
     const scroll = el("div", "card-scroll");

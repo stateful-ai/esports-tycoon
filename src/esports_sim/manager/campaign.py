@@ -1567,9 +1567,20 @@ def _aggregate_stats(
 _META_DIALS = ("aggression", "pace", "util_discipline", "eco_greed", "map_control")
 
 
-def _record_map_meta(gs: GameState, stats, tactics_by_team: dict[str, object]) -> None:
+def _record_map_meta(
+    gs: GameState, stats, tactics_by_team: dict[str, object], *, league_tier: int = 1
+) -> None:
     """Fold a completed map into the public, scouting-independent meta."""
     trend = gs.map_meta_stats.setdefault(stats.map_id, MapMetaStats())
+    scoped = gs.map_meta_stats_by_tier.setdefault(str(league_tier), {}).setdefault(
+        stats.map_id, MapMetaStats()
+    )
+    for target in (trend, scoped):
+        _fold_map_meta(target, stats, tactics_by_team)
+
+
+def _fold_map_meta(trend: MapMetaStats, stats, tactics_by_team: dict[str, object]) -> None:
+    """Same public aggregation for global and competition views; no RNG."""
     for tid in sorted(tactics_by_team):
         tactics = tactics_by_team[tid]
         trend.team_maps += 1
@@ -2284,6 +2295,7 @@ def _sim_fixture(
                 )
                 for tid in (f.team_a, f.team_b)
             },
+            league_tier=f.tier,
         )
         review_bundles.append((stats, res.events, team_of))
         review_weapon_class = weapon_class_of
@@ -3176,6 +3188,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     gs.player_agent_stats = {}
     gs.team_map_stats = {}
     gs.map_meta_stats = {}
+    gs.map_meta_stats_by_tier = {}
 
     # Earned traits unlock from settled career state (career_stats just rolled
     # up, season_start_ca still this season's baseline, age still the played-

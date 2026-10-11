@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from esports_sim.manager.state import GameState, PatchChange, PatchNote
+from esports_sim.manager.state import GameState, MapMetaStats, PatchChange, PatchNote
 from esports_sim.schemas import Ability, Agent
 
 # Clamps for patched knobs — patches bend the meta, they don't break kits.
@@ -105,12 +105,27 @@ def _agent_usage(gs: GameState) -> dict[str, int]:
     return usage
 
 
-def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
+def meta_report(
+    gs: GameState, agents: dict[str, Agent], *, league_tier: int | None = None
+) -> dict:
     """Read-only snapshot of the live meta for the UI: the most recent patch
     note, the net buff/nerf standing of every patched agent, and a usage tier
     list (most-played agents this season). `agents` is the STATIC registry
     bundle; nothing here mutates state or the registry."""
-    usage = _agent_usage(gs)
+    # None retains the existing global report for non-Stats consumers. Scoped
+    # observations were recorded with fixture identity at completion, so a
+    # transfer, tactic edit or scouting update cannot rewrite a past sample.
+    scoped = league_tier is not None
+    if scoped:
+        league_tier = 2 if league_tier == 2 else 1
+        trends = gs.map_meta_stats_by_tier.get(str(league_tier), {})
+        usage: dict[str, int] = {}
+        for map_id in sorted(trends):
+            for aid, picks in sorted(trends[map_id].agent_picks.items()):
+                usage[aid] = usage.get(aid, 0) + picks
+    else:
+        trends = gs.map_meta_stats
+        usage = _agent_usage(gs)
     total_maps = sum(usage.values())
 
     # Net direction per patched agent, folded to a "power" delta where
@@ -143,8 +158,17 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
     ][:8]
 
     latest = gs.patch_history[-1] if gs.patch_history else None
+    completed: dict[str, int] = {}
+    if scoped:
+        # MapResult retains map identity but not agent picks or played dials.
+        # Backfill only the public map counts, never current/private tactics.
+        for fixture in sorted(gs.fixtures, key=lambda f: f.id):
+            if fixture.played and fixture.tier == league_tier:
+                for result in fixture.results:
+                    completed[result.map_id] = completed.get(result.map_id, 0) + 2
     map_trends = []
-    for map_id, trend in sorted(gs.map_meta_stats.items()):
+    for map_id in sorted(set(trends) | set(completed)):
+        trend = trends.get(map_id, MapMetaStats())
         total_picks = sum(trend.agent_picks.values())
         top_agents = [
             {
@@ -169,14 +193,17 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
             max(sorted(trend.site_focuses), key=lambda focus: trend.site_focuses[focus])
             if trend.site_focuses else "balanced"
         )
-        map_trends.append({
+        row = {
             "map_id": map_id,
-            "team_maps": trend.team_maps,
+            "team_maps": max(completed.get(map_id, 0), trend.team_maps),
             "agents": top_agents,
             "tactics": tactics,
-            "site_focus": site_focus,
-        })
-    return {
+            "site_focus": site_focus if trend.team_maps or not scoped else None,
+        }
+        if scoped:
+            row["recorded_team_maps"] = trend.team_maps
+        map_trends.append(row)
+    report = {
         "latest_patch": (
             {
                 "version": latest.version,
@@ -191,6 +218,19 @@ def meta_report(gs: GameState, agents: dict[str, Agent]) -> dict:
         "tier_list": tiers,
         "map_trends": map_trends,
     }
+    if scoped:
+        recorded = sum(row["recorded_team_maps"] for row in map_trends)
+        total = sum(row["team_maps"] for row in map_trends)
+        report.update({
+            "league_tier": league_tier,
+            "patch_scope": "global",
+            "sample": {
+                "completed_team_maps": total,
+                "recorded_team_maps": recorded,
+                "legacy_team_maps": total - recorded,
+            },
+        })
+    return report
 
 
 def _change_options(

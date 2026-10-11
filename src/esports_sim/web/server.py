@@ -4272,11 +4272,11 @@ def league() -> dict:
 
 
 @app.get("/api/meta")
-def meta_view() -> dict:
+def meta_view(league_tier: int = 1) -> dict:
     """The live agent meta: the most recent balance patch, active buff/nerf
     standings, and a usage tier list (manager/meta.py). Pure read."""
     with S.lock:
-        return meta_mod.meta_report(S.require_gs(), S.gd.agents)
+        return meta_mod.meta_report(S.require_gs(), S.gd.agents, league_tier=league_tier)
 
 
 @app.get("/api/standings")
@@ -4868,7 +4868,7 @@ def stats_view(
         players.sort(key=lambda r: (-r["rating"], -r["kills"]))
 
         teams = []
-        for tid in gs.standings_order():
+        for tid in gs.standings_order(tier=league_tier):
             ts = gs.team_stats.get(tid)
             if ts is None or ts.maps == 0:
                 continue
