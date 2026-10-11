@@ -1,0 +1,397 @@
+{
+  "advance_post_count": 1,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/tokens.css"
+    },
+    {
+      "method": "GET",
+      "path": "/app.css"
+    },
+    {
+      "method": "GET",
+      "path": "/facilities.css"
+    },
+    {
+      "method": "GET",
+      "path": "/profile.css"
+    },
+    {
+      "method": "GET",
+      "path": "/usage.js"
+    },
+    {
+      "method": "GET",
+      "path": "/map-transform.js"
+    },
+    {
+      "method": "GET",
+      "path": "/viewer.js"
+    },
+    {
+      "method": "GET",
+      "path": "/facilities.js"
+    },
+    {
+      "method": "GET",
+      "path": "/draft.js"
+    },
+    {
+      "method": "GET",
+      "path": "/app.js"
+    },
+    {
+      "method": "GET",
+      "path": "/profile.js"
+    },
+    {
+      "method": "GET",
+      "path": "/audio.js"
+    },
+    {
+      "method": "GET",
+      "path": "/inbox.js"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/fonts/rajdhani-700.woff2"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/fonts/rajdhani-600.woff2"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/hooks"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/htm@3.1.1"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/htm@3.1.1/es2022/htm.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/es2022/preact.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/es2022/hooks.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lobby"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inbox"
+    },
+    {
+      "method": "GET",
+      "path": "/api/schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_nexus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/career"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/aim_demon.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/clutch_master.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/choker.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/haven.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/ascent.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/lotus.webp"
+    },
+    {
+      "method": "POST",
+      "path": "/api/actions/advance"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_nexus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/career"
+    },
+    {
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/tokens.css"
+    },
+    {
+      "method": "GET",
+      "path": "/app.css"
+    },
+    {
+      "method": "GET",
+      "path": "/facilities.css"
+    },
+    {
+      "method": "GET",
+      "path": "/profile.css"
+    },
+    {
+      "method": "GET",
+      "path": "/usage.js"
+    },
+    {
+      "method": "GET",
+      "path": "/map-transform.js"
+    },
+    {
+      "method": "GET",
+      "path": "/viewer.js"
+    },
+    {
+      "method": "GET",
+      "path": "/facilities.js"
+    },
+    {
+      "method": "GET",
+      "path": "/draft.js"
+    },
+    {
+      "method": "GET",
+      "path": "/app.js"
+    },
+    {
+      "method": "GET",
+      "path": "/profile.js"
+    },
+    {
+      "method": "GET",
+      "path": "/audio.js"
+    },
+    {
+      "method": "GET",
+      "path": "/inbox.js"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/hooks"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/htm@3.1.1"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/es2022/preact.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/preact@10.19.2/es2022/hooks.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "https://esm.sh/htm@3.1.1/es2022/htm.mjs"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lobby"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/fonts/rajdhani-600.woff2"
+    },
+    {
+      "method": "GET",
+      "path": "/ds/fonts/rajdhani-700.woff2"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inbox"
+    },
+    {
+      "method": "GET",
+      "path": "/api/schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_nexus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/career"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/aim_demon.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/clutch_master.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/choker.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/haven.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/ascent.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/lotus.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gameplan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/api/standings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_nexus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/team_sahara_compass"
+    },
+    {
+      "method": "GET",
+      "path": "/api/career"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gameplan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/report"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/logos/logo_1.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/logos/logo_6.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/lotus.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/aim_demon.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/choker.webp"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inbox"
+    }
+  ]
+}

@@ -7,3 +7,5 @@ docs/playtests/2026-10-11-gap40-shared-ready/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-shared-ready/actions.csv -text -whitespace
 docs/playtests/2026-10-11-gap40-status-retry/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-status-retry/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-ready-reload/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-ready-reload/actions.csv -text -whitespace
