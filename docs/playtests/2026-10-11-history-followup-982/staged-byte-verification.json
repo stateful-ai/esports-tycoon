@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-10-11T08:25:34.157441+00:00",
+  "verified_at_utc": "2026-10-11T08:26:16.639340+00:00",
   "verification_kind": "Read-only raw/Git hash, CSV and original JSON/JSONL inspection; no local tests or historical helper execution",
   "original_artifact_raw_and_Git_byte_matches": 129,
   "historical_tested_Git_source_blob_matches": 4,
@@ -12,7 +12,7 @@
   "gap40_historical_tests_UNRUN": true,
   "canonical982_sha256": "d9242dc4f81aa6bc98b78c130a3e2e0910cfad49bf93a6ad623c70e0762722d4",
   "parent957_exact_raw_prefix": true,
-  "docs_only_staged_paths_before_this_receipt": 143,
+  "docs_only_staged_paths_before_this_receipt": 1,
   "JSON_format_limit": "All copied original receipt .json files parse; existing zero-byte stderr preserved as empty text, no missing output synthesized",
   "privacy": "Complete gap40 and away owner/source saves plus auth/session/launch inputs excluded; root fictional before/after saves scoped; telemetry session IDs are not authentication"
 }
