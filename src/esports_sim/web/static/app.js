@@ -1750,6 +1750,14 @@ function dashGoTab(name) {
    fixture board, both sides' form + danger men, the opposing bench) laid out
    on the workspace grid. Presentation only — every number arrives computed;
    this renders, deep-links names, and hands off to the game-plan screen. */
+let matchdayUsageOpen = false;
+function recordMatchdayOpen(ov) {
+  // Count completed visible inspections, not fetch attempts or refreshes.
+  if (!ov.classList.contains("hidden") && !matchdayUsageOpen) {
+    matchdayUsageOpen = true;
+    window.Usage?.interaction("matchday/briefing_open");
+  }
+}
 async function openMatchday() {
   let md = null;
   try { md = await api("/api/matchday"); } catch (_e) { return; }
@@ -1770,6 +1778,7 @@ async function openMatchday() {
     btn.onclick = closeMatchday;
     empty.appendChild(btn);
     wrap.appendChild(empty);
+    recordMatchdayOpen(ov);
     return;
   }
   const you = md.you, them = md.them;
@@ -1928,11 +1937,16 @@ async function openMatchday() {
   cont.onclick = closeMatchday;
   foot.append(plan, cont);
   ws.appendChild(foot);
+  recordMatchdayOpen(ov);
 }
 
 function closeMatchday() {
   const ov = $("#matchday");
   if (!ov) return;
+  if (matchdayUsageOpen && !ov.classList.contains("hidden")) {
+    window.Usage?.interaction("matchday/briefing_close");
+  }
+  matchdayUsageOpen = false;
   ov.classList.add("hidden");
   ov.innerHTML = "";
   ov.onclick = null;

@@ -80,7 +80,8 @@ async function take() {
   const allowed = ['lobby/seed_change','week/full_report_open','market/player_search', ...['player','team','staff','manager'].flatMap(k => ['open','close'].map(a => `profile/${k}_${a}`)),
     'handbook/open','handbook/close','handbook/section_first_week','handbook/section_screens','handbook/section_glossary',
     'inbox/item_open','inbox/item_close',
-    ...['dashboard','inbox','club','tactics','facilities','season','market','stats','company'].map(tab => `inbox/shortcut_${tab}`)];
+    ...['dashboard','inbox','club','tactics','facilities','season','market','stats','company'].map(tab => `inbox/shortcut_${tab}`),
+    'matchday/briefing_open','matchday/briefing_close'];
   for (const target of allowed) context.window.Usage.interaction(target);
   console.log(JSON.stringify(await take()));
 })().catch(e => {console.error(e);process.exitCode=1;});

@@ -70,7 +70,8 @@
     "handbook/section_screens", "handbook/section_glossary",
     "inbox/item_open", "inbox/item_close",
     ...["dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company"]
-      .map(tab => `inbox/shortcut_${tab}`)]);
+      .map(tab => `inbox/shortcut_${tab}`),
+    "matchday/briefing_open", "matchday/briefing_close"]);
   function interaction(target) {
     if (interactions.has(target)) emit({kind: "interaction", target});
   }

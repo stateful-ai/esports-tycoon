@@ -47,8 +47,9 @@ INBOX_INTERACTIONS = {"inbox/item_open", "inbox/item_close"} | {
     f"inbox/shortcut_{tab}" for tab in
     ("dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company")
 }
+MATCHDAY_INTERACTIONS = {"matchday/briefing_open", "matchday/briefing_close"}
 INTERACTIONS = ({"lobby/seed_change", "week/full_report_open", "market/player_search"}
-                | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS | INBOX_INTERACTIONS)
+                | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS | INBOX_INTERACTIONS | MATCHDAY_INTERACTIONS)
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
