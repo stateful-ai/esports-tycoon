@@ -3471,10 +3471,11 @@ function developmentReportCard(report) {
   card.innerHTML = `<div class="dev-report-head">
       <div><h2>Development Report</h2><p class="muted">Season ${report.season} · ${range}</p></div>
       <div class="dev-report-summary">
-        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">Squad OVR ${signed(report.overall_delta)}</span>
+        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">${report.overall_delta == null ? "OVR comparison unavailable" : `Compared OVR ${signed(report.overall_delta)} · ${report.compared_players} players`}</span>
         <span class="chip tone-good">${report.grown} grown</span>
         <span class="chip tone-bad">${report.regressed} regressed</span>
         <span class="chip">${report.steady} steady</span>
+        ${report.first_observations ? `<span class="chip">${report.first_observations} first observations</span>` : ""}
       </div>
     </div>`;
 
@@ -3508,14 +3509,16 @@ function developmentReportCard(report) {
     }).join(" ");
     if (!p.attribute_tracking) {
       changes = '<span class="muted">Skill tracking starts with the next snapshot</span>';
+    } else if (!p.comparison_available) {
+      changes = '<span class="muted">First observation — no earlier skill comparison</span>';
     } else if (!changes) {
       changes = '<span class="muted">No skill changes of 0.1 or more</span>';
     }
     body.appendChild(el("tr", "", `<td><b>${plink(p.id, p.handle)}</b></td>
-      <td class="muted">W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts</td>
+      <td class="muted">${p.comparison_available ? `W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts` : `First observation · W${p.end_week}`}</td>
       <td class="num">${Number(p.overall_start).toFixed(1)}</td>
       <td class="num">${Number(p.overall_current).toFixed(1)}</td>
-      <td class="num"><span class="${tone}">${signed(p.overall_delta)}</span></td>
+      <td class="num"><span class="${tone}">${p.comparison_available ? signed(p.overall_delta) : "No earlier comparison"}</span></td>
       <td><div class="dev-change-list">${changes}</div></td><td class="dev-week-feedback">${feedback}</td>`));
   }
   table.appendChild(body);
