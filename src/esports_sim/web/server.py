@@ -20,6 +20,7 @@ import random
 import re
 import secrets
 import threading
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -2160,6 +2161,59 @@ def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
     return view, opp_id
 
 
+def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
+    """Pure current-fixture guidance; standing coverage and deep dives coexist."""
+    fixture = gs.team_fixture(team_id)
+    if fixture is None:
+        return None
+    opponent = fixture.team_b if fixture.team_a == team_id else fixture.team_a
+    name = gs.teams[opponent].name
+    desk = scouting.scout_desk_view(gs, team_id)
+    pro = desk["pro"]
+    standing = ((pro["directive"] == "scout_opponents"
+                and pro["opponent"] is not None
+                and pro["opponent"]["team_id"] == opponent)
+                or pro["directive"] in (opponent, f"match:{fixture.id}"))
+    target = gs.scout_targets.get(team_id)
+    deep_dive = target in (opponent, f"match:{fixture.id}")
+    assigned = standing or deep_dive
+    raw_progress = gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0)
+    progress = round(raw_progress, 2)
+    # Decimal text preserves stored hundredths without rounding a locked read
+    # up to its unlock or flooring 0.58's binary product below 58 percent.
+    depth_pct = math.floor(Decimal(str(raw_progress)) * 100)
+    playbook = round(scouting.team_playbook_read(gs, team_id, opponent), 2)
+    measured = progress > 0 or playbook > 0
+    # Matchday identity and counter reads unlock from team scouting depth.
+    # Playbook confidence remains useful measured intel, not that unlock.
+    ready = raw_progress >= 0.5
+    source = "Standing pro lane" if standing else "Deep dive" if deep_dive else None
+    if assigned and not measured:
+        badge, status = "Scouting assigned", "Assigned"
+        title = f"Coverage assigned to {name}"
+        copy = (f"{source} covers this fixture. No measured intel yet; "
+                "coverage builds when the week resolves.")
+    elif measured:
+        badge = f"{depth_pct}% scouted"
+        status = f"{depth_pct}% / {round(playbook * 100)}% playbook"
+        title = f"Review the intel on {name}"
+        copy = (f"{source} covers this fixture. " if assigned else
+                "Stored intel is available, but no assignment covers this fixture. ")
+        copy += (f"Scouting depth {depth_pct}%; "
+                 f"playbook read {round(playbook * 100)}%. ")
+        copy += ("Review verified reads before finalizing the plan." if ready else
+                 "Opponent identity and counter reads unlock at 50% scouting depth.")
+    else:
+        badge = "Scout elsewhere" if target or pro["directive"] else "Scouting unassigned"
+        status = "Unassigned"
+        title = f"Put the book on {name}"
+        copy = f"No scouting assignment covers {name}. Set upcoming-opponent coverage if this match is the priority."
+    return {"opponent_id": opponent, "assigned": assigned, "source": source,
+            "progress": progress, "playbook": playbook, "measured": measured,
+            "ready": ready, "badge": badge, "status": status, "title": title,
+            "copy": copy, "tone": "ready" if ready else "" if assigned else "urgent"}
+
+
 def _needs_you_flags(gs: GameState, tid: str) -> dict:
     """The pending-decision flags app.js computeNeedsYou badges without a new
     Dashboard card (7-card budget). Pure read; all four derived from live state.
@@ -2340,6 +2394,7 @@ def state() -> dict:
                     scout_target or "", 0.0
                 ),
                 "cap": scout_cap,
+                "readiness": _fixture_scout_readiness(gs, gs.acting_team_id),
             },
             "standings_top": [
                 {"team_id": tid, "name": gs.teams[tid].name, **gs.standings[tid].model_dump()}

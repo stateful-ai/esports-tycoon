@@ -1,0 +1,354 @@
+{
+  "original_pr_head": "99e6477aa129c0411dc869c3decfc31792f8dad2",
+  "main_head": "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71",
+  "merge_parents": [
+    "99e6477aa129c0411dc869c3decfc31792f8dad2",
+    "6fd38e1d8b413deeec2f3a078d3a80b71a5f0d71"
+  ],
+  "source_composition_tree": "5b8d835ce0b45112036d33693892918c6a5d70df",
+  "conflicts": [
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/actions.csv",
+      "stage1": null,
+      "stage2": "564ea15b5733b8517593b747ca78445dfcaf9412",
+      "stage3": "f0901ad0908d485231142feffea91e10f2c22b79",
+      "resolved": "f0901ad0908d485231142feffea91e10f2c22b79"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/correction-audit.json",
+      "stage1": null,
+      "stage2": "e34a72847124bd5bcf250e570acbe1a1c286eba0",
+      "stage3": "5c21ed092051ca602c0f09b379a19b93182d7287",
+      "resolved": "5c21ed092051ca602c0f09b379a19b93182d7287"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/decision-report.txt",
+      "stage1": null,
+      "stage2": "0133ca6920c88695d49148d3d5c63f4e96484ec6",
+      "stage3": "c1e6b8cda0c8630f5f6679bf3369bcdfe434a855",
+      "resolved": "c1e6b8cda0c8630f5f6679bf3369bcdfe434a855"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-post.json",
+      "stage1": null,
+      "stage2": "577ce4f38bce4febcc0a84d5c777c039dbe38702",
+      "stage3": "07e021eff9cc6bfafdcd985b6c6b51c20d1dbc37",
+      "resolved": "07e021eff9cc6bfafdcd985b6c6b51c20d1dbc37"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/flywheel-pre.json",
+      "stage1": null,
+      "stage2": "8548242055531299fd3161cbbaba68698ee17c7a",
+      "stage3": "1e4c0e873666cadd603204a51bc4ba2f08584cd5",
+      "resolved": "1e4c0e873666cadd603204a51bc4ba2f08584cd5"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-final-verification.json",
+      "stage1": null,
+      "stage2": "2879d1d7580ece512c511fb47a2aafcf7d340dab",
+      "stage3": "4fa013a497b8e94a8bab14f6b3f34f9d9462b090",
+      "resolved": "4fa013a497b8e94a8bab14f6b3f34f9d9462b090"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-exit.json",
+      "stage1": null,
+      "stage2": "767f60a666ea002a931f500efe6125d1e46b2a5f",
+      "stage3": "a43b2f7ce6ba97d80b48b38c1b2c94d2a0604e86",
+      "resolved": "a43b2f7ce6ba97d80b48b38c1b2c94d2a0604e86"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-full.log",
+      "stage1": null,
+      "stage2": "b79993edc536cd64dc807a790a62281d15bc1637",
+      "stage3": "3afec6a92fb0d99390ebe46371bced9ba46a12eb",
+      "resolved": "3afec6a92fb0d99390ebe46371bced9ba46a12eb"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-gate.py",
+      "stage1": null,
+      "stage2": "692505815e15f4571eadd569f84ba0b6023523f2",
+      "stage3": "01f7c4c701c80acc69ca45c77223f72bfe84b4fd",
+      "resolved": "01f7c4c701c80acc69ca45c77223f72bfe84b4fd"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-result.json",
+      "stage1": null,
+      "stage2": "6714406475aabc9e65fa58cee1d077616ef24e2e",
+      "stage3": "8d833abc758d9f718be46817fb99ae45bc2bda91",
+      "resolved": "8d833abc758d9f718be46817fb99ae45bc2bda91"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-source-freeze.json",
+      "stage1": null,
+      "stage2": "f6677ccc66901922cc24c13106471b3adcb55f4e",
+      "stage3": "96583b2112aa59e3725e3b548b3d3b6b6b1d736a",
+      "resolved": "96583b2112aa59e3725e3b548b3d3b6b6b1d736a"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/migration-independent-started.json",
+      "stage1": null,
+      "stage2": "7131c7b20526d12505ef0ffd14ab2e4ba678a6a6",
+      "stage3": "af9f8c3f24dbd5044695122167a43ab2ebcc923d",
+      "resolved": "af9f8c3f24dbd5044695122167a43ab2ebcc923d"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/original-actions-before-annotation.csv",
+      "stage1": null,
+      "stage2": "43fd247b4cd6d6e0fafe39113fc459d64c86e8d7",
+      "stage3": "8606523760d8cd969d047057bfd26812cc1d1a02",
+      "resolved": "8606523760d8cd969d047057bfd26812cc1d1a02"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-1.json",
+      "stage1": null,
+      "stage2": "6cf182080dfb7c65998d315c79d3608da9c0c617",
+      "stage3": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c",
+      "resolved": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-3.json",
+      "stage1": null,
+      "stage2": "6cf182080dfb7c65998d315c79d3608da9c0c617",
+      "stage3": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c",
+      "resolved": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-4.json",
+      "stage1": null,
+      "stage2": "6cf182080dfb7c65998d315c79d3608da9c0c617",
+      "stage3": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c",
+      "resolved": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/public-6.json",
+      "stage1": null,
+      "stage2": "6cf182080dfb7c65998d315c79d3608da9c0c617",
+      "stage3": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c",
+      "resolved": "41a8a95e5b5f9ef3f0fe4664ac44ca446fc7980c"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/reconciliation.json",
+      "stage1": null,
+      "stage2": "eb644b40a48602726abb2756ade44e554d7e081c",
+      "stage3": "5d302e4de18339b3920d54102a30fd2b96eec876",
+      "resolved": "5d302e4de18339b3920d54102a30fd2b96eec876"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/report.md",
+      "stage1": null,
+      "stage2": "6c01373d0705c6c1cd43b5bfa7c067e3a9374305",
+      "stage3": "20b9a5dd2c998327666fd5f90601d0cbec7e54e5",
+      "resolved": "20b9a5dd2c998327666fd5f90601d0cbec7e54e5"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/superseded-usage-report.txt",
+      "stage1": null,
+      "stage2": "b23db7b46f9611b2f4bcaf73bf465b15cea497c2",
+      "stage3": "36d473fa3d5cb880e47e3659a04f29242a2b5d29",
+      "resolved": "36d473fa3d5cb880e47e3659a04f29242a2b5d29"
+    },
+    {
+      "path": "docs/playtests/2026-10-10-dashboard-migrated-scouting/usage-report.txt",
+      "stage1": null,
+      "stage2": "cf664b73573448d2dee3799e293a7c015d103a4c",
+      "stage3": "8f54ae99b7347784dcdc59c77375ca29ffadbe7b",
+      "resolved": "8f54ae99b7347784dcdc59c77375ca29ffadbe7b"
+    }
+  ],
+  "feature_blobs": [
+    {
+      "path": "src/esports_sim/web/server.py",
+      "main": "11384eab73c15905e4c90f736c1046032035f661",
+      "resolved": "a90a14bb6a9cb046b5875a809e1b588b78b61fa7",
+      "original_pr": "5ae5bb0603d7090b65380f8e57974de1f0889f1f"
+    },
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "main": "3325e753abf5fe33b121b7623b6bfef7dea96b6e",
+      "resolved": "9762960206913a94617d23d950a343fe7ae93ac7",
+      "original_pr": "f80f6dc08710c4748222b1772fb8d9e43ef70bac"
+    },
+    {
+      "path": "tests/test_web_scout_readiness.py",
+      "main": null,
+      "resolved": "057f6cf10c692b89f451a8089edd077652046e86",
+      "original_pr": "057f6cf10c692b89f451a8089edd077652046e86"
+    }
+  ],
+  "current_main_nonfeature_blob_count": 3558,
+  "nonfeature_differences": [],
+  "unexpected_added_paths": [],
+  "canonical_history_main": "cb486f7fa373e10c5ef230cb6cfa48a40541a8ab",
+  "canonical_history_resolved": "cb486f7fa373e10c5ef230cb6cfa48a40541a8ab",
+  "historical_raw_proof_archive_sha256": "bf043b55a85d4ad5d695b723b8c4ac87e68d084cb12b6488518489d6ebc6696b",
+  "local_tests_run": false,
+  "validation": "Git/source composition only. No local tests, syntax checks, simulations, gates or report commands executed.",
+  "inline_comments_fully_paged": 3,
+  "inline_comment_ids": [
+    4224925158,
+    4224925164,
+    4239090467
+  ],
+  "inline_snapshot_sha256": "b5f03a89578d254327b308be054920dc93a730cbe4770425af002a3a8a8eadce",
+  "historical_paths_removed_relative_to_original_pr": [
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/actions.csv",
+      "original_pr": "0b31045491782ccdcf7c7d3c15cbc2503bd05416",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/dashboard-standing.png",
+      "original_pr": "0be3e8ff0bc8e6137957027949445622cce262c3",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/dashboard-stored-intel.png",
+      "original_pr": "8385ed35161b7efb8b3da6c256ab827826e60918",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/flywheel-post.json",
+      "original_pr": "67ab45daa38d9a04d30759b5dd0d3cf9b5bc2b9b",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/full-gate-result.json",
+      "original_pr": "1fffa4d53089463f578e2fcecb2e54dd891dd55c",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/gate-runner.ps1",
+      "original_pr": "0d3741cd2dd1ceb794e6dff18194f036c9ff32c0",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/import-proof.json",
+      "original_pr": "87a5c63ac232cc8750c8ca7b4559b2c3c33cf6da",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/reconciliation.json",
+      "original_pr": "52d81f37511295bb33405879daf9201a48a804a8",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/report.md",
+      "original_pr": "ab61974139bb5ea0303d5cdede6cc6e2ff8f6d21",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-dashboard.png",
+      "original_pr": "5e9f816ac434b6386fb0e207a4a24dcaf1a195b1",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-flywheel-post.json",
+      "original_pr": "0cdf50c68fe3e5c5a3b00716581ede64126f577a",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-import-proof.json",
+      "original_pr": "b521fe0cc6ccf4ab343332a23c0fa3f118c8f432",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-independent-exit.json",
+      "original_pr": "ed162fbe3d0854f7a9d82f732a453107c29a3cee",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-independent-gate.py",
+      "original_pr": "c78e94a0540186cbdc04bbd827c5fda2237dd04a",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-independent-result.json",
+      "original_pr": "83a01e3779829a5cfa9422c4fe1aedfb5088cc8e",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-independent-started.json",
+      "original_pr": "d0b8d72057fd8f6e5ba603583cdbf3a2c1ffb2ef",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-independent-verification.json",
+      "original_pr": "6818eae066c455501a0e9c641e60625550e792f4",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-interrupted-full.log",
+      "original_pr": "d388f3a352e5f2c71b8a2c53b8e66da7d1f10e28",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-interrupted-gate.json",
+      "original_pr": "8a525d7ce3ef4c8903f784100f8172f437a65e08",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-matchday.png",
+      "original_pr": "34640b21e4ce637de9ce04293bef28a2f0e66b89",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-public-readback.json",
+      "original_pr": "a3f10ad6bbadf882b714242f4df58aa50d294610",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/review-usage-counts.json",
+      "original_pr": "df5b2dee2492413a6ebe60b3c8ef14c29c79c433",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/source-freeze.json",
+      "original_pr": "c0a006f41795565bb50acd39a9471cae43d2f202",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/superseded-full-gate.log",
+      "original_pr": "577c39d758302c987a58302a3f616c2c13eee0b9",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/superseded-gate-result.json",
+      "original_pr": "0500567f030ba28b8f93add943eed50809ba1cb0",
+      "main": null,
+      "resolved": null
+    },
+    {
+      "path": "docs/playtests/2026-10-08-dashboard-standing-scouting/superseded-source-freeze.json",
+      "original_pr": "64f56ff36e124ee1df40671f05fbff18d69da445",
+      "main": null,
+      "resolved": null
+    }
+  ],
+  "historical_paths_removed_count": 26,
+  "current_main_gitattributes": "835efd647da25bac2a754c42c53f464ce86efd13",
+  "resolved_gitattributes": "835efd647da25bac2a754c42c53f464ce86efd13"
+}
