@@ -36,9 +36,6 @@ jobs:
         # research extra exercises the optional VLR parser fixtures.
         run: pip install -e ".[dev,web,research]"
 
-      - name: Lobby seed frontend regression
-        run: pytest -q tests/test_lobby_seed_preview_frontend.py
-
       - name: Test suite
         run: pytest -q
 
