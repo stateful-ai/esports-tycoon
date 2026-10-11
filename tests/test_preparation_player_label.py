@@ -14,6 +14,7 @@ def report(gs, tid, pid):
         partner_id="partner", map_id="lotus", objective="retakes", intensity="normal",
         season=gs.season, week=gs.week, artifact_label="Lotus retake book",
         dev_suggestion_player_id=pid, dev_suggestion="Hollowlock pushed the starters.",
+        dev_suggestion_basis="age",
     )
 
 
@@ -40,7 +41,7 @@ def test_prep_player_label_keeps_profile_id_and_saved_state(game_data, availabil
         artifact = _last_prep_artifact(gs, tid)
         for view in (full, artifact):
             assert view["dev_suggestion_player_id"] == pid
-            assert view["dev_suggestion_handle"] == ("Hollowlock" if availability == "known" else "")
+            assert view["dev_suggestion_handle"] == ("Hollowlock" if availability == "known" else None)
         assert gs.model_dump_json() == before
 
 
