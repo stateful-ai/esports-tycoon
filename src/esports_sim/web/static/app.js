@@ -927,8 +927,8 @@ function updateAdvanceTransition(s) {
   const btn = $("#advance-btn"), notice = $("#advance-notice");
   // The ready response refreshes state before polling starts. Server readiness
   // must preserve Waiting during that interval as well as during polling.
-  btn.textContent = s?.multiplayer?.you_ready || mpPolling
-    ? "Waiting… ⏳"
+  btn.textContent = mpPollingRetry ? "Retry status ▸"
+    : s?.multiplayer?.you_ready || mpPolling ? "Waiting… ⏳"
     : `${transition?.label || "Advance Week"} ▸`;
   notice.textContent = transition?.notice || "";
   notice.classList.toggle("hidden", !transition?.notice);
@@ -8137,6 +8137,7 @@ window.closeTalk = closeTalk;
 /* -- advance week ------------------------------------------------------------------ */
 
 let mpPolling = false;
+let mpPollingRetry = false;
 let weekLoadingTimer = null;
 
 function showWeekLoading({ simAhead = false } = {}) {
@@ -8164,6 +8165,13 @@ function hideWeekLoading() {
 $("#advance-btn").onclick = async () => {
   $("#advance-btn").disabled = true;
   const prevWeek = App.state?.week;
+  if (mpPollingRetry) {
+    // Reconnect to the pending ready-up. Sending advance again could tick a
+    // second week if the shared world moved while status was unavailable.
+    pollForAdvance(prevWeek);
+    updateAdvanceTransition(App.state);
+    return;
+  }
   showWeekLoading();
   try {
     const rep = await api("/api/actions/advance", {});
@@ -8222,14 +8230,17 @@ $("#simahead-btn").onclick = async () => {
 function pollForAdvance(prevWeek) {
   if (mpPolling) return;
   mpPolling = true;
+  mpPollingRetry = false;
   const tick = async () => {
     let s;
     try {
       s = await api("/api/state");
     } catch {
       mpPolling = false;
+      mpPollingRetry = true;
       updateAdvanceTransition(App.state);
       $("#advance-btn").disabled = false;
+      toast("Shared status unavailable. Click Retry status to reconnect.");
       return;
     }
     App.state = s;
