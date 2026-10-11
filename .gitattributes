@@ -1,2 +1,5 @@
 # Preserve whitespace inside quoted source stage labels in the research CSV.
 data/research/war-history/map_context.csv -whitespace
+
+# Preserve the exact captured Windows receipt bytes for away-recap acceptance.
+docs/playtests/2026-10-11-away-recap/evidence/** -text -whitespace
