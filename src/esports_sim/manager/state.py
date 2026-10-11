@@ -1554,7 +1554,7 @@ class MediaCommitment(BaseModel):
 
 
 class MediaEffectChange(BaseModel):
-    """One measured target, captured around the MEDIA mutation only."""
+    """One measured target, captured around its explicitly named mutation."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -1594,6 +1594,9 @@ class MediaDecision(BaseModel):
     # independently measured settlement after loading.
     immediate_effects: MediaEffects | None = None
     settlement_effects: MediaEffects | None = None
+    # Separate from MEDIA deltas: the public choice can trigger culture trust
+    # penalties for the whole roster. None means this phase was not measured.
+    culture_trust_effects: list[MediaEffectChange] | None = None
 
 
 class DraftPick(BaseModel):

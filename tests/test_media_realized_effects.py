@@ -141,6 +141,41 @@ def test_full_state_is_deterministic_for_both_phases(campaign):
     assert campaign.model_dump_json() == twin.model_dump_json()
 
 
+@pytest.mark.parametrize("initial_trust", [0.0, 50.0])
+def test_choice_triggered_culture_trust_is_measured_separately(campaign, initial_trust):
+    tid = campaign.user_team_id
+    pid = sorted(campaign.teams[tid].player_ids)[0]
+    queue(campaign, "roster_rumor", "acknowledge_market", pid)
+    campaign.culture_principles[tid] = "player_led"
+    campaign.culture_committed_since_by[tid] = 0
+    campaign.manager_player_trust_by[tid] = dict.fromkeys(campaign.teams[tid].player_ids, initial_trust)
+    twin = campaign.model_copy(deep=True)
+    ok, message, _ = media_events.resolve(campaign, tid, "acknowledge_market")
+    media_events.resolve(twin, tid, "acknowledge_market")
+    assert ok and campaign.model_dump_json() == twin.model_dump_json()
+    decision = campaign.media_history_by[tid][-1]
+    media_after = {p.id: p.after for p in decision.immediate_effects.player_trust}
+    adjustments = {p.id: p for p in decision.culture_trust_effects}
+    for player_id in campaign.teams[tid].player_ids:
+        before_culture = media_after.get(player_id, initial_trust)
+        final = media_events.trust(campaign, tid, player_id)
+        if final != before_culture:
+            change = adjustments[player_id]
+            assert (change.before, change.after, change.delta) == (before_culture, final, round(final-before_culture, 1))
+            assert f"{change.before:g} -> {change.after:g}" in message
+        else:
+            assert player_id not in adjustments
+    assert bool(adjustments) == bool(initial_trust)
+    assert "Separate culture trust adjustment" in message
+    assert all("culture trust adjustment" not in line for line in campaign.news)
+    assert any("Separate culture trust adjustment" in line for line in media_events.decision_feedback(decision))
+    assert GameState.model_validate_json(campaign.model_dump_json()).media_history_by == campaign.media_history_by
+    legacy = decision.model_dump()
+    legacy.pop("culture_trust_effects")
+    old = type(decision).model_validate(legacy)
+    assert "older record" in media_events.culture_trust_feedback(old)
+
+
 def test_old_record_unknown_immediate_new_settlement_and_roundtrip(campaign, tmp_path):
     tid, fixture = queue(campaign)
     media_events.resolve(campaign, tid, "respect_rival")

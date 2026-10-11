@@ -214,16 +214,24 @@ def _signed(value: float) -> str:
     return f"{value:+g}"
 
 
+def _measured_feedback(change: MediaEffectChange) -> str:
+    return f"{change.label} {_signed(change.delta)} ({change.before:g} -> {change.after:g})"
+
+
 def effect_feedback(effects: MediaEffects) -> str:
     """Server-authored measured values; no client arithmetic or hidden maths."""
-    def measured(change: MediaEffectChange) -> str:
-        return f"{change.label} {_signed(change.delta)} ({change.before:g} -> {change.after:g})"
-
     return "; ".join([
-        measured(effects.sentiment),
-        "Player trust: " + (", ".join(map(measured, effects.player_trust)) or "no current player affected"),
-        "Sponsor relations: " + (", ".join(map(measured, effects.sponsor_relations)) or "no active sponsor affected"),
+        _measured_feedback(effects.sentiment),
+        "Player trust: " + (", ".join(map(_measured_feedback, effects.player_trust)) or "no current player affected"),
+        "Sponsor relations: " + (", ".join(map(_measured_feedback, effects.sponsor_relations)) or "no active sponsor affected"),
     ]) + "."
+
+
+def culture_trust_feedback(decision: MediaDecision) -> str:
+    if decision.culture_trust_effects is None:
+        return "Separate culture trust adjustment: measured changes unavailable for this older record."
+    changes = ", ".join(map(_measured_feedback, decision.culture_trust_effects))
+    return "Separate culture trust adjustment triggered by this choice: " + (changes or "no additional trust change") + "."
 
 
 def decision_feedback(decision: MediaDecision) -> list[str]:
@@ -231,6 +239,7 @@ def decision_feedback(decision: MediaDecision) -> list[str]:
     immediate, settled = decision.immediate_effects, decision.settlement_effects
     lines.append("Immediate MEDIA effect: " + effect_feedback(immediate) if immediate else
                  "Immediate MEDIA effect: measured changes unavailable for this older record.")
+    lines.append(culture_trust_feedback(decision))
     if settled:
         lines.append("Result settlement MEDIA effect: " + effect_feedback(settled))
     elif decision.settlement:
@@ -248,7 +257,7 @@ def decision_feedback(decision: MediaDecision) -> list[str]:
         sentiment = round(immediate.sentiment.delta + settled.sentiment.delta, 1)
         lines.append(f"Cumulative MEDIA contribution: Community sentiment {_signed(sentiment)}; "
                      f"Player trust: {totals('player_trust')}; Sponsor relations: {totals('sponsor_relations')}. "
-                     "Includes only this choice and its result settlement.")
+                     "Includes only this choice and its result settlement. Excludes the separate culture adjustment.")
     elif settled and not immediate:
         lines.append("Cumulative MEDIA contribution unavailable: the immediate effect was not measured.")
     return lines
@@ -314,8 +323,18 @@ def resolve(
     # import cycle at module load.
     from esports_sim.manager import culture
 
+    trust_before_culture = {
+        pid: trust(gs, team_id, pid) for pid in sorted(gs.teams[team_id].player_ids)
+        if pid in gs.players
+    }
     culture.register_choice(gs, team_id, "media", event.type_id, choice_id, event.player_id)
-    feedback = summary + " Immediate MEDIA effect: " + effect_feedback(measured)
+    decision.culture_trust_effects = [
+        _change(pid, gs.players[pid].handle, before, trust(gs, team_id, pid))
+        for pid, before in trust_before_culture.items()
+        if trust(gs, team_id, pid) != before
+    ]
+    feedback = (summary + " Immediate MEDIA effect: " + effect_feedback(measured)
+                + " " + culture_trust_feedback(decision))
     if announce:
         gs.push_news(summary)
         gs.push_private_news(feedback, owner=team_id)
