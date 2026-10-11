@@ -3822,11 +3822,49 @@ async function tacticsPrep(ws) {
     for (const x of d.series.responses) { const o = el("option", "", humanize(x)); o.value = x; response.appendChild(o); }
     const sin = el("select", "sel-sm"), sout = el("select", "sel-sm");
     for (const [sel, ids] of [[sin, d.series.bench_ids], [sout, d.series.starter_ids]]) { const none = el("option", "", "No substitution"); none.value = ""; sel.appendChild(none); for (const p of d.registration.players.filter((x) => ids.includes(x.id))) { const o = el("option", "", p.handle); o.value = p.id; sel.appendChild(o); } }
+    trigger.setAttribute("aria-label", "Series condition");
+    response.setAttribute("aria-label", "Between-map response");
+    sin.setAttribute("aria-label", "Substitute in");
+    sout.setAttribute("aria-label", "Substitute out");
+    const saved = d.series.directive?.fixture_id === d.series.fixture.id ? d.series.directive : null;
+    const playerName = (pid) => d.series.substitute_handles?.[pid] || d.registration.players.find((p) => p.id === pid)?.handle || `Unavailable player (${pid})`;
+    // Keep an unavailable saved choice visible until the manager replaces it;
+    // silently selecting the first legal option would overwrite their intent.
+    const restore = (select, value, options, label) => {
+      if (!options.includes(value)) {
+        const unavailable = el("option", "", `${label} (unavailable)`);
+        unavailable.value = value; unavailable.disabled = true;
+        select.appendChild(unavailable);
+      }
+      select.value = value;
+    };
+    if (saved) {
+      restore(trigger, saved.trigger, d.series.triggers, humanize(saved.trigger));
+      restore(response, saved.response, d.series.responses, humanize(saved.response));
+      restore(sin, saved.substitute_in || "", ["", ...d.series.bench_ids], saved.substitute_in ? playerName(saved.substitute_in) : "No substitution");
+      restore(sout, saved.substitute_out || "", ["", ...d.series.starter_ids], saved.substitute_out ? playerName(saved.substitute_out) : "No substitution");
+    }
     const row = el("div", "row"); row.append(trigger, response, sin, sout);
     const save = el("button", "btn btn-primary", "Save series card");
+    const warning = el("p", "muted");
+    const checkSelection = () => {
+      const legal = d.series.triggers.includes(trigger.value) && d.series.responses.includes(response.value)
+        && ((!sin.value && !sout.value) || (d.series.bench_ids.includes(sin.value) && d.series.starter_ids.includes(sout.value)));
+      save.disabled = !legal;
+      warning.textContent = legal ? "" : "Choose an available registered substitute and starter, or set both to No substitution, before saving.";
+    };
+    for (const select of [trigger, response, sin, sout]) select.onchange = checkSelection;
+    checkSelection();
     save.onclick = async () => { const r = await api("/api/actions/series_directive", { fixture_id: d.series.fixture.id, trigger: trigger.value, response: response.value, substitute_in: sin.value || null, substitute_out: sout.value || null }); toast(r.message); refresh(); };
-    sc.append(row, save);
-    if (d.series.directive) sc.appendChild(el("p", "muted", `Current: ${humanize(d.series.directive.trigger)} → ${humanize(d.series.directive.response)}.`));
+    sc.append(row, warning, save);
+    if (saved) {
+      const summary = el("p", "muted");
+      const substitution = saved.substitute_in || saved.substitute_out
+        ? `${saved.substitute_in ? plink(saved.substitute_in, playerName(saved.substitute_in)) : "No player"} in; ${saved.substitute_out ? plink(saved.substitute_out, playerName(saved.substitute_out)) : "no player"} out.`
+        : "No substitution.";
+      summary.innerHTML = `Current: ${esc(humanize(saved.trigger))} → ${esc(humanize(saved.response))}. ${substitution}`;
+      sc.appendChild(summary);
+    }
   }
   ws.appendChild(sc);
 }

@@ -2705,10 +2705,16 @@ def _club_view(gs: GameState) -> dict:
     series_fixture = next(
         (
             f for f in sorted(gs.fixtures, key=lambda x: (x.week, x.id))
-            if not f.played and f.best_of >= 3 and tid in (f.team_a, f.team_b)
+            if not f.played and f.week >= gs.week and f.best_of >= 3
+            and tid in (f.team_a, f.team_b)
         ),
         None,
     )
+    # A persisted card belongs to one fixture, never the next series editor.
+    if series_fixture is None or (
+        directive is not None and directive.fixture_id != series_fixture.id
+    ):
+        directive = None
     registration = series_management.registration_for(gs, tid)
     if not registration:
         registration = series_management.auto_registration(gs, tid)
@@ -2746,6 +2752,13 @@ def _club_view(gs: GameState) -> dict:
         "series": {
             "fixture": _fixture_view(series_fixture, gs) if series_fixture else None,
             "directive": directive.model_dump(mode="json") if directive else None,
+            "substitute_handles": {
+                pid: gs.players[pid].handle if pid in gs.players else None
+                for pid in (
+                    [directive.substitute_in, directive.substitute_out]
+                    if directive else []
+                ) if pid is not None
+            },
             "triggers": list(series_management.TRIGGERS),
             "responses": list(series_management.RESPONSES),
             "starter_ids": series_starters,
