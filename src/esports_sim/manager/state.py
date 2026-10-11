@@ -557,11 +557,12 @@ def _migrate_v37_to_v38(data: dict) -> dict:
     Pre-integration recovery saves stored only the week. Retain their booking
     lock for the saved season, without blocking that week in future seasons.
     MEDIA phase measurements and separate culture effects default unknown;
-    unrelated additive v38 fields are supplied by their model defaults.
+    tier meta starts empty because historic global totals lack tier identity.
     """
     data.setdefault("recovery_booked_season_by", {
         tid: data.get("season", 1) for tid in data.get("recovery_booked_by", {})
     })
+    data.setdefault("map_meta_stats_by_tier", {})
     return data
 
 
@@ -1787,6 +1788,11 @@ class GameState(BaseModel):
     team_map_stats: dict[str, dict[str, TeamMapStats]] = Field(default_factory=dict)
     # Aggregate observations from completed maps, never gated by scouting.
     map_meta_stats: dict[str, MapMetaStats] = Field(default_factory=dict)
+    # Fixture-tier identity captured at completion, independent of transfers.
+    # Older saves retain global totals but cannot reconstruct scoped picks/dials.
+    map_meta_stats_by_tier: dict[str, dict[str, MapMetaStats]] = Field(
+        default_factory=dict
+    )
     # Time-series (SURVIVE season rollover, capped): performance points for
     # anyone who played that week; development points for human rosters.
     stat_history: dict[str, list[StatSnap]] = Field(default_factory=dict)

@@ -1194,7 +1194,8 @@ def test_meta_endpoint_shape(env):
     gs, gd, h = env
     _bind(gs, gd)
     mv = server_mod.meta_view()
-    assert set(mv) == {"latest_patch", "patched_agents", "tier_list", "map_trends"}
+    assert set(mv) == {"latest_patch", "patched_agents", "tier_list", "map_trends",
+                       "league_tier", "patch_scope", "sample"}
     for a in mv["tier_list"]:
         assert set(a) == {"agent_id", "name", "maps", "pick_rate"}
         assert a["maps"] > 0
@@ -1205,7 +1206,8 @@ def test_meta_endpoint_shape(env):
         assert a["direction"] in ("buff", "nerf", "even")
     assert mv["map_trends"]
     for trend in mv["map_trends"]:
-        assert set(trend) == {"map_id", "team_maps", "agents", "tactics", "site_focus"}
+        assert set(trend) == {"map_id", "team_maps", "agents", "tactics", "site_focus",
+                              "recorded_team_maps"}
         assert trend["team_maps"] > 0
         assert {t["key"] for t in trend["tactics"]} == {
             "aggression", "pace", "util_discipline", "eco_greed", "map_control",

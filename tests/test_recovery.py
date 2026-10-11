@@ -141,17 +141,32 @@ def test_legacy_recovery_booking_preserves_current_season_lock(
 ) -> None:
     import json
 
-    from esports_sim.manager.state import GameState
+    from esports_sim.manager.state import GameState, MediaDecision
 
     gs = _wrecked(game_data)
     assert recovery.book(gs, TEAM, "day")[0]
+    gs.media_history_by[TEAM] = [MediaDecision(
+        event_id="legacy-media", season=gs.season, week=gs.week,
+        team_id=TEAM, type_id="sponsor_duty", choice_id="attend",
+        summary="Legacy media choice", sentiment_delta=2.0,
+    )]
     old = gs.model_dump(mode="json")
     old["schema_version"] = 36
     old.pop("recovery_booked_season_by")
+    old.pop("map_meta_stats_by_tier")
+    for decision in old["media_history_by"][TEAM]:
+        for field in ("immediate_effects", "settlement_effects", "culture_trust_effects"):
+            decision.pop(field)
     save = tmp_path / "legacy-recovery.json"
     save.write_text(json.dumps(old), encoding="utf-8")
     loaded = GameState.load(save)
     assert recovery.already_booked(loaded, TEAM)
+    assert loaded.map_meta_stats_by_tier == {}
+    decision = loaded.media_history_by[TEAM][0]
+    assert decision.immediate_effects is None
+    assert decision.settlement_effects is None
+    assert decision.culture_trust_effects is None
+    assert decision.sentiment_delta == 2.0
     loaded.season += 1
     assert not recovery.already_booked(loaded, TEAM)
 
