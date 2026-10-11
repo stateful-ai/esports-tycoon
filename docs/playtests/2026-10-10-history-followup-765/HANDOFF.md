@@ -54,3 +54,10 @@ canonical765 SHA and apply this mapping during subsequent raw/Git blob audits.
 The successful request/result and post-reload state are independently retained;
 the response body was not captured. The root must review all new-head inline
 comments and both new-head CI jobs. No local tests or expensive gates launched.
+
+Gap26 finding4239880354: original retained artifacts are now tracked under
+2026-10-10-gap26-spacing/evidence with exact recovery-provenance path/hash mapping.
+The nine recovered files include original four cited receipts,16-event usage
+and historical gate proof. No historical CSV or manifest changed; no local tests
+ran. Apply the Save-body mapping above and gap26 recovery mapping when reviewing
+the current head. Do not claim historical profile clicks as instrumented usage.

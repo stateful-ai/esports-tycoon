@@ -39,3 +39,13 @@ and proves raw/index blob equality. The canonical765 CSV and every original
 observation field remain unchanged. Save request22/result200 and post-reload
 public state support the outcome independently; the response body was not
 captured and its content remains unknown. No local tests were run.
+
+Finding4239880354 is addressed by publishing nine sanitized original gap26
+artifacts from the retained sponsor-demand-spacing worktree, including all four
+named receipts, the raw16-event usage stream and historical gate evidence.
+`../2026-10-10-gap26-spacing/evidence/recovery-provenance.json` records exact
+source/published path mappings and raw hashes. The original summaries and
+cropped screenshot contain no credentials or private request payload; the raw
+usage uses only its closed telemetry envelope. No response, screenshot, result
+or replay was fabricated. Historical canonical rows and manifests stay intact;
+current612-file source equality is verified without running local tests.
