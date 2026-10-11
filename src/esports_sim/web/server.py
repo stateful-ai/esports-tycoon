@@ -2290,7 +2290,9 @@ def state() -> dict:
             "scout": {
                 "target": scout_target,
                 "target_name": scout_label,
-                "progress": gs.scout_progress.get(scout_target or "", 0.0),
+                "progress": gs.scout_progress_by.get(gs.acting_team_id, {}).get(
+                    scout_target or "", 0.0
+                ),
                 "cap": scout_cap,
             },
             "standings_top": [
@@ -3774,7 +3776,7 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
             "label": career.GOAL_LABELS.get(seat.contract.goal, humanize_identifier(seat.contract.goal)),
             "state": st["state"], "detail": st["detail"],
         })
-    for slot, deal in sorted(gs.sponsor_slots.items()):
+    for slot, deal in sorted(gs.sponsor_slots_by.get(tid, {}).items()):
         if deal is None:
             continue
         for ob in deal.objectives:
