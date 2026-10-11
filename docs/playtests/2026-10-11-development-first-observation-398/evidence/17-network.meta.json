@@ -1,0 +1,1 @@
+{"at_utc": "2026-10-11T10:24:07.467131+00:00", "exit_code": 1, "command": ["C:\\Program Files\\nodejs\\npx.cmd", "--package", "@playwright/cli", "playwright-cli", "-s=development-398-first", "network"]}

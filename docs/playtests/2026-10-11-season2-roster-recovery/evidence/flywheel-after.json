@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0234",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Recovery can preserve match learning",
+    "problem": "Fatigued Vortex59.5 needed a lower practice workload.",
+    "solution": "Set rest/normal, public focus persisted; next tick70.5,0practiceOVR,0.01matchOVR. Bench Hollow65\u219289.",
+    "lesson": "Read condition and authored source attribution separately; recovery does not remove the player from the five.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0235",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Weekly reveal blocks topbar until complete",
+    "problem": "Two manual Save observations failed with no HTTP attempt.",
+    "solution": "Fresh click log showed week-reveal interception; Continue then Save200 recovered.",
+    "lesson": "Inspect visible modal state before classifying a timeout as API failure.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0236",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Streaming workload and revenue share copy conflict",
+    "problem": "Practice-focused Hollow tooltip called him heavy streamer;70% streams ambiguous.",
+    "solution": "Public stream_load19.7/statuspractice-focused/mult0.93 separate from contractshare70; dedicated6.1solmedium PR395.",
+    "lesson": "Use server status and distinguish contractual revenue share from streaming workload.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  }
+]
