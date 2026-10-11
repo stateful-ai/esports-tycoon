@@ -33,10 +33,18 @@ jobs:
       - name: Install
         # web extra included: the API contract tests (tests/test_profiles.py,
         # parts of test_inbox.py) import the FastAPI server.
-        run: pip install -e ".[dev,web]"
+        # research extra exercises the optional VLR parser fixtures.
+        run: pip install -e ".[dev,web,research]"
 
       - name: Test suite
         run: pytest -q
+
+      - name: Research data integrity and browser audit
+        run: |
+          python scripts/analyze_vlr_research.py --validate-only
+          python scripts/check_vlr_manual_audit.py
+          python scripts/analyze_vlr_war_history.py --validate-only
+          python scripts/check_vlr_manual_audit.py --data data/research/war-history
 
       - name: Determinism gate
         run: pytest -q tests/test_determinism.py tests/test_engine.py tests/test_manager.py -k "determin or identical" --no-header

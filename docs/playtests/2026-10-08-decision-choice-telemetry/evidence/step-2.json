@@ -1,0 +1,39 @@
+{
+  "step": 2,
+  "result": "met",
+  "observation": {
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex"
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex"
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost"
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade"
+      },
+      {
+        "id": "echo",
+        "handle": "Echo"
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock"
+      }
+    ],
+    "lineup_ids": [
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ]
+  }
+}

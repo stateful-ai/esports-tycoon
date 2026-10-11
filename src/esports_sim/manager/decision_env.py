@@ -137,7 +137,7 @@ def _player_stats(gs: GameState, pid: str) -> dict[str, float]:
 
 def _own_player(gs: GameState, pid: str) -> dict[str, Any]:
     p = gs.players[pid]
-    performance_coach = gs.staff.get("performance_coach")
+    performance_coach = gs.staff_by.get(gs.acting_team_id, {}).get("performance_coach")
     return {
         "id": p.id,
         "handle": p.handle,
@@ -184,9 +184,10 @@ def _staff_observation(gs: GameState, member) -> dict[str, Any]:
 def _scouted_player(gs: GameState, team_id: str, pid: str) -> dict[str, Any]:
     owner = market.team_of(gs, pid)
     broad_key = owner if owner is not None else "market"
+    scout_progress = gs.scout_progress_by.get(team_id, {})
     progress = max(
-        gs.scout_progress.get(broad_key, 0.0),
-        gs.scout_progress.get(f"player:{pid}", 0.0),
+        scout_progress.get(broad_key, 0.0),
+        scout_progress.get(f"player:{pid}", 0.0),
     )
     report = development.scout_report(gs, gs.players[pid], progress)
     report["perceived_quality"] = round(
@@ -198,6 +199,13 @@ def _scouted_player(gs: GameState, team_id: str, pid: str) -> dict[str, Any]:
 
 
 def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
+    # Mutable GameState convenience properties create buckets on access.
+    # Masks only read existing state, including before an org has any offers.
+    team_staff = gs.staff_by.get(team_id, {})
+    facilities = gs.facilities_by.get(team_id, {})
+    sponsor_market = gs.sponsor_market_by.get(team_id, {})
+    sponsor_slots = gs.sponsor_slots_by.get(team_id, {})
+    negotiations = gs.negotiations_by.get(team_id, {})
     roster = sorted(gs.teams[team_id].player_ids)
     free_agents = sorted(gs.free_agent_ids)
     signable = [pid for pid in free_agents if market.can_sign(gs, team_id, pid)[0]]
@@ -235,7 +243,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "focus_options": list(training.DEV_FOCUS_OPTIONS),
         "intensity_options": list(training.INTENSITY_OPTIONS),
         "language_options": list(training.LANGUAGE_OPTIONS),
-        "has_language_coach": "language_coach" in gs.staff,
+        "has_language_coach": "language_coach" in team_staff,
     }
     mentor_pairs = [
         {"protege_id": protege, "mentor_id": mentor}
@@ -249,13 +257,13 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
     ]
     facility_options = []
     for name in economy.FACILITY_NAMES:
-        level = gs.facilities.get(name, 0)
+        level = facilities.get(name, 0)
         cost = economy.facility_upgrade_cost(level)
         if cost is not None and gs.teams[team_id].balance >= cost:
             facility_options.append({"facility": name, "next_level": level + 1, "cost": cost})
     sponsor_options = []
     for slot in sponsors.SLOT_ORDER:
-        for offer in sorted(gs.sponsor_market.get(slot, []), key=lambda o: o.brand):
+        for offer in sorted(sponsor_market.get(slot, []), key=lambda o: o.brand):
             sponsor_options.append(
                 {
                     "slot": slot,
@@ -264,7 +272,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
                     "structure": "",
                 }
             )
-            if slot not in gs.sponsor_slots:
+            if slot not in sponsor_slots:
                 for structure in sponsors.STRUCTURES:
                     sponsor_options.append(
                         {
@@ -276,7 +284,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
                     )
     demand_options = []
     unplayed_fixture_ids = {f.id for f in gs.fixtures if not f.played}
-    for demand in gs.sponsor_demands:
+    for demand in gs.sponsor_demands_by.get(team_id, []):
         if (
             demand.status == "pending"
             and demand.issued_season == gs.season
@@ -293,7 +301,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "salary_range": [800, max(800, neg.demand_salary * 2)],
             "weeks_range": [market.MIN_CONTRACT_WEEKS, market.MAX_CONTRACT_WEEKS],
         }
-        for pid, neg in sorted(gs.negotiations.items())
+        for pid, neg in sorted(negotiations.items())
     ]
     negotiable = []
     for pid in sorted(set(roster + free_agents)):
@@ -355,7 +363,14 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
             "offer_player_ids": list(o.offer_player_ids),
             "cash_to_seller": o.cash_to_seller,
             "cash_to_buyer": o.cash_to_buyer,
-            "can_accept": market.market_move_allowed(gs, o.to_team)[0],
+            "can_accept": market.team_of(gs, o.player_id) == o.from_team and (
+                market.can_execute_package(
+                    gs, o.player_id, o.to_team, o.offer_player_ids,
+                    o.cash_to_seller, o.cash_to_buyer,
+                )
+                if o.offer_player_ids or o.cash_to_buyer
+                else market.can_execute_transfer(gs, o.player_id, o.to_team, o.fee)
+            )[0],
         }
         for o in gs.transfer_offers
         if o.from_team == team_id
@@ -440,7 +455,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "set_dev_plan": dev_plans,
         "mentor": {"enabled": bool(roster), "pairs": mentor_pairs, "clear_ids": roster},
         "hire_staff": {"enabled": bool(hireable), "candidate_ids": hireable},
-        "release_staff": {"enabled": bool(gs.staff), "roles": sorted(gs.staff)},
+        "release_staff": {"enabled": bool(team_staff), "roles": sorted(team_staff)},
         "facility_upgrade": {"enabled": bool(facility_options), "options": facility_options},
         "sponsor_respond": {"enabled": bool(sponsor_options), "options": sponsor_options},
         "sponsor_demand_respond": {
@@ -472,7 +487,7 @@ def _legal_actions(gs: GameState, team_id: str) -> dict[str, Any]:
         "negotiate_open": {"enabled": bool(negotiable), "player_ids": negotiable},
         "negotiate_offer": {"enabled": bool(live_negotiations), "options": live_negotiations},
         "negotiate_cancel": {
-            "enabled": bool(gs.negotiations), "player_ids": sorted(gs.negotiations)
+            "enabled": bool(negotiations), "player_ids": sorted(negotiations)
         },
         "accept_job": {"enabled": bool(job_offers), "team_ids": sorted(job_offers)},
         "academy_move": {"enabled": bool(academy_moves), "options": academy_moves},
@@ -552,7 +567,8 @@ def manager_observation(
 
     Rival and free-agent ability is represented by the existing scouting
     report and perceived-quality systems; hidden attributes and exact potential
-    never enter the observation.
+    never enter the observation. Read per-team maps directly so observing an
+    absent bucket cannot initialize saved state.
     """
     if team_id not in gs.teams:
         raise KeyError(f"unknown team {team_id!r}")
@@ -568,7 +584,7 @@ def manager_observation(
             {
                 "team_id": opponent_id,
                 "team_name": gs.teams[opponent_id].name,
-                "scout_progress": gs.scout_progress.get(opponent_id, 0.0),
+                "scout_progress": gs.scout_progress_by.get(team_id, {}).get(opponent_id, 0.0),
                 "players": [
                     _scouted_player(gs, team_id, pid)
                     for pid in sorted(gs.teams[opponent_id].player_ids)
@@ -605,19 +621,19 @@ def manager_observation(
             "scout_target": gs.scout_target,
             "staff": {
                 role: _staff_observation(gs, member)
-                for role, member in sorted(gs.staff.items())
+                for role, member in sorted(gs.staff_by.get(gs.acting_team_id, {}).items())
             },
             "staff_candidates": [
                 _staff_observation(gs, member)
                 for member in sorted(gs.staff_pool, key=lambda m: m.id)
             ],
-            "facilities": dict(sorted(gs.facilities.items())),
+            "facilities": dict(sorted(gs.facilities_by.get(gs.acting_team_id, {}).items())),
             "sponsor_market": {
                 slot: [offer.model_dump() for offer in sorted(offers, key=lambda o: o.brand)]
-                for slot, offers in sorted(gs.sponsor_market.items())
+                for slot, offers in sorted(gs.sponsor_market_by.get(gs.acting_team_id, {}).items())
             },
             "negotiations": {
-                pid: neg.model_dump() for pid, neg in sorted(gs.negotiations.items())
+                pid: neg.model_dump() for pid, neg in sorted(gs.negotiations_by.get(gs.acting_team_id, {}).items())
             },
             "game_plan": gs.game_plan.model_dump() if gs.game_plan is not None else None,
             "career_offers": (
@@ -782,7 +798,14 @@ class HeadlessManagerEnv:
                     raise InvalidManagerAction("protege is not on the roster")
                 if not mentor:
                     self.gs.mentorships.pop(protege, None)
+                    self.gs.mentorship_progress.pop(protege, None)
                 elif development.mentorship_valid(self.gs, protege, mentor):
+                    # A changed assignment starts a new program; repeating
+                    # the same legal pair preserves its accumulated progress.
+                    if self.gs.mentorships.get(protege) != mentor:
+                        self.gs.mentorship_progress[protege] = 0.0
+                    else:
+                        self.gs.mentorship_progress.setdefault(protege, 0.0)
                     self.gs.mentorships[protege] = mentor
                 else:
                     raise InvalidManagerAction("mentor must be an older, higher-rated teammate")

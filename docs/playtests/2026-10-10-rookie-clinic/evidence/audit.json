@@ -1,0 +1,102 @@
+{
+  "audited_at_utc": "2026-10-10T20:45:05.133751+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "baseline_actions": 55,
+  "final_actions": 58,
+  "prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 3,
+    "attempted": 3
+  },
+  "snapshot_entries_before": {
+    "mgr_team_nexus": 11
+  },
+  "snapshot_entries_after": {
+    "mgr_team_nexus": 11
+  },
+  "snapshots_unchanged": true,
+  "all_player_fields_unchanged_except_ghost_focus_intensity": true,
+  "social_before": 59.1,
+  "social_after": 58.1,
+  "social_effect_support": "Saved-state audit only; original browser response did not display this effect",
+  "bank_before": 482260,
+  "bank_after": 482260,
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "e9e1fa8a17412d1f54931e851291b98d2f727adb3c9ff14923b8e88b856f3a36",
+  "report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "usage_events": 37,
+  "usage_kind_counts": {
+    "session_start": 1,
+    "view": 6,
+    "visible_time": 21,
+    "attempt": 4,
+    "result": 4,
+    "session_end": 1
+  },
+  "page_session_ids": [
+    "7fd4deab353405d1aefe1b33eea2a23f"
+  ],
+  "paired_requests": 4,
+  "usage_request_pairs": [
+    {
+      "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+      "request_id": 17,
+      "target": "/api/actions/flavor_event"
+    },
+    {
+      "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+      "request_id": 28,
+      "target": "/api/actions/dev_plan"
+    },
+    {
+      "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+      "request_id": 30,
+      "target": "/api/actions/dev_plan"
+    },
+    {
+      "session_id": "7fd4deab353405d1aefe1b33eea2a23f",
+      "request_id": 32,
+      "target": "/api/actions/save"
+    }
+  ],
+  "unmatched_attempts": [],
+  "orphan_results": [],
+  "server_family_stopped": [
+    {
+      "pid": 36276,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 11504,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8490",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 2532,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8490",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Retained bounded best-effort usage does not establish full session duration, attention or complete funnels. Read-only inspection groups are navigation receipts, not accepted decisions. No advance or causal development result measured. Browser helper heading/require failures are preserved in step1; no HTTP rejection inferred. Existing overlay gap23 owns fine-grained inspection."
+}

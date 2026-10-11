@@ -1,0 +1,34 @@
+{
+  "verified_sessions": [
+    {
+      "session": "2026-10-10-regional-final",
+      "exact_new_decisions": 4,
+      "exact_accepted_prefix": 68,
+      "successful_pairs": 6,
+      "retained_usage_events": 88,
+      "snapshot_prefix_unchanged": true,
+      "verification": "Read-only original JSON/JSONL bytes; no imports from simulator or historical helper execution"
+    },
+    {
+      "session": "2026-10-10-masters-quarter",
+      "exact_new_decisions": 3,
+      "exact_accepted_prefix": 72,
+      "successful_pairs": 5,
+      "retained_usage_events": 80,
+      "snapshot_prefix_unchanged": true,
+      "verification": "Read-only original JSON/JSONL bytes; no imports from simulator or historical helper execution"
+    },
+    {
+      "session": "2026-10-10-masters-semi",
+      "exact_new_decisions": 4,
+      "exact_accepted_prefix": 75,
+      "successful_pairs": 6,
+      "retained_usage_events": 73,
+      "snapshot_prefix_unchanged": true,
+      "verification": "Read-only original JSON/JSONL bytes; no imports from simulator or historical helper execution"
+    }
+  ],
+  "exact_new_accepted_decisions": 11,
+  "exact_successful_usage_pairs": 17,
+  "historical_exit_receipts_not_recreated": true
+}

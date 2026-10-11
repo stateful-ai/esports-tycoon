@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-masters-semi",
+  "step": 10,
+  "started_at_utc": "2026-10-11T00:08:58.753+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "browser",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W19 playoffs",
+  "intent": "Verify accepted decisions and usage capture independently, record learnings and release only owned runtime",
+  "action": "Audit saved prefixes, exact accepted parameters, actual participants/cash/scouting, usage requestpairs; exportreports, recordflywheel and stopverified8516family",
+  "expected_outcome": "All4new accepted choices and6successful browserrequestpairs reconcile; source545 and inputfixtureunchanged; telemetry limitations are explicit and user8421 untouched.",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

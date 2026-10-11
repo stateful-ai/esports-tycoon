@@ -1,0 +1,11 @@
+{
+  "runner_pid": 37056,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-condition-precision\\ESports Simulator",
+  "interpreter": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+  "import": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-condition-precision\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "started": 1791655673.3428211,
+  "pytest_pid": 32444,
+  "exit_code": 0,
+  "finished": 1791658481.2554522,
+  "source_unchanged": true
+}

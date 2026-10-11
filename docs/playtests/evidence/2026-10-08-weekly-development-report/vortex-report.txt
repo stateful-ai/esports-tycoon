@@ -1,0 +1,5 @@
+Vortex OVR 74.5 → 74.6 (+0.1)
+Rest / Normal · 1 map
+Matches +0.01 OVR · Comms Quality +0.08 · Composure +0.01 · Game Sense +0.02 · Positioning +0.01 · Utility Usage +0.01
+Career events +0.09 OVR · Composure +0.39 · Game Sense +0.46
+Individual recovery: practice paused, match experience retained

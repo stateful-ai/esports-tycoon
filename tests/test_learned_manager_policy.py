@@ -9,6 +9,7 @@ import numpy as np
 from esports_sim.manager.learned_manager_policy import (
     ACTION_VOCAB,
     LearnedManagerModel,
+    conditioned_features,
     encode_observation,
     imitation_metrics,
 )
@@ -148,3 +149,45 @@ def test_learned_policy_can_autoplay_a_live_campaign_week(game_data):
     assert (gs.season, gs.week) != before
     assert gs.action_log
     assert all(action.source == "agent" for action in gs.action_log)
+
+
+def test_assignment_heads_use_demonstrated_legal_parameters(game_data):
+    from esports_sim.manager.decision_env import HeadlessManagerEnv
+
+    profile = generate_profile(121, "assignment")
+    env = HeadlessManagerEnv(new_campaign(game_data, seed=1001), game_data)
+    obs = env.observe()
+    legal = obs["legal_actions"]["assignment"]
+    pid = legal["player_ids"][0]
+    row = next(r for r in obs["roster"] if r["id"] == pid)
+    role = next(r for r in legal["roles"] if r != row["role"])
+    style = next(s for s in legal["playstyles"] if s != row["playstyle"])
+    model = LearnedManagerModel.train([{
+        "observation": obs,
+        "action": {"kind": "assignment", "params": {
+            "player_id": pid, "role": role, "playstyle": style,
+        }},
+    }])
+    assert model.categorical_labels["assignment_role"] == (role,)
+    assert model.categorical_labels["assignment_playstyle"] == (style,)
+    policy = model.make_policy(profile)
+    action = policy._build_action(obs, "assignment", conditioned_features(obs))
+    assert action["params"]["role"] == role
+    assert action["params"]["playstyle"] == style
+    env.step(action)
+    selected = env.gs.players[action["params"]["player_id"]]
+    assert (str(selected.role), str(selected.playstyle)) == (role, style)
+
+
+def test_assignment_without_parameter_heads_has_a_legal_change(game_data):
+    from esports_sim.manager.decision_env import HeadlessManagerEnv
+
+    obs = HeadlessManagerEnv(new_campaign(game_data, seed=1002), game_data).observe()
+    model = LearnedManagerModel(action_weights=np.zeros((len(ACTION_VOCAB), len(conditioned_features(obs)))))
+    policy = model.make_policy(generate_profile(122, "old-assignment"))
+    action = policy._build_action(obs, "assignment", conditioned_features(obs))
+    params = action["params"]
+    row = next(r for r in obs["roster"] if r["id"] == params["player_id"])
+    assert params["role"] in obs["legal_actions"]["assignment"]["roles"]
+    assert params["playstyle"] in obs["legal_actions"]["assignment"]["playstyles"]
+    assert (params["role"], params["playstyle"]) != (row["role"], row["playstyle"])

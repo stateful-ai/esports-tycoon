@@ -1,0 +1,122 @@
+[
+  {
+    "text": "Apex",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"apex\">Apex</button>"
+  },
+  {
+    "text": "Vortex",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"vortex\">Vortex</button>"
+  },
+  {
+    "text": "Ghost",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"ghost\">Ghost</button>"
+  },
+  {
+    "text": "Slyblade",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"fa_13\">Slyblade</button>"
+  },
+  {
+    "text": "Echo",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"echo\">Echo</button>"
+  },
+  {
+    "text": "Hollowlock",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"fa_0\">Hollowlock</button>"
+  },
+  {
+    "text": "Nightsurge",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"team_kraken_unit_p0\">Nightsurge</button>"
+  },
+  {
+    "text": "Frostdash",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"fa_12\">Frostdash</button>"
+  },
+  {
+    "text": "Nightsurge",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"team_kraken_unit_p0\">Nightsurge</button>"
+  },
+  {
+    "text": "Ghost",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"ghost\">Ghost</button>"
+  },
+  {
+    "text": "Vortex",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"vortex\">Vortex</button>"
+  },
+  {
+    "text": "Ghost",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"ghost\">Ghost</button>"
+  },
+  {
+    "text": "Slyblade",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"fa_13\">Slyblade</button>"
+  },
+  {
+    "text": "Echo",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"echo\">Echo</button>"
+  },
+  {
+    "text": "Hollowlock",
+    "tag": "BUTTON",
+    "tabIndex": 0,
+    "type": "button",
+    "role": null,
+    "outerHTML": "<button type=\"button\" class=\"plink \" data-pid=\"fa_0\">Hollowlock</button>"
+  }
+]

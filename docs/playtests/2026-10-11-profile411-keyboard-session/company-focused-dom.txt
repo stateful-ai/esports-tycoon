@@ -1,0 +1,215 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 7 · Regular — Team Nexus 2,366,434 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 15"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Company
+  - button "Finances"
+  - button "Brand"
+  - paragraph: 2,366,434 cr banked · net +75,202 cr/wk
+  - heading "Sponsorships — marketability 1.01" [level=2]
+  - text: Sponsor demands specific match obligations with real financial stakes met Streamforge Jersey week 11 Play
+  - button "Ghost"
+  - text: "against Saracen Guard Ghost is age 20 with 27 career maps (rookie limit: 10). reward 20,200 cr failure -10,100 cr brand relation 51 Commitments accepted sponsor obligations and how they landed honored Streamforge Jersey Play Ghost against Saracen Guard reward 20,200 cr risk -10,100 cr +5.0 relation settled wk 11 active Title Polar Compute Steady 41,300 cr/wk — 18 weeks ✗ win the regional split → 424,000 cr ✓ qualify for Masters → 445,000 cr active Jersey Streamforge Steady 10,100 cr/wk — 3 weeks ✗ win the regional split → 117,000 cr offer Vantage Motors 25w · until wk 8 win the regional split → 104,000 cr make the regional playoffs → 70,000 cr"
+  - 'button "upfront: 215,000 cr now + 2,200 cr/wk" [disabled]'
+  - 'button "steady: 11,900 cr/wk" [disabled]'
+  - 'button "performance: 5,900 cr/wk + 10,000 cr/win" [disabled]'
+  - button "✕"
+  - text: active Peripheral Redline Chairs Upfront 106,000 cr up front · 1,800 cr/wk — 6 weeks ✓ make the regional playoffs → 12,600 cr active Stream OrbitCast Steady 9,400 cr/wk — 16 weeks make the regional playoffs → 43,000 cr · At Risk active Apparel GG Threads Steady 5,900 cr/wk — 20 weeks make the regional playoffs → 16,000 cr · At Risk
+  - heading "This week" [level=2]
+  - text: 2,366,434 cr Balance +75,202 cr Net / wk 130,602 cr Income 55,400 cr Expenses
+  - heading "This week's run rate" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item cr / wk":
+        - columnheader "Item"
+        - columnheader "cr / wk"
+    - rowgroup:
+      - row "Base sponsorship 48,454 cr":
+        - cell "Base sponsorship"
+        - cell "48,454 cr"
+      - row "Title sponsor 41,300 cr":
+        - cell "Title sponsor"
+        - cell "41,300 cr"
+      - row "Jersey sponsor 10,100 cr":
+        - cell "Jersey sponsor"
+        - cell "10,100 cr"
+      - row "Peripheral sponsor 1,800 cr":
+        - cell "Peripheral sponsor"
+        - cell "1,800 cr"
+      - row "Stream sponsor 9,400 cr":
+        - cell "Stream sponsor"
+        - cell "9,400 cr"
+      - row "Apparel sponsor 5,900 cr":
+        - cell "Apparel sponsor"
+        - cell "5,900 cr"
+      - row "Merchandise 2,186 cr":
+        - cell "Merchandise"
+        - cell "2,186 cr"
+      - row "Ticket sales 1,457 cr":
+        - cell "Ticket sales"
+        - cell "1,457 cr"
+      - row "Streaming → Brand 10,005 cr":
+        - cell "Streaming → Brand":
+          - text: Streaming
+          - button "→ Brand"
+        - cell "10,005 cr"
+      - row "Prize money 0 cr":
+        - cell "Prize money"
+        - cell "0 cr"
+      - row "Income total 130,602 cr":
+        - cell "Income total"
+        - cell "130,602 cr"
+      - row "Salaries → Squad -47,500 cr":
+        - cell "Salaries → Squad":
+          - text: Salaries
+          - button "→ Squad"
+        - cell "-47,500 cr"
+      - row "Staff -4,900 cr":
+        - cell "Staff"
+        - cell "-4,900 cr"
+      - row "Facility upkeep → Facilities -3,000 cr":
+        - cell "Facility upkeep → Facilities":
+          - text: Facility upkeep
+          - button "→ Facilities"
+        - cell "-3,000 cr"
+      - row "Expense total -55,400 cr":
+        - cell "Expense total"
+        - cell "-55,400 cr"
+      - row "Net +75,202 cr":
+        - cell "Net"
+        - cell "+75,202 cr"
+  - paragraph: A live run-rate snapshot from the current roster, staff, sponsors and facilities — not a ledger of a specific past week.
+  - heading "8-week cash projection" [level=2]
+  - img "projected balance"
+  - text: 2,913,950 cr in 8w
+  - table:
+    - rowgroup:
+      - row "Week Net Balance":
+        - columnheader "Week"
+        - columnheader "Net"
+        - columnheader "Balance"
+    - rowgroup:
+      - row "W8 +75,202 cr 2,441,636 cr":
+        - cell "W8"
+        - cell "+75,202 cr"
+        - cell "2,441,636 cr"
+      - row "W9 +75,202 cr 2,516,838 cr":
+        - cell "W9"
+        - cell "+75,202 cr"
+        - cell "2,516,838 cr"
+      - row "W10 +75,202 cr 2,592,040 cr":
+        - cell "W10"
+        - cell "+75,202 cr"
+        - cell "2,592,040 cr"
+      - row "W11 +65,102 cr 2,657,142 cr":
+        - cell "W11"
+        - cell "+65,102 cr"
+        - cell "2,657,142 cr"
+      - row "W12 +65,102 cr 2,722,244 cr":
+        - cell "W12"
+        - cell "+65,102 cr"
+        - cell "2,722,244 cr"
+      - row "W13 +65,102 cr 2,787,346 cr":
+        - cell "W13"
+        - cell "+65,102 cr"
+        - cell "2,787,346 cr"
+      - row "W14 +63,302 cr 2,850,648 cr":
+        - cell "W14"
+        - cell "+63,302 cr"
+        - cell "2,850,648 cr"
+      - row "W15 +63,302 cr 2,913,950 cr":
+        - cell "W15"
+        - cell "+63,302 cr"
+        - cell "2,913,950 cr"
+  - paragraph: Assumes current sponsors, facilities and roster hold steady; sponsor slot deals drop off as they expire. Prize money and roster moves aren't modeled.
+  - heading "Brand value — marketability 1.01 (facility ×1.1)" [level=2]
+  - text: Reputation +0.73 Social reach +0.11 Star power +0.11 Fanbase +0.06 International run +0 Community mood -0.01 Results -0.07
+- button "Close profile": ✕
+- text: Vortex Key Influencer Duelist Awper AR ES 95 · EN 58 age 23 734.6K followers 🎥 heavy streamer · 4,027 cr/wk 122w at club rest · normal Team Nexus 24w left · 9,200 cr/wk 74% streams · 110,000 cr release · 442,000 cr buyout · starter
+- button "Rein in streaming…"
+- button "Change role/style…"
+- button "Make IGL"
+- button "Scout development"
+- text: 77 OVR ★★★ 90–93 Current ability 100 comfort 68–85 Potential peak forecast 57 Form 82 Morale 100 Condition 62 Confidence drives duels & nerve 291,000 cr Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Badges" [level=3]
+- text: Aim Demon Clutch Master
+- heading "Attributes" [level=3]
+- text: Aim Precision 98 Aim Reactivity 94 →94.2–99 Clutch Factor 92 →92.1–97.9 Comms Quality 59 →84.6–95.6 Composure 74 →74.9–85.4 Game Sense 73 →79.2–89.9 Movement 87 →87–93.5 Positioning 78 →83.5–94.4 Tilt Resistance 52 →80.2–91 Utility Usage 60 →76.1–86.6
+- heading "Traits" [level=3]
+- text: Perfectionist Star Player Volatile
+- heading "Agent pool" [level=3]
+- text: Role comfort 100 Jett 96 Yoru 68 Phoenix 68 Iso 67 Neon 66
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- text: "1.21 Rating 1.30 K/D 23 FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 6 matches · 105 / 81 / — K / D / A
+- text: ACS by week Kills &amp; deaths by week K D
+- img "Kills and deaths by week"
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over time CA Conf
+- img "Ability and confidence over time": 79 50
+- paragraph: CA 74.5 to 76.8 over 30 weeks / 734.6K followers
+- text: Season growth Tilt Resistance this season
+- img "Tilt Resistance trajectory this season": 52.1 50.0
+- button "Tilt Resistance 52+2.1 ▲"
+- button "Composure 74+0.4 ▲"
+- button "Comms Quality 59+0.3 ▲"
+- button "Game Sense 73+0.1 ▲"
+- button "Utility Usage 60+0.1 ▲"
+- button "Clutch Factor 92+0.1 ▲"
+- button "Aim Precision 980.0 —"
+- button "Aim Reactivity 940.0 —"
+- heading "Relationships" [level=3]
+- button "Ghost Neutral"
+- button "Slyblade Neutral"
+- button "Apex Neutral"
+- button "Hollowlock Neutral"
+- button "Frostdash Neutral"
+- button "Nightsurge Neutral"
+- button "Echo Neutral"
+- heading "Career" [level=3]
+- text: 2 Seasons 36 Maps 778 Kills 1.63 K/D 0 Honours 0 MVPs 0 All-Star Timeline S1 Vortex re-signs with Team Nexus. Vortex earns the Aim Demon badge. Vortex reaches 75 CA. Vortex earns the Clutch Master badge. Vortex passes 500 career kills. Memories
+- list:
+  - listitem: "S1: Vortex earns the Clutch Master badge."
+  - listitem: "S1: Vortex earns the Aim Demon badge."
+  - listitem: "S1: Vortex passes 500 career kills."
+  - listitem: "S1: Vortex reaches 75 CA."
+  - listitem: "S1: Vortex re-signs with Team Nexus."
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Apex"
+  - option "Ghost"
+  - option "Slyblade"
+  - option "Echo"
+  - option "Hollowlock"
+  - option "Nightsurge"
+  - option "Frostdash"

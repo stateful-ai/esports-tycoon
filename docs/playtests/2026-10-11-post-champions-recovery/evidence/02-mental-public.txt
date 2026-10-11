@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async page => { console.log(JSON.stringify(await page.evaluate(async () => ({state: await (await fetch('/api/state')).json(), roster: await (await fetch('/api/roster/team_nexus')).json()})))); })(page);
+```

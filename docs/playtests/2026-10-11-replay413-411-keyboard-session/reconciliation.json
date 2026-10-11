@@ -1,0 +1,56 @@
+{
+  "head": "308640af46cc2a7d7f0cae92923f9594342de554",
+  "tree": "7e3e2e8622a1bba459b8021eb402425fb0f357e7",
+  "baselineSha256": "c14f5a35f054e0b612fd5162016f33d256e917b246752065a7f9bc1bde287db8",
+  "finalSha256": "f343fec3268c3fef1356cd03dd40eee211c831748f8d6e80e89f25cd76536563",
+  "baselineDecisions": 133,
+  "finalDecisions": 135,
+  "fullPrefixUnchanged": true,
+  "newActions": [
+    {
+      "season": 2,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "team_first",
+        "event_id": "ce95f3d9a2102946"
+      },
+      "source": "web"
+    },
+    {
+      "season": 2,
+      "week": 7,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "snapBefore": 29,
+  "snapAfter": 30,
+  "baselineGameTime": [
+    2,
+    7
+  ],
+  "finalGameTime": [
+    2,
+    8
+  ],
+  "usageCount": 127,
+  "usageKinds": {
+    "session_start": 1,
+    "view": 8,
+    "visible_time": 44,
+    "attempt": 3,
+    "result": 3,
+    "interaction": 1,
+    "replay": 66,
+    "session_end": 1
+  },
+  "sourceUnchanged": true
+}

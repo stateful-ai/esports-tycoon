@@ -1,0 +1,8 @@
+{
+  "observed_snapshot": "ghost-mentor-options.yml",
+  "player": "ghost",
+  "age": 19,
+  "selected_before": "",
+  "observed_options": [{"value":"","label":"no mentor"},{"value":"apex","label":"Apex (teach 73)"},{"value":"fa_13","label":"Slyblade (teach 62)"}],
+  "note": "Derived only from actual preselection DOM snapshot; later selected readback preserved separately."
+}

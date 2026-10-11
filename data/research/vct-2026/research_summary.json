@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "season": 2026,
+  "pack_snapshot": "2026-07-09",
+  "research_snapshot": "2026-10-06",
+  "coverage": {
+    "selected_events": 50,
+    "full_map_events": 16,
+    "scope_note": "All discovered 2026 VCT and international events on tier-1 first page; selected main Challengers circuits on tier-2 first page. Event stats are broad; full map collection is explicitly limited to collect_maps=true. Not a claim of complete worldwide coverage."
+  },
+  "counts": {
+    "events": 50,
+    "event_observations": 3816,
+    "unique_event_players": 1994,
+    "maps": 1567,
+    "unique_map_players": 683,
+    "unique_observed_players": 2046,
+    "player_map_observations": 15157,
+    "fully_reconciled_event_candidates": 13,
+    "source_pages": 1136,
+    "pack_players": 435,
+    "pack_free_agents": 88,
+    "reviewable_quality_proposals": 355
+  },
+  "identity_status": {
+    "corroborated": 386,
+    "candidate_needs_review": 37,
+    "ambiguous": 8,
+    "unobserved": 4
+  },
+  "free_agent_identity_status": {
+    "corroborated": 68,
+    "unobserved": 1,
+    "candidate_needs_review": 17,
+    "ambiguous": 2
+  },
+  "collection_issues": [
+    {
+      "kind": "no_played_maps",
+      "source_url": "https://www.vlr.gg/642133/joblife-vs-stallions-esports-challengers-2026-emea-stage-1-c",
+      "detail": "Challengers 2026: EMEA Stage 1"
+    },
+    {
+      "kind": "no_played_maps",
+      "source_url": "https://www.vlr.gg/642135/stallions-esports-vs-pixel-lumina-challengers-2026-emea-stage-1-c",
+      "detail": "Challengers 2026: EMEA Stage 1"
+    },
+    {
+      "kind": "no_played_maps",
+      "source_url": "https://www.vlr.gg/642137/ucam-esports-club-vs-stallions-esports-challengers-2026-emea-stage-1-c",
+      "detail": "Challengers 2026: EMEA Stage 1"
+    },
+    {
+      "kind": "no_event_stats",
+      "source_url": "https://www.vlr.gg/event/stats/2934?min_rounds=0",
+      "detail": "China National Tournament 2026 Split Alpha: Pro Division"
+    },
+    {
+      "kind": "no_played_maps",
+      "source_url": "https://www.vlr.gg/681041/any-questions-gaming-vs-ace-china-national-tournament-2026-split-alpha-pro-division-lr1",
+      "detail": "China National Tournament 2026 Split Alpha: Pro Division"
+    },
+    {
+      "kind": "missing_teams",
+      "source_url": "https://www.vlr.gg/668491/intz-vs-tbd-challengers-2026-brazil-gamers-club-stage-2-w3",
+      "detail": "Challengers 2026: Brazil Gamers Club Stage 2"
+    }
+  ],
+  "validation_errors": 0,
+  "validation_warnings": 826,
+  "source_provenance_rows_checked": 20981,
+  "manual_browser_audit": {
+    "method": "Live VLR pages opened in Playwright Chromium; rendered table screenshots visually inspected and manually transcribed independently of CSV/parser output. TLS verified. Purposive sample.",
+    "reviewed_at_utc": "2026-10-06T20:06:00+00:00",
+    "observations_sha256": "285f7498b8a5b37a489c70171f28f4848ecd259e4aba084b1e720b15c2792c8b",
+    "checked_csv_sha256": {
+      "map_outcomes.csv": "719a6f0b6b105291bf82826d8145092948778f065242ab445424df95358a1045",
+      "player_map_stats.csv": "9c369afe5bc2df66462965f20b3718b1fe88a1aa89db7295833cb19b9b61d22f",
+      "player_event_stats.csv": "5cba7fd05c26dd2c2f1b03f4ee1eb35ea324b50478aded41dce4f5e4acc40286",
+      "player_profiles.csv": "3aaab66f7eafc0b174508fe8103afaa1c1376b41ec1098df5760ab4b20820819"
+    },
+    "pages": 10,
+    "screenshots": 11,
+    "field_checks": 662,
+    "passed": 662,
+    "failed": 0,
+    "scope": "Purposive sample: tier 1, tier 2, overtime, event totals, missing stats/lineups, and free-agent profile identity/current versus past listings; not a statistical accuracy estimate.",
+    "matches_current_csv_hashes": true
+  },
+  "model": {
+    "eligible_maps": 1470,
+    "excluded_incomplete_lineup_maps": 97,
+    "total_players": 680,
+    "exactly_inseparable_players": 545,
+    "connected_components": 4,
+    "test_lineup_model": {
+      "log_loss": 0.665745,
+      "brier_score": 0.236555,
+      "accuracy": 0.583607
+    },
+    "test_team_identity_baseline": {
+      "log_loss": 0.666217,
+      "brier_score": 0.23676,
+      "accuracy": 0.580328
+    }
+  },
+  "rating_decision": "No automatic gameplay edits. Box-score quality proposals are authored heuristics; compare lineup and team baselines and inseparable player counts before interpreting WAR.",
+  "free_agent_status": "Authored pack free agents reviewed; professional contract availability remains unverified. Historical retirement/bench and current team listings retained as evidence."
+}

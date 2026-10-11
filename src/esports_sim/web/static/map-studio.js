@@ -36,6 +36,15 @@ const Editor = {
   externalChangePending: false,
   pollingRevision: false,
   revisionTimer: null,
+  snapStep: 0.5,
+  showReference: true,
+  referenceOpacity: 0.65,
+  showRoutes: true,
+  previewPlayers: {},
+  previewTimer: null,
+  previewGeneration: 0,
+  floorComparison: null,
+  comparisonGeneration: 0,
 };
 
 function toast(msg) {
@@ -78,6 +87,8 @@ async function request(path, options = {}) {
 }
 
 function pushState() {
+  stopPreview();
+  clearFloorComparison();
   Editor.undoStack.push(JSON.stringify(Editor.doc));
   Editor.redoStack = [];
   Editor.dirty = true;
@@ -85,28 +96,38 @@ function pushState() {
 }
 
 function undo() {
+  stopPreview();
+  clearFloorComparison();
   if (document.activeElement && typeof document.activeElement.blur === "function") {
     document.activeElement.blur();
   }
   if (Editor.undoStack.length === 0) return;
   Editor.redoStack.push(JSON.stringify(Editor.doc));
   Editor.doc = JSON.parse(Editor.undoStack.pop());
+  Editor.selectedItem = null;
+  syncMetaFields();
   Editor.dirty = true;
   paintSaveState();
   renderCanvas();
+  updateReferenceImage();
   updateInspector();
 }
 
 function redo() {
+  stopPreview();
+  clearFloorComparison();
   if (document.activeElement && typeof document.activeElement.blur === "function") {
     document.activeElement.blur();
   }
   if (Editor.redoStack.length === 0) return;
   Editor.undoStack.push(JSON.stringify(Editor.doc));
   Editor.doc = JSON.parse(Editor.redoStack.pop());
+  Editor.selectedItem = null;
+  syncMetaFields();
   Editor.dirty = true;
   paintSaveState();
   renderCanvas();
+  updateReferenceImage();
   updateInspector();
 }
 
@@ -129,6 +150,14 @@ function paintSaveState() {
     chip.textContent = "Draft Saved";
     chip.classList.add("saved");
   }
+}
+
+function syncMetaFields() {
+  if (!Editor.doc) return;
+  $("#meta-name").value = Editor.doc.display_name;
+  $("#meta-sites").value = (Editor.doc.sites || []).join(',');
+  $("#meta-atk-spawn").value = Editor.doc.attacker_spawn;
+  $("#meta-def-spawn").value = Editor.doc.defender_spawn;
 }
 
 // ---------------------------------------------------------------------------
@@ -180,6 +209,8 @@ function paintMapList() {
 }
 
 function closeOpenMap() {
+  stopPreview();
+  clearFloorComparison();
   Editor.doc = null;
   Editor.hash = null;
   Editor.dirty = false;
@@ -196,6 +227,7 @@ function closeOpenMap() {
   $("#editor").classList.add("hidden");
   $("#empty-state").classList.remove("hidden");
   $("#validate-btn").disabled = true;
+  $("#preview-round-btn").disabled = true;
   $("#publish-btn").disabled = true;
   $("#delete-map-btn").disabled = true;
   $("#save-btn").disabled = true;
@@ -215,6 +247,8 @@ function closeOpenMap() {
 }
 
 async function openMap(mapId, options = {}) {
+  stopPreview();
+  clearFloorComparison();
   try {
     const preservedViewBox = options.preserveView ? clone(Editor.viewBox) : null;
     const res = await request(`/api/map-studio/maps/${encodeURIComponent(mapId)}`);
@@ -234,9 +268,17 @@ async function openMap(mapId, options = {}) {
     $("#meta-sites").value = (Editor.doc.sites || []).join(",");
     $("#meta-atk-spawn").value = Editor.doc.attacker_spawn || "attacker_spawn";
     $("#meta-def-spawn").value = Editor.doc.defender_spawn || "defender_spawn";
+
+    // Keep library selections reloadable and shareable as the selected draft.
+    if (window.history?.replaceState && window.location) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("map", Editor.doc.id);
+      window.history.replaceState({}, "", url);
+    }
     
     // Enable top bar actions
     $("#validate-btn").disabled = false;
+    $("#preview-round-btn").disabled = false;
     $("#publish-btn").disabled = false;
     $("#delete-map-btn").disabled = false;
     $("#save-btn").disabled = false;
@@ -247,6 +289,9 @@ async function openMap(mapId, options = {}) {
     $("#hash-compiled").textContent = "-";
     $("#paint-status").textContent = "unknown";
     
+    Editor.drawingPoints = [];
+    Editor.linkStart = null;
+    Editor.dragState = null;
     // Initialize viewBox state
     if (preservedViewBox) {
       Editor.viewBox = preservedViewBox;
@@ -259,6 +304,8 @@ async function openMap(mapId, options = {}) {
     paintMapList();
     paintSaveState();
     renderCanvas();
+    if (!preservedViewBox) fitMap();
+    updateReferenceImage();
     updateInspector();
     
     if (Editor.showOverlay) {
@@ -328,8 +375,93 @@ function updateOverlayImage() {
   }
 }
 
+function updateReferenceImage() {
+  const img = $("#reference-image");
+  const ref = Editor.doc?.reference;
+  $("#reference-toggle").disabled = !ref;
+  $("#reference-opacity").disabled = !ref;
+  $("#reference-caption").textContent = ref
+    ? `${ref.description}${Editor.isIso ? ' · Switch to 2D to trace.' : ''}` : "No calibrated reference attached.";
+  if (!ref || !Editor.showReference || Editor.isIso) {
+    img.style.opacity = "0";
+    return;
+  }
+  img.setAttribute("href", ref.image_path);
+  for (const key of ["x", "y", "width", "height"]) img.setAttribute(key, ref[key]);
+  img.style.opacity = String(Editor.referenceOpacity);
+}
+
+function fitMap() {
+  if (!Editor.doc) return;
+  const points = Editor.doc.walkable_surfaces.flatMap(s =>
+    surfacePolygons(s).flatMap(poly => poly.map(p => MapTransform.project(p[0], p[1], s.elevation, Editor.isIso))));
+  const reference = Editor.doc.reference;
+  if (reference && Editor.showReference && !Editor.isIso) {
+    points.push(MapTransform.project(reference.x, reference.y, 0, false),
+      MapTransform.project(reference.x + reference.width, reference.y + reference.height, 0, false));
+  }
+  if (!points.length) return;
+  const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+  const x = Math.min(...xs) - 5, y = Math.min(...ys) - 5;
+  Editor.viewBox = { x, y, w: Math.max(...xs) - x + 5, h: Math.max(...ys) - y + 5 };
+  renderCanvas();
+}
+
+function createRoomRectangle(a, b) {
+  const polygon = MapAuthoring.rectangle(a, b);
+  if (polygon[0][0] === polygon[2][0] || polygon[0][1] === polygon[2][1]) {
+    toast("Choose two different corners with non-zero width and height.");
+    return;
+  }
+  pushState();
+  const id = MapAuthoring.nextId(Editor.doc, "room");
+  const surfaceId = `surf_${id}`;
+  Editor.doc.walkable_surfaces.push({ id: surfaceId, polygon: clone(polygon), elevation: 0 });
+  Editor.doc.semantic_zones.push({ id, display_name: humanize(id), kind: "callout", polygon,
+    surface_ids: [surfaceId], label_position: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2],
+    site_id: "none", legacy_zone: "mid" });
+  Editor.selectedItem = { type: "zone", id, index: Editor.doc.semantic_zones.length - 1 };
+  Editor.drawingPoints = [];
+  Editor.selectedTool = "select";
+  updateToolActive();
+  renderCanvas();
+  updateInspector();
+}
+
 // ---------------------------------------------------------------------------
 // Event Handlers for Meta fields
+
+function selectedFloorSurface() {
+  const item = Editor.selectedItem;
+  if (!item || !Editor.doc) return null;
+  if (item.type === 'surface') return Editor.doc.walkable_surfaces[item.index];
+  if (item.type === 'zone') {
+    const zone = Editor.doc.semantic_zones[item.index];
+    if (zone.kind !== 'plant') return Editor.doc.walkable_surfaces.find(s => zone.surface_ids.includes(s.id));
+  }
+  return null;
+}
+
+function createFloorExtension(a, b) {
+  const surface = selectedFloorSurface();
+  Editor.drawingPoints = [];
+  if (!surface) { toast('Select the room to extend, then choose Floor Extension.'); return; }
+  const polygon = MapAuthoring.rectangle(a,b);
+  const [x,y] = polygon[0], w = polygon[1][0]-x, h = polygon[2][1]-y;
+  if (w <= 0 || h <= 0) { toast('Choose two different corners.'); return; }
+  const connected = surfacePolygons(surface).some(poly => {
+    const xs = poly.map(p => p[0]), ys = poly.map(p => p[1]);
+    const dx = Math.min(x+w,Math.max(...xs))-Math.max(x,Math.min(...xs));
+    const dy = Math.min(y+h,Math.max(...ys))-Math.max(y,Math.min(...ys));
+    return dx >= 0 && dy >= 0 && (dx > 0 || dy > 0);
+  });
+  if (!connected) { toast('The new floor must touch this room along an edge.'); return; }
+  pushState();
+  surface.floor_extensions ||= [];
+  surface.floor_extensions.push({x,y,w,h});
+  Editor.selectedTool = 'select';
+  updateToolActive(); renderCanvas(); updateInspector();
+}
 
 function bindMetaEvents() {
   $("#meta-name").onchange = (e) => {
@@ -387,7 +519,7 @@ function bindCanvasEvents() {
       return;
     }
     
-    const pt = getCanvasCoords(e);
+    const pt = MapAuthoring.snapPoint(getCanvasCoords(e), Editor.snapStep);
     
     if (Editor.selectedTool === "select") {
       // Find what point or handle we clicked
@@ -424,7 +556,17 @@ function bindCanvasEvents() {
         updateInspector();
         renderCanvas();
       }
-    } else if (Editor.selectedTool === "surface" || Editor.selectedTool === "zone" || Editor.selectedTool === "wall") {
+    } else if (Editor.selectedTool === "surface" || Editor.selectedTool === "extension") {
+      if (Editor.drawingPoints.length === 0) Editor.drawingPoints.push(pt);
+      else if (Editor.selectedTool === "extension") createFloorExtension(Editor.drawingPoints[0], pt);
+      else createRoomRectangle(Editor.drawingPoints[0], pt);
+      renderCanvas();
+    } else if (Editor.selectedTool === "zone" || Editor.selectedTool === "wall") {
+      if (Editor.selectedTool === "wall" && Editor.drawingPoints.length) {
+        const last = Editor.drawingPoints[Editor.drawingPoints.length - 1];
+        if (Math.abs(pt[0] - last[0]) >= Math.abs(pt[1] - last[1])) pt[1] = last[1];
+        else pt[0] = last[0];
+      }
       // Add point to drawing points
       Editor.drawingPoints.push(pt);
       renderCanvas();
@@ -530,7 +672,8 @@ function bindCanvasEvents() {
       return;
     }
     
-    const pt = getCanvasCoords(e);
+    const pt = MapAuthoring.snapPoint(getCanvasCoords(e), Editor.snapStep);
+    $("#cursor-coords").textContent = `x ${pt[0].toFixed(2)} · y ${pt[1].toFixed(2)}`;
     
     if (Editor.dragState) {
       const dx = pt[0] - Editor.dragState.startX;
@@ -616,7 +759,15 @@ function bindCanvasEvents() {
 
   // End polygon on Enter key
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && Editor.drawingPoints.length >= 3) {
+    if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+      e.preventDefault();
+      e.shiftKey ? redo() : undo();
+      return;
+    }
+    if (e.key.toLowerCase() === "f") fitMap();
+    const minPoints = Editor.selectedTool === "wall" ? 2 : 3;
+    if (e.key === "Enter" && Editor.drawingPoints.length >= minPoints) {
       pushState();
       if (Editor.selectedTool === "surface") {
         const sid = `surface_${Date.now()}`;
@@ -694,19 +845,41 @@ function renderCanvas() {
   svg.setAttribute("viewBox", `${Editor.viewBox.x} ${Editor.viewBox.y} ${Editor.viewBox.w} ${Editor.viewBox.h}`);
 
   // Clear layers
-  const layers = ["surfaces", "zones", "walls", "props", "links", "players", "probes", "handles"];
+  const layers = ["surfaces", "zones", "walls", "props", "comparison", "links", "players", "probes", "handles"];
   layers.forEach(l => $(`#layer-${l}`).innerHTML = "");
+  if (Editor.floorComparison && !isIso) {
+    for (const kind of ["outside", "missing"]) {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      node.setAttribute("d", Editor.floorComparison[kind].map(r => {
+        const points = [[r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h]];
+        return points.map((p, i) => `${i ? 'L' : 'M'} ${MapTransform.project(...p, 0, false).join(' ')}`).join(' ') + ' Z';
+      }).join(' '));
+      node.setAttribute("class", `floor-comparison-${kind}`);
+      $("#layer-comparison").appendChild(node);
+    }
+  }
 
   // Draw walkable surfaces
   Editor.doc.walkable_surfaces.forEach((surf, idx) => {
     const isSelected = Editor.selectedItem && Editor.selectedItem.type === "surface" && Editor.selectedItem.index === idx;
-    const pts = surf.polygon.map(pt => MapTransform.project(pt[0], pt[1], surf.elevation, isIso));
-    const d = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]} ${p[1]}`).join(" ") + " Z";
+    const d = surfacePolygons(surf).map(poly => {
+      const pts = poly.map(pt => MapTransform.project(pt[0], pt[1], surf.elevation, isIso));
+      return pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]} ${p[1]}`).join(" ") + " Z";
+    }).join(" ");
     
     const node = document.createElementNS("http://www.w3.org/2000/svg", "path");
     node.setAttribute("d", d);
     node.setAttribute("class", `walkable-surface ${isSelected ? "selected" : ""}`);
+    // Draw the physical union once. Thousands of 0.5u tile seams otherwise
+    // turn the tracing outline into a solid stroke and obscure the reference.
+    node.style.stroke = "none";
     $("#layer-surfaces").appendChild(node);
+    const outline = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    outline.setAttribute("d", MapAuthoring.floorOutline(surf).map(([a,b]) =>
+      `M ${MapTransform.project(...a,surf.elevation,isIso).join(' ')} L ${MapTransform.project(...b,surf.elevation,isIso).join(' ')}`
+    ).join(' '));
+    outline.setAttribute("class", `walkable-surface-outline ${isSelected ? "selected" : ""}`);
+    $("#layer-surfaces").appendChild(outline);
   });
 
   // Draw semantic zones
@@ -737,7 +910,7 @@ function renderCanvas() {
     text.setAttribute("font-size", "3px");
     text.setAttribute("font-family", "var(--es-font-mono)");
     text.setAttribute("text-anchor", "middle");
-    text.textContent = zone.id;
+    text.textContent = (zone.display_name || humanize(zone.id)).replace(/\b(Attacker|Defender) Side\b/g,'$1');
     $("#layer-zones").appendChild(text);
   });
 
@@ -752,7 +925,7 @@ function renderCanvas() {
     
     const node = document.createElementNS("http://www.w3.org/2000/svg", "path");
     node.setAttribute("d", d);
-    node.setAttribute("class", `prop-rect ${isSelected ? "selected" : ""}`);
+    node.setAttribute("class", `prop-rect ${prop.role === 'wall' ? 'solid-wall' : ''} ${isSelected ? "selected" : ""}`);
     $("#layer-props").appendChild(node);
   });
 
@@ -777,6 +950,7 @@ function renderCanvas() {
 
   // Draw traversal links
   Editor.doc.traversal_links.forEach((link, idx) => {
+    if (!Editor.showRoutes) return;
     const isSelected = Editor.selectedItem && Editor.selectedItem.type === "link" && Editor.selectedItem.index === idx;
     // find elevations
     const fs = Editor.doc.walkable_surfaces.find(s => s.id === link.from_pos[2]);
@@ -796,6 +970,10 @@ function renderCanvas() {
       `${pointIndex === 0 ? "M" : "L"} ${point[0]} ${point[1]}`
     ).join(" "));
     path.setAttribute("class", `traversal-link-line ${isSelected ? "selected" : ""}`);
+    if (link.runtime_enabled === false) {
+      path.setAttribute("stroke-dasharray", "1.5 1");
+      path.setAttribute("opacity", "0.65");
+    }
     path.setAttribute("fill", "none");
     $("#layer-links").appendChild(path);
     
@@ -813,6 +991,18 @@ function renderCanvas() {
   });
 
   // Draw test players
+  Object.values(Editor.previewPlayers).forEach(player => {
+    const surface = Editor.doc.walkable_surfaces.find(s => s.id === `surf_${player.callout_id}`);
+    const p = MapTransform.project(player.x, player.y, surface?.elevation || 0, isIso);
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p[0]); circle.setAttribute("cy", p[1]); circle.setAttribute("r", "1.1");
+    circle.setAttribute("fill", player.team_id === "team_nexus" ? "var(--es-color-accent)" : "var(--es-color-brand)");
+    circle.setAttribute("stroke", "var(--es-color-text-primary)"); circle.setAttribute("stroke-width", "0.25");
+    circle.style.pointerEvents = "none";
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = player.handle;
+    circle.appendChild(title); $("#layer-players").appendChild(circle);
+  });
   Editor.doc.editor_state.test_players.forEach((player, idx) => {
     const isSelected = Editor.selectedItem && Editor.selectedItem.type === "player" && Editor.selectedItem.index === idx;
     const p = MapTransform.project(player.x, player.y, 0, isIso);
@@ -1024,7 +1214,7 @@ function findElementAt(pt) {
   }
 
   // Links and walls must be picked before their containing zone/surface.
-  for (let i = 0; i < Editor.doc.traversal_links.length; i++) {
+  for (let i = 0; Editor.showRoutes && i < Editor.doc.traversal_links.length; i++) {
     const link = Editor.doc.traversal_links[i];
     const points = linkPoints(link);
     for (let pointIndex = 1; pointIndex < points.length; pointIndex++) {
@@ -1055,7 +1245,7 @@ function findElementAt(pt) {
   // Check surfaces
   for (let i = 0; i < Editor.doc.walkable_surfaces.length; i++) {
     const surf = Editor.doc.walkable_surfaces[i];
-    if (isPointInPolygon(pt, surf.polygon)) {
+    if (surfacePolygons(surf).some(poly => isPointInPolygon(pt, poly))) {
       return { type: "surface", id: surf.id, index: i };
     }
   }
@@ -1075,9 +1265,14 @@ function isPointInPolygon(pt, poly) {
   return inside;
 }
 
+function surfacePolygons(surface) {
+  return [surface.polygon, ...(surface.floor_extensions || []).map(r =>
+    [[r.x,r.y],[r.x+r.w,r.y],[r.x+r.w,r.y+r.h],[r.x,r.y+r.h]])];
+}
+
 function surfaceAt(pt) {
   return Editor.doc.walkable_surfaces.find(surface =>
-    isPointInPolygon(pt, surface.polygon)
+    surfacePolygons(surface).some(poly => isPointInPolygon(pt, poly))
   ) || null;
 }
 
@@ -1113,6 +1308,23 @@ function movePoint(type, index, ptIdx, dx, dy) {
     pts = linkPoints(link);
   }
   if (pts[ptIdx]) {
+    if (["surface", "zone", "prop"].includes(type) && MapAuthoring.isRectangle(pts)) {
+      const resized = MapAuthoring.resizeRectangle(pts, ptIdx,
+        MapAuthoring.snapPoint([pts[ptIdx][0] + dx, pts[ptIdx][1] + dy], Editor.snapStep));
+      const collection = type === "surface" ? Editor.doc.walkable_surfaces : type === "zone" ? Editor.doc.semantic_zones : Editor.doc.props;
+      const entity = collection[index];
+      if (type === "surface" || (type === "zone" && entity.kind !== "plant")) {
+        const surface = type === "surface" ? entity : Editor.doc.walkable_surfaces.find(s =>
+          entity.surface_ids.includes(s.id) && JSON.stringify(s.polygon) === JSON.stringify(pts));
+        if (surface) {
+          Editor.doc.semantic_zones.filter(z => z.kind !== "plant" && z.surface_ids.includes(surface.id))
+            .forEach(z => { z.polygon = clone(resized); });
+          surface.polygon = clone(resized);
+        }
+      }
+      entity[type === "prop" ? "footprint" : "polygon"] = clone(resized);
+      return;
+    }
     pts[ptIdx][0] = Math.round((pts[ptIdx][0] + dx) * 100) / 100;
     pts[ptIdx][1] = Math.round((pts[ptIdx][1] + dy) * 100) / 100;
     if (type === "link" && (ptIdx === 0 || ptIdx === pts.length - 1)) {
@@ -1123,6 +1335,27 @@ function movePoint(type, index, ptIdx, dx, dy) {
 }
 
 function moveElement(type, index, dx, dy) {
+  const zone = type === "zone" ? Editor.doc.semantic_zones[index] : null;
+  const surface = type === "surface" ? Editor.doc.walkable_surfaces[index] :
+    zone && zone.kind !== "plant" ? Editor.doc.walkable_surfaces.find(s =>
+      zone.surface_ids.includes(s.id) && JSON.stringify(s.polygon) === JSON.stringify(zone.polygon)) : null;
+  if (surface) {
+    const shift = pts => pts.forEach(p => {
+      p[0] = Math.round((p[0] + dx) * 100) / 100;
+      p[1] = Math.round((p[1] + dy) * 100) / 100;
+    });
+    shift(surface.polygon);
+    (surface.floor_extensions || []).forEach(r => { r.x += dx; r.y += dy; });
+    Editor.doc.semantic_zones.filter(z => z.surface_ids.includes(surface.id)).forEach(z => {
+      shift(z.polygon); shift([z.label_position]);
+    });
+    Editor.doc.props.filter(p => p.surface_id === surface.id).forEach(p => shift(p.footprint));
+    Editor.doc.traversal_links.forEach(l => {
+      if (l.from_pos[2] === surface.id) shift([l.from_pos]);
+      if (l.to_pos[2] === surface.id) shift([l.to_pos]);
+    });
+    return;
+  }
   if (type === "player") {
     const player = Editor.doc.editor_state.test_players[index];
     player.x = Math.round((player.x + dx) * 100) / 100;
@@ -1172,6 +1405,9 @@ function updateInspector() {
   
   const item = Editor.selectedItem;
   let html = "";
+  const floorSurface = item.type === "surface" ? Editor.doc.walkable_surfaces[item.index] :
+    item.type === "zone" && Editor.doc.semantic_zones[item.index].kind !== "plant" ?
+    Editor.doc.walkable_surfaces.find(s => Editor.doc.semantic_zones[item.index].surface_ids.includes(s.id)) : null;
   
   if (item.type === "surface") {
     const surf = Editor.doc.walkable_surfaces[item.index];
@@ -1214,9 +1450,15 @@ function updateInspector() {
   } else if (item.type === "prop") {
     const prop = Editor.doc.props[item.index];
     html = `
-      <h3>Prop Cover</h3>
+      <h3>${prop.role === 'wall' ? 'Solid Wall Volume' : 'Cover Prop'}</h3>
       <div style="display: grid; gap: var(--es-space-4); margin-top: var(--es-space-4);">
         <label class="field"><span>Prop ID</span><input type="text" value="${esc(prop.id)}" onchange="updateSelectedField('id', this.value)"></label>
+        <label class="field"><span>Role</span>
+          <select onchange="updateSelectedField('role', this.value)">
+            <option value="cover" ${(prop.role || 'cover') === 'cover' ? 'selected' : ''}>Cover / holding spot</option>
+            <option value="wall" ${prop.role === 'wall' ? 'selected' : ''}>Solid wall volume</option>
+          </select>
+        </label>
         <label class="field"><span>Height</span>
           <select onchange="updateSelectedField('height', this.value)">
             <option value="half" ${prop.height === "half" ? "selected" : ""}>Half Height (Crate)</option>
@@ -1250,6 +1492,11 @@ function updateInspector() {
       <h3>Traversal Link</h3>
       <div style="display: grid; gap: var(--es-space-4); margin-top: var(--es-space-4);">
         <label class="field"><span>Link ID</span><input type="text" value="${esc(link.id)}" onchange="updateSelectedField('id', this.value)"></label>
+        <label class="field"><span>Simulation traversal</span><select onchange="updateSelectedField('runtime_enabled', this.value === 'true')">
+          <option value="true" ${link.runtime_enabled !== false ? "selected" : ""}>Enabled</option>
+          <option value="false" ${link.runtime_enabled === false ? "selected" : ""}>Recorded only</option>
+        </select></label>
+        <label class="field"><span>Traversal note</span><input value="${esc(link.description || '')}" onchange="updateSelectedField('description', this.value)"></label>
         <label class="field"><span>Kind</span>
           <select onchange="updateSelectedField('kind', this.value)">
             ${["ramp", "rope", "door", "rotating_door", "teleporter", "drop"].map(value =>
@@ -1270,6 +1517,7 @@ function updateInspector() {
           </select>
         </label>
         <label class="field"><span>Via points (x,y; x,y)</span><input type="text" value="${esc(via)}" onchange="updateLinkVia(this.value)"></label>
+        <label class="field"><span>Doorway Span (low, high)</span><input value="${esc((link.opening_span || []).join(', '))}" placeholder="Open seam" onchange="updateOpeningSpan(this.value)"></label>
         <label class="field"><span>Noise Radius</span><input type="number" min="0" step="1" value="${link.noise_radius || 0}" onchange="updateSelectedField('noise_radius', parseFloat(this.value))"></label>
         <label class="field"><span>Setup-Close Probability (breakable: defenders switch it shut)</span><input type="number" min="0" max="1" step="0.05" value="${link.start_closed_prob || 0}" onchange="updateSelectedField('start_closed_prob', parseFloat(this.value))"></label>
         <button class="btn" onclick="deleteSelectedItem()" style="border-color: var(--es-color-brand); color: var(--es-color-brand);">Delete Link</button>
@@ -1288,7 +1536,26 @@ function updateInspector() {
     `;
   }
   
+  if (floorSurface) html += `<label class="field"><span>Floor extensions (x, y, width, height)</span>
+    <textarea aria-label="Floor extensions" rows="4" onchange="updateFloorExtensions(this.value)">${esc(
+      (floorSurface.floor_extensions || []).map(r => [r.x,r.y,r.w,r.h].join(', ')).join('\n'))}</textarea></label>
+    <p class="trace-help">Each rectangle adds physical floor to this room. Its navigation center stays fixed.</p>`;
   panel.innerHTML = html;
+}
+
+function updateFloorExtensions(value) {
+  if (!Editor.doc || !Editor.selectedItem) return;
+  const item = Editor.selectedItem;
+  const surface = item.type === 'surface' ? Editor.doc.walkable_surfaces[item.index] :
+    item.type === 'zone' ? Editor.doc.walkable_surfaces.find(s => Editor.doc.semantic_zones[item.index].surface_ids.includes(s.id)) : null;
+  if (!surface) return;
+  const rows = value.trim() ? value.trim().split('\n').map(row => row.split(',').map(v => v.trim() ? Number(v.trim()) : NaN)) : [];
+  if (rows.some(row => row.length !== 4 || row.some(v => !Number.isFinite(v)) || row[2] <= 0 || row[3] <= 0)) {
+    toast('Use one rectangle per line: x, y, positive width, positive height.'); return;
+  }
+  pushState();
+  surface.floor_extensions = rows.map(([x,y,w,h]) => ({x,y,w,h}));
+  renderCanvas();
 }
 
 function updateSelectedField(field, value) {
@@ -1322,6 +1589,20 @@ function updateSelectedField(field, value) {
   } else if (item.type === "player") {
     Editor.doc.editor_state.test_players[item.index][field] = value;
   }
+  renderCanvas();
+}
+
+function updateOpeningSpan(value) {
+  const span = value.trim() ? value.split(',').map(Number) : null;
+  if (span && (span.length !== 2 || !span.every(Number.isFinite) || span[0] >= span[1])) {
+    toast("Enter two finite numbers in ascending order, or leave blank for an open seam.");
+    return;
+  }
+  if (Editor.selectedItem?.type !== 'link') return;
+  pushState();
+  const link = Editor.doc.traversal_links[Editor.selectedItem.index];
+  link.opening_span = span;
+  link.override_opening = true;
   renderCanvas();
 }
 
@@ -1424,7 +1705,14 @@ async function validateDraft() {
     
     if (res.valid) {
       list.innerHTML = `<p class="muted">All continuous audits and legacy compilation compatibility checks passed successfully!</p>`;
+      list.innerHTML += Editor.doc.traversal_links.filter(link => link.runtime_enabled === false).map(link =>
+        `<p class="muted"><b>Recorded traversal: ${esc(link.id)}</b> ${esc(link.description || 'This link is excluded from simulation.')}</p>`
+      ).join("");
+      toast("Map validation passed.");
     } else {
+      $("#editor").classList.remove("focus-canvas");
+      $("#focus-canvas-btn").textContent = "Focus Canvas";
+      toast(`Map has ${res.errors.length} validation issue(s). See Audits & Warnings.`);
       list.innerHTML = res.errors.map(err => `
         <div class="newsline" style="color: var(--es-color-brand); border-color: color-mix(in srgb, var(--es-color-brand) 25%, transparent)">
           <b>${esc(err.path)}</b>: ${esc(err.message)}
@@ -1433,6 +1721,90 @@ async function validateDraft() {
     }
   } catch (err) {
     toast(`Validation failed: ${err.message}`);
+  }
+}
+
+function clearFloorComparison() {
+  Editor.comparisonGeneration++;
+  Editor.floorComparison = null;
+  $("#floor-comparison-status").textContent = "";
+  $("#compare-floor-btn").textContent = "Compare Floor";
+  $("#compare-floor-btn").disabled = false;
+  $("#layer-comparison").innerHTML = "";
+}
+
+async function compareFloor() {
+  if (!Editor.doc?.reference) { toast("Attach a calibrated reference to compare floor."); return; }
+  if (Editor.floorComparison) { clearFloorComparison(); renderCanvas(); return; }
+  const generation = ++Editor.comparisonGeneration;
+  $("#compare-floor-btn").disabled = true;
+  $("#floor-comparison-status").textContent = "Comparing floor to the reference…";
+  try {
+    const result = await request("/api/map-studio/compare-floor", { method: "POST", body: Editor.doc });
+    if (generation !== Editor.comparisonGeneration) return;
+    Editor.floorComparison = result;
+    $("#compare-floor-btn").textContent = "Hide Comparison";
+    $("#floor-comparison-status").textContent = `${Math.round(result.iou * 100)}% floor overlap · Red: floor outside reference (${Math.round(result.outside_area)}u²) · Green: missing floor (${Math.round(result.missing_area)}u²) · Approximate image trace, ${result.grid_step}u grid`;
+    renderCanvas();
+  } catch (error) {
+    if (generation !== Editor.comparisonGeneration) return;
+    $("#floor-comparison-status").textContent = `Comparison failed: ${error.message}`;
+  } finally {
+    if (generation === Editor.comparisonGeneration) $("#compare-floor-btn").disabled = false;
+  }
+}
+
+function stopPreview() {
+  Editor.previewGeneration++;
+  if (Editor.previewTimer !== null) clearInterval(Editor.previewTimer);
+  Editor.previewTimer = null;
+  Editor.previewPlayers = {};
+  $("#preview-status").textContent = "";
+  $("#preview-round-btn").textContent = "Test Round";
+  $("#preview-round-btn").disabled = !Editor.doc;
+}
+
+async function previewRound() {
+  if (!Editor.doc) return;
+  const seed = Number($("#round-preview-seed").value);
+  if (!Number.isInteger(seed) || seed < 0 || seed > 2147483647) { toast('Choose a whole-number round seed from 0 to 2147483647.'); return; }
+  if (Editor.previewTimer !== null) { stopPreview(); renderCanvas(); return; }
+  stopPreview();
+  const generation = Editor.previewGeneration;
+  $("#preview-round-btn").disabled = true;
+  $("#preview-status").textContent = "Simulating a test round on this draft…";
+  try {
+    const replay = await request("/api/map-studio/preview", { method: "POST", body: {doc: Editor.doc, seed} });
+    if (generation !== Editor.previewGeneration) return;
+    $("#preview-round-btn").disabled = false;
+    $("#preview-round-btn").textContent = "Stop Preview";
+    let index = 0;
+    Editor.previewTimer = setInterval(() => {
+      const tick = replay.events[index]?.tick;
+      if (tick === undefined) {
+        clearInterval(Editor.previewTimer); Editor.previewTimer = null;
+        $("#preview-round-btn").textContent = "Test Round";
+        return;
+      }
+      let ending = null;
+      while (index < replay.events.length && replay.events[index].tick === tick) {
+        const e = replay.events[index++];
+        if (e.type === "round.control" || (e.type === "round.move" && e.from_callout === null && e.waypoints?.length)) {
+          const [x, y] = e.type === "round.control" ? [e.x, e.y] : e.waypoints[0];
+          Editor.previewPlayers[e.player_id] = { ...replay.players[e.player_id], x, y, callout_id: e.callout_id || e.to_callout };
+        }
+        if (e.type === "round.kill") delete Editor.previewPlayers[e.victim_id];
+        if (e.type === "round.end") ending = e;
+      }
+      $("#preview-status").textContent = ending
+        ? `Round 1: ${humanize(ending.winner_id)} won (${humanize(ending.reason)}). Seed ${replay.seed}.`
+        : `Round 1 · seed ${replay.seed} · tick ${tick} · ${Object.keys(Editor.previewPlayers).length} players · recorded engine positions`;
+      renderCanvas();
+    }, 100);
+  } catch (err) {
+    if (generation !== Editor.previewGeneration) return;
+    stopPreview();
+    toast(`Preview failed: ${err.message}`);
   }
 }
 
@@ -1600,15 +1972,39 @@ function bindToolbarEvents() {
       Editor.viewBox = { x: -6, y: -6, w: 112, h: 112 };
     }
     renderCanvas();
+    fitMap();
     updateOverlayImage();
+    updateReferenceImage();
   };
 
   $("#undo-btn").onclick = undo;
   $("#redo-btn").onclick = redo;
+  $("#fit-map-btn").onclick = fitMap;
+  $("#focus-canvas-btn").onclick = () => {
+    const editor = $("#editor");
+    const focused = editor.classList.contains("focus-canvas");
+    focused ? editor.classList.remove("focus-canvas") : editor.classList.add("focus-canvas");
+    $("#focus-canvas-btn").textContent = focused ? "Focus Canvas" : "Show Properties";
+  };
+  $("#snap-step").onchange = e => { Editor.snapStep = Number(e.target.value); };
+  $("#reference-toggle").onchange = e => { Editor.showReference = e.target.checked; updateReferenceImage(); };
+  $("#compare-floor-btn").onclick = compareFloor;
+  $("#round-preview-seed").onchange = () => { stopPreview(); renderCanvas(); };
+  $("#reference-opacity").oninput = e => { Editor.referenceOpacity = Number(e.target.value) / 100; updateReferenceImage(); };
+  $("#routes-toggle").onchange = e => {
+    Editor.showRoutes = e.target.checked;
+    if (!Editor.showRoutes && Editor.selectedItem?.type === "link") Editor.selectedItem = null;
+    renderCanvas(); updateInspector();
+  };
+  $("#trace-outline").onchange = e => {
+    const classes = $("#studio-canvas").classList;
+    e.target.checked ? classes.add("trace-outlines") : classes.remove("trace-outlines");
+  };
 
   $("#save-btn").onclick = saveDraft;
   $("#reload-btn").onclick = reloadLatest;
   $("#validate-btn").onclick = validateDraft;
+  $("#preview-round-btn").onclick = previewRound;
   $("#publish-btn").onclick = publishRuntime;
   $("#delete-map-btn").onclick = openDeleteMapDialog;
 
@@ -1619,6 +2015,12 @@ function bindToolbarEvents() {
 }
 
 function updateToolActive() {
+  const help = { surface: "Click two opposite corners. A room and linked callout are created together.",
+    extension: "Select a room, then click two opposite corners to add connected floor. The navigation center stays fixed.",
+    zone: "Click polygon corners, then Enter. Plant zones must share the site's surface.",
+    wall: "Click wall corners, then Enter. Segments stay horizontal or vertical.",
+    link: "Click a start surface, then a destination. Edit bends and doorway span in Properties." };
+  $("#trace-help").textContent = help[Editor.selectedTool] || "Select and drag to edit. Wheel to zoom · Right-drag to pan · F to fit · Ctrl+Z to undo.";
   document.querySelectorAll(".tool-btn").forEach(btn => {
     if (btn.dataset.tool === Editor.selectedTool) {
       btn.classList.add("active");

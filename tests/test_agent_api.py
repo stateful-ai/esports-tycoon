@@ -64,6 +64,20 @@ def test_agent_state_requires_a_world(lobby):
     assert err.value.status_code == 409
 
 
+@pytest.mark.parametrize("pace", ["fast", None, [], {}])
+def test_malformed_nested_parameters_are_recoverable(lobby, pace):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=918))
+    _as(lobby, SID_A)
+    game = lobby.games[created["code"]]
+    before = game.gs.model_dump_json()
+    with pytest.raises(HTTPException) as err:
+        server.agent_act(server.AgentActBody(kind="set_tactics", params={"pace": pace}))
+    assert err.value.status_code == 422
+    assert err.value.detail
+    assert game.gs.model_dump_json() == before
+
+
 def test_join_guards_taken_seats_and_draft_worlds(lobby):
     _as(lobby, SID_A)
     created = server.agent_create(

@@ -1000,7 +1000,9 @@ def test_map_pool_board_shape(env):
     gs, gd, h = env
     _bind(gs, gd)
     mp = server_mod._map_pool_board(gs, h.user_team)
-    assert set(mp) == {"maps", "veto"}
+    assert set(mp) == {"team_id", "team_name", "maps", "veto"}
+    assert mp["team_id"] == h.user_team
+    assert mp["team_name"] == gs.teams[h.user_team].name
     for m in mp["maps"]:
         assert set(m) == {"map", "map_id", "played", "wins", "win_rate"}
         assert m["wins"] <= m["played"]
@@ -1397,3 +1399,48 @@ def test_objectives_hub_and_rotation_shape(env):
     rot = server_mod._rotation_usage(gs, h.user_team)
     assert all(set(r) == {"id", "handle", "maps", "starter", "stamina", "burnout"} for r in rot)
     assert rot == sorted(rot, key=lambda r: (-r["maps"], r["handle"]))
+
+@pytest.mark.parametrize("reverse", [False, True])
+@pytest.mark.parametrize("acting", ["own", "opponent"])
+def test_next_fixture_names_stakes_and_owns_map_record(env, reverse, acting):
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    own = h.user_team
+    opponent = next(t.id for t in gs.teams.values()
+                    if t.id != own and t.region == gs.teams[own].region and t.tier == 1)
+    third = next(t.id for t in gs.teams.values()
+                 if t.id not in (own, opponent) and t.region == gs.teams[own].region and t.tier == 1)
+    def played(fid, week, a, b, winner, mid):
+        return Fixture(id=fid, week=week, team_a=a, team_b=b, maps=[mid],
+                       played=True, winner_id=winner, results=[MapResult(
+                           map_id=mid, seed=0, score_a=13 if winner == a else 7,
+                           score_b=13 if winner == b else 7, winner_id=winner)])
+    upcoming = Fixture(id="ownership-next", week=3,
+                       team_a=opponent if reverse else own,
+                       team_b=own if reverse else opponent, maps=["bind"])
+    gs.fixtures = [played("own-1", 1, own, third, own, "ascent"),
+                   played("opp-1", 1, opponent, third, opponent, "bind"),
+                   played("own-2", 2, third, own, own, "lotus"),
+                   played("opp-2", 2, third, opponent, third, "bind"), upcoming]
+    gs.week = 3
+    gs.phase = "regular"
+    gs.standings = {tid: TeamRecord(wins=2 if tid == own else 1 if tid == opponent else 0)
+                    for tid in gs.teams}
+    # Real alternate manager perspective, independent of fixture A/B ordering.
+    tid = own if acting == "own" else opponent
+    game = server_mod._Game(gd, "TESTC", gs=gs)
+    server_mod._ctx.set(server_mod._ReqCtx(game, tid))
+    gs.set_acting(tid)
+    before = gs.model_dump_json()
+    view, opp_id = server_mod._next_fixture_board(gs)
+    assert opp_id == (opponent if tid == own else own)
+    name = gs.teams[tid].name
+    assert any(name + "'s grip" in line for line in view["preview"])
+    winning_runs = [line for line in view["preview"] if "winning run" in line]
+    assert winning_runs == ([f"{name} arrive on a 2-match winning run."] if tid == own else [])
+    assert not any("They" in line or "their grip" in line for line in view["preview"])
+    mp = view["map_pool"]
+    assert (mp["team_id"], mp["team_name"]) == (tid, name)
+    records = {m["map_id"]: (m["wins"], m["played"]) for m in mp["maps"]}
+    assert records == ({"ascent": (1, 1), "lotus": (1, 1)} if tid == own else {"bind": (1, 2)})
+    assert gs.model_dump_json() == before

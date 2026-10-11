@@ -1,0 +1,118 @@
+ESPORTSSIM
+Season 1 · Week 23 · Offseason — Team Nexus
+2,266,822 cr
+Save
+Autosave off
+Every week
+Every 2 weeks
+Every 3 weeks
+Every 5 weeks
+Every 8 weeks
+Campaigns
+Start Season 2 ▸
+Sim ahead ▸▸
+🛠️
+🔇
+Guide
+
+Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition.
+
+WEEKLY
+DASHBOARD
+INBOX18
+MATCH
+ORG
+CLUB
+FACILITIES
+SEASON
+MARKET1
+STATS
+COMPANY
+DASHBOARD
+S1 · W23 · Offseason
+Guide
+Career ▸
+11–3
+RECORD
++69 rd
+2nd
+LEAGUE
+Americas
+L1
+STREAK
+2,266,822 cr
+BALANCE
+92
+MORALE
+93
+CONDITION
+MATCH DAY
+
+No fixture scheduled — offseason.
+
+MATCH REVIEW
+
+Last time out — Lost to Team Vanguard 1-2. Standout: Vortex (1.06). Off-colour: Echo (0.63).
+
+L
+vs Team Vanguard
+1–2
+★
+POTM
+Slice
+WHAT WORKED
+—
+WHERE IT BROKE DOWN
+Echo off-colour  
+0.63 average rating across the series.
+Young with room (proj. 65–80) — a development call, not a bench.
+Defense is leaking
+14/36 defense rounds won (39%).
+WHAT TO TWEAK
+▸ Echo is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.
+
+A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+
+AMERICAS LEAGUE
+#	TEAM	W	L	+/-
+1	Team Vanguard	13	1	+82
+2	Team Nexus	11	3	+69
+3	Rust Belt Gaming	10	4	+55
+4	Saracen Guard	8	6	+26
+LAST RESULT
+L
+Team Vanguard
+1–2
+
+World #4 · Rep 67 · Fans 333.9K
+
+Full table ▸
+NEEDS YOU
+▸ Scout report ready — Slice
+▸ 18 unread inbox messages
+▸ Vortex: Top Fragger Award · In Contention · 2nd · 673
+▸ Vortex: Opening King Award · In Contention · 3rd · 111
+▸ Vortex: Clutch Merchant Award · In Contention · 3rd · 14
+YOUR CALLS
+LAST MATCH
+▸ Aggression 30 vs book 50
+▸ Map control 70 vs book 50
+▸ Pace 30 vs book 50
+▸ Utility discipline 70 vs book 50
+▸ Preparation: book on Haven, Ascent, Lotus
+DECISIONS SETTLED
+PAID OFF Training call (mental): focused skills moved +0.14 avg this week vs +0.04 in a typical week.
+NEWS
+[S1 W22] Zephyrzero (Rust Belt Gaming) passes 300 kills this season.
+[S1 W22] Havocflare (Rust Belt Gaming) passes 300 kills this season.
+[S1 W22] [CHAMP_FINAL] Team Vanguard beat Rust Belt Gaming, 3-1.
+[S1 W22] Team Vanguard win CHAMPIONS — Season 1 world champions (1,000,000 cr)!
+[S1 W22] Slyecho re-signs with Yucatan Ceibas at 3,500/wk.
+[S1 W22] Wraithshot re-signs with Volga Reign at 3,800/wk.
+[S1 W22] Frostpulse re-signs with Taipei Circuit at 4,400/wk.
+[S1 W22] Slyflare re-signs with Coral Sea Drakes at 5,700/wk.
+[S1 W22] Nightrush re-signs with Chao Phraya Owls at 5,700/wk.
+[S1 W22] Slymark re-signs with Apex Syndicate at 5,000/wk.
+[S1 W22] Jinxshot re-signs with Apex Syndicate at 3,900/wk.
+[S1 W22] OrbitCast are courting the stream slot (9,400/wk steady, alternatives available). On the table until week 24.

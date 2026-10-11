@@ -1,0 +1,37 @@
+SQUAD DEVELOPMENT · SEASON 1 · WEEK 2
+
+Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+
+Apex OVR 78.3 → 78.3 (0.0)
+Tactical / Normal · 1 map
+Matches +0.01 OVR · Aim Precision +0.03 · Aim Reactivity +0.02
+Strong match performances are accelerating learning
+Tired legs are reducing practice quality; ease intensity or rest
+Streaming is taking time away from practice
+Coaching and club support are improving practice
+This focus has little reachable headroom; try another skill area
+Phantom OVR 65.5 → 65.9 (+0.4)
+Tactical / Normal · 1 map
+Practice +0.37 OVR · Game Sense +0.97 · Positioning +0.53 · Utility Usage +2.21
+Matches +0.08 OVR · Clutch Factor +0.05 · Comms Quality +0.21 · Composure +0.08 · Game Sense +0.17 · Positioning +0.02 · Utility Usage +0.24
+Strong match performances are accelerating learning
+Tactical practice reinforces skills used in matches
+Tired legs are reducing practice quality; ease intensity or rest
+Coaching and club support are improving practice
+Echo OVR 75.5 → 75.5 (0.0)
+Tactical / Normal · 1 map
+No measured skill gains
+Streaming is taking time away from practice
+Coaching and club support are improving practice
+This focus has little reachable headroom; try another skill area
+Vortex OVR 74.5 → 74.6 (+0.1)
+Rest / Normal · 1 map
+Matches +0.01 OVR · Comms Quality +0.08 · Composure +0.01 · Game Sense +0.02 · Positioning +0.01 · Utility Usage +0.01
+Career events +0.09 OVR · Composure +0.39 · Game Sense +0.46
+Individual recovery: practice paused, match experience retained
+Ghost OVR 75.7 → 75.9 (+0.2)
+Tactical / Normal · 1 map
+Practice +0.14 OVR · Positioning +0.35 · Utility Usage +1.02
+Matches +0.05 OVR · Aim Precision +0.25 · Aim Reactivity +0.11 · Comms Quality +0.06 · Composure +0.02 · Positioning +0.02 · Utility Usage +0.02
+Tactical practice reinforces skills used in matches
+Coaching and club support are improving practice

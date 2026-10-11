@@ -1,0 +1,266 @@
+diff --git a/src/esports_sim/web/static/app.js b/src/esports_sim/web/static/app.js
+index 1ef1478..e8807b2 100644
+--- a/src/esports_sim/web/static/app.js
++++ b/src/esports_sim/web/static/app.js
+@@ -792,7 +792,10 @@ function setupLobby(lob) {
+       createGame(t.id, shared_, world, "sandbox", scenario)
+     );
+   };
+-  $("#ng-seed").addEventListener("change", () => renderPick());
++  $("#ng-seed").addEventListener("change", () => {
++    window.Usage?.interaction("lobby/seed_change");
++    renderPick();
++  });
+   const showCreate = (shared) => {
+     shared_ = shared;
+     create.classList.remove("hidden");
+@@ -5027,12 +5030,20 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
+   const [results, setResults] = useState([]);
+   const [loading, setLoading] = useState(false);
+   const timerRef = useRef(null);
++  const userSearchRef = useRef(false);
++  const inputRef = useRef(null);
+ 
+   const performSearch = async (q) => {
++    // Tab navigation can detach the Preact root without running its cleanup.
++    if (!inputRef.current?.isConnected) return;
++    const userTriggered = userSearchRef.current;
++    userSearchRef.current = false;
+     if (q.trim().length < 2) {
+       setResults([]);
+       return;
+     }
++    // Request initiation only; never transmit the query or imply a result.
++    if (userTriggered) window.Usage?.interaction("market/player_search");
+     setLoading(true);
+     try {
+       const r = await api("/api/market/search?q=" + encodeURIComponent(q.trim()));
+@@ -5055,10 +5066,17 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
+   const handleKeyDown = (e) => {
+     if (e.key === "Enter") {
+       if (timerRef.current) clearTimeout(timerRef.current);
++      userSearchRef.current = true;
+       performSearch(query);
+     }
+   };
+ 
++  const handleInput = (e) => {
++    if (timerRef.current) clearTimeout(timerRef.current);
++    userSearchRef.current = true;
++    setQuery(e.target.value);
++  };
++
+   const handleBuyout = async (p) => {
+     if (!confirm(`Trigger ${p.handle}'s buyout clause for ${money(p.buyout)}?`)) return;
+     try {
+@@ -5075,10 +5093,11 @@ const PlayerSearch = ({ myRoster, triggerRefresh }) => {
+       <h2>Find a player</h2>
+       <div class="row">
+         <input 
+-          class="field mono player-search-input" 
++          class="field mono player-search-input"
++          ref=${inputRef}
+           placeholder="search by handle or real name…" 
+           value=${query}
+-          onInput=${(e) => setQuery(e.target.value)}
++          onInput=${handleInput}
+           onKeyDown=${handleKeyDown}
+         />
+       </div>
+@@ -8289,6 +8308,7 @@ function startWeekReveal(rep) {
+     e.stopPropagation();
+     closeWeekReveal();
+     showReport(rep);
++    window.Usage?.interaction("week/full_report_open");
+   };
+   fin.appendChild(cont);
+   fin.appendChild(full);
+diff --git a/src/esports_sim/web/static/usage.js b/src/esports_sim/web/static/usage.js
+index ae52240..a138057 100644
+--- a/src/esports_sim/web/static/usage.js
++++ b/src/esports_sim/web/static/usage.js
+@@ -60,7 +60,11 @@
+     if (target === "open") { replayReturn = current; view("replay"); }
+     if (target === "close") view(replayReturn || "dashboard");
+   }
+-  window.Usage = {view, request, result, boundary, replay, flush};
++  const interactions = new Set(["lobby/seed_change", "week/full_report_open", "market/player_search"]);
++  function interaction(target) {
++    if (interactions.has(target)) emit({kind: "interaction", target});
++  }
++  window.Usage = {view, request, result, boundary, replay, interaction, flush};
+   emit({kind: "session_start"}); view("lobby");
+   setInterval(() => { dwell(); void flush(); }, 15000);
+   document.addEventListener("visibilitychange", () => {
+diff --git a/src/esports_sim/web/usage_telemetry.py b/src/esports_sim/web/usage_telemetry.py
+index 9b5a12b..617291a 100644
+--- a/src/esports_sim/web/usage_telemetry.py
++++ b/src/esports_sim/web/usage_telemetry.py
+@@ -16,7 +16,7 @@ from starlette.concurrency import run_in_threadpool
+ 
+ class UsageEvent(BaseModel):
+     model_config = ConfigDict(extra="forbid", strict=True)
+-    kind: Literal["session_start", "session_end", "view", "visible_time", "attempt", "result", "replay"]
++    kind: Literal["session_start", "session_end", "view", "visible_time", "attempt", "result", "replay", "interaction"]
+     target: str = Field(default="", max_length=100, pattern=r"^[a-z0-9_/.-]*$")
+     request_id: int | None = Field(default=None, ge=1, le=2**31-1)
+     outcome: Literal["success", "http_error", "transport_error", "rejected"] | None = None
+@@ -36,6 +36,8 @@ SUBTABS = {"overview", "squad", "development", "locker_room", "operations", "str
+            "gameplan", "league", "fixtures", "playoffs", "records", "players", "scouting", "staff",
+            "leaders", "races", "meta", "history", "teams", "agents", "maps", "finances", "brand"}
+ REPLAY = {"open", "close", "play", "pause", "seek", "round", "speed_1", "speed_4", "speed_16", "speed_inst"}
++# Coarse control use only: never values, labels, selectors, or report contents.
++INTERACTIONS = {"lobby/seed_change", "week/full_report_open", "market/player_search"}
+ 
+ 
+ def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
+@@ -45,6 +47,8 @@ def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
+             valid = parts[0] in VIEWS and len(parts) <= 2 and (len(parts) == 1 or parts[1] in SUBTABS)
+         elif event.kind == "replay":
+             valid = event.target in REPLAY
++        elif event.kind == "interaction":
++            valid = event.target in INTERACTIONS
+         elif event.kind in {"attempt", "result"}:
+             valid = event.target in endpoints and event.request_id is not None
+         else:
+diff --git a/tests/market_search_usage_check.cjs b/tests/market_search_usage_check.cjs
+new file mode 100644
+index 0000000..c501315
+--- /dev/null
++++ b/tests/market_search_usage_check.cjs
+@@ -0,0 +1,48 @@
++const assert = require('node:assert/strict');
++const fs = require('node:fs');
++const vm = require('node:vm');
++const source = fs.readFileSync('src/esports_sim/web/static/app.js', 'utf8');
++const start = source.indexOf('const PlayerSearch =');
++const end = source.indexOf('  const handleBuyout', start);
++const callbacks = source.slice(start, end) + 'return {handleInput, handleKeyDown}; };';
++let slots = [], index = 0, effect, cleanup, pending, queries = [], receipts = [];
++const context = {
++  useState(initial) { const i = index++; slots[i] ??= initial; return [slots[i], v => { slots[i] = v; }]; },
++  useRef(initial) { const i = index++; slots[i] ??= {current: initial}; return slots[i]; },
++  useEffect(fn) { effect = fn; },
++  setTimeout(fn, ms) { assert.equal(ms, 250); pending = fn; return 1; },
++  clearTimeout() { pending = null; },
++  api: async url => { queries.push(url); return {results: []}; },
++  window: {Usage: {interaction: target => receipts.push(target)}}, console,
++};
++vm.createContext(context);
++vm.runInContext(callbacks + '\nglobalThis.component = PlayerSearch;', context);
++function render() { index = 0; const handlers = context.component({}); slots[5].current = {isConnected: true}; cleanup?.(); cleanup = effect(); return handlers; }
++async function fire() { const fn = pending; pending = null; fn?.(); await Promise.resolve(); }
++(async () => {
++  let handlers = render(); await fire(); // Initial render.
++  assert.equal(receipts.length, 0); assert.equal(queries.length, 0);
++  handlers.handleInput({target: {value: 'S'}}); handlers = render(); await fire();
++  assert.equal(receipts.length, 0);
++  handlers.handleInput({target: {value: 'Sly'}}); handlers = render();
++  handlers.handleInput({target: {value: 'Slyblade'}}); handlers = render(); await fire();
++  assert.equal(receipts.length, 1); assert.equal(queries.length, 1);
++  assert(queries[0].endsWith('Slyblade'));
++  handlers.handleInput({target: {value: 'cancelled'}}); handlers = render();
++  handlers.handleInput({target: {value: '  '}}); handlers = render(); await fire();
++  assert.equal(receipts.length, 1);
++  handlers.handleInput({target: {value: 'secret'}}); handlers = render(); slots[5].current.isConnected = false; await fire();
++  assert.equal(receipts.length, 1); // Navigation unmount cancels pending work.
++  handlers.handleInput({target: {value: 'Enter query'}}); handlers = render();
++  handlers.handleKeyDown({key: 'Enter'}); await fire();
++  assert.equal(receipts.length, 2); assert.equal(queries.length, 2);
++  handlers.handleKeyDown({key: 'Enter'}); await fire();
++  assert.equal(receipts.length, 3); // Explicit repeat submission counts again.
++  slots[0] = 'programmatic'; handlers = render(); await fire();
++  assert.equal(receipts.length, 3); // Programmatic update is not control use.
++  context.window.Usage = undefined;
++  handlers.handleKeyDown({key: 'Enter'}); await fire(); // Optional sidecar never blocks search.
++  assert.equal(queries.length, 5);
++  assert.deepEqual(receipts, Array(3).fill('market/player_search'));
++  console.log('Market search callback semantics passed');
++})().catch(e => { console.error(e); process.exitCode = 1; });
+diff --git a/tests/test_usage_telemetry.py b/tests/test_usage_telemetry.py
+index b5cc4e8..67d72bd 100644
+--- a/tests/test_usage_telemetry.py
++++ b/tests/test_usage_telemetry.py
+@@ -74,6 +74,31 @@ def test_bounded_payload(client):
+     assert client.post("/api/usage/events", json=payload(*[{"kind": "session_start"}] * 33)).status_code == 422
+ 
+ 
++def test_control_interactions_are_counts_only(client):
++    events = [{"kind": "interaction", "target": target} for target in
++              ("lobby/seed_change", "week/full_report_open", "week/full_report_open")]
++    assert client.post("/api/usage/events", json=payload(*events)).json()["accepted"]
++    report = client.get("/api/usage/report").json()
++    assert report["events"] == {"interaction:lobby/seed_change": 1,
++                                "interaction:week/full_report_open": 2}
++    assert report["attempts"] == report["paired_results"] == 0
++    assert report["visible_ms"] == report["outcomes"] == {}
++
++
++@pytest.mark.parametrize("event", [
++    {"kind": "interaction", "target": "lobby/seed_change/2039"},
++    {"kind": "interaction", "target": "week/report_text"},
++    {"kind": "interaction", "target": "lobby/seed_change", "seed": 2039},
++    {"kind": "interaction", "target": "week/full_report_open", "label": "secret"},
++    {"kind": "interaction", "target": "lobby/seed_change", "request_id": 1},
++    {"kind": "interaction", "target": "week/full_report_open", "duration_ms": 10},
++    {"kind": "interaction", "target": "week/full_report_open", "outcome": "success"},
++    {"kind": "interaction", "target": "week/full_report_open", "status": 200},
++])
++def test_rejects_interaction_values_and_request_semantics(client, event):
++    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
++
++
+ def test_reordered_concurrent_funnels_and_visible_time(client):
+     rows = [
+         {"kind": "result", "target": "/api/actions/train", "request_id": 2, "outcome": "rejected", "status": 200},
+@@ -215,3 +240,32 @@ def test_rotation_respects_exact_byte_boundary_on_windows(monkeypatch, tmp_path)
+     assert store.paths()[1].exists()
+     assert all(path.stat().st_size <= store.max_bytes for path in store.paths() if path.exists())
+     assert b"\r\n" not in row
++
++
++def test_market_search_receipts_are_coarse_counts(client):
++    event = {"kind": "interaction", "target": "market/player_search"}
++    assert client.post("/api/usage/events", json=payload(event, event)).json()["accepted"]
++    report = client.get("/api/usage/report").json()
++    assert report["events"] == {"interaction:market/player_search": 2}
++    assert report["attempts"] == report["paired_results"] == 0
++
++
++@pytest.mark.parametrize("event", [
++    {"kind": "interaction", "target": "market/player_search/secret"},
++    {"kind": "interaction", "target": "market/search"},
++    *[{"kind": "interaction", "target": "market/player_search", field: value}
++      for field, value in [("query", "secret"), ("handle", "secret"), ("player_id", "secret"),
++                           ("selector", "secret"), ("label", "secret"), ("url", "secret"),
++                           ("request_id", 1), ("outcome", "success"), ("duration_ms", 1)]],
++])
++def test_market_search_rejects_values_and_unknown_targets(client, event):
++    assert client.post("/api/usage/events", json=payload(event)).status_code == 422
++
++
++def test_market_search_actual_js_callbacks():
++    import shutil
++    import subprocess
++    node = shutil.which("node")
++    if not node:
++        pytest.skip("Node unavailable")
++    subprocess.run([node, "tests/market_search_usage_check.cjs"], check=True, capture_output=True)
+diff --git a/tests/usage_frontend_check.cjs b/tests/usage_frontend_check.cjs
+index 7146a71..68140ff 100644
+--- a/tests/usage_frontend_check.cjs
++++ b/tests/usage_frontend_check.cjs
+@@ -17,6 +17,13 @@ vm.createContext(context);
+ vm.runInContext(fs.readFileSync('src/esports_sim/web/static/usage.js', 'utf8'), context);
+ (async () => {
+   const usage = context.window.Usage;
++  usage.interaction('lobby/seed_change');
++  usage.interaction('week/full_report_open');
++  usage.interaction('lobby/seed_change/SECRET');
++  await usage.flush();
++  const interactions = requests.flatMap(r => r.events).filter(e => e.kind === 'interaction');
++  assert.deepEqual(interactions.map(e => e.target), ['lobby/seed_change', 'week/full_report_open']);
++  assert(interactions.every(e => Object.keys(e).sort().join(',') === 'kind,target'));
+   now = 1000; usage.view('club/squad');
+   now = 2000; document.hidden = true; listeners.visibilitychange();
+   await usage.flush();

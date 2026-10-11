@@ -1,0 +1,93 @@
+{
+  "recovered_at_utc": "2026-10-11T07:24:50.132382+00:00",
+  "original_mapping": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\audit-regional-final.py",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/retained/audit-regional-final.py",
+      "sha256": "5f99312747d3a39c7925c7c9e70b371fb5ca10357b5bb5d21b867477153eb12b",
+      "byte_count": 8737,
+      "purpose": "Retained corrected audit source; source alone does not certify original stdout/exit or earlier failure version",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\audit-masters-quarter.py",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/retained/audit-masters-quarter.py",
+      "sha256": "2285c9d93fe342379f9a7bb64269a5c6dce20e3aa6dda4f0150c8dbf8fc9ba38",
+      "byte_count": 8783,
+      "purpose": "Retained corrected audit source; source alone does not certify original stdout/exit or earlier failure version",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\audit-masters-semi.py",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/retained/audit-masters-semi.py",
+      "sha256": "022945ce027af5cc1207756d5ac99f674e1d699bad0c327818f7ba6c5074cf01",
+      "byte_count": 10216,
+      "purpose": "Retained corrected audit source; source alone does not certify original stdout/exit or earlier failure version",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-regional-final\\saves\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-regional-final/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+      "byte_count": 5021660,
+      "purpose": "Final saved audit input named by historical report",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-masters-quarter\\saves\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-masters-quarter/evidence/retained/campaign_f2977bf6e97d789a.json",
+      "sha256": "999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+      "byte_count": 5081628,
+      "purpose": "Final saved audit input named by historical report",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-masters-semi\\pre-advance-fixture\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/retained/pre-advance-fixture/campaign_f2977bf6e97d789a.json",
+      "sha256": "e8c864a4fb5f6e5894cab49cb4e7e40939a9335286aa1a7f1506036c7a100743",
+      "byte_count": 5083580,
+      "purpose": "Exact pre-Advance 78-decision fixture; private sessions/meta deliberately excluded",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap35-series-card\\ESports Simulator\\saves\\campaign_f2977bf6e97d789a.json",
+      "published_path": "docs/playtests/2026-10-10-gap35-series-card/evidence/retained/final/campaign_f2977bf6e97d789a.json",
+      "sha256": "55879871f9ae8c366c09fcb4b4e495d75c79f6f73adb8fe42d2f6c69c40238f9",
+      "byte_count": 5084017,
+      "purpose": "Sanitized standalone campaign save; no auth/member/bootstrap files",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap30-qualification-stakes\\ESports Simulator\\src\\esports_sim\\manager\\qualification.py",
+      "published_path": "docs/playtests/gap30-qualification-stakes/evidence/retained/report-cited-source/src/esports_sim/manager/qualification.py",
+      "sha256": "b213faa2d41667e20a1aaf833ae77fec5ada63c0a09750c20bc48121861881cd",
+      "byte_count": 1874,
+      "purpose": "Historical report-cited feature source/test, exact original feature gate freeze hash; archived under docs, not active runtime source",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\review-already-benched-advice\\ESports Simulator\\tests\\test_review_selected_lineup.py",
+      "published_path": "docs/playtests/2026-10-10-gap34-already-benched/evidence/retained/report-cited-source/tests/test_review_selected_lineup.py",
+      "sha256": "7de6600a48b7e72510f02865b222c12dcd10679e2820fde30fa374aa9c2f83b6",
+      "byte_count": 4057,
+      "purpose": "Historical report-cited feature source/test, exact original feature gate freeze hash; archived under docs, not active runtime source",
+      "original_bytes_unchanged": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator\\docs\\playtests\\actions.csv",
+      "published_path": "docs/playtests/2026-10-10-gap31-evidence/evidence/retained/original-owner-actions.csv",
+      "sha256": "7c4a847d22adc67ba995c4350f691d2ecbe7cc8965dbab393cb3217dce8b42b6",
+      "byte_count": 1120585,
+      "purpose": "Immutable entire original owner CSV: eight gap31 observations match canonical all21fields; no derived rewrite",
+      "original_bytes_unchanged": true
+    }
+  ],
+  "tests_helpers_gameplay_executed": false,
+  "execution_limit": "Corrected audit sources are retained versions, not proof of original process exit or failed source versions. Original root audit stdout/exit receipts not found in scoped retained session/primary runs. Private sessions/meta referenced by one helper intentionally excluded; auth-dependent portion is not reproduced.",
+  "gap31_original_owner_csv_8rows_all21_fields_match": true,
+  "gap35_source_save_mapping": {
+    "historical_source_sha256": "e8c864a4fb5f6e5894cab49cb4e7e40939a9335286aa1a7f1506036c7a100743",
+    "published_path": "docs/playtests/2026-10-10-masters-semi/evidence/retained/pre-advance-fixture/campaign_f2977bf6e97d789a.json",
+    "qualification": "Same exact root handed immutable source; original source-only candidate path absent in gap35 run. No private session/member files copied."
+  }
+}

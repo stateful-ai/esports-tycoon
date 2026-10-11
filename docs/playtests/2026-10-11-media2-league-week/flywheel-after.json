@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0256",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Light mental reset resolves with explicit costs and zero match edge",
+    "problem": "Echo40.5 andApex48.5condition beforeawaymatch.",
+    "solution": "Chose lightreset1.5condition; freshcompletedreport methodology0.67morale2.5chemistry0.3edge0; lost3to13.",
+    "lesson": "Preparation has observable bounded effects without guaranteeing competitive improvement; tiredstarters stayedtired.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0257",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Team moment blocker has recoverable route",
+    "problem": "Firstadvance409pendingNightsurgevideo.",
+    "solution": "FollowedDashboardNeedsYou selectedfilm_grind; crew ranlong andplayerflat; retrycompletedoneweek.",
+    "lesson": "Rejected advance is browserusage only; flavor response and completed advance are separate accepteddecisions.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0258",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Away fixture result surfaces disagree in form strip",
+    "problem": "Knownawayformstrip says1to13 whileactualNexusroundscore3to13; rawfixtureRBG13Nexus3.",
+    "solution": "Preserved screenshot/publicfixture; treatedknown392 scope withoutduplicatefix.",
+    "lesson": "Use fixtureteamids and results to verify away scores; visibleformlabel can still confuse assessment onba3.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "pain-point"
+  }
+]

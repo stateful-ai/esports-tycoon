@@ -1,0 +1,487 @@
+### Page
+- Page URL: http://127.0.0.1:8543/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 2 · Week 5 · Regular — Team Nexus
+      - generic [ref=f1e6]: 2,568,240 cr
+      - button "Save" [ref=f1e7] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard 1" [ref=f1e18] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f1e19]: "1"
+        - button "Inbox 13" [ref=f1e20] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e21]: "13"
+        - button "Match 2" [ref=f1e22] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e23]: "2"
+      - generic "Org" [ref=f1e24]:
+        - button "Club" [ref=f1e26] [cursor=pointer]
+        - button "Facilities" [ref=f1e27] [cursor=pointer]
+        - button "Season" [ref=f1e28] [cursor=pointer]
+        - button "Market 1" [ref=f1e29] [cursor=pointer]:
+          - text: Market
+          - generic [ref=f1e30]: "1"
+        - button "Stats" [ref=f1e31] [cursor=pointer]
+        - button "Company" [ref=f1e32] [cursor=pointer]
+    - main [ref=f1e33]:
+      - generic [ref=f1e302]:
+        - generic [ref=f1e303]:
+          - generic [ref=f1e304]: Market
+          - generic [ref=f1e305]:
+            - button "Players" [ref=f1e306] [cursor=pointer]
+            - button "Scouting" [ref=f1e307] [cursor=pointer]
+            - button "Staff" [ref=f1e308] [cursor=pointer]
+          - generic [ref=f1e309]: ~64,667 cr/wk free · stable
+          - generic [ref=f1e310]: Opening window · Closes after week 5.
+        - generic [ref=f1e311]:
+          - generic [ref=f1e312]:
+            - generic [ref=f1e313]:
+              - heading "Find a player" [level=2] [ref=f1e314]
+              - textbox "search by handle or real name…" [ref=f1e316]
+            - generic [ref=f1e317]:
+              - heading "Free agents — 6" [level=2] [ref=f1e318]:
+                - text: Free agents
+                - generic [ref=f1e319]: — 6
+              - paragraph [ref=f1e320]: Market coverage 0% — estimates only; assign your scout to the market to see ceilings.
+              - generic [ref=f1e322] [cursor=pointer]:
+                - generic [ref=f1e323]: 🛠️ Filter free agents
+                - button "Show Filters ▾" [ref=f1e324]
+              - table [ref=f1e327]:
+                - rowgroup [ref=f1e328]:
+                  - row [ref=f1e329]:
+                    - columnheader "Player" [ref=f1e330] [cursor=pointer]
+                    - columnheader "Role" [ref=f1e331] [cursor=pointer]
+                    - columnheader "Age" [ref=f1e332] [cursor=pointer]
+                    - columnheader "OVR" [ref=f1e333]
+                    - columnheader "Ability" [ref=f1e334]
+                    - columnheader "Ceiling" [ref=f1e335]
+                    - columnheader "Languages" [ref=f1e336]
+                    - columnheader "Stream revenue" [ref=f1e337] [cursor=pointer]
+                    - columnheader "Asking" [ref=f1e338]
+                    - columnheader [ref=f1e339] [cursor=pointer]
+                    - columnheader "Swap out" [ref=f1e340] [cursor=pointer]
+                - rowgroup [ref=f1e341]:
+                  - row [ref=f1e342] [cursor=pointer]:
+                    - cell "Frostdash Room fit 50" [ref=f1e343]:
+                      - text: Frostdash
+                      - generic "Existing player history with your current roster" [ref=f1e344]: Room fit 50
+                    - cell "Controller IGL" [ref=f1e345]:
+                      - generic [ref=f1e346]:
+                        - generic [ref=f1e347]: Controller
+                        - generic [ref=f1e348]: IGL
+                    - cell "29" [ref=f1e349]
+                    - cell "~51" [ref=f1e350]
+                    - cell "½–★★½" [ref=f1e351]
+                    - cell "unknown" [ref=f1e352]
+                    - cell "Es En" [ref=f1e353]:
+                      - generic "Es — proficiency 86" [ref=f1e354]: Es
+                      - generic "En — proficiency 18" [ref=f1e355]: En
+                    - cell "17 cr/wk" [ref=f1e356]
+                    - cell "2,400 cr/wk" [ref=f1e357]
+                    - cell [ref=f1e358]:
+                      - button "Negotiate…" [ref=f1e359]
+                    - cell [ref=f1e360]:
+                      - generic [ref=f1e361]:
+                        - combobox [ref=f1e362]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e363]
+                  - row [ref=f1e364] [cursor=pointer]:
+                    - cell "Neohawk Room fit 50" [ref=f1e365]:
+                      - text: Neohawk
+                      - generic "Existing player history with your current roster" [ref=f1e366]: Room fit 50
+                    - cell "Duelist Awper" [ref=f1e367]:
+                      - generic [ref=f1e368]:
+                        - generic [ref=f1e369]: Duelist
+                        - generic [ref=f1e370]: Awper
+                    - cell "28" [ref=f1e371]
+                    - cell "~48" [ref=f1e372]
+                    - cell "½–★½" [ref=f1e373]
+                    - cell "unknown" [ref=f1e374]
+                    - cell "Es En" [ref=f1e375]:
+                      - generic "Es — proficiency 92" [ref=f1e376]: Es
+                      - generic "En — proficiency 56" [ref=f1e377]: En
+                    - cell "30 cr/wk" [ref=f1e378]
+                    - cell "3,000 cr/wk" [ref=f1e379]
+                    - cell [ref=f1e380]:
+                      - button "Negotiate…" [ref=f1e381]
+                    - cell [ref=f1e382]:
+                      - generic [ref=f1e383]:
+                        - combobox [ref=f1e384]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e385]
+                  - row [ref=f1e386] [cursor=pointer]:
+                    - cell "Falconflare Room fit 50" [ref=f1e387]:
+                      - text: Falconflare
+                      - generic "Existing player history with your current roster" [ref=f1e388]: Room fit 50
+                    - cell "Sentinel Anchor" [ref=f1e389]:
+                      - generic [ref=f1e390]:
+                        - generic [ref=f1e391]: Sentinel
+                        - generic [ref=f1e392]: Anchor
+                    - cell "18" [ref=f1e393]
+                    - cell "~48" [ref=f1e394]
+                    - cell "½–★½" [ref=f1e395]
+                    - cell "unknown" [ref=f1e396]
+                    - cell "Ko En" [ref=f1e397]:
+                      - generic "Ko — proficiency 94" [ref=f1e398]: Ko
+                      - generic "En — proficiency 23" [ref=f1e399]: En
+                    - cell "0 cr/wk" [ref=f1e400]
+                    - cell "2,300 cr/wk" [ref=f1e401]
+                    - cell [ref=f1e402]:
+                      - button "Negotiate…" [ref=f1e403]
+                    - cell [ref=f1e404]:
+                      - generic [ref=f1e405]:
+                        - combobox [ref=f1e406]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e407]
+                  - row [ref=f1e408] [cursor=pointer]:
+                    - cell "Nightecho Room fit 50" [ref=f1e409]:
+                      - text: Nightecho
+                      - generic "Existing player history with your current roster" [ref=f1e410]: Room fit 50
+                    - cell "Duelist Awper" [ref=f1e411]:
+                      - generic [ref=f1e412]:
+                        - generic [ref=f1e413]: Duelist
+                        - generic [ref=f1e414]: Awper
+                    - cell "19" [ref=f1e415]
+                    - cell "~48" [ref=f1e416]
+                    - cell "½–★★½" [ref=f1e417]
+                    - cell "unknown" [ref=f1e418]
+                    - cell "De En Ru" [ref=f1e419]:
+                      - generic "De — proficiency 94" [ref=f1e420]: De
+                      - generic "En — proficiency 48" [ref=f1e421]: En
+                      - generic "Ru — proficiency 50" [ref=f1e422]: Ru
+                    - cell "2 cr/wk" [ref=f1e423]
+                    - cell "2,300 cr/wk" [ref=f1e424]
+                    - cell [ref=f1e425]:
+                      - button "Negotiate…" [ref=f1e426]
+                    - cell [ref=f1e427]:
+                      - generic [ref=f1e428]:
+                        - combobox [ref=f1e429]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e430]
+                  - row [ref=f1e431] [cursor=pointer]:
+                    - cell "Grimecho Room fit 50" [ref=f1e432]:
+                      - text: Grimecho
+                      - generic "Existing player history with your current roster" [ref=f1e433]: Room fit 50
+                    - cell "Sentinel Anchor" [ref=f1e434]:
+                      - generic [ref=f1e435]:
+                        - generic [ref=f1e436]: Sentinel
+                        - generic [ref=f1e437]: Anchor
+                    - cell "27" [ref=f1e438]
+                    - cell "~43" [ref=f1e439]
+                    - cell "½–★★" [ref=f1e440]
+                    - cell "unknown" [ref=f1e441]
+                    - cell "Pt En" [ref=f1e442]:
+                      - generic "Pt — proficiency 89" [ref=f1e443]: Pt
+                      - generic "En — proficiency 91" [ref=f1e444]: En
+                    - cell "7 cr/wk" [ref=f1e445]
+                    - cell "2,400 cr/wk" [ref=f1e446]
+                    - cell [ref=f1e447]:
+                      - button "Negotiate…" [ref=f1e448]
+                    - cell [ref=f1e449]:
+                      - generic [ref=f1e450]:
+                        - combobox [ref=f1e451]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e452]
+                  - row [ref=f1e453] [cursor=pointer]:
+                    - cell "Falconstorm Room fit 50" [ref=f1e454]:
+                      - text: Falconstorm
+                      - generic "Existing player history with your current roster" [ref=f1e455]: Room fit 50
+                    - cell "Initiator Support" [ref=f1e456]:
+                      - generic [ref=f1e457]:
+                        - generic [ref=f1e458]: Initiator
+                        - generic [ref=f1e459]: Support
+                    - cell "17" [ref=f1e460]
+                    - cell "~40" [ref=f1e461]
+                    - cell "½" [ref=f1e462]
+                    - cell "unknown" [ref=f1e463]
+                    - cell "Ru En" [ref=f1e464]:
+                      - generic "Ru — proficiency 94" [ref=f1e465]: Ru
+                      - generic "En — proficiency 11" [ref=f1e466]: En
+                    - cell "0 cr/wk" [ref=f1e467]
+                    - cell "1,700 cr/wk" [ref=f1e468]
+                    - cell [ref=f1e469]:
+                      - button "Negotiate…" [ref=f1e470]
+                    - cell [ref=f1e471]:
+                      - generic [ref=f1e472]:
+                        - combobox [ref=f1e473]:
+                          - option "— drop —" [selected]
+                          - option "Apex (79)"
+                          - option "Vortex (77)"
+                          - option "Ghost (79)"
+                          - option "Slyblade (73)"
+                          - option "Echo (75)"
+                          - option "Hollowlock (63)"
+                          - option "Nightsurge (52)"
+                        - button "Swap" [ref=f1e474]
+          - generic [ref=f1e475]:
+            - generic [ref=f1e476]:
+              - heading "Squad intelligence" [level=2] [ref=f1e477]
+              - generic [ref=f1e478]:
+                - generic [ref=f1e479]: duelist 2
+                - generic [ref=f1e480]: controller 3
+                - generic [ref=f1e481]: initiator 1
+                - generic [ref=f1e482]: sentinel 1
+                - generic [ref=f1e483]: flex 0
+              - paragraph [ref=f1e484]: "Weakest: Controller (64.6)"
+            - generic [ref=f1e485]:
+              - heading "Signing headroom" [level=2] [ref=f1e486]
+              - generic [ref=f1e487]:
+                - generic [ref=f1e488]: Weekly net 64,667 cr
+                - generic [ref=f1e489]:
+                  - text: Affordable wage
+                  - generic [ref=f1e490]: 64,667 cr/wk
+                - generic [ref=f1e491]: stable
+            - generic [ref=f1e492]:
+              - heading "Suggested signings" [level=2] [ref=f1e493]
+              - generic [ref=f1e494]:
+                - generic [ref=f1e495]: Frostdash
+                - generic [ref=f1e496]: Controller
+                - generic [ref=f1e497]: "50.7"
+            - generic [ref=f1e498]:
+              - heading "Contract watch" [level=2] [ref=f1e499]
+              - generic [ref=f1e500]:
+                - generic [ref=f1e501]: Pulse
+                - generic [ref=f1e502]: Team Vanguard · Duelist
+                - generic [ref=f1e503]: 6w
+              - generic [ref=f1e504]:
+                - generic [ref=f1e505]: Wraithveil
+                - generic [ref=f1e506]: Seoul Dynasty Prime · Initiator
+                - generic [ref=f1e507]: 7w
+              - generic [ref=f1e508]:
+                - generic [ref=f1e509]: Ironstorm
+                - generic [ref=f1e510]: Coral Sea Drakes · Duelist
+                - generic [ref=f1e511]: 8w
+              - generic [ref=f1e512]:
+                - generic [ref=f1e513]: Crimstorm
+                - generic [ref=f1e514]: Nordic Frost · Sentinel
+                - generic [ref=f1e515]: 6w
+            - generic [ref=f1e516]:
+              - heading "Wonderkids — ≤20" [level=2] [ref=f1e517]:
+                - text: Wonderkids
+                - generic [ref=f1e518]: — ≤20
+              - generic [ref=f1e519]:
+                - generic [ref=f1e520]: Ghost
+                - generic [ref=f1e521]: 20y · Initiator · Team Nexus
+                - generic [ref=f1e522]: ★★★★★
+              - generic [ref=f1e523]:
+                - generic [ref=f1e524]: Ironhawk
+                - generic [ref=f1e525]: 19y · Initiator · Kathmandu Apex
+                - generic [ref=f1e526]: ★★★★★
+              - generic [ref=f1e527]:
+                - generic [ref=f1e528]: Driftlock
+                - generic [ref=f1e529]: 20y · Sentinel · Kathmandu Apex
+                - generic [ref=f1e530]: ★★★★★
+              - generic [ref=f1e531]:
+                - generic [ref=f1e532]: Ironhawk
+                - generic [ref=f1e533]: 19y · Duelist · Midnight Polders
+                - generic [ref=f1e534]: ★★★★★
+              - generic [ref=f1e535]:
+                - generic [ref=f1e536]: Driftshot
+                - generic [ref=f1e537]: 20y · Duelist · Taipei Circuit
+                - generic [ref=f1e538]: ★★★★★
+              - generic [ref=f1e539]:
+                - generic [ref=f1e540]: Frostecho
+                - generic [ref=f1e541]: 18y · Duelist · Sahara Compass
+                - generic [ref=f1e542]: ★★★★★
+            - generic [ref=f1e543]:
+              - heading "Challengers standouts" [level=2] [ref=f1e544]
+              - generic [ref=f1e545]:
+                - generic [ref=f1e546]: Driftshot
+                - generic [ref=f1e547]: 20y · Duelist · Taipei Circuit
+                - generic [ref=f1e548]: "1.57"
+              - generic [ref=f1e549]:
+                - generic [ref=f1e550]: Karmasnap
+                - generic [ref=f1e551]: 23y · Duelist · Gallic Storm
+                - generic [ref=f1e552]: "1.55"
+              - generic [ref=f1e553]:
+                - generic [ref=f1e554]: Voltflare
+                - generic [ref=f1e555]: 23y · Duelist · Kraken Unit
+                - generic [ref=f1e556]: "1.24"
+              - generic [ref=f1e557]:
+                - generic [ref=f1e558]: Havocflare
+                - generic [ref=f1e559]: 22y · Controller · Taipei Circuit
+                - generic [ref=f1e560]: "1.24"
+              - generic [ref=f1e561]:
+                - generic [ref=f1e562]: Grimstep
+                - generic [ref=f1e563]: 18y · Duelist · Azure Vanta
+                - generic [ref=f1e564]: "1.20"
+            - generic [ref=f1e565]:
+              - heading "Rumour mill" [level=2] [ref=f1e566]
+              - generic [ref=f1e567]:
+                - generic [ref=f1e568]: Free agent Frostdash (controller) linked with a move to Team Nexus.
+                - generic [ref=f1e569]: Free agent Neohawk (duelist) linked with a move to Team Nexus.
+                - generic [ref=f1e570]: Free agent Falconflare (sentinel) linked with a move to Team Nexus.
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Market
+    - generic: Find players and staff who improve the club without breaking its finances or chemistry.
+    - generic: Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.
+  - generic [ref=f1e572]:
+    - button "Close profile" [ref=f1e573] [cursor=pointer]: ✕
+    - generic [ref=f1e575]:
+      - generic [ref=f1e576]:
+        - generic [ref=f1e577]:
+          - generic [ref=f1e578]:
+            - text: Frostdash
+            - generic [ref=f1e579]: Core
+          - generic [ref=f1e580]:
+            - generic [ref=f1e581]: Controller
+            - generic [ref=f1e582]: IGL
+            - generic "nationality" [ref=f1e583]: AR
+            - generic "spoken languages (fluency)" [ref=f1e584]: ES 86 · EN 18
+            - generic [ref=f1e585]: age 29
+            - generic "social reach" [ref=f1e586]: 25.1K followers
+            - generic "org cut 17 cr/wk · heavy streaming slows development to ×0.97" [ref=f1e587]: 🎥 practice-focused · 17 cr/wk
+            - generic [ref=f1e588]: free agent
+          - generic [ref=f1e589]: Free agent — unsigned
+        - button "Scout player" [ref=f1e590] [cursor=pointer]
+      - generic [ref=f1e591]:
+        - generic [ref=f1e592]:
+          - generic [ref=f1e593]: —
+          - generic [ref=f1e594]: OVR
+          - generic [ref=f1e595]: scouted
+        - generic [ref=f1e596]:
+          - generic [ref=f1e597]: 51–68
+          - generic [ref=f1e598]: Current ability
+          - generic [ref=f1e599]: scouted
+        - generic [ref=f1e600]:
+          - generic [ref=f1e601]: depth-rotation
+          - generic [ref=f1e602]: Potential
+          - generic [ref=f1e603]: scouted
+        - generic [ref=f1e604]:
+          - generic [ref=f1e605]: —
+          - generic [ref=f1e606]: Form
+        - generic [ref=f1e607]:
+          - generic [ref=f1e608]: —
+          - generic [ref=f1e609]: Morale
+        - generic [ref=f1e610]:
+          - generic [ref=f1e611]: —
+          - generic [ref=f1e612]: Condition
+        - generic [ref=f1e613]:
+          - generic [ref=f1e614]: —
+          - generic [ref=f1e615]: Confidence
+          - generic [ref=f1e616]: drives duels & nerve
+        - generic [ref=f1e617]:
+          - generic [ref=f1e618]: 18,000 cr
+          - generic [ref=f1e619]: Value
+      - generic [ref=f1e620]:
+        - generic [ref=f1e621]:
+          - heading "Attributes" [level=3] [ref=f1e622]
+          - generic [ref=f1e623]:
+            - generic [ref=f1e624]:
+              - generic [ref=f1e625]: Aim Precision
+              - generic [ref=f1e626]: weak
+            - generic [ref=f1e628]:
+              - generic [ref=f1e629]: Aim Reactivity
+              - generic [ref=f1e630]: average
+            - generic [ref=f1e632]:
+              - generic [ref=f1e633]: Clutch Factor
+              - generic [ref=f1e634]: average
+            - generic [ref=f1e636]:
+              - generic [ref=f1e637]: Comms Quality
+              - generic [ref=f1e638]: strong
+            - generic [ref=f1e640]:
+              - generic [ref=f1e641]: Composure
+              - generic [ref=f1e642]: average
+            - generic [ref=f1e644]:
+              - generic [ref=f1e645]: Game Sense
+              - generic [ref=f1e646]: solid
+            - generic [ref=f1e648]:
+              - generic [ref=f1e649]: Movement
+              - generic [ref=f1e650]: average
+            - generic [ref=f1e652]:
+              - generic [ref=f1e653]: Positioning
+              - generic [ref=f1e654]: weak
+            - generic [ref=f1e656]:
+              - generic [ref=f1e657]: Tilt Resistance
+              - generic [ref=f1e658]: average
+            - generic [ref=f1e660]:
+              - generic [ref=f1e661]: Utility Usage
+              - generic [ref=f1e662]: strong
+        - generic [ref=f1e664]:
+          - generic [ref=f1e665]:
+            - heading "Traits" [level=3] [ref=f1e666]
+            - paragraph [ref=f1e667]: No traits revealed.
+          - generic [ref=f1e668]:
+            - heading "Agent pool" [level=3] [ref=f1e669]
+            - generic [ref=f1e670]:
+              - generic [ref=f1e671]:
+                - generic [ref=f1e672]:
+                  - generic [ref=f1e673]: Astra
+                  - generic [ref=f1e677]: "63"
+                - generic [ref=f1e678]:
+                  - generic [ref=f1e679]: Clove
+                  - generic [ref=f1e683]: "46"
+                - generic [ref=f1e684]:
+                  - generic [ref=f1e685]: Miks
+                  - generic [ref=f1e689]: "42"
+                - generic [ref=f1e690]:
+                  - generic [ref=f1e691]: Harbor
+                  - generic [ref=f1e695]: "39"
+                - generic [ref=f1e696]:
+                  - generic [ref=f1e697]: Omen
+                  - generic [ref=f1e701]: "36"
+              - button "Show all (29)" [ref=f1e702] [cursor=pointer]
+      - generic [ref=f1e703]:
+        - heading "Season — analytics" [level=3] [ref=f1e704]
+        - generic [ref=f1e705]:
+          - generic [ref=f1e707]:
+            - generic [ref=f1e708]: "0"
+            - generic [ref=f1e709]: "FK : FD"
+          - paragraph [ref=f1e710]: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+          - paragraph [ref=f1e711]: 0 matches · 0 / 0 / — K / D / A
+```

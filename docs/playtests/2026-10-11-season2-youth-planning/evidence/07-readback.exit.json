@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:51:04.042350+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {   const get = async path => { const response = await page.request.get(new URL(path, page.url()).href); if (!response.ok()) throw new Error(`${path}: ${response.status()}`); return response.json(); };   const state = await get('/api/state'); const club = await get('/api/club');   const roster = await get('/api/roster/team_nexus');   const frost = await get('/api/players/team_cascadia_youth_p1/profile');   const night = await get('/api/players/team_kraken_unit_p0/profile');   return {state:{season:state.season,week:state.week,phase:state.phase,user_team:state.user_team,save:state.save},academy:club.academy,roster:roster.players.map(p=>({id:p.id,handle:p.handle,starter:p.starter,dev_focus:p.dev_focus,training_intensity:p.training_intensity,salary:p.salary,stamina:p.stamina})),frost:{player:frost.player,overview:frost.overview},night:{player:night.player,overview:night.overview}}; }"
+  ],
+  "stdout_bytes": 8080,
+  "stderr_bytes": 0
+}

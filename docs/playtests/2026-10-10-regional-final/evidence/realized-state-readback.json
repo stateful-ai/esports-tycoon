@@ -1,0 +1,497 @@
+{
+  "fixture": {
+    "id": "s1amfinal",
+    "week": 16,
+    "stage": "final",
+    "bracket": "league",
+    "tier": 1,
+    "best_of": 3,
+    "team_a": "team_vanguard",
+    "team_b": "team_nexus",
+    "maps": [
+      "haven",
+      "ascent",
+      "lotus"
+    ],
+    "veto": [
+      "VGD ban split",
+      "NXS ban bind",
+      "VGD pick haven",
+      "NXS pick ascent",
+      "decider lotus"
+    ],
+    "played": true,
+    "results": [
+      {
+        "map_id": "haven",
+        "seed": 1568122991658826565,
+        "score_a": 13,
+        "score_b": 8,
+        "winner_id": "team_vanguard",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 11,
+            "deaths": 16,
+            "rating": 0.79
+          },
+          {
+            "player_id": "echo",
+            "kills": 7,
+            "deaths": 17,
+            "rating": 0.5
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 16,
+            "deaths": 19,
+            "rating": 0.97
+          },
+          {
+            "player_id": "ghost",
+            "kills": 9,
+            "deaths": 11,
+            "rating": 0.71
+          },
+          {
+            "player_id": "pulse",
+            "kills": 13,
+            "deaths": 17,
+            "rating": 0.8
+          },
+          {
+            "player_id": "shade",
+            "kills": 15,
+            "deaths": 15,
+            "rating": 0.95
+          },
+          {
+            "player_id": "slice",
+            "kills": 28,
+            "deaths": 9,
+            "rating": 1.74
+          },
+          {
+            "player_id": "vortex",
+            "kills": 17,
+            "deaths": 11,
+            "rating": 1.08
+          },
+          {
+            "player_id": "warden",
+            "kills": 11,
+            "deaths": 12,
+            "rating": 0.74
+          },
+          {
+            "player_id": "zenith",
+            "kills": 7,
+            "deaths": 7,
+            "rating": 0.75
+          }
+        ]
+      },
+      {
+        "map_id": "ascent",
+        "seed": 13154999376097313639,
+        "score_a": 13,
+        "score_b": 4,
+        "winner_id": "team_vanguard",
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 8,
+            "deaths": 15,
+            "rating": 0.62
+          },
+          {
+            "player_id": "echo",
+            "kills": 3,
+            "deaths": 16,
+            "rating": 0.24
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 8,
+            "deaths": 12,
+            "rating": 0.64
+          },
+          {
+            "player_id": "ghost",
+            "kills": 10,
+            "deaths": 13,
+            "rating": 0.73
+          },
+          {
+            "player_id": "pulse",
+            "kills": 17,
+            "deaths": 7,
+            "rating": 1.45
+          },
+          {
+            "player_id": "shade",
+            "kills": 13,
+            "deaths": 12,
+            "rating": 0.98
+          },
+          {
+            "player_id": "slice",
+            "kills": 23,
+            "deaths": 7,
+            "rating": 1.77
+          },
+          {
+            "player_id": "vortex",
+            "kills": 11,
+            "deaths": 15,
+            "rating": 0.78
+          },
+          {
+            "player_id": "warden",
+            "kills": 14,
+            "deaths": 8,
+            "rating": 1.14
+          },
+          {
+            "player_id": "zenith",
+            "kills": 4,
+            "deaths": 6,
+            "rating": 0.68
+          }
+        ]
+      }
+    ],
+    "winner_id": "team_vanguard",
+    "series_notes": [
+      "VGD: targeting Vortex."
+    ]
+  },
+  "trust": {
+    "fa_0": {
+      "before": 58.0,
+      "pre_advance": 61.0,
+      "after": 62.0
+    },
+    "apex": {
+      "before": 50.0,
+      "pre_advance": 53.0,
+      "after": 54.0
+    },
+    "echo": {
+      "before": 50.0,
+      "pre_advance": 53.0,
+      "after": 54.0
+    },
+    "fa_13": {
+      "before": 50.0,
+      "pre_advance": 53.0,
+      "after": 54.0
+    },
+    "ghost": {
+      "before": 50.0,
+      "pre_advance": 53.0,
+      "after": 54.0
+    },
+    "vortex": {
+      "before": 50.0,
+      "pre_advance": 53.0,
+      "after": 54.0
+    }
+  },
+  "media": {
+    "event_id": "d2c6ee7fa625f074",
+    "season": 1,
+    "week": 16,
+    "team_id": "team_nexus",
+    "type_id": "derby_expectations",
+    "choice_id": "respect_rival",
+    "player_id": "",
+    "fixture_id": "s1amfinal",
+    "summary": "The manager backs the group without dismissing the rival.",
+    "sentiment_delta": 0.0,
+    "sponsor_delta": 0.0,
+    "trust_delta": 4.0,
+    "settlement": "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight."
+  },
+  "preparation": {
+    "plan_id": "82d995be264afa5a",
+    "team_id": "team_nexus",
+    "fixture_id": "s1amfinal",
+    "opponent_id": "team_vanguard",
+    "partner_id": "team_adriatic_sirens",
+    "map_id": "haven",
+    "objective": "anti_exec",
+    "intensity": "light",
+    "season": 1,
+    "week": 16,
+    "status": "completed",
+    "finding_code": "opponent_attack_pressure",
+    "finding": "The opponent has won 85.7% of recorded attack rounds on haven.",
+    "evidence": {
+      "own_map_samples": 1,
+      "opponent_map_samples": 2,
+      "partner_map_samples": 4,
+      "own_attack_win_pct": 66.7,
+      "own_defense_win_pct": 100.0,
+      "opponent_attack_win_pct": 85.7,
+      "opponent_defense_win_pct": 83.3,
+      "partner_map_win_pct": 75.0,
+      "scouting_confidence": 0.5,
+      "average_stamina": 90.0,
+      "average_morale": 96.8,
+      "rotation_candidate_id": "fa_0"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "antistrat:team_vanguard",
+    "knowledge_gain": 1.1,
+    "stamina_cost": 1.5,
+    "morale_delta": 0.2,
+    "chemistry_delta": 0.2,
+    "artifact_label": "haven anti-exec book +1.1",
+    "prep_edge_contribution": 0.0044,
+    "dev_suggestion_player_id": "fa_0",
+    "dev_suggestion": "Hollowlock pushed the starters on haven; a focused development block could make that rotation real."
+  },
+  "review": {
+    "fixture_id": "s1amfinal",
+    "season": 1,
+    "week": 16,
+    "team_id": "team_nexus",
+    "opp_id": "team_vanguard",
+    "won": false,
+    "best_of": 3,
+    "your_maps": 0,
+    "their_maps": 2,
+    "your_rounds": 12,
+    "their_rounds": 26,
+    "potm_id": "slice",
+    "contested": true,
+    "working": [
+      {
+        "code": "clutch",
+        "category": "clutch",
+        "tone": "good",
+        "min_tier": 1,
+        "value": 0.1739,
+        "num": 4,
+        "den": 23,
+        "weight": 0.5217,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "retake",
+        "category": "retake",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.375,
+        "num": 9,
+        "den": 24,
+        "weight": 0.1625,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "utility",
+        "category": "utility",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.0213,
+        "num": 4,
+        "den": 188,
+        "weight": 0.0213,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      },
+      {
+        "code": "comms",
+        "category": "comms",
+        "tone": "good",
+        "min_tier": 2,
+        "value": 0.0,
+        "num": 0,
+        "den": 38,
+        "weight": 0.0,
+        "player_id": "",
+        "lever_code": "",
+        "site": ""
+      }
+    ],
+    "breaking": [
+      {
+        "code": "xde_struggle",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -2.6368,
+        "num": 7,
+        "den": 10,
+        "weight": 4.7462,
+        "player_id": "echo",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "xde_struggle",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -2.0253,
+        "num": 16,
+        "den": 18,
+        "weight": 3.6456,
+        "player_id": "fa_13",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "xde_struggle",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -1.9795,
+        "num": 13,
+        "den": 15,
+        "weight": 3.5631,
+        "player_id": "vortex",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "acs_gap",
+        "category": "acs",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": -70.2895,
+        "num": 148,
+        "den": 219,
+        "weight": 1.4058,
+        "player_id": "",
+        "lever_code": "aim_training",
+        "site": ""
+      },
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "min_tier": 0,
+        "value": 0.37,
+        "num": 0,
+        "den": 0,
+        "weight": 1.134,
+        "player_id": "echo",
+        "lever_code": "player_form",
+        "site": ""
+      },
+      {
+        "code": "atk_side",
+        "category": "attack",
+        "tone": "bad",
+        "min_tier": 0,
+        "value": 0.2143,
+        "num": 3,
+        "den": 14,
+        "weight": 0.8571,
+        "player_id": "",
+        "lever_code": "atk_tempo",
+        "site": ""
+      },
+      {
+        "code": "post_plant",
+        "category": "post_plant",
+        "tone": "bad",
+        "min_tier": 2,
+        "value": 0.2308,
+        "num": 3,
+        "den": 13,
+        "weight": 0.48,
+        "player_id": "",
+        "lever_code": "post_plant",
+        "site": ""
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "min_tier": 0,
+        "value": 0.375,
+        "num": 9,
+        "den": 24,
+        "weight": 0.375,
+        "player_id": "",
+        "lever_code": "def_setups",
+        "site": ""
+      },
+      {
+        "code": "trades",
+        "category": "trades",
+        "tone": "bad",
+        "min_tier": 2,
+        "value": 0.2552,
+        "num": 37,
+        "den": 145,
+        "weight": 0.2172,
+        "player_id": "",
+        "lever_code": "trade_discipline",
+        "site": ""
+      },
+      {
+        "code": "opening",
+        "category": "opening",
+        "tone": "bad",
+        "min_tier": 1,
+        "value": 0.3947,
+        "num": 15,
+        "den": 38,
+        "weight": 0.2105,
+        "player_id": "",
+        "lever_code": "entry_support",
+        "site": ""
+      },
+      {
+        "code": "retake_site",
+        "category": "retake",
+        "tone": "bad",
+        "min_tier": 2,
+        "value": 0.25,
+        "num": 1,
+        "den": 4,
+        "weight": 0.0,
+        "player_id": "",
+        "lever_code": "retake_site",
+        "site": "C"
+      }
+    ],
+    "calls": {
+      "plan_set": true,
+      "dials": {},
+      "base_dials": {},
+      "site_focus": "",
+      "focus_target": "pulse",
+      "team_talk": "",
+      "talk_avg_delta": 0.0,
+      "lineup_override": false,
+      "picked": [],
+      "benched": [],
+      "picked_ratings": {},
+      "prep_edge": 1.024,
+      "prepped_maps_played": [
+        "haven",
+        "ascent"
+      ],
+      "prepped_maps_missed": [
+        "lotus"
+      ]
+    }
+  }
+}

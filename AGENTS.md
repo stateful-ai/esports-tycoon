@@ -55,3 +55,18 @@ Quick orientation for any agent:
   import this worktree rather than the primary checkout.
 - Use the `/learning` skill for checkpoint compatibility, trace generation,
   online improvement, and promotion.
+
+## Persistent gameplay testing
+
+- When exploring, playing, or acceptance-testing the game, use
+  [`/playtest-log`](.claude/skills/playtest-log/SKILL.md). Automated gate runs
+  alone do not replace a player session.
+- Append meaningful attempts to `docs/playtests/actions.csv`: timestamped
+  intent, action, expected outcome (written before acting), actual outcome,
+  commit/dirty-tree status, game version, runtime model and effort, surface,
+  seed/world and game time. Use `scripts/playtest_log.py`; never overwrite
+  earlier sessions or guess unavailable runtime metadata.
+- End by reconciling the test world's saved decision telemetry against the
+  CSV, reporting quantitative coverage and gaps with evidence. Keep timestamps
+  and subjective observations outside deterministic GameState. Preserve the
+  existing pre/post play flywheel loop in `CLAUDE.md`.

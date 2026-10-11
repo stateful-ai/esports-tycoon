@@ -1,0 +1,34 @@
+{
+  "world": "FWXCK",
+  "seed": 2038,
+  "saved_time": "S1W3",
+  "decision_count": 3,
+  "matched_decisions": 3,
+  "csv_rows": 11,
+  "telemetry_snap_managers": [
+    "mgr_team_nexus"
+  ],
+  "telemetry_snap_count": 2,
+  "world_event_count": 46,
+  "world_event_counts": {
+    "result:/api/new": 1,
+    "session_start:": 4,
+    "view:lobby": 4,
+    "visible_time:lobby": 4,
+    "view:dashboard": 4,
+    "visible_time:dashboard": 4,
+    "view:club/squad": 5,
+    "visible_time:club/squad": 5,
+    "view:club/development": 3,
+    "attempt:/api/actions/dev_plan": 1,
+    "result:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/advance": 2,
+    "result:/api/actions/advance": 2,
+    "visible_time:club/development": 2,
+    "attempt:/api/actions/save": 2,
+    "result:/api/actions/save": 2
+  },
+  "all_retained_events": 50,
+  "all_retained_sessions": 5,
+  "page_errors": []
+}

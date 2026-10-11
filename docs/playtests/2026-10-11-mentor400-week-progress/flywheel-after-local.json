@@ -1,0 +1,27 @@
+{
+  "domain": "esports-playtest",
+  "world": "26UHC",
+  "seed": 2038,
+  "head": "fa6d622ca685dae9ab7a74cc6cb46c9977fdf812",
+  "entries": [
+    {
+      "kind": "learning",
+      "topic": "Mentorship lifecycle advances naturally",
+      "lesson": "On unchanged PR400 fa6d622, one actual S2W5 browser advance moved both pre-existing Apex programs Ghost/Nightsurge 0\u21925%, confirmed UI, public profiles/roster and save; default five unchanged.",
+      "confidence": "high"
+    },
+    {
+      "kind": "learning",
+      "topic": "Development clock differs from current clock",
+      "lesson": "Played-week report remains S2W5 while current state/profiles show S2W6; use both clocks explicitly. Nightsurge report shows practice/scrim/event contributions; no isolated causality inferred.",
+      "confidence": "high"
+    },
+    {
+      "kind": "pain-point",
+      "topic": "Content choice has an adverse player cost",
+      "lesson": "Visible Film practice-room grind resolved pending Nightsurge moment but feedback said crew ran long and left him flat. A label aligned with training can still have a cost; inspect actual feedback rather than treating acceptance as benefit.",
+      "confidence": "high"
+    }
+  ],
+  "limits": "Live flywheel tools unavailable in this agent; inherited before notes and local after findings retained for parent publication."
+}

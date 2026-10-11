@@ -1,0 +1,1178 @@
+{
+  "original_raw_mappings": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\actions.csv",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/actions.csv",
+      "raw_sha256": "2a2ed2c12634ba46ba492d149510cf6f1ce0e9f341112a107ab68357a3d8df68",
+      "bytes": 13169
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\artifact-hashes.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/artifact-hashes.json",
+      "raw_sha256": "af6a0a0eacf651e0d1b97ed942d4a0751479cd3c43ca2e75eeae7cce62c3583b",
+      "bytes": 13793
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-browser-open.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.exit.json",
+      "raw_sha256": "544f697f1e6510ab101d8d885498167dd71e2051b2f1caf3ecb0215e81c1b9f6",
+      "bytes": 341
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-browser-open.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-browser-open.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.txt",
+      "raw_sha256": "eef541da65758be45de03d132456d4580341102c834f24587dec90cd048c1238",
+      "bytes": 406
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-campaign-open.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.exit.json",
+      "raw_sha256": "521e760a6e5a4bc357eb295bcbe07c0a2ee46780e437601b71a2653f3e97afe1",
+      "bytes": 324
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-campaign-open.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-campaign-open.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.txt",
+      "raw_sha256": "c20c83f64caacb3b462bde295cebcac3a5832d51b94f0fa88ee81594f3bacb3a",
+      "bytes": 224
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-club.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.exit.json",
+      "raw_sha256": "e46ee6cfc6d83d6fd13ea56d96922935af8976f2383c3fa76992043d60e46898",
+      "bytes": 305
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-club.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\01-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.txt",
+      "raw_sha256": "8072f3dd0ddab287e90c37d2a2a0c1f70260643ca7778c4cee16b9e47c48b679",
+      "bytes": 93
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-club.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.exit.json",
+      "raw_sha256": "4cc8336a54523237e08239f2c3a540d43842624ec9a7d01d9f373375b3e36270",
+      "bytes": 308
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-club.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.txt",
+      "raw_sha256": "289782f29dff820b447d60d9ce256d2d2e238a62bdc05b5ff9db624e82b99779",
+      "bytes": 239
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-fresh.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.exit.json",
+      "raw_sha256": "b95c6e629c6f45b21e52904c715004d6c68a947da0853fecd58cfd728e9538b7",
+      "bytes": 299
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-fresh.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-fresh.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.txt",
+      "raw_sha256": "ab1173024dd7b5105542180a0fb0535de0034e6c770fed515f8d89f62322a060",
+      "bytes": 17038
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-operations.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.exit.json",
+      "raw_sha256": "2f139a62e8f5ada15d380b9320f20d17b25cc02398c65aa0c48e322680788a79",
+      "bytes": 309
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-operations.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\02-operations.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.txt",
+      "raw_sha256": "694159fa9ff5ae43e843b533d3b7ecb7bce3c4937cffb34ebe3591903724ae86",
+      "bytes": 245
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-after.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.exit.json",
+      "raw_sha256": "006d9f53525548919a37eefb6a0a2a3c2f7c7cee39a8e248eb7962b200f123d1",
+      "bytes": 299
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-after.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-after.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.txt",
+      "raw_sha256": "5415118f0aecf82a9be772df384138a64df15ea68d45017553ef1b8f4a36e11b",
+      "bytes": 10158
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-console.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.exit.json",
+      "raw_sha256": "39256853e374d383fe3f01dafada07c0937a46b5b87f6766605cc86f0c5a78bf",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-console.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-console.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.txt",
+      "raw_sha256": "d2ea7c0b30d3d97fe4310a4d4a0a08a0eceaacdd08c477c9f7027185f1eabd1e",
+      "bytes": 364
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-network.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.exit.json",
+      "raw_sha256": "7157ab7d2c99ef458e8c64f20295c9a49b8d7dc7f1c08ca53db4f04c461c0271",
+      "bytes": 298
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-network.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.stderr.txt",
+      "raw_sha256": "c068e256e5b8e82ed33e826d3bbfd59c425ba2af077aeb95d04be2633f4ce66b",
+      "bytes": 26
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-network.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.txt",
+      "raw_sha256": "4ddc02a05688fe21ec46b5f3cc508b3cf6f2036d8070c16ef3c56aba8a0232fc",
+      "bytes": 7492
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-promote.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.exit.json",
+      "raw_sha256": "094341e07b6576069abf221a2b60f6616c36dd67946baf7ccfb872f9cdd515a1",
+      "bytes": 309
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-promote.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-promote.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.txt",
+      "raw_sha256": "06d53367aa1f8c7c957152fd4f981eceb6105ee802c5213bdbc7a4b67c4a9cae",
+      "bytes": 375
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-rejected-body.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.exit.json",
+      "raw_sha256": "ef90f825e9af2297a02cb298628296f630cf6742838670c54ef7438355dea811",
+      "bytes": 312
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-rejected-body.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-rejected-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.txt",
+      "raw_sha256": "436aecf206533362924b7318afc2177159b93bc6540e1eb8c220fb8a981e05ad",
+      "bytes": 54
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-request-body.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.exit.json",
+      "raw_sha256": "9d358baccc510bf1969733c1b2afc41d6d003d83f8585ae63577092b210ecb5d",
+      "bytes": 311
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-request-body.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-request-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.txt",
+      "raw_sha256": "33e372c48496e6e0e831eec53bbd04926ad2970d903685e4f518ccc99c5c85d0",
+      "bytes": 58
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-requests.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.exit.json",
+      "raw_sha256": "590a1b05d1faacc30e3578528d0a5fcf2386270f188dad53c7d73ac6f9f3eee6",
+      "bytes": 298
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-requests.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\03-requests.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.txt",
+      "raw_sha256": "92a5412fc32982be9872c578d139b9e96c95fdad68e7092c6ca8f009475832bb",
+      "bytes": 1190
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-guide.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.exit.json",
+      "raw_sha256": "ac3994b06b155f26f93762485ef48e9b4c818ca2c1c5a9807d179d9501480ec3",
+      "bytes": 309
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-guide.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-guide.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.txt",
+      "raw_sha256": "b5d44c47b0b09a5dfb4676ceaeb957127e5fd6bcbac58ce94c2341fd45b7dfb0",
+      "bytes": 272
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-market.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.exit.json",
+      "raw_sha256": "7ba493034c4c22655314af10b82d591d28f04e1d403a06337428373ee621013e",
+      "bytes": 309
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-market.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\04-market.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.txt",
+      "raw_sha256": "31abd181f9306a489dd4a5a80dc8c6aa13213c85ede41f378508dab28bc5000f",
+      "bytes": 278
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\05-negotiation.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.exit.json",
+      "raw_sha256": "9e31f3f93abe8046e58ff497483dab5fe73134a2e300107979634e7e3ad8d814",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\05-negotiation.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\05-negotiation.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.txt",
+      "raw_sha256": "e6b04b0f0ac72bef69a2d6b4a42c34b3f85d77c2db68ff3c08f8bd3640fe9aa3",
+      "bytes": 286
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-offer.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.exit.json",
+      "raw_sha256": "a2cb532d22ab52edc97f3e494986f11063e0a3bd0c827de2b9f89cd5b7b8d1bf",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-offer.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-offer.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.txt",
+      "raw_sha256": "b182728070b8ba59cb639e02c7cef153e67c0d91e1b174ef06e965c10768d219",
+      "bytes": 281
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-recovered.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.exit.json",
+      "raw_sha256": "c062a1b5bf687662393403ba9a2bb2ac59c2bb593b233307ecd7eaca0a9e848d",
+      "bytes": 731
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-recovered.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-recovered.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.txt",
+      "raw_sha256": "ad72bac110d8604d7fe05021dd541827d959c3d162806294e56a7e9a01375f74",
+      "bytes": 56
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-valid-url.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.exit.json",
+      "raw_sha256": "c7105bb8544b6048295cdc1281529e3128c77bf8f7c66e2b03739eb9defde165",
+      "bytes": 760
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-valid-url.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public-valid-url.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.txt",
+      "raw_sha256": "6a19c1ddbc981279de0b3dda7ad700c123ba80460c7a95cd6c7475914b1da4f0",
+      "bytes": 42986
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.exit.json",
+      "raw_sha256": "db48ec1fc7e403d1700937c7de1d7eab154e9c089c8226b5317a922e82c9f00c",
+      "bytes": 737
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\06-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.txt",
+      "raw_sha256": "ceeb99bfe3b24ec0e4c79f7f5790605734e9076aac2c6a6f4caea78871991fc5",
+      "bytes": 44
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-club.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.exit.json",
+      "raw_sha256": "e402e1821be5a594f06ff6748f750ff91c9feedf1ecde23ef3f54856ba78de74",
+      "bytes": 308
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-club.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.txt",
+      "raw_sha256": "803c8e023f9d765f8caeaa6832f566a97d6da3910ebee95a7fb71801702de083",
+      "bytes": 271
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-readback.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.exit.json",
+      "raw_sha256": "bce6335c6d58586630d6eb7506c24f3f5bf48f570b45192c0c8f2016502c2f54",
+      "bytes": 1216
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-readback.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.txt",
+      "raw_sha256": "fc55c8dd776280967bc0ca9c1d164e53a3aa45f5e36b005cc5f96f32c66887ee",
+      "bytes": 8080
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-send-down.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.exit.json",
+      "raw_sha256": "4fca6f8c0f38092fd02f18aad0685afc4e6cd736311b71f4ab02e66d22b0d9f8",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-send-down.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\07-send-down.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.txt",
+      "raw_sha256": "dc24b483cbf16f4d3e22e815cdafdee41c7e408d448fc3108897ec3f08de49e7",
+      "bytes": 283
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-promote.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.exit.json",
+      "raw_sha256": "11335a36e1b445cb4e6a123c706ee19958c27b29a54986b13d3442b431279d65",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-promote.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-promote.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.txt",
+      "raw_sha256": "8b7ea71d3365555aa00037dcf6cb13889bef5dcd485b0869f65e4f545876f856",
+      "bytes": 282
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-readback.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.exit.json",
+      "raw_sha256": "2ab6fd4b46e62810869a41efcbf5f150edbf4f472dcf9af8d426eaec79de067b",
+      "bytes": 1216
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-readback.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\08-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.txt",
+      "raw_sha256": "b3c308c65bb11fbbe20419187fad3a8b076dd70bf70999861d3cee9942eab513",
+      "bytes": 8115
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-development.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.exit.json",
+      "raw_sha256": "ace481ef3eeaccc13bb394082850d93f3a2deeed3d06fa619f7c1fdef9ca5457",
+      "bytes": 310
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-development.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-development.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.txt",
+      "raw_sha256": "dc22624ddff317442818fa4bd012e735f6621323a827e94f15e4273646bb86a3",
+      "bytes": 278
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-fresh.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.exit.json",
+      "raw_sha256": "c88e0ab6f266bea85bbb81521d5670345cf5ff7e1da40d0c44cd074acd3c323d",
+      "bytes": 299
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-fresh.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-fresh.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.txt",
+      "raw_sha256": "970fe2bac31e27d5890a25f75f63bf2f301d2f14c77ea1858e62a5e508f46d2a",
+      "bytes": 10670
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-row.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.exit.json",
+      "raw_sha256": "02d18f30bbf2539c9573f5c14df0380fa1503cba66b88a11ade44e082a74aead",
+      "bytes": 463
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-row.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\09-row.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.txt",
+      "raw_sha256": "ab2574876f181f1041d83390243b0daf99911d11bae29230bb5d4564c9c89a19",
+      "bytes": 4272
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-body.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.exit.json",
+      "raw_sha256": "8af99a772fd06e5a8a1102067fbc65058b79079068dee4f323e992addba080b1",
+      "bytes": 312
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-body.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.txt",
+      "raw_sha256": "2e3e9904ec5dbf80582221d687d72c34062179845b1fdf318673665996cbd378",
+      "bytes": 59
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-result.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.exit.json",
+      "raw_sha256": "8b473cb23d4d369daf3a9b0e5354539856a64763f6ebc3e0ed7a08ac59ce7785",
+      "bytes": 313
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-result.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-focus-result.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.txt",
+      "raw_sha256": "c6838809dcd389f6ca234f06b93ec1991b380bb3761ae4bd3c4e819e62c26af4",
+      "bytes": 69
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-body.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.exit.json",
+      "raw_sha256": "0d841bdd76585ca0e746ad380cefde8f66a4336a43be22ead1e8ed794300ab5b",
+      "bytes": 312
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-body.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.txt",
+      "raw_sha256": "70b75f190c6f063790ea445632b50935b8f66915d042ea057f6678af2bf807dd",
+      "bytes": 65
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-result.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.exit.json",
+      "raw_sha256": "8d8695468c5ac1b9271fc2f5cc272add153859dab31aff6654dec757404a60ff",
+      "bytes": 313
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-result.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-intensity-result.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.txt",
+      "raw_sha256": "5267eb970eeb49205b73d6c92a6d8527a5810b3987d18420e9c09bc117246570",
+      "bytes": 68
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-plans.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.exit.json",
+      "raw_sha256": "fb440de6ce291e8badad8f1897932102ec5fb80de4f3504779d82888db00f0b4",
+      "bytes": 1629
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-plans.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-plans.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.txt",
+      "raw_sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249",
+      "bytes": 106
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-readback.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.exit.json",
+      "raw_sha256": "259cfc3cd523284d35cf17fc842230735b3d59b520dd233a6871113ea11b5025",
+      "bytes": 767
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-readback.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.txt",
+      "raw_sha256": "58a6ddfa9ef56b32b52d3a97942cb2065daad3aff94bb2df8912ad902165443e",
+      "bytes": 1632
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-requests.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.exit.json",
+      "raw_sha256": "b522b47fd9d537f0f6f1eab2219bb0542b04feffc6cd9323a7153f9021a64981",
+      "bytes": 298
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-requests.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\10-requests.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.txt",
+      "raw_sha256": "b018bfae86a1617b902162eef9b5bc3cf2fe7a7d730359fe4366c19e79672b16",
+      "bytes": 4569
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\11-mentor.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.exit.json",
+      "raw_sha256": "b9df275808ca08fd0076a01954c3478be1e8109f829192ef82295cd52d4da2b0",
+      "bytes": 1347
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\11-mentor.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\11-mentor.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.txt",
+      "raw_sha256": "00c620affee729457d8866f4492b216a4b2044756ac5f053e507ab9310e92d0f",
+      "bytes": 2106
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-advance-once.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.exit.json",
+      "raw_sha256": "8370c35d5b3d4ddf15c002b0aa7313c89ec06f595bb71a61fd26cbbbf85ef133",
+      "bytes": 1032
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-advance-once.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-advance-once.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.txt",
+      "raw_sha256": "1a3f6d1b4688d07dc363a186b06309a904f3f0b1fa21662a18c3688faabb4a25",
+      "bytes": 7008
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-week5-readback.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.exit.json",
+      "raw_sha256": "683a1697259f69575963c97aabd2573c5590c13464acb980c28d3b28313c4de5",
+      "bytes": 1229
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-week5-readback.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\12-week5-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.txt",
+      "raw_sha256": "1e535d1905611a83feb3d4cfac3066efc96c6d3fc28d2dddd069ad3d936adafa",
+      "bytes": 59532
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-browser-close.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.exit.json",
+      "raw_sha256": "f67bc03735b0228613ddae049bcdb6ecd03583f52ca909145cc423823d4e8a42",
+      "bytes": 293
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-browser-close.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-browser-close.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-browser-close.txt",
+      "raw_sha256": "9946a0a2397c6c3ba1686e4a2682f3f3b0e294be5e6af4967f6fd0e76a8276f9",
+      "bytes": 41
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-save.exit.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.exit.json",
+      "raw_sha256": "2d01d5fb1aae45d61dd22164724d764a33d9fc6a532307515081c8e144b9c923",
+      "bytes": 1105
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-save.stderr.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\13-save.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.txt",
+      "raw_sha256": "9ee3a38bd2a987df73cad79980fe1ecfe81818769a522afb29d858e4f1439c3e",
+      "bytes": 7844
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\actions-before-final-analytics.csv",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/actions-before-final-analytics.csv",
+      "raw_sha256": "89b5b76a341d91a0b32b798b3b3a7ffb42155fe9f76c17d86b67f2f056f91fbc",
+      "bytes": 11475
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\cleanup.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/cleanup.json",
+      "raw_sha256": "693627dddb5ba7f99815247794a1a2a28aed9192d3146bc0909f8de7682791b4",
+      "bytes": 553
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/flywheel-after.json",
+      "raw_sha256": "68c8a6e3f8a0d068b00a2588b37d6bb50ed58880387875025297ce5d9b69444f",
+      "bytes": 2352
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/flywheel-before.json",
+      "raw_sha256": "82fb64061dc5a8f3c0f631bef78b38d9f97404397b57d296839778769cb13b3b",
+      "bytes": 5996
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\reconciliation.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/reconciliation.json",
+      "raw_sha256": "71c69701b65a8cfa2997e90d6d6cdf5cb4c44646aae2067c643c182d90d22e73",
+      "bytes": 5073
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\save-after.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/save-after.json",
+      "raw_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+      "bytes": 5102352
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\save-before.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/save-before.json",
+      "raw_sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+      "bytes": 4832837
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\saved-decisions.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/saved-decisions.json",
+      "raw_sha256": "1f358515ca0c8e4f32e37e14dbe10d906dbfdf9b17fbdad18c131925bac8aed7",
+      "bytes": 2640
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\setup-correction.md",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/setup-correction.md",
+      "raw_sha256": "b35a4fd9403436b9f1559d8956f798ed313ed73d33fe0f7b2194232bc33cd2b6",
+      "bytes": 318
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/source-manifest.json",
+      "raw_sha256": "44928b62433cdc6725b84b5c5630aaa0e933ba69dc6010bcdf5a38b8beee19ea",
+      "bytes": 72887
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\evidence\\usage.raw.jsonl",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/usage.raw.jsonl",
+      "raw_sha256": "0d86d23edefa24abbf553b401901976a39c662807aac353c5e02a36c49acaadf",
+      "bytes": 21162
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-season2-youth-planning\\report.md",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/report.md",
+      "raw_sha256": "4b15323c93772b9dd0331aa8b795d17fb2ae4e7bdbada1f9fb2e3b9853d479ab",
+      "bytes": 4226
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\season2-youth-planning-reviewed-append.json",
+      "published_path": "docs/playtests/2026-10-11-history-followup-1016/original-reviewed-append.json",
+      "raw_sha256": "28cd2ce007fe28f7fd6472eee9c80c16fc418cd2bc6e5e2fd53776a906e1fe00",
+      "bytes": 619
+    }
+  ],
+  "named_row_and_report_references": [
+    {
+      "owner": "row1",
+      "field": "evidence",
+      "original_reference": "01-browser-open.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-browser-open.txt",
+      "raw_sha256": "eef541da65758be45de03d132456d4580341102c834f24587dec90cd048c1238",
+      "bytes": 406
+    },
+    {
+      "owner": "row1",
+      "field": "evidence",
+      "original_reference": "01-campaign-open.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-campaign-open.txt",
+      "raw_sha256": "c20c83f64caacb3b462bde295cebcac3a5832d51b94f0fa88ee81594f3bacb3a",
+      "bytes": 224
+    },
+    {
+      "owner": "row1",
+      "field": "evidence",
+      "original_reference": "01-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/01-club.txt",
+      "raw_sha256": "8072f3dd0ddab287e90c37d2a2a0c1f70260643ca7778c4cee16b9e47c48b679",
+      "bytes": 93
+    },
+    {
+      "owner": "row2",
+      "field": "evidence",
+      "original_reference": "02-fresh.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-fresh.txt",
+      "raw_sha256": "ab1173024dd7b5105542180a0fb0535de0034e6c770fed515f8d89f62322a060",
+      "bytes": 17038
+    },
+    {
+      "owner": "row2",
+      "field": "evidence",
+      "original_reference": "02-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-club.txt",
+      "raw_sha256": "289782f29dff820b447d60d9ce256d2d2e238a62bdc05b5ff9db624e82b99779",
+      "bytes": 239
+    },
+    {
+      "owner": "row2",
+      "field": "evidence",
+      "original_reference": "02-operations.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/02-operations.txt",
+      "raw_sha256": "694159fa9ff5ae43e843b533d3b7ecb7bce3c4937cffb34ebe3591903724ae86",
+      "bytes": 245
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-promote.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-promote.txt",
+      "raw_sha256": "06d53367aa1f8c7c957152fd4f981eceb6105ee802c5213bdbc7a4b67c4a9cae",
+      "bytes": 375
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-network.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-network.txt",
+      "raw_sha256": "4ddc02a05688fe21ec46b5f3cc508b3cf6f2036d8070c16ef3c56aba8a0232fc",
+      "bytes": 7492
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-requests.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-requests.txt",
+      "raw_sha256": "92a5412fc32982be9872c578d139b9e96c95fdad68e7092c6ca8f009475832bb",
+      "bytes": 1190
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-console.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-console.txt",
+      "raw_sha256": "d2ea7c0b30d3d97fe4310a4d4a0a08a0eceaacdd08c477c9f7027185f1eabd1e",
+      "bytes": 364
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-rejected-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-rejected-body.txt",
+      "raw_sha256": "436aecf206533362924b7318afc2177159b93bc6540e1eb8c220fb8a981e05ad",
+      "bytes": 54
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-request-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-request-body.txt",
+      "raw_sha256": "33e372c48496e6e0e831eec53bbd04926ad2970d903685e4f518ccc99c5c85d0",
+      "bytes": 58
+    },
+    {
+      "owner": "row3",
+      "field": "evidence",
+      "original_reference": "03-after.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/03-after.txt",
+      "raw_sha256": "5415118f0aecf82a9be772df384138a64df15ea68d45017553ef1b8f4a36e11b",
+      "bytes": 10158
+    },
+    {
+      "owner": "row4",
+      "field": "evidence",
+      "original_reference": "04-guide.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-guide.txt",
+      "raw_sha256": "b5d44c47b0b09a5dfb4676ceaeb957127e5fd6bcbac58ce94c2341fd45b7dfb0",
+      "bytes": 272
+    },
+    {
+      "owner": "row4",
+      "field": "evidence",
+      "original_reference": "04-market.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/04-market.txt",
+      "raw_sha256": "31abd181f9306a489dd4a5a80dc8c6aa13213c85ede41f378508dab28bc5000f",
+      "bytes": 278
+    },
+    {
+      "owner": "row5",
+      "field": "evidence",
+      "original_reference": "05-negotiation.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/05-negotiation.txt",
+      "raw_sha256": "e6b04b0f0ac72bef69a2d6b4a42c34b3f85d77c2db68ff3c08f8bd3640fe9aa3",
+      "bytes": 286
+    },
+    {
+      "owner": "row6",
+      "field": "evidence",
+      "original_reference": "06-offer.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-offer.txt",
+      "raw_sha256": "b182728070b8ba59cb639e02c7cef153e67c0d91e1b174ef06e965c10768d219",
+      "bytes": 281
+    },
+    {
+      "owner": "row6",
+      "field": "evidence",
+      "original_reference": "06-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public.txt",
+      "raw_sha256": "ceeb99bfe3b24ec0e4c79f7f5790605734e9076aac2c6a6f4caea78871991fc5",
+      "bytes": 44
+    },
+    {
+      "owner": "row6",
+      "field": "evidence",
+      "original_reference": "06-public-recovered.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-recovered.txt",
+      "raw_sha256": "ad72bac110d8604d7fe05021dd541827d959c3d162806294e56a7e9a01375f74",
+      "bytes": 56
+    },
+    {
+      "owner": "row6",
+      "field": "evidence",
+      "original_reference": "06-public-valid-url.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/06-public-valid-url.txt",
+      "raw_sha256": "6a19c1ddbc981279de0b3dda7ad700c123ba80460c7a95cd6c7475914b1da4f0",
+      "bytes": 42986
+    },
+    {
+      "owner": "row7",
+      "field": "evidence",
+      "original_reference": "07-club.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-club.txt",
+      "raw_sha256": "803c8e023f9d765f8caeaa6832f566a97d6da3910ebee95a7fb71801702de083",
+      "bytes": 271
+    },
+    {
+      "owner": "row7",
+      "field": "evidence",
+      "original_reference": "07-send-down.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-send-down.txt",
+      "raw_sha256": "dc24b483cbf16f4d3e22e815cdafdee41c7e408d448fc3108897ec3f08de49e7",
+      "bytes": 283
+    },
+    {
+      "owner": "row7",
+      "field": "evidence",
+      "original_reference": "07-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/07-readback.txt",
+      "raw_sha256": "fc55c8dd776280967bc0ca9c1d164e53a3aa45f5e36b005cc5f96f32c66887ee",
+      "bytes": 8080
+    },
+    {
+      "owner": "row8",
+      "field": "evidence",
+      "original_reference": "08-promote.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-promote.txt",
+      "raw_sha256": "8b7ea71d3365555aa00037dcf6cb13889bef5dcd485b0869f65e4f545876f856",
+      "bytes": 282
+    },
+    {
+      "owner": "row8",
+      "field": "evidence",
+      "original_reference": "08-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/08-readback.txt",
+      "raw_sha256": "b3c308c65bb11fbbe20419187fad3a8b076dd70bf70999861d3cee9942eab513",
+      "bytes": 8115
+    },
+    {
+      "owner": "row9",
+      "field": "evidence",
+      "original_reference": "09-fresh.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-fresh.txt",
+      "raw_sha256": "970fe2bac31e27d5890a25f75f63bf2f301d2f14c77ea1858e62a5e508f46d2a",
+      "bytes": 10670
+    },
+    {
+      "owner": "row9",
+      "field": "evidence",
+      "original_reference": "09-development.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-development.txt",
+      "raw_sha256": "dc22624ddff317442818fa4bd012e735f6621323a827e94f15e4273646bb86a3",
+      "bytes": 278
+    },
+    {
+      "owner": "row9",
+      "field": "evidence",
+      "original_reference": "09-row.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/09-row.txt",
+      "raw_sha256": "ab2574876f181f1041d83390243b0daf99911d11bae29230bb5d4564c9c89a19",
+      "bytes": 4272
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-plans.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-plans.txt",
+      "raw_sha256": "f075ba6a9d5b8c0110d4c7d227ec6be85b985338992fba4a24ea6ad0a7883249",
+      "bytes": 106
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-readback.txt",
+      "raw_sha256": "58a6ddfa9ef56b32b52d3a97942cb2065daad3aff94bb2df8912ad902165443e",
+      "bytes": 1632
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-requests.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-requests.txt",
+      "raw_sha256": "b018bfae86a1617b902162eef9b5bc3cf2fe7a7d730359fe4366c19e79672b16",
+      "bytes": 4569
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-focus-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-body.txt",
+      "raw_sha256": "2e3e9904ec5dbf80582221d687d72c34062179845b1fdf318673665996cbd378",
+      "bytes": 59
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-focus-result.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-focus-result.txt",
+      "raw_sha256": "c6838809dcd389f6ca234f06b93ec1991b380bb3761ae4bd3c4e819e62c26af4",
+      "bytes": 69
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-intensity-body.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-body.txt",
+      "raw_sha256": "70b75f190c6f063790ea445632b50935b8f66915d042ea057f6678af2bf807dd",
+      "bytes": 65
+    },
+    {
+      "owner": "row10",
+      "field": "evidence",
+      "original_reference": "10-intensity-result.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/10-intensity-result.txt",
+      "raw_sha256": "5267eb970eeb49205b73d6c92a6d8527a5810b3987d18420e9c09bc117246570",
+      "bytes": 68
+    },
+    {
+      "owner": "row11",
+      "field": "evidence",
+      "original_reference": "11-mentor.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/11-mentor.txt",
+      "raw_sha256": "00c620affee729457d8866f4492b216a4b2044756ac5f053e507ab9310e92d0f",
+      "bytes": 2106
+    },
+    {
+      "owner": "row12",
+      "field": "evidence",
+      "original_reference": "12-advance-once.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-advance-once.txt",
+      "raw_sha256": "1a3f6d1b4688d07dc363a186b06309a904f3f0b1fa21662a18c3688faabb4a25",
+      "bytes": 7008
+    },
+    {
+      "owner": "row12",
+      "field": "evidence",
+      "original_reference": "12-week5-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/12-week5-readback.txt",
+      "raw_sha256": "1e535d1905611a83feb3d4cfac3066efc96c6d3fc28d2dddd069ad3d936adafa",
+      "bytes": 59532
+    },
+    {
+      "owner": "row13",
+      "field": "evidence",
+      "original_reference": "13-save.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/13-save.txt",
+      "raw_sha256": "9ee3a38bd2a987df73cad79980fe1ecfe81818769a522afb29d858e4f1439c3e",
+      "bytes": 7844
+    },
+    {
+      "owner": "report",
+      "field": "report",
+      "original_reference": "source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-season2-youth-planning/evidence/source-manifest.json",
+      "raw_sha256": "44928b62433cdc6725b84b5c5630aaa0e933ba69dc6010bcdf5a38b8beee19ea",
+      "bytes": 72887
+    }
+  ],
+  "historical_source_archives": [
+    {
+      "historical_commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+      "original_path": "src/esports_sim/manager/academy.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/manager/academy.py",
+      "git_blob": "18d0dfd90b71082cf4b7cbe9c05a27f7ba448d4e",
+      "git_bytes_sha256": "554998a8ff9e713d4d017d988b87795c82f139ac81ab4dda5a65d98c61cd6b42",
+      "bytes": 23725,
+      "original_checkout_raw_sha256": "9a4bb293437d1fff51d7fe4512ee89d56fe76f15f33618da85dd183f895cb4c4",
+      "format": "Exact historical Git bytes; original checkout raw hash separate; not executed."
+    },
+    {
+      "historical_commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+      "original_path": "src/esports_sim/web/server.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/server.py",
+      "git_blob": "4d7c7fcbde55aa6c9f12d31071f02061055bbb86",
+      "git_bytes_sha256": "be9db3a488156b5b0ff6c62372d62b2ec486cc6c4813e7cf8531058a7af4c2c3",
+      "bytes": 380800,
+      "original_checkout_raw_sha256": "72d2bd76aad02286ef3d26e9e5bbe2ca3d2b420e804f686dc74da19f17e669c7",
+      "format": "Exact historical Git bytes; original checkout raw hash separate; not executed."
+    },
+    {
+      "historical_commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+      "original_path": "src/esports_sim/web/static/app.js",
+      "published_path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/static/app.js",
+      "git_blob": "21874eef5d8d1911fe6db3e7b90806b6a6be1823",
+      "git_bytes_sha256": "8226982c12818e81f3015ac6029867e169b6bc9ae151770c9a8356324b73acd2",
+      "bytes": 397646,
+      "original_checkout_raw_sha256": "30aa8b6a41ab8ca5eb225e927760995e0f36720bb8fa8e89c9afd8a25da9b374",
+      "format": "Exact historical Git bytes; original checkout raw hash separate; not executed."
+    },
+    {
+      "historical_commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+      "original_path": "src/esports_sim/web/static/profile.js",
+      "published_path": "docs/playtests/2026-10-11-history-followup-1016/historical-source/src/esports_sim/web/static/profile.js",
+      "git_blob": "91374bf0bfe9a5ce77a1208b1a735f32c07edf17",
+      "git_bytes_sha256": "3eb66e0e493a496db46cb19e534de1e43146efb1201dbc3c53d01959061e538c",
+      "bytes": 94183,
+      "original_checkout_raw_sha256": "11333856588350608066312f87c78abc5992ce3fbf7300fc181f3f64aaa59e2a",
+      "format": "Exact historical Git bytes; original checkout raw hash separate; not executed."
+    }
+  ]
+}

@@ -9,6 +9,7 @@ crossing through an otherwise-walled room seam.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 import math
 
 from esports_sim.schemas.geometry import MapGeometry, Opening, Prop, Region
@@ -42,6 +43,29 @@ class FreeMovementResolver:
             for source, targets in map_obj.adjacency.items()
             for target in targets
         }
+        self._floor_rects = tuple((rid,part.x,part.y,part.x+part.w,part.y+part.h)
+                                 for rid,region in geometry.regions.items() for part in [region,*region.floor_extensions])
+        self._has_extensions = any(r.floor_extensions for r in geometry.regions.values())
+        # A broad-phase index only; exact containment and stable id ordering
+        # still determine membership. Large traces need hundreds of pieces.
+        self._floor_buckets = {} if self._has_extensions else None
+        if self._floor_buckets is not None:
+            for bounds in self._floor_rects:
+                rid,x,y,ex,ey=bounds
+                for by in range(math.floor((y-1e-7)/2),math.floor((ey+1e-7)/2)+1):
+                    for bx in range(math.floor((x-1e-7)/2),math.floor((ex+1e-7)/2)+1):
+                        self._floor_buckets.setdefault((bx,by),[]).append(bounds)
+        # Geometry is fixed for this resolver's lifetime; door state is an
+        # explicit argument. Holding players repeat the same visibility query
+        # thousands of times. Keep a bounded cache local to this match.
+        self.has_line_of_sight = lru_cache(maxsize=8192)(self.has_line_of_sight)
+
+    def _floor_regions_at(self, x: float, y: float) -> tuple[str,...]:
+        if self._floor_buckets is None:
+            return tuple(rid for rid,r in sorted(self.geometry.regions.items()) if self._inside_region(r,x,y))
+        parts=self._floor_buckets.get((math.floor(x/2),math.floor(y/2)),())
+        return tuple(sorted({rid for rid,rx,ry,ex,ey in parts
+                             if rx-1e-7<=x<=ex+1e-7 and ry-1e-7<=y<=ey+1e-7}))
 
     @staticmethod
     def _inside_region(region: Region, x: float, y: float) -> bool:
@@ -73,11 +97,7 @@ class FreeMovementResolver:
     ) -> tuple[str, ...]:
         if self._blocked_by_prop(x, y, visibility=visibility):
             return ()
-        return tuple(
-            region_id
-            for region_id, region in sorted(self.geometry.regions.items())
-            if self._inside_region(region, x, y)
-        )
+        return self._floor_regions_at(x,y)
 
     def callout_at(
         self,
@@ -262,14 +282,17 @@ class FreeMovementResolver:
             return room1 == room2
 
         boundaries = {0.0, 1.0}
-        for region in self.geometry.regions.values():
+        min_x,max_x,min_y,max_y=min(x1,x2),max(x1,x2),min(y1,y2),max(y1,y2)
+        for _,rx,ry,ex,ey in self._floor_rects:
+            if self._has_extensions and (rx > max_x or ex < min_x or ry > max_y or ey < min_y):
+                continue
             if dx != 0.0:
-                for boundary_x in (region.x, region.x + region.w):
+                for boundary_x in (rx, ex):
                     t = (boundary_x - x1) / dx
                     if 0.0 < t < 1.0:
                         boundaries.add(round(t, 12))
             if dy != 0.0:
-                for boundary_y in (region.y, region.y + region.h):
+                for boundary_y in (ry, ey):
                     t = (boundary_y - y1) / dy
                     if 0.0 < t < 1.0:
                         boundaries.add(round(t, 12))
@@ -281,11 +304,7 @@ class FreeMovementResolver:
                 continue
             middle = (start + end) / 2.0
             mx, my = x1 + dx * middle, y1 + dy * middle
-            candidates = tuple(
-                region_id
-                for region_id, region in sorted(self.geometry.regions.items())
-                if self._inside_region(region, mx, my)
-            )
+            candidates = self._floor_regions_at(mx,my)
             if callout in candidates:
                 continue
             cross_x, cross_y = x1 + dx * start, y1 + dy * start
@@ -312,9 +331,5 @@ class FreeMovementResolver:
                 ),
             )
 
-        endpoint_regions = tuple(
-            region_id
-            for region_id, region in sorted(self.geometry.regions.items())
-            if self._inside_region(region, x2, y2)
-        )
+        endpoint_regions = self._floor_regions_at(x2,y2)
         return callout == room2 or room2 in endpoint_regions

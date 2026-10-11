@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0062",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current advice must target manageable roster members",
+    "problem": "Dashboard advised benching released Echo; Club had no Echo",
+    "solution": "Confirmed recommendation and destination against current four-player squad; dispatched a dedicated fix agent",
+    "lesson": "Historical match findings may retain former players, but current bench, agent and development instructions require acting-team roster membership",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0063",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Separate historical diagnosis from current transfer outcomes",
+    "problem": "Removing a historical rating to hide unavailable advice would erase legitimate match evidence",
+    "solution": "Kept Echo0.72 historical finding in the player report while identifying the current recommendation as unavailable",
+    "lesson": "Preserve the roster and outcomes that produced a match; revalidate only present-tense actionability after transfers",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0064",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Recommendation click is not individually instrumented",
+    "problem": "Retained sidecar shows Club navigation after advice click but no advice-control event",
+    "solution": "Reported six coarse views, one Save200pair and zero new decisions separately; did not infer exact click intent from destination",
+    "lesson": "Navigation usage quantifies destination visits, not which recommendation was followed",
+    "confidence": "high",
+    "source": "26UHC seed2038 Team Nexus S1W2 isolated8458 integrated833ae36; docs/playtests/2026-10-08-review-current-roster/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

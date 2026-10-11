@@ -1,0 +1,50 @@
+[
+  {
+    "text": "Stats",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Company",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Players",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Scouting",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Staff",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "",
+    "tag": "INPUT",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Show Filters ▾",
+    "tag": "BUTTON",
+    "pid": null,
+    "type": null
+  },
+  {
+    "text": "Neohawk",
+    "tag": "BUTTON",
+    "pid": "fa_14",
+    "type": "button"
+  }
+]

@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import types
 
+import pytest
+
 from esports_sim.manager import chronicle
 from esports_sim.manager.narrative import (
     head_to_head,
@@ -249,6 +251,43 @@ def test_never_claims_a_meeting_outside_the_fixture_list():
 
 # ---------------------------------------------------------------------------
 # Wiring: the callback sentence in _user_recap / _league_line
+
+
+@pytest.mark.parametrize("best_of", [1, 3])
+@pytest.mark.parametrize("user_is_home", [True, False])
+@pytest.mark.parametrize("won", [True, False])
+@pytest.mark.parametrize("seed", range(8))
+def test_user_recap_score_starts_with_user(best_of, user_is_home, won, seed):
+    """Round and series scores agree with the user-facing result wording."""
+    home, away = ("nxs", "vgd") if user_is_home else ("vgd", "nxs")
+    winner = "nxs" if won else "vgd"
+    f = _played_fixture("score-perspective", 1, home, away, winner)
+    if best_of == 3:
+        f.best_of = 3
+        other = away if winner == home else home
+        # A 2-1 series: distinguish map wins from individual round scores.
+        f.results.extend([
+            MapResult(map_id="bind", seed=1, score_a=13 if other == home else 7,
+                      score_b=13 if other == away else 7, winner_id=other),
+            MapResult(map_id="haven", seed=2, score_a=13 if winner == home else 7,
+                      score_b=13 if winner == away else 7, winner_id=winner),
+        ])
+    gs = _gs([f])
+    gs.seed = seed
+    weekly_news(gs, _report([f]), week_kills={})
+    score = ("13-7" if won else "7-13") if best_of == 1 else ("2-1" if won else "1-2")
+    assert score in gs.news[-1]
+    wrong_score = "-".join(reversed(score.split("-")))
+    assert wrong_score not in gs.news[-1]
+    assert "Vanguard" in gs.news[-1]
+
+
+def test_away_league_winner_retains_fixture_order_score():
+    """Only user recaps change perspective; league reports retain their contract."""
+    f = _played_fixture("league-score", 1, "vgd", "obs", "obs", stage="playoffs")
+    gs = _gs([f])
+    weekly_news(gs, _report([f]), week_kills={})
+    assert "Obsidian beat Vanguard, 7-13" in gs.news[-1]
 
 
 def test_user_recap_mentions_losing_streak():
@@ -552,3 +591,23 @@ def test_match_debrief_reads_last_result_and_box_score():
 def test_match_debrief_empty_without_a_played_match():
     from esports_sim.manager.narrative import match_debrief
     assert match_debrief(_gs(fixtures=[], week=1), "nxs") == {}
+
+def test_match_preview_named_subject_preserves_default_and_state():
+    from esports_sim.manager.narrative import match_preview
+    from esports_sim.manager.state import TeamRecord
+    gs = _gs([
+        _played_fixture("one", 1, "nxs", "vgd", "nxs"),
+        _played_fixture("two", 2, "nxs", "vgd", "nxs"),
+        Fixture(id="next", week=3, team_a="nxs", team_b="vgd", maps=["bind"]),
+    ], week=3)
+    gs.standings = {tid: TeamRecord() for tid in gs.teams}
+    before = gs.model_dump_json()
+    generic = match_preview(gs, gs.fixtures[-1], "nxs")
+    named = match_preview(gs, gs.fixtures[-1], "nxs", named_subject=True)
+    assert generic == ["They arrive on a 2-match winning run.",
+                       "They've won all 2 meetings this season.",
+                       "Three points here tighten their grip on a top-four berth."]
+    assert named == ["Nexus arrive on a 2-match winning run.",
+                     "Nexus have won all 2 meetings this season.",
+                     "Three points here tighten Nexus's grip on a top-four berth."]
+    assert gs.model_dump_json() == before

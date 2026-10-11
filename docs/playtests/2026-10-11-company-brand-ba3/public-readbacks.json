@@ -1,0 +1,1194 @@
+{
+  "before": {
+    "balance": 2568240,
+    "weekly_payroll": 47500,
+    "marketability": 1.06,
+    "marketability_breakdown": {
+      "score": 1.06,
+      "facility_mult": 1.05,
+      "reach": 2118407,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.74
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.11
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.06
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": 0
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": 0
+        }
+      ]
+    },
+    "last_week_income": null,
+    "last_week_expenses": null,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": {
+          "name": "Polar Compute",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 41300,
+          "per_win": 0,
+          "weeks_left": 20,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 424000,
+              "met": false
+            },
+            {
+              "kind": "make_masters",
+              "bonus": 445000,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 424000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          },
+          {
+            "kind": "make_masters",
+            "bonus": 445000,
+            "met": true,
+            "label": "qualify for Masters",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 5,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": false
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": {
+          "name": "Redline Chairs",
+          "kind": "upfront",
+          "signing_bonus": 106000,
+          "weekly": 1800,
+          "per_win": 0,
+          "weeks_left": 8,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 12600,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 12600,
+            "met": true,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "stream": {
+        "deal": {
+          "name": "OrbitCast",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 9400,
+          "per_win": 0,
+          "weeks_left": 18,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 43000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 43000,
+            "met": null,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Media Department level 2",
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "kind": "field_rookie",
+        "fixture_id": "s1w11m2am",
+        "opponent_id": "team_saracen_guard",
+        "player_id": "ghost",
+        "issued_season": 1,
+        "issued_week": 10,
+        "deadline_week": 11,
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 25 career maps (rookie limit: 10).",
+        "opponent_name": "Saracen Guard",
+        "player_name": "Ghost",
+        "relation": 51,
+        "can_respond": false
+      }
+    ],
+    "commitments": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 25 career maps (rookie limit: 10).",
+        "deadline_week": 11,
+        "opponent_name": "Saracen Guard",
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "relation_delta": 5
+      }
+    ],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 1,
+        "max_level": 3,
+        "next_cost": 350000,
+        "upkeep": 1500
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 47500,
+      "staff": 4900,
+      "sponsors_base": 49004,
+      "sponsors_by_slot": {
+        "title": 41300,
+        "jersey": 10100,
+        "peripheral": 1800,
+        "stream": 9400,
+        "apparel": 0
+      },
+      "sponsors_total": 111604,
+      "merch": 2664,
+      "tickets": 1776,
+      "streaming": 9740,
+      "facility_upkeep": 1500,
+      "prizes": 0,
+      "income_total": 125784,
+      "expense_total": 53900,
+      "net": 71884
+    },
+    "projection": [
+      {
+        "week": 6,
+        "net": 71884,
+        "balance": 2640124
+      },
+      {
+        "week": 7,
+        "net": 71884,
+        "balance": 2712008
+      },
+      {
+        "week": 8,
+        "net": 71884,
+        "balance": 2783892
+      },
+      {
+        "week": 9,
+        "net": 71884,
+        "balance": 2855776
+      },
+      {
+        "week": 10,
+        "net": 71884,
+        "balance": 2927660
+      },
+      {
+        "week": 11,
+        "net": 61784,
+        "balance": 2989444
+      },
+      {
+        "week": 12,
+        "net": 61784,
+        "balance": 3051228
+      },
+      {
+        "week": 13,
+        "net": 61784,
+        "balance": 3113012
+      }
+    ]
+  },
+  "after": {
+    "balance": 2218240,
+    "weekly_payroll": 47500,
+    "marketability": 1.11,
+    "marketability_breakdown": {
+      "score": 1.11,
+      "facility_mult": 1.1,
+      "reach": 2118407,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.74
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.11
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.06
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": 0
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": 0
+        }
+      ]
+    },
+    "last_week_income": null,
+    "last_week_expenses": null,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": {
+          "name": "Polar Compute",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 41300,
+          "per_win": 0,
+          "weeks_left": 20,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 424000,
+              "met": false
+            },
+            {
+              "kind": "make_masters",
+              "bonus": 445000,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 424000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          },
+          {
+            "kind": "make_masters",
+            "bonus": 445000,
+            "met": true,
+            "label": "qualify for Masters",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 5,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": false
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": {
+          "name": "Redline Chairs",
+          "kind": "upfront",
+          "signing_bonus": 106000,
+          "weekly": 1800,
+          "per_win": 0,
+          "weeks_left": 8,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 12600,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 12600,
+            "met": true,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "stream": {
+        "deal": {
+          "name": "OrbitCast",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 9400,
+          "per_win": 0,
+          "weeks_left": 18,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 43000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 43000,
+            "met": null,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 4th of 8"
+            }
+          }
+        ]
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "kind": "field_rookie",
+        "fixture_id": "s1w11m2am",
+        "opponent_id": "team_saracen_guard",
+        "player_id": "ghost",
+        "issued_season": 1,
+        "issued_week": 10,
+        "deadline_week": 11,
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 25 career maps (rookie limit: 10).",
+        "opponent_name": "Saracen Guard",
+        "player_name": "Ghost",
+        "relation": 51,
+        "can_respond": false
+      }
+    ],
+    "commitments": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 25 career maps (rookie limit: 10).",
+        "deadline_week": 11,
+        "opponent_name": "Saracen Guard",
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "relation_delta": 5
+      }
+    ],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 2,
+        "max_level": 3,
+        "next_cost": 700000,
+        "upkeep": 3000
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 47500,
+      "staff": 4900,
+      "sponsors_base": 49004,
+      "sponsors_by_slot": {
+        "title": 41300,
+        "jersey": 10100,
+        "peripheral": 1800,
+        "stream": 9400,
+        "apparel": 0
+      },
+      "sponsors_total": 111604,
+      "merch": 2664,
+      "tickets": 1776,
+      "streaming": 9740,
+      "facility_upkeep": 3000,
+      "prizes": 0,
+      "income_total": 125784,
+      "expense_total": 55400,
+      "net": 70384
+    },
+    "projection": [
+      {
+        "week": 6,
+        "net": 70384,
+        "balance": 2288624
+      },
+      {
+        "week": 7,
+        "net": 70384,
+        "balance": 2359008
+      },
+      {
+        "week": 8,
+        "net": 70384,
+        "balance": 2429392
+      },
+      {
+        "week": 9,
+        "net": 70384,
+        "balance": 2499776
+      },
+      {
+        "week": 10,
+        "net": 70384,
+        "balance": 2570160
+      },
+      {
+        "week": 11,
+        "net": 60284,
+        "balance": 2630444
+      },
+      {
+        "week": 12,
+        "net": 60284,
+        "balance": 2690728
+      },
+      {
+        "week": 13,
+        "net": 60284,
+        "balance": 2751012
+      }
+    ]
+  },
+  "contract": {
+    "player": {
+      "id": "fa_12",
+      "handle": "Frostdash",
+      "age": 29,
+      "role": "controller",
+      "team_id": "team_nexus",
+      "team_name": "Team Nexus",
+      "team_logo": "/assets/logos/logo_1.webp",
+      "portrait": "/assets/portraits/controller_1.webp",
+      "is_user_team": true,
+      "is_free_agent": false,
+      "can_talk": true,
+      "hierarchy_role": "core",
+      "mentor_id": null,
+      "mentor_handle": null,
+      "mentor_progress": null,
+      "promises": [],
+      "tenure_weeks": 0,
+      "transfer_ask": null,
+      "seller_stance": null,
+      "ask_breakdown": [],
+      "followers": 25061,
+      "stream_load": 7.6,
+      "stream_status": "practice-focused",
+      "stream_income": 17,
+      "stream_growth_mult": 0.97,
+      "can_rein_streaming": true,
+      "can_change_assignment": true,
+      "can_assign_igl": true,
+      "is_igl": false,
+      "confidence": 52,
+      "is_starter": false,
+      "dev_focus": "auto",
+      "training_intensity": "normal",
+      "country": "AR",
+      "languages": [
+        {
+          "lang": "es",
+          "level": 86
+        },
+        {
+          "lang": "en",
+          "level": 18
+        }
+      ]
+    },
+    "overview": {
+      "ovr": 51,
+      "ovr_stars": 1.5,
+      "current_ability_band": [
+        58.2,
+        61.2
+      ],
+      "comfort": 100,
+      "igl_experience": null,
+      "igl_effectiveness": null,
+      "potential": 46,
+      "potential_stars": 1,
+      "potential_band": [
+        41,
+        51
+      ],
+      "skill_ceilings": {
+        "aim_precision": [
+          41.3,
+          50
+        ],
+        "aim_reactivity": [
+          42.3,
+          50.3
+        ],
+        "clutch_factor": [
+          46,
+          50.4
+        ],
+        "comms_quality": [
+          63.2,
+          63.2
+        ],
+        "composure": [
+          50.5,
+          52.1
+        ],
+        "game_sense": [
+          63.5,
+          63.5
+        ],
+        "movement": [
+          54.8,
+          60.8
+        ],
+        "positioning": [
+          51.4,
+          62.3
+        ],
+        "tilt_resistance": [
+          44,
+          53.4
+        ],
+        "utility_usage": [
+          68.3,
+          68.3
+        ]
+      },
+      "form": 50,
+      "morale": 74.3,
+      "condition": 88,
+      "market_value": 45000,
+      "salary": 2200,
+      "contract_weeks": 65,
+      "contract_terms": {
+        "stream_share": 70,
+        "release_fee": 16000,
+        "buyout": 32000,
+        "no_transfer": false,
+        "roster_role": "bench"
+      },
+      "playstyle": "igl",
+      "fogged": false
+    },
+    "traits": [
+      {
+        "name": "analytical",
+        "desc": "spreadsheet gamer",
+        "revealed": true
+      },
+      {
+        "name": "independent",
+        "desc": "self-managed",
+        "revealed": true
+      }
+    ],
+    "badges": [],
+    "attributes": [
+      {
+        "key": "aim_precision",
+        "label": "Aim Precision",
+        "value": 36.8,
+        "band": "weak",
+        "description": "How tight the crosshair placement is at range. Dominates first-bullet accuracy on rifles and long-range Op duels."
+      },
+      {
+        "key": "aim_reactivity",
+        "label": "Aim Reactivity",
+        "value": 42.3,
+        "band": "average",
+        "description": "Reaction speed + flick repeatability. Matters for peek duels, clutch flicks, re-fragging teammates who die mid-trade."
+      },
+      {
+        "key": "clutch_factor",
+        "label": "Clutch Factor",
+        "value": 46,
+        "band": "average",
+        "description": "Performance uplift in 1vX and late-round situations. Stacks on top of raw aim; two players with identical mechanics can have wildly different clutch win rates."
+      },
+      {
+        "key": "comms_quality",
+        "label": "Comms Quality",
+        "value": 63.2,
+        "band": "solid",
+        "description": "Signal-to-noise of callouts. High comms_quality improves teammates' observation fidelity \u2014 they \"see\" enemies earlier via calls."
+      },
+      {
+        "key": "composure",
+        "label": "Composure",
+        "value": 50.5,
+        "band": "average",
+        "description": "Steadiness under ult-heavy rounds, match points, final maps. Modulates how well the player executes *planned* strats under pressure."
+      },
+      {
+        "key": "game_sense",
+        "label": "Game Sense",
+        "value": 63.5,
+        "band": "solid",
+        "description": "Reads the enemy mid-round. Higher game_sense shortens the latency between a teammate dying and correctly repositioning."
+      },
+      {
+        "key": "movement",
+        "label": "Movement",
+        "value": 54.8,
+        "band": "average",
+        "description": "Counter-strafing, jiggle peeks, bunny-hop defusing. Higher movement reduces the accuracy penalty of strafe-shots and helps first-peek timing."
+      },
+      {
+        "key": "positioning",
+        "label": "Positioning",
+        "value": 40.9,
+        "band": "weak",
+        "description": "How often the player is in the right angle for the situation. Reduces the chance of dying to crossfires and increases the odds of an anchor holding a site 1vN."
+      },
+      {
+        "key": "tilt_resistance",
+        "label": "Tilt Resistance",
+        "value": 40.6,
+        "band": "weak",
+        "description": "How much performance degrades after losing rounds / pistols / duels. Low tilt_resistance is a volatility multiplier on a match."
+      },
+      {
+        "key": "utility_usage",
+        "label": "Utility Usage",
+        "value": 68.3,
+        "band": "strong",
+        "description": "Precision of smokes, molly placements, recon dart lineups. Scales the *effect* of utility, not just whether it's thrown."
+      }
+    ],
+    "agents": [
+      {
+        "agent_id": "astra",
+        "name": "Astra",
+        "icon": "/assets/agents/astra.webp",
+        "mastery": 62.8,
+        "role": "controller"
+      },
+      {
+        "agent_id": "jett",
+        "name": "Jett",
+        "icon": "/assets/agents/jett.webp",
+        "mastery": 46.9,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "clove",
+        "name": "Clove",
+        "icon": "/assets/agents/clove.webp",
+        "mastery": 45.7,
+        "role": "controller"
+      },
+      {
+        "agent_id": "miks",
+        "name": "Miks",
+        "icon": "/assets/agents/miks.webp",
+        "mastery": 42,
+        "role": "controller"
+      },
+      {
+        "agent_id": "harbor",
+        "name": "Harbor",
+        "icon": "/assets/agents/harbor.webp",
+        "mastery": 38.5,
+        "role": "controller"
+      },
+      {
+        "agent_id": "omen",
+        "name": "Omen",
+        "icon": "/assets/agents/omen.webp",
+        "mastery": 35.9,
+        "role": "controller"
+      },
+      {
+        "agent_id": "brimstone",
+        "name": "Brimstone",
+        "icon": "/assets/agents/brimstone.webp",
+        "mastery": 35,
+        "role": "controller"
+      },
+      {
+        "agent_id": "viper",
+        "name": "Viper",
+        "icon": "/assets/agents/viper.webp",
+        "mastery": 35,
+        "role": "controller"
+      },
+      {
+        "agent_id": "sage",
+        "name": "Sage",
+        "icon": "/assets/agents/sage.webp",
+        "mastery": 34.8,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "skye",
+        "name": "Skye",
+        "icon": "/assets/agents/skye.webp",
+        "mastery": 34.2,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "gekko",
+        "name": "Gekko",
+        "icon": "/assets/agents/gekko.webp",
+        "mastery": 34.1,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "kayo",
+        "name": "KAY/O",
+        "icon": "/assets/agents/kayo.webp",
+        "mastery": 29.7,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "killjoy",
+        "name": "Killjoy",
+        "icon": "/assets/agents/killjoy.webp",
+        "mastery": 28.9,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "neon",
+        "name": "Neon",
+        "icon": "/assets/agents/neon.webp",
+        "mastery": 28.4,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "reyna",
+        "name": "Reyna",
+        "icon": "/assets/agents/reyna.webp",
+        "mastery": 27.3,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "chamber",
+        "name": "Chamber",
+        "icon": "/assets/agents/chamber.webp",
+        "mastery": 26.4,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "vyse",
+        "name": "Vyse",
+        "icon": "/assets/agents/vyse.webp",
+        "mastery": 26.1,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "fade",
+        "name": "Fade",
+        "icon": "/assets/agents/fade.webp",
+        "mastery": 25.9,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "yoru",
+        "name": "Yoru",
+        "icon": "/assets/agents/yoru.webp",
+        "mastery": 25.2,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "sova",
+        "name": "Sova",
+        "icon": "/assets/agents/sova.webp",
+        "mastery": 24.4,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "iso",
+        "name": "Iso",
+        "icon": "/assets/agents/iso.webp",
+        "mastery": 22.5,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "phoenix",
+        "name": "Phoenix",
+        "icon": "/assets/agents/phoenix.webp",
+        "mastery": 21.6,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "breach",
+        "name": "Breach",
+        "icon": "/assets/agents/breach.webp",
+        "mastery": 21.1,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "deadlock",
+        "name": "Deadlock",
+        "icon": "/assets/agents/deadlock.webp",
+        "mastery": 19,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "cypher",
+        "name": "Cypher",
+        "icon": "/assets/agents/cypher.webp",
+        "mastery": 18.4,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "waylay",
+        "name": "Waylay",
+        "icon": "/assets/agents/waylay.webp",
+        "mastery": 3.5,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "veto",
+        "name": "Veto",
+        "icon": "/assets/agents/veto.webp",
+        "mastery": 3.3,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "raze",
+        "name": "Raze",
+        "icon": "/assets/agents/raze.webp",
+        "mastery": 3.2,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "tejo",
+        "name": "Tejo",
+        "icon": "/assets/agents/tejo.webp",
+        "mastery": 0.7,
+        "role": "initiator"
+      }
+    ],
+    "season": {
+      "matches": 0,
+      "kills": 0,
+      "deaths": 0,
+      "kd": null,
+      "first_kills": 0,
+      "rating": null,
+      "analytics_tier": 0,
+      "assists": null,
+      "acs": null,
+      "hs_pct": null,
+      "first_deaths": null,
+      "fk_fd": null,
+      "clutches": null,
+      "clutch_1v1": null,
+      "clutch_1v2": null,
+      "clutch_1v3": null,
+      "kast_pct": null,
+      "trade_kills": null,
+      "eco_kills": null,
+      "save_kills": null,
+      "pistol_kills": null,
+      "multikills": null,
+      "aces": null,
+      "kills_by_weapon": null,
+      "xduel_expected_wins": null,
+      "xduel_actual_wins": null,
+      "xde": null
+    },
+    "weekly": [],
+    "splits": null,
+    "charts": {
+      "performance": null,
+      "development": [],
+      "analytics_tier": 0
+    },
+    "relationships": [],
+    "arcs": [],
+    "scouting": {
+      "progress": 0,
+      "active": false,
+      "guidance": null,
+      "guidance_unlock": 0.25,
+      "bonus_mult": 1.05,
+      "report": null
+    },
+    "career": [],
+    "career_totals": null,
+    "career_arc": [
+      {
+        "season": 2,
+        "events": [
+          {
+            "kind": "signing",
+            "text": "Team Nexus sign Frostdash."
+          }
+        ]
+      }
+    ],
+    "honours": [],
+    "epithet": null,
+    "memories": [
+      "S2: Team Nexus sign Frostdash."
+    ]
+  }
+}

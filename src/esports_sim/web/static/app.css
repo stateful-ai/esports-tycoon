@@ -105,6 +105,14 @@ body {
   display: flex; align-items: center; gap: var(--es-space-3, 6px);
 }
 .balance { font-size: var(--es-text-lg, 15px); }
+.advance-notice {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--es-color-text-primary);
+  background: var(--es-color-bg-surface);
+  border-bottom: 1px solid var(--es-color-border-primary);
+  font-size: 13px;
+}
 
 #tabs {
   display: flex; gap: var(--es-space-1, 2px); padding: 0 var(--es-space-6, 16px);
@@ -2068,7 +2076,9 @@ p.good, .good { color: var(--es-color-text-success, var(--es-color-text-success)
 .dev-report-head h2, .dev-report-head p { margin-bottom: 2px; }
 .dev-report-summary { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .dev-report-table { min-width: 850px; }
-.dev-report-table th:last-child, .dev-report-table td:last-child { width: 44%; }
+.dev-report-table th:nth-child(6), .dev-report-table td:nth-child(6) { min-width: 200px; }
+.dev-week-feedback { min-width: 280px; max-width: 420px; line-height: 1.5; }
+.dev-plan-read { margin-top: 4px; max-width: 190px; font-size: 12px; line-height: 1.4; }
 .dev-change-list { display: flex; gap: 4px; flex-wrap: wrap; }
 .chip.dev-gain {
   color: var(--es-color-text-success, var(--es-color-text-success));
@@ -2327,6 +2337,18 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
 /* Unified link affordance: anything carrying data-pid/tid/sid reads as a
    link on hover, everywhere (profile.css keeps only overlay-specific bits). */
 .plink, .tlink, .slink { cursor: pointer; }
+/* Native profile buttons inherit the name's original inline presentation.
+   :where keeps component chip/lineup rules free to supply their own styling. */
+.plink:where(button) {
+  appearance: none; display: inline; background: none; border: 0;
+  margin: 0; padding: 0; font: inherit; color: inherit;
+  text-align: inherit; vertical-align: baseline;
+}
+.plink:where(button).muted { color: var(--es-color-text-secondary); }
+.plink:where(button):focus-visible {
+  outline: 2px solid var(--es-color-accent);
+  outline-offset: 2px; border-radius: 2px;
+}
 .plink:hover, .tlink:hover, .slink:hover {
   color: var(--es-color-accent, var(--es-color-accent));
   text-decoration: underline dotted;
@@ -2526,6 +2548,8 @@ tbody tr {
   border-radius: var(--es-radius-sm, 6px);
 }
 .prep-proposal-head { display: flex; align-items: center; gap: var(--es-space-2, 8px); margin-bottom: var(--es-space-1, 4px); }
+.prep-controls { flex-wrap: wrap; align-items: flex-end; }
+.prep-control { display: flex; flex-direction: column; gap: var(--es-space-1, 4px); }
 .prep-finding { font-size: 12px; margin-top: 2px; }
 .gp-prep-parts { display: inline-flex; gap: var(--es-space-3, 12px); margin: var(--es-space-1, 4px) 0; flex-wrap: wrap; }
 .gp-prep-part { font-size: 12px; }

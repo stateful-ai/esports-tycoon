@@ -1,0 +1,222 @@
+### Result
+{
+  "pending": null,
+  "commitment": null,
+  "history": [
+    {
+      "event_id": "841e9532e560ba1e",
+      "season": 1,
+      "week": 8,
+      "team_id": "team_nexus",
+      "type_id": "defend_player",
+      "choice_id": "defend_publicly",
+      "player_id": "fa_0",
+      "fixture_id": "",
+      "summary": "The manager stands between the player and the criticism.",
+      "sentiment_delta": 3,
+      "sponsor_delta": 0,
+      "trust_delta": 8,
+      "settlement": "",
+      "immediate_effects": null,
+      "settlement_effects": null,
+      "effect_feedback": [
+        "Immediate MEDIA effect: measured changes unavailable for this older record."
+      ]
+    },
+    {
+      "event_id": "d2c6ee7fa625f074",
+      "season": 1,
+      "week": 16,
+      "team_id": "team_nexus",
+      "type_id": "derby_expectations",
+      "choice_id": "respect_rival",
+      "player_id": "",
+      "fixture_id": "s1amfinal",
+      "summary": "The manager backs the group without dismissing the rival.",
+      "sentiment_delta": 0,
+      "sponsor_delta": 0,
+      "trust_delta": 4,
+      "settlement": "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight.",
+      "immediate_effects": {
+        "sentiment": {
+          "id": "team_nexus",
+          "label": "Community sentiment",
+          "before": 54.8,
+          "after": 55.8,
+          "delta": 1
+        },
+        "player_trust": [
+          {
+            "id": "apex",
+            "label": "Apex",
+            "before": 50,
+            "after": 53,
+            "delta": 3
+          },
+          {
+            "id": "echo",
+            "label": "Echo",
+            "before": 50,
+            "after": 53,
+            "delta": 3
+          },
+          {
+            "id": "fa_0",
+            "label": "Hollowlock",
+            "before": 58,
+            "after": 61,
+            "delta": 3
+          },
+          {
+            "id": "fa_13",
+            "label": "Slyblade",
+            "before": 50,
+            "after": 53,
+            "delta": 3
+          },
+          {
+            "id": "ghost",
+            "label": "Ghost",
+            "before": 50,
+            "after": 53,
+            "delta": 3
+          },
+          {
+            "id": "vortex",
+            "label": "Vortex",
+            "before": 50,
+            "after": 53,
+            "delta": 3
+          }
+        ],
+        "sponsor_relations": [
+          {
+            "id": "Polar Compute",
+            "label": "Polar Compute",
+            "before": 52,
+            "after": 52,
+            "delta": 0
+          },
+          {
+            "id": "Streamforge",
+            "label": "Streamforge",
+            "before": 57,
+            "after": 57,
+            "delta": 0
+          }
+        ]
+      },
+      "settlement_effects": {
+        "sentiment": {
+          "id": "team_nexus",
+          "label": "Community sentiment",
+          "before": 55.8,
+          "after": 54.8,
+          "delta": -1
+        },
+        "player_trust": [
+          {
+            "id": "apex",
+            "label": "Apex",
+            "before": 53,
+            "after": 54,
+            "delta": 1
+          },
+          {
+            "id": "echo",
+            "label": "Echo",
+            "before": 53,
+            "after": 54,
+            "delta": 1
+          },
+          {
+            "id": "fa_0",
+            "label": "Hollowlock",
+            "before": 61,
+            "after": 62,
+            "delta": 1
+          },
+          {
+            "id": "fa_13",
+            "label": "Slyblade",
+            "before": 53,
+            "after": 54,
+            "delta": 1
+          },
+          {
+            "id": "ghost",
+            "label": "Ghost",
+            "before": 53,
+            "after": 54,
+            "delta": 1
+          },
+          {
+            "id": "vortex",
+            "label": "Vortex",
+            "before": 53,
+            "after": 54,
+            "delta": 1
+          }
+        ],
+        "sponsor_relations": [
+          {
+            "id": "Polar Compute",
+            "label": "Polar Compute",
+            "before": 52,
+            "after": 52,
+            "delta": 0
+          },
+          {
+            "id": "Streamforge",
+            "label": "Streamforge",
+            "before": 57,
+            "after": 57,
+            "delta": 0
+          }
+        ]
+      },
+      "effect_feedback": [
+        "Immediate MEDIA effect: Community sentiment +1 (54.8 -> 55.8); Player trust: Apex +3 (50 -> 53), Echo +3 (50 -> 53), Hollowlock +3 (58 -> 61), Slyblade +3 (50 -> 53), Ghost +3 (50 -> 53), Vortex +3 (50 -> 53); Sponsor relations: Polar Compute +0 (52 -> 52), Streamforge +0 (57 -> 57).",
+        "Result settlement MEDIA effect: Community sentiment -1 (55.8 -> 54.8); Player trust: Apex +1 (53 -> 54), Echo +1 (53 -> 54), Hollowlock +1 (61 -> 62), Slyblade +1 (53 -> 54), Ghost +1 (53 -> 54), Vortex +1 (53 -> 54); Sponsor relations: Polar Compute +0 (52 -> 52), Streamforge +0 (57 -> 57).",
+        "Cumulative MEDIA contribution: Community sentiment +0; Player trust: Apex +4, Echo +4, Hollowlock +4, Slyblade +4, Ghost +4, Vortex +4; Sponsor relations: Polar Compute +0, Streamforge +0. Includes only this choice and its result settlement."
+      ]
+    }
+  ],
+  "player_trust": [
+    {
+      "id": "apex",
+      "handle": "Apex",
+      "trust": 54
+    },
+    {
+      "id": "echo",
+      "handle": "Echo",
+      "trust": 54
+    },
+    {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "trust": 62
+    },
+    {
+      "id": "fa_13",
+      "handle": "Slyblade",
+      "trust": 54
+    },
+    {
+      "id": "ghost",
+      "handle": "Ghost",
+      "trust": 54
+    },
+    {
+      "id": "vortex",
+      "handle": "Vortex",
+      "trust": 54
+    }
+  ],
+  "cooldown_weeks": 5
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const r=await (await fetch("/api/club")).json(); return r.media}');
+```

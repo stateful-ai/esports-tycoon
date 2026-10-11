@@ -1,0 +1,52 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/facility_upgrade": 1,
+    "attempt:/api/actions/flavor_event": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/actions/sponsor": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/facility_upgrade": 1,
+    "result:/api/actions/flavor_event": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/actions/sponsor": 1,
+    "session_end:": 2,
+    "session_start:": 2,
+    "view:company/finances": 4,
+    "view:dashboard": 3,
+    "view:facilities": 1,
+    "view:lobby": 2,
+    "visible_time:company/finances": 23,
+    "visible_time:dashboard": 15,
+    "visible_time:facilities": 4,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "6306c100edde11a46e90af8771cbba88": 15009,
+    "cc96b0970cdf0f62f254dda135481499": 445287
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/facility_upgrade:success": 1,
+    "/api/actions/flavor_event:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/actions/sponsor:success": 1
+  },
+  "paired_results": 5,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "company/finances": 256307,
+    "dashboard": 192375,
+    "facilities": 41494,
+    "lobby": 120
+  },
+  "world_events": {
+    "26UHC": 69
+  }
+}

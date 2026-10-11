@@ -45,9 +45,9 @@ class TeamTactics(BaseModel):
 
 
 class TeamLineup(BaseModel):
-    """The week's committed lineup: which five start and the agent each locks
-    in. The agent is chosen before you know the map, so it's a single agent per
-    player, not a per-map sheet.
+    """The team's saved lineup: which five start and the agent each locks in.
+    Agent assignments persist until changed and apply across maps; upcoming
+    fixtures can already have their maps assigned when the coach chooses.
 
     Both axes default empty, and empty means "let the engine decide" — the whole
     roster starts and each player runs their best-mastery agent, exactly what

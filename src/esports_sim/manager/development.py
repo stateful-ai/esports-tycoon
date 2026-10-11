@@ -360,7 +360,9 @@ def natural_potential(p: Player) -> float:
     pa = potential_of(p)
     realised = (
         _REALIZATION_FLOOR
-        + (pa - _REALIZATION_FLOOR) * development_curve(p).realization
+        + (pa - _REALIZATION_FLOOR) * career_realization(p)
+        + p.development_progress.ceiling_shift
+        + max(0.0, (career_response(p) - 1.0) * 12.0)
     )
     return round(float(max(overall(p), min(99.0, realised))), 2)
 
@@ -388,14 +390,39 @@ def contextual_ceiling_bonus(
     return round(float(np.clip(total, 0.0, 10.0)), 2)
 
 
+def career_response(p: Player) -> float:
+    """Most careers are ordinary; a few learn unusually well or never click.
+
+    Stable identity owns the tail, rather than rerolling a fate each week.
+    Authored zero-volatility careers retain their explicit expectation.
+    Managers can still improve the environment and earn headroom revisions.
+    """
+    scale = 1.0 if p.career_volatility is None else p.career_volatility / 100.0
+    roll = _unit(p.dev_seed, p.id, "career_response")
+    if roll < 0.08 * scale:
+        return 1.0 - 0.75 * scale
+    if roll > 1.0 - 0.06 * scale:
+        return 1.0 + 0.25 * scale
+    return 1.0
+
+
+def career_realization(p: Player) -> float:
+    realization = development_curve(p).realization
+    response = career_response(p)
+    return realization * (1.0 - (1.0 - response) * (0.55 / 0.75)) if response < 1.0 else realization
+
+
 def development_ceiling(p: Player, attr_id: str, support_bonus: float = 0.0) -> float:
     """Reachable skill level now: hidden realization plus contextual upside."""
     cur = p.attr(attr_id)
     full = raw_skill_potential(p, attr_id)
     realised = (
         _REALIZATION_FLOOR
-        + (full - _REALIZATION_FLOOR) * development_curve(p).realization
+        + (full - _REALIZATION_FLOOR) * career_realization(p)
+        + p.development_progress.ceiling_shift
     )
+    if career_response(p) > 1.0:
+        realised += (career_response(p) - 1.0) * 12.0
     return round(float(min(99.0, max(cur, realised + max(0.0, support_bonus)))), 2)
 
 
@@ -847,6 +874,7 @@ DEV_EVENT_PROB = 0.05  # per player per week
 # keep in sync with the headlines in _fire_event below AND the mental
 # events in weekly_mental_events).
 DEV_EVENT_MARKERS = [
+    "career breakthrough", "development has stalled",
     "breakthrough week",
     "is in a slump",
     "tweaks a wrist",
@@ -896,7 +924,10 @@ def weekly_dev_events(gs, rng) -> list[dict]:
         for p in sorted(gs.roster(tid), key=lambda q: q.id):
             if rng.random() >= DEV_EVENT_PROB:
                 continue
+            from esports_sim.manager.development_path import record_gains
+            before = dict(p.attributes)
             kind, headline = _fire_event(gs, tid, p, rng)
+            record_gains(p, "event_gains", before)
             out.append(
                 {"team_id": tid, "player_id": p.id, "kind": kind, "headline": headline}
             )
@@ -910,7 +941,9 @@ def _fire_event(gs, tid: str, p: Player, rng) -> tuple[str, str]:
     to the table — the risk that pays for extra growth — unless the player
     has opted out to rest that week."""
     roll = rng.random()
-    if p.dev_focus != "rest" and p.training_intensity == "intense" and roll < 0.22:
+    week = p.development_progress.latest
+    resting = p.dev_focus == "rest" or (week is not None and week.focus == "rest")
+    if not resting and p.training_intensity == "intense" and roll < 0.22:
         p.stamina = _clamp_stat(p.stamina - 30.0)
         p.morale = _clamp_stat(p.morale - 8.0)
         p.confidence = _clamp_stat(p.confidence - 6.0, 5.0, 95.0)
@@ -920,7 +953,11 @@ def _fire_event(gs, tid: str, p: Player, rng) -> tuple[str, str]:
         )
     if roll < 0.18:
         mult = dev_multiplier(p)
-        for a in _CATEGORY_ATTRS[_weakest_category(p)]:
+        focus = (
+            week.focus if week and week.focus in _CATEGORY_ATTRS else
+            p.dev_focus if p.dev_focus in _CATEGORY_ATTRS else _weakest_category(p)
+        )
+        for a in _CATEGORY_ATTRS[focus]:
             _bump_attr(p, a, float(rng.uniform(0.8, 1.4)) * mult)
         p.confidence = _clamp_stat(p.confidence + 6.0, 5.0, 95.0)
         return "breakthrough", (

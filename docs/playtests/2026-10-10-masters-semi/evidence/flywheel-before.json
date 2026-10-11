@@ -1,0 +1,140 @@
+[
+  {
+    "id": "esports-playtest-0166",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Windows audit encoding and intent ordering friction",
+    "problem": "Initial audit failed using cp1252 and first correction expectation was written after reading",
+    "solution": "Preserve failed and correction rows; write fresh expectation before rerunning UTF-8 audit",
+    "lesson": "Pre-intent must precede the actual audit, and Windows persisted JSON reads require explicit UTF-8",
+    "confidence": "high",
+    "source": "gap34 26UHC seed2038 S1W18 immutable final save SHA999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0165",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Read-only review acceptance retains decisions",
+    "problem": "Advice fix must not alter simulated campaign or imply a new accepted decision",
+    "solution": "Browser Dashboard/Club and Save followed by UTF-8 byte and action/snapshot prefix audit",
+    "lesson": "Copied save remained byte-identical, with75 accepted decisions and17 snapshots; browser usage separately records navigation andSave",
+    "confidence": "high",
+    "source": "gap34 26UHC seed2038 S1W18 immutable final save SHA999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0164",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Review bench advice follows current selection",
+    "problem": "Historical one-match player Hollowlock received bench advice after returning to bench",
+    "solution": "Resolve upcoming map selections including revalidated fixture plan and explicit map overrides",
+    "lesson": "Historical off-colour evidence remains useful while actionable advice acknowledges selection already in place",
+    "confidence": "high",
+    "source": "gap34 26UHC seed2038 S1W18 immutable final save SHA999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0163",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Post-match bench advice ignores consumed rotation",
+    "problem": "Understand coach advice after temporary Hollowlock start",
+    "solution": "Read fresh Dashboard and current upcoming roster after one-match plan consumed",
+    "lesson": "Hollowlock alreadybench, currentVanguardmapfives exclude him and plannull, yet WhattoTweak saysconsiderbench. Gap34 owns currentselection-aware advice. Historical0.69 review remains valid. Root wrong effectivearray claim corrected separately inrow7.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0162",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Fixture guidance must acknowledge locked veto",
+    "problem": "Find useful map prep advice for Masters quarterfinal",
+    "solution": "Compare Dashboard suggestions to actual public fixture veto and Prep legalmaps",
+    "lesson": "ActualAscent/Lotus/Split only, Haven/Bind alreadybanned; generic all-history BanHaven/PickBind advice is unavailable. Gap33 measured patch shows locked veto/playablemap records while preserving historicalmaps.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0161",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "One-match rotation preserves default five and recovery",
+    "problem": "Rest fatigued Ghost without losing quarterfinal roster control",
+    "solution": "Save GhostRest and five-player fixture plan replacing him with Hollowlock, skip extra scrim then Advance once",
+    "lesson": "Hollowlock plays all3 maps, Ghost none, defaultfive restored after consumption; Ghost35.5->59.5. Fullreport separates benchscrims under0.01 from Hollowlock match+0.01. Win2-1 is descriptive, not causal.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-quarter main64ee15f browser8513 world26UHC seed2038 W17-W18",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "recovery",
+      "one-match-lineup",
+      "veto",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0160",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Reload snapshots can precede loaded Dashboard",
+    "problem": "Initial captured reload file was incomplete and first numeric observation wrong",
+    "solution": "Preserve correction row and capture full fresh Dashboard and briefing snapshots",
+    "lesson": "Use completed snapshot records Ascent3/5 Lotus4/7 Split1/1 rather than initial observation",
+    "confidence": "high",
+    "source": "2026-10-10-gap33-fixture-map-advice main64ee dirty browser8514 world26UHC seed2038 S1W17",
+    "code": "",
+    "tags": [
+      "maps",
+      "fixture",
+      "browser"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0159",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Read-only map advice preserves campaign",
+    "problem": "Presentation fixes must not alter deterministic state",
+    "solution": "Save through browser then compare immutable source SHA and accepted telemetry",
+    "lesson": "SHA32d6564 matches after Save,72 actions unchanged and no GameState fields changed",
+    "confidence": "high",
+    "source": "2026-10-10-gap33-fixture-map-advice main64ee dirty browser8514 world26UHC seed2038 S1W17",
+    "code": "",
+    "tags": [
+      "maps",
+      "fixture",
+      "browser"
+    ],
+    "kind": "learning"
+  }
+]

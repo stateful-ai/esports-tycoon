@@ -1,0 +1,14 @@
+{
+  "command": "pytest -q -n2",
+  "exit_code": 0,
+  "elapsed_seconds": 5414.181600093842,
+  "freeze": {
+    "src/esports_sim/web/server.py": "8a6d54019d0126bdbf7f3ecea9c4ca751e509008fd5287ceee650cf24b244e57",
+    "tests/test_review_current_roster.py": "d1e24e070842e49a21812483c6a2705bcd3a31c6256732d63835ea9a9fccbb2b"
+  },
+  "after": {
+    "src/esports_sim/web/server.py": "8a6d54019d0126bdbf7f3ecea9c4ca751e509008fd5287ceee650cf24b244e57",
+    "tests/test_review_current_roster.py": "d1e24e070842e49a21812483c6a2705bcd3a31c6256732d63835ea9a9fccbb2b"
+  },
+  "unchanged": true
+}

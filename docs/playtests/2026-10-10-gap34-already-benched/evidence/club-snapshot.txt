@@ -1,0 +1,417 @@
+### Page
+- Page URL: http://127.0.0.1:8515/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e26]: Season 1 · Week 18 · Playoffs — Team Nexus
+      - generic [ref=f1e27]: 1,499,208 cr
+      - button "Save" [ref=f1e28] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e7] [cursor=pointer]
+      - button "🛠️" [ref=f1e8] [cursor=pointer]
+      - button "🔇" [ref=f1e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e10] [cursor=pointer]: Guide
+    - navigation [ref=f1e11]:
+      - generic "Weekly" [ref=f1e12]:
+        - button "Dashboard" [ref=f1e14] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "18"
+        - button "Match 2" [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e17]:
+        - button "Club" [active] [ref=f1e19] [cursor=pointer]
+        - button "Facilities" [ref=f1e20] [cursor=pointer]
+        - button "Season" [ref=f1e21] [cursor=pointer]
+        - button "Market" [ref=f1e22] [cursor=pointer]
+        - button "Stats" [ref=f1e23] [cursor=pointer]
+        - button "Company" [ref=f1e24] [cursor=pointer]
+    - main [ref=f1e25]:
+      - generic [ref=f1e320]:
+        - generic [ref=f1e321]:
+          - generic [ref=f1e322]: Club
+          - generic [ref=f1e323]: Team Nexus · 6/10
+          - generic [ref=f1e324]:
+            - button "Squad" [ref=f1e325] [cursor=pointer]
+            - button "Development" [ref=f1e326] [cursor=pointer]
+            - button "Locker Room" [ref=f1e327] [cursor=pointer]
+            - button "Operations" [ref=f1e328] [cursor=pointer]
+          - button "Guide" [ref=f1e329] [cursor=pointer]
+          - generic [ref=f1e330]:
+            - generic "Toggle ★ in the table to change who dresses. Bench players scrim (reduced growth) and good ones want minutes." [ref=f1e331]: Default five
+            - generic [ref=f1e332]: 5/5
+            - button "Save lineup" [ref=f1e333] [cursor=pointer]
+        - generic [ref=f1e334]:
+          - table [ref=f1e338]:
+            - rowgroup [ref=f1e339]:
+              - row [ref=f1e340]:
+                - columnheader "★" [ref=f1e341] [cursor=pointer]
+                - columnheader "Player" [ref=f1e342] [cursor=pointer]
+                - columnheader "Role" [ref=f1e343] [cursor=pointer]
+                - columnheader "Agent" [ref=f1e344] [cursor=pointer]
+                - columnheader "Age" [ref=f1e345] [cursor=pointer]
+                - columnheader "OVR" [ref=f1e346]
+                - columnheader "Ceiling" [ref=f1e347]
+                - columnheader "Form" [ref=f1e348]
+                - columnheader "Morale" [ref=f1e349]
+                - columnheader "Condition" [ref=f1e350]
+                - columnheader "Confidence" [ref=f1e351]
+                - columnheader "Salary" [ref=f1e352]
+                - columnheader "Wks" [ref=f1e353]
+                - columnheader [ref=f1e354] [cursor=pointer]
+            - rowgroup [ref=f1e355]:
+              - row [ref=f1e356] [cursor=pointer]:
+                - cell [ref=f1e357]:
+                  - button "★" [ref=f1e358]
+                - cell "Apex IGL" [ref=f1e359]:
+                  - generic [ref=f1e360]: Apex
+                  - generic [ref=f1e361]: IGL
+                - cell "Controller IGL" [ref=f1e362]:
+                  - generic [ref=f1e363]:
+                    - generic [ref=f1e364]: Controller
+                    - generic [ref=f1e365]: IGL
+                - cell "Omen ?" [ref=f1e366]:
+                  - generic "likely auto-pick — not locked by the coach" [ref=f1e367]: Omen ?
+                - cell "26" [ref=f1e368]
+                - cell "78.4" [ref=f1e369]
+                - cell "★★★½" [ref=f1e370]
+                - cell "51 ▼" [ref=f1e371]:
+                  - generic [ref=f1e372]:
+                    - generic "51" [ref=f1e373]
+                    - generic [ref=f1e375]: "51"
+                    - generic "trending down" [ref=f1e376]: ▼
+                - cell "100" [ref=f1e377]:
+                  - generic [ref=f1e378]:
+                    - generic "100" [ref=f1e379]
+                    - generic [ref=f1e381]: "100"
+                - cell "97" [ref=f1e382]:
+                  - generic [ref=f1e383]:
+                    - generic "97" [ref=f1e384]
+                    - generic [ref=f1e386]: "97"
+                - cell "62 ▼" [ref=f1e387]:
+                  - generic [ref=f1e388]:
+                    - generic "62" [ref=f1e389]
+                    - generic [ref=f1e391]: "62"
+                    - generic "trending down" [ref=f1e392]: ▼
+                - cell "10,500 cr/wk" [ref=f1e393]
+                - cell "34w" [ref=f1e394]
+                - cell [ref=f1e395]:
+                  - generic [ref=f1e396]:
+                    - button "Talk" [ref=f1e397]
+                    - button "Renew" [ref=f1e398]
+                    - button "Release" [disabled] [ref=f1e399]
+              - row [ref=f1e400] [cursor=pointer]:
+                - cell [ref=f1e401]:
+                  - button "★" [ref=f1e402]
+                - 'cell "Vortex Aim Demon: raw mechanical menace Heavy streaming" [ref=f1e403]':
+                  - generic [ref=f1e404]: Vortex
+                  - 'img "Aim Demon: raw mechanical menace" [ref=f1e405]'
+                  - generic "Heavy streaming" [ref=f1e406]: 📺
+                - cell "Duelist Awper" [ref=f1e407]:
+                  - generic [ref=f1e408]:
+                    - generic [ref=f1e409]: Duelist
+                    - generic [ref=f1e410]: Awper
+                - cell "Jett ?" [ref=f1e411]:
+                  - generic "likely auto-pick — not locked by the coach" [ref=f1e412]: Jett ?
+                - cell "22" [ref=f1e413]
+                - cell "75.5" [ref=f1e414]
+                - cell "★★★" [ref=f1e415]
+                - cell "66" [ref=f1e416]:
+                  - generic [ref=f1e417]:
+                    - generic "66" [ref=f1e418]
+                    - generic [ref=f1e420]: "66"
+                - cell "100" [ref=f1e421]:
+                  - generic [ref=f1e422]:
+                    - generic "100" [ref=f1e423]
+                    - generic [ref=f1e425]: "100"
+                - cell "97" [ref=f1e426]:
+                  - generic [ref=f1e427]:
+                    - generic "97" [ref=f1e428]
+                    - generic [ref=f1e430]: "97"
+                - cell "79" [ref=f1e431]:
+                  - generic [ref=f1e432]:
+                    - generic "79" [ref=f1e433]
+                    - generic [ref=f1e435]: "79"
+                - cell "9,200 cr/wk" [ref=f1e436]
+                - cell "35w" [ref=f1e437]
+                - cell [ref=f1e438]:
+                  - generic [ref=f1e439]:
+                    - button "Talk" [ref=f1e440]
+                    - button "Renew" [ref=f1e441]
+                    - button "Release" [disabled] [ref=f1e442]
+              - row [ref=f1e443] [cursor=pointer]:
+                - cell [ref=f1e444]:
+                  - button "★" [ref=f1e445]
+                - 'cell "Ghost Mentored player Choker: tightens up when it matters most" [ref=f1e446]':
+                  - generic [ref=f1e447]: Ghost
+                  - generic "Mentored player" [ref=f1e448]: 🎓
+                  - 'img "Choker: tightens up when it matters most" [ref=f1e449]'
+                - cell "Initiator Lurker" [ref=f1e450]:
+                  - generic [ref=f1e451]:
+                    - generic [ref=f1e452]: Initiator
+                    - generic [ref=f1e453]: Lurker
+                - cell "Sova ?" [ref=f1e454]:
+                  - generic "likely auto-pick — not locked by the coach" [ref=f1e455]: Sova ?
+                - cell "19" [ref=f1e456]
+                - cell "77.6" [ref=f1e457]
+                - cell "★★★★★" [ref=f1e458]
+                - cell "52" [ref=f1e459]:
+                  - generic [ref=f1e460]:
+                    - generic "52" [ref=f1e461]
+                    - generic [ref=f1e463]: "52"
+                - cell "95" [ref=f1e464]:
+                  - generic [ref=f1e465]:
+                    - generic "95" [ref=f1e466]
+                    - generic [ref=f1e468]: "95"
+                - cell "60" [ref=f1e469]:
+                  - generic [ref=f1e470]:
+                    - generic "60" [ref=f1e471]
+                    - generic [ref=f1e473]: "60"
+                - cell "61 ▼" [ref=f1e474]:
+                  - generic [ref=f1e475]:
+                    - generic "61" [ref=f1e476]
+                    - generic [ref=f1e478]: "61"
+                    - generic "trending down" [ref=f1e479]: ▼
+                - cell "4,500 cr/wk" [ref=f1e480]
+                - cell "27w" [ref=f1e481]
+                - cell [ref=f1e482]:
+                  - generic [ref=f1e483]:
+                    - button "Talk" [ref=f1e484]
+                    - button "Renew" [ref=f1e485]
+                    - button "Release" [disabled] [ref=f1e486]
+              - row [ref=f1e487] [cursor=pointer]:
+                - cell [ref=f1e488]:
+                  - button "★" [ref=f1e489]
+                - 'cell "Slyblade Clutch Master: wants the round with the game on the line" [ref=f1e490]':
+                  - generic [ref=f1e491]: Slyblade
+                  - 'img "Clutch Master: wants the round with the game on the line" [ref=f1e492]'
+                - cell "Duelist Entry" [ref=f1e493]:
+                  - generic [ref=f1e494]:
+                    - generic [ref=f1e495]: Duelist
+                    - generic [ref=f1e496]: Entry
+                - cell "Yoru ?" [ref=f1e497]:
+                  - generic "likely auto-pick — not locked by the coach" [ref=f1e498]: Yoru ?
+                - cell "28" [ref=f1e499]
+                - cell "72.8" [ref=f1e500]
+                - cell "★★★½" [ref=f1e501]
+                - cell "57" [ref=f1e502]:
+                  - generic [ref=f1e503]:
+                    - generic "57" [ref=f1e504]
+                    - generic [ref=f1e506]: "57"
+                - cell "100" [ref=f1e507]:
+                  - generic [ref=f1e508]:
+                    - generic "100" [ref=f1e509]
+                    - generic [ref=f1e511]: "100"
+                - cell "97" [ref=f1e512]:
+                  - generic [ref=f1e513]:
+                    - generic "97" [ref=f1e514]
+                    - generic [ref=f1e516]: "97"
+                - cell "65" [ref=f1e517]:
+                  - generic [ref=f1e518]:
+                    - generic "65" [ref=f1e519]
+                    - generic [ref=f1e521]: "65"
+                - cell "6,300 cr/wk" [ref=f1e522]
+                - cell "45w" [ref=f1e523]
+                - cell [ref=f1e524]:
+                  - generic [ref=f1e525]:
+                    - button "Talk" [ref=f1e526]
+                    - button "Renew" [ref=f1e527]
+                    - button "Release" [disabled] [ref=f1e528]
+              - row [ref=f1e529] [cursor=pointer]:
+                - cell [ref=f1e530]:
+                  - button "★" [ref=f1e531]
+                - 'cell "Echo Clutch Master: wants the round with the game on the line" [ref=f1e532]':
+                  - generic [ref=f1e533]: Echo
+                  - 'img "Clutch Master: wants the round with the game on the line" [ref=f1e534]'
+                - cell "Sentinel Anchor" [ref=f1e535]:
+                  - generic [ref=f1e536]:
+                    - generic [ref=f1e537]: Sentinel
+                    - generic [ref=f1e538]: Anchor
+                - cell "Killjoy ?" [ref=f1e539]:
+                  - generic "likely auto-pick — not locked by the coach" [ref=f1e540]: Killjoy ?
+                - cell "23" [ref=f1e541]
+                - cell "76" [ref=f1e542]
+                - cell "★★★" [ref=f1e543]
+                - cell "50 ▼" [ref=f1e544]:
+                  - generic [ref=f1e545]:
+                    - generic "50" [ref=f1e546]
+                    - generic [ref=f1e548]: "50"
+                    - generic "trending down" [ref=f1e549]: ▼
+                - cell "100" [ref=f1e550]:
+                  - generic [ref=f1e551]:
+                    - generic "100" [ref=f1e552]
+                    - generic [ref=f1e554]: "100"
+                - cell "97" [ref=f1e555]:
+                  - generic [ref=f1e556]:
+                    - generic "97" [ref=f1e557]
+                    - generic [ref=f1e559]: "97"
+                - cell "66 ▼" [ref=f1e560]:
+                  - generic [ref=f1e561]:
+                    - generic "66" [ref=f1e562]
+                    - generic [ref=f1e564]: "66"
+                    - generic "trending down" [ref=f1e565]: ▼
+                - cell "7,700 cr/wk" [ref=f1e566]
+                - cell "39w" [ref=f1e567]
+                - cell [ref=f1e568]:
+                  - generic [ref=f1e569]:
+                    - button "Talk" [ref=f1e570]
+                    - button "Renew" [ref=f1e571]
+                    - button "Release" [disabled] [ref=f1e572]
+              - row [ref=f1e573] [cursor=pointer]:
+                - cell [ref=f1e574]:
+                  - button "☆" [ref=f1e575]
+                - 'cell "Hollowlock Inconsistent: a different player week to week bench" [ref=f1e576]':
+                  - generic [ref=f1e577]: Hollowlock
+                  - 'img "Inconsistent: a different player week to week" [ref=f1e578]'
+                  - generic [ref=f1e579]: bench
+                - cell "Controller IGL" [ref=f1e580]:
+                  - generic [ref=f1e581]:
+                    - generic [ref=f1e582]: Controller
+                    - generic [ref=f1e583]: IGL
+                - cell "Harbor" [ref=f1e584]:
+                  - generic "locked by their coach" [ref=f1e585]: Harbor
+                - cell "26" [ref=f1e586]
+                - cell "63.2" [ref=f1e587]
+                - cell "★★" [ref=f1e588]
+                - cell "48 ▲" [ref=f1e589]:
+                  - generic [ref=f1e590]:
+                    - generic "48" [ref=f1e591]
+                    - generic [ref=f1e593]: "48"
+                    - generic "trending up" [ref=f1e594]: ▲
+                - cell "86" [ref=f1e595]:
+                  - generic [ref=f1e596]:
+                    - generic "86" [ref=f1e597]
+                    - generic [ref=f1e599]: "86"
+                - cell "97" [ref=f1e600]:
+                  - generic [ref=f1e601]:
+                    - generic "97" [ref=f1e602]
+                    - generic [ref=f1e604]: "97"
+                - cell "56" [ref=f1e605]:
+                  - generic [ref=f1e606]:
+                    - generic "56" [ref=f1e607]
+                    - generic [ref=f1e609]: "56"
+                - cell "4,000 cr/wk" [ref=f1e610]
+                - cell "45w" [ref=f1e611]
+                - cell [ref=f1e612]:
+                  - generic [ref=f1e613]:
+                    - button "Talk" [ref=f1e614]
+                    - button "Renew" [ref=f1e615]
+                    - button "Release" [disabled] [ref=f1e616]
+          - generic [ref=f1e617]:
+            - generic [ref=f1e618]:
+              - heading "Form & fitness" [level=2] [ref=f1e619]
+              - text: Cumulative wins
+              - generic [ref=f1e620]:
+                - img "cumulative wins" [ref=f1e621]
+                - text: 13W in 17 played
+            - generic [ref=f1e640]:
+              - heading "Squad profile" [level=2] [ref=f1e641]
+              - paragraph [ref=f1e642]: Average age 24
+              - generic [ref=f1e643]:
+                - generic [ref=f1e644]: Youth ≤21
+                - generic [ref=f1e647]: "1"
+              - generic [ref=f1e648]:
+                - generic [ref=f1e649]: Prime 22–26
+                - generic [ref=f1e652]: "4"
+              - generic [ref=f1e653]:
+                - generic [ref=f1e654]: Veteran 27+
+                - generic [ref=f1e657]: "1"
+            - generic [ref=f1e658]:
+              - heading "Scouting book" [level=2] [ref=f1e659]
+              - paragraph [ref=f1e660]: Balanced
+            - generic [ref=f1e661]:
+              - heading "Locker room" [level=2] [ref=f1e662]
+              - paragraph [ref=f1e663]: No standout duos or feuds.
+              - paragraph [ref=f1e664]:
+                - generic "Shared language affects comms. Pairs without a common language rarely reach full chemistry." [ref=f1e665]: Comms 58
+                - text: shared languages feed chemistry.
+            - generic [ref=f1e666]:
+              - heading "Map lineups" [level=2] [ref=f1e667]
+              - paragraph [ref=f1e668]: vs Team Vanguard · Bo3
+              - generic [ref=f1e669]:
+                - generic [ref=f1e670]: Haven
+                - generic "uses your default five" [ref=f1e671]: default
+              - generic [ref=f1e672]: Apex · Vortex · Ghost · Slyblade · Echo
+              - generic [ref=f1e673]:
+                - generic [ref=f1e674]: Ascent
+                - generic "uses your default five" [ref=f1e675]: default
+              - generic [ref=f1e676]: Apex · Vortex · Ghost · Slyblade · Echo
+              - generic [ref=f1e677]:
+                - generic [ref=f1e678]: Lotus
+                - generic "uses your default five" [ref=f1e679]: default
+              - generic [ref=f1e680]: Apex · Vortex · Ghost · Slyblade · Echo
+              - button "Edit ▸" [ref=f1e681] [cursor=pointer]
+          - generic [ref=f1e683]:
+            - heading "Lineups — vs Team Vanguard (Bo3)" [level=2] [ref=f1e684]
+            - paragraph [ref=f1e685]: Dress exactly 5 for each map. A map with no pick uses your default five (★).
+            - generic [ref=f1e686]:
+              - heading "Default five" [level=3] [ref=f1e687]
+              - generic [ref=f1e688]:
+                - generic [ref=f1e689]:
+                  - button "Apex" [ref=f1e690] [cursor=pointer]
+                  - button "Vortex" [ref=f1e691] [cursor=pointer]
+                  - button "Ghost" [ref=f1e692] [cursor=pointer]
+                  - button "Slyblade" [ref=f1e693] [cursor=pointer]
+                  - button "Echo" [ref=f1e694] [cursor=pointer]
+                  - button "Hollowlock" [ref=f1e695] [cursor=pointer]
+                - generic [ref=f1e696]:
+                  - generic [ref=f1e697]: 5/5
+                  - button "Save" [ref=f1e698] [cursor=pointer]
+              - button "Clear (auto top-5)" [ref=f1e699] [cursor=pointer]
+            - generic [ref=f1e700]:
+              - heading "Haven · default" [level=3] [ref=f1e701]
+              - generic [ref=f1e702]:
+                - generic [ref=f1e703]:
+                  - button "Apex" [ref=f1e704] [cursor=pointer]
+                  - button "Vortex" [ref=f1e705] [cursor=pointer]
+                  - button "Ghost" [ref=f1e706] [cursor=pointer]
+                  - button "Slyblade" [ref=f1e707] [cursor=pointer]
+                  - button "Echo" [ref=f1e708] [cursor=pointer]
+                  - button "Hollowlock" [ref=f1e709] [cursor=pointer]
+                - generic [ref=f1e710]:
+                  - generic [ref=f1e711]: 5/5
+                  - button "Save" [ref=f1e712] [cursor=pointer]
+            - generic [ref=f1e713]:
+              - heading "Ascent · default" [level=3] [ref=f1e714]
+              - generic [ref=f1e715]:
+                - generic [ref=f1e716]:
+                  - button "Apex" [ref=f1e717] [cursor=pointer]
+                  - button "Vortex" [ref=f1e718] [cursor=pointer]
+                  - button "Ghost" [ref=f1e719] [cursor=pointer]
+                  - button "Slyblade" [ref=f1e720] [cursor=pointer]
+                  - button "Echo" [ref=f1e721] [cursor=pointer]
+                  - button "Hollowlock" [ref=f1e722] [cursor=pointer]
+                - generic [ref=f1e723]:
+                  - generic [ref=f1e724]: 5/5
+                  - button "Save" [ref=f1e725] [cursor=pointer]
+            - generic [ref=f1e726]:
+              - heading "Lotus · default" [level=3] [ref=f1e727]
+              - generic [ref=f1e728]:
+                - generic [ref=f1e729]:
+                  - button "Apex" [ref=f1e730] [cursor=pointer]
+                  - button "Vortex" [ref=f1e731] [cursor=pointer]
+                  - button "Ghost" [ref=f1e732] [cursor=pointer]
+                  - button "Slyblade" [ref=f1e733] [cursor=pointer]
+                  - button "Echo" [ref=f1e734] [cursor=pointer]
+                  - button "Hollowlock" [ref=f1e735] [cursor=pointer]
+                - generic [ref=f1e736]:
+                  - generic [ref=f1e737]: 5/5
+                  - button "Save" [ref=f1e738] [cursor=pointer]
+  - tooltip "Club Manage the squad, weekly development, locker room, academy, and staff delegation. Name a default five, check condition and confidence, then set team and player training plans.":
+    - heading "Club" [level=4]
+    - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+    - generic: Name a default five, check condition and confidence, then set team and player training plans.
+```

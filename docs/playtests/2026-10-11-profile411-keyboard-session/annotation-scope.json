@@ -1,0 +1,42 @@
+{
+  "changes": {
+    "1": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "2": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "3": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "4": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "5": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "6": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "7": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "8": [
+      "analytics_status",
+      "analytics_evidence"
+    ],
+    "9": [
+      "analytics_status",
+      "analytics_evidence"
+    ]
+  },
+  "before_sha256": "39fdfd61b27cbb3c5dc263aa0a3d5259af622ead3634dd6f9680abd80e177639",
+  "after_sha256": "5e0b32df637a7bc4753d89e6d15e4ccbbc65420a6b8f2daa585c5040e7ac10c4"
+}

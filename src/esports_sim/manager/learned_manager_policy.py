@@ -191,6 +191,8 @@ _CATEGORICAL_SPECS: dict[str, tuple[str, str]] = {
     "sponsor_structure": ("sponsor_respond", "structure"),
     "dev_focus": ("set_dev_plan", "dev_focus"),
     "team_talk": ("set_game_plan", "team_talk"),
+    "assignment_role": ("assignment", "role"),
+    "assignment_playstyle": ("assignment", "playstyle"),
 }
 
 
@@ -659,10 +661,19 @@ class LearnedManagerPolicy:
         elif kind == "assignment":
             pid = self._candidate(obs, kind) or legal["player_ids"][0]
             row = next((r for r in obs.get("roster", []) if r["id"] == pid), None)
+            # Old checkpoints have no assignment heads; choose a legal change
+            # deterministically. New demonstrations train both parameter heads.
+            role_default = next(
+                (role for role in legal["roles"] if not row or role != row["role"]),
+                legal["roles"][0],
+            )
+            style_default = row["playstyle"] if row else legal["playstyles"][0]
+            role = self._predict_head("assignment_role", x, role_default)
+            style = self._predict_head("assignment_playstyle", x, style_default)
             params = {
                 "player_id": pid,
-                "role": row["role"] if row else legal["roles"][0],
-                "playstyle": row["playstyle"] if row else legal["playstyles"][0],
+                "role": role if role in legal["roles"] else role_default,
+                "playstyle": style if style in legal["playstyles"] else style_default,
             }
         elif kind == "igl":
             params = {"player_id": self._candidate(obs, kind) or legal["player_ids"][0]}

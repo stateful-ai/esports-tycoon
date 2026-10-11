@@ -1,0 +1,11 @@
+# PR 369 publication integration qualification - 2026-10-11
+
+This integration merges published main `8e31dec231029568cc0f5762fa36b3b59d2cb6a2` (PR 394, merged 2026-10-11 11:28:21 UTC) into PR 369's previously reviewed head `d67f5a24a17128921523d42b05cff0a822b1aa54`. The old feature base was `300462da2ae10a55c6106918c9de209638f85406`.
+
+All 22 actual add/add conflicts are CRLF/LF differences only. Main's published Git bytes are retained at every conflicting path; no duplicate historical artifact copies were added. The JSON proof records each old/main raw SHA256 and Git blob, plus normalized content equality. All 2002 existing published main playtest paths retain exact Git blob IDs. The canonical CSV remains 994 rows, 21 fields, raw SHA256 `21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631`. The three historical overlay integration rows match all 21 fields in canonical history; the old 765-row canonical history also remains an exact field-by-field prefix.
+
+The six feature paths have exactly the original added/deleted lines relative to the old base: app.js +20/-1; profile.js +25/-1; usage.js +5/-1; usage_telemetry.py +7/-1; overlay_usage_frontend_check.cjs +84/-0; test_usage_telemetry.py +56/-0. Consequently published main source changes, including PRs 366, 371, 372 and 385, are retained. The JSON proof contains feature raw SHA256/blob comparisons and the integrated src/tests/data/scripts index manifest with worktree SHA256 values.
+
+Existing `integration-pr369/` qualifications and archived source remain immutable historical evidence. The original overlay acceptance, native gates, and successful remote CI at `d67f5a24` apply only to those dated source revisions. This integration executed no local tests, Node checks, simulations, gates, analytics commands or browser acceptance, at the user's explicit instruction. The live server at port 8421 was untouched. Only Git/file/CSV receipt audits were performed. Fresh independent root review and exact-new-head remote CI are required; neither is claimed complete here.
+
+See `source-and-history-qualification.json` for path inventory and comparison evidence. The final merge commit has old PR head as first parent and published main as second parent. The PR remains open for root review and merge.

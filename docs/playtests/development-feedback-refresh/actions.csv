@@ -1,0 +1,152 @@
+session_id,step,started_at_utc,finished_at_utc,commit,working_tree_dirty,game_version,model,effort,surface,world_code,seed,game_time,intent,action,expected_outcome,actual_outcome,result,evidence,analytics_status,analytics_evidence
+2026-10-08-development-feedback-refresh,1,2026-10-08T15:38:21.972+00:00,2026-10-08T15:39:14.071+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Harness observed App.mp before campaign creation finished; no outcome inferred. Retry with explicit membership wait.,blocked,,unverified,
+2026-10-08-development-feedback-refresh,5,2026-10-08T15:39:18.205+00:00,2026-10-08T15:41:01.809+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,UI create click did not establish membership within 30 seconds. No world or mutation inferred.,blocked,,unverified,
+2026-10-08-development-feedback-refresh,9,2026-10-08T15:41:02.533+00:00,2026-10-08T15:41:50.077+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,"Seed input blur caused a second preview render during the pick click, replacing its button; no POST /api/new observed. Retry after committing seed input.",blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,13,2026-10-08T15:41:50.768+00:00,2026-10-08T15:41:53.037+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,ZMGP6,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,14,2026-10-08T15:41:53.039+00:00,2026-10-08T15:42:43.089+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,ZMGP6,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,Automatic first-week handbook intercepted Club click; no navigation completed. Retry after closing handbook.,blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,17,2026-10-08T15:42:43.762+00:00,2026-10-08T15:42:45.863+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,KMFA7,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,18,2026-10-08T15:42:45.865+00:00,2026-10-08T15:43:00.302+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,KMFA7,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Development row opened, but harness console failed encoding its Unicode text; assertions not reached. Retry ASCII-safe console output.",blocked,,not_instrumented,
+2026-10-08-development-feedback-refresh,21,2026-10-08T15:43:00.942+00:00,2026-10-08T15:43:03.058+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,6N3FZ,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,22,2026-10-08T15:43:03.060+00:00,2026-10-08T15:43:22.372+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,Vortex row visibly shows TOO EXHAUSTED TO TRAIN and Game Sense/Utility Usage/Positioning; harness assertion was case sensitive against CSS uppercase text. Retry case-insensitive.,met,,not_instrumented,
+2026-10-08-development-feedback-refresh,25,2026-10-08T15:43:22.944+00:00,2026-10-08T15:43:25.029+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,26,2026-10-08T15:43:25.031+00:00,2026-10-08T15:43:25.539+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+⚠ TOO EXHAUSTED TO TRAIN
+Game Sense, Utility Usage, Positioning
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—",met,,not_instrumented,Read-only navigation
+2026-10-08-development-feedback-refresh,27,2026-10-08T15:43:25.540+00:00,2026-10-08T15:43:25.685+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Recover exhausted Vortex,Change Vortex individual focus to rest,Same visible row immediately shows Recovery without exhausted warning; control focus survives,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—; rest retained and focus preserved",met,,unverified,"WZVWL browser acceptance passed; explicit Save used wrong endpoint, persisted save does not contain both decisions. Later NHVUT run saved and reconciled."
+2026-10-08-development-feedback-refresh,28,2026-10-08T15:43:25.686+00:00,2026-10-08T15:43:25.817+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,WZVWL,2038,S1 W1,Verify intensity refresh retains rest,Change Vortex intensity to light,Same row remains Recovery and light selection is persisted,Recovery remained visible; live roster readback rest/light; no browser page errors,met,,unverified,"WZVWL browser acceptance passed; explicit Save used wrong endpoint, persisted save does not contain both decisions. Later NHVUT run saved and reconciled."
+2026-10-08-development-feedback-refresh,29,2026-10-08T15:43:46.429+00:00,2026-10-08T15:43:48.539+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Create separate acceptance world,Open isolated server and create Team Nexus seed2038,Sandbox Team Nexus opens at S1W1,Sandbox opened,met,,not_instrumented,Creation is outside campaign action_log
+2026-10-08-development-feedback-refresh,30,2026-10-08T15:43:48.540+00:00,2026-10-08T15:43:49.018+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,See individual plan feedback,Open Club Development,Vortex row reports exhausted auto plan,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+⚠ TOO EXHAUSTED TO TRAIN
+Game Sense, Utility Usage, Positioning
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—",met,,not_instrumented,Read-only navigation
+2026-10-08-development-feedback-refresh,31,2026-10-08T15:43:49.019+00:00,2026-10-08T15:43:49.150+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Recover exhausted Vortex,Change Vortex individual focus to rest,Same visible row immediately shows Recovery without exhausted warning; control focus survives,"Vortex	22	74.5	★★★	
+	
+	
+auto
+mechanical
+tactical
+mental
+team
+language
+rest
+Recovery
+	
+choose language
+AR
+DE
+EN
+ES
+FR
+ID
+JA
+KO
+MS
+PT
+RU
+TH
+TL
+TR
+VI
+ZH
+	
+light
+normal
+intense
+	—; rest retained and focus preserved",met,,recorded,evidence.json: NHVUT action_log index 0; usage matched dev_plan attempt/result success200
+2026-10-08-development-feedback-refresh,32,2026-10-08T15:43:49.152+00:00,2026-10-08T15:43:49.263+00:00,3ac34df3a476543d9e79dc4dc03bb381c04e397d,true,0.0.1,gpt-6.1-sol,medium,browser,NHVUT,2038,S1 W1,Verify intensity refresh retains rest,Change Vortex intensity to light,Same row remains Recovery and light selection is persisted,Recovery remained visible; live roster readback rest/light; no browser page errors,met,,recorded,evidence.json: NHVUT action_log index 1; usage matched dev_plan attempt/result success200

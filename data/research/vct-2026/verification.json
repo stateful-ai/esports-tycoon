@@ -1,0 +1,45 @@
+{
+  "verified_at_utc": "2026-10-06T21:20:40+00:00",
+  "repository_base_commit": "0aabb0d4bfc1366192b23623925ef19ad5784b0d",
+  "python": "3.12.14",
+  "full_suite": {
+    "passed": 1111,
+    "failed": 0,
+    "duration_seconds": 5627.87,
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -vv -n 4",
+    "note": "All game tests and research tests collected at run start. Latest research parser/validator changes also covered by the focused run and cached-page/data checks."
+  },
+  "focused_research_tests": {
+    "passed": 13,
+    "failed": 0,
+    "command": "python -m pytest -q -n0 tests/test_vlr_research.py"
+  },
+  "data_integrity": {
+    "errors": 0,
+    "source_warnings": 826,
+    "provenance_rows_checked": 20981
+  },
+  "browser_audit": {
+    "pages": 10,
+    "field_checks": 662,
+    "passed": 662,
+    "failed": 0
+  },
+  "offline_reproduction": "All nine collected CSVs match; all 623 cached matches reproduce 1567 map outcomes and 15157 player-map rows. See reproduction.json.",
+  "balance": {
+    "command": "python scripts/balance_report.py 300",
+    "passed": true,
+    "attack_win_pct": {
+      "ascent": 55.6,
+      "bind": 49.5,
+      "haven": 51.9,
+      "lotus": 56.0,
+      "split": 50.1
+    }
+  },
+  "pacing": {
+    "command": "python scripts/pacing_report.py",
+    "passed": true
+  },
+  "runtime_roster_edits": false
+}

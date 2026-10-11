@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-10-08T21:29:23.820622+00:00",
+  "verified_processes": [
+    {
+      "pid": 40888,
+      "name": "python.exe",
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\runs\\playtests\\2026-10-08-default-lineup-count",
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8468",
+        "--no-browser"
+      ],
+      "created_at": 1791494401.710872
+    },
+    {
+      "pid": 8372,
+      "name": "conhost.exe",
+      "cwd": "C:\\WINDOWS",
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ],
+      "created_at": 1791494401.720246
+    },
+    {
+      "pid": 22820,
+      "name": "python3.13.exe",
+      "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\runs\\playtests\\2026-10-08-default-lineup-count",
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8468",
+        "--no-browser"
+      ],
+      "created_at": 1791494401.7552469
+    }
+  ],
+  "port8468_listeners": 0,
+  "note": "Root stopped only verified completed acceptance server after agent yielded; detached fullpytest untouched. Standalone browser closure not claimed."
+}

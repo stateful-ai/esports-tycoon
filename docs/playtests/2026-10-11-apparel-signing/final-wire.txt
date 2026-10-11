@@ -1,0 +1,6 @@
+### Result
+"[{\"url\":\"/api/actions/sponsor\",\"method\":\"POST\",\"body\":\"{\\\"slot\\\":\\\"apparel\\\",\\\"accept\\\":true,\\\"brand\\\":\\\"GG Threads\\\",\\\"structure\\\":\\\"steady\\\"}\",\"status\":200,\"response\":\"{\\\"ok\\\":true,\\\"message\\\":\\\"signed with GG Threads (apparel, steady)\\\"}\"},{\"url\":\"/api/actions/save\",\"method\":\"POST\",\"body\":\"{}\",\"status\":200,\"response\":\"{\\\"ok\\\":true,\\\"message\\\":\\\"World saved.\\\"}\"}]"
+### Ran Playwright code
+```js
+await page.evaluate('() => JSON.stringify(window.__playWire)');
+```

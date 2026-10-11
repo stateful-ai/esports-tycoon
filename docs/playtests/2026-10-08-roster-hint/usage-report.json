@@ -1,0 +1,58 @@
+{
+  "attempts": 8,
+  "events": {
+    "attempt:/api/actions/advance": 2,
+    "attempt:/api/actions/release": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 3,
+    "attempt:/api/new": 1,
+    "result:/api/actions/advance": 2,
+    "result:/api/actions/release": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 3,
+    "result:/api/new": 1,
+    "session_start:": 8,
+    "view:club/squad": 2,
+    "view:dashboard": 5,
+    "view:lobby": 8,
+    "view:market/players": 2,
+    "visible_time:club/squad": 1,
+    "visible_time:dashboard": 6,
+    "visible_time:lobby": 9,
+    "visible_time:market/players": 1
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "30992f0817b41747b7d397f01c00f089": 26835,
+    "62e161dfb82f41574dd431324415547b": 0,
+    "82eb566a651f86b0a99234054f810480": 14992,
+    "9a388729f324ce89c92a8462c8b15ade": 0,
+    "9b34e02d36235c0fbad70f23dda8bcf2": 1183,
+    "ced5e1d7f9575d6dd700b1f81640a70a": 28906,
+    "eae670bdb7350bcf9fc9b85ecf95cc37": 0,
+    "edb4c6017cb1796ef1722ecd48cb445b": 347
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/release:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 3,
+    "/api/new:success": 1
+  },
+  "paired_results": 8,
+  "retention_bytes": 8388608,
+  "sessions": 8,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/squad": 12074,
+    "dashboard": 32751,
+    "lobby": 46308,
+    "market/players": 1998
+  },
+  "world_events": {
+    "95WTN": 47,
+    "lobby": 11
+  }
+}
