@@ -7,8 +7,8 @@
   },
   {
     "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/actions.csv",
-    "sha256": "9d56c1e34145086fae68e767c8ac1d769e686dc8b69567ca4223d31b55e8541f",
-    "git_blob_sha256": "9d56c1e34145086fae68e767c8ac1d769e686dc8b69567ca4223d31b55e8541f",
+    "sha256": "8584324df23bb08be83b08b336043d4a8116b606ee6173324e7919d74e605d19",
+    "git_blob_sha256": "8584324df23bb08be83b08b336043d4a8116b606ee6173324e7919d74e605d19",
     "byte_identical": true
   },
   {
@@ -33,6 +33,12 @@
     "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/finances-after.json",
     "sha256": "346c28925a93beaabf2d939ef6ae59022bf856328c7c00f383ca4f0c2b34b5ce",
     "git_blob_sha256": "346c28925a93beaabf2d939ef6ae59022bf856328c7c00f383ca4f0c2b34b5ce",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/flywheel-after.json",
+    "sha256": "9c45a9c0b33094456fe2597d1f449590852d45755fb525525f5d55c3dc25b83e",
+    "git_blob_sha256": "9c45a9c0b33094456fe2597d1f449590852d45755fb525525f5d55c3dc25b83e",
     "byte_identical": true
   },
   {
@@ -67,8 +73,14 @@
   },
   {
     "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/report.md",
-    "sha256": "9d6b4ec37abbcb34519f9ec3112e01410879e2de5a932a8a9e8419932c5b1edb",
-    "git_blob_sha256": "9d6b4ec37abbcb34519f9ec3112e01410879e2de5a932a8a9e8419932c5b1edb",
+    "sha256": "8183da3626e67996423f2c4099180148b68425e9a18bf57f506e749ee180cd30",
+    "git_blob_sha256": "8183da3626e67996423f2c4099180148b68425e9a18bf57f506e749ee180cd30",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/source-qualification.json",
+    "sha256": "02c07570f2f04a706f4b3dbe40a47461c2353fb024037b1395c3f288d9f3d030",
+    "git_blob_sha256": "02c07570f2f04a706f4b3dbe40a47461c2353fb024037b1395c3f288d9f3d030",
     "byte_identical": true
   },
   {

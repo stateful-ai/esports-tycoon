@@ -63,5 +63,17 @@ for an omitted active deal; (2) explicit separate Stream sponsor and player
 Streaming rows make both revenue sources understandable. Pain point: the
 lobby Join UI labels an existing human seat taken even after copied session
 ownership is cleared, so fixture identity restoration was necessary.
-Flywheel tools were unavailable in the exposed tool inventory; these findings
-are retained here for later ingestion instead of claiming a remote recording.
+Flywheel tools were unavailable in the exposed tool inventory before play;
+no own pre-play flywheel inheritance occurred. The local Agora recorder fallback
+was found after play, and these two learnings and one pain point were appended
+and independently read back; see flywheel-after.json. An initial dataclass
+JSON serialization failure occurred after recording; entries were read back
+without recording duplicates. Failed setup CLI/HTTP output is narrative evidence
+only where raw receipts were not retained.
+
+No pre-play source freeze was captured. source-qualification.json provides
+static committed source hashes for root's independent current-head review;
+it does not retroactively establish runtime import/source identity. Both isolated
+browser tabs and the CLI browser were closed, and the isolated8531 server's
+verified child16116 and wrapper2504 were stopped; a final listener query found
+no listener. Disposable bootstrap captures remain under ignored runs paths.
