@@ -1,0 +1,9 @@
+{
+  "pr": 381,
+  "previous_head": "2b7ad3e17aec7789933290e8a1dbf1e6e5c483af",
+  "previous_tree": "5ec7d5d248e37e30408a6ff927afae570295ed8e",
+  "merged_exact_pr379": "44231268ba1bf7dbab11f1c5e3cf29fc2258cd6f",
+  "merge_conflicts": 0,
+  "preserved": "PR379 secured berth with final league record wording, qualification helper and elimination badges; PR381 fixture map records and locked veto assertions; all prior raw aliases and attributes",
+  "validation": "Static diff review only. No local tests, validators, hooks or application runtime executed. Exact resulting head requires fresh remote CI."
+}

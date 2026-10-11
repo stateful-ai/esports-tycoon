@@ -29,6 +29,7 @@ from pydantic import BaseModel
 
 from esports_sim.web.usage_telemetry import install_usage_routes
 from esports_sim.labels import humanize_identifier
+from esports_sim.manager.qualification import PLAYOFF_CUT, qualification_statuses
 from esports_sim.manager import (
     academy,
     analytics,
@@ -2098,8 +2099,8 @@ def _roster_movers(gs: GameState, tid: str, n: int = 4) -> list[dict]:
 def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
     """The acting team's upcoming fixture enriched with the pre-match reads:
     this-season head-to-head (attached only when they've met — silence beats
-    a "0-0" line), the grounded prose preview, and the map pool + suggested
-    veto (which hides itself until both sides have prior maps). Shared by
+    a "0-0" line), the grounded prose preview, and historical map records
+    beside the scheduled maps and locked veto. Shared by
     GET /api/state and GET /api/matchday so the two surfaces can never
     drift. Returns (view, opponent_id); (None, None) without a fixture."""
     fixture = gs.team_fixture(gs.acting_team_id)
@@ -2123,7 +2124,7 @@ def _next_fixture_board(gs: GameState) -> tuple[dict | None, str | None]:
     view["preview"] = narrative.match_preview(
         gs, fixture, gs.acting_team_id, named_subject=True,
     )
-    view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id)
+    view["map_pool"] = _map_pool_board(gs, gs.acting_team_id, opp_id, fixture=fixture)
     # Who is across the aisle: the opponent's named manager (rival persona
     # or human seat) — name + one-word identity, both public facts.
     view["opp_manager"] = rival_managers_mod.spotlight_view(gs, opp_id)
@@ -3946,37 +3947,14 @@ def _team_recent_form(gs: GameState, tid: str, n: int = 5) -> list[dict]:
     return out
 
 
-PLAYOFF_CUT = 4  # regional playoffs take the top four of the regular season
-
-
 def _eliminated_teams(gs: GameState, region: str) -> set[str]:
     """Tier-1 teams in `region` that can no longer reach the top-4 playoff
     cut, however every remaining regular-season game falls. Correct
     regardless of tiebreakers — it uses only strict win comparisons: a team
     X is out when at least four rivals already have more wins than X could
     reach by winning out. Empty outside the regular season."""
-    if gs.phase != "regular":
-        return set()
-    tids = [
-        t.id for t in gs.teams.values()
-        if str(t.region) == region and t.tier == 1
-    ]
-    wins = {tid: (gs.standings[tid].wins if tid in gs.standings else 0) for tid in tids}
-    remaining = {tid: 0 for tid in tids}
-    for f in gs.fixtures:
-        if f.tier != 1 or f.stage != "regular" or f.played:
-            continue
-        if f.team_a in remaining:
-            remaining[f.team_a] += 1
-        if f.team_b in remaining:
-            remaining[f.team_b] += 1
-    out: set[str] = set()
-    for x in tids:
-        x_ceiling = wins[x] + remaining[x]
-        certainly_ahead = sum(1 for y in tids if y != x and wins[y] > x_ceiling)
-        if certainly_ahead >= PLAYOFF_CUT:
-            out.add(x)
-    return out
+    return {tid for tid, status in qualification_statuses(gs, region).items()
+            if status == "eliminated"}
 
 
 def _team_map_record(gs: GameState, tid: str) -> dict[str, list[int]]:
@@ -3993,10 +3971,13 @@ def _team_map_record(gs: GameState, tid: str) -> dict[str, list[int]]:
     return agg
 
 
-def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
-    """A team's per-map win rates (the map pool) and — when an opponent is
-    given — a suggested veto: ban where they hold the biggest edge, pick where
-    you do. Pure read of persisted results."""
+def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None, *, fixture=None) -> dict:
+    """Historical map records and the current fixture's fixed map context.
+
+    Without a fixture, the legacy veto field describes relative historical
+    strengths only. A fixture replaces it with scheduled-map records and the
+    stored veto; this serializer never offers another veto or mutates it.
+    """
     mine = _team_map_record(gs, tid)
 
     def _name(mid: str) -> str:
@@ -4017,8 +3998,28 @@ def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
     ]
     maps.sort(key=lambda m: (-(m["win_rate"] if m["win_rate"] is not None else -1), m["map"]))
 
+    # Scheduled maps are already fixed by the campaign. Historical relative
+    # strengths must never be presented as another actionable veto for them.
+    current = None
+    if fixture is not None and tid in (fixture.team_a, fixture.team_b):
+        opp_id = fixture.team_b if tid == fixture.team_a else fixture.team_a
+        opp = _team_map_record(gs, opp_id)
+
+        def record(agg, mid):
+            played, wins = agg.get(mid, (0, 0))
+            return {"played": played, "wins": wins,
+                    "win_rate": round(100 * wins / played) if played else None}
+
+        current = {
+            "fixture_id": fixture.id, "veto_locked": bool(fixture.veto),
+            "veto": list(fixture.veto), "opponent": gs.teams[opp_id].name,
+            "maps": [{"map_id": mid, "map": _name(mid),
+                      "ours": record(mine, mid), "theirs": record(opp, mid)}
+                     for mid in fixture.maps],
+        }
+
     veto = None
-    if opp_id and opp_id in gs.teams:
+    if current is None and opp_id and opp_id in gs.teams:
         opp = _team_map_record(gs, opp_id)
         # Shared universe: maps either side has actually played (real signal).
         universe = sorted(set(mine) | set(opp))
@@ -4051,7 +4052,7 @@ def _map_pool_board(gs: GameState, tid: str, opp_id: str | None = None) -> dict:
         }
     return {
         "team_id": tid, "team_name": gs.teams[tid].name,
-        "maps": maps, "veto": veto,
+        "maps": maps, "veto": veto, "fixture": current,
     }
 
 
