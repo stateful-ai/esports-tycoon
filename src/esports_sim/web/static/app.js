@@ -3475,7 +3475,7 @@ function developmentReportCard(report) {
         <span class="chip tone-good">${report.grown} grown</span>
         <span class="chip tone-bad">${report.regressed} regressed</span>
         <span class="chip">${report.steady} steady</span>
-        ${report.first_observations ? `<span class="chip">${report.first_observations} first observations</span>` : ""}
+        ${report.first_observations ? `<span class="chip">${report.first_observations} first observation${report.first_observations === 1 ? "" : "s"}</span>` : ""}
       </div>
     </div>`;
 
