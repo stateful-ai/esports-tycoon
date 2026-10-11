@@ -2468,9 +2468,9 @@ async function dashboard(v) {
         if (yc.prep) {
           const bits = [];
           if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
-          if ((yc.prep.maps_played || []).length) bits.push(`available on ${yc.prep.maps_played.map(esc).join(", ")}`);
-          if ((yc.prep.maps_missed || []).length) bits.push(`unused on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
-          if (bits.length) yrow(`Map book: ${bits.join(" · ")}`);
+          if ((yc.prep.maps_played || []).length) bits.push(`stored book on ${yc.prep.maps_played.map(esc).join(", ")} (played)`);
+          if ((yc.prep.maps_missed || []).length) bits.push(`stored book on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
+          if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
           card.appendChild(el("span", "es-scout-lab muted", "Last match"));

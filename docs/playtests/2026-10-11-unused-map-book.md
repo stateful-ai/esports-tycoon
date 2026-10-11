@@ -6,7 +6,7 @@ with only the three-line Dashboard wording change. No fixture was replayed.
 
 The observed quarterfinal debrief had called historical Lotus knowledge
 "prepped Lotus (never played)" although the booked session resolved on Ascent.
-The corrected Dashboard reads **Map book: available on Ascent, Split · unused on
+The initial candidate Dashboard read **Map book: available on Ascent, Split · unused on
 Lotus (not played)**. Independently opening Match > Prep still showed
 **ascent retake playbook +2.1**, knowledge **+2.12**, stamina **-4**.
 
@@ -19,7 +19,9 @@ Saved-career readback remained byte-identical to the copy baseline: SHA256
 All 85 pre-existing accepted decisions and telemetry snapshots remained intact;
 zero new accepted decisions were expected or recorded. Read-only navigation and
 Save are outside accepted gameplay decision coverage: all three rows are marked
-`not_instrumented` for that stream, with zero missing expected decisions.
+`recorded` for the separate browser usage stream, with zero missing expected
+gameplay decisions. The original annotations conflated these streams; the
+published shard corrects only `analytics_status` and `analytics_evidence`.
 
 Usage was isolated by the fresh browser's session-start identifier, excluding
 the copied sidecar history. Retained evidence: one lobby view, one Dashboard
@@ -27,8 +29,11 @@ view, one strategy view, one Prep view, and one Save attempt/result pair.
 Visible-time events are visibility proxies. No gameplay request or fixture
 advance was made in this acceptance session. Session CSV and audit JSON are in
 the [exact three-row shard](2026-10-11-unused-map-book/actions.csv), supplied to
-root for sequential append; the canonical CSV was not edited here. Its SHA256
-is `79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27`.
+root for sequential append; the canonical CSV was not edited here. The original
+three-row CSV SHA256 is
+`79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27`;
+the [annotation receipt](2026-10-11-unused-map-book/annotation-receipt.json)
+verifies equality of all 19 other fields, including step 2's empty evidence.
 
 Durable original receipts are published alongside the shard:
 
@@ -40,7 +45,8 @@ Durable original receipts are published alongside the shard:
 - [Original audit](2026-10-11-unused-map-book/audit.json) and
   [complete local save comparison hashes](2026-10-11-unused-map-book/save-comparison.json).
   Full saves remain local; only comparison scope and hashes are published.
-- [Original own-session usage](2026-10-11-unused-map-book/usage.sanitized.jsonl):
+- [Original own-session usage](2026-10-11-unused-map-book/usage.sanitized.jsonl) and
+  [copied baseline usage](2026-10-11-unused-map-book/usage.baseline.sanitized.jsonl):
   session identifier redacted; other raw event fields retained. Seven final
   Prep visible-time slices include four after the original audit's three.
 - [Source-to-publication manifest](2026-10-11-unused-map-book/manifest.json):
@@ -52,7 +58,17 @@ actions were replayed for this publication. The original CSV timestamps,
 expectations, outcomes and fields remain unchanged. Historical acceptance used
 the dirty base recorded in the CSV; the initial published source head was
 `c0b6459e6d27eaf0b8e30a82bc312b8a5b657d61`, whose CI was queued at handoff.
-This evidence-only follow-up needs its own fresh CI result.
+Later review identified two wording errors in that initial candidate. The full
+preparation edge includes scouting, institutional knowledge and coaching. Also,
+`knowledge.prep_bonus` averages all scheduled fixture maps before the series;
+books for unplayed maps can still contribute to the shared preparation edge.
+The final wording preserves **Preparation:** and says **stored book on Ascent,
+Split (played) · stored book on Lotus (not played)**, making no causal claim
+about book use. Static source review confirmed this in `campaign._fixture_plans`,
+`preparation.prep_edge_breakdown`, and server `_your_calls`; no formula changed.
+The original low-tier fixture hides the numeric edge, so its original acceptance
+did not verify higher-tier visible numeric edge wording. The original receipts
+and observations are preserved as evidence of the earlier candidate.
 
 Flywheel inheritance used the eight most recent esports-playtest findings.
 After play, records 0182/0183 capture stored-book versus session attribution and
