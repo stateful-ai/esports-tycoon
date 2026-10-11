@@ -27,11 +27,12 @@ const app = fs.readFileSync('src/esports_sim/web/static/app.js', 'utf8');
 const code = app.slice(app.indexOf('let lobbyGeneration ='), app.indexOf('async function joinGame('));
 const tick = async () => { await Promise.resolve(); await Promise.resolve(); };
 function harness() {
-  const nodes = {}, pending = [], creations = [], interviews = [], timers = new Map();
+  const nodes = {}, pending = [], creations = [], interviews = [], interactions = [], timers = new Map();
   let timerId = 0;
   const $ = selector => nodes[selector] ||= new Node();
   const context = {
-    $, window: {}, App: {}, Math: {random: () => 6162 / 999999, floor: Math.floor},
+    $, window: {Usage: {view() {}, interaction: (...args) => interactions.push(args)}},
+    App: {}, Math: {random: () => 6162 / 999999, floor: Math.floor},
     Number, clearTimeout: id => timers.delete(id),
     setTimeout: fn => { timers.set(++timerId, fn); return timerId; },
     el: () => new Node(), refresh: async () => {}, toast: () => {},
@@ -50,13 +51,63 @@ function harness() {
     {id: 'pack', name: 'Pack', regions: ['Pacific'], teams_per_region: 1, teams: [{id: 'pack-team'}]},
   ]};
   context.setupLobby(lob);
-  return {context, $, pending, creations, interviews, lob,
+  return {context, $, pending, creations, interviews, interactions, timers, lob,
     input(value) { $('#ng-seed').value = value; $('#ng-seed').oninput(); },
     flush() { for (const [id, fn] of [...timers]) { timers.delete(id); fn(); } },
   };
 }
 
 (async () => {
+  // Input-driven preview refresh must carry coarse usage without waiting for change.
+  // Burst edits collapse at the existing preview debounce; no raw value is emitted.
+  const usage = harness();
+  assert.equal(usage.interactions.length, 0);
+  usage.$('#ng-modes').children[1].onclick();
+  usage.$('#ng-worlds').children[1].onclick();
+  assert.equal(usage.interactions.length, 0);
+  usage.input('2'); usage.input('20'); usage.input('2040');
+  assert.equal(usage.interactions.length, 0);
+  usage.flush();
+  assert.deepEqual(usage.interactions, [['lobby/seed_change']]);
+  usage.$('#ng-seed').onchange(); usage.$('#ng-seed').onblur(); usage.flush();
+  assert.equal(usage.interactions.length, 1);
+  usage.input('2040'); usage.flush();
+  assert.equal(usage.interactions.length, 1);
+  usage.input('temporary'); usage.input('2040'); usage.flush();
+  assert.equal(usage.interactions.length, 1);
+  for (const value of ['0', '', '2040']) {
+    usage.input(value); usage.flush();
+  }
+  assert.deepEqual(usage.interactions, Array.from({length: 4}, () => ['lobby/seed_change']));
+
+  const blur = harness(); blur.input('2040'); blur.$('#ng-seed').onblur();
+  assert.deepEqual(blur.interactions, [['lobby/seed_change']]);
+  blur.$('#ng-seed').onchange(); blur.flush();
+  assert.equal(blur.interactions.length, 1);
+  const changeUsage = harness(); changeUsage.$('#ng-seed').value = '2040';
+  changeUsage.$('#ng-seed').onchange(); changeUsage.$('#ng-seed').onblur();
+  assert.deepEqual(changeUsage.interactions, [['lobby/seed_change']]);
+
+  // Mode switches settle pending input once; switching modes alone is not an edit.
+  const interrupted = harness(); interrupted.input('2040');
+  interrupted.$('#mode-join').onclick(); interrupted.flush();
+  assert.deepEqual(interrupted.interactions, [['lobby/seed_change']]);
+  interrupted.$('#mode-solo').onclick();
+  assert.equal(interrupted.interactions.length, 1);
+
+  // A late callback from a previous lobby visit must neither render nor emit.
+  const staleUsage = harness(); staleUsage.input('2040');
+  const staleTimer = [...staleUsage.timers.values()][0];
+  const staleBlur = staleUsage.$('#ng-seed').onblur;
+  staleUsage.context.setupLobby(staleUsage.lob);
+  const pendingAfterRevisit = staleUsage.pending.length;
+  staleTimer(); staleBlur();
+  assert.equal(staleUsage.pending.length, pendingAfterRevisit);
+  assert.equal(staleUsage.interactions.length, 0);
+  staleUsage.input('0'); staleUsage.flush();
+  staleUsage.$('#ng-seed').onchange(); staleUsage.$('#ng-seed').onblur();
+  assert.deepEqual(staleUsage.interactions, [['lobby/seed_change']]);
+
   const h = harness();
   assert.match(h.pending[0].path, /seed=6163$/);
   h.pending[0].resolve({teams: [{id: 'old', balance: 227100}]}); await tick();
