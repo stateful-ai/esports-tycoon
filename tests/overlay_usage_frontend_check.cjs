@@ -81,7 +81,8 @@ async function take() {
     'handbook/open','handbook/close','handbook/section_first_week','handbook/section_screens','handbook/section_glossary',
     'inbox/item_open','inbox/item_close',
     ...['dashboard','inbox','club','tactics','facilities','season','market','stats','company'].map(tab => `inbox/shortcut_${tab}`),
-    'matchday/briefing_open','matchday/briefing_close'];
+    'matchday/briefing_open','matchday/briefing_close',
+    'stats/competition_top_flight','stats/competition_challengers'];
   for (const target of allowed) context.window.Usage.interaction(target);
   console.log(JSON.stringify(await take()));
 })().catch(e => {console.error(e);process.exitCode=1;});

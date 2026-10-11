@@ -7153,7 +7153,13 @@ async function stats(v) {
   const tierSeg = el("div", "seg");
   const mkTier = (label, tval) => {
     const b = el("button", "seg-btn" + (lgTier === tval ? " on" : ""), label);
-    b.onclick = () => { App.statsTier = tval; renderApp(); };
+    b.onclick = () => {
+      if ((App.statsTier ?? 1) === tval) return;
+      App.statsTier = tval;
+      window.Usage?.interaction(tval === 1
+        ? "stats/competition_top_flight" : "stats/competition_challengers");
+      renderApp();
+    };
     tierSeg.appendChild(b);
   };
   mkTier("Top flight", 1);

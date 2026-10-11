@@ -48,8 +48,9 @@ INBOX_INTERACTIONS = {"inbox/item_open", "inbox/item_close"} | {
     ("dashboard", "inbox", "club", "tactics", "facilities", "season", "market", "stats", "company")
 }
 MATCHDAY_INTERACTIONS = {"matchday/briefing_open", "matchday/briefing_close"}
+STATS_COMPETITION_INTERACTIONS = {"stats/competition_top_flight", "stats/competition_challengers"}
 INTERACTIONS = ({"lobby/seed_change", "week/full_report_open", "market/player_search"}
-                | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS | INBOX_INTERACTIONS | MATCHDAY_INTERACTIONS)
+                | PROFILE_INTERACTIONS | HANDBOOK_INTERACTIONS | INBOX_INTERACTIONS | MATCHDAY_INTERACTIONS | STATS_COMPETITION_INTERACTIONS)
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:
