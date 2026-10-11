@@ -2677,6 +2677,10 @@ def matchday() -> dict:
         }
 
 
+def _academy_move_window(gs: GameState, team_id: str) -> tuple[bool, str]:
+    return market.market_move_allowed(gs, team_id, emergency_ok=False)
+
+
 def _club_view(gs: GameState) -> dict:
     tid = gs.acting_team_id
     team = gs.teams[tid]
@@ -2716,7 +2720,7 @@ def _club_view(gs: GameState) -> dict:
         series_management.starting_five(gs, tid, series_fixture)
         if series_fixture else []
     )
-    academy_view = academy.academy_view(gs, tid)
+    academy_view = academy.academy_view(gs, tid, window_check=_academy_move_window)
     return {
         "market_window": market.market_window_status(gs),
         "academy": academy_view,
@@ -2779,9 +2783,7 @@ def academy_move(body: AcademyMoveBody) -> dict:
             gs.acting_team_id,
             body.player_id,
             body.direction,
-            window_check=lambda state, team_id: market.market_move_allowed(
-                state, team_id, emergency_ok=False
-            ),
+            window_check=_academy_move_window,
         )
         if not ok:
             raise HTTPException(422, msg)

@@ -1156,8 +1156,37 @@ async function clubOps(v, sub) {
   // Academy: the affiliate is a real tier-2 team with real results and minutes.
   const ac = el("div", "card ws-6");
   const a = d.academy;
+  const academyContext = `${App.mp?.code || "local"}:${a.parent_id}`;
   ac.innerHTML = `<h2>Academy <span class="pill">level ${a.level}</span></h2>` +
-    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}. Promotions and send-downs obey the market window.</p>`;
+    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}.</p>` +
+    `<p class="muted">${esc(a.movement_detail)}</p>`;
+  if (App.academyMoveError?.context === academyContext) {
+    const error = el("p", "alert");
+    error.setAttribute("role", "alert");
+    error.textContent = App.academyMoveError.message;
+    ac.appendChild(error);
+  }
+  const moveButton = (p, direction, label) => {
+    const availability = p[direction];
+    const b = el("button", "btn btn-sm", label);
+    b.disabled = !availability.allowed;
+    b.title = availability.allowed ? label : availability.reason;
+    b.onclick = async () => {
+      b.disabled = true;
+      try {
+        const r = await api("/api/actions/academy_move", { player_id: p.id, direction });
+        App.academyMoveError = null;
+        toast(r.message);
+      } catch (error) {
+        App.academyMoveError = {
+          context: academyContext,
+          message: `Academy move failed: ${error.message || "Request failed. Please try again."}`,
+        };
+      }
+      refresh();
+    };
+    return b;
+  };
   if (a.next_upgrade_cost) {
     const up = el("button", "btn btn-sm", `Upgrade · ${money(a.next_upgrade_cost)}`);
     up.onclick = async () => { const r = await api("/api/actions/academy_upgrade", {}); toast(r.message); refresh(); };
@@ -1167,22 +1196,20 @@ async function clubOps(v, sub) {
   for (const p of a.roster || []) {
     const row = el("div", "entity");
     row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
-    const b = el("button", "btn btn-sm", "Promote");
-    b.disabled = !p.owned;
-    b.title = p.owned ? "Promote to the first team" : "Another parent organization holds this pathway";
-    b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "promote" }); toast(r.message); refresh(); };
-    row.appendChild(b); academyRows.appendChild(row);
+    row.appendChild(moveButton(p, "promote", "Promote"));
+    academyRows.appendChild(row);
+    if (!p.promote.allowed) academyRows.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.promote.reason)}`));
   }
   ac.appendChild(academyRows);
-  const eligibleDown = (d.registration.players || []).filter((p) => p.age <= 23);
+  const eligibleDown = a.send_down_roster || [];
   if (eligibleDown.length) {
     ac.appendChild(el("p", "microlabel", "First team pathways"));
     for (const p of eligibleDown) {
       const row = el("div", "entity");
       row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))}</span>`;
-      const b = el("button", "btn btn-sm", "Send down");
-      b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "send_down" }); toast(r.message); refresh(); };
-      row.appendChild(b); ac.appendChild(row);
+      row.appendChild(moveButton(p, "send_down", "Send down"));
+      ac.appendChild(row);
+      if (!p.send_down.allowed) ac.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.send_down.reason)}`));
     }
   }
   ws.appendChild(ac);
