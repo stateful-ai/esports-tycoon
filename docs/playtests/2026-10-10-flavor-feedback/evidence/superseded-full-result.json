@@ -1,0 +1,18 @@
+{
+  "writer_pid": 31544,
+  "pytest_pid": 8612,
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010",
+  "started": "2026-10-10T20:46:59.647735+00:00",
+  "tested_parent": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "exit_code": 15,
+  "finished": "2026-10-10T20:50:29.552619+00:00",
+  "source_unchanged": true,
+  "log_sha256": "ca2e66206557b8879f1f89a11d414ea162843ced6430d3a2efdb805007b3ba01",
+  "freeze_sha256": "12c817edbfc1afa1bf312f87ca162c1015e19dc17b96735954b04e24c14cc1df"
+}

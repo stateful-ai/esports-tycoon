@@ -1,0 +1,49 @@
+{
+  "sessions": 3,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "interaction:handbook/close": 2,
+    "interaction:handbook/open": 2,
+    "interaction:handbook/section_first_week": 2,
+    "interaction:handbook/section_glossary": 1,
+    "interaction:handbook/section_screens": 1,
+    "interaction:profile/manager_close": 1,
+    "interaction:profile/manager_open": 1,
+    "interaction:profile/player_close": 6,
+    "interaction:profile/player_open": 6,
+    "interaction:profile/team_close": 1,
+    "interaction:profile/team_open": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:club/squad": 1,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "visible_time:club/squad": 23,
+    "visible_time:dashboard": 9,
+    "visible_time:lobby": 3
+  },
+  "visible_ms": {
+    "club/squad": 233114,
+    "dashboard": 81824,
+    "lobby": 28864
+  },
+  "outcomes": {
+    "/api/actions/save:success": 1
+  },
+  "attempts": 1,
+  "paired_results": 1,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "world_events": {
+    "26UHC": 66,
+    "lobby": 3
+  },
+  "observed_session_span_ms": {
+    "2b00dcbcedab996e449a9b7c01cd4248": 0,
+    "5501c77a939e1d1212c5614f8e1cdc8f": 300000,
+    "cabe5c6e5a48db446de4a3ec95df45a0": 0
+  },
+  "malformed_lines": 0,
+  "retention_bytes": 8388608
+}

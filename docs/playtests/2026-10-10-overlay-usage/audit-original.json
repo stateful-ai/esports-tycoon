@@ -1,0 +1,50 @@
+{
+  "base_commit": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 1,
+  "week": 9,
+  "session_ids": [
+    "5501c77a939e1d1212c5614f8e1cdc8f",
+    "cabe5c6e5a48db446de4a3ec95df45a0"
+  ],
+  "retained_world_events": 66,
+  "overlay_counts": {
+    "profile/player_open": 6,
+    "profile/player_close": 6,
+    "handbook/open": 2,
+    "handbook/section_first_week": 2,
+    "handbook/section_screens": 1,
+    "handbook/section_glossary": 1,
+    "handbook/close": 2,
+    "profile/team_open": 1,
+    "profile/team_close": 1,
+    "profile/manager_open": 1,
+    "profile/manager_close": 1
+  },
+  "action_count_before": 43,
+  "action_count_after": 43,
+  "action_log_unchanged": true,
+  "snap_count_before": 1,
+  "snap_count_after": 1,
+  "snapshots_unchanged": true,
+  "rng_keys": [],
+  "rng_unchanged": true,
+  "complete_save_unchanged": true,
+  "raw_save_bytes_unchanged": true,
+  "baseline_save_sha256": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "end_save_sha256": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "changed_save_keys": [],
+  "overlay_event_fields": [
+    "kind",
+    "received_at",
+    "schema_version",
+    "season",
+    "session_id",
+    "target",
+    "team",
+    "week",
+    "world"
+  ],
+  "save_usage_fields": []
+}

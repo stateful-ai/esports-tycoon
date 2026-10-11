@@ -1,0 +1,82 @@
+  skip campaign_207435115aea57a2.meta.json: 3 validation errors for GameState
+  skip campaign_f2977bf6e97d789a.meta.json: 3 validation errors for GameState
+  skip sessions.json: 4 validation errors for GameState
+telemetry report: 2 saves, 112 recorded actions
+
+action mix (count, per advanced week):
+  advance                22     1.00/wk
+  set_dev_plan           16     0.73/wk
+  flavor_choice          12     0.55/wk
+  set_lineup             12     0.55/wk
+  negotiate_open         10     0.45/wk
+  negotiate_offer        10     0.45/wk
+  set_game_plan           8     0.36/wk
+  release                 4     0.18/wk
+  set_preparation         4     0.18/wk
+  sponsor_respond         4     0.18/wk
+  mentor                  2     0.09/wk
+  set_scout_directive      2     0.09/wk
+  media_choice            2     0.09/wk
+  facility_upgrade        2     0.09/wk
+  sponsor_demand_respond      2     0.09/wk
+
+never used anywhere (ideation signal):
+  academy_move
+  academy_upgrade
+  accept_job
+  bid
+  buyout
+  clear_game_plan
+  commit_principle
+  culture_session
+  draft_begin
+  draft_interview
+  draft_pick
+  draft_prefs
+  hire_staff
+  negotiate_cancel
+  promise_respond
+  propose_package
+  rein_streaming
+  release_staff
+  renew
+  resolve_flavor
+  resolve_media
+  respond_offer
+  save_settings
+  scenario_start
+  series_directive
+  set_assignment
+  set_delegation
+  set_igl
+  set_leadership
+  set_scout
+  set_tactics
+  set_training
+  sign
+  sim_ahead
+  swap
+  talk
+  talk_chat
+  tournament_registration
+
+feature adoption (saves that used it / saves):
+  advance            2/2
+  facility_upgrade   2/2
+  flavor_choice      2/2
+  media_choice       2/2
+  mentor             2/2
+  negotiate_offer    2/2
+  negotiate_open     2/2
+  release            2/2
+  set_dev_plan       2/2
+  set_game_plan      2/2
+  set_lineup         2/2
+  set_preparation    2/2
+  set_scout_directive 2/2
+  sponsor_demand_respond 2/2
+  sponsor_respond    2/2
+
+game plans: 8 set; 2 carried dial overrides (25%)
+actions per week by phase: regular: 5.1
+sources: web 112
