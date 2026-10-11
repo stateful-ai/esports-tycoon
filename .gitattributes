@@ -3,3 +3,5 @@ data/research/war-history/map_context.csv -whitespace
 # Keep gap40 acceptance receipt hashes equal to the raw captured bytes.
 docs/playtests/2026-10-11-gap40-rollover/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-rollover/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-shared-ready/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-shared-ready/actions.csv -text -whitespace

@@ -1,0 +1,103 @@
+{
+  "tested_code_head": "4fee846e9a582ba5cb6c5e2fcf91518d9bda21df",
+  "historical_acceptance": "../2026-10-11-gap40-rollover remains unchanged as historical6f8a evidence",
+  "limits": "No credentials/bootstrap registry, launcher scripts or full save published. Internal module polling state was not exposed; before-poll ordering is source-qualified, while public ready state and visible label sequence are browser-observed. No local pytest or expensive gates.",
+  "receipts": {
+    "actions.csv": {
+      "bytes": 4145,
+      "sha256": "338ef7cca11a79b268637688315038d2e60c14d524681d4fdaf42f08ca6d0e33"
+    },
+    "evidence/01-offseason.png": {
+      "bytes": 285323,
+      "sha256": "78648f447b913fd356f2a5de8fbfb8b505df2884864530d601691e91769571aa"
+    },
+    "evidence/01-state.json": {
+      "bytes": 15093,
+      "sha256": "2b782b3000a378f29807248825c4a4bde1639484a5c842f13763ae151af7748b"
+    },
+    "evidence/02-join.json": {
+      "bytes": 97,
+      "sha256": "0113a24efbf5b7f9a780103b3a557d4f86628ddb8bbea419c8ab771217d7a5a2"
+    },
+    "evidence/02-public-choices.json": {
+      "bytes": 37065,
+      "sha256": "0baa5d58c8bfb8eef1371d8b07268a49664b5511553a90132b2552f02c2d8733"
+    },
+    "evidence/02-readback.json": {
+      "bytes": 15217,
+      "sha256": "9bd13a93a12260b34ed4836b19295755e6a292e5f34cfef20bc7183f1147a890"
+    },
+    "evidence/04-label-observations.json": {
+      "bytes": 288,
+      "sha256": "588f12f15a8dca217418e835265c6299a20bdf5b57894c976e99870e3da508a4"
+    },
+    "evidence/04-ready-before.json": {
+      "bytes": 15241,
+      "sha256": "d2f6938d8c567859d7f30fb5021175a87968fff8561440321fdf2fa0a8a18142"
+    },
+    "evidence/04-ready-readback.json": {
+      "bytes": 15241,
+      "sha256": "d2f6938d8c567859d7f30fb5021175a87968fff8561440321fdf2fa0a8a18142"
+    },
+    "evidence/04-ready-response.json": {
+      "bytes": 111,
+      "sha256": "a8d5e99943e302bb24e57ede9f263770ca3c9e7fd01d8f48b361274220181980"
+    },
+    "evidence/04-waiting.png": {
+      "bytes": 292403,
+      "sha256": "3508a9ef3c26bdbc23bffb6070be76d8edfd159b34e89fde5e7063334b47ffa8"
+    },
+    "evidence/05-readback.json": {
+      "bytes": 13798,
+      "sha256": "8cc9d8db8b4a696cf5d5397162e279a6984942d493609f3b50f6cbb42053b97f"
+    },
+    "evidence/05-regular.png": {
+      "bytes": 262063,
+      "sha256": "328f61473cc59f439a89c4dd1345c12e953d4d7e3642e49fcc75c4468304f5dc"
+    },
+    "evidence/05-response.json": {
+      "bytes": 6540,
+      "sha256": "3258c579daa2abb058250a5520e93b5abfe5903d36fcb688e7dab8d691493f02"
+    },
+    "evidence/06-save.json": {
+      "bytes": 48,
+      "sha256": "4901a3e982eb8be471408125dcd65f76fe1d6e70bcc5df1bfc138666ac430668"
+    },
+    "evidence/audit.json": {
+      "bytes": 13483,
+      "sha256": "fcc8fea9144dc675569f1adce2f4450051930d010cd8923b016f2281e46b9dc3"
+    },
+    "evidence/flywheel-after.json": {
+      "bytes": 2247,
+      "sha256": "10370f4315f89671e5ff795f64f8598775f41aecd5b679aac61d5fcae0e6f2b9"
+    },
+    "evidence/flywheel-before.json": {
+      "bytes": 3775,
+      "sha256": "45ea4ada19259578307cb3419c446e02fdb73cf199d047d7f91771b0507a956a"
+    },
+    "evidence/freeze-after.json": {
+      "bytes": 236491,
+      "sha256": "dd9bd12671868cbd257710770a5985a76095892d1c4859815fcfa0e33e81bd93"
+    },
+    "evidence/freeze-before.json": {
+      "bytes": 236491,
+      "sha256": "dd9bd12671868cbd257710770a5985a76095892d1c4859815fcfa0e33e81bd93"
+    },
+    "evidence/indexed-decisions.json": {
+      "bytes": 571,
+      "sha256": "0edeb5ee3905e7e02589891d63b9d02a6b09e52627946620061152d0911c55ce"
+    },
+    "evidence/tested-git-blobs.json": {
+      "bytes": 303431,
+      "sha256": "8bae5c0b5d5536d5b2ee88913c305357be4498850d8a01e44e51869699e63aee"
+    },
+    "evidence/usage-summary.json": {
+      "bytes": 1868,
+      "sha256": "de856268104af801b9aaf0c06d4bbc015c4d901806f7262dd15a32792a1cb35d"
+    },
+    "evidence/usage-world.jsonl": {
+      "bytes": 8793,
+      "sha256": "e99488c2636bab2ad12fb1432f71489f2fe6f9ffafa62aaf357c6ac705291c0a"
+    }
+  }
+}
