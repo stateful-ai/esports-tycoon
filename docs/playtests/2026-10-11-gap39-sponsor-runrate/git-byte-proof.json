@@ -1,0 +1,92 @@
+[
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/.gitattributes",
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "git_blob_sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/actions.csv",
+    "sha256": "b24c010ade73679feae89de73f98822d36c61c62fde3e0e8141aa10bf5dcf186",
+    "git_blob_sha256": "b24c010ade73679feae89de73f98822d36c61c62fde3e0e8141aa10bf5dcf186",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/audit.json",
+    "sha256": "045eca4524762fc9459ae98dc3885b086799581b53559c0c46d9a354000e2917",
+    "git_blob_sha256": "b79123008ab446eb9705c604241ce6201ec2074029d1b3fbfe1029b3a7ded646",
+    "byte_identical": false
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/company-dom.yml",
+    "sha256": "2c8f681a28163429672f629e9b42cae484de3641070cea06cddc73dc022656e3",
+    "git_blob_sha256": "2c8f681a28163429672f629e9b42cae484de3641070cea06cddc73dc022656e3",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/company.png",
+    "sha256": "0604446d13b92098d65dd0362e14ac5794682c4f09713338b22dc586199730f9",
+    "git_blob_sha256": "0604446d13b92098d65dd0362e14ac5794682c4f09713338b22dc586199730f9",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/finances-after.json",
+    "sha256": "346c28925a93beaabf2d939ef6ae59022bf856328c7c00f383ca4f0c2b34b5ce",
+    "git_blob_sha256": "34f85886005ff7ce31da2f0e7adffb9cda709c185b89c40795d59da10d6b1fb1",
+    "byte_identical": false
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/original-03-steady-readback.txt",
+    "sha256": "915f03d59e19145cdc9bd46635889fb6d807c53de58ffc4b440ce4b080d3df57",
+    "git_blob_sha256": "915f03d59e19145cdc9bd46635889fb6d807c53de58ffc4b440ce4b080d3df57",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/original-03-steady-response.txt",
+    "sha256": "58a1a6047c4503af2f46d4e0fd068925a89f3964536e34799339788f810ed713",
+    "git_blob_sha256": "58a1a6047c4503af2f46d4e0fd068925a89f3964536e34799339788f810ed713",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/original-04-ghost-readback.txt",
+    "sha256": "a370cbb8c174a40e94e7a9809dbfb93130b36a33463c075c597bf53441f28153",
+    "git_blob_sha256": "a370cbb8c174a40e94e7a9809dbfb93130b36a33463c075c597bf53441f28153",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/original-05-rollover-readback.txt",
+    "sha256": "9a7005b4c206410ffd058e974fd8d8a8910a132fe86e43a3328a67037b8f3d6f",
+    "git_blob_sha256": "9a7005b4c206410ffd058e974fd8d8a8910a132fe86e43a3328a67037b8f3d6f",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/original-evidence-hashes.json",
+    "sha256": "66d2f8d40a9a21959bc25e6b0fe8451b4ca30084931b08f5188f69fd94558dc3",
+    "git_blob_sha256": "635b0ddcc1508c36997d1ab9a0dde3c7e0b89f3680abfdbc33f0d2b0d9bdc404",
+    "byte_identical": false
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/report.md",
+    "sha256": "9d6b4ec37abbcb34519f9ec3112e01410879e2de5a932a8a9e8419932c5b1edb",
+    "git_blob_sha256": "9d6b4ec37abbcb34519f9ec3112e01410879e2de5a932a8a9e8419932c5b1edb",
+    "byte_identical": true
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/telemetry-report.txt",
+    "sha256": "804ceb71dd2e3e67861f00dc35e18ce4cf06b087890662e884c8f518d42f9eb3",
+    "git_blob_sha256": "b16fae4de4c5c731f57fd3f206b83f4f6c34533f8a1632fea5fd27dc71940875",
+    "byte_identical": false
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/ui-usage-report.txt",
+    "sha256": "48c8c920070f0fa78ed469c992b67e95ad959265e97b8c23f79f45f47e317a62",
+    "git_blob_sha256": "e34eb4e9aac1e8be23578a1d2550dbcb99e132c611123862507af311ded6b731",
+    "byte_identical": false
+  },
+  {
+    "path": "docs/playtests/2026-10-11-gap39-sponsor-runrate/usage.0.jsonl",
+    "sha256": "1c091ac3cb95991f53157d4314a4bd2fd2d9065e9af213112f4a7bb306b60001",
+    "git_blob_sha256": "1c091ac3cb95991f53157d4314a4bd2fd2d9065e9af213112f4a7bb306b60001",
+    "byte_identical": true
+  }
+]
