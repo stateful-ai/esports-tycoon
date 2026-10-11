@@ -8095,6 +8095,65 @@ def _profile_splits(gs: GameState, pid: str) -> dict | None:
     }
 
 
+def _profile_development_comparison(snaps: list) -> dict:
+    """Describe stored endpoints without treating observation count as time.
+
+    Histories can span seasons, skip weeks, or contain same-week snapshots.
+    Cross-season endpoints are comparable, but do not imply a known elapsed
+    week count. A single dated point cannot establish measured flat growth.
+    """
+    ordered = sorted(snaps, key=lambda s: (s.season, s.week))
+    first = ordered[0] if ordered else None
+    last = ordered[-1] if ordered else None
+    available = bool(first and (first.season, first.week) < (last.season, last.week))
+    delta = round(last.ca - first.ca, 1) if available else None
+    status = (
+        "no_observations" if first is None else
+        "first_observation" if not available else
+        "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+    )
+    return {
+        "comparison_available": available,
+        "status": status,
+        "tracked_points": len(ordered),
+        "start": {"season": first.season, "week": first.week, "ca": first.ca} if first else None,
+        "end": {"season": last.season, "week": last.week, "ca": last.ca} if last else None,
+        "elapsed_weeks": last.week - first.week if available and first.season == last.season else None,
+        "overall_delta": delta,
+    }
+
+
+def _profile_season_growth(gs: GameState, pid: str) -> dict:
+    """Current-season skill endpoints, retaining old saves' missing attributes.
+
+    Attribute tracking may start later than CA tracking. Use the first and
+    last attributed snapshots and compare only their shared attribute keys.
+    No values are backfilled from the player's present attributes.
+    """
+    snaps = sorted(
+        (s for s in gs.dev_history.get(pid, []) if s.season == gs.season and s.attributes),
+        key=lambda s: s.week,
+    )
+    comparison = _profile_development_comparison(snaps)
+    changes = []
+    if comparison["comparison_available"]:
+        first, last = snaps[0], snaps[-1]
+        changes = [
+            {"key": aid, "delta": round(last.attributes[aid] - first.attributes[aid], 1),
+             "value": last.attributes[aid]}
+            for aid in sorted(set(first.attributes) & set(last.attributes))
+        ]
+        changes.sort(key=lambda item: (-abs(item["delta"]), item["key"]))
+    return {
+        "season": gs.season,
+        "comparison": comparison,
+        "series": [s.model_dump() for s in snaps],
+        "changes": changes,
+        "attribute_comparison_available": bool(changes),
+        "has_measurable_change": any(abs(item["delta"]) >= 0.1 for item in changes),
+    }
+
+
 def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     """Time-series for the profile trend charts. Performance series needs
     an analytics department (tier 2+); the development series (ability,
@@ -8108,7 +8167,14 @@ def _profile_charts(gs: GameState, pid: str, own: bool) -> dict:
     dev = (
         [s.model_dump() for s in gs.dev_history.get(pid, [])] if own else None
     )
-    return {"performance": perf, "development": dev, "analytics_tier": tier}
+    from esports_sim.manager.development_path import report_view
+
+    return {
+        "performance": perf, "development": dev, "analytics_tier": tier,
+        "development_comparison": _profile_development_comparison(gs.dev_history.get(pid, [])) if own else None,
+        "season_growth": _profile_season_growth(gs, pid) if own else None,
+        "development_latest_week": report_view(gs.players[pid]) if own else None,
+    }
 
 
 def _profile_weekly(gs: GameState, pid: str) -> list[dict]:
