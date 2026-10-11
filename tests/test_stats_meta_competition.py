@@ -14,7 +14,7 @@ from esports_sim.manager import advance_week, meta, new_campaign
 from esports_sim.manager.campaign import _record_map_meta
 from esports_sim.manager.state import (
     Fixture, GameState, MapMetaStats, MapResult, PatchChange, PatchNote,
-    SCHEMA_VERSION, TeamSeasonStats,
+    PlayerLineSnap, SCHEMA_VERSION, TeamSeasonStats,
 )
 from esports_sim.schemas.team import TeamTactics
 import esports_sim.web.server as server
@@ -84,7 +84,8 @@ def test_legacy_public_counts_no_fabricated_agents_or_tactics(sample, tmp_path):
     gs, gd, aids = sample
     tids = sorted(gs.teams)[:2]
     gs.fixtures = [Fixture(id="old", week=1, tier=2, team_a=tids[0], team_b=tids[1], played=True,
-        results=[MapResult(map_id="lotus", seed=1, score_a=13, score_b=8, winner_id=tids[0])])]
+        results=[MapResult(map_id="lotus", seed=1, score_a=13, score_b=8, winner_id=tids[0],
+            lines=[PlayerLineSnap(player_id="p0", kills=10, deaths=8, rating=1.0)])])]
     data = gs.model_dump(mode="json")
     data["schema_version"] = 37
     data.pop("map_meta_stats_by_tier")
@@ -103,7 +104,8 @@ def test_legacy_public_counts_no_fabricated_agents_or_tactics(sample, tmp_path):
     assert row["site_focus"] is None
     record(loaded, 2, "lotus", [aids[1]] * 10, 60, 70)
     loaded.fixtures.append(Fixture(id="new", week=2, tier=2, team_a=tids[0], team_b=tids[1], played=True,
-        results=[MapResult(map_id="lotus", seed=2, score_a=13, score_b=8, winner_id=tids[0])]))
+        results=[MapResult(map_id="lotus", seed=2, score_a=13, score_b=8, winner_id=tids[0],
+            lines=[PlayerLineSnap(player_id="p0", kills=10, deaths=8, rating=1.0)])]))
     report = meta.meta_report(loaded, gd.agents, league_tier=2)
     assert report["sample"] == {"completed_team_maps": 4, "recorded_team_maps": 2, "legacy_team_maps": 2}
     assert report["map_trends"][0]["agents"][0]["pick_rate"] == 100.0
@@ -136,6 +138,8 @@ def test_actual_completed_fixture_path_records_each_competition(game_data):
             for fixture in gs.fixtures:
                 if fixture.played and fixture.tier == tier:
                     for result in fixture.results:
+                        if not result.lines:
+                            continue
                         expected[result.map_id] = expected.get(result.map_id, 0) + 2
             assert expected, "fixture regression must exercise both competitions"
             recorded = gs.map_meta_stats_by_tier[str(tier)]
@@ -179,6 +183,17 @@ def test_no_sample_and_endpoint_team_scope(game_data):
         assert gs.model_dump_json() == before
     finally:
         server._ctx.reset(token)
+
+
+def test_walkover_and_unplayed_fixture_are_not_meta_samples(game_data):
+    gs = new_campaign(game_data, seed=2026)
+    tids = sorted(gs.teams)[:2]
+    result = MapResult(map_id="lotus", seed=0, score_a=13, score_b=0, winner_id=tids[0])
+    gs.fixtures = [Fixture(id="forfeit", week=1, tier=2, team_a=tids[0], team_b=tids[1], played=True, results=[result])]
+    assert meta.meta_report(gs, game_data.agents, league_tier=2)["map_trends"] == []
+    gs.fixtures[0].played = False
+    gs.fixtures[0].results[0].lines = [PlayerLineSnap(player_id="p0", kills=10, deaths=8, rating=1.0)]
+    assert meta.meta_report(gs, game_data.agents, league_tier=2)["map_trends"] == []
 
 
 def test_stats_frontend_actual_queries_and_selection():

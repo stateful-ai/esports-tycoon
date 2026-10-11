@@ -165,6 +165,9 @@ def meta_report(
         for fixture in sorted(gs.fixtures, key=lambda f: f.id):
             if fixture.played and fixture.tier == league_tier:
                 for result in fixture.results:
+                    # Walkovers carry a nominal score but no played box score.
+                    if not result.lines:
+                        continue
                     completed[result.map_id] = completed.get(result.map_id, 0) + 2
     map_trends = []
     for map_id in sorted(set(trends) | set(completed)):

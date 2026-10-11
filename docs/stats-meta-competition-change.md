@@ -37,7 +37,8 @@ Schema 38 adds `map_meta_stats_by_tier`. Migration starts it empty: old global
 tactic sums have no tier identity, and stored fixture player lines have no
 agent IDs. Reconstructing historical picks from today's affiliations or agent
 preferences would fabricate evidence after transfers. Completed fixture map
-counts can be read safely, so older maps remain visible while their agent and
+counts with played box-score lines can be read safely (walkovers and unplayed
+fixtures are excluded), so older maps remain visible while their agent and
 tactic samples are explicitly unavailable. Responses expose completed,
 recorded and legacy team-map counts, plus each map's recorded sample. Percentages
 and tactic averages use only that recorded competition sample. New campaigns
