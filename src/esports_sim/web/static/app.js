@@ -915,6 +915,9 @@ async function deleteWorld(world) {
 async function refresh() {
   App.state = await api("/api/state");
   const s = App.state;
+  // Only fresh status may cancel retry; failure rendering uses cached state.
+  if (!s?.multiplayer?.you_ready && !mpPolling) mpPollingRetry = false;
+  updateAdvanceTransition(s);
   // Fantasy draft in progress: the draft screen (draft.js) IS the app until
   // the last pick resolves — rosters are mid-build, so no tab makes sense.
   if (s.draft_active) {
@@ -934,9 +937,35 @@ async function refresh() {
   $("#balance").textContent = money(s.user_team.balance);
   updateMpChip(s.multiplayer);
   updateSaveControls(s.save);
+  resumeSharedAdvance(s);
   refreshTabBadges(s); // fire-and-forget: nav badges repaint off this state
   renderApp();
   maybeShowFirstWeekHelp(s);
+}
+
+// A ready seat may be loaded without this page having submitted advance.
+// Resume status observation before making its primary control available.
+function resumeSharedAdvance(s) {
+  if (s.multiplayer?.you_ready && !mpPolling && !mpPollingRetry) {
+    $("#advance-btn").disabled = true;
+    pollForAdvance(s.week);
+    updateAdvanceTransition(s);
+  }
+}
+
+// The server describes the campaign branch; the client only paints its copy.
+function updateAdvanceTransition(s) {
+  const transition = s?.advance_transition;
+  const btn = $("#advance-btn"), notice = $("#advance-notice");
+  // Server readiness must preserve Waiting during ready-seat reload as well
+  // as during polling.
+  btn.textContent = mpPollingRetry ? "Retry status ▸"
+    : s?.multiplayer?.you_ready || mpPolling ? "Waiting… ⏳"
+    : `${transition?.label || "Advance Week"} ▸`;
+  notice.textContent = transition?.notice || "";
+  notice.classList.toggle("hidden", !transition?.notice);
+  if (transition?.notice) btn.setAttribute("aria-describedby", "advance-notice");
+  else btn.removeAttribute("aria-describedby");
 }
 
 // Topbar save controls: the explicit Save button (dot = unsaved changes)
@@ -8173,14 +8202,15 @@ window.closeTalk = closeTalk;
 /* -- advance week ------------------------------------------------------------------ */
 
 let mpPolling = false;
+let mpPollingRetry = false;
 let weekLoadingTimer = null;
 
-function showWeekLoading({ simAhead = false } = {}) {
+function showWeekLoading({ simAhead = false, transition = App.state?.advance_transition } = {}) {
   const overlay = $("#week-loading");
-  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : "Advancing week";
+  $("#week-loading-title").textContent = simAhead ? "Simming ahead" : (transition?.loading_title || "Advancing week");
   $("#week-loading-detail").textContent = simAhead
     ? "Running up to four full league weeks. The sim will stop as soon as something needs you."
-    : "Resolving fixtures across the league, then settling training, scouting, and finances.";
+    : (transition?.loading_detail || "Resolving the campaign transition.");
   const started = performance.now();
   $("#week-loading-time").textContent = "0s";
   overlay.classList.remove("hidden");
@@ -8200,6 +8230,14 @@ function hideWeekLoading() {
 $("#advance-btn").onclick = async () => {
   $("#advance-btn").disabled = true;
   const prevWeek = App.state?.week;
+  const prevSeason = App.state?.season;
+  if (mpPollingRetry) {
+    // Reconnect to the pending ready-up. Sending advance again could tick a
+    // second week if the shared world moved while status was unavailable.
+    pollForAdvance(prevWeek, prevSeason);
+    updateAdvanceTransition(App.state);
+    return;
+  }
   showWeekLoading();
   try {
     const rep = await api("/api/actions/advance", {});
@@ -8207,8 +8245,10 @@ $("#advance-btn").onclick = async () => {
       // Shared game: you're ready, but the week waits for the others.
       $("#advance-btn").textContent = "Waiting… ⏳";
       toast("Ready — waiting for: " + rep.waiting_on.join(", "));
+      // Capture the pending calendar and own readiness before refresh can
+      // fail or observe a rollover. Its failure must not permit another POST.
+      pollForAdvance(prevWeek, prevSeason);
       await refresh(); // reflect your ready state in the chip
-      pollForAdvance(prevWeek);
       return; // stay disabled; pollForAdvance re-enables when the week ticks
     }
     // Refresh FIRST so the dashboard behind the reveal (and the reveal's
@@ -8255,24 +8295,27 @@ $("#simahead-btn").onclick = async () => {
 
 // While waiting for other managers to ready up, poll the shared world until the
 // week actually advances, then drop the waiting player into the new week.
-function pollForAdvance(prevWeek) {
+function pollForAdvance(prevWeek, prevSeason = App.state?.season) {
   if (mpPolling) return;
   mpPolling = true;
+  mpPollingRetry = false;
   const tick = async () => {
     let s;
     try {
       s = await api("/api/state");
     } catch {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      mpPollingRetry = true;
+      updateAdvanceTransition(App.state);
       $("#advance-btn").disabled = false;
+      toast("Shared status unavailable. Click Retry status to reconnect.");
       return;
     }
     App.state = s;
     updateMpChip(s.multiplayer);
-    if (s.week !== prevWeek) {
+    if (s.week !== prevWeek || s.season !== prevSeason) {
       mpPolling = false;
-      $("#advance-btn").textContent = "Advance Week ▸";
+      updateAdvanceTransition(s);
       $("#advance-btn").disabled = false;
       // Show the played week's report (results + replay buttons) — the
       // manager whose ready-up ticked the world got it from advance();
@@ -8287,6 +8330,16 @@ function pollForAdvance(prevWeek) {
         toast(`Week ${s.week} — everyone advanced.`);
       }
       if (typeof inboxAfterAdvance === "function") await inboxAfterAdvance();
+      return;
+    }
+    if (!s.multiplayer?.you_ready) {
+      // Readiness is transient server state and may clear on restart. The
+      // unchanged calendar means this is cancellation, not a completed tick.
+      mpPolling = false;
+      updateAdvanceTransition(s);
+      $("#advance-btn").disabled = false;
+      await refresh();
+      toast("Your ready status was cleared. Review the campaign, then advance when ready.");
       return;
     }
     setTimeout(tick, 2500);

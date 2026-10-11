@@ -105,6 +105,14 @@ body {
   display: flex; align-items: center; gap: var(--es-space-3, 6px);
 }
 .balance { font-size: var(--es-text-lg, 15px); }
+.advance-notice {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--es-color-text-primary);
+  background: var(--es-color-bg-surface);
+  border-bottom: 1px solid var(--es-color-border-primary);
+  font-size: 13px;
+}
 
 #tabs {
   display: flex; gap: var(--es-space-1, 2px); padding: 0 var(--es-space-6, 16px);

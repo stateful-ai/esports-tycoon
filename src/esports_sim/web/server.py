@@ -2163,6 +2163,32 @@ def _needs_you_flags(gs: GameState, tid: str) -> dict:
     }
 
 
+def _advance_transition(gs: GameState) -> dict:
+    """Describe the next tick's branch without mutating the campaign."""
+    if gs.phase == "offseason":
+        return {
+            "label": f"Start Season {gs.season + 1}",
+            "loading_title": f"Season {gs.season + 1} transition",
+            "loading_detail": (
+                f"Completing the offseason and preparing Season {gs.season + 1}, Week 1. "
+                "Ordinary weekly training, sponsor income and payroll do not run."
+            ),
+            "notice": (
+                f"Next advance completes the offseason and starts Season {gs.season + 1}, "
+                "Week 1. Season-end changes resolve; ordinary weekly training, "
+                "sponsor income and payroll do not run on this transition."
+            ),
+        }
+    return {
+        "label": "Advance Week", "notice": "",
+        "loading_title": "Advancing week",
+        "loading_detail": (
+            "Resolving fixtures across the league, then settling training, "
+            "scouting, and finances."
+        ),
+    }
+
+
 @app.get("/api/state")
 def state() -> dict:
     with S.lock:
@@ -2232,6 +2258,7 @@ def state() -> dict:
             "week": gs.week,
             "phase": gs.phase,
             "window": market.market_window_status(gs),
+            "advance_transition": _advance_transition(gs),
             "roster_readiness": {
                 "ready": roster_ready,
                 "reason": roster_reason,
@@ -2279,7 +2306,9 @@ def state() -> dict:
             "scout": {
                 "target": scout_target,
                 "target_name": scout_label,
-                "progress": gs.scout_progress.get(scout_target or "", 0.0),
+                "progress": gs.scout_progress_by.get(gs.acting_team_id, {}).get(
+                    scout_target or "", 0.0
+                ),
                 "cap": scout_cap,
             },
             "standings_top": [
@@ -3782,7 +3811,7 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
             "label": career.GOAL_LABELS.get(seat.contract.goal, humanize_identifier(seat.contract.goal)),
             "state": st["state"], "detail": st["detail"],
         })
-    for slot, deal in sorted(gs.sponsor_slots.items()):
+    for slot, deal in sorted(gs.sponsor_slots_by.get(tid, {}).items()):
         if deal is None:
             continue
         for ob in deal.objectives:
