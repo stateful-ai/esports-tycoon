@@ -1,0 +1,16 @@
+{
+  "head": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+  "files": {
+    "src/esports_sim/web/static/app.js": {
+      "sha256": "db156263d04723885f266fa05ce8c79d87535b2367ff7085d4faf3ccfde26612",
+      "bytes": 407890,
+      "dirty_source": true
+    },
+    "tests/flavor_feedback_check.cjs": {
+      "sha256": "f4693a6ca44d015f2643a174d71915bccdd6653f2e955d23dc840be73d60500e",
+      "bytes": 3487,
+      "dirty_source": true
+    }
+  },
+  "local_tests": "UNRUN by explicit user instruction"
+}

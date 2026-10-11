@@ -1,0 +1,15 @@
+{
+  "port": 8541,
+  "pid": 18768,
+  "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010\\runs\\playtests\\2026-10-11-flavor-served-title",
+  "source_fixture_sha256": "43525a9dd3b7b45ce88333c7849d4c2069a0bdcfd5ce462ef5e16267c8946fb3",
+  "seed": 2038,
+  "season": 1,
+  "week": 12,
+  "world": "FLV42",
+  "event_id": "8f43d112fb4700ed",
+  "fallback_title": "A community clinic asks for Team Nexus",
+  "overlay_title": "Community clinic: a small group invitation",
+  "no_llm_calls": true,
+  "package_source": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010\\src"
+}

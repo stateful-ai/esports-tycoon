@@ -2360,9 +2360,10 @@ async function dashboard(v) {
     // Interactive event prompts render in full (a list row can't hold the
     // choice buttons); computeNeedsYou still counts them for the badges.
     const eventBlock = (ev, kicker, endpoint, fallbackDone) => {
+      const displayedTitle = ev.title || "A decision is waiting";
       const event = el("div", "flavor-event");
       event.appendChild(el("div", "microlabel", kicker));
-      event.appendChild(el("h3", "", ev.title || "A decision is waiting"));
+      event.appendChild(el("h3", "", displayedTitle));
       event.appendChild(el("p", "", ev.prompt || "Choose how to respond."));
       const choices = el("div", "row flavor-choices");
       for (const choice of ev.choices ?? []) {
@@ -2377,7 +2378,9 @@ async function dashboard(v) {
             const r = await api(endpoint, { event_id: ev.id, choice_id: choice.id });
             if (endpoint === "/api/actions/flavor_event") {
               if (App.mp?.code !== originWorld || App.state?.user_team?.id !== originTeam) return;
-              App.flavorSettlement = r;
+              // Serving-layer prose may differ from the deterministic fallback
+              // title in the response. Keep the moment the manager actually saw.
+              App.flavorSettlement = { ...r, event_title: displayedTitle };
               App.flavorSettlementWorld = originWorld;
               App.flavorSettlementTeam = originTeam;
             }
