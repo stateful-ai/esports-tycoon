@@ -1,0 +1,149 @@
+{
+  "checked_at_utc": "2026-10-10T18:36:14.426820+00:00",
+  "commit": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "root_model": "unknown (not exposed)",
+  "root_effort": "unknown (not exposed)",
+  "source_paths_unchanged": 543,
+  "fixture_sha256_unchanged": "ea97d274868fe1e1f21c24ea8f66e9a3b9807cf0aa271b0f8042d279d6e0147a",
+  "baseline_decisions": 40,
+  "final_decisions": 43,
+  "accepted_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 3,
+    "attempted": 3
+  },
+  "new_decisions": [
+    {
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "media_choice",
+      "params": {
+        "choice_id": "defend_publicly",
+        "event_id": "841e9532e560ba1e"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "sponsor_respond",
+      "params": {
+        "accept": "True",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "structure": "steady"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 8,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "trust_before": 50.0,
+  "trust_after": 58.0,
+  "sponsor": {
+    "name": "Streamforge",
+    "kind": "steady",
+    "signing_bonus": 0,
+    "weekly": 10100,
+    "per_win": 0,
+    "weeks_left": 23,
+    "objectives": [
+      {
+        "kind": "win_split",
+        "bonus": 117000,
+        "met": null
+      }
+    ]
+  },
+  "settled_income": 67874,
+  "settled_expenses": 47100,
+  "bank_delta": 20774,
+  "bank_final": 461864,
+  "baseline_snapshots": 7,
+  "final_snapshots": 8,
+  "snapshot_prefix_unchanged": true,
+  "usage_total": 77,
+  "usage_world": 77,
+  "usage_kind_counts": {
+    "session_start": 3,
+    "view": 12,
+    "visible_time": 49,
+    "attempt": 5,
+    "result": 5,
+    "session_end": 2,
+    "interaction": 1
+  },
+  "page_sessions": [
+    "697a54022c78ac0a7dcf5c94552f1de6",
+    "9d52f52eb3597f2e2690b8b4ab334cd2",
+    "a3aaa4234b8fed0eca5e03193544b3ef"
+  ],
+  "attempts": 5,
+  "results": 5,
+  "paired_requests": 5,
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "request_targets": {
+    "/api/actions/media_event": 1,
+    "/api/actions/sponsor": 1,
+    "/api/actions/save": 2,
+    "/api/actions/advance": 1
+  },
+  "cli_report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "own_server_closed": [
+    {
+      "pid": 27716,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 28048,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8478",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 34148,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8478",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limitations": [
+    "Retained usage is bounded best effort, not a complete funnel or attention measure",
+    "Direct public fetch readbacks bypass browser wrapper usage hooks",
+    "Original exact Save lookup was unproven; row5 corrects row4; no accepted/rejected game action invented",
+    "Sponsor term and aggregate payout verified, no separate settled sponsor-component ledger exposed"
+  ]
+}

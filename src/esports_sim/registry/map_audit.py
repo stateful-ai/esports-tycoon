@@ -12,6 +12,49 @@ EPS = 0.75  # world units of forgiveness (sub-door-width)
 SAMPLE_STEP = 1.0
 
 
+def surface_polygons(surface: WalkableSurface):
+    return [surface.polygon, *[r.polygon for r in surface.floor_extensions]]
+
+
+def surface_contains(surface: WalkableSurface, point):
+    return any(is_point_in_polygon(point, polygon) for polygon in surface_polygons(surface))
+
+
+def connected_extension_indices(surface):
+    boxes = [(min(x for x,y in p), min(y for x,y in p), max(x for x,y in p), max(y for x,y in p))
+             for p in surface_polygons(surface)]
+    visited, pending = {0}, [0]
+    while pending:
+        a = boxes[pending.pop()]
+        for index,b in enumerate(boxes):
+            if index in visited: continue
+            dx,dy = min(a[2],b[2])-max(a[0],b[0]), min(a[3],b[3])-max(a[1],b[1])
+            if dx >= -1e-6 and dy >= -1e-6 and (dx > 1e-6 or dy > 1e-6):
+                visited.add(index)
+                pending.append(index)
+    return {i-1 for i in visited if i > 0}
+
+
+def surface_boundary_segments(surface: WalkableSurface):
+    """Exposed edges of the rectangle union, excluding internal tile seams."""
+    polygons = surface_polygons(surface)
+    for polygon in polygons:
+        for start, end in zip(polygon, polygon[1:] + polygon[:1]):
+            horizontal = start[1] == end[1]
+            axis = 0 if horizontal else 1
+            lo, hi = sorted((start[axis], end[axis]))
+            cuts = sorted({lo, hi, *[p[axis] for poly in polygons for p in poly if lo < p[axis] < hi]})
+            dx, dy = end[0]-start[0], end[1]-start[1]
+            length = (dx*dx+dy*dy)**0.5
+            for a, b in zip(cuts, cuts[1:]):
+                mid = (a+b)/2
+                point = (mid, start[1]) if horizontal else (start[0], mid)
+                right = (point[0]+dy/length*1e-6, point[1]-dx/length*1e-6)
+                left = (point[0]-dy/length*1e-6, point[1]+dx/length*1e-6)
+                if not (surface_contains(surface, right) and surface_contains(surface, left)):
+                    yield ((a,start[1]),(b,start[1])) if horizontal else ((start[0],a),(start[0],b))
+
+
 # ---------------------------------------------------------------------------
 # Legacy Floor Audit (Refactored from scripts/map_floor_audit.py)
 
@@ -19,14 +62,18 @@ def inside(pt: tuple[float, float], rects, eps: float = EPS) -> bool:
     x, y = pt
     return any(
         r.x - eps <= x <= r.x + r.w + eps and r.y - eps <= y <= r.y + r.h + eps
-        for r in rects
+        for region in rects for r in [region, *getattr(region, "floor_extensions", ())]
     )
 
 
 def rects_touch(a, b, eps: float = EPS) -> bool:
-    return not (
-        a.x + a.w + eps < b.x or b.x + b.w + eps < a.x
-        or a.y + a.h + eps < b.y or b.y + b.h + eps < a.y
+    return any(
+        not (
+            left.x + left.w + eps < right.x or right.x + right.w + eps < left.x
+            or left.y + left.h + eps < right.y or right.y + right.h + eps < left.y
+        )
+        for left in [a, *getattr(a, "floor_extensions", ())]
+        for right in [b, *getattr(b, "floor_extensions", ())]
     )
 
 
@@ -232,9 +279,11 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             findings.append(f"Duplicate walkable surface id '{surf.id}'")
             continue
         surfaces_by_id[surf.id] = surf
-        errors = check_polygon_valid(surf.polygon)
-        for err in errors:
-            findings.append(f"Walkable surface '{surf.id}': {err}")
+        for polygon in surface_polygons(surf):
+            for err in check_polygon_valid(polygon):
+                findings.append(f"Walkable surface '{surf.id}': {err}")
+        if len(connected_extension_indices(surf)) != len(surf.floor_extensions):
+            findings.append(f"Walkable surface '{surf.id}' has disconnected floor extensions")
 
     # 2. Semantic zones: polygon validity & containment
     zones_by_id: dict[str, SemanticZone] = {}
@@ -253,11 +302,16 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
                 findings.append(f"Semantic zone '{zone.id}' references missing surface '{sid}'")
             else:
                 surf = surfaces_by_id[sid]
-                if not is_point_in_polygon(zone.label_position, surf.polygon):
+                if zone.kind != "plant" and not surface_contains(surf, zone.label_position):
                     findings.append(
                         f"Semantic zone '{zone.id}' label position is outside "
                         f"walkable surface '{sid}'"
                     )
+        if zone.kind == "plant" and not any(
+            sid in surfaces_by_id and surface_contains(surfaces_by_id[sid], zone.label_position)
+            for sid in zone.surface_ids
+        ):
+            findings.append(f"Plant zone '{zone.id}' label position is outside its supporting floor union")
 
     for side, spawn_id in (
         ("attacker", doc.attacker_spawn),
@@ -282,7 +336,7 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             findings.append(f"Traversal link '{link.id}' from_pos references missing surface '{fsid}'")
         else:
             surf = surfaces_by_id[fsid]
-            if not is_point_in_polygon((fx, fy), surf.polygon):
+            if not surface_contains(surf, (fx, fy)):
                 findings.append(f"Traversal link '{link.id}' from_pos ({fx}, {fy}) is outside walkable surface '{fsid}'")
         # to pos
         tx, ty, tsid = link.to_pos
@@ -290,14 +344,14 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             findings.append(f"Traversal link '{link.id}' to_pos references missing surface '{tsid}'")
         else:
             surf = surfaces_by_id[tsid]
-            if not is_point_in_polygon((tx, ty), surf.polygon):
+            if not surface_contains(surf, (tx, ty)):
                 findings.append(f"Traversal link '{link.id}' to_pos ({tx}, {ty}) is outside walkable surface '{tsid}'")
 
         # A Studio-authored corridor is the motor controller's exact route
         # core. Reject it if a player-sized capsule would clip authored walls
         # or colliding props; the current match sim deliberately trusts this
         # validated path rather than running a second pathfinder every tick.
-        if link.path_mode == "corridor" and link.include_endpoints_in_path:
+        if link.runtime_enabled and link.path_mode == "corridor" and link.include_endpoints_in_path:
             route = [link.from_pos[:2], *link.via, link.to_pos[:2]]
             blockers: list[
                 tuple[str, tuple[float, float], tuple[float, float], float]
@@ -348,13 +402,19 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             surf = surfaces_by_id[prop.surface_id]
             if (
                 prop.id not in doc.legacy.prop_support_exemptions
-                and not polygon_contains_polygon(surf.polygon, prop.footprint)
+                and not any(polygon_contains_polygon(poly, prop.footprint) for poly in surface_polygons(surf))
             ):
                 findings.append(f"Prop '{prop.id}' footprint is not fully supported by surface '{prop.surface_id}'")
 
     # 5. Overlapping surfaces / elevation audit
     for i, surf1 in enumerate(doc.walkable_surfaces):
         for j, surf2 in enumerate(doc.walkable_surfaces[i+1:]):
+            # A shared edge is a valid ramp seam, not an overlapping floor.
+            # Compilation already requires rectangular physical cores.
+            x_overlap = min(max(x for x,y in surf1.polygon), max(x for x,y in surf2.polygon)) - max(min(x for x,y in surf1.polygon), min(x for x,y in surf2.polygon))
+            y_overlap = min(max(y for x,y in surf1.polygon), max(y for x,y in surf2.polygon)) - max(min(y for x,y in surf1.polygon), min(y for x,y in surf2.polygon))
+            if x_overlap <= 1e-6 or y_overlap <= 1e-6:
+                continue
             # Check overlap in 2D
             overlaps = False
             for pt in surf1.polygon:
@@ -423,6 +483,8 @@ def audit_continuous(doc: MapStudioDocumentV1) -> list[str]:
             surf_to_zone[sid] = zone.id
 
     for link in doc.traversal_links:
+        if not link.runtime_enabled:
+            continue
         from_surf_id = link.from_pos[2]
         to_surf_id = link.to_pos[2]
         from_zone = surf_to_zone.get(from_surf_id)

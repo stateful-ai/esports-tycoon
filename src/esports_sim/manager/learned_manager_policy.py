@@ -548,6 +548,16 @@ class LearnedManagerPolicy:
                 legal["options"][0],
             )
             params = {"facility": option["facility"]}
+        elif kind == "book_recovery":
+            from esports_sim.manager.recovery import TIER_IDS
+
+            options = legal.get("options", [])
+            if not legal.get("enabled") or not options:
+                raise ValueError("no legal recovery option is available")
+            tier = options[0].get("tier")
+            if not isinstance(tier, str) or tier not in TIER_IDS:
+                raise ValueError("legal recovery option has no tier")
+            params = {"tier": tier}
         elif kind == "sponsor_respond":
             structure = self._predict_head("sponsor_structure", x, "steady")
             accepts = [

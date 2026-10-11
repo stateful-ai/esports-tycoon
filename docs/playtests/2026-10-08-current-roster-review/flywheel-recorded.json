@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0065",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current-roster review advice",
+    "problem": "Historical Echo finding persisted after release",
+    "solution": "Retained 0.55 finding with squad-unavailable explanation and removed Echo lever",
+    "lesson": "Generate current player advice only for an existing player in the acting manager squad",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0066",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Review dedup after membership filtering",
+    "problem": "A departed finding can occupy the single player_form recommendation",
+    "solution": "Regression covers current teammate after departed finding and second human manager",
+    "lesson": "Filter unavailable advice before deduplicating so current teammates remain actionable",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0067",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Automatic guide blocked an Advance attempt",
+    "problem": "First-week handbook intercepted the intended Advance click",
+    "solution": "Retained blocked pre-action log and closed guide before recovery",
+    "lesson": "Do not infer an action request from a blocked click; distinguish UI recovery from accepted decisions",
+    "confidence": "high",
+    "source": "JEB4V seed2038 Team Nexus S1W2 isolated8460; docs/playtests/2026-10-08-current-roster-review/report.md",
+    "code": "JEB4V",
+    "tags": [
+      "browser",
+      "match-review",
+      "roster"
+    ],
+    "kind": "pain-point"
+  }
+]

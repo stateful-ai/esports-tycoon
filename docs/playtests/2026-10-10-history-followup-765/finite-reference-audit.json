@@ -1,0 +1,1004 @@
+{
+  "audited_at_utc": "2026-10-11T06:37:05.417557+00:00",
+  "finding_id": 4240465394,
+  "audit_scope": "Every evidence field plus filename references in analytics_evidence for all41 finitepublication rows724:765; no later sessions imported",
+  "canonical765_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "finite_rows": 41,
+  "reference_count": 97,
+  "artifact_references_resolved": 97,
+  "unresolved": [],
+  "references": [
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-next-fixture-development/01-blocked-lobby.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/01-blocked-lobby.txt",
+      "sha256": "3e32ae4cf25832ba226f2761e900f5081ede7d617416f9da963223a98d87e735",
+      "byte_count": 10456,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "02-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/02-dashboard.txt",
+      "sha256": "51cc3ff88748c965e8641d9d1cf062cbf2aefc8b898d46e225e87aa49e46c33f",
+      "byte_count": 17947,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-46-08-971Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-08-971Z.yml",
+      "sha256": "1f08036256ed94ee260b6fdc02fdd0acdec9fd06782da4ab4ff272af82a9f244",
+      "byte_count": 22962,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-46-40-052Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-40-052Z.yml",
+      "sha256": "32143b5b338d8ac5914d2116e88e0aad646cddd401a7b09bbb89d205655befa6",
+      "byte_count": 19292,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-roster-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-roster-response.txt",
+      "sha256": "68b61ac751d369bcc56c49a927c1334e0caf5a5846e2542c209c7a1df36b849d",
+      "byte_count": 27855,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-tactics-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-tactics-response.txt",
+      "sha256": "32824c681c7b067f174153cc2bdd0369ef1e2d5ee26c12d2b21a54a7721364bc",
+      "byte_count": 20122,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-46-08-971Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-08-971Z.yml",
+      "sha256": "1f08036256ed94ee260b6fdc02fdd0acdec9fd06782da4ab4ff272af82a9f244",
+      "byte_count": 22962,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "03-roster-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-roster-response.txt",
+      "sha256": "68b61ac751d369bcc56c49a927c1334e0caf5a5846e2542c209c7a1df36b849d",
+      "byte_count": 27855,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "03-tactics-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-tactics-response.txt",
+      "sha256": "32824c681c7b067f174153cc2bdd0369ef1e2d5ee26c12d2b21a54a7721364bc",
+      "byte_count": 20122,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-46-08-971Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-08-971Z.yml",
+      "sha256": "1f08036256ed94ee260b6fdc02fdd0acdec9fd06782da4ab4ff272af82a9f244",
+      "byte_count": 22962,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/verify-next-fixture-lineup.py",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/verify-next-fixture-lineup.py",
+      "sha256": "eb290d0dab6e2528008d912bd53b9deb5a8661389bcaad7c9bf9db8ea8c62e9a",
+      "byte_count": 771,
+      "qualified_execution": true
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-54-02-639Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-54-02-639Z.yml",
+      "sha256": "9afd0bd23775f272af3e34e4213fa86f93d9fecfae3397cdac5dd04069f7c415",
+      "byte_count": 33760,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-next-fixture-development/07-after-advance.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/07-after-advance.txt",
+      "sha256": "eff70271961a7c0b4b3f6f7ce574b10f5f5a73f9d1b5e1aaba294f1ce7415eaf",
+      "byte_count": 35086,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-55-02-985Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-55-02-985Z.yml",
+      "sha256": "1fd1e1acc61c0adb74983f521947564a3ba18a80f62367c8698eead7f1214037",
+      "byte_count": 40368,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-55-08-043Z.png",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-55-08-043Z.png",
+      "sha256": "462a7975d1987c037d3ed4a6b19846239fd24a361230d6f57d57aa761dcf54f0",
+      "byte_count": 165597,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": ".playwright-cli/page-2026-10-10T21-56-11-501Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-56-11-501Z.yml",
+      "sha256": "584ba04c44bc38fc2ee110479650927bd35d286ccfb0d943856e2ae7f403cb31",
+      "byte_count": 34087,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/audit.json",
+      "sha256": "45cf85fd109a9cd371d502cb994460146d80b3dddf6f8de39d0629ad80e077a6",
+      "byte_count": 2271,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "evidence/request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/request-pairs.json",
+      "sha256": "f742dcd72f75efb1af6f06c4fa6e6729e8ceb48f50a052d28cb7ba5251e7baca",
+      "byte_count": 2894,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-next-fixture-development",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "evidence/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/decision-indexed.json",
+      "sha256": "f8f19287bb9a23fad9e34c1f5cc350a4e6a823a5d898af6d731639efa04d2889",
+      "byte_count": 571,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-10-flavor-feedback/03-settlement-public-readback.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/03-settlement-public-readback.json",
+      "sha256": "b7ce67a67ec32ad5a38f3f6dfae9fcf82027dfbf1546ee8f2cbe4caa9e7da7b8",
+      "byte_count": 2177,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/decision-indexed.json",
+      "sha256": "50780870d14f820c690308c16349854a8122cba2ce56d67efa74ec2d8a5f4432",
+      "byte_count": 308,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/request-pairs.json",
+      "sha256": "aae4ff3a19d1e9ade5e22759af8ebfdbd3f0def1f134f07b7c3bd7ef743f01ab",
+      "byte_count": 1938,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/request-pairs.json",
+      "sha256": "aae4ff3a19d1e9ade5e22759af8ebfdbd3f0def1f134f07b7c3bd7ef743f01ab",
+      "byte_count": 1938,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "7",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/review/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/review/decision-indexed.json",
+      "sha256": "44d0501c589c48736d74bcfa8ec38e6f874278a3523b6e25f358ab27e280f49d",
+      "byte_count": 719,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "7",
+      "field": "analytics_evidence",
+      "historical_reference": "request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/request-pairs.json",
+      "sha256": "aae4ff3a19d1e9ade5e22759af8ebfdbd3f0def1f134f07b7c3bd7ef743f01ab",
+      "byte_count": 1938,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/evidence/08-corrected-settlement.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/08-corrected-settlement.json",
+      "sha256": "cda4e0611607a341b0ca53f8202fb8905890c729c1f5991faab3eefcc3de0442",
+      "byte_count": 1567,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "8",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/review/decision-indexed.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/review/decision-indexed.json",
+      "sha256": "44d0501c589c48736d74bcfa8ec38e6f874278a3523b6e25f358ab27e280f49d",
+      "byte_count": 719,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "8",
+      "field": "analytics_evidence",
+      "historical_reference": "request-pairs.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/request-pairs.json",
+      "sha256": "aae4ff3a19d1e9ade5e22759af8ebfdbd3f0def1f134f07b7c3bd7ef743f01ab",
+      "byte_count": 1938,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/report.md",
+      "sha256": "fa447e07cb3a18fc0ffe6cbba3a5a19935cb57794351ff1b6080a361247df7a7",
+      "byte_count": 6912,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-flavor-feedback",
+      "step": "9",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/review/audit.json",
+      "published_path": "docs/playtests/2026-10-10-flavor-feedback/evidence/review/audit.json",
+      "sha256": "8a051fe734eff008b53374dd4533b8a2fe0aba6ce5a1f9493ae251e4a58abab5",
+      "byte_count": 2231,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "1",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "1",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "5",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "5",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "6",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "6",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "7",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "7",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "8",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "8",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "9",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "9",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "9",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-evidence.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/usage-evidence.json",
+      "sha256": "4bfe9ec4224654baae8b9f0003b5b5bbdee78394a3c6de835c97d33ef85e7db2",
+      "byte_count": 6636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "10",
+      "field": "evidence",
+      "historical_reference": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/report.md",
+      "sha256": "f31afff0744c35472f754fe0a15ae47ad9fbe66497b2c58dd0f36f9b3f23a723",
+      "byte_count": 4881,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-facility-gate-name-consistency",
+      "step": "10",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-facility-gate-name-consistency/audit.json",
+      "sha256": "95185a871e1065fbd12568a3637338391389a4b95791550c766650ee05c69dd1",
+      "byte_count": 690,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-gap26-spacing",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/gap26/browser_accept.py",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/browser_accept.py",
+      "sha256": "9ef8332f51ca60ee0b5711f4b746df5993ad3bf8d8e7a3a73dbf42127e1d9669",
+      "byte_count": 2822,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-gap26-spacing",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/gap26/browser-result.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/browser-result.json",
+      "sha256": "e226cc350d55f07db4b644b0251d09f04f1bd0298267f2202d4b131725244f37",
+      "byte_count": 352,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-gap26-spacing",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/gap26/sponsor-demand.png",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/sponsor-demand.png",
+      "sha256": "0d2fe41b4a9f5e750e5cc4da1c5ab0f91d1d4aa13776f1cfc22604120ca1220b",
+      "byte_count": 2383,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-gap26-spacing",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/gap26/sibling-result.json",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/sibling-result.json",
+      "sha256": "57998f95c062a80d1121c35fa7a274832d2beda5a350139f3f0f5300e2c45956",
+      "byte_count": 163,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "fixture.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/fixture.json",
+      "sha256": "399523e644768c460e76c357eda8fe6e828c19553c53806ece67b37ad9ea353e",
+      "byte_count": 1145,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "locker-before.yml",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/locker-before.yml",
+      "sha256": "1df8452b306a6e516aa2d9e61005202f912051f1b6f8abec7ed61522e31ab9c0",
+      "byte_count": 7561,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "early-profile.yml",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/early-profile.yml",
+      "sha256": "3b3739553de8b13c3f4006577539e0956c905fe8d89e463db696e42b960e357b",
+      "byte_count": 24540,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "public-before.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-before.txt",
+      "sha256": "6a62c216e798b7c555755bbe9e7b54590abecb83f5560227476bcdc245082a38",
+      "byte_count": 32149,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "early-profile.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/early-profile.txt",
+      "sha256": "89e7005ffdfc89aa080c2152e7350a67044319138e2bdc61d13a2943c4f6c3d2",
+      "byte_count": 15754,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "early-profile.png",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/early-profile.png",
+      "sha256": "50a481c4d187b3f1cb4ff092be37df368b8861f85eb6b7f5577c8efee31f36fe",
+      "byte_count": 17664,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "public-renewed.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-renewed.txt",
+      "sha256": "e687af58de0c5645605d4e5e9213190682aea3997e34b899c4c8925f428b5d16",
+      "byte_count": 44218,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "locker-renewed.yml",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/locker-renewed.yml",
+      "sha256": "d010077c2a0c6c515d284de0388b979cec1740fdc04a96b5278b42564c67f597",
+      "byte_count": 21712,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "legacy-renewed-dom.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/legacy-renewed-dom.txt",
+      "sha256": "6e62e77a89c59c321c8edf360816d0a6a6e2e47745fd0c8a5c3dcddb9412401c",
+      "byte_count": 2148,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "legacy-renewed-profile.png",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/legacy-renewed-profile.png",
+      "sha256": "0142746491be19a66fd2f84cf64579dca081508c8a173161021aa130ae0e77fc",
+      "byte_count": 15692,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/reconciliation.json",
+      "sha256": "f26b56e2db6a16cf6f54a57802bac81c7714aba06ab9321c3e35da80adf4fb02",
+      "byte_count": 1929,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "saved-before-reload.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/saved-before-reload.json",
+      "sha256": "b43c2b8daac6744a17ecaa1ed4d8edf966250ffb3fa74aa359a0018a3960402f",
+      "byte_count": 4139257,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "saved-before-reload.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/saved-before-reload.json",
+      "sha256": "b43c2b8daac6744a17ecaa1ed4d8edf966250ffb3fa74aa359a0018a3960402f",
+      "byte_count": 4139257,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "state-saved.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/state-saved.json",
+      "sha256": "4fa22a0988798cde918cdfd7bcace3dabe6dcc4cf1c50c887ffc7806bef729d1",
+      "byte_count": 14591,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "public-reloaded.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-reloaded.json",
+      "sha256": "fdc6e27d360c8926cb754f6ec7a56cd57a073f18d3ac72af598f886bfb3fb1a1",
+      "byte_count": 97091,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "locker-reloaded.yml",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/locker-reloaded.yml",
+      "sha256": "5868606e8a61d70f236a1609875d6ef810c1a77c50470154bac408d0819ef5db",
+      "byte_count": 7569,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "saves/usage/usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/evidence/usage.0.jsonl",
+      "sha256": "7f837a9fa092aad5e9f8040467ceb1e08b3db7111faa1cb44d49c6bd10f64551",
+      "byte_count": 11636,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/reconciliation.json",
+      "sha256": "f26b56e2db6a16cf6f54a57802bac81c7714aba06ab9321c3e35da80adf4fb02",
+      "byte_count": 1929,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "reconciliation.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/reconciliation.json",
+      "sha256": "f26b56e2db6a16cf6f54a57802bac81c7714aba06ab9321c3e35da80adf4fb02",
+      "byte_count": 1929,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "compatibility-audit.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/compatibility-audit.json",
+      "sha256": "33513f0633eb181dd4d45933a8a9e1729769137e30e9119d5abb6c12e254fafc",
+      "byte_count": 910,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "gate-running.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/gate-running.json",
+      "sha256": "da10912d89d2a4072cdaaa480cdb9b264aa903722c1ee5bde3ce0e4ab92893b9",
+      "byte_count": 612,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-promise-legacy-deadline",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "gate-freeze.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/gate-freeze.json",
+      "sha256": "fa3d79fa66b7f723a32452a44fa4e1088680d5b837c3323137f1181b0058ae32",
+      "byte_count": 64421,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "echo-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/echo-snapshot.txt",
+      "sha256": "a4f70340a8ed7e25bd71311435c9dcb0f01306cdb7563a36239430685064e5f7",
+      "byte_count": 35746,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/overlay-usage/echo-dedup-corrected.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/echo-dedup-corrected.txt",
+      "sha256": "19678800fb19b2eed61a96de3522278df0352aedaffaa5c8cdb6ff934fdf6522",
+      "byte_count": 491,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "failure-readback.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/failure-readback.txt",
+      "sha256": "d00bb567eda3177d673a364fb6a8392f1e646af04476d0fcf5badabd2be01d6f",
+      "byte_count": 639,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "handbook-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/handbook-snapshot.txt",
+      "sha256": "c9115b1303204fa43dfae38c9b84e853d933733192cb86c5c8089003d12c599a",
+      "byte_count": 22526,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "team-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/team-snapshot.txt",
+      "sha256": "f0515d1f4519c72d8e1c596b7b39e4ec98e009374f1a783bc8291355562fae88",
+      "byte_count": 28991,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "manager-snapshot.txt",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/manager-snapshot.txt",
+      "sha256": "68ec21c5565f7424291df41982561050bced64c35e3d65ebf68bcb51202087a0",
+      "byte_count": 20834,
+      "qualified_execution": false
+    },
+    {
+      "session_id": "2026-10-10-overlay-usage",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-10-overlay-usage/audit.json",
+      "sha256": "78e5bb6f311ff6bd219844afd23032c2665c9654b9f1fa0dfa2b328bad983d43",
+      "byte_count": 1737,
+      "qualified_execution": false
+    }
+  ],
+  "original_report_prefixes": {
+    "docs/playtests/2026-10-10-next-fixture-development/report.md": {
+      "prior_head_sha256": "5e8615bd340442bdb5141cb5c3f5f756f173acbd0d8ed98a2f7999ac59819c1d",
+      "raw_byte_prefix_preserved": true
+    },
+    "docs/playtests/2026-10-10-history-followup-765/report.md": {
+      "prior_head_sha256": "44288756b2624c01cf3d887fe68861fc9059f81d82e238b7c57e0cbd84d2a9ab",
+      "raw_byte_prefix_preserved": true
+    },
+    "docs/playtests/2026-10-10-history-followup-765/HANDOFF.md": {
+      "prior_head_sha256": "5099a1ddbdd5a2872801a8a4977e495ada37ebaa21e2ceda7cb5fb99408ba2f5",
+      "raw_byte_prefix_preserved": true
+    }
+  },
+  "execution_qualification": {
+    "session_id": "2026-10-10-next-fixture-development",
+    "step": "5",
+    "effective_status": "unverified",
+    "limitation": "Original stdout/exit-status receipt not found in searched retained runs. Archival helper/DOM/public-input files are present and mapped; no helper rerun or output reconstruction."
+  },
+  "same612_raw_source_and_git_tree": true,
+  "local_tests_or_helper_execution": false
+}

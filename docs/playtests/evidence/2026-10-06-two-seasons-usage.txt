@@ -1,0 +1,108 @@
+telemetry report: 1 saves, 191 recorded actions
+
+action mix (count, per advanced week):
+  advance                46     1.00/wk
+  resolve_flavor         28     0.61/wk
+  set_dev_plan           12     0.26/wk
+  set_game_plan          10     0.22/wk
+  set_training            8     0.17/wk
+  sponsor_respond         7     0.15/wk
+  facility_upgrade        6     0.13/wk
+  set_preparation         6     0.13/wk
+  set_lineup              6     0.13/wk
+  hire_staff              5     0.11/wk
+  mentor                  5     0.11/wk
+  culture_session         5     0.11/wk
+  sponsor_demand_respond      5     0.11/wk
+  academy_move            5     0.11/wk
+  set_tactics             4     0.09/wk
+  set_scout_directive      3     0.07/wk
+  tournament_registration      3     0.07/wk
+  talk                    3     0.07/wk
+  negotiate_open          2     0.04/wk
+  negotiate_offer         2     0.04/wk
+  set_leadership          2     0.04/wk
+  sign                    2     0.04/wk
+  set_delegation          2     0.04/wk
+  resolve_media           2     0.04/wk
+  set_scout               1     0.02/wk
+  negotiate_cancel        1     0.02/wk
+  academy_upgrade         1     0.02/wk
+  propose_package         1     0.02/wk
+  clear_game_plan         1     0.02/wk
+  rein_streaming          1     0.02/wk
+  renew                   1     0.02/wk
+  release_staff           1     0.02/wk
+  release                 1     0.02/wk
+  buyout                  1     0.02/wk
+  swap                    1     0.02/wk
+  bid                     1     0.02/wk
+
+never used anywhere (ideation signal):
+  accept_job
+  commit_principle
+  draft_begin
+  draft_interview
+  draft_pick
+  draft_prefs
+  flavor_choice
+  media_choice
+  promise_respond
+  respond_offer
+  save_settings
+  scenario_start
+  series_directive
+  set_assignment
+  set_igl
+  sim_ahead
+  talk_chat
+
+feature adoption (saves that used it / saves):
+  academy_move       1/1
+  academy_upgrade    1/1
+  advance            1/1
+  bid                1/1
+  buyout             1/1
+  clear_game_plan    1/1
+  culture_session    1/1
+  facility_upgrade   1/1
+  hire_staff         1/1
+  mentor             1/1
+  negotiate_cancel   1/1
+  negotiate_offer    1/1
+  negotiate_open     1/1
+  propose_package    1/1
+  rein_streaming     1/1
+  release            1/1
+  release_staff      1/1
+  renew              1/1
+  resolve_flavor     1/1
+  resolve_media      1/1
+  set_delegation     1/1
+  set_dev_plan       1/1
+  set_game_plan      1/1
+  set_leadership     1/1
+  set_lineup         1/1
+  set_preparation    1/1
+  set_scout          1/1
+  set_scout_directive 1/1
+  set_tactics        1/1
+  set_training       1/1
+  sign               1/1
+  sponsor_demand_respond 1/1
+  sponsor_respond    1/1
+  swap               1/1
+  talk               1/1
+  tournament_registration 1/1
+
+tactics: mean |dial - 50| when a book is committed:
+  aggression         5.0 (n=4, max 5)
+  eco_greed         15.0 (n=4, max 25)
+  map_control        7.5 (n=4, max 10)
+  pace               5.0 (n=4, max 5)
+  util_discipline   18.8 (n=4, max 30)
+
+game plans: 10 set; 0 carried dial overrides (0%)
+talk approaches: back x1, promise_captain x1, listen x1
+actions per week by phase: offseason: 3.0, playoffs: 2.1, regular: 5.4
+sources: agent 191

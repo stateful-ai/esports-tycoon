@@ -1,0 +1,12 @@
+{
+  "seed": 2038,
+  "season": 1,
+  "week": 2,
+  "player_ids": [
+    "apex",
+    "phantom",
+    "vortex",
+    "ghost"
+  ],
+  "telemetry_snap_count": 1
+}

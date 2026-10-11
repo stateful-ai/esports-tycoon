@@ -1,0 +1,238 @@
+{
+  "session": "2026-10-11-academy-availability-fixed-head",
+  "created_at_utc": "2026-10-11T10:32:32.460729+00:00",
+  "owned_root": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head",
+  "head": "679fdb313cc8004fb0a34db271ff62c736cbf099",
+  "rows": 6,
+  "columns": 21,
+  "result_counts": {
+    "met": 4,
+    "blocked": 2
+  },
+  "parent_correction": "Root prior four-row message predates additional harness visibility blocked row5 and explicit correction row6; publish six rows, not four. Parent owns canonical append. No further play after row6.",
+  "world": "26UHC",
+  "seed": 2038,
+  "game_time": "S2W4 unchanged",
+  "before_decisions": 112,
+  "after_decisions": 112,
+  "before_snapshots": 26,
+  "after_snapshots": 26,
+  "raw_save_byte_equal": true,
+  "raw_save_before": {
+    "bytes": 4832837,
+    "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca"
+  },
+  "raw_save_after": {
+    "bytes": 4832837,
+    "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca"
+  },
+  "source_frozen_files": 524,
+  "all_tracked_clean": true,
+  "acceptance": "Actual browser disabled Promotions/visible blocker-depth/age candidates/explicit Save accepted; successful recovery/promotion/stale rejection and closed/full windows unverified. No local automated tests, gates or native acceptance.",
+  "usage": "42 retained world/team events, one Save attempt/result request14 /api/actions/save success200; no academy_move. Raw usage baseline byte prefix retained.",
+  "allowlist": [
+    {
+      "relative_path": "actions.csv",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\actions.csv",
+      "bytes": 5712,
+      "sha256": "2db179b6b0613492b71e2999d2b566a3043fdc26a47b7f34639bf7b7683e2766"
+    },
+    {
+      "relative_path": "baseline-import-correction.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\baseline-import-correction.json",
+      "bytes": 267,
+      "sha256": "9c0e146cc72c6464e38ed6eec4de53f13c31caa48e7bd8712cdfc07b51a6e87e"
+    },
+    {
+      "relative_path": "evidence/01-club.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\01-club.txt",
+      "bytes": 10369,
+      "sha256": "f6323076a5d071e5afc156552699e585e8bc20753b2d14340efa42e6006048f3"
+    },
+    {
+      "relative_path": "evidence/01-operations.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\01-operations.txt",
+      "bytes": 5825,
+      "sha256": "d58511a80f8d59c5173d929ebbf1267e7c41738e4a8ee8acbfa92966a9581738"
+    },
+    {
+      "relative_path": "evidence/02-pathway-controls.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\02-pathway-controls.txt",
+      "bytes": 2828,
+      "sha256": "2a059b822dd3616f836653a6be74c81bcd39fc6a4303d86bfe50bc6e23ba9ca4"
+    },
+    {
+      "relative_path": "evidence/03-nightsurge-profile.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\03-nightsurge-profile.txt",
+      "bytes": 18479,
+      "sha256": "21dadee8c1a9dff907f98eac9c217910c6047f4932ad3d79bd11fefac074a7ae"
+    },
+    {
+      "relative_path": "evidence/04-independent-readback.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\04-independent-readback.txt",
+      "bytes": 653348,
+      "sha256": "e1179dbd7bb7763ab8d028ecaf47fa3c6ba3471512cfc2025a7c411ecd045d78"
+    },
+    {
+      "relative_path": "evidence/04-save-recovery.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\04-save-recovery.txt",
+      "bytes": 16551,
+      "sha256": "894fe16eff4c11c11f6e674e547bd186e9559043997e29c0929cd0952dbdaba3"
+    },
+    {
+      "relative_path": "evidence/04-squad-save.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\04-squad-save.txt",
+      "bytes": 164,
+      "sha256": "8d733153ebbdcef114f84f7b82360c6200ad1dd259aafd5b69f9162b879e1ac2"
+    },
+    {
+      "relative_path": "evidence/05-close-overlay.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\05-close-overlay.txt",
+      "bytes": 1804,
+      "sha256": "bc7e9b493db713b509b16fba5438a21d94f8720c178d2f538b8e4d77d57ae4d9"
+    },
+    {
+      "relative_path": "evidence/05-overlay-dom-readback.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\05-overlay-dom-readback.txt",
+      "bytes": 957,
+      "sha256": "9e438d73fb1dacebc10bb62783750bbec2c4e6e0aeb74ba9cef2a5684ca43c67"
+    },
+    {
+      "relative_path": "evidence/06-final-receipt.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\06-final-receipt.txt",
+      "bytes": 15087,
+      "sha256": "e064afc2defa078d6751c627a5fdfb8d737ee4da334050f4e2d4a3d094b889b0"
+    },
+    {
+      "relative_path": "evidence/public-readback.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\public-readback.json",
+      "bytes": 116137,
+      "sha256": "568c5b1b8ef2c17e63e638c7d8f04a354a89722a947d6d743d9c3263a08c4b47"
+    },
+    {
+      "relative_path": "evidence/requests-results.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\requests-results.json",
+      "bytes": 476989,
+      "sha256": "44ea1507a1a292a5ee410d6f61eed54f5916181674c652db9756dd8bc5f61331"
+    },
+    {
+      "relative_path": "evidence/save-after.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\save-after.json",
+      "bytes": 4832837,
+      "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca"
+    },
+    {
+      "relative_path": "evidence/save-before.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\save-before.json",
+      "bytes": 4832837,
+      "sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca"
+    },
+    {
+      "relative_path": "evidence/usage-baseline/usage.0.jsonl",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\usage-baseline\\usage.0.jsonl",
+      "bytes": 1091,
+      "sha256": "e52706cfed1ab30c25059eff9624c3d02cdc12a766032322a4d6f6eb9a222235"
+    },
+    {
+      "relative_path": "evidence/usage-end/usage.0.jsonl",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\evidence\\usage-end\\usage.0.jsonl",
+      "bytes": 9856,
+      "sha256": "066902ee94c66eee234069ffb0cd4f526202a0fec338ad16441039ebe00381b6"
+    },
+    {
+      "relative_path": "flywheel-before.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\flywheel-before.json",
+      "bytes": 6164,
+      "sha256": "ab30dcd84940d7cc8f72443f441e06412ab6185eca00416652235c138b66c2f4"
+    },
+    {
+      "relative_path": "flywheel-recorded.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\flywheel-recorded.json",
+      "bytes": 2720,
+      "sha256": "fcddc4b3162034272f39b81179e7934567861b763ff5f6dedb052b566a54b804"
+    },
+    {
+      "relative_path": "git-and-save-proof.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\git-and-save-proof.json",
+      "bytes": 207134,
+      "sha256": "932e88a28957773c13472530fc1626dd4aae400b452b9d284315b93c88cc4fb4"
+    },
+    {
+      "relative_path": "harness-corrections.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\harness-corrections.txt",
+      "bytes": 1383,
+      "sha256": "630ed0d7ba4942a5ea547dc4111d5dda98d8f4434d50f6c677a03d434049d51d"
+    },
+    {
+      "relative_path": "manifest.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\manifest.json",
+      "bytes": 1073,
+      "sha256": "baa244bb7afb3ab1950ddc9c151686ef079d1b6573baaa4f390b0c7490efe329"
+    },
+    {
+      "relative_path": "owned-server-pid.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\owned-server-pid.txt",
+      "bytes": 7,
+      "sha256": "ca9de7e0b8a2d2effe1bbaccf6c637ad33c0e8f4993d16befbcab8a95980ac4a"
+    },
+    {
+      "relative_path": "reconciliation.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\reconciliation.json",
+      "bytes": 3339,
+      "sha256": "e2885c039da2607a564550a4a891bf06862055eea5c8a598225f9e101b3be3a7"
+    },
+    {
+      "relative_path": "report.md",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+      "bytes": 4867,
+      "sha256": "bb60fee0827f6af009f578323aeeb1ed266f57c0254604cdc6da9004ef03278c"
+    },
+    {
+      "relative_path": "server-err.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\server-err.txt",
+      "bytes": 202,
+      "sha256": "db980473977a12068da63b14c87db644c5a19bc1664694b68372f53fb3620612"
+    },
+    {
+      "relative_path": "server-out.txt",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\server-out.txt",
+      "bytes": 7829,
+      "sha256": "d71a9d01f316cff691547cacf776002777285b3d31757895b97d2106d30f0218"
+    },
+    {
+      "relative_path": "shutdown.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\shutdown.json",
+      "bytes": 373,
+      "sha256": "230a4f6657aa50045c08847211aea4176d8a4e5be3833f4946e272f1985511b5"
+    },
+    {
+      "relative_path": "source-after.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\source-after.json",
+      "bytes": 104184,
+      "sha256": "9f243e3c59e4c91f3f5006d73882d030cc94130ef50cf693cb30a180a2d92e70"
+    },
+    {
+      "relative_path": "source-before.json",
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\academy-promotion-availability\\ESports Simulator\\runs\\playtests\\2026-10-11-academy-availability-fixed-head\\source-before.json",
+      "bytes": 104184,
+      "sha256": "9f243e3c59e4c91f3f5006d73882d030cc94130ef50cf693cb30a180a2d92e70"
+    }
+  ],
+  "private_and_helper_exclusions": [
+    "artifact-hashes.json",
+    "document-evidence.py",
+    "final-manifest.py",
+    "log.py",
+    "private-bootstrap.json",
+    "private-browser-bootstrap.js",
+    "record-findings.py",
+    "recover-findings.py",
+    "setup.py"
+  ],
+  "external_private_exclusions": [
+    "saves/sessions.json",
+    "browser cookies",
+    "any private auth/bootstrap session receipts"
+  ],
+  "helper_scope": "21-column session logger invoked original scripts/playtest_log.py with LOG_DIR redirected to this ignored session directory. Source logger and canonical CSV were untouched."
+}

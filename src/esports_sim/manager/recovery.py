@@ -83,7 +83,10 @@ def booked_week(gs, team_id: str) -> int | None:
 
 
 def already_booked(gs, team_id: str) -> bool:
-    return booked_week(gs, team_id) == gs.week
+    return (
+        booked_week(gs, team_id) == gs.week
+        and gs.recovery_booked_season_by.get(team_id, gs.season) == gs.season
+    )
 
 
 def average_condition(gs, team_id: str) -> float:
@@ -187,6 +190,7 @@ def book(gs, team_id: str, tier: str) -> tuple[bool, str]:
     after = average_condition(gs, team_id)
 
     gs.recovery_booked_by[team_id] = gs.week
+    gs.recovery_booked_season_by[team_id] = gs.season
     gs.push_news(
         f"{team.name} book a {spec['label'].lower()} ({cost:,} cr). "
         f"Squad condition {before:.0f} -> {after:.0f}."

@@ -1,0 +1,52 @@
+[
+  {
+    "rows": 765,
+    "historical_commit": "5a74f951291214ff30bde165f398a5062619655e",
+    "original_path": "docs/playtests/actions.csv",
+    "original_git_blob": "73446589a12ac898bace8a8b8f1146de8a5384e3",
+    "published_path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-765.csv",
+    "sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+    "bytes": 1354497,
+    "intermediate_merge_claimed": false
+  },
+  {
+    "rows": 994,
+    "historical_commit": "809b988fe1ace6281531e26f0a9d2b9020c136e6",
+    "original_path": "docs/playtests/actions.csv",
+    "original_git_blob": "3dd120d24f4604b43e44007bc7a879e0e36f05f9",
+    "published_path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-994.csv",
+    "sha256": "21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631",
+    "bytes": 1568755,
+    "intermediate_merge_claimed": false
+  },
+  {
+    "rows": 1003,
+    "historical_commit": "66c5cef9e1a0c2b52a5c3a77bfd4dce5f1110f89",
+    "original_path": "docs/playtests/actions.csv",
+    "original_git_blob": "eeb76b1a7f37835cf9d1f17d1ed3a4444ded666f",
+    "published_path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1003.csv",
+    "sha256": "33c7b39e80f3cc1d00355f01ba607ae4b9796cfc6f7f627811be07f87c328020",
+    "bytes": 1578333,
+    "intermediate_merge_claimed": false
+  },
+  {
+    "rows": 1016,
+    "historical_commit": "17a470ff15afb2aac27fb7e8638b9cecd6e012c4",
+    "original_path": "docs/playtests/actions.csv",
+    "original_git_blob": "66943228621909293329f606a6ef286465016c01",
+    "published_path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1016.csv",
+    "sha256": "17ceb1060a97fe258df2f5b9413829a09d0191d8527b2b6e988741fa14bebfff",
+    "bytes": 1591270,
+    "intermediate_merge_claimed": false
+  },
+  {
+    "rows": 1028,
+    "historical_commit": "9846fbd93ef0a84044753b153d63c9af2275376a",
+    "original_path": "docs/playtests/actions.csv",
+    "original_git_blob": "88b20ffde5e36b85dde9304a5f4bcf770fd7fcff",
+    "published_path": "docs/playtests/2026-10-11-history-consolidated-1044/historical-csv/snapshot-1028.csv",
+    "sha256": "ff314b3bc68c641dd3d9bea38afd0ef6194fcc0602d699836d5a2986148b50b7",
+    "bytes": 1602495,
+    "intermediate_merge_claimed": false
+  }
+]

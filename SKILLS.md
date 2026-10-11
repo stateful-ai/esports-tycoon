@@ -17,6 +17,7 @@ mirror of it.
 | `build-roster-packs` | Build or correct roster packs through portable drafts, schema validation, and the `esports-rosters` MCP tools |
 | `map-studio-authoring` | Create or co-edit shared Studio maps through revision-safe `esports-maps` MCP tools |
 | `trace-map` | Trace a real-map wiki minimap into geometry one-for-one (`scripts/wiki_map_trace.py` grid/zoom/overlay + gate chain) |
+| `playtest-log` | Play a separate test career, append player intentions/actions/expected vs actual outcomes to the persistent CSV, and verify decision-telemetry coverage |
 | `skills/esports-sim-guardrails` (repo-root, legacy location) | Engineering guardrails: determinism, typed boundaries, data-driven design |
 
 ## Learning policy work

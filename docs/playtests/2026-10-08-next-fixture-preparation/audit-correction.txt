@@ -1,0 +1,1 @@
+First offline ledger read used platform-default CP1252 and failed UnicodeDecodeError before any decisions were inspected. ExplicitUTF8 correction read succeeds; independent audit.py verifies baseline, exact new actions, paired usage and all17source hashes. Row11 and correction12 preserve this failure; no borrowed old audit result.

@@ -1,0 +1,25 @@
+{
+  "opened": {
+    "inert": false,
+    "ariaHidden": null,
+    "rect": {
+      "x": 355,
+      "y": 45,
+      "width": 880,
+      "height": 810,
+      "top": 45,
+      "right": 1235,
+      "bottom": 855,
+      "left": 355
+    },
+    "viewport": {
+      "width": 1600,
+      "height": 900
+    },
+    "active": "BODY"
+  },
+  "liveFocus": {
+    "active": "<button class=\"btn btn-sm\" data-tooltip=\"&lt;h4&gt;Rein in streaming…&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;Spend this week&amp;#39;s 1:1 telling them to stream less and practice more&lt;/div&gt;\" aria-describedby=\"es-tooltip\">Rein in streaming…</button>",
+    "inProfile": true
+  }
+}

@@ -72,6 +72,25 @@ def test_free_agents_do_not_reuse_a_rostered_handle(game_data: GameData) -> None
     assert not clashes, f"free agents reuse rostered handles: {clashes}"
 
 
+@pytest.mark.campaign
+def test_fantasy_draft_top_up_handles_are_unique(game_data: GameData) -> None:
+    gs = new_campaign(game_data, seed=2026, fantasy_draft=True)
+    handles = [p.handle for p in gs.players.values()]
+    assert len(handles) == len(set(handles))
+
+
+@pytest.mark.campaign
+def test_later_rookie_generators_keep_world_handles_unique(game_data: GameData) -> None:
+    from esports_sim.manager import campaign, market
+
+    gs = new_campaign(game_data, seed=2026)
+    campaign._rookie_classes(gs, game_data, np.random.default_rng(701), 12)
+    for seed in range(5):
+        market._generate_rookie(gs, game_data, np.random.default_rng(seed))
+    handles = [p.handle for p in gs.players.values()]
+    assert len(handles) == len(set(handles))
+
+
 def test_free_handle_is_pure_and_stable() -> None:
     """Same inputs, same answer, and it never returns something already taken."""
     taken = {"Nightwolf", "Nightbyte"}

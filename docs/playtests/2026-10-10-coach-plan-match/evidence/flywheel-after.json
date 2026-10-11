@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0143",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Winning does not imply a focused plan succeeded",
+    "problem": "Assess the selected target independently of the team result",
+    "solution": "Compare explicit target outcome and baseline season form after advancing once",
+    "lesson": "Nexus won13-3 but Cipherstrike1.53 exceeded season1.22; UI marks focus backfired. This descriptive comparison is not a causal estimate. Refocus separately reports confidence-3 per starter",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0144",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Coach booking, game plan and weekly development are distinct",
+    "problem": "Track preparation cost without attributing all weekly condition change to it",
+    "solution": "Read booking, save reload and completed preparation report plus weekly source attribution",
+    "lesson": "Normal Retakes consumed its one-fixture booking, saved cost4 and knowledge1.95; Ghost practice+0.37/matches+0.06 while bench Hollowlock recovered67.9->87.9. Condition includes training/recovery and match load",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0145",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation development labels expose internal stable IDs",
+    "problem": "Clickable Dev note displays FA0 beside Hollowlock prose and roster",
+    "solution": "Preserve full screenshot/DOM and assign narrow known-player handle serialization/profile-target fix",
+    "lesson": "Current main report lacks dev_suggestion_handle; app falls back to humanizing fa_0. Gap29 assigned GPT6.1-sol/medium, no correction shipped yet. Stale Save reference failure is separate harness friction",
+    "confidence": "high",
+    "source": "2026-10-10-coach-plan-match main64ee15f browser8495 world26UHC seed2038 W13-W14",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "preparation",
+      "game-plan",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

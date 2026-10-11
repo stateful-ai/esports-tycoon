@@ -1,0 +1,3030 @@
+schema_version: 1
+id: bind-layout-v2
+display_name: Bind - Layout v2
+reference:
+  image_path: /assets/maps/references/bind.png
+  description: Bind minimap - owner's July 2026 snapshot; flipv orientation
+  source_sha256: dc4a43f2a5b99d6d2af287025e29c38e26b10784ba7ae0a342b0677b5b5499cb
+  rotation: flipv
+  x: 0.0
+  y: 0.0
+  width: 86.14958448753464
+  height: 100.0
+links_define_adjacency: true
+movement_model: free
+sites:
+- a
+- b
+attacker_spawn: attacker_spawn
+defender_spawn: defender_spawn
+walkable_surfaces:
+- id: surf_attacker_spawn
+  polygon:
+  - - 38.0
+    - 0.0
+  - - 58.0
+    - 0.0
+  - - 58.0
+    - 16.0
+  - - 38.0
+    - 16.0
+  elevation: 0.0
+  floor_extensions: []
+- id: surf_defender_spawn
+  polygon:
+  - - 27.0
+    - 72.5
+  - - 72.0
+    - 72.5
+  - - 72.0
+    - 97.0
+  - - 27.0
+    - 97.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 56.5
+    y: 72.0
+    w: 12.0
+    h: 0.5100000000000051
+  - x: 38.5
+    y: 96.99
+    w: 5.5
+    h: 0.5100000000000051
+- id: surf_a_lobby
+  polygon:
+  - - 13.0
+    - 16.0
+  - - 44.0
+    - 16.0
+  - - 44.0
+    - 44.0
+  - - 13.0
+    - 44.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 9.0
+    y: 33.5
+    w: 4.01
+    h: 7.0
+  - x: 23.0
+    y: 43.99
+    w: 4.0
+    h: 3.509999999999998
+  - x: 6.5
+    y: 36.0
+    w: 2.5
+    h: 3.0
+  - x: 11.0
+    y: 31.5
+    w: 2.01
+    h: 2.0
+  - x: 11.0
+    y: 40.5
+    w: 2.01
+    h: 2.0
+  - x: 16.0
+    y: 43.99
+    w: 7.0
+    h: 0.509999999999998
+  - x: 27.0
+    y: 43.99
+    w: 2.0
+    h: 1.509999999999998
+  - x: 8.0
+    y: 34.5
+    w: 1.0
+    h: 1.5
+  - x: 6.0
+    y: 36.5
+    w: 0.5
+    h: 2.5
+  - x: 12.0
+    y: 30.5
+    w: 1.0099999999999998
+    h: 1.0
+  - x: 10.0
+    y: 32.5
+    w: 1.0
+    h: 1.0
+  - x: 10.0
+    y: 40.5
+    w: 1.0
+    h: 1.0
+  - x: 12.0
+    y: 42.5
+    w: 1.0099999999999998
+    h: 1.0
+  - x: 27.0
+    y: 45.5
+    w: 1.0
+    h: 1.0
+- id: surf_a_showers
+  polygon:
+  - - 3.0
+    - 44.0
+  - - 16.0
+    - 44.0
+  - - 16.0
+    - 60.0
+  - - 3.0
+    - 60.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 7.5
+    y: 41.0
+    w: 2.5
+    h: 3.009999999999998
+  - x: 15.99
+    y: 54.0
+    w: 1.0099999999999998
+    h: 5.5
+  - x: 6.0
+    y: 39.0
+    w: 2.0
+    h: 2.0
+  - x: 10.0
+    y: 42.5
+    w: 1.5
+    h: 1.509999999999998
+  - x: 6.5
+    y: 42.5
+    w: 1.0
+    h: 1.509999999999998
+  - x: 8.0
+    y: 40.0
+    w: 1.0
+    h: 1.0
+  - x: 8.5
+    y: 59.99
+    w: 1.0
+    h: 1.009999999999998
+- id: surf_a_short
+  polygon:
+  - - 30.0
+    - 44.0
+  - - 48.0
+    - 44.0
+  - - 48.0
+    - 62.0
+  - - 30.0
+    - 62.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 26.0
+    y: 48.0
+    w: 4.010000000000002
+    h: 8.0
+  - x: 24.0
+    y: 53.0
+    w: 2.0
+    h: 2.5
+  - x: 28.0
+    y: 46.0
+    w: 2.0100000000000016
+    h: 2.0
+  - x: 27.0
+    y: 56.0
+    w: 3.0100000000000016
+    h: 1.0
+  - x: 47.99
+    y: 50.0
+    w: 0.509999999999998
+    h: 5.0
+  - x: 47.99
+    y: 44.0
+    w: 0.509999999999998
+    h: 4.0
+  - x: 44.5
+    y: 43.5
+    w: 3.5
+    h: 0.509999999999998
+  - x: 29.0
+    y: 45.0
+    w: 1.0100000000000016
+    h: 1.0
+  - x: 27.0
+    y: 47.0
+    w: 1.0
+    h: 1.0
+  - x: 48.5
+    y: 52.5
+    w: 0.5
+    h: 2.0
+  - x: 28.0
+    y: 57.0
+    w: 2.0100000000000016
+    h: 0.5
+- id: surf_a_site
+  polygon:
+  - - 10.0
+    - 60.0
+  - - 30.0
+    - 60.0
+  - - 30.0
+    - 74.5
+  - - 10.0
+    - 74.5
+  elevation: 0.0
+  floor_extensions:
+  - x: 19.5
+    y: 49.5
+    w: 3.5
+    h: 10.509999999999998
+  - x: 3.5
+    y: 64.5
+    w: 4.0
+    h: 8.0
+  - x: 7.5
+    y: 64.5
+    w: 2.51
+    h: 3.0
+  - x: 7.5
+    y: 70.0
+    w: 2.51
+    h: 2.5
+  - x: 18.5
+    y: 49.5
+    w: 1.0
+    h: 5.5
+  - x: 8.5
+    y: 61.5
+    w: 1.5099999999999998
+    h: 2.5
+  - x: 23.0
+    y: 53.5
+    w: 0.5
+    h: 6.509999999999998
+  - x: 18.5
+    y: 57.0
+    w: 1.0
+    h: 3.009999999999998
+- id: surf_a_lamps
+  polygon:
+  - - 27.0
+    - 60.0
+  - - 34.0
+    - 60.0
+  - - 34.0
+    - 72.5
+  - - 27.0
+    - 72.5
+  elevation: 0.0
+  floor_extensions: []
+- id: surf_a_uhall
+  polygon:
+  - - 10.0
+    - 72.5
+  - - 27.0
+    - 72.5
+  - - 27.0
+    - 80.0
+  - - 10.0
+    - 80.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 9.5
+    y: 79.99
+    w: 16.5
+    h: 0.5100000000000051
+  - x: 3.5
+    y: 72.5
+    w: 6.51
+    h: 1.0
+  - x: 9.5
+    y: 73.5
+    w: 0.5099999999999998
+    h: 6.5
+- id: surf_b_fountain
+  polygon:
+  - - 44.0
+    - 12.0
+  - - 63.0
+    - 12.0
+  - - 63.0
+    - 42.0
+  - - 44.0
+    - 42.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 62.99
+    y: 22.5
+    w: 2.509999999999998
+    h: 5.5
+  - x: 65.5
+    y: 23.5
+    w: 0.5
+    h: 4.0
+  - x: 62.99
+    y: 21.5
+    w: 1.509999999999998
+    h: 1.0
+  - x: 62.99
+    y: 28.0
+    w: 1.509999999999998
+    h: 1.0
+- id: surf_b_window
+  polygon:
+  - - 49.0
+    - 42.0
+  - - 60.0
+    - 42.0
+  - - 60.0
+    - 52.0
+  - - 49.0
+    - 52.0
+  elevation: 3.0
+  floor_extensions:
+  - x: 49.0
+    y: 51.99
+    w: 5.0
+    h: 1.509999999999998
+  - x: 48.5
+    y: 43.5
+    w: 0.509999999999998
+    h: 4.5
+  - x: 48.5
+    y: 50.0
+    w: 0.509999999999998
+    h: 2.5
+- id: surf_b_long
+  polygon:
+  - - 60.0
+    - 30.0
+  - - 85.0
+    - 30.0
+  - - 85.0
+    - 53.0
+  - - 60.0
+    - 53.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 71.0
+    y: 52.99
+    w: 6.5
+    h: 1.509999999999998
+  - x: 64.5
+    y: 28.5
+    w: 1.5
+    h: 1.5100000000000016
+- id: surf_b_site
+  polygon:
+  - - 54.5
+    - 52.0
+  - - 69.0
+    - 52.0
+  - - 69.0
+    - 71.0
+  - - 54.5
+    - 71.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 56.5
+    y: 70.99
+    w: 11.5
+    h: 1.0100000000000051
+  - x: 68.99
+    y: 54.5
+    w: 1.0100000000000051
+    h: 1.0
+- id: surf_b_elbow
+  polygon:
+  - - 47.0
+    - 55.0
+  - - 56.0
+    - 55.0
+  - - 56.0
+    - 73.0
+  - - 47.0
+    - 73.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 49.5
+    y: 53.5
+    w: 4.5
+    h: 1.509999999999998
+  - x: 46.5
+    y: 62.5
+    w: 0.509999999999998
+    h: 6.0
+- id: surf_b_hall
+  polygon:
+  - - 68.5
+    - 56.0
+  - - 76.0
+    - 56.0
+  - - 76.0
+    - 72.0
+  - - 68.5
+    - 72.0
+  elevation: 0.0
+  floor_extensions:
+  - x: 70.5
+    y: 54.5
+    w: 5.5
+    h: 1.509999999999998
+  - x: 75.99
+    y: 55.5
+    w: 1.5100000000000051
+    h: 2.5
+  - x: 68.5
+    y: 71.99
+    w: 2.5
+    h: 0.5100000000000051
+walls: []
+props:
+- id: prop_a_lobby_0
+  surface_id: surf_a_lobby
+  footprint:
+  - - 13.0
+    - 16.0
+  - - 28.0
+    - 16.0
+  - - 28.0
+    - 27.5
+  - - 13.0
+    - 27.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_lobby_1
+  surface_id: surf_a_lobby
+  footprint:
+  - - 40.0
+    - 18.0
+  - - 44.0
+    - 18.0
+  - - 44.0
+    - 28.0
+  - - 40.0
+    - 28.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_lobby_2
+  surface_id: surf_a_lobby
+  footprint:
+  - - 36.0
+    - 40.0
+  - - 44.0
+    - 40.0
+  - - 44.0
+    - 44.0
+  - - 36.0
+    - 44.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_fountain_3
+  surface_id: surf_b_fountain
+  footprint:
+  - - 44.0
+    - 12.0
+  - - 49.0
+    - 12.0
+  - - 49.0
+    - 27.0
+  - - 44.0
+    - 27.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_fountain_4
+  surface_id: surf_b_fountain
+  footprint:
+  - - 49.0
+    - 18.0
+  - - 56.0
+    - 18.0
+  - - 56.0
+    - 28.0
+  - - 49.0
+    - 28.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_lobby_5
+  surface_id: surf_a_lobby
+  footprint:
+  - - 13.0
+    - 28.0
+  - - 19.0
+    - 28.0
+  - - 19.0
+    - 31.5
+  - - 13.0
+    - 31.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_short_6
+  surface_id: surf_a_short
+  footprint:
+  - - 40.5
+    - 44.0
+  - - 48.0
+    - 44.0
+  - - 48.0
+    - 50.5
+  - - 40.5
+    - 50.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_short_7
+  surface_id: surf_a_short
+  footprint:
+  - - 30.0
+    - 46.0
+  - - 32.5
+    - 46.0
+  - - 32.5
+    - 58.0
+  - - 30.0
+    - 58.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_long_8
+  surface_id: surf_b_long
+  footprint:
+  - - 60.5
+    - 42.5
+  - - 66.0
+    - 42.5
+  - - 66.0
+    - 53.0
+  - - 60.5
+    - 53.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_long_9
+  surface_id: surf_b_long
+  footprint:
+  - - 75.5
+    - 30.0
+  - - 85.0
+    - 30.0
+  - - 85.0
+    - 40.5
+  - - 75.5
+    - 40.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_long_10
+  surface_id: surf_b_long
+  footprint:
+  - - 75.5
+    - 50.0
+  - - 85.0
+    - 50.0
+  - - 85.0
+    - 53.0
+  - - 75.5
+    - 53.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_elbow_11
+  surface_id: surf_b_elbow
+  footprint:
+  - - 47.0
+    - 67.0
+  - - 52.5
+    - 67.0
+  - - 52.5
+    - 73.0
+  - - 47.0
+    - 73.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_defender_spawn_12
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 27.0
+    - 80.5
+  - - 36.0
+    - 80.5
+  - - 36.0
+    - 97.0
+  - - 27.0
+    - 97.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_defender_spawn_13
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 51.0
+    - 80.5
+  - - 72.0
+    - 80.5
+  - - 72.0
+    - 97.0
+  - - 51.0
+    - 97.0
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_14
+  surface_id: surf_a_site
+  footprint:
+  - - 22.0
+    - 62.5
+  - - 25.0
+    - 62.5
+  - - 25.0
+    - 65.5
+  - - 22.0
+    - 65.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_15
+  surface_id: surf_b_site
+  footprint:
+  - - 64.5
+    - 53.5
+  - - 67.5
+    - 53.5
+  - - 67.5
+    - 56.5
+  - - 64.5
+    - 56.5
+  height: full
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_16
+  surface_id: surf_a_site
+  footprint:
+  - - 12.0
+    - 62.0
+  - - 15.0
+    - 62.0
+  - - 15.0
+    - 65.0
+  - - 12.0
+    - 65.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_17
+  surface_id: surf_a_site
+  footprint:
+  - - 16.5
+    - 65.5
+  - - 19.5
+    - 65.5
+  - - 19.5
+    - 68.5
+  - - 16.5
+    - 68.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_18
+  surface_id: surf_a_site
+  footprint:
+  - - 25.5
+    - 67.5
+  - - 28.5
+    - 67.5
+  - - 28.5
+    - 70.5
+  - - 25.5
+    - 70.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_19
+  surface_id: surf_a_site
+  footprint:
+  - - 13.0
+    - 68.5
+  - - 16.0
+    - 68.5
+  - - 16.0
+    - 71.5
+  - - 13.0
+    - 71.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_site_20
+  surface_id: surf_a_site
+  footprint:
+  - - 26.0
+    - 61.0
+  - - 29.0
+    - 61.0
+  - - 29.0
+    - 64.0
+  - - 26.0
+    - 64.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_21
+  surface_id: surf_b_site
+  footprint:
+  - - 56.0
+    - 55.0
+  - - 59.0
+    - 55.0
+  - - 59.0
+    - 58.0
+  - - 56.0
+    - 58.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_22
+  surface_id: surf_b_site
+  footprint:
+  - - 60.0
+    - 59.5
+  - - 63.0
+    - 59.5
+  - - 63.0
+    - 62.5
+  - - 60.0
+    - 62.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_23
+  surface_id: surf_b_site
+  footprint:
+  - - 65.0
+    - 63.0
+  - - 68.0
+    - 63.0
+  - - 68.0
+    - 66.0
+  - - 65.0
+    - 66.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_24
+  surface_id: surf_b_site
+  footprint:
+  - - 57.0
+    - 66.0
+  - - 60.0
+    - 66.0
+  - - 60.0
+    - 69.0
+  - - 57.0
+    - 69.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_site_25
+  surface_id: surf_b_site
+  footprint:
+  - - 62.0
+    - 67.5
+  - - 65.0
+    - 67.5
+  - - 65.0
+    - 70.5
+  - - 62.0
+    - 70.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_lamps_26
+  surface_id: surf_a_lamps
+  footprint:
+  - - 28.0
+    - 68.0
+  - - 31.0
+    - 68.0
+  - - 31.0
+    - 71.0
+  - - 28.0
+    - 71.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_a_uhall_27
+  surface_id: surf_a_uhall
+  footprint:
+  - - 12.0
+    - 74.0
+  - - 15.0
+    - 74.0
+  - - 15.0
+    - 77.0
+  - - 12.0
+    - 77.0
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_elbow_28
+  surface_id: surf_b_elbow
+  footprint:
+  - - 48.5
+    - 59.5
+  - - 51.5
+    - 59.5
+  - - 51.5
+    - 62.5
+  - - 48.5
+    - 62.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: prop_b_hall_29
+  surface_id: surf_b_hall
+  footprint:
+  - - 70.0
+    - 67.5
+  - - 73.0
+    - 67.5
+  - - 73.0
+    - 70.5
+  - - 70.0
+    - 70.5
+  height: half
+  collision: true
+  destructible: false
+  role: cover
+- id: trace_mask_surf_a_lamps_000
+  surface_id: surf_a_lamps
+  footprint:
+  - - 32.5
+    - 63.0
+  - - 33.99
+    - 63.0
+  - - 33.99
+    - 67.0
+  - - 32.5
+    - 67.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lamps_001
+  surface_id: surf_a_lamps
+  footprint:
+  - - 32.0
+    - 70.5
+  - - 33.99
+    - 70.5
+  - - 33.99
+    - 72.0
+  - - 32.0
+    - 72.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_window_002
+  surface_id: surf_b_window
+  footprint:
+  - - 49.01
+    - 42.01
+  - - 53.0
+    - 42.01
+  - - 53.0
+    - 43.5
+  - - 49.01
+    - 43.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_window_003
+  surface_id: surf_b_window
+  footprint:
+  - - 57.5
+    - 48.0
+  - - 59.0
+    - 48.0
+  - - 59.0
+    - 50.5
+  - - 57.5
+    - 50.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_hall_004
+  surface_id: surf_b_hall
+  footprint:
+  - - 74.0
+    - 58.0
+  - - 75.99
+    - 58.0
+  - - 75.99
+    - 71.99
+  - - 74.0
+    - 71.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_hall_005
+  surface_id: surf_b_hall
+  footprint:
+  - - 71.5
+    - 58.0
+  - - 74.0
+    - 58.0
+  - - 74.0
+    - 61.0
+  - - 71.5
+    - 61.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_hall_006
+  surface_id: surf_b_hall
+  footprint:
+  - - 69.0
+    - 63.5
+  - - 70.5
+    - 63.5
+  - - 70.5
+    - 66.0
+  - - 69.0
+    - 66.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_hall_007
+  surface_id: surf_b_hall
+  footprint:
+  - - 73.5
+    - 61.0
+  - - 74.0
+    - 61.0
+  - - 74.0
+    - 66.0
+  - - 73.5
+    - 66.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_elbow_008
+  surface_id: surf_b_elbow
+  footprint:
+  - - 47.01
+    - 55.5
+  - - 49.5
+    - 55.5
+  - - 49.5
+    - 58.0
+  - - 47.01
+    - 58.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_009
+  surface_id: surf_a_showers
+  footprint:
+  - - 3.01
+    - 44.01
+  - - 6.5
+    - 44.01
+  - - 6.5
+    - 52.5
+  - - 3.01
+    - 52.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_010
+  surface_id: surf_a_showers
+  footprint:
+  - - 12.5
+    - 49.0
+  - - 15.99
+    - 49.0
+  - - 15.99
+    - 53.0
+  - - 12.5
+    - 53.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_011
+  surface_id: surf_a_showers
+  footprint:
+  - - 3.01
+    - 58.5
+  - - 8.5
+    - 58.5
+  - - 8.5
+    - 59.99
+  - - 3.01
+    - 59.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_012
+  surface_id: surf_a_showers
+  footprint:
+  - - 14.5
+    - 46.0
+  - - 15.99
+    - 46.0
+  - - 15.99
+    - 49.0
+  - - 14.5
+    - 49.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_013
+  surface_id: surf_a_showers
+  footprint:
+  - - 10.5
+    - 44.5
+  - - 11.5
+    - 44.5
+  - - 11.5
+    - 47.0
+  - - 10.5
+    - 47.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_014
+  surface_id: surf_a_showers
+  footprint:
+  - - 11.0
+    - 51.5
+  - - 12.5
+    - 51.5
+  - - 12.5
+    - 53.0
+  - - 11.0
+    - 53.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_showers_015
+  surface_id: surf_a_showers
+  footprint:
+  - - 8.5
+    - 58.5
+  - - 10.5
+    - 58.5
+  - - 10.5
+    - 59.5
+  - - 8.5
+    - 59.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_site_016
+  surface_id: surf_b_site
+  footprint:
+  - - 61.0
+    - 54.0
+  - - 63.0
+    - 54.0
+  - - 63.0
+    - 57.5
+  - - 61.0
+    - 57.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_site_017
+  surface_id: surf_a_site
+  footprint:
+  - - 26.0
+    - 73.5
+  - - 29.99
+    - 73.5
+  - - 29.99
+    - 74.49
+  - - 26.0
+    - 74.49
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_site_018
+  surface_id: surf_a_site
+  footprint:
+  - - 10.01
+    - 67.5
+  - - 11.5
+    - 67.5
+  - - 11.5
+    - 70.0
+  - - 10.01
+    - 70.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_site_019
+  surface_id: surf_a_site
+  footprint:
+  - - 26.0
+    - 65.0
+  - - 28.5
+    - 65.0
+  - - 28.5
+    - 66.0
+  - - 26.0
+    - 66.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_site_020
+  surface_id: surf_a_site
+  footprint:
+  - - 17.0
+    - 60.01
+  - - 18.5
+    - 60.01
+  - - 18.5
+    - 61.5
+  - - 17.0
+    - 61.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_021
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 38.01
+    - 0.01
+  - - 42.5
+    - 0.01
+  - - 42.5
+    - 13.0
+  - - 38.01
+    - 13.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_022
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 42.5
+    - 0.01
+  - - 57.99
+    - 0.01
+  - - 57.99
+    - 2.5
+  - - 42.5
+    - 2.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_023
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 55.0
+    - 2.5
+  - - 57.99
+    - 2.5
+  - - 57.99
+    - 12.5
+  - - 55.0
+    - 12.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_024
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 42.5
+    - 2.5
+  - - 45.5
+    - 2.5
+  - - 45.5
+    - 6.0
+  - - 42.5
+    - 6.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_025
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 52.5
+    - 2.5
+  - - 55.0
+    - 2.5
+  - - 55.0
+    - 5.0
+  - - 52.5
+    - 5.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_026
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 38.01
+    - 13.0
+  - - 40.0
+    - 13.0
+  - - 40.0
+    - 15.99
+  - - 38.01
+    - 15.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_027
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 56.0
+    - 12.5
+  - - 57.99
+    - 12.5
+  - - 57.99
+    - 14.0
+  - - 56.0
+    - 14.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_028
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 50.0
+    - 14.0
+  - - 51.5
+    - 14.0
+  - - 51.5
+    - 15.99
+  - - 50.0
+    - 15.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_029
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 53.5
+    - 5.0
+  - - 55.0
+    - 5.0
+  - - 55.0
+    - 6.5
+  - - 53.5
+    - 6.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_030
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 42.5
+    - 6.0
+  - - 44.0
+    - 6.0
+  - - 44.0
+    - 7.5
+  - - 42.5
+    - 7.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_attacker_spawn_031
+  surface_id: surf_attacker_spawn
+  footprint:
+  - - 40.0
+    - 13.0
+  - - 42.0
+    - 13.0
+  - - 42.0
+    - 14.0
+  - - 40.0
+    - 14.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_032
+  surface_id: surf_a_short
+  footprint:
+  - - 39.5
+    - 54.0
+  - - 46.5
+    - 54.0
+  - - 46.5
+    - 60.5
+  - - 39.5
+    - 60.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_033
+  surface_id: surf_a_short
+  footprint:
+  - - 34.0
+    - 60.5
+  - - 44.0
+    - 60.5
+  - - 44.0
+    - 61.99
+  - - 34.0
+    - 61.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_034
+  surface_id: surf_a_short
+  footprint:
+  - - 33.5
+    - 46.5
+  - - 35.5
+    - 46.5
+  - - 35.5
+    - 51.0
+  - - 33.5
+    - 51.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_035
+  surface_id: surf_a_short
+  footprint:
+  - - 36.5
+    - 57.5
+  - - 39.5
+    - 57.5
+  - - 39.5
+    - 60.5
+  - - 36.5
+    - 60.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_036
+  surface_id: surf_a_short
+  footprint:
+  - - 44.0
+    - 52.5
+  - - 47.5
+    - 52.5
+  - - 47.5
+    - 54.0
+  - - 44.0
+    - 54.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_037
+  surface_id: surf_a_short
+  footprint:
+  - - 46.5
+    - 54.0
+  - - 47.0
+    - 54.0
+  - - 47.0
+    - 60.0
+  - - 46.5
+    - 60.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_038
+  surface_id: surf_a_short
+  footprint:
+  - - 38.0
+    - 45.0
+  - - 39.0
+    - 45.0
+  - - 39.0
+    - 47.5
+  - - 38.0
+    - 47.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_039
+  surface_id: surf_a_short
+  footprint:
+  - - 38.0
+    - 56.0
+  - - 39.5
+    - 56.0
+  - - 39.5
+    - 57.5
+  - - 38.0
+    - 57.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_short_040
+  surface_id: surf_a_short
+  footprint:
+  - - 35.0
+    - 59.0
+  - - 36.5
+    - 59.0
+  - - 36.5
+    - 60.5
+  - - 35.0
+    - 60.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_041
+  surface_id: surf_b_fountain
+  footprint:
+  - - 45.0
+    - 29.0
+  - - 52.5
+    - 29.0
+  - - 52.5
+    - 41.99
+  - - 45.0
+    - 41.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_042
+  surface_id: surf_b_fountain
+  footprint:
+  - - 58.5
+    - 12.01
+  - - 62.99
+    - 12.01
+  - - 62.99
+    - 16.0
+  - - 58.5
+    - 16.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_043
+  surface_id: surf_b_fountain
+  footprint:
+  - - 44.01
+    - 29.0
+  - - 45.0
+    - 29.0
+  - - 45.0
+    - 38.5
+  - - 44.01
+    - 38.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_044
+  surface_id: surf_b_fountain
+  footprint:
+  - - 61.0
+    - 16.0
+  - - 62.99
+    - 16.0
+  - - 62.99
+    - 19.0
+  - - 61.0
+    - 19.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_045
+  surface_id: surf_b_fountain
+  footprint:
+  - - 57.0
+    - 22.0
+  - - 58.0
+    - 22.0
+  - - 58.0
+    - 26.0
+  - - 57.0
+    - 26.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_046
+  surface_id: surf_b_fountain
+  footprint:
+  - - 55.0
+    - 36.0
+  - - 55.5
+    - 36.0
+  - - 55.5
+    - 41.99
+  - - 55.0
+    - 41.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_047
+  surface_id: surf_b_fountain
+  footprint:
+  - - 45.0
+    - 28.0
+  - - 47.5
+    - 28.0
+  - - 47.5
+    - 29.0
+  - - 45.0
+    - 29.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_fountain_048
+  surface_id: surf_b_fountain
+  footprint:
+  - - 57.5
+    - 31.0
+  - - 59.5
+    - 31.0
+  - - 59.5
+    - 32.0
+  - - 57.5
+    - 32.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_049
+  surface_id: surf_b_long
+  footprint:
+  - - 66.0
+    - 30.01
+  - - 74.0
+    - 30.01
+  - - 74.0
+    - 34.0
+  - - 66.0
+    - 34.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_050
+  surface_id: surf_b_long
+  footprint:
+  - - 77.0
+    - 41.5
+  - - 84.99
+    - 41.5
+  - - 84.99
+    - 44.0
+  - - 77.0
+    - 44.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_051
+  surface_id: surf_b_long
+  footprint:
+  - - 83.5
+    - 44.0
+  - - 84.99
+    - 44.0
+  - - 84.99
+    - 48.5
+  - - 83.5
+    - 48.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_052
+  surface_id: surf_b_long
+  footprint:
+  - - 62.0
+    - 40.0
+  - - 67.5
+    - 40.0
+  - - 67.5
+    - 41.0
+  - - 62.0
+    - 41.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_053
+  surface_id: surf_b_long
+  footprint:
+  - - 69.5
+    - 50.5
+  - - 71.0
+    - 50.5
+  - - 71.0
+    - 52.99
+  - - 69.5
+    - 52.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_b_long_054
+  surface_id: surf_b_long
+  footprint:
+  - - 67.5
+    - 34.0
+  - - 74.0
+    - 34.0
+  - - 74.0
+    - 34.5
+  - - 67.5
+    - 34.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_055
+  surface_id: surf_a_lobby
+  footprint:
+  - - 29.0
+    - 16.01
+  - - 34.0
+    - 16.01
+  - - 34.0
+    - 24.5
+  - - 29.0
+    - 24.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_056
+  surface_id: surf_a_lobby
+  footprint:
+  - - 41.5
+    - 29.5
+  - - 43.99
+    - 29.5
+  - - 43.99
+    - 37.5
+  - - 41.5
+    - 37.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_057
+  surface_id: surf_a_lobby
+  footprint:
+  - - 22.5
+    - 37.5
+  - - 26.0
+    - 37.5
+  - - 26.0
+    - 41.5
+  - - 22.5
+    - 41.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_058
+  surface_id: surf_a_lobby
+  footprint:
+  - - 34.0
+    - 16.01
+  - - 37.5
+    - 16.01
+  - - 37.5
+    - 19.5
+  - - 34.0
+    - 19.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_059
+  surface_id: surf_a_lobby
+  footprint:
+  - - 20.0
+    - 28.5
+  - - 26.0
+    - 28.5
+  - - 26.0
+    - 30.0
+  - - 20.0
+    - 30.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_060
+  surface_id: surf_a_lobby
+  footprint:
+  - - 37.0
+    - 35.5
+  - - 41.5
+    - 35.5
+  - - 41.5
+    - 37.5
+  - - 37.0
+    - 37.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_061
+  surface_id: surf_a_lobby
+  footprint:
+  - - 25.0
+    - 35.0
+  - - 28.0
+    - 35.0
+  - - 28.0
+    - 37.5
+  - - 25.0
+    - 37.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_062
+  surface_id: surf_a_lobby
+  footprint:
+  - - 31.0
+    - 35.0
+  - - 34.0
+    - 35.0
+  - - 34.0
+    - 37.5
+  - - 31.0
+    - 37.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_063
+  surface_id: surf_a_lobby
+  footprint:
+  - - 29.0
+    - 24.5
+  - - 31.5
+    - 24.5
+  - - 31.5
+    - 26.5
+  - - 29.0
+    - 26.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_064
+  surface_id: surf_a_lobby
+  footprint:
+  - - 34.0
+    - 19.5
+  - - 35.5
+    - 19.5
+  - - 35.5
+    - 22.5
+  - - 34.0
+    - 22.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_065
+  surface_id: surf_a_lobby
+  footprint:
+  - - 32.0
+    - 28.5
+  - - 34.0
+    - 28.5
+  - - 34.0
+    - 30.5
+  - - 32.0
+    - 30.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_a_lobby_066
+  surface_id: surf_a_lobby
+  footprint:
+  - - 20.5
+    - 39.5
+  - - 22.5
+    - 39.5
+  - - 22.5
+    - 41.5
+  - - 20.5
+    - 41.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_067
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 38.5
+    - 72.51
+  - - 45.5
+    - 72.51
+  - - 45.5
+    - 76.5
+  - - 38.5
+    - 76.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_068
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 47.5
+    - 87.5
+  - - 49.5
+    - 87.5
+  - - 49.5
+    - 96.99
+  - - 47.5
+    - 96.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_069
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 70.0
+    - 74.0
+  - - 71.99
+    - 74.0
+  - - 71.99
+    - 79.0
+  - - 70.0
+    - 79.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_070
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 41.5
+    - 76.5
+  - - 46.0
+    - 76.5
+  - - 46.0
+    - 78.5
+  - - 41.5
+    - 78.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_071
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 55.0
+    - 73.5
+  - - 58.5
+    - 73.5
+  - - 58.5
+    - 76.0
+  - - 55.0
+    - 76.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_072
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 45.5
+    - 93.5
+  - - 47.5
+    - 93.5
+  - - 47.5
+    - 96.99
+  - - 45.5
+    - 96.99
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_073
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 34.5
+    - 72.51
+  - - 38.5
+    - 72.51
+  - - 38.5
+    - 74.0
+  - - 34.5
+    - 74.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_074
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 45.5
+    - 74.0
+  - - 48.0
+    - 74.0
+  - - 48.0
+    - 76.0
+  - - 45.5
+    - 76.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_075
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 27.01
+    - 74.5
+  - - 31.5
+    - 74.5
+  - - 31.5
+    - 75.5
+  - - 27.01
+    - 75.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_076
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 58.5
+    - 75.0
+  - - 61.0
+    - 75.0
+  - - 61.0
+    - 76.0
+  - - 58.5
+    - 76.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_077
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 37.0
+    - 74.0
+  - - 38.5
+    - 74.0
+  - - 38.5
+    - 75.5
+  - - 37.0
+    - 75.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_078
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 28.5
+    - 75.5
+  - - 33.0
+    - 75.5
+  - - 33.0
+    - 76.0
+  - - 28.5
+    - 76.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_079
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 48.0
+    - 80.5
+  - - 49.5
+    - 80.5
+  - - 49.5
+    - 82.0
+  - - 48.0
+    - 82.0
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+- id: trace_mask_surf_defender_spawn_080
+  surface_id: surf_defender_spawn
+  footprint:
+  - - 48.0
+    - 86.0
+  - - 49.5
+    - 86.0
+  - - 49.5
+    - 87.5
+  - - 48.0
+    - 87.5
+  height: full
+  collision: true
+  destructible: false
+  role: wall
+semantic_zones:
+- id: attacker_spawn
+  display_name: Attacker Spawn
+  kind: spawn
+  polygon:
+  - - 38.0
+    - 0.0
+  - - 58.0
+    - 0.0
+  - - 58.0
+    - 16.0
+  - - 38.0
+    - 16.0
+  surface_ids:
+  - surf_attacker_spawn
+  label_position:
+  - 48.0
+  - 8.0
+  site_id: none
+  legacy_zone: attacker_spawn
+- id: defender_spawn
+  display_name: Defender Spawn
+  kind: spawn
+  polygon:
+  - - 27.0
+    - 72.5
+  - - 72.0
+    - 72.5
+  - - 72.0
+    - 97.0
+  - - 27.0
+    - 97.0
+  surface_ids:
+  - surf_defender_spawn
+  label_position:
+  - 49.0
+  - 76.0
+  site_id: none
+  legacy_zone: defender_spawn
+- id: a_lobby
+  display_name: A Lobby
+  kind: callout
+  polygon:
+  - - 13.0
+    - 16.0
+  - - 44.0
+    - 16.0
+  - - 44.0
+    - 44.0
+  - - 13.0
+    - 44.0
+  surface_ids:
+  - surf_a_lobby
+  label_position:
+  - 24.0
+  - 36.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_showers
+  display_name: Showers
+  kind: callout
+  polygon:
+  - - 3.0
+    - 44.0
+  - - 16.0
+    - 44.0
+  - - 16.0
+    - 60.0
+  - - 3.0
+    - 60.0
+  surface_ids:
+  - surf_a_showers
+  label_position:
+  - 9.0
+  - 52.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_short
+  display_name: A Short
+  kind: callout
+  polygon:
+  - - 30.0
+    - 44.0
+  - - 48.0
+    - 44.0
+  - - 48.0
+    - 62.0
+  - - 30.0
+    - 62.0
+  surface_ids:
+  - surf_a_short
+  label_position:
+  - 37.0
+  - 51.0
+  site_id: a
+  legacy_zone: attacker_side
+- id: a_site
+  display_name: A Site
+  kind: site
+  polygon:
+  - - 10.0
+    - 60.0
+  - - 30.0
+    - 60.0
+  - - 30.0
+    - 74.5
+  - - 10.0
+    - 74.5
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 20.0
+  - 66.0
+  site_id: a
+  legacy_zone: site
+- id: a_lamps
+  display_name: Lamps
+  kind: callout
+  polygon:
+  - - 27.0
+    - 60.0
+  - - 34.0
+    - 60.0
+  - - 34.0
+    - 72.5
+  - - 27.0
+    - 72.5
+  surface_ids:
+  - surf_a_lamps
+  label_position:
+  - 30.0
+  - 66.0
+  site_id: a
+  legacy_zone: defender_side
+- id: a_uhall
+  display_name: U-Hall
+  kind: callout
+  polygon:
+  - - 10.0
+    - 72.5
+  - - 27.0
+    - 72.5
+  - - 27.0
+    - 80.0
+  - - 10.0
+    - 80.0
+  surface_ids:
+  - surf_a_uhall
+  label_position:
+  - 17.0
+  - 76.0
+  site_id: a
+  legacy_zone: defender_side
+- id: b_fountain
+  display_name: Fountain
+  kind: callout
+  polygon:
+  - - 44.0
+    - 12.0
+  - - 63.0
+    - 12.0
+  - - 63.0
+    - 42.0
+  - - 44.0
+    - 42.0
+  surface_ids:
+  - surf_b_fountain
+  label_position:
+  - 56.0
+  - 35.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: b_window
+  display_name: Hookah
+  kind: callout
+  polygon:
+  - - 49.0
+    - 42.0
+  - - 60.0
+    - 42.0
+  - - 60.0
+    - 52.0
+  - - 49.0
+    - 52.0
+  surface_ids:
+  - surf_b_window
+  label_position:
+  - 54.0
+  - 47.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: b_long
+  display_name: B Long
+  kind: callout
+  polygon:
+  - - 60.0
+    - 30.0
+  - - 85.0
+    - 30.0
+  - - 85.0
+    - 53.0
+  - - 60.0
+    - 53.0
+  surface_ids:
+  - surf_b_long
+  label_position:
+  - 70.0
+  - 38.0
+  site_id: b
+  legacy_zone: attacker_side
+- id: b_site
+  display_name: B Site
+  kind: site
+  polygon:
+  - - 54.5
+    - 52.0
+  - - 69.0
+    - 52.0
+  - - 69.0
+    - 71.0
+  - - 54.5
+    - 71.0
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 61.0
+  - 61.0
+  site_id: b
+  legacy_zone: site
+- id: b_elbow
+  display_name: Elbow
+  kind: callout
+  polygon:
+  - - 47.0
+    - 55.0
+  - - 56.0
+    - 55.0
+  - - 56.0
+    - 73.0
+  - - 47.0
+    - 73.0
+  surface_ids:
+  - surf_b_elbow
+  label_position:
+  - 51.0
+  - 61.0
+  site_id: b
+  legacy_zone: defender_side
+- id: b_hall
+  display_name: B Hall
+  kind: callout
+  polygon:
+  - - 68.5
+    - 56.0
+  - - 76.0
+    - 56.0
+  - - 76.0
+    - 72.0
+  - - 68.5
+    - 72.0
+  surface_ids:
+  - surf_b_hall
+  label_position:
+  - 72.0
+  - 64.0
+  site_id: b
+  legacy_zone: defender_side
+- id: a_plant
+  display_name: A Plant
+  kind: plant
+  polygon:
+  - - 14.25
+    - 67.25
+  - - 22.5
+    - 67.25
+  - - 22.5
+    - 74.0
+  - - 14.25
+    - 74.0
+  surface_ids:
+  - surf_a_site
+  label_position:
+  - 18.375
+  - 70.625
+  site_id: a
+  legacy_zone: null
+- id: b_plant
+  display_name: B Plant
+  kind: plant
+  polygon:
+  - - 57.25
+    - 60.75
+  - - 66.75
+    - 60.75
+  - - 66.75
+    - 70.25
+  - - 57.25
+    - 70.25
+  surface_ids:
+  - surf_b_site
+  label_position:
+  - 62.0
+  - 65.5
+  site_id: b
+  legacy_zone: null
+traversal_links:
+- id: link_attacker_spawn_a_lobby_0
+  kind: rope
+  from_pos:
+  - 48.0
+  - 8.0
+  - surf_attacker_spawn
+  to_pos:
+  - 28.5
+  - 30.0
+  - surf_a_lobby
+  via:
+  - - 44.0
+    - 13.0
+  - - 34.0
+    - 26.0
+  - - 22.0
+    - 34.0
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 25.0
+  start_closed_prob: 0.7
+  opening_span:
+  - 39.0
+  - 43.0
+  override_opening: false
+- id: link_attacker_spawn_b_fountain_1
+  kind: rope
+  from_pos:
+  - 48.0
+  - 8.0
+  - surf_attacker_spawn
+  to_pos:
+  - 53.5
+  - 27.0
+  - surf_b_fountain
+  via:
+  - - 53.0
+    - 13.0
+  - - 60.0
+    - 22.0
+  - - 59.0
+    - 30.0
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 25.0
+  start_closed_prob: 0.7
+  opening_span:
+  - 50.0
+  - 56.0
+  override_opening: false
+- id: link_b_fountain_b_long_2
+  kind: rope
+  from_pos:
+  - 53.5
+  - 27.0
+  - surf_b_fountain
+  to_pos:
+  - 72.5
+  - 41.5
+  - surf_b_long
+  via:
+  - - 57.0
+    - 33.0
+  - - 61.5
+    - 35.25
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 25.0
+  start_closed_prob: 0.7
+  opening_span:
+  - 33.0
+  - 37.5
+  override_opening: false
+- id: link_a_short_a_lobby_3
+  kind: rope
+  from_pos:
+  - 39.0
+  - 53.0
+  - surf_a_short
+  to_pos:
+  - 28.5
+  - 30.0
+  - surf_a_lobby
+  via:
+  - - 36.0
+    - 45.0
+  - - 30.0
+    - 38.0
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 25.0
+  start_closed_prob: 0.7
+  opening_span:
+  - 32.5
+  - 36.0
+  override_opening: false
+- id: tp_short_window
+  kind: teleporter
+  from_pos:
+  - 39.0
+  - 53.0
+  - surf_a_short
+  to_pos:
+  - 54.5
+  - 47.0
+  - surf_b_window
+  via:
+  - - 49.0
+    - 50.0
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 30.0
+  start_closed_prob: 0.7
+  opening_span: null
+  override_opening: false
+- id: tp_long_uhall
+  kind: teleporter
+  from_pos:
+  - 72.5
+  - 41.5
+  - surf_b_long
+  to_pos:
+  - 18.5
+  - 76.25
+  - surf_a_uhall
+  via:
+  - - 50.0
+    - 60.0
+  path_mode: corridor
+  include_endpoints_in_path: false
+  noise_radius: 30.0
+  start_closed_prob: 0.7
+  opening_span: null
+  override_opening: false
+- id: route_a_lobby_a_showers
+  kind: ramp
+  from_pos:
+  - 24.0
+  - 36.0
+  - surf_a_lobby
+  to_pos:
+  - 9.0
+  - 52.0
+  - surf_a_showers
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 13.2
+  - 15.8
+  override_opening: false
+- id: route_a_showers_a_site
+  kind: ramp
+  from_pos:
+  - 9.0
+  - 52.0
+  - surf_a_showers
+  to_pos:
+  - 20.0
+  - 66.0
+  - surf_a_site
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 11.0
+  - 15.0
+  override_opening: false
+- id: route_a_short_a_site
+  kind: ramp
+  from_pos:
+  - 37.0
+  - 51.0
+  - surf_a_short
+  to_pos:
+  - 20.0
+  - 66.0
+  - surf_a_site
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_short_a_lamps
+  kind: ramp
+  from_pos:
+  - 37.0
+  - 51.0
+  - surf_a_short
+  to_pos:
+  - 30.0
+  - 66.0
+  - surf_a_lamps
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span: null
+  override_opening: false
+- id: route_a_site_a_lamps
+  kind: ramp
+  from_pos:
+  - 20.0
+  - 66.0
+  - surf_a_site
+  to_pos:
+  - 30.0
+  - 66.0
+  - surf_a_lamps
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 61.0
+  - 64.0
+  override_opening: false
+- id: route_a_site_a_uhall
+  kind: ramp
+  from_pos:
+  - 20.0
+  - 66.0
+  - surf_a_site
+  to_pos:
+  - 17.0
+  - 76.0
+  - surf_a_uhall
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 11.0
+  - 15.0
+  override_opening: false
+- id: route_a_lamps_defender_spawn
+  kind: ramp
+  from_pos:
+  - 30.0
+  - 66.0
+  - surf_a_lamps
+  to_pos:
+  - 49.0
+  - 76.0
+  - surf_defender_spawn
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 28.0
+  - 33.0
+  override_opening: false
+- id: route_a_uhall_defender_spawn
+  kind: ramp
+  from_pos:
+  - 17.0
+  - 76.0
+  - surf_a_uhall
+  to_pos:
+  - 49.0
+  - 76.0
+  - surf_defender_spawn
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 74.0
+  - 79.0
+  override_opening: false
+- id: route_b_fountain_b_window
+  kind: ramp
+  from_pos:
+  - 56.0
+  - 35.0
+  - surf_b_fountain
+  to_pos:
+  - 54.0
+  - 47.0
+  - surf_b_window
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 52.0
+  - 56.0
+  override_opening: false
+- id: route_b_window_b_site
+  kind: ramp
+  from_pos:
+  - 54.0
+  - 47.0
+  - surf_b_window
+  to_pos:
+  - 61.0
+  - 61.0
+  - surf_b_site
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 55.0
+  - 59.0
+  override_opening: false
+- id: route_b_long_b_site
+  kind: ramp
+  from_pos:
+  - 70.0
+  - 38.0
+  - surf_b_long
+  to_pos:
+  - 61.0
+  - 61.0
+  - surf_b_site
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 66.0
+  - 69.0
+  override_opening: false
+- id: route_b_site_b_elbow
+  kind: ramp
+  from_pos:
+  - 61.0
+  - 61.0
+  - surf_b_site
+  to_pos:
+  - 51.0
+  - 61.0
+  - surf_b_elbow
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 58.0
+  - 62.0
+  override_opening: false
+- id: route_b_site_b_hall
+  kind: ramp
+  from_pos:
+  - 61.0
+  - 61.0
+  - surf_b_site
+  to_pos:
+  - 72.0
+  - 64.0
+  - surf_b_hall
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 57.0
+  - 60.5
+  override_opening: false
+- id: route_b_elbow_defender_spawn
+  kind: ramp
+  from_pos:
+  - 51.0
+  - 61.0
+  - surf_b_elbow
+  to_pos:
+  - 49.0
+  - 76.0
+  - surf_defender_spawn
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 52.5
+  - 56.0
+  override_opening: false
+- id: route_b_hall_defender_spawn
+  kind: ramp
+  from_pos:
+  - 72.0
+  - 64.0
+  - surf_b_hall
+  to_pos:
+  - 49.0
+  - 76.0
+  - surf_defender_spawn
+  via: []
+  path_mode: portal
+  include_endpoints_in_path: false
+  noise_radius: 0.0
+  start_closed_prob: 0.0
+  opening_span:
+  - 69.0
+  - 72.0
+  override_opening: false
+legacy:
+  adjacency_overrides:
+    attacker_spawn:
+    - a_lobby
+    - b_fountain
+    a_lobby:
+    - attacker_spawn
+    - a_showers
+    - a_short
+    a_showers:
+    - a_lobby
+    - a_site
+    a_short:
+    - a_lobby
+    - a_site
+    - a_lamps
+    - b_window
+    a_site:
+    - a_showers
+    - a_short
+    - a_lamps
+    - a_uhall
+    a_lamps:
+    - a_short
+    - a_site
+    - defender_spawn
+    a_uhall:
+    - a_site
+    - defender_spawn
+    - b_long
+    b_fountain:
+    - attacker_spawn
+    - b_window
+    - b_long
+    b_window:
+    - b_fountain
+    - b_site
+    - a_short
+    b_long:
+    - b_fountain
+    - b_site
+    - a_uhall
+    b_site:
+    - b_window
+    - b_long
+    - b_elbow
+    - b_hall
+    b_elbow:
+    - b_site
+    - defender_spawn
+    b_hall:
+    - b_site
+    - defender_spawn
+    defender_spawn:
+    - a_lamps
+    - a_uhall
+    - b_elbow
+    - b_hall
+  sightline_overrides:
+  - from_callout: a_showers
+    to_callout: a_site
+    advantaged_side: defense
+  - from_callout: a_short
+    to_callout: a_site
+    advantaged_side: defense
+  - from_callout: a_lamps
+    to_callout: a_site
+    advantaged_side: defense
+  - from_callout: a_uhall
+    to_callout: a_site
+    advantaged_side: defense
+  - from_callout: b_window
+    to_callout: b_site
+    advantaged_side: defense
+  - from_callout: b_long
+    to_callout: b_site
+    advantaged_side: defense
+  - from_callout: b_elbow
+    to_callout: b_site
+    advantaged_side: defense
+  - from_callout: b_hall
+    to_callout: b_site
+    advantaged_side: defense
+  - from_callout: a_lamps
+    to_callout: a_short
+    advantaged_side: defense
+  - from_callout: b_hall
+    to_callout: b_window
+    advantaged_side: defense
+  opening_overrides:
+  - between:
+    - attacker_spawn
+    - a_lobby
+    span:
+    - 39.0
+    - 43.0
+  - between:
+    - attacker_spawn
+    - b_fountain
+    span:
+    - 50.0
+    - 56.0
+  - between:
+    - b_fountain
+    - b_long
+    span:
+    - 33.0
+    - 37.5
+  - between:
+    - a_lobby
+    - a_showers
+    span:
+    - 13.2
+    - 15.8
+  - between:
+    - a_lobby
+    - a_short
+    span:
+    - 32.5
+    - 36.0
+  - between:
+    - a_showers
+    - a_site
+    span:
+    - 11.0
+    - 15.0
+  - between:
+    - a_site
+    - a_lamps
+    span:
+    - 61.0
+    - 64.0
+  - between:
+    - a_site
+    - a_uhall
+    span:
+    - 11.0
+    - 15.0
+  - between:
+    - a_lamps
+    - defender_spawn
+    span:
+    - 28.0
+    - 33.0
+  - between:
+    - a_uhall
+    - defender_spawn
+    span:
+    - 74.0
+    - 79.0
+  - between:
+    - b_fountain
+    - b_window
+    span:
+    - 52.0
+    - 56.0
+  - between:
+    - b_window
+    - b_site
+    span:
+    - 55.0
+    - 59.0
+  - between:
+    - b_long
+    - b_site
+    span:
+    - 66.0
+    - 69.0
+  - between:
+    - b_site
+    - b_elbow
+    span:
+    - 58.0
+    - 62.0
+  - between:
+    - b_site
+    - b_hall
+    span:
+    - 57.0
+    - 60.5
+  - between:
+    - b_elbow
+    - defender_spawn
+    span:
+    - 52.5
+    - 56.0
+  - between:
+    - b_hall
+    - defender_spawn
+    span:
+    - 69.0
+    - 72.0
+  prop_support_exemptions:
+  - prop_a_lobby_0
+  - prop_a_lobby_1
+  - prop_a_lobby_2
+  - prop_b_fountain_3
+  - prop_a_lobby_5
+  - prop_a_short_6
+  - prop_a_short_7
+  - prop_b_long_8
+  - prop_b_long_9
+  - prop_b_long_10
+  - prop_b_elbow_11
+  - prop_defender_spawn_12
+  - prop_defender_spawn_13
+editor_state:
+  test_players: []
+  viewport: {}
+  selected_tool: ''

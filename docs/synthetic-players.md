@@ -40,6 +40,13 @@ step, because the first thing it does is look.
 
 ## Running one
 
+Before a player session, follow [.claude/skills/playtest-log/SKILL.md](../.claude/skills/playtest-log/SKILL.md)
+and the pre/post flywheel loop in `CLAUDE.md`. Write intent and expected outcome
+with `scripts/playtest_log.py` before meaningful actions, append observed results
+to `docs/playtests/actions.csv`, and reconcile saved decision telemetry at the end.
+The harness journal and findings supplement that persistent history. Record
+unavailable model/effort metadata as `unknown (not exposed)`.
+
 ```bash
 python scripts/run_synthetic_players.py --list
 python scripts/run_synthetic_players.py --persona first-timer --start

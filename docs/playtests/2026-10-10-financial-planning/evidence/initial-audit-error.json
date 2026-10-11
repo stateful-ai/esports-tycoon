@@ -1,0 +1,6 @@
+{
+  "recorded_at_utc": "2026-10-10T19:38:15.489668+00:00",
+  "error": "KeyError: 'facilities'",
+  "scope": "Initial post-play dictionary inspection, before report CLIs or cleanup",
+  "recovery": "Read persisted facilities_by/team_nexus; failed CSV row8 retained"
+}

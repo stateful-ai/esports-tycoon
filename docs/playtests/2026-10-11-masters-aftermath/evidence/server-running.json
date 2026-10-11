@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-11T02:15:35.145391+00:00",
+  "pid": 2520,
+  "port": 8518,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\masters-aftermath-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-masters-aftermath",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "esports_sim",
+    "--web",
+    "--port",
+    "8518",
+    "--no-browser"
+  ],
+  "package_path": "C:\\Users\\aidan\\.codex\\worktrees\\masters-aftermath-playtest\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "fixture_source": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-masters-semi\\saves",
+  "fixture_sha256": "222d4fdb5763cbade7dc28479704e9475ed4fa30004850391e2d251315b68a6b",
+  "source_paths": 630,
+  "usage_baseline": []
+}

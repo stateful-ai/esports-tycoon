@@ -204,43 +204,95 @@ function pfNotDevelopingText(reason) {
   }
 }
 
-/* F1 — season growth: per-attribute deltas over the current season pulled
-   straight from dev_history snapshots (DevSnap.attributes), plus a trajectory
-   sparkline for the selected attribute. Delta = last-minus-first of the
-   season's snapshots, the same display-transform the CA summary line uses;
-   no engine/campaign formula is mirrored. */
-const SeasonGrowth = ({ series, labelMap }) => {
-  const [sel, setSel] = useState(null);
-  const seasonPts = useMemo(() => {
-    const withAttrs = (series || []).filter(
-      (s) => s && s.attributes && Object.keys(s.attributes).length
-    );
-    if (withAttrs.length < 2) return [];
-    const maxSeason = Math.max(...withAttrs.map((s) => s.season));
-    return withAttrs.filter((s) => s.season === maxSeason);
-  }, [series]);
-  const movers = useMemo(() => {
-    if (seasonPts.length < 2) return [];
-    const first = seasonPts[0].attributes;
-    const last = seasonPts[seasonPts.length - 1].attributes;
-    const out = [];
-    for (const k of Object.keys(last)) {
-      if (first[k] == null) continue;
-      out.push({ key: k, delta: last[k] - first[k], value: last[k] });
-    }
-    out.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || a.key.localeCompare(b.key));
-    return out;
-  }, [seasonPts]);
+const pfDevDate = (point) => point ? `S${point.season} W${point.week}` : "";
 
-  if (seasonPts.length < 2 || !movers.length) return null;
+const DevelopmentComparison = ({ comparison }) => {
+  if (!comparison || !comparison.end) {
+    return html`<p class="pf-season-line muted">No recorded development observations yet.</p>`;
+  }
+  const c = comparison;
+  return html`
+    <p class="pf-season-line muted">
+      ${c.comparison_available
+        ? `CA ${pfNum(c.start.ca, 1)} to ${pfNum(c.end.ca, 1)} · ${pfDevDate(c.start)} to ${pfDevDate(c.end)}${c.elapsed_weeks != null ? ` · ${c.elapsed_weeks} elapsed ${c.elapsed_weeks === 1 ? "week" : "weeks"}` : ""}`
+        : `First observation · ${pfDevDate(c.end)} · CA ${pfNum(c.end.ca, 1)} — no earlier dated comparison`}
+      · ${c.tracked_points} recorded ${c.tracked_points === 1 ? "observation" : "observations"}
+      ${c.status === "steady" ? " · No measurable CA change between these observations" : ""}
+    </p>
+  `;
+};
+
+/* All source gains and explanations come from development_path.report_view.
+   Latest-week senior maps are separate from the profile's season matches. */
+const LatestDevelopmentWeek = ({ week, labelMap }) => {
+  if (!week) return html`<p class="pf-season-line muted">No latest-week development feedback recorded yet.</p>`;
+  const sources = [
+    ["practice_gains", "Practice"], ["match_gains", "Senior matches"],
+    ["scrim_gains", "Bench scrims"], ["event_gains", "Career events"],
+    ["badge_gains", "Badges"],
+  ].filter(([key]) => key !== "badge_gains" || week.badge_tracking || (week.badge_events || []).length);
+  return html`
+    <div class="pf-growth">
+      <div class="pf-career-sub muted">Latest recorded week · S${week.season} W${week.week}</div>
+      <p class="pf-season-line muted">${humanize(week.focus)} · ${humanize(week.intensity)} · ${week.maps} senior ${week.maps === 1 ? "map" : "maps"} this week · ${humanize(week.trend)}</p>
+      <div class="pf-chips">
+        ${sources.map(([key, label]) => {
+          const source = week.sources[key];
+          if (!source) return null;
+          const skills = Object.entries(source.skills || {}).map(([aid, gain]) =>
+            `${(labelMap && labelMap[aid]) || humanize(aid)} ${gain > 0 ? "+" : ""}${pfNum(gain, 2)}`
+          ).join(" / ");
+          return html`<span key=${key} class="pf-chip" title=${skills || "No recorded skill gains from this source"}>${label} ${source.overall_gain > 0 ? "+" : ""}${pfNum(source.overall_gain, 2)} OVR</span>`;
+        })}
+      </div>
+      <details>
+        <summary class="pf-season-line muted">Latest-week skill breakdown</summary>
+        ${sources.map(([key, label]) => {
+          const skills = Object.entries((week.sources[key] && week.sources[key].skills) || {});
+          if (!skills.length) return null;
+          return html`<p key=${key} class="pf-season-line muted">${label}: ${skills.map(([aid, gain]) =>
+            `${(labelMap && labelMap[aid]) || humanize(aid)} ${gain > 0 ? "+" : ""}${pfNum(gain, 2)}`
+          ).join(" / ")}</p>`;
+        })}
+      </details>
+      ${(week.badge_events || []).length
+        ? week.badge_events.map((event, i) => {
+          const skills = Object.entries(event.skills || {}).map(([aid, gain]) =>
+            `${(labelMap && labelMap[aid]) || humanize(aid)} ${gain > 0 ? "+" : ""}${pfNum(gain, 2)}`
+          ).join(" / ");
+          return html`<p key=${i} class="pf-season-line">Badge ${event.action}: ${event.name} · ${event.overall_gain > 0 ? "+" : ""}${pfNum(event.overall_gain, 2)} OVR · ${skills || "No current ability change"}</p>`;
+        })
+        : html`<p class="pf-season-line muted">${week.badge_tracking ? "No badge changes this week" : "Badge attribution unavailable for this saved week"}</p>`}
+      ${(week.factors || []).map((factor, i) => html`<p key=${i} class="pf-season-line muted">${factor}</p>`)}
+      ${week.career_event && html`<p class="pf-season-line">${week.career_event}</p>`}
+    </div>
+  `;
+};
+
+/* Current-season skill endpoints and deltas are authored by the server.
+   Missing legacy attributes never become a fabricated season baseline. */
+const SeasonGrowth = ({ growth, labelMap }) => {
+  const [sel, setSel] = useState(null);
+  if (!growth) return null;
+  const seasonPts = growth.series || [];
+  const movers = growth.changes || [];
+  const c = growth.comparison;
+  if (!growth.attribute_comparison_available) {
+    return html`<div class="pf-growth">
+      <div class="pf-career-sub muted">Season ${growth.season} skill growth</div>
+      <p class="pf-season-line muted">${c && c.end && !c.comparison_available
+        ? `First skill observation · ${pfDevDate(c.end)} — no earlier skill comparison.`
+        : "No comparable skill snapshots recorded this season."}</p>
+    </div>`;
+  }
   const top = movers.slice(0, 8);
   const label = (k) => (labelMap && labelMap[k]) || humanize(k);
   const selKey = sel && top.some((m) => m.key === sel) ? sel : top[0].key;
-  const anyMove = top.some((m) => Math.abs(m.delta) >= 0.05);
+  const anyMove = growth.has_measurable_change;
 
   return html`
     <div class="pf-growth">
-      <div class="pf-career-sub muted">Season growth</div>
+      <div class="pf-career-sub muted">Season ${growth.season} skill growth · ${pfDevDate(c.start)} to ${pfDevDate(c.end)}</div>
       <div class="pf-chart-box">
         <div class="pf-chart-cap">${label(selKey)} this season</div>
         <${MetricLine}
@@ -251,7 +303,7 @@ const SeasonGrowth = ({ series, labelMap }) => {
         />
       </div>
       ${!anyMove
-        ? html`<p class="pf-season-line muted">No measurable attribute movement yet this season.</p>`
+        ? html`<p class="pf-season-line muted">No measurable attribute movement between these observations.</p>`
         : html`
           <div class="pf-attrs pf-growth-list">
             ${top.map((m) => {
@@ -274,7 +326,7 @@ const SeasonGrowth = ({ series, labelMap }) => {
                   <span class="pf-attr-bar"><${PfBar} value=${m.value} /></span>
                   <span class="pf-attr-val mono">
                     ${Math.round(m.value)}
-                    <span class=${`pf-growth-delta ${cls}`} style=${{ marginLeft: "6px" }} title="change since the start of the season">${sign}${m.delta.toFixed(1)} ${arrow}</span>
+                    <span class=${`pf-growth-delta ${cls}`} style=${{ marginLeft: "6px" }} title=${`change from ${pfDevDate(c.start)} to ${pfDevDate(c.end)}`}>${sign}${m.delta.toFixed(1)} ${arrow}</span>
                   </span>
                 </div>
               `;
@@ -554,7 +606,7 @@ const PlayerProfile = ({ data }) => {
 
   const contractDetail = ov.contract_terms;
   const contractTerms = (!p.is_free_agent && contractDetail)
-    ? `${contractDetail.stream_share}% streams · ${money(contractDetail.release_fee)} release · ` +
+    ? `player keeps ${contractDetail.stream_share}% of streaming revenue · ${money(contractDetail.release_fee)} release · ` +
       `${contractDetail.buyout ? money(contractDetail.buyout) + " buyout" : "no buyout"} · ${contractDetail.roster_role}` +
       `${contractDetail.no_transfer ? " · no-transfer" : ""}`
     : "";
@@ -651,11 +703,11 @@ const PlayerProfile = ({ data }) => {
               <span class="pill" title="social reach">${fmtFollowers(p.followers)} followers</span>
             `}
             ${p.stream_load != null && p.stream_load > 5 && html`
-              <span class="pill" title=${`org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
+              <span class="pill" title=${`Streaming workload: ${p.stream_status} · org cut ${money(p.stream_income)}/wk · development multiplier from streaming: ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
             `}
             ${p.mentor_id && html`
               <span class="pill" title=${`Mentored by ${p.mentor_handle || humanize(p.mentor_id)}`}>
-                Mentor: <span class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</span>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
+                Mentor: <button type="button" class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</button>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
               </span>
             `}
             ${p.tenure_weeks != null && p.tenure_weeks >= 26 && html`
@@ -1009,7 +1061,7 @@ const PlayerProfile = ({ data }) => {
                 ${hasMirror && html`
                   <div class="pf-chart-box">
                     <div class="pf-chart-cap">
-                      Kills &amp; deaths by week
+                      Kills & deaths by week
                       <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>K<span class="pf-sw pf-sw-d"></span>D</span>
                     </div>
                     <${KdMirrorBars} weekly=${weekly} />
@@ -1021,29 +1073,26 @@ const PlayerProfile = ({ data }) => {
         </div>
       `}
 
-      ${devSeries.length > 0 && html`
+      ${p.is_user_team && html`
         <div class="pf-section">
           <h3 class="pf-section-title">Development</h3>
-          <div class="pf-chart-box">
-            <div class="pf-chart-cap">
-              Ability &amp; confidence over time
-              <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>CA<span class="pf-sw pf-sw-d"></span>Conf</span>
+          ${devSeries.length > 0 && html`
+            <div class="pf-chart-box">
+              <div class="pf-chart-cap">
+                Ability & confidence over recorded observations
+                <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>CA<span class="pf-sw pf-sw-d"></span>Conf</span>
+              </div>
+              <${DevChart} series=${devSeries} />
             </div>
-            <${DevChart} series=${devSeries} />
-          </div>
-          ${(() => {
-            const first = devSeries[0], last = devSeries[devSeries.length - 1];
-            return html`
-              <p class="pf-season-line muted">
-                CA ${pfNum(first.ca, 1)} to ${pfNum(last.ca, 1)} over ${devSeries.length} weeks
-                ${typeof fmtFollowers === "function" ? ` / ${fmtFollowers(last.followers)} followers` : ""}
-              </p>
-            `;
-          })()}
+          `}
+          <${DevelopmentComparison} comparison=${data.charts && data.charts.development_comparison} />
           ${(() => {
             const labelMap = {};
             for (const a of attrs) { if (a && a.key) labelMap[a.key] = a.label || a.key; }
-            return html`<${SeasonGrowth} series=${devSeries} labelMap=${labelMap} />`;
+            return html`
+              <${LatestDevelopmentWeek} week=${data.charts && data.charts.development_latest_week} labelMap=${labelMap} />
+              <${SeasonGrowth} growth=${data.charts && data.charts.season_growth} labelMap=${labelMap} />
+            `;
           })()}
         </div>
       `}
@@ -1111,9 +1160,9 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Relationships</h3>
           <div class="pf-chips">
             ${rels.map((r, i) => html`
-              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
+              <button type="button" key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
                 ${r.handle ?? "—"}<span class="pf-rel-kind">${humanize(r.arc || r.kind || "")}</span>
-              </span>
+              </button>
             `)}
           </div>
         </div>
@@ -1204,19 +1253,22 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Active Promises</h3>
           <div class="pf-promises-container">
             ${promList.map((prom, idx) => {
-              const duration = prom.initial_duration || 1;
-              const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
-              let progressInfo = "";
-              if (prom.promise_type === "play_time") {
-                progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-              }
+              const assessment = prom.play_time_assessment;
+              const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
               return html`
                 <div key=${idx} class="pf-promise-item">
                   <div style=${{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                     <strong>${humanize(prom.promise_type)}</strong>
-                    <span class="muted">${prom.weeks_left} weeks left</span>
+                    ${!assessment && html`<span class="muted">${prom.weeks_left} weeks left</span>`}
                   </div>
-                  <div style=${{ fontSize: "0.9em", marginBottom: "4px" }}>Target: ${prom.target_value || "N/A"}${progressInfo}</div>
+                  ${assessment ? html`
+                    <div class="promise-assessment" style=${{ fontSize: "0.9em", marginBottom: "4px" }}>
+                      <p>${assessment.target_label}</p><p>${assessment.progress_label}</p>
+                      <p>${assessment.deadline_label}</p><p>${assessment.next_evaluation_label}</p>
+                      <p class="muted">${assessment.counting_label}</p>
+                    </div>
+                  ` : html`<div>Target: ${prom.target_value ?? "N/A"}</div>`}
+                  <div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>
                   <div class="pf-hbar" style=${{ height: "6px", background: "var(--es-color-bg-alt, #151b26)", borderRadius: "3px", overflow: "hidden" }}>
                     <i style=${{ display: "block", height: "100%", width: `${pct}%`, '--target-width': `${pct}%`, background: "var(--es-color-accent, #00f0ff)", borderRadius: "3px" }}></i>
                   </div>
@@ -1399,7 +1451,7 @@ const TeamProfile = ({ data }) => {
             <tbody>
               ${players.map((pl) => html`
                 <tr key=${pl.pid} class="pf-rrow plink" data-pid=${pl.pid}>
-                  <td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
+                  <td><b><button type="button" class="plink" data-pid=${pl.pid}>${pl.handle ?? "—"}</button></b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
                   <td>${pl.role && html`<span class="pill">${humanize(pl.role)}</span>`}</td>
                   <td class="num">${pfNum(pl.matches)}</td>
                   <td class="num">${pfNum(pl.kd, 2)}</td>
@@ -1452,13 +1504,13 @@ const TeamProfile = ({ data }) => {
           <div class="pf-chips">
             ${chem.bonds.map((b, i) => html`
               <span key=${`bond-${i}`} class="pf-rel-chip rel-duo">
-                <span class="plink" data-pid=${b.a_id}>${b.a}</span> + <span class="plink" data-pid=${b.b_id}>${b.b}</span>
+                <button type="button" class="plink" data-pid=${b.a_id}>${b.a}</button> + <button type="button" class="plink" data-pid=${b.b_id}>${b.b}</button>
                 <span class="pf-rel-kind">${Math.round(b.strength)}</span>
               </span>
             `)}
             ${chem.frictions.map((f, i) => html`
               <span key=${`fric-${i}`} class="pf-rel-chip rel-feud">
-                <span class="plink" data-pid=${f.a_id}>${f.a}</span> + <span class="plink" data-pid=${f.b_id}>${f.b}</span>
+                <button type="button" class="plink" data-pid=${f.a_id}>${f.a}</button> + <button type="button" class="plink" data-pid=${f.b_id}>${f.b}</button>
                 <span class="pf-rel-kind">${Math.round(f.strength)}</span>
               </span>
             `)}
@@ -1479,7 +1531,7 @@ const TeamProfile = ({ data }) => {
                 <span class="pf-arcline-text">
                   ${a.text}${" "}
                   ${(a.pids || []).map((pid, j) => html`
-                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</span>
+                    <button type="button" key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</button>
                   `)}
                 </span>
               </div>
@@ -1501,7 +1553,7 @@ const TeamProfile = ({ data }) => {
               const support = d.support_bonus > 0 ? html` · support +${d.support_bonus.toFixed(1)}` : "";
               return html`
                 <div key=${d.id} class="pf-dev-row">
-                  <span class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</span>
+                  <button type="button" class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</button>
                   <span class="muted pf-dev-meta" title=${d.curve_read}>${d.age}y · CA ${d.ca} · peak ${ceilTxt}${above}${support}${teach}</span>
                   <span class="pf-dev-bar"><span class="pf-dev-fill" style=${{ width: `${d.progress_pct}%`, '--target-width': `${d.progress_pct}%` }}></span></span>
                   <span class=${`mono ${acls}`}>${d.progress_pct}% ${arrow}</span>
@@ -1550,7 +1602,7 @@ const TeamProfile = ({ data }) => {
 
       ${know && (know.methodology != null || (know.playbooks || []).length > 0 || (know.antistrats || []).length > 0) && html`
         <div class="pf-section">
-          <h3 class="pf-section-title">Playbook &amp; knowledge</h3>
+          <h3 class="pf-section-title">Playbook & knowledge</h3>
           ${know.methodology != null && html`
             <p class="pf-season-line muted">
               Methodology <b class="mono">${pfNum(know.methodology, 1)}</b> — training-ground know-how that survives roster churn
@@ -1900,9 +1952,25 @@ async function pfAssignIgl(p) {
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
+let pfOpener = null; // original focus target across loading and profile navigation
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
+let pfInspected = null; // successful visible identity; never sent to telemetry
+
+function pfEndInspection() {
+  if (pfInspected) window.Usage?.interaction(`profile/${pfInspected.kind}_close`);
+  pfInspected = null;
+}
+
+function pfInspectVisible() {
+  if (!pfCurrent || !isProfileOpen()) return;
+  if (pfInspected && pfInspected.kind === pfCurrent.kind
+      && String(pfInspected.id) === String(pfCurrent.id)) return;
+  pfEndInspection();
+  pfInspected = {kind: pfCurrent.kind, id: pfCurrent.id};
+  window.Usage?.interaction(`profile/${pfInspected.kind}_open`);
+}
 
 function pfNavTo(entry, opts) {
   const replace = !!(opts && opts.replace);
@@ -1927,6 +1995,8 @@ function pfEnsureOverlay() {
   const ov = document.createElement("div");
   ov.id = "profile";
   ov.className = "overlay hidden";
+  ov.inert = true;
+  ov.setAttribute("aria-hidden", "true");
   ov.innerHTML =
     `<div class="panel pf-panel">` +
     `<button class="pf-back btn btn-sm hidden" aria-label="Back to previous profile">← Back</button>` +
@@ -1943,20 +2013,37 @@ function pfEnsureOverlay() {
 
 function pfShow(vnode) {
   const ov = pfEnsureOverlay();
+  if (!isProfileOpen()) pfOpener = document.activeElement;
   const body = ov.querySelector("#profile-body");
   render(vnode, body);
   ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
   body.scrollTop = 0;
   ov.classList.remove("hidden");
+  ov.inert = false;
+  ov.removeAttribute("aria-hidden");
 }
 
 function closeProfile() {
-  pfStack.length = 0;
+  pfEndInspection();  pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
+  const opener = pfOpener;
+  pfOpener = null;
   if (pfOverlayEl) {
+    // The fade keeps this subtree displayed; closed controls must leave focus
+    // and the accessibility tree immediately, even while opacity animates.
+    if (pfOverlayEl.contains(document.activeElement)) document.activeElement.blur();
+    pfOverlayEl.inert = true;
+    pfOverlayEl.setAttribute("aria-hidden", "true");
     pfOverlayEl.classList.add("hidden");
     pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
+  }
+  // A mutation may have replaced the opener or made it unavailable.
+  if (opener instanceof HTMLElement && opener !== document.body
+      && opener.isConnected && !opener.matches(":disabled")
+      && !opener.closest("[inert]") && opener.getClientRects().length
+      && getComputedStyle(opener).visibility === "visible") {
+    try { opener.focus({ preventScroll: true }); } catch {}
   }
 }
 
@@ -1974,8 +2061,10 @@ async function openPlayerProfile(pid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${PlayerProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -1987,8 +2076,10 @@ async function openTeamProfile(tid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${TeamProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -2000,8 +2091,10 @@ async function openStaffProfile(sid, opts) {
   if (seq !== pfSeq || !isProfileOpen()) return;
   if (data) {
     pfShow(html`<${StaffProfile} data=${data} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 
@@ -2009,6 +2102,7 @@ window.openManagerProfile = (career, opts) => {
   if (!career) return;
   pfNavTo({ kind: "manager", id: career.id || "me", career }, opts);
   pfShow(html`<${ManagerProfile} career=${career} />`);
+  pfInspectVisible();
 };
 
 async function pfReopenManager(entry) {
@@ -2019,8 +2113,10 @@ async function pfReopenManager(entry) {
   const payload = data || entry.career;
   if (payload) {
     pfShow(html`<${ManagerProfile} career=${payload} />`);
+    pfInspectVisible();
   } else {
     pfShow(html`<${Unavailable} />`);
+    pfEndInspection();
   }
 }
 

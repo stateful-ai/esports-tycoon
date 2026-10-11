@@ -1,0 +1,358 @@
+{
+  "source_url": "https://valorant-api.com/v1/maps",
+  "asset_url": "https://media.valorant-api.com/maps/1c18ab1f-420d-0d8b-71d0-77ad3c439115/displayicon.png",
+  "retrieved": "2026-10-04",
+  "source_sha256": "9f9ed010f502a1146435e779ec2979ce2eb72f78559df19fb89d47e36c98a483",
+  "map_uuid": "1c18ab1f-420d-0d8b-71d0-77ad3c439115",
+  "rotation": "ccw",
+  "metres_per_source_unit": 0.01,
+  "map_units_per_source_unit": 0.006999999999999999,
+  "grid_step": 0.5,
+  "transform": {
+    "xMultiplier": 7e-05,
+    "yMultiplier": -7e-05,
+    "xScalarToAdd": 0.526158,
+    "yScalarToAdd": 0.5
+  },
+  "original_callouts": [
+    {
+      "regionName": "Crane",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 4458.2866,
+        "y": -3999.4976,
+        "z": 600
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Elbow",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 5583.2793,
+        "y": -2074.4995,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Link",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 1783.2793,
+        "y": -1049.5073,
+        "z": 675
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Lobby",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 4333.2793,
+        "y": 2600.4976,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Main",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 5933.2793,
+        "y": 1225.4977,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Pocket",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 5583.2793,
+        "y": -799.4995,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Site",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 3458.2793,
+        "y": -1824.5004,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Spawn",
+      "superRegion": "ECalloutSuperRegion::AttackerSide",
+      "superRegionName": "Attacker Side",
+      "location": {
+        "x": -25,
+        "y": 5675,
+        "z": 575
+      },
+      "scale3D": null,
+      "rotation": null
+    },
+    {
+      "regionName": "Yard",
+      "superRegion": "ECalloutSuperRegion::A",
+      "superRegionName": "A",
+      "location": {
+        "x": 4333.2793,
+        "y": -799.50256,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Arch",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -3216.7134,
+        "y": -4399.5156,
+        "z": 600
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Elbow",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -5591.7236,
+        "y": -2924.5183,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Link",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -1291.7185,
+        "y": -1824.5093,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Lobby",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -1666.7264,
+        "y": 2775.4875,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Main",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -2716.7236,
+        "y": 750.4862,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Bottom",
+      "superRegion": "ECalloutSuperRegion::Mid",
+      "superRegionName": "Mid",
+      "location": {
+        "x": 133.27757,
+        "y": 175.49072,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Site",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -2716.7234,
+        "y": -1174.5138,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Tower",
+      "superRegion": "ECalloutSuperRegion::B",
+      "superRegionName": "B",
+      "location": {
+        "x": -3516.7236,
+        "y": -2924.5183,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Spawn",
+      "superRegion": "ECalloutSuperRegion::DefenderSide",
+      "superRegionName": "Defender Side",
+      "location": {
+        "x": 8.286561,
+        "y": -5749.507,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Stairs",
+      "superRegion": "ECalloutSuperRegion::Mid",
+      "superRegionName": "Mid",
+      "location": {
+        "x": 133.28067,
+        "y": -1474.5093,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Window",
+      "superRegion": "ECalloutSuperRegion::Mid",
+      "superRegionName": "Mid",
+      "location": {
+        "x": 133.28421,
+        "y": -3099.5093,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    },
+    {
+      "regionName": "Top",
+      "superRegion": "ECalloutSuperRegion::Mid",
+      "superRegionName": "Mid",
+      "location": {
+        "x": 133.2815,
+        "y": -1824.5093,
+        "z": 700
+      },
+      "scale3D": null,
+      "rotation": {
+        "pitch": 0,
+        "yaw": 180.00012,
+        "roll": 0
+      }
+    }
+  ],
+  "omitted_disconnected_floor_areas": [],
+  "aliases": [],
+  "limitations": [
+    "Callout z is a coarse floor elevation; vertical overlap and ramps are approximated.",
+    "Minimap does not supply reliable crate height; cover props are not surveyed.",
+    "Death drops and jump/zipline traversal need engine support; no false floor is added."
+  ]
+}

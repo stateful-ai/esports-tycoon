@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"apex\": {\n    \"id\": \"apex\",\n    \"intensity\": \"light\",\n    \"focus\": \"auto\",\n    \"stamina\": 53,\n    \"starter\": true,\n    \"development_plan\": {\n      \"focus\": \"tactical\",\n      \"skills\": [\n        \"game_sense\",\n        \"utility_usage\",\n        \"positioning\"\n      ],\n      \"condition_cost\": 3,\n      \"advice\": \"Fatigue is reducing learning. A lighter plan or recovery week can help.\"\n    }\n  },\n  \"ghost\": [\n    {\n      \"id\": \"ghost\",\n      \"mentor\": \"apex\",\n      \"progress\": 0,\n      \"overall\": 75.9\n    }\n  ],\n  \"row\": \"Apex IGL\\t26\\t78.3\\t★★★½\\t\\n\\t\\n▲\\t\\nauto\\nmechanical\\ntactical\\nmental\\nteam\\nlanguage\\nrest\\nGame Sense, Utility Usage, Positioning\\n\\t\\nchoose language\\nAR\\nDE\\nEN\\nES\\nFR\\nID\\nJA\\nKO\\nMS\\nPT\\nRU\\nTH\\nTL\\nTR\\nVI\\nZH\\n\\t\\nlight\\nnormal\\nintense\\n\\t—\"\n}\n### Ran Playwright code\n```js\nawait page.evaluate('async () => {const r=await api(\\'/api/roster/team_nexus\\'); const p=r.players.find(x=>x.id===\\'apex\\'); return {apex:{id:p.id,intensity:p.training_intensity,focus:p.dev_focus,stamina:p.stamina,starter:p.starter,development_plan:p.development_plan},ghost:r.players.filter(x=>x.id===\\'ghost\\').map(p=>({id:p.id,mentor:p.mentor_id,progress:p.mentor_progress,overall:p.overall})),row:document.querySelector(\\'[data-pid=\"apex\"]\\')?.closest(\\'tr\\')?.innerText};}');\n```"
+    }
+  ]
+}

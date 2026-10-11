@@ -272,6 +272,7 @@ class PlaytestSession:
         self.chromium = chromium if chromium is not None else find_chromium()
         self.step = 0
         self._errors: list[dict[str, Any]] = []
+        self._reported_errors = 0
         self._playwright = None
         self._browser = None
         self._page = None
@@ -372,10 +373,11 @@ class PlaytestSession:
         agent's findings worthless.
         """
         self.step += 1
-        errors_before = len(self._errors)
+        errors_before = self._reported_errors
         self._settle()
         snapshot = self.snapshot()
         shot = self._shoot(action)
+        self._reported_errors = len(self._errors)
         return Observation(
             step=self.step,
             action=action,
@@ -389,6 +391,7 @@ class PlaytestSession:
     def drain_errors(self) -> list[dict[str, Any]]:
         """Return every error seen so far and reset the buffer."""
         errors, self._errors = list(self._errors), []
+        self._reported_errors = 0
         return errors
 
     @property
@@ -414,6 +417,7 @@ class PlaytestSession:
         page.click("#mode-solo")
         page.wait_for_selector("#ng-seed", timeout=10_000)
         page.fill("#ng-seed", str(seed))
+        page.locator("#ng-seed").dispatch_event("change")
 
         # Editing the seed makes the lobby refetch and rebuild the whole team
         # grid, because a fictional league is *generated* from the seed. Until
@@ -438,7 +442,7 @@ class PlaytestSession:
                                     and not state["loading"]) else 0
             last = state["count"]
             page.wait_for_timeout(400)
-        if last <= 0:
+        if last <= 0 or stable < 2:
             return self.observe(
                 "new_campaign", ok=False,
                 message="the lobby never produced a selectable team for that seed",
@@ -672,6 +676,7 @@ class PlaytestSession:
         # The reveal overlay is the honest completion signal: it appears while
         # the week simulates and goes away when the new week is renderable.
         deadline = time.monotonic() + timeout_ms / 1000
+        busy = True
         while time.monotonic() < deadline:
             busy = page.evaluate(
                 """() => {
@@ -689,7 +694,7 @@ class PlaytestSession:
                 break
             page.wait_for_timeout(500)
         after = self._context()
-        if before and after == before:
+        if not before or not after or after == before or busy:
             return self.observe(
                 "advance_week", ok=False,
                 message=(

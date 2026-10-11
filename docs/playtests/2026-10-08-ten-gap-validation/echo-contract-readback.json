@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"count\": 5,\n  \"ids\": [\n    \"apex\",\n    \"vortex\",\n    \"ghost\",\n    \"fa_13\",\n    \"echo\"\n  ],\n  \"echo\": {\n    \"id\": \"echo\",\n    \"handle\": \"Echo\",\n    \"role\": \"sentinel\",\n    \"salary\": 7700,\n    \"release_cost\": 92000,\n    \"contract_weeks_left\": 55,\n    \"stream_load\": 44.4,\n    \"stream_status\": \"balanced\",\n    \"stream_heavy\": false,\n    \"stream_income\": 899,\n    \"stream_growth_mult\": 0.84,\n    \"asking_salary\": 6100,\n    \"hierarchy_role\": \"core\",\n    \"transfer_request\": false\n  }\n}\n### Ran Playwright code\n```js\nawait page.evaluate('async () => {const r=await api(\\'/api/roster/team_nexus\\'); const p=r.players.find(p=>p.id===\\'echo\\'); return {count:r.players.length,ids:r.players.map(p=>p.id),echo:{id:p.id,handle:p.handle,...Object.fromEntries(Object.entries(p).filter(([k])=>/contract|salary|weeks|stream|release|buyout|transfer|role/.test(k)))}};}');\n```"
+    }
+  ]
+}

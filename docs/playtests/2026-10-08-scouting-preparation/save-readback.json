@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\n  \"time\": \"2026-10-08T20:45:06.909Z\",\n  \"header\": \"ESPORTSSIM\\nSeason 1 · Week 5 · Regular — Team Nexus\\n408,276 cr\\nSave\\nAutosave off\\nEvery week\\nEvery 2 weeks\\nEvery 3 weeks\\nEvery 5 weeks\\nEvery 8 weeks\\nCampaigns\\nAdvance Week ▸\\nSim ahead ▸▸\\n🛠️\\n🔇\\nGuide\",\n  \"week\": 5\n}\n### Ran Playwright code\n```js\nawait page.evaluate('async () => ({time:new Date().toISOString(),header:document.querySelector(\\'header\\').innerText,week:(await api(\\'/api/state\\')).week})');\n```"
+    }
+  ]
+}

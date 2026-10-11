@@ -1,0 +1,128 @@
+{
+  "audited_at_utc": "2026-10-10T23:32:51.989081+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "actual_seed": 2038,
+  "baseline_actions": 68,
+  "final_actions": 72,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 4,
+    "accepted": 4
+  },
+  "standing_five_unchanged": true,
+  "snapshot_prefix_unchanged": true,
+  "manager_streams": 1,
+  "snapshots_before_after": [
+    15,
+    16
+  ],
+  "bank_before_after": [
+    805569,
+    989505
+  ],
+  "report_income": 111036,
+  "report_expenses": 47100,
+  "bank_delta": 183936,
+  "unreported_prize": 120000,
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+  "usage_events_at_audit": 88,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 11,
+    "visible_time": 61,
+    "session_end": 1,
+    "attempt": 6,
+    "result": 6,
+    "interaction": 1
+  },
+  "usage_target_counts": {
+    "view": {
+      "lobby": 2,
+      "dashboard": 3,
+      "tactics/strategy": 2,
+      "tactics/prep": 1,
+      "tactics/gameplan": 1,
+      "club/squad": 1,
+      "club/operations": 1
+    },
+    "interaction": {
+      "week/full_report_open": 1
+    },
+    "replay": {}
+  },
+  "request_pairs": 6,
+  "pairs": [
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 17,
+      "target": "/api/actions/media_event"
+    },
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 28,
+      "target": "/api/actions/preparation"
+    },
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 34,
+      "target": "/api/actions/gameplan"
+    },
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 37,
+      "target": "/api/actions/save"
+    },
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 38,
+      "target": "/api/actions/advance"
+    },
+    {
+      "session_id": "00e09ff2ca10650d5396386d7bea3104",
+      "request_id": 53,
+      "target": "/api/actions/save"
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 38380,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 43416,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8500",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 2004,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8500",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Bounded usage is not attention or complete funnels. Media interpretation and readback lack semantic hooks. Failed CLI refs and observer errors are qualitative, not HTTP rejections. No causal inference from0-2 loss. Gap31 reused; gap32 delegated."
+}

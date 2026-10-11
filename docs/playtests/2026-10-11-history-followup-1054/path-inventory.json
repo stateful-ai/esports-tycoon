@@ -1,0 +1,154 @@
+[
+  {
+    "status": "M",
+    "path": ".gitattributes"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/artifact-index.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/dated-stack-and-main-qualification.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/original-root-audit.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/publication-proof.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/report.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract-root-audit.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/actions.csv"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/check2.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/check3.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/check4.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/check6.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/dirty-row9-metadata.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/flywheel-after.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/flywheel-before.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/fresh-screen.png"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/reconciliation.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/recover8.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/reopen7.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/report.md"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/root-audit.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/safe-manifest.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/save-readback.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/shutdown.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/source-after.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/source-before.json"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/stale-screen.png"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step1.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step2.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step3.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step4.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step5.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step6.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step7.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/step8.txt"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-transfer-contract/usage-end.jsonl"
+  },
+  {
+    "status": "M",
+    "path": "docs/playtests/actions.csv"
+  },
+  {
+    "status": "A",
+    "path": "docs/playtests/2026-10-11-history-followup-1054/path-inventory.json"
+  }
+]

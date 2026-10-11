@@ -1,0 +1,13 @@
+{
+  "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "source_diff_sha256": "2de7af6a32b1b61c6481038543515237ae6723d81cede09eff536d79425a6133",
+  "byte_identical_to_parent_reviewed_patch": true,
+  "source_unchanged_after_gate_start": true,
+  "files": {
+    "src/esports_sim/web/static/app.js": "01594d73d9557841e6b21882fa5c5f11833aac100e61b30a3a3221954d923032",
+    "src/esports_sim/web/static/usage.js": "b298ee7d95004bd8ab6b9e5a90b0e2c7b0bc7746b8a095e9fd6ebd0a45af356b",
+    "src/esports_sim/web/usage_telemetry.py": "425782fd9967a578b928991130c0409f7141084f9adec457ad54850e87090711",
+    "tests/test_usage_telemetry.py": "5f8409358dbd2ac1daaf239c0376565c7fb83862a492e0d95ed799d1f1ad63f2",
+    "tests/usage_frontend_check.cjs": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064"
+  }
+}

@@ -13,12 +13,13 @@
     <a class="brand" href="/">ESPORTS<span>SIM</span></a>
     <div class="title-block">
       <b>Map Studio</b>
-      <span>Create and review continuous map geometries before publishing to legacy match runtimes.</span>
+      <span>Trace real layouts, connect rooms, and test routes.</span>
     </div>
     <div class="spacer"></div>
     <span id="save-state" class="status-chip">No map open</span>
     <button id="reload-btn" class="btn" disabled>Reload Latest</button>
     <button id="validate-btn" class="btn" disabled>Validate</button>
+    <button id="preview-round-btn" class="btn" disabled>Test Round</button>
     <button id="publish-btn" class="btn" disabled>Publish Runtime</button>
     <button id="delete-map-btn" class="btn danger-action" disabled>Delete Map</button>
     <button id="save-btn" class="btn primary" disabled>Save Draft</button>
@@ -70,7 +71,8 @@
           <div class="canvas-panel">
             <div class="canvas-toolbar">
               <button class="tool-btn active" data-tool="select" title="Select & Edit elements">Select</button>
-              <button class="tool-btn" data-tool="surface" title="Draw walkable surface polygon">Walkable Surface</button>
+              <button class="tool-btn" data-tool="surface" title="Click two opposite corners to create a rectangular room and its callout">Room Rectangle</button>
+              <button class="tool-btn" data-tool="extension" title="Select a room, then click two corners to extend its floor">Floor Extension</button>
               <button class="tool-btn" data-tool="wall" title="Draw wall segment">Wall</button>
               <button class="tool-btn" data-tool="zone" title="Add semantic zone / callout">Semantic Zone</button>
               <button class="tool-btn" data-tool="prop" title="Place crate or sight blocker prop">Prop</button>
@@ -79,9 +81,26 @@
               <button class="tool-btn" data-tool="probe" title="Collision & sightline probe">Probe</button>
               <div class="spacer"></div>
               <button id="view-toggle" class="btn">View: 2D Top-Down</button>
+              <button id="focus-canvas-btn" class="btn">Focus Canvas</button>
               <button id="undo-btn" class="btn" title="Undo">↶</button>
               <button id="redo-btn" class="btn" title="Redo">↷</button>
             </div>
+
+            <div class="trace-toolbar">
+              <button id="fit-map-btn" class="btn" title="Fit all map geometry (F)">Fit Map</button>
+              <label>Snap <select id="snap-step" aria-label="Grid snap"><option value="0">Off</option><option value="0.25">0.25u</option><option value="0.5" selected>0.5u</option><option value="1">1u</option></select></label>
+              <label><input id="reference-toggle" type="checkbox" checked> Reference</label>
+              <label>Opacity <input id="reference-opacity" aria-label="Reference opacity" type="range" min="0" max="100" value="65"></label>
+              <label><input id="trace-outline" type="checkbox"> Outlines</label>
+              <label><input id="routes-toggle" type="checkbox" checked> Routes</label>
+              <button id="compare-floor-btn" class="btn">Compare Floor</button>
+              <label>Round seed <input id="round-preview-seed" type="number" aria-label="Round preview seed" min="0" max="2147483647" value="1167"></label>
+              <span id="cursor-coords" class="mono">x — · y —</span>
+            </div>
+            <p id="trace-help" class="trace-help">Select and drag to edit. Wheel to zoom · Right-drag to pan · F to fit · Ctrl+Z to undo.</p>
+            <p id="reference-caption" class="reference-caption"></p>
+            <p id="preview-status" class="trace-help" aria-live="polite"></p>
+            <p id="floor-comparison-status" class="trace-help" aria-live="polite"></p>
 
             <div class="svg-container">
               <svg id="studio-canvas" viewBox="-110 -12 220 128" preserveAspectRatio="xMidYMid meet">
@@ -91,17 +110,19 @@
                     <path d="M 5 0 L 0 0 0 5" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.2"/>
                   </pattern>
                 </defs>
-                <rect x="-110" y="-12" width="220" height="128" fill="var(--es-color-map-bg)" />
-                <rect x="-110" y="-12" width="220" height="128" fill="url(#grid)" />
+                <rect x="-2000" y="-2000" width="4000" height="4000" fill="var(--es-color-map-bg)" />
                 
                 <!-- Under-layers (Paint backdrop if toggle enabled) -->
                 <image id="backdrop-image" x="-110" y="-12" width="220" height="128" opacity="0" style="pointer-events: none;" />
+                <image id="reference-image" opacity="0" preserveAspectRatio="none" transform="translate(0 100) scale(1 -1)" style="pointer-events: none;" />
+                <rect x="-2000" y="-2000" width="4000" height="4000" fill="url(#grid)" style="pointer-events: none;" />
                 
                 <!-- Active layers (rendered by js) -->
                 <g id="layer-surfaces"></g>
                 <g id="layer-zones"></g>
                 <g id="layer-walls"></g>
                 <g id="layer-props"></g>
+                <g id="layer-comparison" style="pointer-events: none;"></g>
                 <g id="layer-links"></g>
                 <g id="layer-players"></g>
                 <g id="layer-probes"></g>
@@ -175,6 +196,7 @@
 
   <div id="toast" aria-live="polite"></div>
   <script src="/map-transform.js"></script>
+  <script src="/map-authoring.js"></script>
   <script src="/map-studio.js"></script>
 </body>
 </html>

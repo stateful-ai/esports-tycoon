@@ -1,0 +1,1430 @@
+{
+  "reviewed_at_utc": "2026-10-06T20:06:00+00:00",
+  "method": "Live VLR pages opened in Playwright Chromium; rendered table screenshots visually inspected and manually transcribed independently of CSV/parser output. TLS verified. Purposive sample.",
+  "pages": [
+    {
+      "label": "Tier 1 Santiago Haven",
+      "url": "https://www.vlr.gg/625788/gentle-mates-vs-edward-gaming-valorant-masters-santiago-2026-r1/?game=254143",
+      "screenshot": "screenshots/audit-santiago-stats.png",
+      "note": "",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143
+          },
+          "fields": {
+            "map_name": "Haven",
+            "team1_name": "Gentle Mates",
+            "team2_name": "EDward Gaming",
+            "team1_rounds": 13,
+            "team2_rounds": 11,
+            "rounds": 24
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "Minny"
+          },
+          "fields": {
+            "vlr_rating": 1.33,
+            "acs": 241,
+            "kills": 21,
+            "deaths": 16,
+            "assists": 5,
+            "kast_pct": 71,
+            "adr": 163,
+            "hs_pct": 42,
+            "first_kills": 1,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "starxo"
+          },
+          "fields": {
+            "vlr_rating": 1.07,
+            "acs": 207,
+            "kills": 17,
+            "deaths": 15,
+            "assists": 4,
+            "kast_pct": 58,
+            "adr": 125,
+            "hs_pct": 26,
+            "first_kills": 4,
+            "first_deaths": 5
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "marteen"
+          },
+          "fields": {
+            "vlr_rating": 0.94,
+            "acs": 164,
+            "kills": 12,
+            "deaths": 15,
+            "assists": 7,
+            "kast_pct": 63,
+            "adr": 107,
+            "hs_pct": 26,
+            "first_kills": 2,
+            "first_deaths": 4
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "bipo"
+          },
+          "fields": {
+            "vlr_rating": 0.93,
+            "acs": 162,
+            "kills": 14,
+            "deaths": 13,
+            "assists": 6,
+            "kast_pct": 63,
+            "adr": 104,
+            "hs_pct": 21,
+            "first_kills": 2,
+            "first_deaths": 4
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "GLYPH"
+          },
+          "fields": {
+            "vlr_rating": 0.85,
+            "acs": 114,
+            "kills": 10,
+            "deaths": 15,
+            "assists": 8,
+            "kast_pct": 54,
+            "adr": 73,
+            "hs_pct": 25,
+            "first_kills": 1,
+            "first_deaths": 0
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "ZmjjKK"
+          },
+          "fields": {
+            "vlr_rating": 1.21,
+            "acs": 240,
+            "kills": 21,
+            "deaths": 14,
+            "assists": 1,
+            "kast_pct": 67,
+            "adr": 153,
+            "hs_pct": 28,
+            "first_kills": 6,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "cb"
+          },
+          "fields": {
+            "vlr_rating": 0.93,
+            "acs": 204,
+            "kills": 19,
+            "deaths": 15,
+            "assists": 0,
+            "kast_pct": 71,
+            "adr": 128,
+            "hs_pct": 33,
+            "first_kills": 3,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "nobody"
+          },
+          "fields": {
+            "vlr_rating": 0.92,
+            "acs": 147,
+            "kills": 13,
+            "deaths": 14,
+            "assists": 3,
+            "kast_pct": 50,
+            "adr": 101,
+            "hs_pct": 18,
+            "first_kills": 0,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "Smoggy"
+          },
+          "fields": {
+            "vlr_rating": 0.81,
+            "acs": 148,
+            "kills": 10,
+            "deaths": 16,
+            "assists": 9,
+            "kast_pct": 71,
+            "adr": 104,
+            "hs_pct": 23,
+            "first_kills": 3,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625788,
+            "map_id": 254143,
+            "handle": "CHICHOO"
+          },
+          "fields": {
+            "vlr_rating": 0.8,
+            "acs": 146,
+            "kills": 11,
+            "deaths": 15,
+            "assists": 5,
+            "kast_pct": 58,
+            "adr": 106,
+            "hs_pct": 21,
+            "first_kills": 2,
+            "first_deaths": 2
+          }
+        }
+      ]
+    },
+    {
+      "label": "Overtime Santiago Split",
+      "url": "https://www.vlr.gg/625789/t1-vs-team-liquid-valorant-masters-santiago-2026-r1/?game=254147",
+      "screenshot": "screenshots/audit-overtime-stats.png",
+      "note": "",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147
+          },
+          "fields": {
+            "map_name": "Split",
+            "team1_name": "T1",
+            "team2_name": "Team Liquid",
+            "team1_rounds": 13,
+            "team2_rounds": 15,
+            "rounds": 28
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "stax"
+          },
+          "fields": {
+            "vlr_rating": 1.32,
+            "acs": 221,
+            "kills": 24,
+            "deaths": 17,
+            "assists": 6,
+            "kast_pct": 79,
+            "adr": 140,
+            "hs_pct": 27,
+            "first_kills": 1,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "iZu"
+          },
+          "fields": {
+            "vlr_rating": 1.16,
+            "acs": 239,
+            "kills": 26,
+            "deaths": 20,
+            "assists": 2,
+            "kast_pct": 64,
+            "adr": 154,
+            "hs_pct": 30,
+            "first_kills": 4,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "BuZz"
+          },
+          "fields": {
+            "vlr_rating": 0.82,
+            "acs": 205,
+            "kills": 17,
+            "deaths": 22,
+            "assists": 8,
+            "kast_pct": 68,
+            "adr": 146,
+            "hs_pct": 12,
+            "first_kills": 2,
+            "first_deaths": 3
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "Munchkin"
+          },
+          "fields": {
+            "vlr_rating": 0.78,
+            "acs": 166,
+            "kills": 13,
+            "deaths": 21,
+            "assists": 15,
+            "kast_pct": 68,
+            "adr": 113,
+            "hs_pct": 11,
+            "first_kills": 3,
+            "first_deaths": 3
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "Meteor"
+          },
+          "fields": {
+            "vlr_rating": 0.66,
+            "acs": 176,
+            "kills": 17,
+            "deaths": 22,
+            "assists": 3,
+            "kast_pct": 54,
+            "adr": 115,
+            "hs_pct": 33,
+            "first_kills": 1,
+            "first_deaths": 7
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "wayne"
+          },
+          "fields": {
+            "vlr_rating": 1.23,
+            "acs": 225,
+            "kills": 22,
+            "deaths": 18,
+            "assists": 7,
+            "kast_pct": 79,
+            "adr": 143,
+            "hs_pct": 24,
+            "first_kills": 4,
+            "first_deaths": 3
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "purp0"
+          },
+          "fields": {
+            "vlr_rating": 1.12,
+            "acs": 227,
+            "kills": 22,
+            "deaths": 20,
+            "assists": 9,
+            "kast_pct": 79,
+            "adr": 147,
+            "hs_pct": 40,
+            "first_kills": 3,
+            "first_deaths": 0
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "nAts"
+          },
+          "fields": {
+            "vlr_rating": 1.04,
+            "acs": 238,
+            "kills": 24,
+            "deaths": 22,
+            "assists": 7,
+            "kast_pct": 75,
+            "adr": 155,
+            "hs_pct": 32,
+            "first_kills": 1,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "MiniBoo"
+          },
+          "fields": {
+            "vlr_rating": 1.02,
+            "acs": 202,
+            "kills": 18,
+            "deaths": 19,
+            "assists": 9,
+            "kast_pct": 79,
+            "adr": 125,
+            "hs_pct": 23,
+            "first_kills": 7,
+            "first_deaths": 4
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 625789,
+            "map_id": 254147,
+            "handle": "kamo"
+          },
+          "fields": {
+            "vlr_rating": 0.81,
+            "acs": 159,
+            "kills": 16,
+            "deaths": 18,
+            "assists": 3,
+            "kast_pct": 71,
+            "adr": 100,
+            "hs_pct": 48,
+            "first_kills": 2,
+            "first_deaths": 2
+          }
+        }
+      ]
+    },
+    {
+      "label": "Tier 2 NA Breeze",
+      "url": "https://www.vlr.gg/645242/shopify-rebellion-black-vs-rose-challengers-2026-north-america-ace-stage-2-r1/?game=258547",
+      "screenshot": "screenshots/audit-na-tier2-stats.png",
+      "note": "",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547
+          },
+          "fields": {
+            "map_name": "Breeze",
+            "team1_name": "Shopify Rebellion Black",
+            "team2_name": "ROSE",
+            "team1_rounds": 13,
+            "team2_rounds": 7,
+            "rounds": 20
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "satellite"
+          },
+          "fields": {
+            "vlr_rating": 1.75,
+            "acs": 351,
+            "kills": 26,
+            "deaths": 12,
+            "assists": 4,
+            "kast_pct": 95,
+            "adr": 224,
+            "hs_pct": 24,
+            "first_kills": 5,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "Smoke"
+          },
+          "fields": {
+            "vlr_rating": 1.36,
+            "acs": 312,
+            "kills": 23,
+            "deaths": 13,
+            "assists": 0,
+            "kast_pct": 80,
+            "adr": 180,
+            "hs_pct": 7,
+            "first_kills": 7,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "NaturE"
+          },
+          "fields": {
+            "vlr_rating": 1.03,
+            "acs": 188,
+            "kills": 14,
+            "deaths": 9,
+            "assists": 3,
+            "kast_pct": 75,
+            "adr": 135,
+            "hs_pct": 23,
+            "first_kills": 0,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "exa"
+          },
+          "fields": {
+            "vlr_rating": 0.95,
+            "acs": 175,
+            "kills": 13,
+            "deaths": 13,
+            "assists": 6,
+            "kast_pct": 80,
+            "adr": 113,
+            "hs_pct": 34,
+            "first_kills": 0,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "zander"
+          },
+          "fields": {
+            "vlr_rating": 0.91,
+            "acs": 101,
+            "kills": 7,
+            "deaths": 9,
+            "assists": 5,
+            "kast_pct": 90,
+            "adr": 66,
+            "hs_pct": 27,
+            "first_kills": 0,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "k0rupt"
+          },
+          "fields": {
+            "vlr_rating": 1.28,
+            "acs": 242,
+            "kills": 17,
+            "deaths": 15,
+            "assists": 5,
+            "kast_pct": 85,
+            "adr": 150,
+            "hs_pct": 41,
+            "first_kills": 1,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "Bob"
+          },
+          "fields": {
+            "vlr_rating": 0.87,
+            "acs": 188,
+            "kills": 12,
+            "deaths": 17,
+            "assists": 4,
+            "kast_pct": 50,
+            "adr": 128,
+            "hs_pct": 33,
+            "first_kills": 1,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "RetrQ"
+          },
+          "fields": {
+            "vlr_rating": 0.51,
+            "acs": 127,
+            "kills": 9,
+            "deaths": 17,
+            "assists": 2,
+            "kast_pct": 50,
+            "adr": 83,
+            "hs_pct": 14,
+            "first_kills": 1,
+            "first_deaths": 5
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "CHAROD"
+          },
+          "fields": {
+            "vlr_rating": 0.51,
+            "acs": 109,
+            "kills": 9,
+            "deaths": 16,
+            "assists": 0,
+            "kast_pct": 40,
+            "adr": 79,
+            "hs_pct": 38,
+            "first_kills": 3,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 645242,
+            "map_id": 258547,
+            "handle": "Tim"
+          },
+          "fields": {
+            "vlr_rating": 0.39,
+            "acs": 135,
+            "kills": 9,
+            "deaths": 18,
+            "assists": 3,
+            "kast_pct": 55,
+            "adr": 88,
+            "hs_pct": 20,
+            "first_kills": 2,
+            "first_deaths": 3
+          }
+        }
+      ]
+    },
+    {
+      "label": "NA source missing optional stats",
+      "url": "https://www.vlr.gg/606535/qor-vs-evictix-challengers-2026-north-america-ace-stage-1-r2-0-1/?game=248834",
+      "screenshot": "screenshots/audit-missing-stats-stats.png",
+      "note": "K/D/A present; every other displayed numerical box-score field blank. Blanks must remain missing.",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834
+          },
+          "fields": {
+            "map_name": "Pearl",
+            "team1_name": "QoR",
+            "team2_name": "Evictix",
+            "team1_rounds": 13,
+            "team2_rounds": 8,
+            "rounds": 21
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "Notexxd"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 23,
+            "deaths": 14,
+            "assists": 12,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "flyuh"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 17,
+            "deaths": 11,
+            "assists": 8,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "kumi"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 15,
+            "deaths": 9,
+            "assists": 1,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "Smoke"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 13,
+            "deaths": 14,
+            "assists": 7,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "moose"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 12,
+            "deaths": 12,
+            "assists": 7,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "traded"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 15,
+            "deaths": 18,
+            "assists": 3,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "Scottie"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 12,
+            "deaths": 14,
+            "assists": 4,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "squirmor"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 11,
+            "deaths": 17,
+            "assists": 6,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "dre"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 11,
+            "deaths": 16,
+            "assists": 5,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 606535,
+            "map_id": 248834,
+            "handle": "Racoone"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": 11,
+            "deaths": 15,
+            "assists": 5,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        }
+      ]
+    },
+    {
+      "label": "China source missing lineup",
+      "url": "https://www.vlr.gg/653018/ace-vs-octagonal-disposition-gaming-china-national-tournament-2026-split-alpha-pro-division-w1/?game=262427",
+      "screenshot": "screenshots/audit-china-stats.png",
+      "note": "ACE table empty; five ODG names with blank stats. Scoreline implies 23 rounds; blank round-grid placeholders are not actual round count. Ineligible for lineup model.",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427
+          },
+          "fields": {
+            "map_name": "Pearl",
+            "team1_name": "ACE",
+            "team2_name": "Octagonal Disposition Gaming",
+            "team1_rounds": 13,
+            "team2_rounds": 10,
+            "rounds": 23
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427,
+            "handle": "Eren"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": null,
+            "deaths": null,
+            "assists": null,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427,
+            "handle": "YHchen"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": null,
+            "deaths": null,
+            "assists": null,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427,
+            "handle": "ZiXuan"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": null,
+            "deaths": null,
+            "assists": null,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427,
+            "handle": "W1nner"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": null,
+            "deaths": null,
+            "assists": null,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 653018,
+            "map_id": 262427,
+            "handle": "XyuS"
+          },
+          "fields": {
+            "vlr_rating": null,
+            "acs": null,
+            "kills": null,
+            "deaths": null,
+            "assists": null,
+            "kast_pct": null,
+            "adr": null,
+            "hs_pct": null,
+            "first_kills": null,
+            "first_deaths": null
+          }
+        }
+      ]
+    },
+    {
+      "label": "Santiago event aggregate All/Both/Min rounds 0",
+      "url": "https://www.vlr.gg/event/stats/2760?min_rounds=0",
+      "screenshot": "screenshots/audit-event-stats-stats.png",
+      "note": "Maps and FK/FD counts are hidden in this rendered view and are not checked. CL numerator and denominator are independently transcribed.",
+      "observations": [
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2760,
+            "handle": "marteen"
+          },
+          "fields": {
+            "rounds": 186,
+            "vlr_rating": 1.41,
+            "acs": 268,
+            "kd": 1.43,
+            "kast_pct": 76,
+            "adr": 169.1,
+            "kpr": 0.95,
+            "apr": 0.31,
+            "fk_fd_ratio": 1.47,
+            "hs_pct": 31,
+            "clutch_pct": 32,
+            "clutches_won": 7,
+            "clutch_attempts": 22,
+            "max_kills": 30,
+            "kills": 176,
+            "deaths": 123,
+            "assists": 57
+          }
+        },
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2760,
+            "handle": "eeiu"
+          },
+          "fields": {
+            "rounds": 126,
+            "vlr_rating": 1.24,
+            "acs": 244,
+            "kd": 1.34,
+            "kast_pct": 69,
+            "adr": 166.5,
+            "kpr": 0.88,
+            "apr": 0.23,
+            "fk_fd_ratio": 2.0,
+            "hs_pct": 35,
+            "clutch_pct": 17,
+            "clutches_won": 3,
+            "clutch_attempts": 18,
+            "max_kills": 22,
+            "kills": 111,
+            "deaths": 83,
+            "assists": 29
+          }
+        },
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2760,
+            "handle": "trent"
+          },
+          "fields": {
+            "rounds": 330,
+            "vlr_rating": 1.15,
+            "acs": 194,
+            "kd": 1.11,
+            "kast_pct": 73,
+            "adr": 131.1,
+            "kpr": 0.69,
+            "apr": 0.34,
+            "fk_fd_ratio": 1.42,
+            "hs_pct": 29,
+            "clutch_pct": 19,
+            "clutches_won": 10,
+            "clutch_attempts": 52,
+            "max_kills": 32,
+            "kills": 229,
+            "deaths": 207,
+            "assists": 111
+          }
+        },
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2760,
+            "handle": "iZu"
+          },
+          "fields": {
+            "rounds": 135,
+            "vlr_rating": 1.14,
+            "acs": 234,
+            "kd": 1.24,
+            "kast_pct": 65,
+            "adr": 155.2,
+            "kpr": 0.87,
+            "apr": 0.21,
+            "fk_fd_ratio": 0.88,
+            "hs_pct": 40,
+            "clutch_pct": 0,
+            "clutches_won": 0,
+            "clutch_attempts": 19,
+            "max_kills": 29,
+            "kills": 117,
+            "deaths": 94,
+            "assists": 29
+          }
+        }
+      ]
+    },
+    {
+      "label": "China Stage 1 discrepant-round Pearl",
+      "url": "https://www.vlr.gg/642919/bilibili-gaming-vs-tyloo-vct-2026-china-stage-1-w1/?game=257941",
+      "screenshot": "screenshots/audit-china-pearl-stats.png",
+      "note": "Scoreline implies 16 scored rounds. Event round totals exceed the sum of map scores by one for these teams; retain both source measures without assuming a cause.",
+      "observations": [
+        {
+          "table": "map_outcomes.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941
+          },
+          "fields": {
+            "map_name": "Pearl",
+            "team1_rounds": 13,
+            "team2_rounds": 3,
+            "rounds": 16
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "whzy"
+          },
+          "fields": {
+            "vlr_rating": 1.54,
+            "acs": 374,
+            "kills": 23,
+            "deaths": 12,
+            "assists": 4,
+            "kast_pct": 94,
+            "adr": 222,
+            "hs_pct": 21,
+            "first_kills": 5,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "nephh"
+          },
+          "fields": {
+            "vlr_rating": 1.51,
+            "acs": 262,
+            "kills": 16,
+            "deaths": 7,
+            "assists": 3,
+            "kast_pct": 82,
+            "adr": 168,
+            "hs_pct": 29,
+            "first_kills": 2,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "Knight"
+          },
+          "fields": {
+            "vlr_rating": 1.27,
+            "acs": 197,
+            "kills": 12,
+            "deaths": 8,
+            "assists": 7,
+            "kast_pct": 82,
+            "adr": 160,
+            "hs_pct": 25,
+            "first_kills": 0,
+            "first_deaths": 0
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "rushia"
+          },
+          "fields": {
+            "vlr_rating": 0.99,
+            "acs": 212,
+            "kills": 12,
+            "deaths": 10,
+            "assists": 4,
+            "kast_pct": 76,
+            "adr": 137,
+            "hs_pct": 17,
+            "first_kills": 0,
+            "first_deaths": 1
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "yilai"
+          },
+          "fields": {
+            "vlr_rating": 0.82,
+            "acs": 219,
+            "kills": 12,
+            "deaths": 13,
+            "assists": 8,
+            "kast_pct": 82,
+            "adr": 135,
+            "hs_pct": 16,
+            "first_kills": 4,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "splash"
+          },
+          "fields": {
+            "vlr_rating": 1.37,
+            "acs": 300,
+            "kills": 16,
+            "deaths": 14,
+            "assists": 4,
+            "kast_pct": 82,
+            "adr": 180,
+            "hs_pct": 21,
+            "first_kills": 1,
+            "first_deaths": 4
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "Erv"
+          },
+          "fields": {
+            "vlr_rating": 0.79,
+            "acs": 167,
+            "kills": 8,
+            "deaths": 15,
+            "assists": 9,
+            "kast_pct": 71,
+            "adr": 115,
+            "hs_pct": 21,
+            "first_kills": 1,
+            "first_deaths": 0
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "sword9"
+          },
+          "fields": {
+            "vlr_rating": 0.71,
+            "acs": 158,
+            "kills": 9,
+            "deaths": 15,
+            "assists": 5,
+            "kast_pct": 65,
+            "adr": 113,
+            "hs_pct": 40,
+            "first_kills": 0,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "Scales"
+          },
+          "fields": {
+            "vlr_rating": 0.7,
+            "acs": 169,
+            "kills": 9,
+            "deaths": 15,
+            "assists": 4,
+            "kast_pct": 71,
+            "adr": 113,
+            "hs_pct": 33,
+            "first_kills": 3,
+            "first_deaths": 2
+          }
+        },
+        {
+          "table": "player_map_stats.csv",
+          "key": {
+            "match_id": 642919,
+            "map_id": 257941,
+            "handle": "slowly"
+          },
+          "fields": {
+            "vlr_rating": 0.6,
+            "acs": 160,
+            "kills": 8,
+            "deaths": 16,
+            "assists": 2,
+            "kast_pct": 47,
+            "adr": 116,
+            "hs_pct": 32,
+            "first_kills": 0,
+            "first_deaths": 3
+          }
+        }
+      ]
+    },
+    {
+      "label": "China Stage 1 aggregate rounds slowly",
+      "url": "https://www.vlr.gg/event/stats/2864?min_rounds=0",
+      "screenshot": "screenshots/audit-china-event-slowly.png",
+      "note": "Source aggregate round count retained despite one-round scoreline reconciliation warning.",
+      "observations": [
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2864,
+            "handle": "slowly"
+          },
+          "fields": {
+            "rounds": 517
+          }
+        }
+      ]
+    },
+    {
+      "label": "China Stage 1 aggregate rounds nephh",
+      "url": "https://www.vlr.gg/event/stats/2864?min_rounds=0",
+      "screenshot": "screenshots/audit-china-event-nephh.png",
+      "note": "Source aggregate round count retained despite one-round scoreline reconciliation warning.",
+      "observations": [
+        {
+          "table": "player_event_stats.csv",
+          "key": {
+            "event_id": 2864,
+            "handle": "nephh"
+          },
+          "fields": {
+            "rounds": 259
+          }
+        }
+      ]
+    },
+    {
+      "label": "Free-agent profile Marved",
+      "url": "https://www.vlr.gg/player/263/marved",
+      "screenshot": "screenshots/audit-marved-profile-top.png",
+      "note": "No current team section; past teams are not current listings. No contract availability inferred. FiNESSE profile also shows alias FNS and retirement news.",
+      "observations": [
+        {
+          "table": "player_profiles.csv",
+          "key": {
+            "vlr_player_id": 263
+          },
+          "fields": {
+            "handle": "Marved",
+            "real_name": "Jimmy Nguyen",
+            "current_team_evidence": null,
+            "team_listing_status": "no_current_team_listed"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Free-agent profile FiNESSE",
+      "url": "https://www.vlr.gg/player/817/fns",
+      "screenshot": "screenshots/audit-fns-profile-top.png",
+      "note": "No current team section; past teams are not current listings. No contract availability inferred. FiNESSE profile also shows alias FNS and retirement news.",
+      "observations": [
+        {
+          "table": "player_profiles.csv",
+          "key": {
+            "vlr_player_id": 817
+          },
+          "fields": {
+            "handle": "FiNESSE",
+            "real_name": "Pujan Mehta",
+            "current_team_evidence": null,
+            "team_listing_status": "no_current_team_listed"
+          }
+        }
+      ]
+    }
+  ]
+}

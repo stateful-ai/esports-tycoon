@@ -126,6 +126,37 @@ def test_only_one_booking_per_week(game_data: GameData) -> None:
 
 
 @pytest.mark.campaign
+def test_same_week_in_next_season_allows_recovery(game_data: GameData) -> None:
+    gs = _wrecked(game_data)
+    assert recovery.book(gs, TEAM, "day")[0]
+    gs.season += 1
+    assert recovery.can_book(gs, TEAM, "day")[0]
+    assert recovery.book(gs, TEAM, "day")[0]
+    assert not recovery.can_book(gs, TEAM, "retreat")[0]
+
+
+@pytest.mark.campaign
+def test_legacy_recovery_booking_preserves_current_season_lock(
+    game_data: GameData, tmp_path,
+) -> None:
+    import json
+
+    from esports_sim.manager.state import GameState
+
+    gs = _wrecked(game_data)
+    assert recovery.book(gs, TEAM, "day")[0]
+    old = gs.model_dump(mode="json")
+    old["schema_version"] = 36
+    old.pop("recovery_booked_season_by")
+    save = tmp_path / "legacy-recovery.json"
+    save.write_text(json.dumps(old), encoding="utf-8")
+    loaded = GameState.load(save)
+    assert recovery.already_booked(loaded, TEAM)
+    loaded.season += 1
+    assert not recovery.already_booked(loaded, TEAM)
+
+
+@pytest.mark.campaign
 def test_a_club_that_cannot_pay_is_refused_with_the_shortfall(
     game_data: GameData,
 ) -> None:

@@ -1,0 +1,12 @@
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Advance Week ▸' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:8536/
+- Page Title: esports-sim
+- Console: 2 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T10-23-09-598Z.yml)
+### Events
+- New console entries: .playwright-cli\console-2026-10-11T10-21-00-612Z.log#L2-L5

@@ -1,0 +1,43 @@
+{
+  "attempts": 3,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/new": 1,
+    "interaction:lobby/seed_change": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/new": 1,
+    "session_start:": 4,
+    "view:dashboard": 4,
+    "view:lobby": 4,
+    "visible_time:dashboard": 9,
+    "visible_time:lobby": 7
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "3ea72b52d9829f72133f014b47c324a0": 29881,
+    "6a5aee4cc4879d0ab73676a3d878ea21": 14990,
+    "8d50d9fe8baf0afeb695890c834466b6": 5,
+    "98a5283e6f6ad255931f0a6f8fbdddab": 18199
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/new:success": 1
+  },
+  "paired_results": 3,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 90833,
+    "lobby": 15037
+  },
+  "world_events": {
+    "M74LG": 29,
+    "lobby": 7
+  }
+}

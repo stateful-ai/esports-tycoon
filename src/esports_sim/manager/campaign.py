@@ -34,6 +34,7 @@ from esports_sim.manager import (
     knowledge,
     market,
     media_events,
+    mentorship,
     meta,
     narrative,
     preparation,
@@ -229,6 +230,9 @@ def new_campaign(
     # with authored ones. 24 x 24 parts against 228 players makes duplicates
     # the norm without it, not the exception.
     taken_handles: set[str] = {p.handle for p in players.values()}
+    if pack is not None:
+        taken_handles.update(p.handle for p in pack.free_agents.values())
+        taken_handles.update(p.player.handle for p in pack.future_prospects.values())
     for region in regions:
         have = sum(
             1 for t in teams.values() if t.region == region and t.tier == 1
@@ -299,7 +303,9 @@ def new_campaign(
             len(t.player_ids) for t in teams.values() if t.tier == 1
         )
         need = fantasy_draft_mod.draft_class_size(n_t1, rostered_t1 + len(fas))
-        for p in fantasy_draft_mod.generate_draft_class(rng, gd, regions, need):
+        for p in fantasy_draft_mod.generate_draft_class(
+            rng, gd, regions, need, taken_handles=taken_handles,
+        ):
             players[p.id] = p
             draft_class_ids.append(p.id)
 
@@ -628,6 +634,9 @@ def advance_week(
     if gs.phase == "offseason":
         return _run_offseason(gs, gd)
 
+    from esports_sim.manager import development_path
+
+    development_path.begin_week(gs)
     report = WeekReport(season=gs.season, week=gs.week, phase=gs.phase)
     tree = RngTree(gs.seed)
     week_rng = tree.derive("season", gs.season, "week", gs.week, "weekly")
@@ -725,6 +734,8 @@ def advance_week(
     for tid, team in gs.teams.items():
         role_fit.build_igl_experience(team, week_dressed.get(tid, set()))
 
+    development_path.update_trends(gs)
+
     # 2. Training (human focus is manager-set unless weekly training is
     # delegated; AI and delegated coaches use the same roster-aware picker.
     # Every club's concrete coach contributes attributes, system fit, and
@@ -763,6 +774,10 @@ def advance_week(
     # mentor_skill. gs.mentorships is empty in hands-off sims, so this is a
     # no-op there and the balance gates stay byte-identical.
     development.apply_mentorship_growth(gs)
+    # Development above owns all weekly ceiling/breakthrough rewards. Settle
+    # the same week's program progress afterwards, including its final week,
+    # without applying the legacy standalone reward channel a second time.
+    mentorship.tick_mentorship(gs, apply_rewards=False)
 
     # 2a''. Agent mastery (F6): a week of maps played on an agent (already
     # folded into gs.player_agent_stats during the match loop), a matching
@@ -804,6 +819,7 @@ def advance_week(
     dev_events = development.weekly_dev_events(
         gs, tree.derive("season", gs.season, "week", gs.week, "devevents")
     )
+    dev_events += development_path.career_turning_points(gs, tree)
 
     # 2b'''. Mental momentum: tilt spirals and heaters — threshold events
     # on top of the smooth per-map confidence movement. Own stream
@@ -1603,12 +1619,21 @@ def _apply_match_development(gs: GameState, stats) -> None:
         tid: _development_support_bonuses(gs, tid) or {}
         for tid in playing_teams
     }
+    qualities = {
+        tid: sum(development.overall(gs.players[pid]) for pid in sorted(stats.lines)
+                 if pid_to_tid.get(pid) == tid and pid in gs.players)
+             / max(1, sum(pid_to_tid.get(pid) == tid for pid in stats.lines))
+        for tid in playing_teams
+    }
     for pid in sorted(stats.lines):
         p = gs.players.get(pid)
         if p is not None:
             tid = pid_to_tid.get(pid, "")
+            opponent_tid = stats.team_b_id if tid == stats.team_a_id else stats.team_a_id
+            opponent_quality = qualities.get(opponent_tid, development.overall(p))
             training.apply_match_experience(
-                p, stats.lines[pid], n_rounds, supports.get(tid, {}).get(pid, 0.0)
+                p, stats.lines[pid], n_rounds, supports.get(tid, {}).get(pid, 0.0),
+                opponent_quality=opponent_quality,
             )
 
 
@@ -2858,6 +2883,8 @@ def _rookie_classes(
     per_region = 2 + max(0, n_retired) // (len(gs.league_regions) * 2)
     headliners: list[str] = []
     historical_debuts = historical_debuts or {}
+    taken_handles = {p.handle for p in gs.players.values()}
+    taken_handles.update(p.player.handle for p in gs.future_prospects.values())
     for region in gs.league_regions:
         for _ in range(max(0, per_region - historical_debuts.get(str(region), 0))):
             style, role = _FA_SLOTS[gs.fa_counter % len(_FA_SLOTS)]
@@ -2867,6 +2894,7 @@ def _rookie_classes(
             p = generate_player(
                 rng, pid, style, role, quality, gd,
                 region=region, age_lo=17, age_hi=20,
+                taken_handles=taken_handles,
             )
             p.contract_weeks_left = 0
             p.personality_tags = sorted({*p.personality_tags, "rookie"})
@@ -3081,6 +3109,8 @@ def _record_meta_era(gs: GameState) -> None:
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
+    from esports_sim.manager import development_path
+    development_path.begin_week(gs)
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
     rng = tree.derive("season", gs.season, "offseason")
@@ -3220,6 +3250,7 @@ def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
     for pid in sorted(gs.mentorships):
         if pid not in gs.players or gs.mentorships[pid] not in gs.players:
             del gs.mentorships[pid]
+            gs.mentorship_progress.pop(pid, None)
 
     # Refresh the free-agent pool: cull the weakest journeymen (rookies
     # are exempt — prospects deserve a season on the market).

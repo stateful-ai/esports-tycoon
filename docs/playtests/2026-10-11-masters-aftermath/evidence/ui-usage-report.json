@@ -1,0 +1,45 @@
+{
+  "attempts": 3,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/dev_plan": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:club/development": 1,
+    "view:club/squad": 2,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "visible_time:club/development": 5,
+    "visible_time:club/squad": 4,
+    "visible_time:dashboard": 4,
+    "visible_time:lobby": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "8fc3e994da7459cc73b1f6478708bd1b": 0,
+    "d0152839bdcdd8e24a29b9a6284218b4": 120001
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 3,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 63013,
+    "club/squad": 25376,
+    "dashboard": 46593,
+    "lobby": 10016
+  },
+  "world_events": {
+    "26UHC": 31
+  }
+}

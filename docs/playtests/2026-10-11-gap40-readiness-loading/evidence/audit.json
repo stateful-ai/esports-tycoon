@@ -1,0 +1,613 @@
+{
+  "head": "1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+  "source_freeze_equal": true,
+  "decision_baseline": 100,
+  "decision_delta": [
+    {
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_adriatic_sirens",
+      "team_id": "team_adriatic_sirens",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "usage_events": [
+    {
+      "schema_version": 1,
+      "session_id": "f2a078474b1ba868c5badfbabe720070",
+      "received_at": "2026-10-11T08:15:52.824605+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "f2a078474b1ba868c5badfbabe720070",
+      "received_at": "2026-10-11T08:15:52.824605+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "f2a078474b1ba868c5badfbabe720070",
+      "received_at": "2026-10-11T08:15:52.824605+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 9255
+    },
+    {
+      "schema_version": 1,
+      "session_id": "f2a078474b1ba868c5badfbabe720070",
+      "received_at": "2026-10-11T08:15:52.824605+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:15:54.924927+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:15:54.924927+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:15:54.924927+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 2911
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:15:54.924927+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:15:54.924927+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 12091
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:07.852305+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:07.852305+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:07.852305+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 16
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:07.852305+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:07.852305+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14997
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:16:09.930572+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:16:09.930572+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15007
+    },
+    {
+      "schema_version": 1,
+      "session_id": "6c4321323b9026a7786049cb488adfd6",
+      "received_at": "2026-10-11T08:16:22.846522+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14996
+    },
+    {
+      "schema_version": 1,
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "received_at": "2026-10-11T08:16:24.930365+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15001
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 201
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:17:58.344366+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 221
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:18:10.476880+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 20
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:18:10.476880+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 23,
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 20,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 124
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 182
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:10.802711+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 234
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:18:11.460802+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14811
+    },
+    {
+      "schema_version": 1,
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "received_at": "2026-10-11T08:18:12.296772+00:00",
+      "world": "RSET4",
+      "team": "team_adriatic_sirens",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14819
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:18:13.084315+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 1624
+    },
+    {
+      "schema_version": 1,
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "received_at": "2026-10-11T08:18:13.084315+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "session_end",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 92
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 10
+    },
+    {
+      "schema_version": 1,
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "received_at": "2026-10-11T08:18:13.775498+00:00",
+      "world": "RSET4",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 25
+    }
+  ],
+  "page_errors": [],
+  "backend_pids": [
+    24356,
+    5672
+  ],
+  "primary_advance_posts": 2,
+  "canceled_initial_ready_not_accepted": true,
+  "loading_observations": [
+    {
+      "rendered_title": "SEASON 2 TRANSITION",
+      "title": "Season 2 transition",
+      "detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+      "visible": true,
+      "server_copy": {
+        "label": "Start Season 2",
+        "loading_title": "Season 2 transition",
+        "loading_detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+        "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+      }
+    },
+    {
+      "rendered_title": "SEASON 2 TRANSITION",
+      "title": "Season 2 transition",
+      "detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+      "visible": true,
+      "server_copy": {
+        "label": "Start Season 2",
+        "loading_title": "Season 2 transition",
+        "loading_detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+        "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+      }
+    },
+    {
+      "rendered_title": "SEASON 2 TRANSITION",
+      "title": "Season 2 transition",
+      "detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+      "visible": true,
+      "server_copy": {
+        "label": "Start Season 2",
+        "loading_title": "Season 2 transition",
+        "loading_detail": "Completing the offseason and preparing Season 2, Week 1. Ordinary weekly training, sponsor income and payroll do not run.",
+        "notice": "Next advance completes the offseason and starts Season 2, Week 1. Season-end changes resolve; ordinary weekly training, sponsor income and payroll do not run on this transition."
+      }
+    }
+  ],
+  "network_failures": [
+    {
+      "method": "GET",
+      "path": "/assets/badges/clutch_master.webp",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/badges/choker.webp",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/haven.webp",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/ascent.webp",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maps/lotus.webp",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/state",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events",
+      "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/usage/events",
+      "failure": "net::ERR_ABORTED"
+    }
+  ]
+}

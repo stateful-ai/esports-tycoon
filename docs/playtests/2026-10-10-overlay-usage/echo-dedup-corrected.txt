@@ -1,0 +1,8 @@
+### Result
+{
+  "hidden": true
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const id=[...document.querySelectorAll("main [data-pid]")].find(e=>e.textContent.trim()==="Echo").dataset.pid;await window.openPlayerProfile(id);await window.Usage.boundary();await window.openPlayerProfile(id,{replace:true});window.closeProfile();window.closeProfile();await window.Usage.boundary();return {hidden:document.getElementById("profile").classList.contains("hidden")}}');
+```

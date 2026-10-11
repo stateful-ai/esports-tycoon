@@ -1,0 +1,61 @@
+[
+  {
+    "index": 100,
+    "season": 1,
+    "week": 23,
+    "phase": "offseason",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "sponsor_respond",
+    "params": {
+      "accept": "True",
+      "brand": "OrbitCast",
+      "slot": "stream",
+      "structure": "steady"
+    },
+    "source": "web"
+  },
+  {
+    "index": 101,
+    "season": 1,
+    "week": 23,
+    "phase": "offseason",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "mechanical",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 102,
+    "season": 1,
+    "week": 23,
+    "phase": "offseason",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "mechanical",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "ghost"
+    },
+    "source": "web"
+  },
+  {
+    "index": 103,
+    "season": 1,
+    "week": 23,
+    "phase": "offseason",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

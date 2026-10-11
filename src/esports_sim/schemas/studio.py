@@ -6,6 +6,28 @@ from __future__ import annotations
 
 from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
+from esports_sim.schemas.geometry import FloorRect
+
+
+class LayoutReference(BaseModel):
+    """Calibrated local minimap, retained with the authored geometry.
+
+    Pixels run from low to high map y; the editor applies its normal y flip.
+    References are authoring evidence and never enter simulation state.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid", allow_inf_nan=False)
+
+    image_path: str = Field(pattern=r"^/assets/maps/references/[a-z0-9_-]+\.png$")
+    description: str
+    source_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    rotation: Literal["none", "ccw", "cw", "180", "flipv", "transpose"] = "none"
+    # White outlines in extracted minimaps are wall marks, not floor.
+    floor_color_max: int = Field(default=256, ge=80, le=256)
+    x: float = 0.0
+    y: float = 0.0
+    width: float = Field(gt=0.0)
+    height: float = Field(gt=0.0)
 
 
 class WalkableSurface(BaseModel):
@@ -14,6 +36,7 @@ class WalkableSurface(BaseModel):
     id: str
     polygon: list[tuple[float, float]] = Field(min_length=3)
     elevation: float = 0.0
+    floor_extensions: list[FloorRect] = Field(default_factory=list)
 
 
 class SemanticZone(BaseModel):
@@ -59,12 +82,17 @@ class Prop(BaseModel):
     height: Literal["half", "full"] = "half"
     collision: bool = True
     destructible: bool = False
+    role: Literal["cover", "wall"] = "cover"
 
 
 class TraversalLink(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     id: str
+    # Recorded traversal that the current motor cannot execute (e.g. a
+    # zipline over a void) stays editable without creating false walkable floor.
+    runtime_enabled: bool = True
+    description: str = ""
     kind: Literal["rope", "door", "rotating_door", "teleporter", "drop", "ramp"]
     from_pos: tuple[float, float, str]  # (x, y, surface_id)
     to_pos: tuple[float, float, str]    # (x, y, surface_id)
@@ -78,6 +106,10 @@ class TraversalLink(BaseModel):
     # Breakable door only: chance defenders switch it shut during setup
     # (doors start open; a shut one reopens only by damage).
     start_closed_prob: float = Field(default=0.7, ge=0.0, le=1.0)
+    # Extent along the shared region seam. A span replaces the legacy doorway;
+    # override_opening with no span explicitly clears it to an open seam.
+    opening_span: tuple[float, float] | None = None
+    override_opening: bool = False
 
 
 class LegacyCompilationConfig(BaseModel):
@@ -110,6 +142,10 @@ class MapStudioDocumentV1(BaseModel):
     schema_version: Literal[1] = 1
     id: str
     display_name: str
+    reference: LayoutReference | None = None
+    # Imported maps can retain legacy neighbor ordering while making the
+    # visible links authoritative for whether a connection still exists.
+    links_define_adjacency: bool = False
     movement_model: Literal["routed", "free"] = "routed"
     sites: list[str] = Field(default_factory=list)
     attacker_spawn: str = "attacker_spawn"

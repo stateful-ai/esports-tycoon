@@ -63,12 +63,27 @@ def _eligible(p, bid: str) -> bool:
     return all(p.attr(a) >= mn for a, mn in BADGES[bid].get("eligible", {}).items())
 
 
+def _record_change(gs, p, bid: str, action: str, before: dict[str, float]) -> None:
+    from esports_sim.manager.development_path import record_gains
+    from esports_sim.schemas.player import BadgeDevelopmentEvent
+
+    week = p.development_progress.latest
+    if week is None or (week.season, week.week) != (gs.season, gs.week):
+        return
+    skills = {aid: round(p.attr(aid) - value, 2)
+              for aid, value in sorted(before.items())
+              if round(p.attr(aid) - value, 2)}
+    record_gains(p, "badge_gains", before)
+    week.badge_events.append(BadgeDevelopmentEvent(badge=bid, action=action, skills=skills))
+
+
 def _earn(gs, tid: str, p, bid: str) -> bool:
     """Apply a badge's effect and record it. The CA deltas are stored (post-
     clamp) for exact reversion on decay; the PA revision is permanent."""
     from esports_sim.schemas.player import PlayerBadge
 
     b = BADGES[bid]
+    before = dict(p.attributes)
     applied: dict[str, float] = {}
     for attr, d in sorted(b.get("ca", {}).items()):
         cur = p.attr(attr)
@@ -86,6 +101,7 @@ def _earn(gs, tid: str, p, bid: str) -> bool:
             applied=applied, pa_applied=pa_applied, last_qualified=gs.season,
         )
     )
+    _record_change(gs, p, bid, "earned", before)
     p.badges.sort(key=lambda x: x.id)
     verb = "earns" if b["polarity"] > 0 else "is saddled with"
     chronicle.record(
@@ -210,7 +226,9 @@ def decay(gs) -> list[dict]:
                 if not (floored or stale):
                     keep.append(pb)
                     continue
+                before = dict(p.attributes)
                 _revert(p, pb)
+                _record_change(gs, p, pb.id, "lost", before)
                 out.append({"team_id": tid, "player_id": p.id, "badge": pb.id})
                 verb = "loses" if b["polarity"] > 0 else "sheds"
                 chronicle.record(

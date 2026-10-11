@@ -1,0 +1,17 @@
+{
+  "method": "Live VLR pages opened in Playwright Chromium; rendered table screenshots visually inspected and manually transcribed independently of CSV/parser output. TLS verified. Purposive sample.",
+  "reviewed_at_utc": "2026-10-06T20:06:00+00:00",
+  "observations_sha256": "285f7498b8a5b37a489c70171f28f4848ecd259e4aba084b1e720b15c2792c8b",
+  "checked_csv_sha256": {
+    "map_outcomes.csv": "719a6f0b6b105291bf82826d8145092948778f065242ab445424df95358a1045",
+    "player_map_stats.csv": "9c369afe5bc2df66462965f20b3718b1fe88a1aa89db7295833cb19b9b61d22f",
+    "player_event_stats.csv": "5cba7fd05c26dd2c2f1b03f4ee1eb35ea324b50478aded41dce4f5e4acc40286",
+    "player_profiles.csv": "3aaab66f7eafc0b174508fe8103afaa1c1376b41ec1098df5760ab4b20820819"
+  },
+  "pages": 10,
+  "screenshots": 11,
+  "field_checks": 662,
+  "passed": 662,
+  "failed": 0,
+  "scope": "Purposive sample: tier 1, tier 2, overtime, event totals, missing stats/lineups, and free-agent profile identity/current versus past listings; not a statistical accuracy estimate."
+}

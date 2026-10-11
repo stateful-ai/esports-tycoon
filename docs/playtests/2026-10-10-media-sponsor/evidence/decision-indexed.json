@@ -1,0 +1,43 @@
+[
+  {
+    "index": 40,
+    "season": 1,
+    "week": 8,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "media_choice",
+    "params": {
+      "choice_id": "defend_publicly",
+      "event_id": "841e9532e560ba1e"
+    },
+    "source": "web"
+  },
+  {
+    "index": 41,
+    "season": 1,
+    "week": 8,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "sponsor_respond",
+    "params": {
+      "accept": "True",
+      "brand": "Streamforge",
+      "slot": "jersey",
+      "structure": "steady"
+    },
+    "source": "web"
+  },
+  {
+    "index": 42,
+    "season": 1,
+    "week": 8,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

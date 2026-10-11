@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:54:36.428195+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  const pid='team_kraken_unit_p0'; const row=page.locator('tr').filter({has:page.locator('td span.plink[data-pid=\"'+pid+'\"]')});  if(await row.count()!==1)throw new Error('Expected one identity-scoped player row');  const control=row.locator('select[data-act=\"mentor\"]');if(await control.count()!==1)throw new Error('Expected one mentor control');  const pending=page.waitForResponse(r=>{if(r.request().method()!=='POST'||!r.url().endsWith('/api/actions/mentor'))return false;const b=r.request().postDataJSON();return b.protege_id===pid&&b.mentor_id==='apex';});  await control.selectOption('apex');const response=await pending;  const roster=await (await page.request.get(new URL('/api/roster/team_nexus',page.url()).href)).json();  return {request:response.request().postDataJSON(),status:response.status(),result:await response.json(),roster:roster.players.map(p=>({id:p.id,mentor_id:p.mentor_id,mentor_progress:p.mentor_progress,starter:p.starter,dev_focus:p.dev_focus,training_intensity:p.training_intensity}))}; }"
+  ],
+  "stdout_bytes": 2106,
+  "stderr_bytes": 0
+}

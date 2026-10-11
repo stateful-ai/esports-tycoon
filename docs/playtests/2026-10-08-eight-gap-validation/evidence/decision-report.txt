@@ -1,0 +1,68 @@
+telemetry report: 1 saves, 6 recorded actions
+
+action mix (count, per advanced week):
+  release                 2     2.00/wk
+  negotiate_open          1     1.00/wk
+  negotiate_offer         1     1.00/wk
+  set_dev_plan            1     1.00/wk
+  advance                 1     1.00/wk
+
+never used anywhere (ideation signal):
+  academy_move
+  academy_upgrade
+  accept_job
+  bid
+  buyout
+  clear_game_plan
+  commit_principle
+  culture_session
+  draft_begin
+  draft_interview
+  draft_pick
+  draft_prefs
+  facility_upgrade
+  flavor_choice
+  hire_staff
+  media_choice
+  mentor
+  negotiate_cancel
+  promise_respond
+  propose_package
+  rein_streaming
+  release_staff
+  renew
+  resolve_flavor
+  resolve_media
+  respond_offer
+  save_settings
+  scenario_start
+  series_directive
+  set_assignment
+  set_delegation
+  set_game_plan
+  set_igl
+  set_leadership
+  set_lineup
+  set_preparation
+  set_scout
+  set_scout_directive
+  set_tactics
+  set_training
+  sign
+  sim_ahead
+  sponsor_demand_respond
+  sponsor_respond
+  swap
+  talk
+  talk_chat
+  tournament_registration
+
+feature adoption (saves that used it / saves):
+  advance            1/1
+  negotiate_offer    1/1
+  negotiate_open     1/1
+  release            1/1
+  set_dev_plan       1/1
+
+actions per week by phase: regular: 6.0
+sources: web 6

@@ -1,0 +1,23 @@
+{
+  "method": "Human transcription of viewed Chromium screenshots plus four native loadout title attributes inspected independently in browser DOM; expected values never read from CSV output.",
+  "reviewed_at_utc": "2026-10-08T07:01:02+00:00",
+  "observations_sha256": "c2eaf28650f8dbafda1d5f1dd53ca3bc3e3af373443e22ec81dccd829c27da60",
+  "checked_csv_sha256": {
+    "map_context.csv": "ec8af3105073fb41ab2325a47dd81f6a89849f6a51a1a2f086fd0078ada5929a",
+    "map_model_eligibility.csv": "85e783062ff45aa6bd1898761706831342e5deab3f13dc44a7e5205292fa60f3",
+    "map_outcomes.csv": "71c88aec18c3da9c0066261f7d1d93bf51153f93f38aae35327561d129ceb12e",
+    "performance_identity_review.csv": "8de1fd47fcb783eff45c8e5653508e2bb3823b2b72b0d148eff2859592aba90e",
+    "performance_value_review.csv": "1997cfda7eeb978e06eaff04adb6465eb200928eeabf9db37b8df1ac22d94287",
+    "player_map_performance.csv": "23d70327b4a63c831779b9188684122b16deb6fbb1eec4f066664462d2af558b",
+    "player_map_side_stats.csv": "c461743f3608d29f5a77821ed24107c88ff111652dac84db3c4d83fbb51468d4",
+    "player_map_stats.csv": "1150b599c7b3250069026fbb818832cca20e7584fa751efb73d6912a4012306d",
+    "round_economy.csv": "dbed06bb2c6c2a67305e7a8dca11783e266a270613368eb9b4b16e7aa32b1bcf",
+    "round_outcomes.csv": "a9c720749680ac77e08dde3f25be7bc5af32f01bb8f1f7d411acb69b312853a7"
+  },
+  "pages": 10,
+  "screenshots": 15,
+  "field_checks": 816,
+  "passed": 816,
+  "failed": 0,
+  "scope": "Purposive historical and new-event browser sample, including round winners/sides, displayed economy, multikills/clutches/objectives and context; not a dataset-wide error-rate estimate."
+}

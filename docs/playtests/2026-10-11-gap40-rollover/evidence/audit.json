@@ -1,0 +1,470 @@
+{
+  "head": "6f8a114741a2d0000e05168bf3faf7118fc4a8ac",
+  "source_and_original_save_unchanged": true,
+  "decision_baseline": 100,
+  "decision_delta": [
+    {
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "usage_events": [
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 184
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:21.856572+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 67
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:35.817758+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 14816
+    },
+    {
+      "schema_version": 1,
+      "session_id": "2a85e69f9c126b6b1b290e033f0d93a1",
+      "received_at": "2026-10-11T07:15:50.818510+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "dashboard",
+      "duration_ms": 15002
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "session_start",
+      "target": ""
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "lobby"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "visible_time",
+      "target": "lobby",
+      "duration_ms": 162
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "view",
+      "target": "dashboard"
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 10
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4a79330c3d46f68a1e0e914040d89c8a",
+      "received_at": "2026-10-11T07:16:25.897150+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 2,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 31
+    }
+  ],
+  "report": {
+    "report": {
+      "advanced": true,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "fixtures": [],
+      "user_income": 0,
+      "user_expenses": 0,
+      "notes": [
+        "Season MVP: Wraithghost (Crimson Order) \u2014 1.65 rating over 14 maps",
+        "Top Fragger: Slice (Team Vanguard) \u2014 767 kills",
+        "Opening King: Slice (Team Vanguard) \u2014 114 opening kills",
+        "Rookie of the Season: Ironhawk (Midnight Polders) \u2014 1.36 rating at age 18",
+        "Clutch Merchant: Karmawire (Solar Flare) \u2014 16 clutch rounds from a man down, incl. 5 from 1v3+",
+        "Most Improved: Driftlock (Kathmandu Apex) \u2014 +8 CA this season (61 -> 70)",
+        "Challengers MVP: Falconzero (Berlin Wolves) \u2014 1.67 rating, age 20",
+        "Best Defensive Team: Team Vanguard (Team Vanguard) \u2014 62% defensive round win rate",
+        "All-Star Five: Wraithghost (duelist), Riftbyte (controller), Crimghost (initiator), Nightwing (sentinel)",
+        "Patch 2.00 lands over the break.",
+        "S1 in review: Team Vanguard were crowned world champions; Wraithghost claimed MVP; Driftlock made the biggest leap; the league settled into a spread-map-control era.",
+        "Offseason complete \u2014 Season 2 starts now."
+      ],
+      "development": {
+        "season": 1,
+        "week": 23,
+        "players": [
+          {
+            "id": "apex",
+            "handle": "Apex",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "thriving",
+              "badge_tracking": true,
+              "badge_events": [],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          },
+          {
+            "id": "vortex",
+            "handle": "Vortex",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "thriving",
+              "badge_tracking": true,
+              "badge_events": [],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          },
+          {
+            "id": "ghost",
+            "handle": "Ghost",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "settling",
+              "badge_tracking": true,
+              "badge_events": [],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          },
+          {
+            "id": "fa_13",
+            "handle": "Slyblade",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "thriving",
+              "badge_tracking": true,
+              "badge_events": [],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          },
+          {
+            "id": "echo",
+            "handle": "Echo",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "settling",
+              "badge_tracking": true,
+              "badge_events": [
+                {
+                  "badge": "clutch_master",
+                  "action": "lost",
+                  "skills": {
+                    "clutch_factor": -3.0,
+                    "composure": -2.0
+                  },
+                  "name": "Clutch Master",
+                  "overall_gain": -0.5
+                }
+              ],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": -0.5,
+                  "skills": {
+                    "clutch_factor": -3.0,
+                    "composure": -2.0
+                  }
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          },
+          {
+            "id": "fa_0",
+            "handle": "Hollowlock",
+            "attribution": {
+              "season": 1,
+              "week": 23,
+              "focus": "auto",
+              "intensity": "normal",
+              "maps": 0,
+              "trend": "settling",
+              "badge_tracking": true,
+              "badge_events": [],
+              "sources": {
+                "practice_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "match_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "scrim_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "event_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                },
+                "badge_gains": {
+                  "overall_gain": 0.0,
+                  "skills": {}
+                }
+              },
+              "factors": [],
+              "career_event": null
+            },
+            "measured": null
+          }
+        ]
+      },
+      "week_reveal": {
+        "fixture_id": null,
+        "standings": null
+      }
+    }
+  }
+}

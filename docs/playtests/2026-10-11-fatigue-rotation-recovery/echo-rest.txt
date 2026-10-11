@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async (page) => {const cell=page.getByRole("cell").filter({has:page.locator("[data-pid=echo]")});const row=page.getByRole("row").filter({has:cell}).filter({has:page.locator("select[data-act=focus]")});const control=row.locator("select[data-act=focus]");if(await row.count()!==1||await control.count()!==1)throw new Error("Ambiguous Echo focus");const response=page.waitForResponse(r=>r.url().endsWith("/api/actions/dev_plan")&&r.request().method()==="POST"&&r.request().postDataJSON().player_id==="echo");await control.selectOption("rest");await response; })(page);
+```

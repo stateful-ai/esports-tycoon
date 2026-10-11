@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0032",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Expand played weeks to reopen the latest replay",
+    "problem": "Season Fixtures defaults to upcoming weeks",
+    "solution": "Expanded Played weeks to find the prior Lotus13-2 replay without advancing",
+    "lesson": "Use the played-week archive to review a result while preserving the same career state",
+    "confidence": "medium",
+    "source": "26UHC seed2038 S1W2 read-only replay follow-up; clean3ac34df; docs/playtests/2026-10-08-replay-roster.md",
+    "code": "26UHC",
+    "tags": [
+      "replay",
+      "roster",
+      "identity"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0033",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Cross-check replay participants with the match box score",
+    "problem": "Current opponent roster can change immediately after a played fixture",
+    "solution": "Compared Frostecho in replay roster with Grimveil in match box score and match.start agents",
+    "lesson": "Roster names alone are not proof of historical participants; verify the actual match identities",
+    "confidence": "medium",
+    "source": "26UHC seed2038 S1W2 read-only replay follow-up; clean3ac34df; docs/playtests/2026-10-08-replay-roster.md",
+    "code": "26UHC",
+    "tags": [
+      "replay",
+      "roster",
+      "identity"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0034",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Replay uses post-match roster and loses departed player identity",
+    "problem": "Sahara released Grimveil after the fixture; replay lists later-signing Frostecho, omits Grimveil, and box score loses Grimveil team",
+    "solution": "Retained match.start agents and public replay response showing mismatch; queued a dedicated gap agent",
+    "lesson": "Replays need match-time participants and agents rather than the club roster at viewing time",
+    "confidence": "medium",
+    "source": "26UHC seed2038 S1W2 read-only replay follow-up; clean3ac34df; docs/playtests/2026-10-08-replay-roster.md",
+    "code": "26UHC",
+    "tags": [
+      "replay",
+      "roster",
+      "identity"
+    ],
+    "kind": "pain-point"
+  }
+]

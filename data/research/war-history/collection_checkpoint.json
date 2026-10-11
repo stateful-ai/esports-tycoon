@@ -1,0 +1,12 @@
+{
+  "completed_events": 88,
+  "scope": "Raw collection checkpoint before offline identity/side enrichment",
+  "manifest_sha256": "ed8f6791903c6a2e6dc487d09813c67e212de8ac7caf31d9852b12cc83953b19",
+  "snapshot_sha256": {
+    "events.csv": "d24a5a083cb838cd3fae5fd415106897fc9c6f112963044d7716040603da9d1c",
+    "collection_issues.csv": "03adbd755f40cda8fd3def3f2df907072dc78c1be767ef286072708c9d1bc9fb",
+    "sources.csv": "402b0c58a4b0a342c9f42833fb545494439960adefa9eeed183461ece7961781",
+    "map_context.csv": "ec8af3105073fb41ab2325a47dd81f6a89849f6a51a1a2f086fd0078ada5929a",
+    "tab_coverage.csv": "cfe099b29be10508b64e100dea56e5f389d4d40b35adf42eec524ee02330cc76"
+  }
+}

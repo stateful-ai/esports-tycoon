@@ -1,0 +1,18 @@
+{
+  "rows": 8,
+  "outcomes": {
+    "partial": 2,
+    "unexpected": 1,
+    "blocked": 1,
+    "met": 4
+  },
+  "immutable_fields_preserved": true,
+  "before_sha256": "9a49b940b91fb5bbd86f5d8bca3b7270afdf5c8916d0a9a6b24a7ac1b103ac32",
+  "after_sha256": "a8975d335868c715cc6c7256f8c070bd7b8b969570a80e8bda5701d9ecb863ce",
+  "actual_view_targets": {
+    "lobby": 2,
+    "dashboard": 3,
+    "club/squad": 4,
+    "club/locker_room": 5
+  }
+}

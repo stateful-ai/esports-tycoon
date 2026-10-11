@@ -1,0 +1,44 @@
+{
+  "attempts": 4,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 2,
+    "attempt:/api/new": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 2,
+    "result:/api/new": 1,
+    "session_end:": 1,
+    "session_start:": 3,
+    "view:dashboard": 4,
+    "view:lobby": 3,
+    "view:market/players": 1,
+    "visible_time:dashboard": 4,
+    "visible_time:lobby": 5,
+    "visible_time:market/players": 1
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "54c8d88d110c59f9546f262fe3ccb5fa": 0,
+    "8655a757cc2f98187007e8e2d687803e": 29989,
+    "b322deb6a1ca2dd4f766edf94f8bacdb": 292
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 2,
+    "/api/new:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 3,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 24090,
+    "lobby": 21991,
+    "market/players": 525
+  },
+  "world_events": {
+    "WJBF7": 25,
+    "lobby": 5
+  }
+}

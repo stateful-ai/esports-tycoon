@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:15:38.451346+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-roster-recovery",
+    "run-code",
+    "async (page) => await page.evaluate(async()=>{ const r=await fetch(\"/api/roster/team_nexus\"); const d=await r.json(); return {status:r.status,keys:Object.keys(d),players:(Array.isArray(d)?d:d.players||d.roster||[]).map(x=>({id:x.id,name:x.name,stamina:x.stamina,dev_focus:x.dev_focus,training_intensity:x.training_intensity,streaming_commitment:x.streaming_commitment,streaming_pct:x.streaming_pct}))}; })"
+  ],
+  "stdout_bytes": 1417,
+  "stderr_bytes": 0
+}

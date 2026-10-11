@@ -17,8 +17,10 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
 
 from esports_sim.registry import load_all
+from esports_sim.registry.loader import load_geometry
 from esports_sim.sim import simulate_match_result
 
 ATK_BAND = (0.45, 0.65)  # per-map attack-round win rate (CLAUDE.md invariant 3)
@@ -26,13 +28,14 @@ ATK_BAND = (0.45, 0.65)  # per-map attack-round win rate (CLAUDE.md invariant 3)
 # fast maps never see over a few hundred seeds; requiring it flakes.
 REQUIRED_REASONS = {"elim", "spike_detonation", "spike_defused"}
 
-def _simulate_map(map_id: str, n: int) -> tuple[str, Counter, Counter, float, int]:
+def _simulate_map(map_id: str, n: int, data_dir: Path | None = None) -> tuple[str, Counter, Counter, float, int]:
     """Independent deterministic map sweep, safe to run in a worker."""
-    gd = load_all(map_ids=[map_id])
+    gd = load_all(data_dir=data_dir, map_ids=[map_id])
     wins: Counter[str] = Counter()
     reasons: Counter[str] = Counter()
     atk_wins = total = 0
     loser_rounds = []
+    geometry = load_geometry(map_id, data_dir=data_dir)
     for seed in range(n):
         res = simulate_match_result(
             gd,
@@ -41,6 +44,7 @@ def _simulate_map(map_id: str, n: int) -> tuple[str, Counter, Counter, float, in
             map_id,
             seed,
             capture_control_events=False,
+            geometry=geometry,
         )
         wins[res.winner_id] += 1
         loser_rounds.append(min(res.score_a, res.score_b))
@@ -60,6 +64,7 @@ def _simulate_map(map_id: str, n: int) -> tuple[str, Counter, Counter, float, in
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("n_matches", nargs="?", type=int, default=30)
+    parser.add_argument("--data-dir", type=Path, help="isolated compiled draft data directory")
     parser.add_argument(
         "--maps",
         nargs="+",
@@ -72,9 +77,9 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     n = args.n_matches
-    map_ids = sorted(args.maps or load_all().maps)
+    map_ids = sorted(args.maps or load_all(data_dir=args.data_dir).maps)
     with ProcessPoolExecutor(max_workers=len(map_ids)) as pool:
-        futures = [pool.submit(_simulate_map, map_id, n) for map_id in map_ids]
+        futures = [pool.submit(_simulate_map, map_id, n, args.data_dir) for map_id in map_ids]
         results = [future.result() for future in futures]
 
     failures: list[str] = []

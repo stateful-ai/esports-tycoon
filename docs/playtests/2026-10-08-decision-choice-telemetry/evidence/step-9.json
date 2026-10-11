@@ -1,0 +1,11 @@
+{
+  "step": 9,
+  "result": "met",
+  "observation": {
+    "status": 422,
+    "detail": {
+      "detail": "a per-map lineup needs fixture_id + map_id"
+    },
+    "unchanged_public_tactics": true
+  }
+}

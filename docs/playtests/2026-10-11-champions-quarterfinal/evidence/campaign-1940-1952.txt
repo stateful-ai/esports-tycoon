@@ -1,0 +1,14 @@
+src/esports_sim/manager/campaign.py
+1940:         know = gs.scout_progress_by.get(tid, {}).get(opp, 0.0)
+1941:         # Institutional knowledge amplifies preparation: the org's book on
+1942:         # these maps and this opponent adds to the edge — but only WITH a
+1943:         # plan (no prep, no payoff). The engine clamps the total.
+1944:         book = knowledge.prep_bonus(gs, tid, opp, list(f.maps))
+1945:         plans[tid] = TeamMatchPlan(
+1946:             tactics=resolved_tactics[tid] if overrides else None,
+1947:             focus_target=target,
+1948:             prep_edge=(
+1949:                 PREP_EDGE_BASE + PREP_EDGE_SPAN * know + book
+1950:                 + staff.coach_prep_bonus(gs, tid, resolved_tactics[tid])
+1951:             ),
+1952:             counter_edge=tactics_fit.counter_strat_edge(

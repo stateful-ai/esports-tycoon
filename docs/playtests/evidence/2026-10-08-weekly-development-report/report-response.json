@@ -1,0 +1,2451 @@
+{
+  "advanced": true,
+  "season": 1,
+  "week": 1,
+  "phase": "regular",
+  "fixtures": [
+    {
+      "id": "s1w1m0am",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_baltic_meridian",
+      "team_b": "team_vanguard",
+      "team_a_name": "Baltic Meridian",
+      "team_b_name": "Team Vanguard",
+      "rivalry": null,
+      "potm": {
+        "player_id": "pulse",
+        "handle": "Pulse",
+        "rating": 2.05,
+        "kills": 31,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_vanguard",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 5,
+          "score_b": 13,
+          "winner_id": "team_vanguard",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "pulse",
+              "kills": 31,
+              "deaths": 12,
+              "rating": 2.05
+            },
+            {
+              "player_id": "shade",
+              "kills": 10,
+              "deaths": 11,
+              "rating": 0.86
+            },
+            {
+              "player_id": "slice",
+              "kills": 11,
+              "deaths": 13,
+              "rating": 0.81
+            },
+            {
+              "player_id": "team_baltic_meridian_p0",
+              "kills": 10,
+              "deaths": 16,
+              "rating": 0.79
+            },
+            {
+              "player_id": "team_baltic_meridian_p1",
+              "kills": 11,
+              "deaths": 15,
+              "rating": 0.77
+            },
+            {
+              "player_id": "team_baltic_meridian_p2",
+              "kills": 16,
+              "deaths": 10,
+              "rating": 1.23
+            },
+            {
+              "player_id": "team_baltic_meridian_p3",
+              "kills": 6,
+              "deaths": 5,
+              "rating": 0.71
+            },
+            {
+              "player_id": "team_baltic_meridian_p4",
+              "kills": 6,
+              "deaths": 17,
+              "rating": 0.4
+            },
+            {
+              "player_id": "warden",
+              "kills": 9,
+              "deaths": 9,
+              "rating": 0.78
+            },
+            {
+              "player_id": "zenith",
+              "kills": 2,
+              "deaths": 4,
+              "rating": 0.53
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m0amt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_azure_vanta",
+      "team_b": "team_volga_reign",
+      "team_a_name": "Azure Vanta",
+      "team_b_name": "Volga Reign",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_volga_reign_p0",
+        "handle": "Emberstorm",
+        "rating": 1.37,
+        "kills": 23,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "AZV: counter-plan on Pace.",
+        "VLG: counter-plan on Pace."
+      ],
+      "played": true,
+      "winner_id": "team_volga_reign",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 9,
+          "score_b": 13,
+          "winner_id": "team_volga_reign",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_azure_vanta_p0",
+              "kills": 17,
+              "deaths": 12,
+              "rating": 1.2
+            },
+            {
+              "player_id": "team_azure_vanta_p1",
+              "kills": 11,
+              "deaths": 14,
+              "rating": 0.69
+            },
+            {
+              "player_id": "team_azure_vanta_p2",
+              "kills": 8,
+              "deaths": 18,
+              "rating": 0.49
+            },
+            {
+              "player_id": "team_azure_vanta_p3",
+              "kills": 8,
+              "deaths": 17,
+              "rating": 0.47
+            },
+            {
+              "player_id": "team_azure_vanta_p4",
+              "kills": 9,
+              "deaths": 16,
+              "rating": 0.6
+            },
+            {
+              "player_id": "team_volga_reign_p0",
+              "kills": 23,
+              "deaths": 17,
+              "rating": 1.37
+            },
+            {
+              "player_id": "team_volga_reign_p1",
+              "kills": 19,
+              "deaths": 6,
+              "rating": 1.27
+            },
+            {
+              "player_id": "team_volga_reign_p2",
+              "kills": 18,
+              "deaths": 9,
+              "rating": 1.19
+            },
+            {
+              "player_id": "team_volga_reign_p3",
+              "kills": 11,
+              "deaths": 10,
+              "rating": 0.81
+            },
+            {
+              "player_id": "team_volga_reign_p4",
+              "kills": 6,
+              "deaths": 11,
+              "rating": 0.51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m0em",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_adriatic_sirens",
+      "team_b": "team_tokyo_drift_six",
+      "team_a_name": "Adriatic Sirens",
+      "team_b_name": "Tokyo Drift Six",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_adriatic_sirens_p0",
+        "handle": "Karmahawk",
+        "rating": 1.14,
+        "kills": 21,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_adriatic_sirens",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 13,
+          "score_b": 11,
+          "winner_id": "team_adriatic_sirens",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_adriatic_sirens_p0",
+              "kills": 21,
+              "deaths": 19,
+              "rating": 1.14
+            },
+            {
+              "player_id": "team_adriatic_sirens_p1",
+              "kills": 18,
+              "deaths": 15,
+              "rating": 0.99
+            },
+            {
+              "player_id": "team_adriatic_sirens_p2",
+              "kills": 12,
+              "deaths": 17,
+              "rating": 0.69
+            },
+            {
+              "player_id": "team_adriatic_sirens_p3",
+              "kills": 13,
+              "deaths": 14,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_adriatic_sirens_p4",
+              "kills": 9,
+              "deaths": 11,
+              "rating": 0.62
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p0",
+              "kills": 12,
+              "deaths": 15,
+              "rating": 0.82
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p1",
+              "kills": 20,
+              "deaths": 16,
+              "rating": 1.07
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p2",
+              "kills": 20,
+              "deaths": 20,
+              "rating": 1.0
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p3",
+              "kills": 12,
+              "deaths": 10,
+              "rating": 0.78
+            },
+            {
+              "player_id": "team_tokyo_drift_six_p4",
+              "kills": 12,
+              "deaths": 12,
+              "rating": 0.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m0emt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_anatolia_forge",
+      "team_b": "team_phantom_core",
+      "team_a_name": "Anatolia Forge",
+      "team_b_name": "Phantom Core",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_phantom_core_p1",
+        "handle": "Hollowshot",
+        "rating": 1.31,
+        "kills": 15,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_phantom_core",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 3,
+          "score_b": 13,
+          "winner_id": "team_phantom_core",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_anatolia_forge_p0",
+              "kills": 13,
+              "deaths": 11,
+              "rating": 1.18
+            },
+            {
+              "player_id": "team_anatolia_forge_p1",
+              "kills": 14,
+              "deaths": 14,
+              "rating": 0.98
+            },
+            {
+              "player_id": "team_anatolia_forge_p2",
+              "kills": 8,
+              "deaths": 13,
+              "rating": 0.63
+            },
+            {
+              "player_id": "team_anatolia_forge_p3",
+              "kills": 2,
+              "deaths": 11,
+              "rating": 0.24
+            },
+            {
+              "player_id": "team_anatolia_forge_p4",
+              "kills": 7,
+              "deaths": 13,
+              "rating": 0.63
+            },
+            {
+              "player_id": "team_phantom_core_p0",
+              "kills": 8,
+              "deaths": 10,
+              "rating": 0.73
+            },
+            {
+              "player_id": "team_phantom_core_p1",
+              "kills": 15,
+              "deaths": 12,
+              "rating": 1.31
+            },
+            {
+              "player_id": "team_phantom_core_p2",
+              "kills": 15,
+              "deaths": 10,
+              "rating": 1.23
+            },
+            {
+              "player_id": "team_phantom_core_p3",
+              "kills": 13,
+              "deaths": 5,
+              "rating": 1.16
+            },
+            {
+              "player_id": "team_phantom_core_p4",
+              "kills": 11,
+              "deaths": 7,
+              "rating": 1.04
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m0pa",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_alpine_echo",
+      "team_b": "team_solar_flare",
+      "team_a_name": "Alpine Echo",
+      "team_b_name": "Solar Flare",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_alpine_echo_p1",
+        "handle": "Ciphermark",
+        "rating": 1.72,
+        "kills": 27,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_alpine_echo",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 13,
+          "score_b": 6,
+          "winner_id": "team_alpine_echo",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_alpine_echo_p0",
+              "kills": 15,
+              "deaths": 18,
+              "rating": 0.96
+            },
+            {
+              "player_id": "team_alpine_echo_p1",
+              "kills": 27,
+              "deaths": 11,
+              "rating": 1.72
+            },
+            {
+              "player_id": "team_alpine_echo_p2",
+              "kills": 13,
+              "deaths": 13,
+              "rating": 0.87
+            },
+            {
+              "player_id": "team_alpine_echo_p3",
+              "kills": 20,
+              "deaths": 11,
+              "rating": 1.47
+            },
+            {
+              "player_id": "team_alpine_echo_p4",
+              "kills": 5,
+              "deaths": 14,
+              "rating": 0.4
+            },
+            {
+              "player_id": "team_solar_flare_p0",
+              "kills": 11,
+              "deaths": 15,
+              "rating": 0.85
+            },
+            {
+              "player_id": "team_solar_flare_p1",
+              "kills": 18,
+              "deaths": 16,
+              "rating": 1.12
+            },
+            {
+              "player_id": "team_solar_flare_p2",
+              "kills": 19,
+              "deaths": 16,
+              "rating": 1.26
+            },
+            {
+              "player_id": "team_solar_flare_p3",
+              "kills": 16,
+              "deaths": 16,
+              "rating": 1.01
+            },
+            {
+              "player_id": "team_solar_flare_p4",
+              "kills": 3,
+              "deaths": 17,
+              "rating": 0.21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m0pat2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_busan_tempest",
+      "team_b": "team_yucatan_ceibas",
+      "team_a_name": "Busan Tempest",
+      "team_b_name": "Yucatan Ceibas",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_busan_tempest_p1",
+        "handle": "Hollowwire",
+        "rating": 1.45,
+        "kills": 18,
+        "on_winner": true
+      },
+      "maps": [
+        "bind"
+      ],
+      "map_thumbs": {
+        "bind": "/assets/maps/bind.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "YCB: counter-plan on Map Control."
+      ],
+      "played": true,
+      "winner_id": "team_busan_tempest",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "bind",
+          "map_thumb": "/assets/maps/bind.webp",
+          "score_a": 13,
+          "score_b": 4,
+          "winner_id": "team_busan_tempest",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_busan_tempest_p0",
+              "kills": 12,
+              "deaths": 8,
+              "rating": 1.12
+            },
+            {
+              "player_id": "team_busan_tempest_p1",
+              "kills": 18,
+              "deaths": 9,
+              "rating": 1.45
+            },
+            {
+              "player_id": "team_busan_tempest_p2",
+              "kills": 15,
+              "deaths": 10,
+              "rating": 1.15
+            },
+            {
+              "player_id": "team_busan_tempest_p3",
+              "kills": 14,
+              "deaths": 5,
+              "rating": 1.22
+            },
+            {
+              "player_id": "team_busan_tempest_p4",
+              "kills": 12,
+              "deaths": 8,
+              "rating": 1.07
+            },
+            {
+              "player_id": "team_yucatan_ceibas_p0",
+              "kills": 6,
+              "deaths": 16,
+              "rating": 0.49
+            },
+            {
+              "player_id": "team_yucatan_ceibas_p1",
+              "kills": 8,
+              "deaths": 13,
+              "rating": 0.65
+            },
+            {
+              "player_id": "team_yucatan_ceibas_p2",
+              "kills": 12,
+              "deaths": 15,
+              "rating": 0.86
+            },
+            {
+              "player_id": "team_yucatan_ceibas_p3",
+              "kills": 9,
+              "deaths": 14,
+              "rating": 0.63
+            },
+            {
+              "player_id": "team_yucatan_ceibas_p4",
+              "kills": 5,
+              "deaths": 13,
+              "rating": 0.41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1am",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_kathmandu_apex",
+      "team_b": "team_saracen_guard",
+      "team_a_name": "Kathmandu Apex",
+      "team_b_name": "Saracen Guard",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_kathmandu_apex_p2",
+        "handle": "Ashcore",
+        "rating": 1.27,
+        "kills": 17,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "KTA: counter-plan on Aggression."
+      ],
+      "played": true,
+      "winner_id": "team_kathmandu_apex",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 13,
+          "score_b": 5,
+          "winner_id": "team_kathmandu_apex",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_kathmandu_apex_p0",
+              "kills": 10,
+              "deaths": 12,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_kathmandu_apex_p1",
+              "kills": 14,
+              "deaths": 8,
+              "rating": 1.07
+            },
+            {
+              "player_id": "team_kathmandu_apex_p2",
+              "kills": 17,
+              "deaths": 12,
+              "rating": 1.27
+            },
+            {
+              "player_id": "team_kathmandu_apex_p3",
+              "kills": 10,
+              "deaths": 14,
+              "rating": 0.7
+            },
+            {
+              "player_id": "team_kathmandu_apex_p4",
+              "kills": 14,
+              "deaths": 8,
+              "rating": 1.19
+            },
+            {
+              "player_id": "team_saracen_guard_p0",
+              "kills": 8,
+              "deaths": 13,
+              "rating": 0.62
+            },
+            {
+              "player_id": "team_saracen_guard_p1",
+              "kills": 12,
+              "deaths": 14,
+              "rating": 0.85
+            },
+            {
+              "player_id": "team_saracen_guard_p2",
+              "kills": 10,
+              "deaths": 13,
+              "rating": 0.75
+            },
+            {
+              "player_id": "team_saracen_guard_p3",
+              "kills": 14,
+              "deaths": 12,
+              "rating": 1.08
+            },
+            {
+              "player_id": "team_saracen_guard_p4",
+              "kills": 10,
+              "deaths": 13,
+              "rating": 0.69
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1amt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_gallic_storm",
+      "team_b": "team_taipei_circuit",
+      "team_a_name": "Gallic Storm",
+      "team_b_name": "Taipei Circuit",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_taipei_circuit_p4",
+        "handle": "Havocwing",
+        "rating": 1.35,
+        "kills": 14,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_taipei_circuit",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 3,
+          "score_b": 13,
+          "winner_id": "team_taipei_circuit",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_gallic_storm_p0",
+              "kills": 6,
+              "deaths": 14,
+              "rating": 0.52
+            },
+            {
+              "player_id": "team_gallic_storm_p1",
+              "kills": 12,
+              "deaths": 12,
+              "rating": 1.02
+            },
+            {
+              "player_id": "team_gallic_storm_p2",
+              "kills": 15,
+              "deaths": 15,
+              "rating": 1.04
+            },
+            {
+              "player_id": "team_gallic_storm_p3",
+              "kills": 5,
+              "deaths": 14,
+              "rating": 0.5
+            },
+            {
+              "player_id": "team_gallic_storm_p4",
+              "kills": 4,
+              "deaths": 13,
+              "rating": 0.33
+            },
+            {
+              "player_id": "team_taipei_circuit_p0",
+              "kills": 17,
+              "deaths": 12,
+              "rating": 1.34
+            },
+            {
+              "player_id": "team_taipei_circuit_p1",
+              "kills": 11,
+              "deaths": 8,
+              "rating": 0.99
+            },
+            {
+              "player_id": "team_taipei_circuit_p2",
+              "kills": 15,
+              "deaths": 6,
+              "rating": 1.32
+            },
+            {
+              "player_id": "team_taipei_circuit_p3",
+              "kills": 11,
+              "deaths": 11,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_taipei_circuit_p4",
+              "kills": 14,
+              "deaths": 5,
+              "rating": 1.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1em",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_bayou_kings",
+      "team_b": "team_prairie_signal",
+      "team_a_name": "Bayou Kings",
+      "team_b_name": "Prairie Signal",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_bayou_kings_p0",
+        "handle": "Karmablade",
+        "rating": 1.63,
+        "kills": 13,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_bayou_kings",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 13,
+          "score_b": 0,
+          "winner_id": "team_bayou_kings",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_bayou_kings_p0",
+              "kills": 13,
+              "deaths": 5,
+              "rating": 1.63
+            },
+            {
+              "player_id": "team_bayou_kings_p1",
+              "kills": 14,
+              "deaths": 4,
+              "rating": 1.43
+            },
+            {
+              "player_id": "team_bayou_kings_p2",
+              "kills": 6,
+              "deaths": 2,
+              "rating": 0.79
+            },
+            {
+              "player_id": "team_bayou_kings_p3",
+              "kills": 7,
+              "deaths": 4,
+              "rating": 0.99
+            },
+            {
+              "player_id": "team_bayou_kings_p4",
+              "kills": 7,
+              "deaths": 5,
+              "rating": 0.91
+            },
+            {
+              "player_id": "team_prairie_signal_p0",
+              "kills": 2,
+              "deaths": 13,
+              "rating": 0.22
+            },
+            {
+              "player_id": "team_prairie_signal_p1",
+              "kills": 6,
+              "deaths": 7,
+              "rating": 0.69
+            },
+            {
+              "player_id": "team_prairie_signal_p2",
+              "kills": 5,
+              "deaths": 10,
+              "rating": 0.49
+            },
+            {
+              "player_id": "team_prairie_signal_p3",
+              "kills": 4,
+              "deaths": 9,
+              "rating": 0.44
+            },
+            {
+              "player_id": "team_prairie_signal_p4",
+              "kills": 3,
+              "deaths": 8,
+              "rating": 0.38
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1emt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_apex_syndicate",
+      "team_b": "team_mekong_vipers",
+      "team_a_name": "Apex Syndicate",
+      "team_b_name": "Mekong Vipers",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_apex_syndicate_p1",
+        "handle": "Nightdash",
+        "rating": 1.6,
+        "kills": 16,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_apex_syndicate",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 13,
+          "score_b": 1,
+          "winner_id": "team_apex_syndicate",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_apex_syndicate_p0",
+              "kills": 9,
+              "deaths": 6,
+              "rating": 1.14
+            },
+            {
+              "player_id": "team_apex_syndicate_p1",
+              "kills": 16,
+              "deaths": 6,
+              "rating": 1.6
+            },
+            {
+              "player_id": "team_apex_syndicate_p2",
+              "kills": 12,
+              "deaths": 10,
+              "rating": 1.09
+            },
+            {
+              "player_id": "team_apex_syndicate_p3",
+              "kills": 12,
+              "deaths": 7,
+              "rating": 1.18
+            },
+            {
+              "player_id": "team_apex_syndicate_p4",
+              "kills": 13,
+              "deaths": 7,
+              "rating": 1.19
+            },
+            {
+              "player_id": "team_mekong_vipers_p0",
+              "kills": 4,
+              "deaths": 14,
+              "rating": 0.4
+            },
+            {
+              "player_id": "team_mekong_vipers_p1",
+              "kills": 12,
+              "deaths": 13,
+              "rating": 1.01
+            },
+            {
+              "player_id": "team_mekong_vipers_p2",
+              "kills": 8,
+              "deaths": 11,
+              "rating": 0.71
+            },
+            {
+              "player_id": "team_mekong_vipers_p3",
+              "kills": 9,
+              "deaths": 12,
+              "rating": 0.76
+            },
+            {
+              "player_id": "team_mekong_vipers_p4",
+              "kills": 3,
+              "deaths": 12,
+              "rating": 0.28
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1pa",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_coral_sea_drakes",
+      "team_b": "team_seoul_dynasty_prime",
+      "team_a_name": "Coral Sea Drakes",
+      "team_b_name": "Seoul Dynasty Prime",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_coral_sea_drakes_p2",
+        "handle": "Slyflare",
+        "rating": 1.3,
+        "kills": 20,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "SDP: counter-plan on Map Control."
+      ],
+      "played": true,
+      "winner_id": "team_coral_sea_drakes",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 13,
+          "score_b": 7,
+          "winner_id": "team_coral_sea_drakes",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_coral_sea_drakes_p0",
+              "kills": 15,
+              "deaths": 17,
+              "rating": 0.97
+            },
+            {
+              "player_id": "team_coral_sea_drakes_p1",
+              "kills": 19,
+              "deaths": 16,
+              "rating": 1.19
+            },
+            {
+              "player_id": "team_coral_sea_drakes_p2",
+              "kills": 20,
+              "deaths": 12,
+              "rating": 1.3
+            },
+            {
+              "player_id": "team_coral_sea_drakes_p3",
+              "kills": 6,
+              "deaths": 15,
+              "rating": 0.41
+            },
+            {
+              "player_id": "team_coral_sea_drakes_p4",
+              "kills": 16,
+              "deaths": 9,
+              "rating": 1.22
+            },
+            {
+              "player_id": "team_seoul_dynasty_prime_p0",
+              "kills": 13,
+              "deaths": 17,
+              "rating": 0.9
+            },
+            {
+              "player_id": "team_seoul_dynasty_prime_p1",
+              "kills": 22,
+              "deaths": 15,
+              "rating": 1.3
+            },
+            {
+              "player_id": "team_seoul_dynasty_prime_p2",
+              "kills": 11,
+              "deaths": 15,
+              "rating": 0.78
+            },
+            {
+              "player_id": "team_seoul_dynasty_prime_p3",
+              "kills": 11,
+              "deaths": 16,
+              "rating": 0.76
+            },
+            {
+              "player_id": "team_seoul_dynasty_prime_p4",
+              "kills": 12,
+              "deaths": 13,
+              "rating": 0.79
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m1pat2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_cascadia_youth",
+      "team_b": "team_nova_rift",
+      "team_a_name": "Cascadia Youth",
+      "team_b_name": "Nova Rift",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_nova_rift_p4",
+        "handle": "Staticstrike",
+        "rating": 1.9,
+        "kills": 20,
+        "on_winner": true
+      },
+      "maps": [
+        "haven"
+      ],
+      "map_thumbs": {
+        "haven": "/assets/maps/haven.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "CSY: counter-plan on Aggression."
+      ],
+      "played": true,
+      "winner_id": "team_nova_rift",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "haven",
+          "map_thumb": "/assets/maps/haven.webp",
+          "score_a": 1,
+          "score_b": 13,
+          "winner_id": "team_nova_rift",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_cascadia_youth_p0",
+              "kills": 5,
+              "deaths": 13,
+              "rating": 0.51
+            },
+            {
+              "player_id": "team_cascadia_youth_p1",
+              "kills": 10,
+              "deaths": 11,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_cascadia_youth_p2",
+              "kills": 10,
+              "deaths": 13,
+              "rating": 0.86
+            },
+            {
+              "player_id": "team_cascadia_youth_p3",
+              "kills": 4,
+              "deaths": 11,
+              "rating": 0.4
+            },
+            {
+              "player_id": "team_cascadia_youth_p4",
+              "kills": 2,
+              "deaths": 14,
+              "rating": 0.15
+            },
+            {
+              "player_id": "team_nova_rift_p0",
+              "kills": 17,
+              "deaths": 7,
+              "rating": 1.67
+            },
+            {
+              "player_id": "team_nova_rift_p1",
+              "kills": 12,
+              "deaths": 6,
+              "rating": 1.26
+            },
+            {
+              "player_id": "team_nova_rift_p2",
+              "kills": 7,
+              "deaths": 7,
+              "rating": 0.78
+            },
+            {
+              "player_id": "team_nova_rift_p3",
+              "kills": 6,
+              "deaths": 6,
+              "rating": 0.71
+            },
+            {
+              "player_id": "team_nova_rift_p4",
+              "kills": 20,
+              "deaths": 5,
+              "rating": 1.9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2am",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nexus",
+      "team_b": "team_sahara_compass",
+      "team_a_name": "Team Nexus",
+      "team_b_name": "Sahara Compass",
+      "rivalry": null,
+      "potm": {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "rating": 2.61,
+        "kills": 28,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_nexus",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 13,
+          "score_b": 1,
+          "winner_id": "team_nexus",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "apex",
+              "kills": 9,
+              "deaths": 9,
+              "rating": 1.01
+            },
+            {
+              "player_id": "echo",
+              "kills": 2,
+              "deaths": 4,
+              "rating": 0.55
+            },
+            {
+              "player_id": "ghost",
+              "kills": 10,
+              "deaths": 6,
+              "rating": 1.0
+            },
+            {
+              "player_id": "phantom",
+              "kills": 14,
+              "deaths": 8,
+              "rating": 1.29
+            },
+            {
+              "player_id": "team_sahara_compass_p0",
+              "kills": 4,
+              "deaths": 13,
+              "rating": 0.37
+            },
+            {
+              "player_id": "team_sahara_compass_p1",
+              "kills": 11,
+              "deaths": 12,
+              "rating": 0.89
+            },
+            {
+              "player_id": "team_sahara_compass_p2",
+              "kills": 5,
+              "deaths": 13,
+              "rating": 0.44
+            },
+            {
+              "player_id": "team_sahara_compass_p3",
+              "kills": 3,
+              "deaths": 13,
+              "rating": 0.33
+            },
+            {
+              "player_id": "team_sahara_compass_p4",
+              "kills": 5,
+              "deaths": 12,
+              "rating": 0.47
+            },
+            {
+              "player_id": "vortex",
+              "kills": 28,
+              "deaths": 1,
+              "rating": 2.61
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2amt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_kraken_unit",
+      "team_b": "team_patagonia_sur",
+      "team_a_name": "Kraken Unit",
+      "team_b_name": "Patagonia Sur",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_kraken_unit_p2",
+        "handle": "Voltflare",
+        "rating": 1.6,
+        "kills": 23,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_kraken_unit",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 13,
+          "score_b": 6,
+          "winner_id": "team_kraken_unit",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_kraken_unit_p0",
+              "kills": 18,
+              "deaths": 12,
+              "rating": 1.39
+            },
+            {
+              "player_id": "team_kraken_unit_p1",
+              "kills": 11,
+              "deaths": 16,
+              "rating": 0.75
+            },
+            {
+              "player_id": "team_kraken_unit_p2",
+              "kills": 23,
+              "deaths": 7,
+              "rating": 1.6
+            },
+            {
+              "player_id": "team_kraken_unit_p3",
+              "kills": 13,
+              "deaths": 15,
+              "rating": 0.86
+            },
+            {
+              "player_id": "team_kraken_unit_p4",
+              "kills": 13,
+              "deaths": 10,
+              "rating": 0.95
+            },
+            {
+              "player_id": "team_patagonia_sur_p0",
+              "kills": 10,
+              "deaths": 15,
+              "rating": 0.76
+            },
+            {
+              "player_id": "team_patagonia_sur_p1",
+              "kills": 16,
+              "deaths": 15,
+              "rating": 1.07
+            },
+            {
+              "player_id": "team_patagonia_sur_p2",
+              "kills": 13,
+              "deaths": 16,
+              "rating": 0.81
+            },
+            {
+              "player_id": "team_patagonia_sur_p3",
+              "kills": 11,
+              "deaths": 16,
+              "rating": 0.69
+            },
+            {
+              "player_id": "team_patagonia_sur_p4",
+              "kills": 10,
+              "deaths": 16,
+              "rating": 0.67
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2em",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_chao_phraya_owls",
+      "team_b": "team_midnight_polders",
+      "team_a_name": "Chao Phraya Owls",
+      "team_b_name": "Midnight Polders",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_midnight_polders_p1",
+        "handle": "Ironhawk",
+        "rating": 1.58,
+        "kills": 43,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [
+        "MDP: counter-plan on Aggression."
+      ],
+      "played": true,
+      "winner_id": "team_midnight_polders",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 17,
+          "score_b": 19,
+          "winner_id": "team_midnight_polders",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_chao_phraya_owls_p0",
+              "kills": 25,
+              "deaths": 26,
+              "rating": 0.99
+            },
+            {
+              "player_id": "team_chao_phraya_owls_p1",
+              "kills": 38,
+              "deaths": 26,
+              "rating": 1.38
+            },
+            {
+              "player_id": "team_chao_phraya_owls_p2",
+              "kills": 24,
+              "deaths": 21,
+              "rating": 0.93
+            },
+            {
+              "player_id": "team_chao_phraya_owls_p3",
+              "kills": 26,
+              "deaths": 23,
+              "rating": 0.95
+            },
+            {
+              "player_id": "team_chao_phraya_owls_p4",
+              "kills": 17,
+              "deaths": 25,
+              "rating": 0.61
+            },
+            {
+              "player_id": "team_midnight_polders_p0",
+              "kills": 11,
+              "deaths": 31,
+              "rating": 0.48
+            },
+            {
+              "player_id": "team_midnight_polders_p1",
+              "kills": 43,
+              "deaths": 19,
+              "rating": 1.58
+            },
+            {
+              "player_id": "team_midnight_polders_p2",
+              "kills": 36,
+              "deaths": 23,
+              "rating": 1.34
+            },
+            {
+              "player_id": "team_midnight_polders_p3",
+              "kills": 7,
+              "deaths": 30,
+              "rating": 0.28
+            },
+            {
+              "player_id": "team_midnight_polders_p4",
+              "kills": 24,
+              "deaths": 27,
+              "rating": 0.86
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2emt2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_berlin_wolves",
+      "team_b": "team_hokkaido_drift",
+      "team_a_name": "Berlin Wolves",
+      "team_b_name": "Hokkaido Drift",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_hokkaido_drift_p2",
+        "handle": "Frostbyte",
+        "rating": 1.11,
+        "kills": 21,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_hokkaido_drift",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 11,
+          "score_b": 13,
+          "winner_id": "team_hokkaido_drift",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_berlin_wolves_p0",
+              "kills": 15,
+              "deaths": 15,
+              "rating": 0.96
+            },
+            {
+              "player_id": "team_berlin_wolves_p1",
+              "kills": 16,
+              "deaths": 16,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_berlin_wolves_p2",
+              "kills": 36,
+              "deaths": 16,
+              "rating": 1.97
+            },
+            {
+              "player_id": "team_berlin_wolves_p3",
+              "kills": 12,
+              "deaths": 13,
+              "rating": 0.71
+            },
+            {
+              "player_id": "team_berlin_wolves_p4",
+              "kills": 10,
+              "deaths": 13,
+              "rating": 0.64
+            },
+            {
+              "player_id": "team_hokkaido_drift_p0",
+              "kills": 10,
+              "deaths": 18,
+              "rating": 0.65
+            },
+            {
+              "player_id": "team_hokkaido_drift_p1",
+              "kills": 20,
+              "deaths": 18,
+              "rating": 1.04
+            },
+            {
+              "player_id": "team_hokkaido_drift_p2",
+              "kills": 21,
+              "deaths": 16,
+              "rating": 1.11
+            },
+            {
+              "player_id": "team_hokkaido_drift_p3",
+              "kills": 8,
+              "deaths": 17,
+              "rating": 0.48
+            },
+            {
+              "player_id": "team_hokkaido_drift_p4",
+              "kills": 14,
+              "deaths": 20,
+              "rating": 0.74
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2pa",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_ghostline",
+      "team_b": "team_outback_sentinels",
+      "team_a_name": "Ghostline",
+      "team_b_name": "Outback Sentinels",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "rating": 1.81,
+        "kills": 38,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_outback_sentinels",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 12,
+          "score_b": 14,
+          "winner_id": "team_outback_sentinels",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_ghostline_p0",
+              "kills": 13,
+              "deaths": 20,
+              "rating": 0.73
+            },
+            {
+              "player_id": "team_ghostline_p1",
+              "kills": 26,
+              "deaths": 20,
+              "rating": 1.2
+            },
+            {
+              "player_id": "team_ghostline_p2",
+              "kills": 21,
+              "deaths": 16,
+              "rating": 1.16
+            },
+            {
+              "player_id": "team_ghostline_p3",
+              "kills": 17,
+              "deaths": 20,
+              "rating": 0.81
+            },
+            {
+              "player_id": "team_ghostline_p4",
+              "kills": 12,
+              "deaths": 19,
+              "rating": 0.62
+            },
+            {
+              "player_id": "team_outback_sentinels_p0",
+              "kills": 15,
+              "deaths": 17,
+              "rating": 0.93
+            },
+            {
+              "player_id": "team_outback_sentinels_p1",
+              "kills": 22,
+              "deaths": 17,
+              "rating": 1.1
+            },
+            {
+              "player_id": "team_outback_sentinels_p2",
+              "kills": 38,
+              "deaths": 17,
+              "rating": 1.81
+            },
+            {
+              "player_id": "team_outback_sentinels_p3",
+              "kills": 14,
+              "deaths": 16,
+              "rating": 0.79
+            },
+            {
+              "player_id": "team_outback_sentinels_p4",
+              "kills": 6,
+              "deaths": 22,
+              "rating": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m2pat2",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_highlands_nine",
+      "team_b": "team_lisbon_tide",
+      "team_a_name": "Highlands Nine",
+      "team_b_name": "Lisbon Tide",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_lisbon_tide_p3",
+        "handle": "Cipherhawk",
+        "rating": 1.33,
+        "kills": 13,
+        "on_winner": true
+      },
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_lisbon_tide",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "lotus",
+          "map_thumb": "/assets/maps/lotus.webp",
+          "score_a": 1,
+          "score_b": 13,
+          "winner_id": "team_lisbon_tide",
+          "has_replay": false,
+          "lines": [
+            {
+              "player_id": "team_highlands_nine_p0",
+              "kills": 4,
+              "deaths": 10,
+              "rating": 0.5
+            },
+            {
+              "player_id": "team_highlands_nine_p1",
+              "kills": 16,
+              "deaths": 9,
+              "rating": 1.39
+            },
+            {
+              "player_id": "team_highlands_nine_p2",
+              "kills": 8,
+              "deaths": 13,
+              "rating": 0.64
+            },
+            {
+              "player_id": "team_highlands_nine_p3",
+              "kills": 5,
+              "deaths": 9,
+              "rating": 0.7
+            },
+            {
+              "player_id": "team_highlands_nine_p4",
+              "kills": 1,
+              "deaths": 12,
+              "rating": 0.13
+            },
+            {
+              "player_id": "team_lisbon_tide_p0",
+              "kills": 9,
+              "deaths": 8,
+              "rating": 1.02
+            },
+            {
+              "player_id": "team_lisbon_tide_p1",
+              "kills": 10,
+              "deaths": 7,
+              "rating": 1.03
+            },
+            {
+              "player_id": "team_lisbon_tide_p2",
+              "kills": 10,
+              "deaths": 8,
+              "rating": 1.04
+            },
+            {
+              "player_id": "team_lisbon_tide_p3",
+              "kills": 13,
+              "deaths": 5,
+              "rating": 1.33
+            },
+            {
+              "player_id": "team_lisbon_tide_p4",
+              "kills": 11,
+              "deaths": 6,
+              "rating": 1.17
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m3am",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nordic_frost",
+      "team_b": "team_rust_belt_gaming",
+      "team_a_name": "Nordic Frost",
+      "team_b_name": "Rust Belt Gaming",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_rust_belt_gaming_p1",
+        "handle": "Zephyrpulse",
+        "rating": 1.09,
+        "kills": 14,
+        "on_winner": true
+      },
+      "maps": [
+        "split"
+      ],
+      "map_thumbs": {
+        "split": "/assets/maps/split.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_rust_belt_gaming",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "split",
+          "map_thumb": "/assets/maps/split.webp",
+          "score_a": 6,
+          "score_b": 13,
+          "winner_id": "team_rust_belt_gaming",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_nordic_frost_p0",
+              "kills": 9,
+              "deaths": 11,
+              "rating": 0.83
+            },
+            {
+              "player_id": "team_nordic_frost_p1",
+              "kills": 14,
+              "deaths": 11,
+              "rating": 0.98
+            },
+            {
+              "player_id": "team_nordic_frost_p2",
+              "kills": 8,
+              "deaths": 10,
+              "rating": 0.68
+            },
+            {
+              "player_id": "team_nordic_frost_p3",
+              "kills": 6,
+              "deaths": 9,
+              "rating": 0.52
+            },
+            {
+              "player_id": "team_nordic_frost_p4",
+              "kills": 9,
+              "deaths": 12,
+              "rating": 0.65
+            },
+            {
+              "player_id": "team_rust_belt_gaming_p0",
+              "kills": 5,
+              "deaths": 9,
+              "rating": 0.57
+            },
+            {
+              "player_id": "team_rust_belt_gaming_p1",
+              "kills": 14,
+              "deaths": 10,
+              "rating": 1.09
+            },
+            {
+              "player_id": "team_rust_belt_gaming_p2",
+              "kills": 13,
+              "deaths": 10,
+              "rating": 1.06
+            },
+            {
+              "player_id": "team_rust_belt_gaming_p3",
+              "kills": 10,
+              "deaths": 8,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_rust_belt_gaming_p4",
+              "kills": 11,
+              "deaths": 9,
+              "rating": 0.83
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m3em",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_crimson_order",
+      "team_b": "team_meridian_cross",
+      "team_a_name": "Crimson Order",
+      "team_b_name": "Meridian Cross",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_meridian_cross_p1",
+        "handle": "Falconghost",
+        "rating": 1.31,
+        "kills": 15,
+        "on_winner": true
+      },
+      "maps": [
+        "split"
+      ],
+      "map_thumbs": {
+        "split": "/assets/maps/split.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_meridian_cross",
+      "map_score": [
+        0,
+        1
+      ],
+      "results": [
+        {
+          "map_id": "split",
+          "map_thumb": "/assets/maps/split.webp",
+          "score_a": 4,
+          "score_b": 13,
+          "winner_id": "team_meridian_cross",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_crimson_order_p0",
+              "kills": 5,
+              "deaths": 12,
+              "rating": 0.43
+            },
+            {
+              "player_id": "team_crimson_order_p1",
+              "kills": 13,
+              "deaths": 10,
+              "rating": 1.04
+            },
+            {
+              "player_id": "team_crimson_order_p2",
+              "kills": 16,
+              "deaths": 11,
+              "rating": 1.37
+            },
+            {
+              "player_id": "team_crimson_order_p3",
+              "kills": 3,
+              "deaths": 12,
+              "rating": 0.32
+            },
+            {
+              "player_id": "team_crimson_order_p4",
+              "kills": 14,
+              "deaths": 11,
+              "rating": 1.02
+            },
+            {
+              "player_id": "team_meridian_cross_p0",
+              "kills": 16,
+              "deaths": 9,
+              "rating": 1.28
+            },
+            {
+              "player_id": "team_meridian_cross_p1",
+              "kills": 15,
+              "deaths": 7,
+              "rating": 1.31
+            },
+            {
+              "player_id": "team_meridian_cross_p2",
+              "kills": 11,
+              "deaths": 11,
+              "rating": 0.85
+            },
+            {
+              "player_id": "team_meridian_cross_p3",
+              "kills": 5,
+              "deaths": 13,
+              "rating": 0.41
+            },
+            {
+              "player_id": "team_meridian_cross_p4",
+              "kills": 9,
+              "deaths": 11,
+              "rating": 0.91
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1w1m3pa",
+      "week": 1,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_harbour_city_nine",
+      "team_b": "team_iron_pact",
+      "team_a_name": "Harbour City Nine",
+      "team_b_name": "Iron Pact",
+      "rivalry": null,
+      "potm": {
+        "player_id": "team_harbour_city_nine_p1",
+        "handle": "Pyrowire",
+        "rating": 1.43,
+        "kills": 21,
+        "on_winner": true
+      },
+      "maps": [
+        "split"
+      ],
+      "map_thumbs": {
+        "split": "/assets/maps/split.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": true,
+      "winner_id": "team_harbour_city_nine",
+      "map_score": [
+        1,
+        0
+      ],
+      "results": [
+        {
+          "map_id": "split",
+          "map_thumb": "/assets/maps/split.webp",
+          "score_a": 13,
+          "score_b": 6,
+          "winner_id": "team_harbour_city_nine",
+          "has_replay": true,
+          "lines": [
+            {
+              "player_id": "team_harbour_city_nine_p0",
+              "kills": 18,
+              "deaths": 16,
+              "rating": 1.22
+            },
+            {
+              "player_id": "team_harbour_city_nine_p1",
+              "kills": 21,
+              "deaths": 10,
+              "rating": 1.43
+            },
+            {
+              "player_id": "team_harbour_city_nine_p2",
+              "kills": 21,
+              "deaths": 12,
+              "rating": 1.35
+            },
+            {
+              "player_id": "team_harbour_city_nine_p3",
+              "kills": 6,
+              "deaths": 13,
+              "rating": 0.55
+            },
+            {
+              "player_id": "team_harbour_city_nine_p4",
+              "kills": 10,
+              "deaths": 10,
+              "rating": 0.76
+            },
+            {
+              "player_id": "team_iron_pact_p0",
+              "kills": 12,
+              "deaths": 18,
+              "rating": 0.83
+            },
+            {
+              "player_id": "team_iron_pact_p1",
+              "kills": 16,
+              "deaths": 15,
+              "rating": 1.09
+            },
+            {
+              "player_id": "team_iron_pact_p2",
+              "kills": 13,
+              "deaths": 17,
+              "rating": 0.88
+            },
+            {
+              "player_id": "team_iron_pact_p3",
+              "kills": 11,
+              "deaths": 12,
+              "rating": 0.76
+            },
+            {
+              "player_id": "team_iron_pact_p4",
+              "kills": 9,
+              "deaths": 14,
+              "rating": 0.68
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "user_income": 53891,
+  "user_expenses": 36400,
+  "notes": [],
+  "development": {
+    "season": 1,
+    "week": 1,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {
+                "aim_precision": 0.02,
+                "aim_reactivity": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 78.3,
+          "overall_current": 78.3,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "phantom",
+        "handle": "Phantom",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.37,
+              "skills": {
+                "game_sense": 0.95,
+                "positioning": 0.6,
+                "utility_usage": 2.12
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "comms_quality": 0.04,
+                "composure": 0.02,
+                "game_sense": 0.03,
+                "positioning": 0.03
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Tactical practice reinforces skills used in matches",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 65.1,
+          "overall_current": 65.5,
+          "overall_delta": 0.4
+        }
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.5,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "rest",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.02,
+              "skills": {
+                "comms_quality": 0.15,
+                "composure": 0.03,
+                "game_sense": 0.02,
+                "positioning": 0.01,
+                "utility_usage": 0.03
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 74.5,
+          "overall_current": 74.5,
+          "overall_delta": 0.0
+        }
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.16,
+              "skills": {
+                "positioning": 0.44,
+                "utility_usage": 1.19
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.03,
+              "skills": {
+                "aim_precision": 0.12,
+                "aim_reactivity": 0.05,
+                "comms_quality": 0.05,
+                "composure": 0.01,
+                "positioning": 0.02,
+                "utility_usage": 0.01
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Tactical practice reinforces skills used in matches",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.7,
+          "overall_delta": 0.2
+        }
+      }
+    ]
+  },
+  "week_reveal": {
+    "fixture_id": "s1w1m2am",
+    "standings": {
+      "prev": null,
+      "now": 1,
+      "of": 8
+    }
+  }
+}

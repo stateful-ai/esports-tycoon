@@ -1,0 +1,162 @@
+{
+  "events": 25,
+  "kinds": {
+    "result": 4,
+    "visible_time": 8,
+    "view": 7,
+    "session_start": 2,
+    "attempt": 3,
+    "session_end": 1
+  },
+  "targets": {
+    "/api/new": 1,
+    "lobby": 5,
+    "dashboard": 8,
+    "": 3,
+    "market/players": 2,
+    "/api/negotiation": 4,
+    "/api/actions/save": 2
+  },
+  "request_events": [
+    {
+      "schema_version": 1,
+      "session_id": "8655a757cc2f98187007e8e2d687803e",
+      "received_at": "2026-10-08T18:18:23.614150+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/new",
+      "request_id": 3,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 321
+    },
+    {
+      "schema_version": 1,
+      "session_id": "b322deb6a1ca2dd4f766edf94f8bacdb",
+      "received_at": "2026-10-08T18:22:32.614606+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/negotiation",
+      "request_id": 11
+    },
+    {
+      "schema_version": 1,
+      "session_id": "b322deb6a1ca2dd4f766edf94f8bacdb",
+      "received_at": "2026-10-08T18:22:32.614606+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/negotiation",
+      "request_id": 11,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 17
+    },
+    {
+      "schema_version": 1,
+      "session_id": "b322deb6a1ca2dd4f766edf94f8bacdb",
+      "received_at": "2026-10-08T18:22:32.728771+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/negotiation",
+      "request_id": 12
+    },
+    {
+      "schema_version": 1,
+      "session_id": "b322deb6a1ca2dd4f766edf94f8bacdb",
+      "received_at": "2026-10-08T18:22:32.728771+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/negotiation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 9
+    },
+    {
+      "schema_version": 1,
+      "session_id": "54c8d88d110c59f9546f262fe3ccb5fa",
+      "received_at": "2026-10-08T18:22:33.577199+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 10
+    },
+    {
+      "schema_version": 1,
+      "session_id": "54c8d88d110c59f9546f262fe3ccb5fa",
+      "received_at": "2026-10-08T18:22:33.577199+00:00",
+      "world": "WJBF7",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 1,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 21
+    }
+  ],
+  "report": {
+    "sessions": 3,
+    "events": {
+      "attempt:/api/actions/save": 1,
+      "attempt:/api/negotiation": 2,
+      "attempt:/api/new": 1,
+      "result:/api/actions/save": 1,
+      "result:/api/negotiation": 2,
+      "result:/api/new": 1,
+      "session_end:": 1,
+      "session_start:": 3,
+      "view:dashboard": 4,
+      "view:lobby": 3,
+      "view:market/players": 1,
+      "visible_time:dashboard": 4,
+      "visible_time:lobby": 5,
+      "visible_time:market/players": 1
+    },
+    "visible_ms": {
+      "dashboard": 24090,
+      "lobby": 21991,
+      "market/players": 525
+    },
+    "outcomes": {
+      "/api/actions/save:success": 1,
+      "/api/negotiation:success": 2,
+      "/api/new:success": 1
+    },
+    "attempts": 4,
+    "paired_results": 4,
+    "unmatched_attempts": 0,
+    "orphan_results": 0,
+    "world_events": {
+      "WJBF7": 25,
+      "lobby": 5
+    },
+    "observed_session_span_ms": {
+      "54c8d88d110c59f9546f262fe3ccb5fa": 0,
+      "8655a757cc2f98187007e8e2d687803e": 29989,
+      "b322deb6a1ca2dd4f766edf94f8bacdb": 292
+    },
+    "malformed_lines": 0,
+    "retention_bytes": 8388608
+  }
+}

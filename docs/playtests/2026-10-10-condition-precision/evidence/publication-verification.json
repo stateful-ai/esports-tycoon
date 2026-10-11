@@ -1,0 +1,9 @@
+{
+  "freeze_entries": 545,
+  "all_545_raw_sha256_match": true,
+  "freeze_manifest_sha256": "70ecabcfd4d74ec1a78329c0e48bb5babe0262f65bb52465b8f763424842c945",
+  "app_js_sha256": "bb40271b1387625a773023a89b49ee8250d5b5949d63c6b045807f8b430e8986",
+  "gate_terminal_summary": "1253 passed in 2806.78s (0:46:46)",
+  "pytest_exit_code": 0,
+  "gate_source_unchanged": true
+}

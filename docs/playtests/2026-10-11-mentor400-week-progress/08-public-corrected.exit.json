@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-11T11:07:40.898832+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=mentor400-week-progress",
+    "run-code",
+    "async (page) => { const identities=await page.locator(\"[data-pid]\").evaluateAll(es=>es.filter(e=>[\"Ghost\",\"Nightsurge\"].includes(e.textContent.trim())).map(e=>({id:e.dataset.pid,name:e.textContent.trim()}))); const ids=[...new Set(identities.map(x=>x.id))]; const endpoints=[\"/api/state\",...ids.map(id=>\"/api/players/\"+id+\"/profile\")]; const results=[]; for(const endpoint of endpoints){const r=await page.request.get(new URL(endpoint,page.url()).href);results.push({endpoint,status:r.status(),body:await r.text()});} return {identities,results,wire:globalThis.mentorWire||[]}; }"
+  ]
+}

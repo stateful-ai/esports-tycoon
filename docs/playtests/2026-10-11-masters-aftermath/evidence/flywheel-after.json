@@ -1,0 +1,44 @@
+[
+  {
+    "id": "esports-playtest-0180",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Read-only versus accepted usage",
+    "problem": "Quantify the player session without conflating navigation and accepted decisions",
+    "solution": "Reconciled six CSV rows, preserved79-decision prefix and three paired successful requests",
+    "lesson": "Two accepted decisions were dev_plan and advance; Save appears only in request usage. Views and visible milliseconds cannot establish attention or click-level coverage.",
+    "confidence": "high",
+    "source": "2026-10-11-masters-aftermath; root model/effort unknown (not exposed); recorded after play at 2026-10-11T02:21:30.037664+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0179",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Fixture-free practice causality",
+    "problem": "Understand whether a recovery week can help a benched veteran",
+    "solution": "Changed recovered Hollowlock from rest to mental while preserving Ghost rest; advanced once",
+    "lesson": "W19 mental practice produced clutch+0.11 and tilt+0.05 with zero maps; Ghost rest improved stamina71to89. Inspect per-player overrides before choosing squad focus.",
+    "confidence": "high",
+    "source": "2026-10-11-masters-aftermath; root model/effort unknown (not exposed); recorded after play at 2026-10-11T02:21:30.037664+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0181",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Known prize and roster advice gaps persist on main",
+    "problem": "Main still shows redundant bench advice, fixed-map Ban/Pick advice and omitted120000prize income",
+    "solution": "Matched observed issues to existingPRs382,381,380 instead of creating duplicates",
+    "lesson": "Use actual current-main gameplay to distinguish reviewed pending fixes from merged behavior; preserve arithmetic discrepancies and failed stale references in the original attempt.",
+    "confidence": "high",
+    "source": "2026-10-11-masters-aftermath; root model/effort unknown (not exposed); recorded after play at 2026-10-11T02:21:30.037664+00:00",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  }
+]

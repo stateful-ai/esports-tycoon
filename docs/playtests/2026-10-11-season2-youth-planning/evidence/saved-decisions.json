@@ -1,0 +1,121 @@
+[
+  {
+    "index": 112,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_open",
+    "params": {
+      "player_id": "team_cascadia_youth_p1"
+    },
+    "source": "web"
+  },
+  {
+    "index": 113,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "negotiate_offer",
+    "params": {
+      "buyout": "22000",
+      "no_transfer": "False",
+      "player_id": "team_cascadia_youth_p1",
+      "release_fee": "6000",
+      "role": "academy",
+      "salary": "1500",
+      "status": "accepted",
+      "stream_share": "70",
+      "weeks": "40"
+    },
+    "source": "web"
+  },
+  {
+    "index": 114,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "academy_move",
+    "params": {
+      "direction": "send_down",
+      "player_id": "team_cascadia_youth_p1"
+    },
+    "source": "web"
+  },
+  {
+    "index": 115,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "academy_move",
+    "params": {
+      "direction": "promote",
+      "player_id": "team_kraken_unit_p0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 116,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "tactical",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "team_kraken_unit_p0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 117,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "tactical",
+      "intensity": "light",
+      "learning_language": "",
+      "player_id": "team_kraken_unit_p0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 118,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "mentor",
+    "params": {
+      "mentor_id": "apex",
+      "protege_id": "team_kraken_unit_p0"
+    },
+    "source": "web"
+  },
+  {
+    "index": 119,
+    "season": 2,
+    "week": 4,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

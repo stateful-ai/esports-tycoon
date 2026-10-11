@@ -1,0 +1,34 @@
+{
+  "base": "26b9281357e74de1bdc7beffe5d5660fe05e47b4",
+  "dependency_merge": "26b9281357e74de1bdc7beffe5d5660fe05e47b4",
+  "files": {
+    "src/esports_sim/web/static/app.js": {
+      "sha256": "9f812278e50e38950ed804d8a6d37444f7948eeffc7f070256531b7172884573",
+      "git_blob": "92d504d682c582bd900d4749aca69fe18cf1a4af"
+    },
+    "src/esports_sim/web/static/usage.js": {
+      "sha256": "afafc055e4f36a3f7ce332c5741512542fd63e0d40d8c9874217218dc20b460e",
+      "git_blob": "a138057acae44c01d3588c16f63c670b082164de"
+    },
+    "src/esports_sim/web/usage_telemetry.py": {
+      "sha256": "f85b7927b2dc55e9b6ba7c8225e9170fdb825e5abd5c9869bba63a1b53d78d46",
+      "git_blob": "617291af1a95b6da452582eb4c3736fb75f36d9e"
+    },
+    "tests/test_usage_telemetry.py": {
+      "sha256": "38abadd6cb97db785f878ee4b8fa4a83aaed99935e763b3b262cffdfe561539f",
+      "git_blob": "67d72bd6c0d132604fc7f81fea7bd8132c934bb9"
+    },
+    "tests/usage_frontend_check.cjs": {
+      "sha256": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064",
+      "git_blob": "68140ff19a1e34aee181ffc4b1cc78de0b4c2443"
+    },
+    "tests/market_search_usage_check.cjs": {
+      "sha256": "66467e3278ba91933940274c09199206812278fa0f0d8572757efd9081e815f2",
+      "git_blob": "c501315502a705b577861b24304fde0926c20171"
+    }
+  },
+  "session_csv_sha256": "b187f4f6631978a5266826db7f6c486d4f8ce66ac72d3b24d3473fe66db86ae8",
+  "focused_tests": "41 passed in 1.69s",
+  "node": "app.js/usage.js syntax and actual Market-search callbacks passed",
+  "full_gate": "1213 passed in 6315.94s (1:45:15); full unfiltered pytest -q -n2; exit 0; completed helper PID 39176"
+}
