@@ -74,3 +74,19 @@ projection and inbox sanitization. Its original root-provenance document is
 retained separately in `docs/prep-development-public-evidence.md`. Every local
 test, check, simulation, validator, gate, report command, and runtime acceptance
 remains SKIPPED as instructed. PR #422 is the prerequisite for PR #423.
+
+## Accessible player-link integration, 2026-10-11
+
+This branch normally merged actual main
+`a7d2c6d3d6d0fc583850b34bc07855ad1e1384f2` after identity head
+`411051a08e50fee1c06da98eb27af69ed5552b91`. Main includes PR #411's
+native `button type="button"` player links. The two frontend label expectations
+now match that shared helper, including escaped IDs and handles. The public
+projection, hidden-target privacy, read-only report, and missing-player
+assertions remain intact; all prior identity and projection history is retained.
+
+This is source-only integration. Authored coverage remains **UNRUN**. No tests,
+Node execution, validators, simulations, gates, hooks, or application runtime
+were executed. Earlier root observations above remain historical provenance,
+not acceptance of this integrated head. No gameplay or shared CSV rows were
+added by this repair; any history received from main was retained by the merge.
