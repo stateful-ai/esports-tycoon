@@ -1,0 +1,15 @@
+{
+  "before_actions": 120,
+  "after_actions": 120,
+  "actions_equal": true,
+  "before_snapshots": 27,
+  "after_snapshots": 27,
+  "snapshots_equal": true,
+  "dev_history_equal": true,
+  "game_time": [
+    2,
+    5
+  ],
+  "new_actions": [],
+  "semantic_changed_top_level_keys": []
+}

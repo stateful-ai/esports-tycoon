@@ -1,0 +1,149 @@
+[
+  {
+    "id": "esports-playtest-0239",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "First tracked development point implies false flatness",
+    "problem": "SingleW4 snapshot shows0.0/no skillchanges despite positive weekly skills.",
+    "solution": "Retained before51.8/after52.2,practice+.31OVR andthree skills; delegatedsource-onlyPR398.",
+    "lesson": "First observation lacks cumulative comparison; do not present missing baseline as measured no growth.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0238",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Bench practice and affiliate minutes differ",
+    "problem": "Needed useful pathways without changing senior five.",
+    "solution": "Nightsurge0senior maps butpractice+.31OVR/scrims+.01; Frostwire affiliate1map andacademy+.03.",
+    "lesson": "Reconcile exact role/move/contracts and separate senior practice, bench scrims and affiliate reports.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0237",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Academy promotion needs affiliate depth",
+    "problem": "Enabled Promote failed422 with only5affiliate players.",
+    "solution": "Recruited18yoFrostwire onacademy contract, sentdown, promotedNightsurge with5remaining.",
+    "lesson": "Preserve constraints and expose exact current blocker; an eligible recruitment/send-down path can supply depth.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-youth-planning copied26UHC seed2038 source20273 rootunknown 2026-10-11T10:02:02.075138+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "academy",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0236",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Streaming workload and revenue share copy conflict",
+    "problem": "Practice-focused Hollow tooltip called him heavy streamer;70% streams ambiguous.",
+    "solution": "Public stream_load19.7/statuspractice-focused/mult0.93 separate from contractshare70; dedicated6.1solmedium PR395.",
+    "lesson": "Use server status and distinguish contractual revenue share from streaming workload.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0235",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Weekly reveal blocks topbar until complete",
+    "problem": "Two manual Save observations failed with no HTTP attempt.",
+    "solution": "Fresh click log showed week-reveal interception; Continue then Save200 recovered.",
+    "lesson": "Inspect visible modal state before classifying a timeout as API failure.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0234",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Recovery can preserve match learning",
+    "problem": "Fatigued Vortex59.5 needed a lower practice workload.",
+    "solution": "Set rest/normal, public focus persisted; next tick70.5,0practiceOVR,0.01matchOVR. Bench Hollow65\u219289.",
+    "lesson": "Read condition and authored source attribution separately; recovery does not remove the player from the five.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0233",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor copy serving contract",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "State and action response can name the same event differently; acceptance must compare visible moment and settled receipt.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0232",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement save parity",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "Isolated cached-overlay browser choice yields byte-identical saved state to current-loader migration of the historical deterministic small_group result; raw historical schema differs.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "learning"
+  }
+]
