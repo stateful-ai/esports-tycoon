@@ -43,13 +43,16 @@ contain other roster members' names. Use the visible identity's `data-pid`
 when available, or an anchored identity-cell name after inspecting the current
 DOM. Require exactly one matching row and exactly one intended control; do not
 use `.first()` to hide ambiguous matches. For example, with a player ID read
-from the current public roster/identity link:
+from the current public roster/identity link, scope to editable focus rows
+(the development report also contains player identity links):
 
 ```javascript
 const identityCell = page.getByRole('cell').filter({
   has: page.locator('[data-pid="fa_13"]'),
 });
-const row = page.getByRole('row').filter({ has: identityCell });
+const row = page.getByRole('row')
+  .filter({ has: identityCell })
+  .filter({ has: page.locator('select[data-act="focus"]') });
 const focus = row.locator('select[data-act="focus"]');
 if (await row.count() !== 1 || await focus.count() !== 1)
   throw new Error('Ambiguous player identity or focus control');
