@@ -3796,13 +3796,13 @@ async function tacticsPrep(ws) {
 
   // Tournament roster registration.
   const rc = el("div", "card ws-6");
-  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Five starters plus one between-map substitute.</p>`;
+  rc.innerHTML = `<h2>Tournament six ${d.registration.locked ? '<span class="pill bad">locked</span>' : ""}</h2><p class="muted">Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides.</p>`;
   const chosen = new Set(d.registration.player_ids || []);
   for (const p of d.registration.players) {
     const lab = el("label", "entity");
     const cb = el("input"); cb.type = "checkbox"; cb.checked = chosen.has(p.id); cb.disabled = d.registration.locked;
     cb.onchange = () => cb.checked ? chosen.add(p.id) : chosen.delete(p.id);
-    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · ${humanize(p.role)}`)); rc.appendChild(lab);
+    lab.append(cb, el("span", "entity-name", plink(p.id, p.handle)), el("span", "entity-meta", `${p.age} · Promised squad role: ${humanize(p.role)}`)); rc.appendChild(lab);
   }
   if (!d.registration.locked) {
     const save = el("button", "btn btn-primary", "Submit roster");
