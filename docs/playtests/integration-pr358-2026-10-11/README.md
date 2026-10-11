@@ -56,3 +56,14 @@ the follow-up changes only this README, the readiness serializer and regression
 file. Historical native 1261-test and prior remote CI results remain historical.
 All local checks and hooks are skipped under the user's current instruction;
 fresh remote CI and root review are required for the forward commit.
+
+Inline finding 4242745506 on `d2d20b1` then identified binary multiplication
+under-reporting exact stored hundredths (0.29, 0.57 and 0.58). The next forward
+correction floors `Decimal(str(raw_progress)) * 100`, preserving those exact
+hundredths without a tolerance that could cross the raw 50% unlock. Added
+unrun cases include those three hundredths and two values extremely close to
+but below 0.5, each for assigned coverage and stored intel. Neither `d2d20b1`
+nor this decimal correction has repaired-head runtime acceptance. Raw
+readiness, campaign calculations, migrations and historical proof remain
+unchanged; no local tests, validators, syntax checks, simulations, gates,
+report commands or hooks were run for the follow-up.

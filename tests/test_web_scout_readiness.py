@@ -34,7 +34,9 @@ def test_standing_coverage_without_deep_dive(game_data, progress, playbook):
 
 @pytest.mark.parametrize('assigned', [False, True])
 @pytest.mark.parametrize('depth,displayed', [
+    (.29, 29), (.57, 57), (.58, 58),
     (.494, 49), (.495, 49), (.499, 49), (.499999, 49),
+    (.499999999999, 49), (.49999999999999994, 49),
     (.5, 50), (.999, 99), (1.0, 100),
 ])
 def test_displayed_depth_does_not_round_across_unlock(game_data, assigned, depth, displayed):

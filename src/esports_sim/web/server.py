@@ -20,6 +20,7 @@ import random
 import re
 import secrets
 import threading
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -2148,8 +2149,9 @@ def _fixture_scout_readiness(gs: GameState, team_id: str) -> dict | None:
     assigned = standing or deep_dive
     raw_progress = gs.scout_progress_by.get(team_id, {}).get(opponent, 0.0)
     progress = round(raw_progress, 2)
-    # Display completed depth without rounding a locked read up to its unlock.
-    depth_pct = math.floor(raw_progress * 100)
+    # Decimal text preserves stored hundredths without rounding a locked read
+    # up to its unlock or flooring 0.58's binary product below 58 percent.
+    depth_pct = math.floor(Decimal(str(raw_progress)) * 100)
     playbook = round(scouting.team_playbook_read(gs, team_id, opponent), 2)
     measured = progress > 0 or playbook > 0
     # Matchday identity and counter reads unlock from team scouting depth.
