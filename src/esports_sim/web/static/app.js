@@ -1235,7 +1235,7 @@ async function clubOps(v, sub) {
   const trustRow = el("div", "row");
   for (const p of d.media.player_trust || []) trustRow.appendChild(el("span", "pill", `${p.handle} ${Math.round(p.trust)}`));
   mc.appendChild(trustRow);
-  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}`));
+  for (const h of d.media.history || []) mc.appendChild(el("div", "newsline", `<b>${humanize(h.type_id)}</b> · ${esc(h.summary)}${h.settlement ? `<div class="muted">${esc(h.settlement)}</div>` : ""}${(h.effect_feedback || []).map(line => `<div class="muted">${esc(line)}</div>`).join("")}`));
   if (d.media.commitment) mc.appendChild(el("p", "muted", "A public derby expectation will settle after the fixture."));
   ws.appendChild(mc);
 

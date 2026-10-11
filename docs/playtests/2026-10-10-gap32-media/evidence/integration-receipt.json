@@ -1,0 +1,14 @@
+{
+  "source_commit": "3ec91e8c9e34ae35dce235ccc2ab70622e8a45a9",
+  "canonical_rows": 724,
+  "scoped_original_intent_rows": 8,
+  "canonical_equals_published_main_bytes": true,
+  "canonical_sha256": "0597857c221b2f60818472dfd1c07eca7435d081759d6e00b6ac659393604697",
+  "scoped_csv_sha256": "088ae6814acd602f034bdbc9bc84bb811ca4ccbc2793d600a8a1118ca77477bd",
+  "original_pre_annotation_csv_sha256": "8dd3d955e8c602cf3307e09c9053917208b2c48ca7bf6ae31a17e7e7e24f6975",
+  "all_scoped_fields_unchanged_since_reviewed_head": true,
+  "original_pre_annotation_git_blob_unchanged_since_reviewed_head": true,
+  "canonical_publication_inline_4239880484": "pending; root owns newer 885-row history; not included in published main 724-row canonical history",
+  "local_tests_run": false,
+  "browser_replay_run": false
+}

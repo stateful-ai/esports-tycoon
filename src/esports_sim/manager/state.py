@@ -547,7 +547,7 @@ def _migrate_v35_to_v36(data: dict) -> dict:
 
 
 def _migrate_v36_to_v37(data: dict) -> dict:
-    """Badge evidence defaults empty and untracked for previously saved weeks."""
+    """MEDIA phases default unknown; badge evidence defaults empty and untracked."""
     return data
 
 
@@ -1553,6 +1553,26 @@ class MediaCommitment(BaseModel):
     player_id: str = ""
 
 
+class MediaEffectChange(BaseModel):
+    """One measured target, captured around its explicitly named mutation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    before: float
+    after: float
+    delta: float
+
+
+class MediaEffects(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentiment: MediaEffectChange
+    player_trust: list[MediaEffectChange] = Field(default_factory=list)
+    sponsor_relations: list[MediaEffectChange] = Field(default_factory=list)
+
+
 class MediaDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1569,6 +1589,14 @@ class MediaDecision(BaseModel):
     sponsor_delta: float = 0.0
     trust_delta: float = 0.0
     settlement: str = ""
+    # None means this save predates measurement; nominal deltas above cannot
+    # reconstruct clamped history. An old pending promise may still gain an
+    # independently measured settlement after loading.
+    immediate_effects: MediaEffects | None = None
+    settlement_effects: MediaEffects | None = None
+    # Separate from MEDIA deltas: the public choice can trigger culture trust
+    # penalties for the whole roster. None means this phase was not measured.
+    culture_trust_effects: list[MediaEffectChange] | None = None
 
 
 class DraftPick(BaseModel):

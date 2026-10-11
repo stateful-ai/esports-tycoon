@@ -7376,7 +7376,8 @@ def resolve_media_event(body: MediaEventChoiceBody) -> dict:
             {"event_id": body.event_id, "choice_id": body.choice_id},
         )
         S.save()
-        return {"ok": True, "message": message, "effects": effects}
+        return {"ok": True, "message": message, "effects": effects,
+                "realized_effects": gs.media_history_by[gs.acting_team_id][-1].immediate_effects.model_dump(mode="json")}
 
 
 @app.post("/api/actions/advance")
