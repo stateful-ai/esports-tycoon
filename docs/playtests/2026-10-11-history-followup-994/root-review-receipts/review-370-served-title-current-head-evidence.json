@@ -1,0 +1,26 @@
+{
+  "at_utc": "2026-10-11T08:32:03.743836+00:00",
+  "pr": 370,
+  "head": "5300d4707bfcfb316e5c1e6c91a3201b87d316a2",
+  "integrated_parent": "7854dc70899a967738b9f64f7ca54cffa8bcecdd",
+  "new_frozen_source_paths": 2,
+  "other_integrated_source_raw_Git_unchanged": 617,
+  "new_raw_receipt_paths": 23,
+  "historical_paths_unchanged": 26,
+  "original55_action_prefix_exact": true,
+  "snapshots_unchanged": true,
+  "new_accepted_decisions": 1,
+  "paired_requests200": 2,
+  "usage_events": 18,
+  "displayed_cached_title_preserved": true,
+  "gameplay_equal_migrated_historical_baseline": true,
+  "raw_historical_save_equal": false,
+  "local_tests_launched": false,
+  "expanded_CJS_cases_unrun": true,
+  "limits": [
+    "Controlled cached-overlay fixture; no live LLM generation.",
+    "Two changed paths frozen/snapshotted; remaining integrated source verified statically, no new broad before/after freeze claim.",
+    "Migration-qualified baseline comparison does not claim raw historical save equality or a fresh determinism gate.",
+    "Exact-head CI and remote canonical publication of new4rows remain required."
+  ]
+}
