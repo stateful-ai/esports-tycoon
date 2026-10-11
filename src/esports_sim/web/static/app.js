@@ -2847,9 +2847,12 @@ function computeNeedsYou(data) {
   for (const o of (s.objectives_hub ?? []).slice(0, 6)) {
     const ok = o.state === "achieved" || o.state === "on_track" || o.state === "leading";
     if (ok) continue;
+    const sponsorName = o.kind === "sponsor" ? o.sponsor_name : "";
+    const sponsorSlot = o.kind === "sponsor" && o.sponsor_slot
+      ? SLOT_LABELS[o.sponsor_slot] || humanize(o.sponsor_slot) : "";
     items.push({ tab: "standings", kind: "objective", action: "Chase", needs_action: false,
-      label: esc(o.label),
-      detail: `${esc(humanize(o.kind))} · ${esc(humanize(o.state || ""))}${o.detail ? " · " + esc(o.detail) : ""}` });
+      label: esc(sponsorName ? `${sponsorName} — ${o.label}` : o.label),
+      detail: `${esc(humanize(o.kind))}${sponsorSlot ? " · " + esc(sponsorSlot) : ""} · ${esc(humanize(o.state || ""))}${o.detail ? " · " + esc(o.detail) : ""}` });
   }
   return items;
 }

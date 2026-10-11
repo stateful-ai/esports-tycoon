@@ -3931,6 +3931,8 @@ def _objectives_hub(gs: GameState, tid: str) -> list[dict]:
                 st = career.objective_status(gs, tid, ob.kind)
                 out.append({
                     "kind": "sponsor",
+                    "sponsor_name": deal.name,
+                    "sponsor_slot": slot,
                     "label": sponsors.OBJECTIVE_LABELS.get(ob.kind, humanize_identifier(ob.kind)),
                     "state": st["state"], "detail": st["detail"],
                 })
