@@ -7528,126 +7528,144 @@ def advance() -> dict:
     Returns either the resolved week's report, or a 'waiting' status listing who
     the world is still waiting on."""
     with S.lock:
-        gs = S.require_gs()
-        me = gs.acting_team_id
-        if gs.fantasy_draft is not None and gs.fantasy_draft.active:
-            raise HTTPException(
-                409, "finish the fantasy draft before the season can start"
-            )
-        pending = flavor_events.pending_for(gs, me)
-        if pending is not None:
-            raise HTTPException(
-                409,
-                "Open Dashboard → Needs you → Team moment and resolve the pending "
-                "flavor event by choosing a response, then try Advance Week again.",
-            )
-        pending_media = media_events.pending_for(gs, me)
-        if pending_media is not None:
-            raise HTTPException(
-                409,
-                "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
-            )
-        # Legacy mode: a dismissed manager must take a job before anyone
-        # advances — the world doesn't move while a seat is empty.
-        blocked = career.blocked_seats(gs)
-        if blocked:
-            names = ", ".join(gs.managers[m].name for m in blocked)
-            raise HTTPException(
-                409,
-                f"waiting on a manager to accept a new post ({names})",
-            )
-        # A manager can't tick the week without a legal (five-deep) roster.
-        ok, _ = market.roster_ready(gs, me)
-        if not ok:
-            short = market.ROSTER_MIN - len(gs.teams[me].player_ids)
-            raise HTTPException(
-                409,
-                f"you need {market.ROSTER_MIN} players to advance — "
-                f"open Market → Players and sign {short} more free "
-                f"{'agent' if short == 1 else 'agents'}, then try Advance Week again",
-            )
-        game = _ctx.get().game
-        game.ready.add(me)
-        waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
-        if waiting_on:
-            game.save()  # persist the ready flag isn't needed, but the join is
-            return {
-                "advanced": False,
-                "waiting_on": [gs.teams[t].name for t in waiting_on],
-                "ready": sorted(game.ready),
-            }
-        # Everyone's in — but a manager may have released or sold a player
-        # AFTER readying up, while waiting on the others. Revalidate every human
-        # roster right before the tick so a ready-but-now-short team can't slip
-        # the week through. Offenders lose their ready flag and must re-ready.
-        short = [t for t in gs.human_team_ids if not market.roster_ready(gs, t)[0]]
-        if short:
-            for t in short:
-                game.ready.discard(t)
-            game.save()
-            names = ", ".join(gs.teams[t].name for t in short)
-            raise HTTPException(
-                409,
-                f"can't advance — {names} need {market.ROSTER_MIN} players "
-                "— open Market → Players to sign free agents, then re-ready",
-            )
-        # Everyone's in — advance the shared world exactly once, through the
-        # shared agent_play tick (which records each seat's ready-up as its
-        # own decision — the advance is the RL episode's step boundary — and
-        # builds the per-seat digest agent seats poll for).
-        # Capture every human seat's pre-tick league position so the report's
-        # week_reveal can show the standings movement across this tick
-        # (session memory only, alongside last_report).
-        game.prev_positions = {
-            t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
-        }
-        game.event_logs.clear()  # replays are for the freshly played week
+        return _advance_locked()
 
-        development_rosters = {
-            t: list(gs.teams[t].player_ids) for t in sorted(gs.human_team_ids)
+
+def _advance_locked(*, agent_response: bool = False) -> dict:
+    """Advance and capture the caller response under one game lock."""
+    gs = S.require_gs()
+    me = gs.acting_team_id
+    if gs.fantasy_draft is not None and gs.fantasy_draft.active:
+        raise HTTPException(
+            409, "finish the fantasy draft before the season can start"
+        )
+    pending = flavor_events.pending_for(gs, me)
+    if pending is not None:
+        raise HTTPException(
+            409,
+            "Open Dashboard → Needs you → Team moment and resolve the pending "
+            "flavor event by choosing a response, then try Advance Week again.",
+        )
+    pending_media = media_events.pending_for(gs, me)
+    if pending_media is not None:
+        raise HTTPException(
+            409,
+            "a media decision is waiting in Needs You on the Dashboard - resolve it before advancing",
+        )
+    # Legacy mode: a dismissed manager must take a job before anyone
+    # advances — the world doesn't move while a seat is empty.
+    blocked = career.blocked_seats(gs)
+    if blocked:
+        names = ", ".join(gs.managers[m].name for m in blocked)
+        raise HTTPException(
+            409,
+            f"waiting on a manager to accept a new post ({names})",
+        )
+    # A manager can't tick the week without a legal (five-deep) roster.
+    ok, _ = market.roster_ready(gs, me)
+    if not ok:
+        short = market.ROSTER_MIN - len(gs.teams[me].player_ids)
+        raise HTTPException(
+            409,
+            f"you need {market.ROSTER_MIN} players to advance — "
+            f"open Market → Players and sign {short} more free "
+            f"{'agent' if short == 1 else 'agents'}, then try Advance Week again",
+        )
+    game = _ctx.get().game
+    game.ready.add(me)
+    waiting_on = [t for t in gs.human_team_ids if t not in game.ready]
+    if waiting_on:
+        game.save()  # persist the ready flag isn't needed, but the join is
+        if agent_response:
+            return {
+                "ok": True, "kind": "advance",
+                "message": "ready — waiting on the other seats",
+                "advanced": False, "waiting_on": sorted(waiting_on),
+                "ready": sorted(game.ready), "seq": len(gs.action_log),
+            }
+        return {
+            "advanced": False,
+            "waiting_on": [gs.teams[t].name for t in waiting_on],
+            "ready": sorted(game.ready),
         }
-        try:
-            tick = agent_play.tick_shared_week(
-                gs, S.gd, game.ready, events_out=game.event_logs, source="web"
-            )
-        except agent_play.ShortRosters as exc:
-            # Unreachable in practice (the revalidation above runs under the
-            # same lock), kept as a defensive mirror of that 409.
-            for t in exc.team_ids:
-                game.ready.discard(t)
-            game.save()
-            names = ", ".join(gs.teams[t].name for t in exc.team_ids)
-            raise HTTPException(
-                409,
-                f"can't advance — {names} need {market.ROSTER_MIN} players "
-                "(re-ready once fixed)",
-            ) from exc
-        report = tick.report
-        game.last_report = report
-        game.agent_last_tick = tick.summaries
-        game.tick_seq += 1
-        game.last_report_development = {
-            t: _weekly_development_report(gs, t, report.season, report.week, pids)
-            for t, pids in development_rosters.items()
+    # Everyone's in — but a manager may have released or sold a player
+    # AFTER readying up, while waiting on the others. Revalidate every human
+    # roster right before the tick so a ready-but-now-short team can't slip
+    # the week through. Offenders lose their ready flag and must re-ready.
+    short = [t for t in gs.human_team_ids if not market.roster_ready(gs, t)[0]]
+    if short:
+        for t in short:
+            game.ready.discard(t)
+        game.save()
+        names = ", ".join(gs.teams[t].name for t in short)
+        raise HTTPException(
+            409,
+            f"can't advance — {names} need {market.ROSTER_MIN} players "
+            "— open Market → Players to sign free agents, then re-ready",
+        )
+    # Everyone's in — advance the shared world exactly once, through the
+    # shared agent_play tick (which records each seat's ready-up as its
+    # own decision — the advance is the RL episode's step boundary — and
+    # builds the per-seat digest agent seats poll for).
+    # Capture every human seat's pre-tick league position so the report's
+    # week_reveal can show the standings movement across this tick
+    # (session memory only, alongside last_report).
+    game.prev_positions = {
+        t: _pretick_position(gs, t) for t in sorted(gs.human_team_ids)
+    }
+    game.event_logs.clear()  # replays are for the freshly played week
+
+    development_rosters = {
+        t: list(gs.teams[t].player_ids) for t in sorted(gs.human_team_ids)
+    }
+    try:
+        tick = agent_play.tick_shared_week(
+            gs, S.gd, game.ready, events_out=game.event_logs, source="web"
+        )
+    except agent_play.ShortRosters as exc:
+        # Unreachable in practice (the revalidation above runs under the
+        # same lock), kept as a defensive mirror of that 409.
+        for t in exc.team_ids:
+            game.ready.discard(t)
+        game.save()
+        names = ", ".join(gs.teams[t].name for t in exc.team_ids)
+        raise HTTPException(
+            409,
+            f"can't advance — {names} need {market.ROSTER_MIN} players "
+            "(re-ready once fixed)",
+        ) from exc
+    report = tick.report
+    game.last_report = report
+    game.agent_last_tick = tick.summaries
+    game.tick_seq += 1
+    game.last_report_development = {
+        t: _weekly_development_report(gs, t, report.season, report.week, pids)
+        for t, pids in development_rosters.items()
+    }
+    game.ready.clear()
+    # Append this week's fresh match reviews to the durable on-disk corpus
+    # (serving-layer side effect, off the deterministic tick — see
+    # web/review_history.py). Never fatal: the corpus is analysis-only.
+    try:
+        review_history.append_reviews(gs, game.code, game.review_seen)
+    except Exception:
+        pass
+    # Hand the week's fresh posts to the LLM ghost-writer (async,
+    # serving-layer only — see web/llm_social.py; no-op without a
+    # configured provider).
+    llm_social.enqueue(game)
+    # Re-bind acting (advance_week churns the acting pointer internally).
+    gs.set_acting(me)
+    # Persistence follows the world's autosave policy (every Nth tick,
+    # or never — the explicit Save button always works).
+    game.autosave_tick()
+    if agent_response:
+        return {
+            "ok": True, "kind": "advance", "message": "week advanced",
+            "advanced": True, "tick": game.agent_last_tick.get(me),
+            "seq": len(gs.action_log),
         }
-        game.ready.clear()
-        # Append this week's fresh match reviews to the durable on-disk corpus
-        # (serving-layer side effect, off the deterministic tick — see
-        # web/review_history.py). Never fatal: the corpus is analysis-only.
-        try:
-            review_history.append_reviews(gs, game.code, game.review_seen)
-        except Exception:
-            pass
-        # Hand the week's fresh posts to the LLM ghost-writer (async,
-        # serving-layer only — see web/llm_social.py; no-op without a
-        # configured provider).
-        llm_social.enqueue(game)
-        # Re-bind acting (advance_week churns the acting pointer internally).
-        gs.set_acting(me)
-        # Persistence follows the world's autosave policy (every Nth tick,
-        # or never — the explicit Save button always works).
-        game.autosave_tick()
-        return _report_view(report, gs, me, game.last_report_development.get(me))
+    return _report_view(report, gs, me, game.last_report_development.get(me))
 
 
 class SimAheadBody(BaseModel):
@@ -8078,33 +8096,8 @@ def agent_act(body: AgentActBody) -> dict:
     digest of the resolved week comes back (and stays available under
     sync.last_tick). Every other kind resolves immediately."""
     if body.kind == "advance":
-        result = advance()  # the human ready-up endpoint: one shared barrier
         with S.lock:
-            gs = S.require_gs()
-            me = gs.acting_team_id
-            if not result.get("advanced"):
-                # The human endpoint reports display names; agents get team
-                # ids, consistent with sync.waiting_on.
-                return {
-                    "ok": True,
-                    "kind": "advance",
-                    "message": "ready — waiting on the other seats",
-                    "advanced": False,
-                    "waiting_on": [
-                        t for t in sorted(gs.human_team_ids)
-                        if t not in S.ready
-                    ],
-                    "ready": result.get("ready", []),
-                    "seq": len(gs.action_log),
-                }
-            return {
-                "ok": True,
-                "kind": "advance",
-                "message": "week advanced",
-                "advanced": True,
-                "tick": S.agent_last_tick.get(me),
-                "seq": len(gs.action_log),
-            }
+            return _advance_locked(agent_response=True)
     with S.lock:
         gs = S.require_gs()
         me = gs.acting_team_id
@@ -8113,7 +8106,7 @@ def agent_act(body: AgentActBody) -> dict:
         )
         try:
             step = env.step({"kind": body.kind, "params": body.params})
-        except (InvalidManagerAction, ValueError, TypeError) as exc:
+        except InvalidManagerAction as exc:
             raise HTTPException(422, str(exc)) from exc
         moved_to = env.team_id if env.team_id != me else None
         if moved_to is not None:

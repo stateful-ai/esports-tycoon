@@ -115,6 +115,51 @@ class InvalidManagerAction(ValueError):
     """The requested action is malformed or illegal in the current state."""
 
 
+def validate_manager_action(action: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    """Validate conversion-sensitive parameters before observing or mutating.
+
+    Shared by the headless resolver and shared-world ready votes so malformed
+    direct calls have the same recoverable error contract as HTTP clients.
+    """
+    if not isinstance(action, dict):
+        raise InvalidManagerAction("action must be an object")
+    kind = action.get("kind", "")
+    if not isinstance(kind, str) or kind not in SUPPORTED_ACTIONS:
+        raise InvalidManagerAction(f"unsupported manager action {kind!r}")
+    params = action.get("params", {})
+    if not isinstance(params, dict):
+        raise InvalidManagerAction("action params must be an object")
+    if kind == "transfer_offer" and type(params.get("accept")) is not bool:
+        raise InvalidManagerAction("accept must be a JSON boolean")
+    if kind == "book_recovery":
+        tier = params.get("tier")
+        if not isinstance(tier, str) or tier not in recovery.TIER_IDS:
+            raise InvalidManagerAction("unknown recovery tier")
+    list_fields = {
+        "set_lineup": ("player_ids",),
+        "set_game_plan": ("starter_ids",),
+        "tournament_registration": ("player_ids",),
+        "set_leadership": ("council_ids",),
+    }.get(kind, ())
+    for name in list_fields:
+        if name in params and (
+            not isinstance(params[name], list)
+            or not all(isinstance(value, str) for value in params[name])
+        ):
+            raise InvalidManagerAction(f"{name} must be an array of player ids")
+    try:
+        if kind in ("set_tactics", "set_game_plan"):
+            for dial in _TACTIC_DIALS:
+                if dial in params and not (kind == "set_game_plan" and params[dial] is None):
+                    float(params[dial])
+        elif kind == "negotiate_offer":
+            int(params.get("salary", 0))
+            int(params.get("weeks", 0))
+    except (ValueError, TypeError, OverflowError) as exc:
+        raise InvalidManagerAction(f"malformed {kind} parameters: {exc}") from exc
+    return kind, params
+
+
 @dataclass(frozen=True)
 class StepResult:
     observation: dict[str, Any]
@@ -720,13 +765,8 @@ class HeadlessManagerEnv:
             )
 
     def step(self, action: dict[str, Any]) -> StepResult:
+        kind, params = validate_manager_action(action)
         decision_observation = self.observe()
-        kind = str(action.get("kind", ""))
-        params = action.get("params", {})
-        if kind not in SUPPORTED_ACTIONS:
-            raise InvalidManagerAction(f"unsupported manager action {kind!r}")
-        if not isinstance(params, dict):
-            raise InvalidManagerAction("action params must be an object")
 
         before = telemetry.state_features(self.gs, self.team_id)
         before_season = self.gs.season
@@ -1104,7 +1144,7 @@ class HeadlessManagerEnv:
                 params = {"player_id": pid}
             elif kind == "transfer_offer":
                 pid = str(params.get("player_id", ""))
-                accept = bool(params.get("accept", False))
+                accept = params["accept"]
                 to_team = str(params.get("to_team", "")) or None
                 ok, message = market.respond_offer(self.gs, pid, accept, to_team)
                 if not ok:

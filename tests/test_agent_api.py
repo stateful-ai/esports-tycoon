@@ -5,6 +5,9 @@ request context bound — the house pattern for web endpoint tests."""
 from __future__ import annotations
 
 import pytest
+import threading
+from concurrent.futures import ThreadPoolExecutor
+from types import SimpleNamespace
 
 fastapi = pytest.importorskip("fastapi")
 from fastapi import HTTPException
@@ -76,6 +79,109 @@ def test_malformed_nested_parameters_are_recoverable(lobby, pace):
     assert err.value.status_code == 422
     assert err.value.detail
     assert game.gs.model_dump_json() == before
+
+
+@pytest.mark.parametrize("accept", ["false", "true", 0, 1, None, [], {}])
+def test_http_transfer_requires_boolean_before_mutation(lobby, accept):
+    from esports_sim.manager.state import TransferOffer
+
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=922))
+    _as(lobby, SID_A)
+    game = lobby.games[created["code"]]
+    seller = "team_nexus"
+    buyer = next(t for t in sorted(game.gs.teams) if t != seller)
+    pid = game.gs.teams[seller].player_ids[0]
+    game.gs.transfer_offers.append(TransferOffer(
+        player_id=pid, from_team=seller, to_team=buyer,
+        fee=10_000, expires_week=game.gs.week + 2,
+    ))
+    before = game.gs.model_dump_json()
+    with pytest.raises(HTTPException) as err:
+        server.agent_act(server.AgentActBody(kind="transfer_offer", params={
+            "player_id": pid, "to_team": buyer, "accept": accept,
+        }))
+    assert err.value.status_code == 422
+    assert "JSON boolean" in err.value.detail
+    assert game.gs.model_dump_json() == before
+
+
+@pytest.mark.parametrize("first_advances", [False, True])
+def test_agent_advance_response_is_captured_before_concurrent_votes(lobby, monkeypatch, first_advances):
+    _as(lobby, SID_A)
+    created = server.agent_create(server.AgentCreateBody(team_id="team_nexus", seed=923))
+    game = lobby.games[created["code"]]
+    a = "team_nexus"
+    b = next(t for t in sorted(game.gs.teams) if t != a and game.gs.teams[t].tier == 1)
+    _as(lobby, SID_B)
+    server.agent_join(server.AgentJoinBody(code=game.code, team_id=b))
+    if first_advances:
+        game.ready.add(b)
+
+    # Resolve only the coordinator boundary, so the concurrency regression
+    # controls the interleaving without a match simulation or background work.
+    def tick(gs, gd, ready, **kwargs):
+        week = gs.week
+        gs.week += 1
+        return SimpleNamespace(
+            report=SimpleNamespace(season=gs.season, week=week),
+            summaries={t: {"week": week} for t in gs.human_team_ids},
+        )
+    monkeypatch.setattr(server.agent_play, "tick_shared_week", tick)
+    monkeypatch.setattr(server, "_weekly_development_report", lambda *args: {})
+    monkeypatch.setattr(server, "_report_view", lambda *args: {"advanced": True})
+    monkeypatch.setattr(server.review_history, "append_reviews", lambda *args: None)
+    monkeypatch.setattr(server.llm_social, "enqueue", lambda *args: None)
+    monkeypatch.setattr(game, "autosave_tick", lambda: None)
+    released = threading.Event()
+    competitor_done = threading.Event()
+    underlying = threading.Lock()
+    original_thread = []
+
+    class InterleavingLock:
+        triggered = False
+
+        def __enter__(self):
+            underlying.acquire()
+
+        def __exit__(self, *args):
+            underlying.release()
+            if threading.get_ident() == original_thread[0] and not self.triggered:
+                self.triggered = True
+                released.set()
+                assert competitor_done.wait(10)
+
+    monkeypatch.setattr(game, "lock", InterleavingLock())
+
+    def original():
+        original_thread.append(threading.get_ident())
+        _as(lobby, SID_A)
+        return server.agent_act(server.AgentActBody(kind="advance"))
+
+    def competitor():
+        assert released.wait(10)
+        try:
+            _as(lobby, SID_B)
+            server.agent_act(server.AgentActBody(kind="advance"))
+            if first_advances:
+                _as(lobby, SID_A)
+                server.agent_act(server.AgentActBody(kind="advance"))
+        finally:
+            competitor_done.set()
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        concurrent = pool.submit(competitor)
+        response = pool.submit(original).result(timeout=20)
+        concurrent.result(timeout=20)
+    if first_advances:
+        assert response["advanced"]
+        assert response["tick"]["week"] == 1
+        assert game.agent_last_tick[a]["week"] == 2
+    else:
+        assert not response["advanced"]
+        assert response["waiting_on"] == [b]
+        assert response["ready"] == [a]
+        assert not game.ready
 
 
 def test_join_guards_taken_seats_and_draft_worlds(lobby):

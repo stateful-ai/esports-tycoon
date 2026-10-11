@@ -11,6 +11,9 @@ from esports_sim.manager.learned_manager_policy import (
     conditioned_features,
 )
 from esports_sim.manager.manager_policy import generate_profile
+from esports_sim.manager.decision_env import (
+    HeadlessManagerEnv, InvalidManagerAction, validate_manager_action,
+)
 from esports_sim.playtest.session import PlaytestSession
 
 
@@ -37,6 +40,26 @@ def test_learned_recovery_refuses_unusable_masks(legal):
     with pytest.raises(ValueError):
         policy._build_action({"legal_actions": {"book_recovery": legal}},
                              "book_recovery", np.zeros(1))
+
+
+@pytest.mark.campaign
+@pytest.mark.parametrize("tier", [None, "", "unknown", [], {}, False])
+def test_malformed_recovery_is_refused_before_observation(tier, monkeypatch):
+    env = object.__new__(HeadlessManagerEnv)
+
+    def unexpected_observation():
+        raise AssertionError("malformed recovery must fail before observing")
+
+    monkeypatch.setattr(env, "observe", unexpected_observation)
+    with pytest.raises(InvalidManagerAction, match="recovery tier"):
+        env.step({"kind": "book_recovery", "params": {"tier": tier}})
+
+
+@pytest.mark.campaign
+@pytest.mark.parametrize("tier", ["day", "retreat"])
+def test_shared_preflight_retains_valid_recovery_parameters(tier):
+    action = {"kind": "book_recovery", "params": {"tier": tier}}
+    assert validate_manager_action(action) == ("book_recovery", {"tier": tier})
 
 
 @pytest.mark.campaign
