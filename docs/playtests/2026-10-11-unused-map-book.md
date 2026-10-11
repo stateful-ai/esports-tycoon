@@ -70,6 +70,30 @@ The original low-tier fixture hides the numeric edge, so its original acceptance
 did not verify higher-tier visible numeric edge wording. The original receipts
 and observations are preserved as evidence of the earlier candidate.
 
+Fresh corrected acceptance on source head
+`4bbaa16042d8e942cf7782871121402248bd79fc` used an authorized named Playwright
+CLI fallback after CUA's browser inventory became empty. Its separately logged
+before-action expectations, outcomes and usage annotations are in
+[confirmation/actions.csv](2026-10-11-unused-map-book/confirmation/actions.csv).
+Dashboard showed the final wording above; Match > Prep independently retained
+the Ascent artifact. Save succeeded with HTTP 200. Complete save bytes still
+matched the original SHA256 and all 85 decisions and snapshots remained intact.
+The fixture still hides the numeric edge; no higher-tier browser acceptance is
+claimed. No fixture was replayed.
+
+[Dashboard DOM](2026-10-11-unused-map-book/confirmation/confirmation-dashboard.yml),
+[Dashboard screenshot](2026-10-11-unused-map-book/confirmation/confirmation-dashboard.png),
+[Prep DOM](2026-10-11-unused-map-book/confirmation/confirmation-prep.yml),
+[Prep screenshot](2026-10-11-unused-map-book/confirmation/confirmation-prep.png),
+[Save DOM](2026-10-11-unused-map-book/confirmation/confirmation-save.yml), and
+[independent audit](2026-10-11-unused-map-book/confirmation/confirmation-audit.json)
+are exact original receipts from this fresh session.
+[Its manifest](2026-10-11-unused-map-book/confirmation/manifest.json) maps source
+bytes to published hashes and separates all retained other-session usage from
+the final page session. Two fresh rows have recorded usage evidence; zero new
+gameplay decisions were expected. Flywheel records 0189–0191 preserve the
+corrected causal interpretation, fresh readback and transport recovery.
+
 Flywheel inheritance used the eight most recent esports-playtest findings.
 After play, records 0182/0183 capture stored-book versus session attribution and
 unchanged accepted decisions; 0184 preserves the copied-identity recovery pain.

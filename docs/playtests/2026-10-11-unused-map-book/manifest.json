@@ -1,11 +1,12 @@
 {
   "mapping": [
     {
-      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\actions.csv",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\actions.original-three.csv",
       "published": "docs/playtests/2026-10-11-unused-map-book/actions.preannotation.csv",
       "source_sha256": "79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27",
       "published_sha256": "79713482c26f1f07fafae038c48ba538722a7dc81fcb1029c9b17140642ffc27",
-      "transform": "none; exact bytes"
+      "transform": "none; exact original three-row snapshot before later session rows were appended",
+      "source_original_location": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\actions.csv"
     },
     {
       "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\audit.json",
@@ -45,7 +46,7 @@
       "transform": "exact original tool text; excerpt where the original call filtered DOM; no retrospective browser run"
     },
     {
-      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\saves\\usage\\usage.0.jsonl",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\original-usage-end.jsonl",
       "source_sha256": "b1c8079a4a8bfa76e7126b6d23b87a507b22ed6abdbf20021940b3186e0a33b4",
       "source_line_numbers": [
         79,
@@ -101,7 +102,7 @@
       "transform": "Only analytics_status and analytics_evidence corrected to describe browser usage; annotation-receipt.json verifies every other field."
     },
     {
-      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\saves\\usage\\usage.0.jsonl",
+      "source": "C:\\Users\\aidan\\.codex\\worktrees\\unused-map-book-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-unused-map-book\\original-usage-end.jsonl",
       "source_sha256": "b1c8079a4a8bfa76e7126b6d23b87a507b22ed6abdbf20021940b3186e0a33b4",
       "source_line_numbers": [
         1,
