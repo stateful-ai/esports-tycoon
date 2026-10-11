@@ -3082,6 +3082,8 @@ def _record_meta_era(gs: GameState) -> None:
 
 
 def _run_offseason(gs: GameState, gd: GameData) -> WeekReport:
+    from esports_sim.manager import development_path
+    development_path.begin_week(gs)
     report = WeekReport(season=gs.season, week=gs.week, phase="offseason")
     tree = RngTree(gs.seed)
     rng = tree.derive("season", gs.season, "offseason")

@@ -1,0 +1,28 @@
+CONTROLLED RENDERING FIXTURE: badge bounds, not a simulated week.
+
+income 0 cr · expenses 0 cr
+
+SQUAD DEVELOPMENT · SEASON 1 · WEEK 1
+
+Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+
+Apex Weekly OVR comparison unavailable
+Auto / Normal · 0 maps
+Badges +0.07 OVR · Clutch Factor +0.50 · Composure +0.20
+Badge earned: Clutch Master · +0.07 OVR · Clutch Factor +0.50 · Composure +0.20
+Phantom Weekly OVR comparison unavailable
+Auto / Normal · 0 maps
+Badges -0.15 OVR · Clutch Factor -1.00 · Composure -0.50
+Badge earned: Choker · -0.15 OVR · Clutch Factor -1.00 · Composure -0.50
+Echo Weekly OVR comparison unavailable
+Auto / Normal · 0 maps
+No measured skill gains
+No badge changes this week
+Vortex Weekly OVR comparison unavailable
+Auto / Normal · 0 maps
+No measured skill gains
+No badge changes this week
+Ghost Weekly OVR comparison unavailable
+Auto / Normal · 0 maps
+No measured skill gains
+No badge changes this week

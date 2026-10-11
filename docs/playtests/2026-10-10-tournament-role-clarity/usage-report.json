@@ -1,0 +1,44 @@
+{
+  "attempts": 2,
+  "events": {
+    "attempt:/api/actions/lineup": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/lineup": 1,
+    "result:/api/actions/save": 1,
+    "session_start:": 2,
+    "view:club/squad": 2,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "view:tactics/prep": 3,
+    "view:tactics/strategy": 2,
+    "visible_time:club/squad": 1,
+    "visible_time:dashboard": 2,
+    "visible_time:lobby": 2,
+    "visible_time:tactics/prep": 3,
+    "visible_time:tactics/strategy": 2
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "e87ebd38f69324b5c17b02554d78f952": 0,
+    "f7f74c1b7522401f617cbb3ba807985e": 12187
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/lineup:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 2,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/squad": 492,
+    "dashboard": 1400,
+    "lobby": 634,
+    "tactics/prep": 13588,
+    "tactics/strategy": 719
+  },
+  "world_events": {
+    "26UHC": 27
+  }
+}

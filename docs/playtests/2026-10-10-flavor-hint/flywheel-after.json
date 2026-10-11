@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0101",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor409 recovery follows visible dashboard labels",
+    "problem": "Old recovery text pointed to removed Action required.",
+    "solution": "Follow Dashboard then Needs you then Team moment and select Make it playful.",
+    "lesson": "Frozen recovered source browser reverified409 without state change, existing response200, then retryAdvance200 W6 to W7.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0102",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Recovery evidence distinguishes rejection from accepted actions",
+    "problem": "Recovery attempts require evidence beyond saved decisions.",
+    "solution": "Match request IDs in retained usage and compare exact27actionprefix with29actionend.",
+    "lesson": "This repeat produced2of2accepted decisions and3of3paired requests, with unchanged old action and snapshot prefixes.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0103",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Worktree loss can erase playtest history",
+    "problem": "Original uncommitted checkout lost git metadata and five of eight original CSVrows.",
+    "solution": "Preserve remnants and exact surviving transcript rows, mark history gap, and perform fresh prelogged acceptance.",
+    "lesson": "Never reconstruct missing intent timestamps from request receipt times; fresh independent session provides complete current evidence.",
+    "confidence": "high",
+    "source": "2026-10-10-flavor-hint isolated browser8472 world26UHC seed2038 W6-W7",
+    "code": "",
+    "tags": [
+      "flavor",
+      "recovery",
+      "browser"
+    ],
+    "kind": "pain-point"
+  }
+]
