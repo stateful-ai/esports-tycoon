@@ -58,3 +58,6 @@ The previously launched full suite completed with 1279 passed in 6275.09s (1:44:
 
 
 Root publication recovery recorded the two learnings and one pain point in the local Agora esports-playtest flywheel, using the existing acceptance evidence. This occurred after the original session; it does not retrospectively establish pre-play inheritance. Original agent tool unavailability remains qualified. Actual entry IDs and recording time are preserved in 2026-10-10-gap31-evidence/late-flywheel-recovery.json.
+
+
+Current-head review correction: inline4239895510 correctly identified that the CLI still labeled total report income as sponsor income. The CLI now calls this amount income; named tournament-prize notes continue to identify recipients and amounts. No payout or GameState behavior changed. The earlier1279-test native receipt precedes this one-line CLI correction; its625-file source freeze is historical, and the CLI path now differs. No new local tests were run per direct user instruction. Exact updated-head remote CI remains required.
