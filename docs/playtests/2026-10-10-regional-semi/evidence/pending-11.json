@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-10-10-regional-semi",
+  "step": 11,
+  "started_at_utc": "2026-10-10T23:12:27.425+00:00",
+  "finished_at_utc": "",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "working_tree_dirty": "true",
+  "game_version": "0.0.1",
+  "model": "unknown (not exposed)",
+  "effort": "unknown (not exposed)",
+  "surface": "offline_audit",
+  "world_code": "26UHC",
+  "seed": "2038",
+  "game_time": "S1 W16 playoffs",
+  "intent": "Complete the failed quantitative audit using actual retained target vocabulary",
+  "action": "Inspect bounded request records; correct audit expectation, export reports, preserve evidence, record flywheel and stop only owned8499server",
+  "expected_outcome": "All retained request pairs are identified without guessing target names; accepted coverage remains3/3; original blocked audit preserved; server cleanup confirmed",
+  "actual_outcome": "",
+  "result": "",
+  "evidence": "",
+  "analytics_status": "",
+  "analytics_evidence": ""
+}

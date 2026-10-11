@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-11T09:16:04.777262+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-roster-recovery",
+    "select",
+    "f1e1028",
+    "rest"
+  ],
+  "stdout_bytes": 275,
+  "stderr_bytes": 0
+}

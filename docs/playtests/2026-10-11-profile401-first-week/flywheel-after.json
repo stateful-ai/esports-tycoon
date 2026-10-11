@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0246",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Corrected profile first observation and weekly growth coexist",
+    "problem": "One snapshot previously implied a measured flat interval.",
+    "solution": "Nightsurge visibly shows first observation S2W4, no earlier comparison; latest practice+0.31 bench+0.01 badges0.00 remain visible.",
+    "lesson": "First-observation availability and latest-week sources are separate truths; three season matches are separate from zero latest-week senior maps.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0247",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Measured season skill flatness differs from cumulative regression",
+    "problem": "A flat-player expectation overstated Hollowlock cumulative history.",
+    "solution": "Hollowlock shows CA63.0 to62.8 S1W5 toS2W4 across23 observations; season skills S2W0 toS2W4 are measurably flat.",
+    "lesson": "Interpret each dated scope independently and preserve corrections; unchanged save120 actions27 snapshots bounds this read-only session.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0248",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Expected flat wording caused one browser locator timeout",
+    "problem": "Scroll target expected No measurable CA change, absent for Hollowlock cumulative regression.",
+    "solution": "Preserved30s timeout in step5 and added step6 correction using observed season skill text; did not repeat failed locator.",
+    "lesson": "Use observed wording and screenshots for browser navigation; source expectations cannot establish actual visual acceptance.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  }
+]

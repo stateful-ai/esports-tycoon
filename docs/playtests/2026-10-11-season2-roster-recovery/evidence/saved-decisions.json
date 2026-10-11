@@ -1,0 +1,29 @@
+[
+  {
+    "index": 110,
+    "season": 2,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_dev_plan",
+    "params": {
+      "dev_focus": "rest",
+      "intensity": "normal",
+      "learning_language": "",
+      "player_id": "vortex"
+    },
+    "source": "web"
+  },
+  {
+    "index": 111,
+    "season": 2,
+    "week": 3,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

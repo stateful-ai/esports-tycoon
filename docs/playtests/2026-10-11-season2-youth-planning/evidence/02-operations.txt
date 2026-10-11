@@ -1,0 +1,9 @@
+### Ran Playwright code
+```js
+await page.getByRole('button', { name: 'Operations' }).click();
+```
+### Page
+- Page URL: http://127.0.0.1:8537/
+- Page Title: esports-sim
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T09-46-19-120Z.yml)

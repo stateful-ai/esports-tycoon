@@ -258,23 +258,40 @@ function helpGlossaryMarkup() {
   ).join("")}</div><div class="help-note"><b>Hover for detail</b><span>Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.</span></div>`;
 }
 
+let helpUsageSection = null;
+
+function recordHelpSection(section) {
+  const overlay = document.getElementById("help");
+  if (!overlay || overlay.classList.contains("hidden") || helpUsageSection === section) return;
+  helpUsageSection = section;
+  window.Usage?.interaction(`handbook/section_${section.replace("-", "_")}`);
+}
+
 function renderHelp(section = "first-week", selected = App.tab) {
   const body = document.getElementById("help-body");
   if (!body) return;
+  section = ["first-week", "screens", "glossary"].includes(section) ? section : "first-week";
   document.querySelectorAll("[data-help-section]").forEach((button) => {
     button.classList.toggle("active", button.dataset.helpSection === section);
   });
   body.innerHTML = section === "screens"
     ? helpScreensMarkup(selected)
     : section === "glossary" ? helpGlossaryMarkup() : helpFirstWeekMarkup();
+  recordHelpSection(section);
 }
 
 function openHelp(section = "first-week", selected = App.tab, automatic = false) {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!document.getElementById("help-body")) return;
+  const opening = overlay.classList.contains("hidden");
   overlay.dataset.automatic = automatic ? "true" : "false";
-  renderHelp(section, selected);
   overlay.classList.remove("hidden");
+  if (opening) {
+    helpUsageSection = null;
+    window.Usage?.interaction("handbook/open");
+  }
+  renderHelp(section, selected);
   overlay.setAttribute("aria-hidden", "false");
   overlay.querySelector("[data-help-section].active")?.focus();
 }
@@ -282,6 +299,8 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
 function closeHelp() {
   const overlay = document.getElementById("help");
   if (!overlay) return;
+  if (!overlay.classList.contains("hidden")) window.Usage?.interaction("handbook/close");
+  helpUsageSection = null;
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
   if (overlay.dataset.automatic === "true") {
@@ -1156,8 +1175,37 @@ async function clubOps(v, sub) {
   // Academy: the affiliate is a real tier-2 team with real results and minutes.
   const ac = el("div", "card ws-6");
   const a = d.academy;
+  const academyContext = `${App.mp?.code || "local"}:${a.parent_id}`;
   ac.innerHTML = `<h2>Academy <span class="pill">level ${a.level}</span></h2>` +
-    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}. Promotions and send-downs obey the market window.</p>`;
+    `<p class="muted">Affiliate: ${a.affiliate_id ? tlink(a.affiliate_id, a.affiliate_name) : "None"}.</p>` +
+    `<p class="muted">${esc(a.movement_detail)}</p>`;
+  if (App.academyMoveError?.context === academyContext) {
+    const error = el("p", "alert");
+    error.setAttribute("role", "alert");
+    error.textContent = App.academyMoveError.message;
+    ac.appendChild(error);
+  }
+  const moveButton = (p, direction, label) => {
+    const availability = p[direction];
+    const b = el("button", "btn btn-sm", label);
+    b.disabled = !availability.allowed;
+    b.title = availability.allowed ? label : availability.reason;
+    b.onclick = async () => {
+      b.disabled = true;
+      try {
+        const r = await api("/api/actions/academy_move", { player_id: p.id, direction });
+        App.academyMoveError = null;
+        toast(r.message);
+      } catch (error) {
+        App.academyMoveError = {
+          context: academyContext,
+          message: `Academy move failed: ${error.message || "Request failed. Please try again."}`,
+        };
+      }
+      refresh();
+    };
+    return b;
+  };
   if (a.next_upgrade_cost) {
     const up = el("button", "btn btn-sm", `Upgrade · ${money(a.next_upgrade_cost)}`);
     up.onclick = async () => { const r = await api("/api/actions/academy_upgrade", {}); toast(r.message); refresh(); };
@@ -1167,22 +1215,20 @@ async function clubOps(v, sub) {
   for (const p of a.roster || []) {
     const row = el("div", "entity");
     row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))} · CA ${p.ability} / PA ${p.potential_band[0]}–${p.potential_band[1]}</span>`;
-    const b = el("button", "btn btn-sm", "Promote");
-    b.disabled = !p.owned;
-    b.title = p.owned ? "Promote to the first team" : "Another parent organization holds this pathway";
-    b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "promote" }); toast(r.message); refresh(); };
-    row.appendChild(b); academyRows.appendChild(row);
+    row.appendChild(moveButton(p, "promote", "Promote"));
+    academyRows.appendChild(row);
+    if (!p.promote.allowed) academyRows.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.promote.reason)}`));
   }
   ac.appendChild(academyRows);
-  const eligibleDown = (d.registration.players || []).filter((p) => p.age <= 23);
+  const eligibleDown = a.send_down_roster || [];
   if (eligibleDown.length) {
     ac.appendChild(el("p", "microlabel", "First team pathways"));
     for (const p of eligibleDown) {
       const row = el("div", "entity");
       row.innerHTML = `<span class="entity-name">${plink(p.id, p.handle)}</span><span class="entity-meta">${p.age} · ${esc(humanize(p.role))}</span>`;
-      const b = el("button", "btn btn-sm", "Send down");
-      b.onclick = async () => { const r = await api("/api/actions/academy_move", { player_id: p.id, direction: "send_down" }); toast(r.message); refresh(); };
-      row.appendChild(b); ac.appendChild(row);
+      row.appendChild(moveButton(p, "send_down", "Send down"));
+      ac.appendChild(row);
+      if (!p.send_down.allowed) ac.appendChild(el("p", "muted", `${esc(p.handle)}: ${esc(p.send_down.reason)}`));
     }
   }
   ws.appendChild(ac);
@@ -1452,14 +1498,9 @@ async function clubOps(v, sub) {
       const activeGrid = el("div", "row", null);
       activeGrid.style.cssText = "display:flex; flex-wrap:wrap; gap:12px;";
       for (const prom of active) {
-        const duration = prom.initial_duration || 1;
-        const pct = Math.max(0, Math.min(100, Math.round((prom.weeks_left / duration) * 100)));
+        const assessment = prom.play_time_assessment;
+        const pct = assessment ? assessment.fulfillment_percent : (prom.time_remaining_percent ?? 0);
         const pPlayer = rd.players.find(p => p.id === prom.player_id) || { handle: humanize(prom.player_id) };
-        
-        let progressInfo = "";
-        if (prom.promise_type === "play_time") {
-          progressInfo = ` · Dressed ${prom.dressed_count} weeks`;
-        }
         
         const card = el("div", "card ws-4", null);
         card.style.cssText = "padding:10px; background:var(--es-color-bg-alt, #0b0e14); border:1px solid var(--es-color-border, #1f2a3d); border-radius:4px;";
@@ -1467,10 +1508,14 @@ async function clubOps(v, sub) {
           `<strong>${plink(pPlayer.id, pPlayer.handle)}</strong>: ` +
           `<span style="font-size:0.85em; color:var(--es-color-accent, #00f0ff);">${esc(humanize(prom.promise_type))}</span>` +
         `</div>` +
-        `<div style="font-size:0.9em; margin:6px 0;">Target: ${prom.target_value || "N/A"}${progressInfo}</div>` +
-        `<div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:4px;">` +
-          `<span>Progress</span><span>${prom.weeks_left} weeks left</span>` +
-        `</div>` +
+        (assessment ?
+          `<div class="promise-assessment" style="font-size:0.9em; margin:6px 0;">` +
+            `<p>${esc(assessment.target_label)}</p><p>${esc(assessment.progress_label)}</p>` +
+            `<p>${esc(assessment.deadline_label)}</p><p>${esc(assessment.next_evaluation_label)}</p>` +
+            `<p class="muted">${esc(assessment.counting_label)}</p></div>` :
+          `<div style="font-size:0.9em; margin:6px 0;">Target: ${esc(prom.target_value ?? "N/A")}</div>` +
+          `<div class="muted">${prom.weeks_left} weeks left</div>`) +
+        `<div class="muted">${assessment ? "Progress toward dressed-week requirement" : "Time remaining"}</div>` +
         `<div class="pf-hbar" style="height:6px; background:var(--es-color-bg, #05070a); border-radius:3px; overflow:hidden;">` +
           `<i style="display:block; height:100%; width:${pct}%; background:var(--es-color-accent, #00f0ff); border-radius:3px;"></i>` +
         `</div>`;
@@ -2425,8 +2470,9 @@ async function dashboard(v) {
   // its own ledger rendering.
   {
     const yc = lmr && lmr.contested ? lmr.your_calls : null;
+    const seriesNotes = lmr && lmr.contested ? (lmr.series_notes || []) : [];
     const ledger = s.decision_ledger || [];
-    if (yc || ledger.length) {
+    if (yc || seriesNotes.length || ledger.length) {
       const card = el("div", "card");
       card.appendChild(el("h2", "", "Your calls"));
       if (yc) {
@@ -2468,14 +2514,23 @@ async function dashboard(v) {
         if (yc.prep) {
           const bits = [];
           if (yc.prep.edge != null) bits.push(`prep edge <b class="mono">+${yc.prep.edge.toFixed(2)}</b> applied`);
-          if ((yc.prep.maps_played || []).length) bits.push(`book on ${yc.prep.maps_played.map(esc).join(", ")}`);
-          if ((yc.prep.maps_missed || []).length) bits.push(`prepped ${yc.prep.maps_missed.map(esc).join(", ")} (never played)`);
+          if ((yc.prep.maps_played || []).length) bits.push(`stored book on ${yc.prep.maps_played.map(esc).join(", ")} (played)`);
+          if ((yc.prep.maps_missed || []).length) bits.push(`stored book on ${yc.prep.maps_missed.map(esc).join(", ")} (not played)`);
           if (bits.length) yrow(`Preparation: ${bits.join(" · ")}`);
         }
         if (yl.childElementCount) {
-          card.appendChild(el("span", "es-scout-lab muted", "Last match"));
+          card.appendChild(el("span", "es-scout-lab muted", "Last match · Initial plan"));
           card.appendChild(yl);
         }
+      }
+      if (seriesNotes.length) {
+        card.appendChild(el("span", "es-scout-lab muted", "Last match · Series notes"));
+        card.appendChild(el("p", "muted", "Recorded calls for both teams, including applied between-map responses."));
+        const notes = el("div", "es-review-calls");
+        for (const note of seriesNotes) {
+          notes.appendChild(el("div", "es-review-call", `${esc(note)}`));
+        }
+        card.appendChild(notes);
       }
       if (ledger.length) {
         card.appendChild(el("span", "es-scout-lab muted", "Decisions settled"));
@@ -3471,10 +3526,11 @@ function developmentReportCard(report) {
   card.innerHTML = `<div class="dev-report-head">
       <div><h2>Development Report</h2><p class="muted">Season ${report.season} · ${range}</p></div>
       <div class="dev-report-summary">
-        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">Squad OVR ${signed(report.overall_delta)}</span>
+        <span class="chip ${report.overall_delta > 0 ? "tone-good" : report.overall_delta < 0 ? "tone-bad" : ""}">${report.overall_delta == null ? "OVR comparison unavailable" : `Compared OVR ${signed(report.overall_delta)} · ${report.compared_players} players`}</span>
         <span class="chip tone-good">${report.grown} grown</span>
         <span class="chip tone-bad">${report.regressed} regressed</span>
         <span class="chip">${report.steady} steady</span>
+        ${report.first_observations ? `<span class="chip">${report.first_observations} first observations</span>` : ""}
       </div>
     </div>`;
 
@@ -3508,14 +3564,16 @@ function developmentReportCard(report) {
     }).join(" ");
     if (!p.attribute_tracking) {
       changes = '<span class="muted">Skill tracking starts with the next snapshot</span>';
+    } else if (!p.comparison_available) {
+      changes = '<span class="muted">First observation — no earlier skill comparison</span>';
     } else if (!changes) {
       changes = '<span class="muted">No skill changes of 0.1 or more</span>';
     }
     body.appendChild(el("tr", "", `<td><b>${plink(p.id, p.handle)}</b></td>
-      <td class="muted">W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts</td>
+      <td class="muted">${p.comparison_available ? `W${p.start_week}–W${p.end_week} · ${p.tracked_points} pts` : `First observation · W${p.end_week}`}</td>
       <td class="num">${Number(p.overall_start).toFixed(1)}</td>
       <td class="num">${Number(p.overall_current).toFixed(1)}</td>
-      <td class="num"><span class="${tone}">${signed(p.overall_delta)}</span></td>
+      <td class="num"><span class="${tone}">${p.comparison_available ? signed(p.overall_delta) : "No earlier comparison"}</span></td>
       <td><div class="dev-change-list">${changes}</div></td><td class="dev-week-feedback">${feedback}</td>`));
   }
   table.appendChild(body);
@@ -7835,18 +7893,12 @@ const FinancesTab = ({ onOpenBrand }) => {
                   <td>Base sponsorship</td>
                   <td class="num">${money(b.sponsors_base)}</td>
                 </tr>
-                <tr>
-                  <td>Title sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.title || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Jersey sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.jersey || 0)}</td>
-                </tr>
-                <tr>
-                  <td>Peripheral sponsor</td>
-                  <td class="num">${money(b.sponsors_by_slot.peripheral || 0)}</td>
-                </tr>
+                ${Object.entries(b.sponsors_by_slot).map(([slot, amount]) => html`
+                  <tr>
+                    <td>${humanize(slot)} sponsor</td>
+                    <td class="num">${money(amount)}</td>
+                  </tr>
+                `)}
                 <tr>
                   <td>Merchandise</td>
                   <td class="num">${money(b.merch)}</td>

@@ -1,0 +1,75 @@
+[
+  {
+    "index": 68,
+    "season": 1,
+    "week": 16,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "media_choice",
+    "params": {
+      "choice_id": "respect_rival",
+      "event_id": "d2c6ee7fa625f074"
+    },
+    "source": "web"
+  },
+  {
+    "index": 69,
+    "season": 1,
+    "week": 16,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "1",
+      "created_week": "16",
+      "fixture_id": "s1amfinal",
+      "id": "82d995be264afa5a",
+      "intensity": "light",
+      "map_id": "haven",
+      "objective": "anti_exec",
+      "opponent_id": "team_vanguard",
+      "partner_id": "team_adriatic_sirens",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 70,
+    "season": 1,
+    "week": 16,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s1amfinal",
+      "focus_target": "pulse",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_vanguard",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 71,
+    "season": 1,
+    "week": 16,
+    "phase": "playoffs",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

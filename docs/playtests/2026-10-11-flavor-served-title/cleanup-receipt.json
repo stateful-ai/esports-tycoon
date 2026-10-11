@@ -1,0 +1,46 @@
+{
+  "time_utc": "2026-10-11T08:26:07.533400+00:00",
+  "owned_family": [
+    {
+      "pid": 26496,
+      "cmdline": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ],
+      "cwd": "C:\\WINDOWS",
+      "create_time": 1791707029.510759
+    },
+    {
+      "pid": 39928,
+      "cmdline": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8541",
+        "--no-browser"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010\\runs\\playtests\\2026-10-11-flavor-served-title",
+      "create_time": 1791707029.5369878
+    },
+    {
+      "pid": 18768,
+      "cmdline": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8541",
+        "--no-browser"
+      ],
+      "cwd": "C:\\Users\\aidan\\workspace\\esports-flavor-feedback-20261010\\runs\\playtests\\2026-10-11-flavor-served-title",
+      "create_time": 1791707029.5062308
+    }
+  ],
+  "all_stopped": true,
+  "port8541_free": true,
+  "browser_closed": true,
+  "other_servers_touched": false
+}

@@ -1,0 +1,265 @@
+{
+  "at_utc": "2026-10-11T06:32:59.952229+00:00",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "rows": 11,
+  "outcomes": {
+    "partial": 2,
+    "met": 9
+  },
+  "analytics": {
+    "recorded": 10,
+    "not_instrumented": 1
+  },
+  "all19_observation_fields_preserved": true,
+  "raw_before_analytics_sha256": "eb791f1c848d89234f964258be6f69b0a910cd24834948a89aef57d01e43c7c2",
+  "annotated_csv_sha256": "644cab4c372c275881e47880400de7f2594f74472b1bc40761a0ea182ffa8958",
+  "local_tests_launched": false,
+  "source_paths_unchanged": 630,
+  "accepted_decisions_before": 85,
+  "accepted_decisions_after": 90,
+  "prior_decision_prefix_preserved": true,
+  "new_decisions": [
+    {
+      "season": 1,
+      "week": 21,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "1",
+        "created_week": "21",
+        "fixture_id": "s1csf0",
+        "id": "8c04fe42929f7308",
+        "intensity": "light",
+        "map_id": "haven",
+        "objective": "anti_exec",
+        "opponent_id": "team_vanguard",
+        "partner_id": "team_coral_sea_drakes",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 21,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "30.0",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s1csf0",
+        "focus_target": "",
+        "map_control": "70.0",
+        "n_dials": "4",
+        "one_match_lineup": "False",
+        "opponent": "team_vanguard",
+        "pace": "30.0",
+        "site_focus": "",
+        "starter_ids": "[]",
+        "team_talk": "",
+        "util_discipline": "70.0"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 21,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "series_directive",
+      "params": {
+        "clear": "False",
+        "fixture_id": "s1csf0",
+        "response": "stabilize",
+        "substitute_in": "",
+        "substitute_out": "",
+        "trigger": "after_loss"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 21,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "sponsor_respond",
+      "params": {
+        "accept": "True",
+        "brand": "Redline Chairs",
+        "slot": "peripheral",
+        "structure": "upfront"
+      },
+      "source": "web"
+    }
+  ],
+  "snapshots_before": 20,
+  "snapshots_after": 21,
+  "snapshot_prefix_preserved": true,
+  "save_sha256": "9f66e859da37c117077091eeaa4fda946ab04af42bef01c74e7a552d069324c8",
+  "bank_before": 1814812,
+  "bank_before_sponsor": 1880533,
+  "bank_final": 1986533,
+  "weekly_net65721_matches_display": true,
+  "sponsor_upfront106000_matches_display": true,
+  "preparation": {
+    "plan_id": "8c04fe42929f7308",
+    "team_id": "team_nexus",
+    "fixture_id": "s1csf0",
+    "opponent_id": "team_vanguard",
+    "partner_id": "team_coral_sea_drakes",
+    "map_id": "haven",
+    "objective": "anti_exec",
+    "intensity": "light",
+    "season": 1,
+    "week": 21,
+    "status": "completed",
+    "finding_code": "opponent_attack_pressure",
+    "finding": "The opponent has won 56.8% of recorded attack rounds on haven.",
+    "evidence": {
+      "own_map_samples": 3,
+      "opponent_map_samples": 4,
+      "partner_map_samples": 6,
+      "own_attack_win_pct": 46.2,
+      "own_defense_win_pct": 57.1,
+      "opponent_attack_win_pct": 56.8,
+      "opponent_defense_win_pct": 72.5,
+      "partner_map_win_pct": 33.3,
+      "scouting_confidence": 0.5,
+      "average_stamina": 95.1,
+      "average_morale": 96.6,
+      "rotation_candidate_id": "fa_0"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_13",
+      "ghost",
+      "vortex"
+    ],
+    "knowledge_key": "antistrat:team_vanguard",
+    "knowledge_gain": 1.15,
+    "stamina_cost": 1.5,
+    "morale_delta": 0.2,
+    "chemistry_delta": 0.2,
+    "artifact_label": "haven anti-exec book +1.1",
+    "prep_edge_contribution": 0.0046,
+    "dev_suggestion_player_id": "fa_0",
+    "dev_suggestion": "Map mastery projects Hollowlock as a bench option for haven; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  "calls_initial_plan": {
+    "plan_set": true,
+    "dials": {
+      "aggression": 30.0,
+      "pace": 30.0,
+      "util_discipline": 70.0,
+      "map_control": 70.0
+    },
+    "base_dials": {
+      "aggression": 50.0,
+      "map_control": 50.0,
+      "pace": 50.0,
+      "util_discipline": 50.0
+    },
+    "site_focus": "",
+    "focus_target": "",
+    "team_talk": "",
+    "talk_avg_delta": 0.0,
+    "lineup_override": false,
+    "picked": [],
+    "benched": [],
+    "picked_ratings": {},
+    "prep_edge": 1.066,
+    "prepped_maps_played": [
+      "haven",
+      "ascent",
+      "lotus"
+    ],
+    "prepped_maps_missed": []
+  },
+  "series_notes": [
+    "VGD: targeting Vortex.",
+    "VGD: stabilize response after map 1.",
+    "NXS: stabilize response after map 2."
+  ],
+  "public_series_notes_verified": true,
+  "fixture_results": [
+    {
+      "map": "haven",
+      "score_vanguard": 8,
+      "score_nexus": 13,
+      "own_ids": [
+        "apex",
+        "echo",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ]
+    },
+    {
+      "map": "ascent",
+      "score_vanguard": 13,
+      "score_nexus": 6,
+      "own_ids": [
+        "apex",
+        "echo",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ]
+    },
+    {
+      "map": "lotus",
+      "score_vanguard": 13,
+      "score_nexus": 7,
+      "own_ids": [
+        "apex",
+        "echo",
+        "fa_13",
+        "ghost",
+        "vortex"
+      ]
+    }
+  ],
+  "usage_events": 80,
+  "usage_baseline_events": 0,
+  "page_sessions": 2,
+  "paired_requests": 6,
+  "http_successes": 6,
+  "unmatched_requests": 0,
+  "views": {
+    "lobby": 2,
+    "dashboard": 2,
+    "tactics/strategy": 2,
+    "tactics/prep": 2,
+    "tactics/gameplan": 1,
+    "company/finances": 2,
+    "company/brand": 1,
+    "season/league": 1,
+    "season/fixtures": 1
+  },
+  "limits": [
+    "Ten browser rows have coarse stream evidence; source audit is outside both streams. Attempts are not a conversion denominator for five accepted decisions.",
+    "Two page sessions include identity-restoration/lobby harness activity; empty baseline has no copied usage history. Visibility is not attention; receipt context is post-action week when processed.",
+    "The initial four-dial recap is a stored plan; applied between-map notes are independently visible in Season and savedfixture. No causal win/loss claim.",
+    "Dashboard coaching/scouting, locked-map and stored-book wording reproduce existing owned PRs358/381/383; series form reset reproduces378. Gap37 is debrief discoverability only, its own owner.",
+    "Sponsor objective achieved status is not proof of bonus payout; this session confirms only immediate106000 and active1800/wk contract.",
+    "No local pytest or expensive gates ran."
+  ]
+}

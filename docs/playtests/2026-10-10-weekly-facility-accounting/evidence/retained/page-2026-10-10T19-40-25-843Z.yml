@@ -1,0 +1,310 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 10 · Regular — Team Nexus
+      - generic [ref=f1e6]: 333,406 cr
+      - button "Save •" [ref=f1e810] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard 1" [ref=f1e18] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f1e19]: "1"
+        - button "Inbox 16" [ref=f1e20] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e21]: "16"
+        - button "Match 2" [ref=f1e22] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e23]: "2"
+      - generic "Org" [ref=f1e24]:
+        - button "Club" [ref=f1e26] [cursor=pointer]
+        - button "Facilities" [ref=f1e27] [cursor=pointer]
+        - button "Season" [ref=f1e28] [cursor=pointer]
+        - button "Market" [ref=f1e29] [cursor=pointer]
+        - button "Stats" [ref=f1e30] [cursor=pointer]
+        - button "Company" [ref=f1e31] [cursor=pointer]
+    - main [ref=f1e32]:
+      - generic [ref=f1e811]:
+        - generic [ref=f1e812]:
+          - generic [ref=f1e813]: Facilities
+          - generic [ref=f1e814]: 333,406 cr banked · 1,500 cr/wk upkeep
+          - button "Guide" [ref=f1e815] [cursor=pointer]
+        - generic [ref=f1e816]:
+          - generic [ref=f1e817]:
+            - text: Club infrastructure
+            - heading "Build the operation behind the team" [level=2] [ref=f1e818]
+            - paragraph [ref=f1e819]: Invest in permanent departments that strengthen development, analysis, recovery, wellbeing, and commercial growth. Every level raises weekly upkeep.
+          - generic [ref=f1e820]:
+            - generic [ref=f1e821]:
+              - generic [ref=f1e822]: 1/6
+              - generic [ref=f1e823]: built
+            - generic [ref=f1e824]:
+              - generic [ref=f1e825]: "1"
+              - generic [ref=f1e826]: total levels
+        - generic [ref=f1e827]:
+          - article [ref=f1e828]:
+            - generic [ref=f1e829]:
+              - generic [ref=f1e830]:
+                - text: Planned
+                - heading "Training Centre" [level=2] [ref=f1e831]
+                - text: Unbuilt
+              - generic [ref=f1e832]:
+                - strong [ref=f1e833]: "0"
+                - generic [ref=f1e834]: /3
+            - paragraph [ref=f1e839]: A purpose-built practice wing that improves weekly player development and gives the coaching staff better tools.
+            - generic [ref=f1e840]:
+              - generic [ref=f1e841]:
+                - generic [ref=f1e842]: Coach
+                - generic [ref=f1e843] [cursor=pointer]: Ren Novak
+              - generic [ref=f1e844]: "74.1"
+            - generic [ref=f1e845]:
+              - generic [ref=f1e846]: Current benefits
+              - generic "Applied after coaching and training-plan effects." [ref=f1e847]:
+                - generic [ref=f1e848]:
+                  - generic [ref=f1e849]: Weekly development
+                  - generic [ref=f1e850]: Applied after coaching and training-plan effects.
+                - strong [ref=f1e851]: +0%
+            - generic [ref=f1e852]:
+              - generic [ref=f1e853]:
+                - generic [ref=f1e854]: Next upgrade
+                - generic [ref=f1e855]: L1 · Practice Lab
+              - generic "Applied after coaching and training-plan effects." [ref=f1e856]:
+                - generic [ref=f1e857]:
+                  - generic [ref=f1e858]: Weekly development
+                  - generic [ref=f1e859]: Applied after coaching and training-plan effects.
+                - strong [ref=f1e860]: +6%
+            - generic [ref=f1e861]:
+              - generic [ref=f1e862]:
+                - generic [ref=f1e863]: 150,000 cr
+                - generic [ref=f1e864]: 1,800 cr/wk total upkeep
+              - button "Build" [ref=f1e865] [cursor=pointer]
+          - article [ref=f1e866]:
+            - generic [ref=f1e867]:
+              - generic [ref=f1e868]:
+                - text: Planned
+                - heading "VOD Review Room" [level=2] [ref=f1e869]
+                - text: Unbuilt
+              - generic [ref=f1e870]:
+                - strong [ref=f1e871]: "0"
+                - generic [ref=f1e872]: /3
+            - paragraph [ref=f1e877]: Screens, servers, and review stations improve your Analyst's scouting throughput and unlock deeper performance reporting.
+            - generic [ref=f1e879]:
+              - generic [ref=f1e880]: Analyst
+              - text: No Analyst hired
+            - generic [ref=f1e881]:
+              - generic [ref=f1e882]: Current benefits
+              - generic "Multiplies weekly scouting progress." [ref=f1e883]:
+                - generic [ref=f1e884]:
+                  - generic [ref=f1e885]: Analyst scouting efficiency
+                  - generic [ref=f1e886]: Multiplies weekly scouting progress.
+                - strong [ref=f1e887]: +0%
+              - generic "box scores only" [ref=f1e888]:
+                - generic [ref=f1e889]:
+                  - generic [ref=f1e890]: Reporting access
+                  - generic [ref=f1e891]: box scores only
+                - strong [ref=f1e892]: Tier 0/3
+            - generic [ref=f1e893]:
+              - generic [ref=f1e894]:
+                - generic [ref=f1e895]: Next upgrade
+                - generic [ref=f1e896]: L1 · VOD Review Room
+              - generic "Multiplies weekly scouting progress." [ref=f1e897]:
+                - generic [ref=f1e898]:
+                  - generic [ref=f1e899]: Analyst scouting efficiency
+                  - generic [ref=f1e900]: Multiplies weekly scouting progress.
+                - strong [ref=f1e901]: +8%
+              - generic "duel detail (FK/FD, HS%, ACS, clutches)" [ref=f1e902]:
+                - generic [ref=f1e903]:
+                  - generic [ref=f1e904]: Reporting access
+                  - generic [ref=f1e905]: duel detail (FK/FD, HS%, ACS, clutches)
+                - strong [ref=f1e906]: Tier 1/3
+            - generic [ref=f1e907]:
+              - generic [ref=f1e908]:
+                - generic [ref=f1e909]: 150,000 cr
+                - generic [ref=f1e910]: 2,200 cr/wk total upkeep
+              - button "Build" [ref=f1e911] [cursor=pointer]
+          - article [ref=f1e912]:
+            - generic [ref=f1e913]:
+              - generic [ref=f1e914]:
+                - text: Operational
+                - heading "Media Department" [level=2] [ref=f1e915]
+                - text: Content Desk
+              - generic [ref=f1e916]:
+                - strong [ref=f1e917]: "1"
+                - generic [ref=f1e918]: /3
+            - paragraph [ref=f1e923]: A commercial and content wing that improves sponsor value and opens new partnership categories.
+            - generic [ref=f1e925]:
+              - generic [ref=f1e926]: Commercial team
+              - text: Club commercial operations
+            - generic [ref=f1e927]:
+              - generic [ref=f1e928]: Current benefits
+              - generic "Applied to generated sponsorship terms." [ref=f1e929]:
+                - generic [ref=f1e930]:
+                  - generic [ref=f1e931]: Sponsor offer value
+                  - generic [ref=f1e932]: Applied to generated sponsorship terms.
+                - strong [ref=f1e933]: +5%
+              - generic "New sponsor categories stay subject to reputation gates." [ref=f1e934]:
+                - generic [ref=f1e935]:
+                  - generic [ref=f1e936]: Commercial access
+                  - generic [ref=f1e937]: New sponsor categories stay subject to reputation gates.
+                - strong [ref=f1e938]: Stream partnerships unlocked
+            - generic [ref=f1e939]:
+              - generic [ref=f1e940]:
+                - generic [ref=f1e941]: Next upgrade
+                - generic [ref=f1e942]: L2 · Media Studio
+              - generic "Applied to generated sponsorship terms." [ref=f1e943]:
+                - generic [ref=f1e944]:
+                  - generic [ref=f1e945]: Sponsor offer value
+                  - generic [ref=f1e946]: Applied to generated sponsorship terms.
+                - strong [ref=f1e947]: +10%
+              - generic "New sponsor categories stay subject to reputation gates." [ref=f1e948]:
+                - generic [ref=f1e949]:
+                  - generic [ref=f1e950]: Commercial access
+                  - generic [ref=f1e951]: New sponsor categories stay subject to reputation gates.
+                - strong [ref=f1e952]: Stream and apparel partnerships unlocked
+            - generic [ref=f1e953]:
+              - generic [ref=f1e954]:
+                - generic [ref=f1e955]: 350,000 cr
+                - generic [ref=f1e956]: 3,000 cr/wk total upkeep
+              - button "Upgrade" [disabled] [ref=f1e957]
+            - generic [ref=f1e958]: Insufficient funds for this project.
+          - article [ref=f1e959]:
+            - generic [ref=f1e960]:
+              - generic [ref=f1e961]:
+                - text: Planned
+                - heading "Recovery Suite" [level=2] [ref=f1e962]
+                - text: Unbuilt
+              - generic [ref=f1e963]:
+                - strong [ref=f1e964]: "0"
+                - generic [ref=f1e965]: /3
+            - paragraph [ref=f1e970]: Sports-science equipment and treatment space restore player condition every week, whether or not a Physio is on staff.
+            - generic [ref=f1e972]:
+              - generic [ref=f1e973]: Physio
+              - text: No Physio hired
+            - generic [ref=f1e974]:
+              - generic [ref=f1e975]: Current benefits
+              - generic "Applied to every rostered player after staff recovery." [ref=f1e976]:
+                - generic [ref=f1e977]:
+                  - generic [ref=f1e978]: Weekly stamina recovery
+                  - generic [ref=f1e979]: Applied to every rostered player after staff recovery.
+                - strong [ref=f1e980]: "+0"
+            - generic [ref=f1e981]:
+              - generic [ref=f1e982]:
+                - generic [ref=f1e983]: Next upgrade
+                - generic [ref=f1e984]: L1 · Treatment Room
+              - generic "Applied to every rostered player after staff recovery." [ref=f1e985]:
+                - generic [ref=f1e986]:
+                  - generic [ref=f1e987]: Weekly stamina recovery
+                  - generic [ref=f1e988]: Applied to every rostered player after staff recovery.
+                - strong [ref=f1e989]: "+1.5"
+            - generic [ref=f1e990]:
+              - generic [ref=f1e991]:
+                - generic [ref=f1e992]: 150,000 cr
+                - generic [ref=f1e993]: 1,700 cr/wk total upkeep
+              - button "Build" [ref=f1e994] [cursor=pointer]
+          - article [ref=f1e995]:
+            - generic [ref=f1e996]:
+              - generic [ref=f1e997]:
+                - text: Planned
+                - heading "Strategy Lab" [level=2] [ref=f1e998]
+                - text: Unbuilt
+              - generic [ref=f1e999]:
+                - strong [ref=f1e1000]: "0"
+                - generic [ref=f1e1001]: /3
+            - paragraph [ref=f1e1006]: Dedicated tactical workstations make scheduled preparation more productive while reducing its physical load on the roster.
+            - generic [ref=f1e1007]:
+              - generic [ref=f1e1008]:
+                - generic [ref=f1e1009]: Coach
+                - generic [ref=f1e1010] [cursor=pointer]: Ren Novak
+              - generic [ref=f1e1011]: "74.1"
+            - generic [ref=f1e1012]:
+              - generic [ref=f1e1013]: Current benefits
+              - generic "Multiplies knowledge earned from scheduled preparation." [ref=f1e1014]:
+                - generic [ref=f1e1015]:
+                  - generic [ref=f1e1016]: Preparation knowledge
+                  - generic [ref=f1e1017]: Multiplies knowledge earned from scheduled preparation.
+                - strong [ref=f1e1018]: +0%
+              - generic "Reduces condition spent by each session participant." [ref=f1e1019]:
+                - generic [ref=f1e1020]:
+                  - generic [ref=f1e1021]: Preparation stamina cost
+                  - generic [ref=f1e1022]: Reduces condition spent by each session participant.
+                - strong [ref=f1e1023]: "0"
+            - generic [ref=f1e1024]:
+              - generic [ref=f1e1025]:
+                - generic [ref=f1e1026]: Next upgrade
+                - generic [ref=f1e1027]: L1 · Tactics Room
+              - generic "Multiplies knowledge earned from scheduled preparation." [ref=f1e1028]:
+                - generic [ref=f1e1029]:
+                  - generic [ref=f1e1030]: Preparation knowledge
+                  - generic [ref=f1e1031]: Multiplies knowledge earned from scheduled preparation.
+                - strong [ref=f1e1032]: +10%
+              - generic "Reduces condition spent by each session participant." [ref=f1e1033]:
+                - generic [ref=f1e1034]:
+                  - generic [ref=f1e1035]: Preparation stamina cost
+                  - generic [ref=f1e1036]: Reduces condition spent by each session participant.
+                - strong [ref=f1e1037]: "-0.5"
+            - generic [ref=f1e1038]:
+              - generic [ref=f1e1039]:
+                - generic [ref=f1e1040]: 150,000 cr
+                - generic [ref=f1e1041]: 2,500 cr/wk total upkeep
+              - button "Build" [ref=f1e1042] [cursor=pointer]
+          - article [ref=f1e1043]:
+            - generic [ref=f1e1044]:
+              - generic [ref=f1e1045]:
+                - text: Planned
+                - heading "Team House" [level=2] [ref=f1e1046]
+                - text: Unbuilt
+              - generic [ref=f1e1047]:
+                - strong [ref=f1e1048]: "0"
+                - generic [ref=f1e1049]: /3
+            - paragraph [ref=f1e1054]: Shared living and wellbeing space helps struggling players recover confidence and morale toward a stable baseline each week.
+            - generic [ref=f1e1056]:
+              - generic [ref=f1e1057]: Psychologist
+              - text: No Psychologist hired
+            - generic [ref=f1e1058]:
+              - generic [ref=f1e1059]: Current benefits
+              - generic "Pulls confidence toward 50, never above it." [ref=f1e1060]:
+                - generic [ref=f1e1061]:
+                  - generic [ref=f1e1062]: Confidence recovery
+                  - generic [ref=f1e1063]: Pulls confidence toward 50, never above it.
+                - strong [ref=f1e1064]: +0/wk
+              - generic "Pulls morale toward 50, never above it." [ref=f1e1065]:
+                - generic [ref=f1e1066]:
+                  - generic [ref=f1e1067]: Morale recovery
+                  - generic [ref=f1e1068]: Pulls morale toward 50, never above it.
+                - strong [ref=f1e1069]: +0/wk
+            - generic [ref=f1e1070]:
+              - generic [ref=f1e1071]:
+                - generic [ref=f1e1072]: Next upgrade
+                - generic [ref=f1e1073]: L1 · Player Lounge
+              - generic "Pulls confidence toward 50, never above it." [ref=f1e1074]:
+                - generic [ref=f1e1075]:
+                  - generic [ref=f1e1076]: Confidence recovery
+                  - generic [ref=f1e1077]: Pulls confidence toward 50, never above it.
+                - strong [ref=f1e1078]: +0.5/wk
+              - generic "Pulls morale toward 50, never above it." [ref=f1e1079]:
+                - generic [ref=f1e1080]:
+                  - generic [ref=f1e1081]: Morale recovery
+                  - generic [ref=f1e1082]: Pulls morale toward 50, never above it.
+                - strong [ref=f1e1083]: +0.5/wk
+            - generic [ref=f1e1084]:
+              - generic [ref=f1e1085]:
+                - generic [ref=f1e1086]: 150,000 cr
+                - generic [ref=f1e1087]: 1,300 cr/wk total upkeep
+              - button "Build" [ref=f1e1088] [cursor=pointer]
+  - generic [ref=f1e1089]: Marketing Office upgraded to level 1
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Reporting access box scores only Tier 0/3
+    - generic: box scores only
