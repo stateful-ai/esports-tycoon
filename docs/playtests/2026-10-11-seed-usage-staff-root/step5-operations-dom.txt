@@ -1,0 +1,131 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Azure Vanta
+  - generic: 148,800 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Club
+  - generic: S1 · W1
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - heading "Opening window" [level=3]
+  - paragraph: Closes after week 5.
+  - heading "Academy level 0" [level=2]:
+    - text: Academy
+    - generic: level 0
+  - paragraph: "Affiliate: None."
+  - paragraph: Organization has no academy affiliate.
+  - heading "Staff responsibilities" [level=2]
+  - paragraph: Delegate repeatable work; staff return only exceptions and the prospect alerts you request.
+  - checkbox
+  - generic: Delegate weekly training to coach
+  - generic: Roster-aware focus; rests the squad when needed
+  - checkbox
+  - generic: Renew core starters automatically
+  - generic: salary band
+  - spinbutton: "800"
+  - spinbutton: "8000"
+  - generic: weeks left ≤
+  - spinbutton: "8"
+  - checkbox
+  - generic: Scout all
+  - combobox:
+    - option "Americas"
+    - option "Emea"
+    - option "Pacific" [selected]
+    - option "China"
+  - combobox:
+    - option "Duelist"
+    - option "Controller"
+    - option "Initiator" [selected]
+    - option "Sentinel"
+    - option "Flex"
+  - generic: age ≤
+  - spinbutton: "21"
+  - generic: alert
+  - combobox:
+    - option "All Matches"
+    - option "Shortlist"
+    - option "Tier1 Ready" [selected]
+  - button "Save staff policies"
+  - paragraph: 0 players match the current scouting rule.
+  - heading "Media trust" [level=2]
+  - paragraph: Press choices persist in player trust, community sentiment and active sponsor relationships. High-stakes prompts have a six-week cooldown.
+  - generic: Jinxghost 50
+  - generic: Wraithpulse 50
+  - generic: Hollowdash 50
+  - generic: Riftwolf 50
+  - generic: Zephyrblade 50
+  - heading "Culture & leadership" [level=2]
+  - generic: overall 52.5
+  - generic: cohesion 50
+  - generic: leadership 53.4
+  - generic: stability 55.4
+  - combobox:
+    - option "Jinxghost · 54.5" [selected]
+    - option "Wraithpulse · 52.8"
+    - option "Hollowdash · 45.4"
+    - option "Riftwolf · 49.2"
+    - option "Zephyrblade · 40.2"
+  - combobox:
+    - option "Jinxghost · 54.5"
+    - option "Wraithpulse · 52.8" [selected]
+    - option "Hollowdash · 45.4"
+    - option "Riftwolf · 49.2"
+    - option "Zephyrblade · 40.2"
+  - combobox:
+    - option "Jinxghost · 54.5"
+    - option "Wraithpulse · 52.8"
+    - option "Hollowdash · 45.4"
+    - option "Riftwolf · 49.2" [selected]
+    - option "Zephyrblade · 40.2"
+  - combobox:
+    - option "Balanced" [selected]
+    - option "Accountability"
+    - option "Player Led"
+    - option "Development"
+  - button "Set leadership group"
+  - paragraph: Culture session
+  - button "Accountability"
+  - button "Player Led"
+  - button "Reset"
+  - paragraph: Culture session
+  - heading "Team identity uncommitted" [level=3]:
+    - text: Team identity
+    - generic: uncommitted
+  - paragraph: A committed identity is a promise the locker room holds you to. Choices that betray it cost trust, chemistry and morale; choices that honor it deepen conviction.
+  - paragraph: Commit to Balanced to make it a stated identity. "Balanced" stays uncommitted.
+  - button "Commit to this identity" [disabled]
+- tooltip

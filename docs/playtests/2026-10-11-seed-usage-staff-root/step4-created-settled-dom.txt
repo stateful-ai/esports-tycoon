@@ -1,0 +1,181 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Azure Vanta
+  - generic: 148,800 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W1 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 0–0
+  - generic: Record
+  - generic: 0 rd
+  - button "148,800 cr Balance":
+    - generic: 148,800 cr
+    - generic: Balance
+  - generic: "68"
+  - generic: Morale
+  - button "82 Condition":
+    - generic: "82"
+    - generic: Condition
+  - text: W1 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Azure Vanta
+  - generic: VS
+  - generic: S1 · W1
+  - generic: Emea League
+  - generic: Best of 1
+  - generic: Taipei Circuit
+  - generic: Today's prep
+  - generic: Taipei Circuit in W1
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Taipei Circuit
+  - paragraph: Your scout is not assigned to Taipei Circuit. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Align development with Tactical
+  - paragraph: Set the weekly team focus, then make sure individual focus and intensity support the players who need the work.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: Three points here tighten Azure Vanta's grip on a top-four berth.
+  - generic: Map
+  - figure "bind":
+    - img "bind"
+    - generic: bind
+  - generic: Danger men
+  - generic: Driftstep
+  - generic: Initiator
+  - generic: ~61
+  - generic: Slyecho
+  - generic: Sentinel
+  - generic: ~59
+  - generic: Emberpulse
+  - generic: Duelist
+  - generic: ~57
+  - heading "Emea league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Adriatic Sirens 0 0 0":
+        - cell "1"
+        - cell "Adriatic Sirens"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "2 Anatolia Forge 0 0 0":
+        - cell "2"
+        - cell "Anatolia Forge"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "3 Busan Tempest 0 0 0":
+        - cell "3"
+        - cell "Busan Tempest"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+      - row "4 Ghostline 0 0 0":
+        - cell "4"
+        - cell "Ghostline"
+        - cell "0"
+        - cell "0"
+        - cell "0"
+  - paragraph: "World #32 · Rep 52 · Fans 33.3K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: ▸ No game plan set for W1
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "News" [level=2]
+  - generic: "[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+- dialog "Learn the job":
+  - text: Manager handbook
+  - heading "Learn the job" [level=1]
+  - paragraph: A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.
+  - button "Close manager handbook": Close
+  - tablist "Guide section":
+    - tab "First week" [active]
+    - tab "Screen guide"
+    - tab "Key terms"
+  - generic: Your first week
+  - generic: Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.
+  - list:
+    - generic: "1"
+    - text: Clear urgent work
+    - paragraph: Open Actionable Items and resolve anything with a deadline.
+    - button "Open Inbox"
+    - generic: "2"
+    - text: Check the squad
+    - paragraph: Confirm five starters, inspect condition and confidence, and set training.
+    - button "Open Club"
+    - generic: "3"
+    - text: Prepare the fixture
+    - paragraph: Read the opponent report and make a simple game plan.
+    - button "Open Match"
+    - generic: "4"
+    - text: Know your options
+    - paragraph: Scout one realistic target; you do not need to sign anyone immediately.
+    - button "Open Market"
+    - generic: "5"
+    - text: Advance when ready
+    - paragraph: Return to the Dashboard, check Needs You, then advance the week.
+    - button "Open Dashboard"
+  - generic: A safe learning setup
+  - generic: Keep tactics near 50, use normal training intensity, scout before buying, and leave cash for several weeks of wages.
+  - paragraph: "Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus."
+- tooltip

@@ -1,0 +1,5 @@
+Finite1226history stacks on exactPR425 20554f852dc09c3741bfd7b6bdc5b65cec4596fb. Adds14observations and one safe session evidence shard; raw1212prefix/all25452fields remain exact. Canonical1226/113sessions/21columns SHA256 933d973176c6cb89a34b71ed7125443ef9839979583a393b8996043a5b9578ef. All inherited history/source/attributes blobs unchanged except canonicalCSV exactappend.
+
+Session belongs composeda2393e2f main6fd+424including421; root runtime unknown stays unknown. Public audit preserves3accepted/5pairs/92events and3seedinteractions no unchanged duplicate;bounded retention does not establish complete funnels/attention/causal outcomes. Closed-profile DOM falsepositive was visually corrected without productfix;known358standingDashboardgap stays a finding. Future358integration/420fix excluded.
+
+Safeallowed path/hash inventory and privateomissions are in raw-retention-and-safe-publication.json. Fullsaves/auth/privatepageIDs/rawusage/privateharnesses excluded. Localtests/checks/validators/sims/gates/applicationreports explicitly skipped;authoredtestsUNRUN. No newplay. Draft only;root owns independentreview/publication. Main1226notclaimed.

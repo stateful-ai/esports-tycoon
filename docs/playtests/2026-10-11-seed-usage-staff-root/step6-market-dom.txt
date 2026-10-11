@@ -1,0 +1,601 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 1 · Regular — Azure Vanta
+  - generic: 148,800 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard"
+    - button "Inbox"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market" [active]
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Market
+  - button "Players"
+  - button "Scouting"
+  - button "Staff"
+  - generic: ~22,459 cr/wk free · stable
+  - generic: Opening window · Closes after week 5.
+  - heading "Find a player" [level=2]
+  - textbox "search by handle or real name…"
+  - heading "Free agents — 18" [level=2]:
+    - text: Free agents
+    - generic: — 18
+  - paragraph: Market coverage 0% — estimates only; assign your scout to the market to see ceilings.
+  - generic: 🛠️ Filter free agents
+  - button "Show Filters ▾"
+  - table:
+    - rowgroup:
+      - row "Player Role Age OVR Ability Ceiling Languages Stream revenue Asking Swap out":
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ability"
+        - columnheader "Ceiling"
+        - columnheader "Languages"
+        - columnheader "Stream revenue"
+        - columnheader "Asking"
+        - columnheader
+        - columnheader "Swap out"
+    - rowgroup:
+      - row "Frostwolf Room fit 50 Duelist Awper 26 ~81 ★★★–★★★★★ unknown En 2,962 cr/wk 7,200 cr/wk Negotiate… — drop — Swap":
+        - cell "Frostwolf Room fit 50":
+          - text: Frostwolf
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "26"
+        - cell "~81"
+        - cell "★★★–★★★★★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 93": En
+        - cell "2,962 cr/wk"
+        - cell "7,200 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Lunarshot Room fit 50 Controller IGL 20 ~70 ★½–★★★½ unknown En 975 cr/wk 5,400 cr/wk Negotiate… — drop — Swap":
+        - cell "Lunarshot Room fit 50":
+          - text: Lunarshot
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "20"
+        - cell "~70"
+        - cell "★½–★★★½"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 96": En
+        - cell "975 cr/wk"
+        - cell "5,400 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Nightpulse Room fit 50 Sentinel Anchor 27 ~70 ★★–★★★★½ unknown Pt En 322 cr/wk 5,400 cr/wk Negotiate… — drop — Swap":
+        - cell "Nightpulse Room fit 50":
+          - text: Nightpulse
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "27"
+        - cell "~70"
+        - cell "★★–★★★★½"
+        - cell "unknown"
+        - cell "Pt En":
+          - generic "Pt — proficiency 94": Pt
+          - generic "En — proficiency 38": En
+        - cell "322 cr/wk"
+        - cell "5,400 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Ironblade Room fit 50 Controller IGL 21 ~65 ★–★★★ unknown Es En 531 cr/wk 4,900 cr/wk Negotiate… — drop — Swap":
+        - cell "Ironblade Room fit 50":
+          - text: Ironblade
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "21"
+        - cell "~65"
+        - cell "★–★★★"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 86": Es
+          - generic "En — proficiency 18": En
+        - cell "531 cr/wk"
+        - cell "4,900 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Hollowflare Room fit 50 Initiator Support 28 ~66 ★★–★★★★ unknown Es En 349 cr/wk 4,700 cr/wk Negotiate… — drop — Swap":
+        - cell "Hollowflare Room fit 50":
+          - text: Hollowflare
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Support":
+          - generic: Initiator
+          - generic: Support
+        - cell "28"
+        - cell "~66"
+        - cell "★★–★★★★"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 94": Es
+          - generic "En — proficiency 42": En
+        - cell "349 cr/wk"
+        - cell "4,700 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Ciphercore Room fit 50 Duelist Awper 25 ~63 ★½–★★★ unknown Es En 465 cr/wk 4,600 cr/wk Negotiate… — drop — Swap":
+        - cell "Ciphercore Room fit 50":
+          - text: Ciphercore
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "25"
+        - cell "~63"
+        - cell "★½–★★★"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 95": Es
+          - generic "En — proficiency 48": En
+        - cell "465 cr/wk"
+        - cell "4,600 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Wraithzero Room fit 50 Duelist Entry 24 ~62 ★–★★½ unknown Es En 198 cr/wk 4,500 cr/wk Negotiate… — drop — Swap":
+        - cell "Wraithzero Room fit 50":
+          - text: Wraithzero
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "24"
+        - cell "~62"
+        - cell "★–★★½"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 96": Es
+          - generic "En — proficiency 80": En
+        - cell "198 cr/wk"
+        - cell "4,500 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Cipherstep Room fit 50 Initiator Support 18 ~60 ½–★★½ unknown Es En 16 cr/wk 3,500 cr/wk Negotiate… — drop — Swap":
+        - cell "Cipherstep Room fit 50":
+          - text: Cipherstep
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Support":
+          - generic: Initiator
+          - generic: Support
+        - cell "18"
+        - cell "~60"
+        - cell "½–★★½"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 96": Es
+          - generic "En — proficiency 89": En
+        - cell "16 cr/wk"
+        - cell "3,500 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Embercore Room fit 50 Duelist Awper 19 ~57 ★–★★★ unknown Es En 36 cr/wk 3,200 cr/wk Negotiate… — drop — Swap":
+        - cell "Embercore Room fit 50":
+          - text: Embercore
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Awper":
+          - generic: Duelist
+          - generic: Awper
+        - cell "19"
+        - cell "~57"
+        - cell "★–★★★"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 92": Es
+          - generic "En — proficiency 56": En
+        - cell "36 cr/wk"
+        - cell "3,200 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Slypulse Room fit 50 Initiator Support 28 ~57 ½–★★ unknown En 58 cr/wk 3,900 cr/wk Negotiate… — drop — Swap":
+        - cell "Slypulse Room fit 50":
+          - text: Slypulse
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Support":
+          - generic: Initiator
+          - generic: Support
+        - cell "28"
+        - cell "~57"
+        - cell "½–★★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 94": En
+        - cell "58 cr/wk"
+        - cell "3,900 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Wraithstep Room fit 50 Sentinel Anchor 18 ~56 ½–★★½ unknown Pt En 12 cr/wk 2,900 cr/wk Negotiate… — drop — Swap":
+        - cell "Wraithstep Room fit 50":
+          - text: Wraithstep
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "18"
+        - cell "~56"
+        - cell "½–★★½"
+        - cell "unknown"
+        - cell "Pt En":
+          - generic "Pt — proficiency 90": Pt
+          - generic "En — proficiency 52": En
+        - cell "12 cr/wk"
+        - cell "2,900 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Driftmark Room fit 50 Controller IGL 25 ~45 ½–★½ unknown Es En 7 cr/wk 2,900 cr/wk Negotiate… — drop — Swap":
+        - cell "Driftmark Room fit 50":
+          - text: Driftmark
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Controller IGL":
+          - generic: Controller
+          - generic: IGL
+        - cell "25"
+        - cell "~45"
+        - cell "½–★½"
+        - cell "unknown"
+        - cell "Es En":
+          - generic "Es — proficiency 100": Es
+          - generic "En — proficiency 53": En
+        - cell "7 cr/wk"
+        - cell "2,900 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Pyroblade Room fit 50 Duelist Entry 17 ~46 ½–★★ unknown En 5 cr/wk 2,300 cr/wk Negotiate… — drop — Swap":
+        - cell "Pyroblade Room fit 50":
+          - text: Pyroblade
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "17"
+        - cell "~46"
+        - cell "½–★★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 96": En
+        - cell "5 cr/wk"
+        - cell "2,300 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Falconcore Room fit 50 Duelist Entry 28 ~47 ½–★★ unknown En 10 cr/wk 2,600 cr/wk Negotiate… — drop — Swap":
+        - cell "Falconcore Room fit 50":
+          - text: Falconcore
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Duelist Entry":
+          - generic: Duelist
+          - generic: Entry
+        - cell "28"
+        - cell "~47"
+        - cell "½–★★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 91": En
+        - cell "10 cr/wk"
+        - cell "2,600 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Frostrush Room fit 50 Initiator Lurker 27 ~44 ½–★ unknown En Es 3 cr/wk 2,500 cr/wk Negotiate… — drop — Swap":
+        - cell "Frostrush Room fit 50":
+          - text: Frostrush
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Lurker":
+          - generic: Initiator
+          - generic: Lurker
+        - cell "27"
+        - cell "~44"
+        - cell "½–★"
+        - cell "unknown"
+        - cell "En Es":
+          - generic "En — proficiency 95": En
+          - generic "Es — proficiency 57": Es
+        - cell "3 cr/wk"
+        - cell "2,500 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Emberflare Room fit 50 Initiator Lurker 25 ~44 ½–★ unknown En 11 cr/wk 2,500 cr/wk Negotiate… — drop — Swap":
+        - cell "Emberflare Room fit 50":
+          - text: Emberflare
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Lurker":
+          - generic: Initiator
+          - generic: Lurker
+        - cell "25"
+        - cell "~44"
+        - cell "½–★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 89": En
+        - cell "11 cr/wk"
+        - cell "2,500 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Wraithwire Room fit 50 Initiator Lurker 18 ~41 ½–★★ unknown En 1 cr/wk 1,800 cr/wk Negotiate… — drop — Swap":
+        - cell "Wraithwire Room fit 50":
+          - text: Wraithwire
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Initiator Lurker":
+          - generic: Initiator
+          - generic: Lurker
+        - cell "18"
+        - cell "~41"
+        - cell "½–★★"
+        - cell "unknown"
+        - cell "En":
+          - generic "En — proficiency 100": En
+        - cell "1 cr/wk"
+        - cell "1,800 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+      - row "Ironecho Room fit 50 Sentinel Anchor 19 ~38 ½–★½ unknown Pt En 0 cr/wk 1,700 cr/wk Negotiate… — drop — Swap":
+        - cell "Ironecho Room fit 50":
+          - text: Ironecho
+          - generic "Existing player history with your current roster": Room fit 50
+        - cell "Sentinel Anchor":
+          - generic: Sentinel
+          - generic: Anchor
+        - cell "19"
+        - cell "~38"
+        - cell "½–★½"
+        - cell "unknown"
+        - cell "Pt En":
+          - generic "Pt — proficiency 89": Pt
+          - generic "En — proficiency 91": En
+        - cell "0 cr/wk"
+        - cell "1,700 cr/wk"
+        - cell "Negotiate…":
+          - button "Negotiate…"
+        - cell "— drop — Swap":
+          - combobox:
+            - option "— drop —" [selected]
+            - option "Jinxghost (50)"
+            - option "Wraithpulse (53)"
+            - option "Hollowdash (45)"
+            - option "Riftwolf (45)"
+            - option "Zephyrblade (41)"
+          - button "Swap"
+  - heading "Squad intelligence" [level=2]
+  - generic: duelist 2
+  - generic: controller 1
+  - generic: initiator 1
+  - generic: sentinel 1
+  - generic: flex 0
+  - paragraph: "Weakest: Sentinel (40.8)"
+  - heading "Signing headroom" [level=2]
+  - generic: Weekly net 22,459 cr
+  - text: Affordable wage
+  - generic: 22,459 cr/wk
+  - generic: stable
+  - heading "Suggested signings" [level=2]
+  - generic: Nightpulse
+  - generic: Sentinel
+  - generic: "70.3"
+  - generic: Wraithstep
+  - generic: Sentinel
+  - generic: "55.1"
+  - generic: Ironecho
+  - generic: Sentinel
+  - generic: "39.8"
+  - heading "Contract watch" [level=2]
+  - generic: Apex
+  - generic: Team Nexus · Controller
+  - generic: 3w
+  - generic: Vortex
+  - generic: Team Nexus · Duelist
+  - generic: 8w
+  - heading "Wonderkids — ≤20" [level=2]:
+    - text: Wonderkids
+    - generic: — ≤20
+  - generic: Ghost
+  - generic: 19y · Initiator · Team Nexus
+  - generic: ★★★★★
+  - generic: Grimbyte
+  - generic: 18y · Controller · Alpine Echo
+  - generic: ★★★★★
+  - generic: Nightwolf
+  - generic: 18y · Initiator · Berlin Wolves
+  - generic: ★★★★★
+  - generic: Blitzshot
+  - generic: 19y · Sentinel · Berlin Wolves
+  - generic: ★★★★★
+  - generic: Havoccore
+  - generic: 19y · Duelist · Ghostline
+  - generic: ★★★★★
+  - generic: Grimfade
+  - generic: 18y · Sentinel · Kraken Unit
+  - generic: ★★★★★
+  - heading "Rumour mill" [level=2]
+  - generic: Free agent Frostwolf (duelist) linked with a move to Azure Vanta.
+  - generic: Free agent Lunarshot (controller) linked with a move to Azure Vanta.
+  - generic: Free agent Nightpulse (sentinel) linked with a move to Azure Vanta.
+- tooltip "Market Find players and staff who improve the club without breaking its finances or chemistry. Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.":
+  - heading "Market" [level=4]
+  - generic: Find players and staff who improve the club without breaking its finances or chemistry.
+  - generic: Scout before paying for certainty, and compare role, languages, ceiling, salary, and contract cost together.

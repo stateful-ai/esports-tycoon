@@ -1,0 +1,249 @@
+- banner:
+  - generic: ESPORTSSIM
+  - generic: Season 1 · Week 2 · Regular — Azure Vanta
+  - generic: 166,850 cr
+  - button "Save"
+  - combobox "Choose how often the campaign saves automatically. When off, save it yourself.":
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - generic "Weekly":
+    - generic: Weekly
+    - button "Dashboard 1":
+      - text: Dashboard
+      - generic: "1"
+    - button "Inbox 4":
+      - text: Inbox
+      - generic: "4"
+    - button "Match 2":
+      - text: Match
+      - generic: "2"
+  - generic "Org":
+    - generic: Org
+    - button "Club"
+    - button "Facilities"
+    - button "Season"
+    - button "Market"
+    - button "Stats"
+    - button "Company"
+- main:
+  - generic: Dashboard
+  - generic: S1 · W2 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - generic: 0–1
+  - generic: Record
+  - generic: "-9 rd"
+  - button "166,850 cr Balance":
+    - generic: 166,850 cr
+    - generic: Balance
+  - generic: "64"
+  - generic: Morale
+  - button "69 Condition":
+    - generic: "69"
+    - generic: Condition
+  - text: W2 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - generic: Plan needed
+  - generic: Scout elsewhere
+  - generic: Squad ready
+  - button "Match day briefing ▸"
+  - generic: Azure Vanta
+  - generic: VS
+  - generic: S1 · W2
+  - generic: Emea League
+  - generic: Best of 1
+  - generic: Prairie Signal
+  - generic: Today's prep
+  - generic: Prairie Signal in W2
+  - generic: Set the five, build the plan, sharpen the week.
+  - generic: Assistant coach
+  - generic: Stable
+  - generic: Keep the match five settled
+  - paragraph: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+  - button "Open roster ▸"
+  - generic: Head coach
+  - generic: Priority
+  - generic: Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - generic: Analyst
+  - generic: Unassigned
+  - generic: Put the book on Prairie Signal
+  - paragraph: Your scout is not assigned to Prairie Signal. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - generic: Performance
+  - generic: Tactical
+  - generic: Check Wraithpulse's development plan
+  - paragraph: Wraithpulse moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+  - button "Development plans ▸"
+  - generic: Match intelligence
+  - generic: Opponent read, your stakes, maps and run-in
+  - paragraph: A win would haul Azure Vanta back toward the playoff places.
+  - generic: Map
+  - figure "haven":
+    - img "haven"
+    - generic: haven
+  - generic: Danger men
+  - generic: Staticecho
+  - generic: Duelist
+  - generic: ~70
+  - generic: Havocfade
+  - generic: Controller
+  - generic: ~58
+  - generic: Crimecho
+  - generic: Sentinel
+  - generic: ~58
+  - generic: Playstyle
+  - generic: Balanced
+  - generic: B-heavy attack
+  - text: Your map pool & veto
+  - text: Azure Vanta — season map record (wins / played)
+  - generic: Bind
+  - generic: 0%
+  - generic: 0/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Lost to Taipei Circuit 4-13. Standout: Jinxghost (1.06). Off-colour: Riftwolf (0.62)."
+  - generic: L
+  - generic: vs Taipei Circuit
+  - generic: 4–13
+  - generic: ★
+  - text: POTM
+  - generic: Grimwolf
+  - generic: What worked
+  - generic: Utility on point
+  - generic: 5/89 abilities whiffed (6%).
+  - generic: Where it broke down
+  - generic: Wraithpulse struggled in duels
+  - generic: 7/9 duels won (-1.76 xDE).
+  - generic: Pistols lost
+  - generic: 0/2 pistol rounds (0%).
+  - generic: Defense is leaking
+  - generic: 1/5 defense rounds won (20%).
+  - generic: No clutches closed
+  - generic: 0/12 last-alive rounds won.
+  - generic: Attack is stalling
+  - generic: 3/12 attack rounds won (25%).
+  - paragraph: Hire a coach for tailored fixes.
+  - heading "Emea league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Mumbai Meteors 1 0 +10":
+        - cell "1"
+        - cell "Mumbai Meteors"
+        - cell "1"
+        - cell "0"
+        - cell "+10"
+      - row "2 Nova Rift 1 0 +7":
+        - cell "2"
+        - cell "Nova Rift"
+        - cell "1"
+        - cell "0"
+        - cell "+7"
+      - row "3 Solar Flare 1 0 +6":
+        - cell "3"
+        - cell "Solar Flare"
+        - cell "1"
+        - cell "0"
+        - cell "+6"
+      - row "4 Sahara Compass 1 0 +3":
+        - cell "4"
+        - cell "Sahara Compass"
+        - cell "1"
+        - cell "0"
+        - cell "+3"
+  - paragraph: "World #39 · Rep 52 · Fans 33.3K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - generic: Team moment
+  - heading "A rival quote puts Hollowdash on the spot" [level=3]
+  - paragraph: A rival has dismissed Azure Vanta's recent form on a livestream. The social desk asks whether Hollowdash should answer before the story runs.
+  - button "Answer with a measured line"
+  - button "Answer sharply"
+  - button "Decline to engage"
+  - generic: ▸ No game plan set for W2
+  - text: ▸
+  - generic: Coach proposed a scrim plan Match · Prep
+  - heading "News" [level=2]
+  - generic: "[S1 W1] 4-13 loss to Taipei Circuit on bind. Top rating: Grimwolf, 1.33."
+  - generic: "[S1 W1] Bayou Kings sign Lunarshot (igl) for 6,500/wk."
+  - generic: "[S1 W1] Bayou Kings release Ironcore (severance 36,000 cr)."
+  - generic: "[S1 W1] Cascadia Youth sign Frostwolf (awper) for 7,200/wk."
+  - generic: "[S1 W1] Apex Syndicate sign Nightpulse (anchor) for 5,400/wk."
+  - generic: "[S1 W1] TRANSFER: Pyroghost joins Ghostline from Cascadia Youth for 335,000 cr."
+  - generic: "[S1 W1] Apex Syndicate release Staticveil (severance 40,000 cr)."
+  - generic: "[S1 W1] Apex re-signs with Team Nexus at 8,800/wk."
+  - generic: "[S1 W1] NovaTech Peripherals are courting the peripheral slot (1,600/wk steady, alternatives available). On the table until week 3."
+  - generic: "[S1 W1] Azure Vanta bring in slk (analyst, 3,900/wk)."
+  - generic: "[S1 W1] Season 1 begins — 3 regional leagues of 8, 14 weeks of league play, then playoffs and Masters."
+- generic: league · Season 1 · Week 1
+- generic: Azure Vanta vs Taipei Circuit
+- generic: Bind
+- generic: 4–13
+- generic: Defeat
+- generic: League position
+- generic: 5th of 6
+- button "Continue"
+- button "Full report"
+- generic: click anywhere to skip
+- tooltip:
+  - heading [level=4]: Dashboard
+  - generic: See what changed, what needs a decision, and what the next fixture demands.
+  - generic: Begin with Needs You, then scan the next fixture and recent form.
+- button "Close profile": ✕
+- generic: S
+- generic: slk
+- generic: Analyst
+- generic "opponent breakdowns": opponents
+- generic: age 40
+- generic: emea
+- generic: Azure Vanta (your org)
+- text: · 3,900 cr/wk
+- generic: "73"
+- generic: Overall
+- generic: 5s
+- generic: Experience
+- generic: "0"
+- generic: Titles
+- heading "Attributes" [level=3]
+- generic "Professional command of this staff member's discipline.": Expertise
+- generic: "70"
+- generic "Understanding of systems, game plans, and the live meta.": Tactical Knowledge
+- generic: "80"
+- generic "Ability to diagnose opponents, players, and performance evidence.": Analysis
+- generic: "78"
+- generic "Ability to turn knowledge into repeatable player improvement.": Teaching
+- generic: "53"
+- generic "Trust, relationships, and individual handling.": People Management
+- generic: "67"
+- generic "Ability to set intensity and restore belief under pressure.": Motivation
+- generic: "60"
+- generic "Effectiveness outside a preferred method and during change.": Adaptability
+- generic: "67"
+- heading "What they do" [level=3]
+- generic: ▸ +76% base scouting speed
+- generic: ▸ deeper stat views (analytics tier, with the analytics suite)
+- heading "Style" [level=3]
+- generic: Data PuristAdds five points to analytics-department tier scoring.
+- generic: Talent SpotterMarket scouting progresses 8% faster.
+- heading "Career" [level=3]
+- generic: Analyst, Team Vitality (VCT 2026)
+- generic: "S1: analyst, Azure Vanta"
