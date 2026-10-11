@@ -15,6 +15,8 @@ class Element {
 const requests = [], heads = [], dispatch = [];
 const context = {
   App: {statsTab: 'meta', state: {season: 1}}, STATS_TABS: [],
+  // Browser global retained when PR 431 adds optional selection telemetry.
+  window: {Usage: {interaction() {}}},
   el: (...args) => new Element(...args),
   screenHead: (name, opts) => { heads.push(opts); return new Element('head'); },
   renderApp() {},
