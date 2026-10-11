@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async (page) => { console.log(await page.locator("body").innerText()); console.log(JSON.stringify({url:page.url()})); globalThis.mentorWire=[]; page.on("request", r=>{if(r.url().includes("/api/")) globalThis.mentorWire.push({type:"request",url:r.url(),method:r.method(),body:r.postData()});}); page.on("response", async r=>{if(r.url().includes("/api/")) globalThis.mentorWire.push({type:"response",url:r.url(),status:r.status(),body:await r.text().catch(()=>"")});}); })(page);
+```

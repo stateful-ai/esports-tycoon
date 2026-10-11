@@ -1,0 +1,56 @@
+{
+  "recovered_at_utc": "2026-10-11T13:00:29.625593+00:00",
+  "recovery_method": "Reverse only game_time rows7-10 in current10-row shard, officialCSV serializer; bytehash equals independently retained pre-correction toolreceipt",
+  "original_sha256": "5d01503a17285cb2f84d14b3b932f840cd23339089cc04117e32aa9eae5d87fe",
+  "original_bytes": 7605,
+  "current_sha256": "2cdb22d8e8a97f3b152d06b808f592575d52baaa666e577608aee8fb705fa892",
+  "current_bytes": 7605,
+  "mapping": [
+    {
+      "session_id": "2026-10-11-media2-league-week",
+      "step": "7",
+      "field": "game_time",
+      "original": "S2 W5",
+      "corrected": "S2 W6",
+      "started_at_utc": "2026-10-11T12:52:11.822+00:00",
+      "finished_at_utc": "2026-10-11T12:52:52.727+00:00"
+    },
+    {
+      "session_id": "2026-10-11-media2-league-week",
+      "step": "8",
+      "field": "game_time",
+      "original": "S2 W5",
+      "corrected": "S2 W6",
+      "started_at_utc": "2026-10-11T12:52:52.841+00:00",
+      "finished_at_utc": "2026-10-11T12:53:38.082+00:00"
+    },
+    {
+      "session_id": "2026-10-11-media2-league-week",
+      "step": "9",
+      "field": "game_time",
+      "original": "S2 W5",
+      "corrected": "S2 W6",
+      "started_at_utc": "2026-10-11T12:53:38.207+00:00",
+      "finished_at_utc": "2026-10-11T12:53:49.854+00:00"
+    },
+    {
+      "session_id": "2026-10-11-media2-league-week",
+      "step": "10",
+      "field": "game_time",
+      "original": "S2 W5",
+      "corrected": "S2 W6",
+      "started_at_utc": "2026-10-11T12:55:52.420+00:00",
+      "finished_at_utc": "2026-10-11T12:55:52.658+00:00"
+    }
+  ],
+  "actions_and_original_manifest_unchanged": true,
+  "server": {
+    "pid": 27592,
+    "port": 8545,
+    "package": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\src\\esports_sim\\__init__.py"
+  },
+  "source_before_created_utc": "2026-10-11T12:48:58.615971+00:00",
+  "source_before_modified_utc": "2026-10-11T12:48:58.617023+00:00",
+  "source_before_sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc",
+  "source_after_sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc"
+}

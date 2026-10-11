@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0240",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "First observation stays separate from weekly gains",
+    "problem": "A promoted player has one season point and positive weekly measured gains",
+    "solution": "Observe Club report on exact398 head: missing cumulative comparison and explicit +0.31/+0.01 source gains coexist",
+    "lesson": "Distinguish cumulative comparison availability from latest-week source attribution.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\first-development-baseline-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-development-first-observation-398\\report.md; seed2038 world26UHC head7bee7d7",
+    "code": "",
+    "tags": [
+      "development",
+      "browser",
+      "first-observation",
+      "pr398"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0241",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Compared roster coverage excludes first observations",
+    "problem": "Squad steady count and averages can hide missing baselines",
+    "solution": "Actual7-player report shows6 compared,3 grown,3 steady,1 first observation; saved120/27 prefixes unchanged",
+    "lesson": "Publish comparison coverage and independently preserve saved decision/history prefixes.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\first-development-baseline-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-development-first-observation-398\\report.md; seed2038 world26UHC head7bee7d7",
+    "code": "",
+    "tags": [
+      "development",
+      "browser",
+      "first-observation",
+      "pr398"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0242",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Player profile still frames one observation as a time comparison",
+    "problem": "Nightsurge profile says CA52.2 to52.2 over1weeks despite no earlier observation",
+    "solution": "Keep separate profile gap for new ownership; do not expand398; advance409 prevents second-point play evidence",
+    "lesson": "A corrected Club report does not establish parity in the independent player profile.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\first-development-baseline-clarity\\ESports Simulator\\runs\\playtests\\2026-10-11-development-first-observation-398\\report.md; seed2038 world26UHC head7bee7d7",
+    "code": "",
+    "tags": [
+      "development",
+      "browser",
+      "first-observation",
+      "pr398"
+    ],
+    "kind": "pain-point"
+  }
+]

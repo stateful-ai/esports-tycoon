@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0259",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Nonzero Apparel run rate verified on merged388",
+    "problem": "EarlierplayhadonlyApparel0slot.",
+    "solution": "AcceptedGGThreadssteady5900/week; publicCompanyincome125157to131057net69757to75657; matching5,900row andsigned21weekdeal persistedafterSave/reload.",
+    "lesson": "Immediatecontractsignature changes projectedrecurringincome; no weeklypayment is realizedwithoutadvance.",
+    "confidence": "high",
+    "source": "2026-10-11-apparel-signing exactba3 copied26UHCseed2038 S2W6 actualgpt-6.1-solmedium publicreadbackscreensandrawsave",
+    "code": "",
+    "tags": [
+      "company",
+      "sponsor",
+      "apparel"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0260",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Steady Apparel choice supports predictability with ample cash",
+    "problem": "Visiblechoiceupfront123000plus1300/week orperformance2300plus5100/win; record2-3 andcash2.287M.",
+    "solution": "Chose5900/weeksteady,noimmediatebonus,perwin0;bankunchanged andconditionalplayoff16000atRisk.",
+    "lesson": "Contractstructures trade immediatecash and outcomevariability for recurringrate; conditions remain separatefromguaranteedrate.",
+    "confidence": "high",
+    "source": "2026-10-11-apparel-signing exactba3 copied26UHCseed2038 S2W6 actualgpt-6.1-solmedium publicreadbackscreensandrawsave",
+    "code": "",
+    "tags": [
+      "company",
+      "sponsor",
+      "apparel"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0261",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Refresh replaces Company Brand control references",
+    "problem": "Brandnavigation usedstale ref aftersigningrefresh; noobservedrequest.",
+    "solution": "Loggedblockedrow3thennewrecoveryintentrow4usingfresh Brandref andpublicreadback.",
+    "lesson": "ReacquireCompanycontrols aftermutation; preserve no-request browserfailures apartfromHTTP rejections.",
+    "confidence": "high",
+    "source": "2026-10-11-apparel-signing exactba3 copied26UHCseed2038 S2W6 actualgpt-6.1-solmedium publicreadbackscreensandrawsave",
+    "code": "",
+    "tags": [
+      "company",
+      "sponsor",
+      "apparel"
+    ],
+    "kind": "pain-point"
+  }
+]

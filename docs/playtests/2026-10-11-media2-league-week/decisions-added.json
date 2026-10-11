@@ -1,0 +1,49 @@
+[
+  {
+    "index": 124,
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_preparation",
+    "params": {
+      "created_season": "2",
+      "created_week": "5",
+      "fixture_id": "s2w5m1am",
+      "id": "87bc0f9f0ddb7936",
+      "intensity": "light",
+      "map_id": "bind",
+      "objective": "mental_reset",
+      "opponent_id": "team_rust_belt_gaming",
+      "partner_id": "team_adriatic_sirens",
+      "team_id": "team_nexus"
+    },
+    "source": "web"
+  },
+  {
+    "index": 125,
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "film_grind",
+      "event_id": "f18ff1509b545e6c"
+    },
+    "source": "web"
+  },
+  {
+    "index": 126,
+    "season": 2,
+    "week": 5,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]
