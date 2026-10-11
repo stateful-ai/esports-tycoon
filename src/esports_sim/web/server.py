@@ -87,6 +87,7 @@ from esports_sim.manager.campaign import (
     advance_week,
     default_five,
     dressed_for,
+    projected_dressed_for,
     new_campaign,
     suggested_five,
 )
@@ -1441,6 +1442,31 @@ def _last_match_review(
                     else f"{handle} is off-colour — consider a bench or agent "
                     "swap on the Roster screen."
                 )
+                tid = gs.acting_team_id
+                upcoming = next((
+                    f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
+                    if f.tier == 1 and not f.played and f.week >= gs.week
+                    and tid in (f.team_a, f.team_b)
+                ), None)
+                selections = (
+                    [projected_dressed_for(gs, tid, upcoming, m) for m in upcoming.maps]
+                    if upcoming is not None and upcoming.maps
+                    else [default_five(gs, tid)]
+                )
+                selected = sum(pl.id in lineup for lineup in selections)
+                if selected < len(selections):
+                    context = (
+                        "already out of the next fixture's selected five"
+                        if selected == 0 and upcoming is not None and upcoming.maps
+                        else "already outside your default five"
+                        if selected == 0
+                        else "already rotating out on some maps in the next fixture"
+                    )
+                    followup = (
+                        "set their dev focus or pair a mentor before their next appearance"
+                        if developing else "review their training and agent fit before their next appearance"
+                    )
+                    text = f"{handle} was off-colour and is {context} — {followup} on the Roster screen."
             adjustment = match_review_mod.tactic_adjustment(
                 gs.teams[gs.acting_team_id].tactics,
                 p.lever_code,

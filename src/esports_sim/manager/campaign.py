@@ -494,6 +494,33 @@ def dressed_for(
     return _resolve_five(gs, team_id, primary, roster)
 
 
+def _planned_five(gs: GameState, team_id: str, fixture: Fixture) -> list[str]:
+    """Revalidate the one-fixture selection using the match's eligible pool."""
+    plan = gs.game_plans_by.get(team_id)
+    if plan is None or plan.fixture_id != fixture.id:
+        return []
+    eligible = set(series_management.eligible_pool(gs, team_id, fixture))
+    lineup = [pid for pid in plan.starter_ids if pid in eligible]
+    return lineup if len(lineup) == len(set(lineup)) == market.ROSTER_SIZE else []
+
+
+def projected_dressed_for(
+    gs: GameState, team_id: str, fixture: Fixture, map_id: str
+) -> list[str]:
+    """Read the current selection, including a valid unconsumed game plan.
+
+    Match simulation installs this plan only beneath explicit map overrides.
+    Project through the same dressed resolver without writing to the save.
+    """
+    planned = _planned_five(gs, team_id, fixture)
+    if not planned:
+        return dressed_for(gs, team_id, fixture, map_id)
+    lineups = dict(gs.map_lineups)
+    lineups.setdefault(f"{team_id}|{fixture.id}|{map_id}", planned)
+    projected = gs.model_copy(update={"map_lineups": lineups})
+    return dressed_for(projected, team_id, fixture, map_id)
+
+
 def _dressed_gamedata(
     gs: GameState, gd: GameData, dressed: dict[str, list[str]]
 ) -> GameData:
@@ -1960,9 +1987,8 @@ def _fixture_plans(
             halftime_talk=plan.halftime_talk,
             shouts=plan.shouts,
         )
-        eligible = set(series_management.eligible_pool(gs, tid, f))
-        lineup = [pid for pid in plan.starter_ids if pid in eligible]
-        if len(lineup) == market.ROSTER_SIZE and len(set(lineup)) == market.ROSTER_SIZE:
+        lineup = _planned_five(gs, tid, f)
+        if lineup:
             lineups[tid] = lineup
     return plans, lineups
 
