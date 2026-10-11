@@ -556,7 +556,8 @@ def _migrate_v37_to_v38(data: dict) -> dict:
 
     Pre-integration recovery saves stored only the week. Retain their booking
     lock for the saved season, without blocking that week in future seasons.
-    Unrelated additive v38 fields are supplied by their model defaults.
+    MEDIA phase measurements and separate culture effects default unknown;
+    unrelated additive v38 fields are supplied by their model defaults.
     """
     data.setdefault("recovery_booked_season_by", {
         tid: data.get("season", 1) for tid in data.get("recovery_booked_by", {})
@@ -1567,6 +1568,26 @@ class MediaCommitment(BaseModel):
     player_id: str = ""
 
 
+class MediaEffectChange(BaseModel):
+    """One measured target, captured around its explicitly named mutation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    label: str
+    before: float
+    after: float
+    delta: float
+
+
+class MediaEffects(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentiment: MediaEffectChange
+    player_trust: list[MediaEffectChange] = Field(default_factory=list)
+    sponsor_relations: list[MediaEffectChange] = Field(default_factory=list)
+
+
 class MediaDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1583,6 +1604,14 @@ class MediaDecision(BaseModel):
     sponsor_delta: float = 0.0
     trust_delta: float = 0.0
     settlement: str = ""
+    # None means this save predates measurement; nominal deltas above cannot
+    # reconstruct clamped history. An old pending promise may still gain an
+    # independently measured settlement after loading.
+    immediate_effects: MediaEffects | None = None
+    settlement_effects: MediaEffects | None = None
+    # Separate from MEDIA deltas: the public choice can trigger culture trust
+    # penalties for the whole roster. None means this phase was not measured.
+    culture_trust_effects: list[MediaEffectChange] | None = None
 
 
 class DraftPick(BaseModel):
