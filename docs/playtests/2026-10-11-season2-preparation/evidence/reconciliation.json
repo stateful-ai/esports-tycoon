@@ -1,0 +1,114 @@
+{
+  "at_utc": "2026-10-11T08:09:18.537585+00:00",
+  "source_head": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "b5fb5bccea5e89a0741aa9e762bfffc93f82969695cd81f05203ed2c880e54f2",
+  "save_after_sha256": "1efbf66a707d5f7185761f297883ff424aff86485abaefa66645ae6e53a5dbeb",
+  "before_decisions": 107,
+  "after_decisions": 110,
+  "new_decisions": [
+    {
+      "index": 107,
+      "season": 2,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_preparation",
+      "params": {
+        "created_season": "2",
+        "created_week": "2",
+        "fixture_id": "s2w2m3am",
+        "id": "f87c94062f1b5da1",
+        "intensity": "normal",
+        "map_id": "ascent",
+        "objective": "anti_exec",
+        "opponent_id": "team_nordic_frost",
+        "partner_id": "team_adriatic_sirens",
+        "team_id": "team_nexus"
+      },
+      "source": "web"
+    },
+    {
+      "index": 108,
+      "season": 2,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_game_plan",
+      "params": {
+        "aggression": "",
+        "choice_encoding": "json-v1",
+        "eco_greed": "",
+        "fixture_id": "s2w2m3am",
+        "focus_target": "",
+        "map_control": "30.0",
+        "n_dials": "2",
+        "one_match_lineup": "False",
+        "opponent": "team_nordic_frost",
+        "pace": "70.0",
+        "site_focus": "",
+        "starter_ids": "[]",
+        "team_talk": "",
+        "util_discipline": ""
+      },
+      "source": "web"
+    },
+    {
+      "index": 109,
+      "season": 2,
+      "week": 2,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 24,
+  "snapshots_after": 25,
+  "old_snapshot_prefix_preserved": true,
+  "new_accepted_coverage": "3/3",
+  "retained_usage_events": 78,
+  "paired_requests": 4,
+  "all_request_statuses": 200,
+  "decision_request_mapping": {
+    "107": {
+      "session_id": "37b303435b03b4d5303736c2ef60b1de",
+      "request_id": 13
+    },
+    "108": {
+      "session_id": "37b303435b03b4d5303736c2ef60b1de",
+      "request_id": 19
+    },
+    "109": {
+      "session_id": "37b303435b03b4d5303736c2ef60b1de",
+      "request_id": 22
+    }
+  },
+  "save_request": 30,
+  "event_counts": {
+    "session_start": 2,
+    "view": 7,
+    "visible_time": 59,
+    "session_end": 1,
+    "attempt": 4,
+    "result": 4,
+    "interaction": 1
+  },
+  "local_tests_launched": false,
+  "correction": "Step7 called index107 accept_preparation; exact saved kind is set_preparation. Original row retained; correction step8 is read-only.",
+  "limits": [
+    "Navigation and report inspection have coarse view telemetry only; failed locators have no individual usage event.",
+    "Successful Save lies outside accepted decisions.",
+    "Complete110-decision report includes107 historical actions; usage here is session scoped.",
+    "Root runtime model and effort are not exposed.",
+    "Hollowlock wrist event costs35 condition separately from preparation4; no causal claim that rest or this scrim generated that event.",
+    "Away news score orientation is gap41 and has a separately owned PR."
+  ]
+}

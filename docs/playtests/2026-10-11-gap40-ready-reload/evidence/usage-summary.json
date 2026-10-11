@@ -1,0 +1,75 @@
+{
+  "retained_events": 32,
+  "counts": {
+    "session_start ": 5,
+    "view lobby": 5,
+    "visible_time lobby": 5,
+    "session_end ": 3,
+    "view dashboard": 4,
+    "attempt /api/actions/advance": 2,
+    "result /api/actions/advance": 2,
+    "visible_time dashboard": 2,
+    "attempt /api/state": 1,
+    "result /api/state": 1,
+    "attempt /api/actions/save": 1,
+    "result /api/actions/save": 1
+  },
+  "request_result_receipts": [
+    {
+      "session_id": "8957de078e62654ec9cf88c1daa40e49",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": null
+    },
+    {
+      "session_id": "8957de078e62654ec9cf88c1daa40e49",
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": 200
+    },
+    {
+      "session_id": "0fd08131e261a20fed475ee7969ecc1c",
+      "kind": "attempt",
+      "target": "/api/state",
+      "request_id": 8,
+      "status": null
+    },
+    {
+      "session_id": "0fd08131e261a20fed475ee7969ecc1c",
+      "kind": "result",
+      "target": "/api/state",
+      "request_id": 8,
+      "status": 503
+    },
+    {
+      "session_id": "1a583f25724af3ed6e02cd16d7a670a4",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": null
+    },
+    {
+      "session_id": "1a583f25724af3ed6e02cd16d7a670a4",
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": 200
+    },
+    {
+      "session_id": "680432caa2246fe4c1b4c257319eb874",
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "status": null
+    },
+    {
+      "session_id": "680432caa2246fe4c1b4c257319eb874",
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "status": 200
+    }
+  ]
+}
