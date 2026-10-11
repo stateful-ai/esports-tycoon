@@ -1459,9 +1459,12 @@ def _last_match_review(
                     "swap on the Roster screen."
                 )
                 tid = gs.acting_team_id
+                # Fixtures belong to the current season. Human managers can
+                # also coach Challengers clubs, so follow team membership
+                # across both tiers when finding their next unplayed match.
                 upcoming = next((
                     f for f in sorted(gs.fixtures, key=lambda f: (f.week, f.id))
-                    if f.tier == 1 and not f.played and f.week >= gs.week
+                    if not f.played and f.week >= gs.week
                     and tid in (f.team_a, f.team_b)
                 ), None)
                 selections = (

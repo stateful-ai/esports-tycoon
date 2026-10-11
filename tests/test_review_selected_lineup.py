@@ -73,3 +73,66 @@ def test_review_advice_follows_live_selection(game_data, monkeypatch, selection,
         if tid in plans:
             projected.map_lineups.setdefault(f"{tid}|{fx.id}|{map_id}", plans[tid])
         assert projected_dressed_for(gs, tid, fx, map_id) == dressed_for(projected, tid, fx, map_id)
+
+
+@pytest.mark.parametrize("selection", [
+    "map_out", "plan_out", "map_in", "plan_in", "bench", "rotation",
+])
+def test_challengers_review_uses_next_acting_fixture(game_data, monkeypatch, selection):
+    """Tier-two advice must follow fixture overrides, including active players."""
+    gs = new_campaign(game_data, seed=2038)
+    tid = next(tid for tid, team in gs.teams.items() if team.tier == 2)
+    opponent = next(t for t, team in gs.teams.items() if team.tier == 2 and t != tid)
+    gs.human_team_ids.append(tid)
+    gs.set_acting(tid)
+    gs.week = 3
+    team = gs.teams[tid]
+    five = list(team.player_ids[:5])
+    extra = gs.players[five[0]].model_copy(deep=True, update={
+        "id": "challengers_review_sub", "handle": "ChallengersReviewSub",
+    })
+    gs.players[extra.id] = extra
+    team.player_ids.append(extra.id)
+    with_sub = [extra.id, *five[:4]]
+    team.lineup_ids = with_sub if selection in {"map_out", "plan_out"} else five
+    fx = Fixture(id="next_challengers", week=4, tier=2, team_a=tid,
+                 team_b=opponent, maps=["ascent", "lotus"], best_of=1)
+    # Unsorted fixtures include an already-played match, a past unplayed
+    # match, a later match and the primary manager's unrelated tier-one game.
+    gs.fixtures = [
+        fx.model_copy(update={"id": "later", "week": 5}),
+        fx.model_copy(update={"id": "played", "week": 3, "played": True}),
+        fx.model_copy(update={"id": "past", "week": 2}),
+        Fixture(id="primary", week=3, team_a=gs.user_team_id, team_b=opponent),
+        fx,
+    ]
+    if selection in {"map_out", "map_in", "rotation"}:
+        for map_id in fx.maps:
+            gs.map_lineups[f"{tid}|{fx.id}|{map_id}"] = (
+                five if selection == "map_out" or selection == "rotation" and map_id == "lotus"
+                else with_sub
+            )
+    if selection in {"plan_out", "plan_in"}:
+        gs.game_plans_by[tid] = GamePlan(
+            fixture_id=fx.id, starter_ids=five if selection == "plan_out" else with_sub,
+        )
+    monkeypatch.setattr(server, "_player_developing", lambda *_: (False, [80, 90]))
+    gs.staff["coach"] = StaffMember(id="co", name="Coach", role="coach", quality=85,
+                                   salary=1, specialty="team")
+    gs.last_review_by[tid] = MatchReview(fixture_id="historical", team_id=tid, breaking=[
+        ReviewPoint(code="player_under", category="player", tone="bad", player_id=extra.id,
+                    value=.72, lever_code="player_form"),
+    ])
+    gs.facilities
+    before = gs.model_dump_json()
+    review = server._last_match_review(gs)
+    assert gs.model_dump_json() == before
+    assert review["breaking"][0]["player_id"] == extra.id
+    assert "0.72" in review["breaking"][0]["detail"]
+    advice = next(item["text"] for item in review["levers"] if item["code"] == "player_form")
+    if selection in {"map_in", "plan_in"}:
+        assert "consider a bench" in advice and "already" not in advice
+    else:
+        assert "consider a bench" not in advice
+        assert "rotating out on some maps" in advice if selection == "rotation" else "out of the next fixture" in advice
+        assert "training and agent fit" in advice
