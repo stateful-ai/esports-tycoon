@@ -583,15 +583,23 @@ class PlaytestSession:
         """Open a player/team/staff profile overlay by its data-* ref."""
         script = """
         (ref) => {
-          const node = document.querySelector(
-            `[data-pid="${ref}"], [data-tid="${ref}"], [data-sid="${ref}"]`);
+        """ + VISIBLE_JS + """
+          const overlays = [...document.querySelectorAll('.overlay')].filter(vis);
+          const root = overlays.length ? overlays[overlays.length - 1]
+            : document.getElementById('view');
+          if (!root) return false;
+          const escaped = CSS.escape(String(ref));
+          const node = [...root.querySelectorAll(
+            `[data-pid="${escaped}"], [data-tid="${escaped}"], [data-sid="${escaped}"]`)]
+            .find((n) => vis(n) && !n.disabled && n.getAttribute('aria-disabled') !== 'true');
           if (!node) return false;
           node.click();
           return true;
         }
         """
         if not self.page.evaluate(script, ref):
-            return self.observe(f"profile({ref})", ok=False, message="no element carries that ref")
+            return self.observe(f"profile({ref})", ok=False,
+                                message="no visible profile control carries that ref on the active screen")
         return self.observe(f"profile({ref})")
 
     def _wait_for_overlays_to_clear(self, timeout_ms: int) -> list[str]:

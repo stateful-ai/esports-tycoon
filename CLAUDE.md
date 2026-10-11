@@ -241,6 +241,13 @@ Published at github.com/stateful-ai/esports-tycoon.
   `control.py` keeps one live browser alive across many short CLI commands.
   Drive it with `scripts/run_synthetic_players.py` + `scripts/play.py`, merge
   with `scripts/playtest_report.py`. See `docs/synthetic-players.md`.
+  Synthetic sessions MUST also follow [/playtest-log](.claude/skills/playtest-log/SKILL.md):
+  create pending intent and expected outcome with `scripts/playtest_log.py`
+  BEFORE each meaningful command, append the observed outcome to the canonical
+  `docs/playtests/actions.csv`, and reconcile the saved decision telemetry at
+  session end. Daemon journals and findings do not replace this requirement.
+  Preserve the existing pre/post flywheel loop and never invent unavailable
+  runtime metadata or rewrite previous CSV rows.
 - Docs: `GDD.md` (systems + design), `docs/art-pipeline.md`
   (blockout→beautify + map floor contract + LoRA status), `docs/adr/`
   (esp. ADR-007 neutral-safe tactics), `ROADMAP.md`, `SKILLS.md` (index

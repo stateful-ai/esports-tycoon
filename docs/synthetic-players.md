@@ -41,10 +41,11 @@ step, because the first thing it does is look.
 ## Running one
 
 Before a player session, follow [.claude/skills/playtest-log/SKILL.md](../.claude/skills/playtest-log/SKILL.md)
-and the pre/post flywheel loop in `CLAUDE.md`. Write intent and expected outcome
-with `scripts/playtest_log.py` before meaningful actions, append observed results
+and the pre/post flywheel loop in `CLAUDE.md`. Create pending intent and expected outcome
+with `scripts/playtest_log.py` BEFORE each meaningful command, append observed results
 to `docs/playtests/actions.csv`, and reconcile saved decision telemetry at the end.
-The harness journal and findings supplement that persistent history. Record
+Daemon journals and findings do not replace this requirement. Preserve earlier
+CSV rows and record
 unavailable model/effort metadata as `unknown (not exposed)`.
 
 ```bash

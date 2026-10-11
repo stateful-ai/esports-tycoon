@@ -154,6 +154,39 @@ def test_unknown_targets_fail_loudly_rather_than_silently(session: PlaytestSessi
     assert not session.set_field("#definitely-not-here", "x").ok
 
 
+@pytest.mark.parametrize("surface", ["main", "overlay", "blocked"])
+def test_profile_uses_only_visible_active_surface_and_escaped_ref(session, tmp_path, surface):
+    # An isolated page exercises the actual injected selector without changing
+    # the shared campaign or its player browser.
+    page = session.page.context.new_page()
+    try:
+        page.set_content('''<div id="view"><button id="hidden" style="display:none">Hidden</button>
+            <button id="main">Main</button></div>
+            <div class="overlay" id="lower"><button id="behind">Behind</button></div>
+            <div class="overlay" id="top"><button id="disabled" disabled>Disabled</button>
+            <button id="active">Active</button></div>''')
+        ref = 'player"[]\\ref'
+        page.evaluate('''([ref, surface]) => {
+            for (const button of document.querySelectorAll('button')) {
+                button.setAttribute('data-pid', ref);
+                button.onclick = () => document.body.dataset.clicked = button.id;
+            }
+            if (surface === 'main') {
+                document.getElementById('lower').style.display = 'none';
+                document.getElementById('top').style.display = 'none';
+            }
+            if (surface === 'blocked') document.getElementById('active').style.display = 'none';
+        }''', [ref, surface])
+        isolated = PlaytestSession(run_dir=tmp_path, base_url=session.base_url)
+        isolated._page = page
+        observation = isolated.open_profile(ref)
+        clicked = page.evaluate('document.body.dataset.clicked || ""')
+        assert observation.ok == (surface != "blocked")
+        assert clicked == {"main": "main", "overlay": "active", "blocked": ""}[surface]
+    finally:
+        page.close()
+
+
 def test_zz_advancing_a_week_moves_the_campaign(session: PlaytestSession):
     """Ordered last: it mutates the shared campaign the other tests read."""
     session.open_tab("dashboard")
