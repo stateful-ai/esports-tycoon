@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "### Result\n{\"ghost\":[{\"value\":\"mechanical\",\"disabled\":false},{\"value\":\"\",\"disabled\":true},{\"value\":\"normal\",\"disabled\":false},{\"value\":\"apex\",\"disabled\":false}],\"plans\":[{\"name\":\"Apex IGL\",\"values\":[\"rest\",\"\",\"light\"]},{\"name\":\"Vortex 📺\",\"values\":[\"rest\",\"\",\"normal\"]},{\"name\":\"Ghost 🎓\",\"values\":[\"mechanical\",\"\",\"normal\",\"apex\"]},{\"name\":\"Slyblade\",\"values\":[\"rest\",\"\",\"normal\"]},{\"name\":\"Echo \",\"values\":[\"rest\",\"\",\"light\"]},{\"name\":\"Hollowlock \",\"values\":[\"auto\",\"\",\"normal\"]}],\"banner\":\"ESPORTSSIM\\nSeason 1 · Week 12 · Regular — Team Nexus\\n482,260 cr\\nSave •\\nAutosave off\\nEvery week\\nEvery 2 weeks\\nEvery 3 weeks\\nEvery 5 weeks\\nEvery 8 weeks\\nCampaigns\\nAdvance Week ▸\\nSim ahead ▸▸\\n🛠️\\n🔇\\nGuide\"}\n### Ran Playwright code\n```js\nawait (async(page)=>({ghost:await page.getByRole('row').filter({has:page.getByText('Ghost',{exact:true})}).first().getByRole('combobox').evaluateAll(es=>es.map(e=>({value:e.value,disabled:e.disabled}))),plans:await page.getByRole('row').filter({has:page.getByRole('combobox')}).evaluateAll(es=>es.map(e=>({name:e.querySelector('td')?.innerText,values:[...e.querySelectorAll('select')].map(s=>s.value)}))),banner:await page.locator('header').innerText()}))(page);\n```"
+    }
+  ]
+}

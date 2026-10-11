@@ -1,0 +1,645 @@
+{
+  "status": 200,
+  "state": {
+    "season": 1,
+    "week": 10,
+    "phase": "regular",
+    "window": {
+      "open": false,
+      "kind": "closed",
+      "label": "Window closed",
+      "detail": "The transfer deadline has passed; only emergency free agents are available.",
+      "next_open_week": null
+    },
+    "roster_readiness": {
+      "ready": true,
+      "reason": "",
+      "count": 6,
+      "minimum": 5,
+      "shortfall": 0
+    },
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 483406,
+      "reputation": 63.9,
+      "fan_count": 311671,
+      "world_rank": 3,
+      "chemistry": 74.2,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo"
+      ],
+      "record": {
+        "wins": 8,
+        "losses": 1,
+        "diff": 55
+      }
+    },
+    "next_fixture": {
+      "id": "s1w10m3am",
+      "week": 10,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nexus",
+      "team_b": "team_kathmandu_apex",
+      "team_a_name": "Team Nexus",
+      "team_b_name": "Kathmandu Apex",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "h2h": {
+        "meetings": 1,
+        "wins": 1,
+        "losses": 0,
+        "streak_team": "team_nexus",
+        "streak_len": 1,
+        "you_lead": true
+      },
+      "preview": [
+        "Team Nexus arrive on a 2-match winning run.",
+        "Team Nexus won the season's only prior meeting.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Wraithblade — Kathmandu Apex's form pick at 0.96."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 2,
+            "wins": 2,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 4,
+            "wins": 4,
+            "win_rate": 100
+          },
+          {
+            "map": "Haven",
+            "map_id": "haven",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 2,
+            "wins": 1,
+            "win_rate": 50
+          }
+        ],
+        "veto": {
+          "opponent": "Kathmandu Apex",
+          "ban": {
+            "map": "Haven",
+            "map_id": "haven",
+            "their_wr": 20,
+            "our_wr": 100
+          },
+          "pick": {
+            "map": "Bind",
+            "map_id": "bind",
+            "their_wr": 0,
+            "our_wr": 100
+          }
+        }
+      },
+      "opp_manager": {
+        "name": "Victor Costa",
+        "identity": "Recluse"
+      }
+    },
+    "leaders": [
+      {
+        "pid": "team_crimson_order_p2",
+        "handle": "Wraithghost",
+        "team": "Crimson Order",
+        "team_id": "team_crimson_order",
+        "rating": 1.82,
+        "kills": 224
+      },
+      {
+        "pid": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "team": "Outback Sentinels",
+        "team_id": "team_outback_sentinels",
+        "rating": 1.59,
+        "kills": 225
+      },
+      {
+        "pid": "vortex",
+        "handle": "Vortex",
+        "team": "Team Nexus",
+        "team_id": "team_nexus",
+        "rating": 1.51,
+        "kills": 189
+      }
+    ],
+    "movers": [],
+    "run_in": [
+      {
+        "week": 10,
+        "opponent": "Kathmandu Apex",
+        "opponent_id": "team_kathmandu_apex",
+        "opp_rank": 41,
+        "difficulty": "easy"
+      },
+      {
+        "week": 11,
+        "opponent": "Saracen Guard",
+        "opponent_id": "team_saracen_guard",
+        "opp_rank": 13,
+        "difficulty": "medium"
+      },
+      {
+        "week": 12,
+        "opponent": "Rust Belt Gaming",
+        "opponent_id": "team_rust_belt_gaming",
+        "opp_rank": 12,
+        "difficulty": "medium"
+      },
+      {
+        "week": 13,
+        "opponent": "Baltic Meridian",
+        "opponent_id": "team_baltic_meridian",
+        "opp_rank": 34,
+        "difficulty": "easy"
+      },
+      {
+        "week": 14,
+        "opponent": "Team Vanguard",
+        "opponent_id": "team_vanguard",
+        "opp_rank": 2,
+        "difficulty": "hard"
+      }
+    ],
+    "on_this_day": [],
+    "debrief": {
+      "result": "Beat Nordic Frost 13-4",
+      "won": true,
+      "standout": "Vortex (1.90)",
+      "underperformer": "Ghost (0.77)"
+    },
+    "last_match_review": {
+      "fixture_id": "s1w9m3am",
+      "won": true,
+      "contested": true,
+      "best_of": 1,
+      "your_maps": 1,
+      "their_maps": 0,
+      "your_rounds": 13,
+      "their_rounds": 4,
+      "opp_id": "team_nordic_frost",
+      "opp_name": "Nordic Frost",
+      "potm": {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "badges": []
+      },
+      "tier": 0,
+      "tier_label": "box scores only",
+      "momentum_beat": {
+        "player_id": "vortex",
+        "tone": "hot",
+        "rounds": 13,
+        "start_round": 5,
+        "end_round": 17,
+        "peak": 0.61,
+        "handle": "Vortex",
+        "text": "got hot mid-map (13-round run)."
+      },
+      "your_calls": null,
+      "working": [
+        {
+          "code": "player_std",
+          "category": "player",
+          "tone": "good",
+          "headline": "Vortex carried",
+          "detail": "Team-high 1.9 average rating.",
+          "player_id": "vortex",
+          "handle": "Vortex",
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "def_side",
+          "category": "defense",
+          "tone": "good",
+          "headline": "Defense is a wall",
+          "detail": "5/5 defense rounds won (100%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "atk_side",
+          "category": "attack",
+          "tone": "good",
+          "headline": "Attack is clicking",
+          "detail": "8/12 attack rounds won (67%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        }
+      ],
+      "breaking": [
+        {
+          "code": "player_under",
+          "category": "player",
+          "tone": "bad",
+          "headline": "Ghost off-colour",
+          "detail": "0.77 average rating across the series.",
+          "player_id": "ghost",
+          "handle": "Ghost",
+          "site": null,
+          "badges": [],
+          "dev_note": "Young with room (proj. 83–99) — a development call, not a bench."
+        }
+      ],
+      "levers": [
+        {
+          "code": "player_form",
+          "tab": "roster",
+          "specialty": "team",
+          "on_focus": false,
+          "text": "Ghost is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.",
+          "adjustment": null
+        }
+      ],
+      "coach": {
+        "present": true,
+        "specialty": "mechanical"
+      },
+      "locked": true,
+      "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+    },
+    "decision_ledger": [],
+    "press": "Team Nexus have put themselves in the title picture from second.",
+    "suggested_lineup": {
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "quality": 78,
+          "dressed": true
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "quality": 77,
+          "dressed": true
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "quality": 76,
+          "dressed": true
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "quality": 75,
+          "dressed": true
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "quality": 72,
+          "dressed": true
+        }
+      ],
+      "changed": false
+    },
+    "board": null,
+    "form_trend": [
+      {
+        "n": 1,
+        "week": 1,
+        "wins": 1,
+        "won": true
+      },
+      {
+        "n": 2,
+        "week": 2,
+        "wins": 2,
+        "won": true
+      },
+      {
+        "n": 3,
+        "week": 3,
+        "wins": 3,
+        "won": true
+      },
+      {
+        "n": 4,
+        "week": 4,
+        "wins": 4,
+        "won": true
+      },
+      {
+        "n": 5,
+        "week": 5,
+        "wins": 5,
+        "won": true
+      },
+      {
+        "n": 6,
+        "week": 6,
+        "wins": 6,
+        "won": true
+      },
+      {
+        "n": 7,
+        "week": 7,
+        "wins": 6,
+        "won": false
+      },
+      {
+        "n": 8,
+        "week": 8,
+        "wins": 7,
+        "won": true
+      },
+      {
+        "n": 9,
+        "week": 9,
+        "wins": 8,
+        "won": true
+      }
+    ],
+    "squad_profile": {
+      "avg_age": 24,
+      "buckets": {
+        "youth": 1,
+        "prime": 4,
+        "veteran": 1
+      },
+      "expiries": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 19,
+          "weeks_left": 35
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 26,
+          "weeks_left": 42
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 22,
+          "weeks_left": 43
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 23,
+          "weeks_left": 47
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 26,
+          "weeks_left": 53
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 28,
+          "weeks_left": 53
+        }
+      ]
+    },
+    "objectives_hub": [
+      {
+        "kind": "sponsor",
+        "label": "win the regional split",
+        "state": "on_track",
+        "detail": "currently 2nd of 8"
+      },
+      {
+        "kind": "award",
+        "label": "Vortex: Season MVP",
+        "state": "in contention",
+        "detail": "3rd · 1.51"
+      }
+    ],
+    "rotation": [
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "maps": 9,
+        "starter": true,
+        "stamina": 97,
+        "burnout": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "maps": 9,
+        "starter": true,
+        "stamina": 100,
+        "burnout": false
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "maps": 8,
+        "starter": true,
+        "stamina": 98,
+        "burnout": false
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "maps": 8,
+        "starter": true,
+        "stamina": 81,
+        "burnout": false
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "maps": 7,
+        "starter": true,
+        "stamina": 90,
+        "burnout": false
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "maps": 4,
+        "starter": false,
+        "stamina": 43,
+        "burnout": false
+      }
+    ],
+    "training_focus": "tactical",
+    "training_delegated": false,
+    "focus_options": [
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "rest"
+    ],
+    "news": [
+      "[S1 W9] Midnight Polders part with Veer and appoint TK9 after a 2-match losing streak.",
+      "[S1 W9] Hollowhawk (Volga Reign) passes 100 kills this season.",
+      "[S1 W9] Hollowflare (Volga Reign) passes 200 kills this season.",
+      "[S1 W9] Staticstrike (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W9] Grimstrike (Solar Flare) passes 100 kills this season.",
+      "[S1 W9] Emberstep (Solar Flare) passes 100 kills this season.",
+      "[S1 W9] Wraithveil (Seoul Dynasty Prime) passes 100 kills this season.",
+      "[S1 W9] Riftstrike (Seoul Dynasty Prime) passes 200 kills this season.",
+      "[S1 W9] Crimghost (Saracen Guard) passes 100 kills this season.",
+      "[S1 W9] Frostbyte (Saracen Guard) passes 100 kills this season.",
+      "[S1 W9] Cipherflare (Patagonia Sur) passes 100 kills this season.",
+      "[S1 W9] Crimrush (Nordic Frost) passes 200 kills this season."
+    ],
+    "scout": {
+      "target": null,
+      "target_name": null,
+      "progress": 0,
+      "cap": 1
+    },
+    "standings_top": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "wins": 9,
+        "losses": 0,
+        "rounds_won": 119,
+        "rounds_lost": 57
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "wins": 8,
+        "losses": 1,
+        "rounds_won": 113,
+        "rounds_lost": 58
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "wins": 6,
+        "losses": 3,
+        "rounds_won": 100,
+        "rounds_lost": 64
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "wins": 6,
+        "losses": 3,
+        "rounds_won": 104,
+        "rounds_lost": 76
+      }
+    ],
+    "champions": [],
+    "transfer_offers": [],
+    "flavor_event": {
+      "id": "7487538f6944b101",
+      "season": 1,
+      "week": 10,
+      "team_id": "team_nexus",
+      "player_id": "vortex",
+      "type_id": "rival_quote",
+      "title": "A rival quote puts Vortex on the spot",
+      "prompt": "A rival has dismissed Team Nexus's recent form on a livestream. The social desk asks whether Vortex should answer before the story runs.",
+      "choices": [
+        {
+          "id": "measured",
+          "label": "Answer with a measured line"
+        },
+        {
+          "id": "fire_back",
+          "label": "Answer sharply"
+        },
+        {
+          "id": "no_comment",
+          "label": "Decline to engage"
+        }
+      ],
+      "ai": false
+    },
+    "media_event": null,
+    "career": {
+      "mode": "sandbox",
+      "seat": {
+        "id": "mgr_team_nexus",
+        "name": "NXS manager",
+        "team_id": "team_nexus",
+        "archetype": "",
+        "unemployed": false
+      },
+      "contract": null,
+      "offers": [],
+      "blocked": false
+    },
+    "multiplayer": {
+      "mode": "solo",
+      "code": "26UHC",
+      "humans": [
+        {
+          "team_id": "team_nexus",
+          "name": "Team Nexus",
+          "is_you": true
+        }
+      ],
+      "ready": [],
+      "you_ready": false
+    },
+    "save": {
+      "dirty": false,
+      "autosave_enabled": true,
+      "autosave_every_weeks": 1
+    },
+    "promise_pending": false,
+    "scout_shortlist_ready": false,
+    "scrim_proposal_pending": true,
+    "culture_violation_unack": false
+  }
+}

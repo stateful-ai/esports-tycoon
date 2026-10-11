@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-10T20:55:49.654635+00:00",
+  "rows_before": 706,
+  "rows_after": 724,
+  "prior_bytes_exact_prefix": true,
+  "sha256_before": "aa8f7b443b1be5473e044cd8b7d75e606b8e984409f440e7b87cc46914671d4c",
+  "sha256_after": "0597857c221b2f60818472dfd1c07eca7435d081759d6e00b6ac659393604697",
+  "sources": [
+    {
+      "path": "docs\\playtests\\2026-10-10-play-time-promise-clarity\\actions.csv",
+      "rows": 7,
+      "sha256": "428fb5335dd39a5d5d48b0cfacb107399e5f6316f8cf7da599414579d6a9a18a"
+    },
+    {
+      "path": "docs\\playtests\\2026-10-10-play-time-promise-renewal\\actions.csv",
+      "rows": 11,
+      "sha256": "d80c39191b49d6db419283b268d1a4551da4f942383e615758ebfe380d9b15bc"
+    }
+  ],
+  "publication": "Primary working tree only; append requires a separately reviewed history publication. Previously merged PR362 preserves its original 597-row snapshot."
+}

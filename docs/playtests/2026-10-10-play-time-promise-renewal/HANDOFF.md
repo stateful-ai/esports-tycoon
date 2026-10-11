@@ -1,0 +1,7 @@
+# Renewal follow-up publication handoff
+
+PR366's revised source was validated by the native unfiltered full gate:1274passed2363.98s, exit0, finished2026-10-10T20:44:20.763364Z, empty stderr, source_unchanged=true. All545 freeze hashes, complete file set and worktree package import independently verified before commit. Tested parent3220db1; no rebase. Original3220 review/1269green proof is historical and superseded for the renewed assessment.
+
+Worktree `C:/Users/aidan/.codex/worktrees/play-time-promise-clarity/ESports Simulator`, branch `fix/play-time-promise-clarity`. Raw native artifacts remain at `runs/playtests/2026-10-10-play-time-promise-renewal`: gate-running.json, gate-freeze.json, gate-result.json, pytest.stdout, pytest.stderr and gate_runner.py. Committed gate-proof.json captures their hashes. Runner31560 family gone. Only assessment/source tests changed after3220; all6 mechanical function sources unchanged and28 renewal full-GameState byte comparisons equal old evaluator. Both renewed and unrenewed actual browser surfaces verified.
+
+Own8483/8484 families and both browsers already stopped; do not stop reused process IDs. Root must freshly review eventual published head and both required exact-head CI jobs before merge. Do not merge here. Canonical CSV remains untouched in primary and restored to HEAD in worktree; original7-row and renewal11-row shards are available for root's sequential append. Artifact attachment tools unavailable in child; parent already attachedPR366.

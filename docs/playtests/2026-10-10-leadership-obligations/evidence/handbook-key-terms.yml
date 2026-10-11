@@ -1,0 +1,45 @@
+- dialog [ref=e1536]:
+  - generic [ref=e1537]:
+    - generic [ref=e1538]:
+      - generic [ref=e1539]:
+        - text: Manager handbook
+        - heading "Learn the job" [level=1] [ref=e1540]
+        - paragraph [ref=e1541]: A practical guide to the weekly loop. The simulation keeps running on safe defaults while you learn.
+      - button "Close manager handbook" [ref=e1542] [cursor=pointer]: Close
+    - tablist "Guide section" [ref=e1543]:
+      - tab "First week" [ref=e1544] [cursor=pointer]
+      - tab "Screen guide" [ref=e1545] [cursor=pointer]
+      - tab "Key terms" [active] [ref=e1546] [cursor=pointer]
+    - generic [ref=e1547]:
+      - generic [ref=e1664]:
+        - generic [ref=e1665]:
+          - generic [ref=e1666]: OVR / current ability
+          - generic [ref=e1667]: What the player can deliver now. Role comfort, confidence, form, and tactics still shape match performance.
+        - generic [ref=e1668]:
+          - generic [ref=e1669]: Ceiling / potential
+          - generic [ref=e1670]: A forecast of a player's likely peak, not a guaranteed maximum or hard cap.
+        - generic [ref=e1671]:
+          - generic [ref=e1672]: Form
+          - generic [ref=e1673]: Recent performance. Useful, but noisier than attributes and a longer run of match data.
+        - generic [ref=e1674]:
+          - generic [ref=e1675]: Confidence
+          - generic [ref=e1676]: Belief under pressure; it affects duels and clutch nerve and moves back toward neutral over time.
+        - generic [ref=e1677]:
+          - generic [ref=e1678]: Condition
+          - generic [ref=e1679]: Physical readiness. Matches and hard training drain it; rest and recovery support restore it.
+        - generic [ref=e1680]:
+          - generic [ref=e1681]: Fog / scouting range
+          - generic [ref=e1682]: Uncertainty in an external read. More scouting narrows the band but never reveals private state perfectly.
+        - generic [ref=e1683]:
+          - generic [ref=e1684]: Role comfort
+          - generic [ref=e1685]: Familiarity with the current role and playstyle assignment. A reassignment starts low and settles with time.
+        - generic [ref=e1686]:
+          - generic [ref=e1687]: Badge
+          - generic [ref=e1688]: A public career marker earned from match or development events. Hover it to see its exact effect and how it can fade.
+        - generic [ref=e1689]:
+          - generic [ref=e1690]: xDuel / xDE
+          - generic [ref=e1691]: Actual duel wins compared with expected duel wins. It helps distinguish strong results from favorable matchups.
+      - generic [ref=e1692]:
+        - generic [ref=e1693]: Hover for detail
+        - generic [ref=e1694]: Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.
+    - paragraph [ref=e1580]: "Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus."

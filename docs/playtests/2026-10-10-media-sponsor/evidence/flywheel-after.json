@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0119",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Media choice has measurable state effects",
+    "problem": "Qualitative promise needed independent readback",
+    "solution": "Defend Hollowlock publicly; compare sentiment, saved trust and pending decision",
+    "lesson": "Sentiment52.1->55.1 immediately and saved manager trust50->58; no active sponsors meant sponsor effectzero, not an implied controversy charge",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0120",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate settled cash, live run rate and forecast",
+    "problem": "A signed contract changes recurring income while weekly world factors also change",
+    "solution": "Sign jersey steady10100/24weeks, advanceonce, read report income67874/expenses47100 and bank461864",
+    "lesson": "Settled net20774 matched bankdelta; preweek forecast20150 and postweeklive20933 were different. Contract persisted23weeks; no separate settled sponsor payment row exposed",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0121",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Save action needs current dirty-label selector",
+    "problem": "Exact Save locator missed actual Save-dot; response observer timedout",
+    "solution": "Preserve blocked/unproven attempt, resnapshot observed #save-btn, capture actualHTTP200 and independent saved ledger",
+    "lesson": "Save-dot is a distinct exact name; a tooling timeout is not proof a game request was rejected or even sent",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -1,0 +1,197 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 9 · Regular — Team Nexus
+      - generic [ref=f1e6]: 461,864 cr
+      - button "Save" [ref=f1e31] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard 1" [ref=f1e309] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f1e310]: "1"
+        - button "Inbox 15" [ref=f1e311] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e20]: "15"
+        - button "Match 2" [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e22]:
+        - button "Club" [ref=f1e24] [cursor=pointer]
+        - button "Facilities" [ref=f1e25] [cursor=pointer]
+        - button "Season" [ref=f1e26] [cursor=pointer]
+        - button "Market" [ref=f1e27] [cursor=pointer]
+        - button "Stats" [ref=f1e28] [cursor=pointer]
+        - button "Company" [ref=f1e29] [cursor=pointer]
+    - main [ref=f1e30]:
+      - generic [ref=f1e312]:
+        - generic [ref=f1e313]:
+          - generic [ref=f1e314]: Dashboard
+          - generic [ref=f1e315]: S1 · W9 · Regular
+          - button "Guide" [ref=f1e316] [cursor=pointer]
+          - button "Career ▸" [ref=f1e317] [cursor=pointer]
+        - generic [ref=f1e318]:
+          - generic [ref=f1e320]
+          - generic [ref=f1e341]
+          - generic [ref=f1e467]
+          - generic [ref=f1e546]
+  - generic [ref=f1e603]:
+    - heading "Season 1 · Week 8 results" [level=1] [ref=f1e604]
+    - generic [ref=f1e605]:
+      - generic [ref=f1e606]:
+        - generic [ref=f1e607]: league
+        - generic [ref=f1e608]: Team Vanguard vs Baltic Meridian
+        - generic [ref=f1e609]: 13–4
+        - button "▶ Lotus" [ref=f1e610] [cursor=pointer]
+      - generic [ref=f1e611]:
+        - generic [ref=f1e612]: league
+        - generic [ref=f1e613]: Patagonia Sur vs Azure Vanta
+        - generic [ref=f1e614]: 13–7
+      - generic [ref=f1e615]:
+        - generic [ref=f1e616]: league
+        - generic [ref=f1e617]: Tokyo Drift Six vs Adriatic Sirens
+        - generic [ref=f1e618]: 13–7
+        - button "▶ Lotus" [ref=f1e619] [cursor=pointer]
+      - generic [ref=f1e620]:
+        - generic [ref=f1e621]: league
+        - generic [ref=f1e622]: Hokkaido Drift vs Anatolia Forge
+        - generic [ref=f1e623]: 3–13
+      - generic [ref=f1e624]:
+        - generic [ref=f1e625]: league
+        - generic [ref=f1e626]: Solar Flare vs Alpine Echo
+        - generic [ref=f1e627]: 13–7
+        - button "▶ Lotus" [ref=f1e628] [cursor=pointer]
+      - generic [ref=f1e629]:
+        - generic [ref=f1e630]: league
+        - generic [ref=f1e631]: Lisbon Tide vs Busan Tempest
+        - generic [ref=f1e632]: 13–4
+      - generic [ref=f1e633]:
+        - generic [ref=f1e634]: league
+        - generic [ref=f1e635]: Saracen Guard vs Kathmandu Apex
+        - generic [ref=f1e636]: 13–3
+        - button "▶ Split" [ref=f1e637] [cursor=pointer]
+      - generic [ref=f1e638]:
+        - generic [ref=f1e639]: league
+        - generic [ref=f1e640]: Kraken Unit vs Taipei Circuit
+        - generic [ref=f1e641]: 9–13
+      - generic [ref=f1e642]:
+        - generic [ref=f1e643]: league
+        - generic [ref=f1e644]: Prairie Signal vs Bayou Kings
+        - generic [ref=f1e645]: 3–13
+        - button "▶ Split" [ref=f1e646] [cursor=pointer]
+      - generic [ref=f1e647]:
+        - generic [ref=f1e648]: league
+        - generic [ref=f1e649]: Berlin Wolves vs Mekong Vipers
+        - generic [ref=f1e650]: 13–6
+      - generic [ref=f1e651]:
+        - generic [ref=f1e652]: league
+        - generic [ref=f1e653]: Seoul Dynasty Prime vs Coral Sea Drakes
+        - generic [ref=f1e654]: 9–13
+        - button "▶ Split" [ref=f1e655] [cursor=pointer]
+      - generic [ref=f1e656]:
+        - generic [ref=f1e657]: league
+        - generic [ref=f1e658]: Highlands Nine vs Nova Rift
+        - generic [ref=f1e659]: 4–13
+      - generic [ref=f1e660]:
+        - generic [ref=f1e661]: league
+        - generic [ref=f1e662]: Sahara Compass vs Team Nexus
+        - generic [ref=f1e664]: 3–13
+        - button "▶ Ascent" [ref=f1e665] [cursor=pointer]
+      - generic [ref=f1e666]:
+        - generic [ref=f1e667]: league
+        - generic [ref=f1e668]: Gallic Storm vs Volga Reign
+        - generic [ref=f1e669]: 10–13
+      - generic [ref=f1e670]:
+        - generic [ref=f1e671]: league
+        - generic [ref=f1e672]: Midnight Polders vs Chao Phraya Owls
+        - generic [ref=f1e673]: 10–13
+        - button "▶ Ascent" [ref=f1e674] [cursor=pointer]
+      - generic [ref=f1e675]:
+        - generic [ref=f1e676]: league
+        - generic [ref=f1e677]: Apex Syndicate vs Phantom Core
+        - generic [ref=f1e678]: 13–4
+      - generic [ref=f1e679]:
+        - generic [ref=f1e680]: league
+        - generic [ref=f1e681]: Outback Sentinels vs Ghostline
+        - generic [ref=f1e682]: 13–10
+        - button "▶ Ascent" [ref=f1e683] [cursor=pointer]
+      - generic [ref=f1e684]:
+        - generic [ref=f1e685]: league
+        - generic [ref=f1e686]: Cascadia Youth vs Yucatan Ceibas
+        - generic [ref=f1e687]: 5–13
+      - generic [ref=f1e688]:
+        - generic [ref=f1e689]: league
+        - generic [ref=f1e690]: Rust Belt Gaming vs Nordic Frost
+        - generic [ref=f1e691]: 13–3
+        - button "▶ Bind" [ref=f1e692] [cursor=pointer]
+      - generic [ref=f1e693]:
+        - generic [ref=f1e694]: league
+        - generic [ref=f1e695]: Meridian Cross vs Crimson Order
+        - generic [ref=f1e696]: 13–6
+        - button "▶ Bind" [ref=f1e697] [cursor=pointer]
+      - generic [ref=f1e698]:
+        - generic [ref=f1e699]: league
+        - generic [ref=f1e700]: Iron Pact vs Harbour City Nine
+        - generic [ref=f1e701]: 13–7
+        - button "▶ Bind" [ref=f1e702] [cursor=pointer]
+      - generic [ref=f1e703]: Patch 1.08 shakes the meta.
+      - paragraph [ref=f1e705]: income 67,874 cr · expenses 47,100 cr
+      - generic [ref=f1e706]:
+        - heading "Squad development · Season 1 · Week 8" [level=2] [ref=f1e707]
+        - paragraph [ref=f1e708]: Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+        - generic [ref=f1e709]:
+          - generic [ref=f1e710]: Apex
+          - text: OVR 78.3 → 78.3 (0.0)
+          - generic [ref=f1e711]: Rest / Light · 1 map
+          - generic [ref=f1e712]: Matches under 0.01 OVR · Aim Precision +0.01 · Aim Reactivity +0.01
+          - generic [ref=f1e713]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e714]:
+          - generic [ref=f1e715]: Vortex
+          - text: OVR 74.7 → 74.7 (0.0)
+          - generic [ref=f1e716]: Rest / Normal · 1 map
+          - generic [ref=f1e717]: Matches +0.01 OVR · Comms Quality +0.02 · Composure +0.01 · Game Sense +0.01 · Utility Usage +0.02
+          - generic [ref=f1e718]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e719]:
+          - generic [ref=f1e720]: Ghost
+          - text: OVR 76.4 → 76.5 (+0.1)
+          - generic [ref=f1e721]: Rest / Light · 1 map
+          - generic [ref=f1e722]: Matches +0.09 OVR · Aim Precision +0.38 · Aim Reactivity +0.17 · Clutch Factor +0.14 · Comms Quality +0.06 · Composure +0.12 · Game Sense +0.01 · Positioning +0.01 · Utility Usage +0.04
+          - generic [ref=f1e723]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e724]:
+          - generic [ref=f1e725]: Slyblade
+          - text: OVR 72.3 → 72.3 (0.0)
+          - generic [ref=f1e726]: Rest / Normal · 1 map
+          - generic [ref=f1e727]: No measured skill gains
+          - generic [ref=f1e728]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e729]:
+          - generic [ref=f1e730]: Echo
+          - text: OVR 76.0 → 76.0 (0.0)
+          - generic [ref=f1e731]: Rest / Light · 0 maps
+          - generic [ref=f1e732]: No measured skill gains
+          - generic [ref=f1e733]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e734]:
+          - generic [ref=f1e735]: Hollowlock
+          - text: OVR 63.0 → 63.1 (+0.1)
+          - generic [ref=f1e736]: Tactical / Normal · 1 map
+          - generic [ref=f1e737]: Practice +0.01 OVR · Positioning +0.07
+          - generic [ref=f1e738]: Matches under 0.01 OVR · Aim Precision +0.01 · Aim Reactivity +0.01
+          - generic [ref=f1e739]: Poor match performances are slowing learning; useful practice still counts
+          - generic [ref=f1e740]: Tired legs are reducing practice quality; ease intensity or rest
+          - generic [ref=f1e741]: Coaching and club support are improving practice
+    - button "Continue" [ref=f1e742] [cursor=pointer]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Save •
+    - generic: Save your campaign
