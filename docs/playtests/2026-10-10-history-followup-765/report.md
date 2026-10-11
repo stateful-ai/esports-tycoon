@@ -26,3 +26,16 @@ source. No local tests or expensive gates were launched for this follow-up,
 following the user's instruction. Publication bytes and source equality were
 checked separately; this is not a new gameplay or runtime acceptance session.
 Remote CI will validate this PR's exact published head separately.
+
+## Current PR377 artifact correction
+
+Finding4239862183 was raised after the initial publication head3fb3e17.
+The newline-only historical `next-fixture-development/evidence/08-save.json`
+has been moved without changing a byte to the explicit non-JSON filename
+`08-save-response-body-not-captured.txt`. The historical manifest and publication
+audits remain snapshots of their original paths. The separate
+`save-body-artifact-correction.json` maps the original path to the current path
+and proves raw/index blob equality. The canonical765 CSV and every original
+observation field remain unchanged. Save request22/result200 and post-reload
+public state support the outcome independently; the response body was not
+captured and its content remains unknown. No local tests were run.

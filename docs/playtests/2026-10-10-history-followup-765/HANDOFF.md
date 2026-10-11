@@ -45,3 +45,12 @@ preserved in a stash, the empty follow-up branch moved onto the actual merge,
 and the docs restored. Source/config bytes stayed identical. No local tests
 were launched, per the user's newer instruction. See the separate final report
 and publication audit; the pending language above is archival preparation state.
+
+Current PR377 correction: finding4239862183 identified a newline-only non-JSON
+08-save.json. Its exact bytes now live at08-save-response-body-not-captured.txt;
+save-body-artifact-correction.json is the authoritative historical/current path
+mapping. Prior manifests are preserved as historical snapshots. Preserve the
+canonical765 SHA and apply this mapping during subsequent raw/Git blob audits.
+The successful request/result and post-reload state are independently retained;
+the response body was not captured. The root must review all new-head inline
+comments and both new-head CI jobs. No local tests or expensive gates launched.
