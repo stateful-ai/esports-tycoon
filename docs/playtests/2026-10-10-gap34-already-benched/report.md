@@ -22,3 +22,10 @@ Flywheel loop: inherited recent findings before browser play; recorded two learn
 Root late publication recovery stopped the still-running task-owned8514/8515 server families after checking their exact CLI identities and parents; zero listeners remained, and user8421 was untouched. Original public snapshots and native evidence are copied into evidence/. The raw18-event interval matches the original dated audit; older baseline events remain separate.
 
 Only the Save row's factual analytics status/evidence was updated to recorded for the retained paired browser usage request, explicitly outside accepted campaign decisions. All19 observation fields, partial/failed outcomes and original intentions remain unchanged. The original scoped CSV and field-protection proof are preserved in evidence/.
+
+Publication clarification: the current adjacent shard SHA256 is
+`7999ed3615b406853c06bbcf82aba2e1283216b49902b4ae456079522d708e99`.
+Each cited browser snapshot, reproduction and aggregate report has its
+same-named durable copy in `evidence/`; `audit.json` is adjacent to this report.
+Original ignored run paths above describe acquisition locations. The original
+CSV is preserved as `evidence/actions-before-analytics-correction.csv`.
