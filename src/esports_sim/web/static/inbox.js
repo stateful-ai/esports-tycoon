@@ -75,15 +75,28 @@ async function inboxFetch() {
 
 async function inboxPost(body) {
   if (INBOX_MOCK) return { unread: Math.max(0, inboxUnread - (body.all ? inboxUnread : 1)) };
+  // Keep this transport silent while sharing coarse request receipts with api().
+  // Never pass the payload or an item id to usage telemetry.
+  let token, r;
+  try { token = window.Usage?.request("/api/inbox/read", true); } catch { /* best effort */ }
+  const recordResult = (outcome, status) => {
+    try { window.Usage?.result(token, outcome, status); } catch { /* best effort */ }
+  };
   try {
-    const r = await fetch("/api/inbox/read", {
+    r = await fetch("/api/inbox/read", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!r.ok) return null;
-    return await r.json();
+    if (!r.ok) {
+      recordResult("http_error", r.status);
+      return null;
+    }
+    const data = await r.json();
+    recordResult(data?.ok === false ? "rejected" : "success", r.status);
+    return data;
   } catch {
+    recordResult("transport_error", r?.status);
     return null;
   }
 }
