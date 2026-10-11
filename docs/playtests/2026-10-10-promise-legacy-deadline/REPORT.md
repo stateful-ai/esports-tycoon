@@ -2,6 +2,19 @@
 
 Parent PR366 head8ce7e505a0d4d07c0afb1916d326d75662be579f; GPT-6.1-sol/medium, game0.0.1. New five-row intention-first shard; historical original7 and renewal11 shards remain byte-identical. Primary/canonicalCSV untouched. Explicit controlled LGE22, TeamNexus, seed2038, S1W9 uses a copied immutable naturalW9 save with only two promise inputs replaced. Credits are controlled fixture values, not claimed natural appearances.
 
+Published cold-reload evidence recovery: PR377 finding4239926419 identified
+missing receipts referenced by step4. Original `saved-before-reload.json`,
+`state-saved.json` and `public-reloaded.json` are now copied unchanged from the
+retained original play-time-promise worktree. The additional missing named CSV
+receipts and original50-event usage stream are also recovered. Exact original
+paths, current tracked paths and raw SHA256 hashes are recorded in
+`cold-reload-recovery-provenance.json`; sessions.json and campaign metadata are
+excluded. The controlled saved promise has initial_duration8, earned5 and
+weeks_left6; independent original post-cold-reload public roster confirms the
+same fields and required5. This is a read-only audit of original evidence,
+without replay or reconstructed responses. All765 canonical observations and
+the historical five-row shard remain unchanged. No local tests were launched.
+
 ## Both confirmed inline findings
 
 [Early failure comment4239157619](https://github.com/stateful-ai/esports-tycoon/pull/366#discussion_r4239157619): Echo original8-week60% target means5required credits, with3earned and2evaluations left. Both actual LockerRoom and Echo profile now say **Final scheduled evaluation: after2 more weekly evaluations**, explain possible earlier unreachable-credit failure, and specifically say an undressed next evaluation breaks then. Adjacent server-authored next outcomes say dressed remainsactive/undressed broken. Labels use existing evaluator outcomes; no JavaScript formulas. Actual early-profile screenshot was visually inspected. Focused tests execute both actual next-tick branches.

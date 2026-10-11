@@ -61,3 +61,10 @@ The nine recovered files include original four cited receipts,16-event usage
 and historical gate proof. No historical CSV or manifest changed; no local tests
 ran. Apply the Save-body mapping above and gap26 recovery mapping when reviewing
 the current head. Do not claim historical profile clicks as instrumented usage.
+
+Cold-reload finding4239926419: original saved-before-reload/state-saved/public-
+reloaded receipts and remaining named legacy CSV artifacts are now retained
+with raw-path/hash mapping in cold-reload-recovery-provenance.json. The controlled
+saved/public Apex promise basis8/earned5/left6 and public required5 were checked
+against those original bytes. Canonical765/manifests unchanged; no replay or
+local tests. Review all current inline findings and both new-head CI again.

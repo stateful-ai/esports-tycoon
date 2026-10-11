@@ -49,3 +49,13 @@ cropped screenshot contain no credentials or private request payload; the raw
 usage uses only its closed telemetry envelope. No response, screenshot, result
 or replay was fabricated. Historical canonical rows and manifests stay intact;
 current612-file source equality is verified without running local tests.
+
+Finding4239926419 is addressed by recovering original cold-reload saved/public
+receipts and all remaining named legacy-promise CSV evidence from its retained
+worktree, plus its50-event usage stream. The exact-byte mappings are in
+`../2026-10-10-promise-legacy-deadline/cold-reload-recovery-provenance.json`.
+The saved original promise and independent post-reload public roster both
+retain initial_duration8, credits5 and six evaluations; the public assessment
+requires5 credits. This controlled-fixture verification does not replay a game
+or establish natural appearances. Canonical765 bytes, historical observation
+fields and original manifests remain unchanged; no local tests were launched.
