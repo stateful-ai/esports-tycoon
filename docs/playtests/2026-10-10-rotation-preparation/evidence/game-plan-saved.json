@@ -1,0 +1,796 @@
+{
+  "gameplan": {
+    "fixture": {
+      "id": "s1w7m1am",
+      "week": 7,
+      "stage": "regular",
+      "best_of": 1,
+      "maps": [
+        "lotus"
+      ],
+      "opponent": {
+        "id": "team_vanguard",
+        "name": "Team Vanguard",
+        "tag": "VGD",
+        "world_rank": 2,
+        "record": "6-0"
+      }
+    },
+    "plan": {
+      "fixture_id": "s1w7m1am",
+      "aggression": null,
+      "pace": null,
+      "util_discipline": null,
+      "eco_greed": null,
+      "map_control": null,
+      "site_focus": null,
+      "focus_target": null,
+      "starter_ids": [],
+      "team_talk": null,
+      "halftime_talk": null,
+      "shouts": {}
+    },
+    "tactics": {
+      "aggression": 50,
+      "pace": 50,
+      "util_discipline": 50,
+      "eco_greed": 50,
+      "map_control": 50,
+      "site_focus": "balanced"
+    },
+    "scout_knowledge": 0.34,
+    "prep_edge_breakdown": {
+      "scout": 0.64,
+      "book": 0.005,
+      "coach": 0.176,
+      "total": 0.821,
+      "cap": 1.5
+    },
+    "prep_edge": 0.821,
+    "prep_edge_max": 1.5,
+    "scrim_proposal": null,
+    "last_artifact": {
+      "season": 1,
+      "week": 4,
+      "artifact_label": "bind anti-exec book +0.8",
+      "prep_edge_contribution": 0.003,
+      "dev_suggestion": "Vortex has ~7 points of untapped ceiling; a targeted development focus would compound these reps.",
+      "dev_suggestion_player_id": "vortex"
+    },
+    "counter": {
+      "opponent_edge": null,
+      "meta_edge": 0,
+      "max_edge": 3,
+      "opponent_revealed": false,
+      "meta_team_maps": 54
+    },
+    "opponent_roster": [
+      {
+        "player_id": "pulse",
+        "handle": "Pulse",
+        "role": "duelist",
+        "playstyle": "entry",
+        "overall": 83,
+        "form": 67,
+        "is_starter": true,
+        "fogged": true
+      },
+      {
+        "player_id": "shade",
+        "handle": "Shade",
+        "role": "initiator",
+        "playstyle": "lurker",
+        "overall": 83.5,
+        "form": 64,
+        "is_starter": true,
+        "fogged": true
+      },
+      {
+        "player_id": "slice",
+        "handle": "Slice",
+        "role": "duelist",
+        "playstyle": "awper",
+        "overall": 82.9,
+        "form": 72,
+        "is_starter": true,
+        "fogged": true
+      },
+      {
+        "player_id": "warden",
+        "handle": "Warden",
+        "role": "sentinel",
+        "playstyle": "anchor",
+        "overall": 84,
+        "form": 64,
+        "is_starter": true,
+        "fogged": true
+      },
+      {
+        "player_id": "zenith",
+        "handle": "Zenith",
+        "role": "controller",
+        "playstyle": "igl",
+        "overall": 84.6,
+        "form": 52,
+        "is_starter": true,
+        "fogged": true
+      }
+    ],
+    "suggested_target": null,
+    "own_roster": [
+      {
+        "player_id": "apex",
+        "handle": "Apex",
+        "role": "controller",
+        "playstyle": "igl",
+        "overall": 78.3,
+        "stamina": 66.5,
+        "form": 58.1,
+        "confidence": 61.3,
+        "is_starter": true
+      },
+      {
+        "player_id": "echo",
+        "handle": "Echo",
+        "role": "sentinel",
+        "playstyle": "anchor",
+        "overall": 76,
+        "stamina": 32.5,
+        "form": 54.1,
+        "confidence": 64,
+        "is_starter": false
+      },
+      {
+        "player_id": "fa_0",
+        "handle": "Hollowlock",
+        "role": "controller",
+        "playstyle": "igl",
+        "overall": 63,
+        "stamina": 70.4,
+        "form": 38.5,
+        "confidence": 46.7,
+        "is_starter": true
+      },
+      {
+        "player_id": "fa_13",
+        "handle": "Slyblade",
+        "role": "duelist",
+        "playstyle": "entry",
+        "overall": 72.3,
+        "stamina": 65.4,
+        "form": 59.5,
+        "confidence": 64.2,
+        "is_starter": true
+      },
+      {
+        "player_id": "ghost",
+        "handle": "Ghost",
+        "role": "initiator",
+        "playstyle": "lurker",
+        "overall": 76.3,
+        "stamina": 49.5,
+        "form": 58.7,
+        "confidence": 64.8,
+        "is_starter": true
+      },
+      {
+        "player_id": "vortex",
+        "handle": "Vortex",
+        "role": "duelist",
+        "playstyle": "awper",
+        "overall": 74.7,
+        "stamina": 96.5,
+        "form": 67.7,
+        "confidence": 66.9,
+        "is_starter": true
+      }
+    ],
+    "rotation_hints": [],
+    "site_options": [
+      "balanced",
+      "a",
+      "b",
+      "c"
+    ]
+  },
+  "state": {
+    "season": 1,
+    "week": 7,
+    "phase": "regular",
+    "window": {
+      "open": true,
+      "kind": "mid_split",
+      "label": "Mid-split window",
+      "detail": "Final roster moves close after week 8.",
+      "closes_week": 8
+    },
+    "roster_readiness": {
+      "ready": true,
+      "reason": "",
+      "count": 6,
+      "minimum": 5,
+      "shortfall": 0
+    },
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 431159,
+      "reputation": 62.8,
+      "fan_count": 304546,
+      "world_rank": 3,
+      "chemistry": 67.8,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "fa_13",
+        "fa_0",
+        "ghost"
+      ],
+      "record": {
+        "wins": 6,
+        "losses": 0,
+        "diff": 40
+      }
+    },
+    "next_fixture": {
+      "id": "s1w7m1am",
+      "week": 7,
+      "stage": "regular",
+      "best_of": 1,
+      "team_a": "team_nexus",
+      "team_b": "team_vanguard",
+      "team_a_name": "Team Nexus",
+      "team_b_name": "Team Vanguard",
+      "rivalry": null,
+      "potm": null,
+      "maps": [
+        "lotus"
+      ],
+      "map_thumbs": {
+        "lotus": "/assets/maps/lotus.webp"
+      },
+      "veto": [],
+      "series_notes": [],
+      "played": false,
+      "winner_id": null,
+      "map_score": [
+        0,
+        0
+      ],
+      "results": [],
+      "preview": [
+        "Team Nexus arrive on a 6-match winning run.",
+        "Three points here tighten Team Nexus's grip on a top-four berth.",
+        "Watch Slice — Team Vanguard's form pick at 1.31."
+      ],
+      "map_pool": {
+        "team_id": "team_nexus",
+        "team_name": "Team Nexus",
+        "maps": [
+          {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          },
+          {
+            "map": "Bind",
+            "map_id": "bind",
+            "played": 4,
+            "wins": 4,
+            "win_rate": 100
+          },
+          {
+            "map": "Lotus",
+            "map_id": "lotus",
+            "played": 1,
+            "wins": 1,
+            "win_rate": 100
+          }
+        ],
+        "veto": {
+          "opponent": "Team Vanguard",
+          "ban": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 100,
+            "our_wr": 100
+          },
+          "pick": {
+            "map": "Ascent",
+            "map_id": "ascent",
+            "their_wr": 100,
+            "our_wr": 100
+          }
+        }
+      },
+      "opp_manager": {
+        "name": "Ethan Lopez",
+        "identity": "Connector"
+      }
+    },
+    "leaders": [
+      {
+        "pid": "team_crimson_order_p2",
+        "handle": "Wraithghost",
+        "team": "Crimson Order",
+        "team_id": "team_crimson_order",
+        "rating": 1.96,
+        "kills": 169
+      },
+      {
+        "pid": "team_outback_sentinels_p2",
+        "handle": "Karmahawk",
+        "team": "Outback Sentinels",
+        "team_id": "team_outback_sentinels",
+        "rating": 1.52,
+        "kills": 148
+      },
+      {
+        "pid": "team_seoul_dynasty_prime_p1",
+        "handle": "Riftstrike",
+        "team": "Seoul Dynasty Prime",
+        "team_id": "team_seoul_dynasty_prime",
+        "rating": 1.46,
+        "kills": 137
+      }
+    ],
+    "movers": [],
+    "run_in": [
+      {
+        "week": 7,
+        "opponent": "Team Vanguard",
+        "opponent_id": "team_vanguard",
+        "opp_rank": 2,
+        "difficulty": "hard"
+      },
+      {
+        "week": 8,
+        "opponent": "Sahara Compass",
+        "opponent_id": "team_sahara_compass",
+        "opp_rank": 31,
+        "difficulty": "easy"
+      },
+      {
+        "week": 9,
+        "opponent": "Nordic Frost",
+        "opponent_id": "team_nordic_frost",
+        "opp_rank": 39,
+        "difficulty": "easy"
+      },
+      {
+        "week": 10,
+        "opponent": "Kathmandu Apex",
+        "opponent_id": "team_kathmandu_apex",
+        "opp_rank": 37,
+        "difficulty": "easy"
+      },
+      {
+        "week": 11,
+        "opponent": "Saracen Guard",
+        "opponent_id": "team_saracen_guard",
+        "opp_rank": 17,
+        "difficulty": "easy"
+      }
+    ],
+    "on_this_day": [],
+    "debrief": {
+      "result": "Beat Baltic Meridian 13-7",
+      "won": true,
+      "standout": "Vortex (1.29)",
+      "underperformer": "Hollowlock (0.62)"
+    },
+    "last_match_review": {
+      "fixture_id": "s1w6m0am",
+      "won": true,
+      "contested": true,
+      "best_of": 1,
+      "your_maps": 1,
+      "their_maps": 0,
+      "your_rounds": 13,
+      "their_rounds": 7,
+      "opp_id": "team_baltic_meridian",
+      "opp_name": "Baltic Meridian",
+      "potm": {
+        "player_id": "apex",
+        "handle": "Apex",
+        "badges": []
+      },
+      "tier": 0,
+      "tier_label": "box scores only",
+      "momentum_beat": null,
+      "your_calls": {
+        "plan_set": false,
+        "dials": [],
+        "site_focus": null,
+        "focus_target": null,
+        "team_talk": null,
+        "lineup": {
+          "override": false,
+          "followed": false,
+          "picked": [
+            {
+              "player_id": "fa_0",
+              "handle": "Hollowlock",
+              "rating": 0.62
+            }
+          ],
+          "benched": [
+            {
+              "player_id": "ghost",
+              "handle": "Ghost"
+            }
+          ]
+        },
+        "prep": null
+      },
+      "working": [
+        {
+          "code": "pistol",
+          "category": "pistol",
+          "tone": "good",
+          "headline": "Pistols won",
+          "detail": "2/2 pistol rounds (100%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "def_side",
+          "category": "defense",
+          "tone": "good",
+          "headline": "Defense is a wall",
+          "detail": "7/8 defense rounds won (88%).",
+          "player_id": null,
+          "handle": null,
+          "site": null,
+          "badges": []
+        },
+        {
+          "code": "player_std",
+          "category": "player",
+          "tone": "good",
+          "headline": "Apex carried",
+          "detail": "Team-high 1.29 average rating.",
+          "player_id": "apex",
+          "handle": "Apex",
+          "site": null,
+          "badges": []
+        }
+      ],
+      "breaking": [
+        {
+          "code": "player_under",
+          "category": "player",
+          "tone": "bad",
+          "headline": "Hollowlock off-colour",
+          "detail": "0.62 average rating across the series.",
+          "player_id": "fa_0",
+          "handle": "Hollowlock",
+          "site": null,
+          "badges": [
+            {
+              "id": "inconsistent",
+              "name": "Inconsistent",
+              "emoji": "🎲",
+              "polarity": -1,
+              "blurb": "a different player week to week",
+              "kind": "negative",
+              "impact": "While held: -2 Composure.",
+              "decay": "It can fade after 2 seasons without re-qualifying.",
+              "art": "/assets/badges/inconsistent.webp",
+              "season": 1
+            }
+          ],
+          "dev_note": "Near their ceiling (proj. 55–66) — a lineup call."
+        }
+      ],
+      "levers": [
+        {
+          "code": "player_form",
+          "tab": "roster",
+          "specialty": "team",
+          "on_focus": false,
+          "text": "Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.",
+          "adjustment": null
+        }
+      ],
+      "coach": {
+        "present": true,
+        "specialty": "mechanical"
+      },
+      "locked": true,
+      "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+    },
+    "decision_ledger": [],
+    "press": "Team Nexus are one of the form teams on a 6-match run.",
+    "suggested_lineup": {
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "quality": 78,
+          "dressed": true
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "quality": 76,
+          "dressed": true
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "quality": 76,
+          "dressed": false
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "quality": 75,
+          "dressed": true
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "quality": 72,
+          "dressed": true
+        }
+      ],
+      "changed": true
+    },
+    "board": null,
+    "form_trend": [
+      {
+        "n": 1,
+        "week": 1,
+        "wins": 1,
+        "won": true
+      },
+      {
+        "n": 2,
+        "week": 2,
+        "wins": 2,
+        "won": true
+      },
+      {
+        "n": 3,
+        "week": 3,
+        "wins": 3,
+        "won": true
+      },
+      {
+        "n": 4,
+        "week": 4,
+        "wins": 4,
+        "won": true
+      },
+      {
+        "n": 5,
+        "week": 5,
+        "wins": 5,
+        "won": true
+      },
+      {
+        "n": 6,
+        "week": 6,
+        "wins": 6,
+        "won": true
+      }
+    ],
+    "squad_profile": {
+      "avg_age": 24,
+      "buckets": {
+        "youth": 1,
+        "prime": 4,
+        "veteran": 1
+      },
+      "expiries": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 19,
+          "weeks_left": 38
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 26,
+          "weeks_left": 45
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 22,
+          "weeks_left": 46
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 23,
+          "weeks_left": 50
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 26,
+          "weeks_left": 56
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 28,
+          "weeks_left": 56
+        }
+      ]
+    },
+    "objectives_hub": [],
+    "rotation": [
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "maps": 6,
+        "starter": false,
+        "stamina": 32,
+        "burnout": true
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "maps": 6,
+        "starter": true,
+        "stamina": 65,
+        "burnout": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "maps": 6,
+        "starter": true,
+        "stamina": 96,
+        "burnout": false
+      },
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "maps": 5,
+        "starter": true,
+        "stamina": 66,
+        "burnout": false
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "maps": 5,
+        "starter": true,
+        "stamina": 50,
+        "burnout": false
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "maps": 2,
+        "starter": true,
+        "stamina": 70,
+        "burnout": false
+      }
+    ],
+    "training_focus": "tactical",
+    "training_delegated": false,
+    "focus_options": [
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "rest"
+    ],
+    "news": [
+      "[S1 W6] Rust Belt Gaming part with Jan Andersen and appoint shhhack after a 2-match losing streak.",
+      "[S1 W6] Prairie Signal part with Lucas Janssen and appoint Jhein after a 2-match losing streak.",
+      "[S1 W6] Ghostline part with Diego Larsson and appoint NorthernLights after a 2-match losing streak.",
+      "[S1 W6] Slyecho (Yucatan Ceibas) passes 100 kills this season.",
+      "[S1 W6] Wraithshot (Volga Reign) passes 100 kills this season.",
+      "[S1 W6] Emberstorm (Volga Reign) passes 100 kills this season.",
+      "[S1 W6] Ciphersurge (Tokyo Drift Six) passes 100 kills this season.",
+      "[S1 W6] Frostpulse (Taipei Circuit) passes 100 kills this season.",
+      "[S1 W6] Driftshot (Taipei Circuit) passes 100 kills this season.",
+      "[S1 W6] Karmawire (Solar Flare) passes 100 kills this season.",
+      "[S1 W6] Staticstorm (Saracen Guard) passes 100 kills this season.",
+      "[S1 W6] Zephyrpulse (Rust Belt Gaming) passes 100 kills this season."
+    ],
+    "scout": {
+      "target": null,
+      "target_name": null,
+      "progress": 0,
+      "cap": 1
+    },
+    "standings_top": [
+      {
+        "team_id": "team_vanguard",
+        "name": "Team Vanguard",
+        "wins": 6,
+        "losses": 0,
+        "rounds_won": 80,
+        "rounds_lost": 38
+      },
+      {
+        "team_id": "team_nexus",
+        "name": "Team Nexus",
+        "wins": 6,
+        "losses": 0,
+        "rounds_won": 78,
+        "rounds_lost": 38
+      },
+      {
+        "team_id": "team_rust_belt_gaming",
+        "name": "Rust Belt Gaming",
+        "wins": 3,
+        "losses": 3,
+        "rounds_won": 61,
+        "rounds_lost": 49
+      },
+      {
+        "team_id": "team_saracen_guard",
+        "name": "Saracen Guard",
+        "wins": 3,
+        "losses": 3,
+        "rounds_won": 65,
+        "rounds_lost": 63
+      }
+    ],
+    "champions": [],
+    "transfer_offers": [],
+    "flavor_event": null,
+    "media_event": null,
+    "career": {
+      "mode": "sandbox",
+      "seat": {
+        "id": "mgr_team_nexus",
+        "name": "NXS manager",
+        "team_id": "team_nexus",
+        "archetype": "",
+        "unemployed": false
+      },
+      "contract": null,
+      "offers": [],
+      "blocked": false
+    },
+    "multiplayer": {
+      "mode": "solo",
+      "code": "26UHC",
+      "humans": [
+        {
+          "team_id": "team_nexus",
+          "name": "Team Nexus",
+          "is_you": true
+        }
+      ],
+      "ready": [],
+      "you_ready": false
+    },
+    "save": {
+      "dirty": true,
+      "autosave_enabled": true,
+      "autosave_every_weeks": 1
+    },
+    "promise_pending": false,
+    "scout_shortlist_ready": false,
+    "scrim_proposal_pending": false,
+    "culture_violation_unack": false
+  },
+  "body": "MATCH\nS1 · W7 · Regular\nSTRATEGY\nGAME PLAN\nPREP\nGuide\nGAME PLAN — VS\nTEAM VANGUARD\nVGD\nPLAN SET\n\nleague · best of 1 · lotus · their record 6-0 · world #2. A plan is one match's prep — consumed when the match sims; your standing strategy above is untouched.\n\nPREP EDGE\n+0.8\nscout +0.6\nbook +0.0\ncoach +0.2\nduel points while a plan is set — from scouting, your map book and your coach. Team Vanguard is 34% scouted · capped at +1.5.\nPrep artifact: bind anti-exec book +0.8 +0.0 EDGE\nCOUNTER-STRAT\n0.0\nduel points against the public meta on these maps (54 team-maps). Opposing their dial lean helps; matching it reinforces their strength. Range ±3.0. Scout Team Vanguard to 50% for their private read.\nFOCUS TARGET\nEDGE VS THE HUNTED MAN, A SMALL TAX VS EVERYONE ELSE\n\tPLAYER\tROLE\tSTYLE\tCA\tFORM\t\n\tNo target — play our own game\n\tPulse\tDuelist\tEntry\t~83\t~67\t\n\tShade\tInitiator\tLurker\t~84\t~64\t\n\tSlice\tDuelist\tAwper\t~83\t~72\t\n\tWarden\tSentinel\tAnchor\t~84\t~64\t\n\tZenith\tController\tIGL\t~85\t~52\t\n\nScout them past 35% and your analyst will name the weak link.\n\nDIAL OVERRIDES\nUNCHECKED DIALS PLAY THE STANDING BOOK\nAggression\n50 (book)\nPace\n50 (book)\nUtility discipline\n50 (book)\nEco greed\n50 (book)\nMap control\n50 (book)\nSite focus\nBOOK\nBALANCED\nA SITE\nB SITE\nC SITE\nONE-MATCH LINEUP\nPICK EXACTLY FIVE, OR LEAVE THE STANDING FIVE\nApex\nIGL\n78\n67 sta\nSTARTER\nEcho\nAnchor\n76\n33 sta\nHollowlock\nIGL\n63\n70 sta\nSTARTER\nSlyblade\nEntry\n72\n65 sta\nSTARTER\nGhost\nLurker\n76\n50 sta\nSTARTER\nVortex\nAwper\n75\n97 sta\nSTARTER\nUse standing five\nstanding five\nTeam talk\nNone — let them focus\nFire them up (lift, best for ambitious players)\nReassure (steadies fragile nerves)\nRefocus (settle tilt and hubris alike)\nUpdate game plan\nScrap the plan\nTHIS WEEK'S LINEUP\n\nChoose one agent per player for every map they play. When a fixture is listed, use its maps to plan; otherwise, pick for comfort. Auto fields their best-mastery agent. Off-role picks work but low mastery hurts duels.\n\nPLAYER\tROLE\tAGENT\tMASTERY\tEDGE\nApex\tCONTROLLER IGL\t\nAuto — Omen\nOmen\nAstra\nBrimstone\nClove\nMiks\nViper\nHarbor\nSova\nChamber\nCypher\nDeadlock\nFade\nJett\nKAY/O\nKilljoy\nPhoenix\nReyna\nTejo\nVyse\nYoru\nVeto\nBreach\nRaze\nWaylay\nSkye\nIso\nNeon\nSage\nGekko\n\t92\t+1.7\nVortex\tDUELIST AWPER\t\nAuto — Jett\nJett\nPhoenix\nYoru\nIso\nNeon\nRaze\nReyna\nWaylay\nBrimstone\nGekko\nMiks\nSova\nTejo\nVeto\nAstra\nChamber\nVyse\nSkye\nDeadlock\nBreach\nKilljoy\nSage\nHarbor\nKAY/O\nViper\nCypher\nFade\nClove\nOmen\n\t94\t+1.8\nGhost\tINITIATOR LURKER\t\nAuto — Sova\nSova\nKAY/O\nFade\nGekko\nSkye\nTejo\nBreach\nClove\nIso\nNeon\nRaze\nViper\nBrimstone\nMiks\nVyse\nReyna\nSage\nCypher\nDeadlock\nKilljoy\nYoru\nAstra\nJett\nVeto\nPhoenix\nWaylay\nChamber\nHarbor\nOmen\n\t83\t+1.3\nSlyblade\tDUELIST ENTRY\t\nAuto — Yoru\nYoru\nSage\nRaze\nNeon\nPhoenix\nJett\nIso\nReyna\nViper\nWaylay\nSkye\nClove\nAstra\nKilljoy\nTejo\nMiks\nOmen\nHarbor\nKAY/O\nBrimstone\nFade\nGekko\nDeadlock\nVeto\nVyse\nCypher\nBreach\nChamber\nSova\n\t95\t+1.8\nEcho\tSENTINEL ANCHOR\t\nAuto — Killjoy\nKilljoy\nVeto\nCypher\nDeadlock\nVyse\nSage\nChamber\nGekko\nKAY/O\nOmen\nReyna\nSova\nJett\nWaylay\nIso\nYoru\nHarbor\nAstra\nSkye\nTejo\nBrimstone\nFade\nMiks\nNeon\nPhoenix\nRaze\nBreach\nClove\nViper\n\t91\t+1.6\nHollowlock\tCONTROLLER IGL\t\nAuto — Jett\nHarbor\nJett\nClove\nVeto\nAstra\nBrimstone\nViper\nKAY/O\nReyna\nOmen\nGekko\nMiks\nSkye\nIso\nDeadlock\nFade\nPhoenix\nRaze\nNeon\nSova\nWaylay\nYoru\nChamber\nBreach\nTejo\nKilljoy\nSage\nVyse\nCypher\n\t73\t+0.9\nLock agents\nSaved agents stay in place until changed — rivals need 50%+ scouting to read them."
+}

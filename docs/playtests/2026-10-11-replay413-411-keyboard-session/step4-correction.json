@@ -1,0 +1,15 @@
+{
+  "correctsStep": 4,
+  "receipt": {
+    "active": "<button class=\"btn btn-sm\" id=\"shout-focus\" data-tooltip=\"&lt;h4&gt;Refocus player&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;Ask one player to refocus&lt;/div&gt;\" aria-describedby=\"es-tooltip\">Refocus player</button>",
+    "insideFeed": false,
+    "play": "⏸",
+    "scrub": "16",
+    "feedHtml": "<div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/killjoy.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"echo\">Killjoy</button></b> <span class=\"muted feed-handle\">(Echo)</span> <span class=\"\">→</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"shade\">Sova</button></b> <span class=\"muted feed-handle\">(Shade)</span> <span class=\"muted\">Spectre</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/jett.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"vortex\">Jett</button></b> <span class=\"muted feed-handle\">(Vortex)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"muted\">Spectre · trade</span></div><div class=\"k\"><img class=\"feed-agent\" src=\"/assets/agents/raze.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"pulse\">Raze</button></b> <span class=\"muted feed-handle\">(Pulse)</span> <span class=\"hs\">☠</span> <img class=\"feed-agent\" src=\"/assets/agents/sova.webp\" onerror=\"this.style.display='none'\" alt=\"\"><b><button type=\"button\" class=\"feed-name plink\" data-pid=\"ghost\">Sova</button></b> <span class=\"muted feed-handle\">(Ghost)</span> <span class=\"muted\">Classic</span></div>",
+    "round": "Round 2 · ATK Team Nexus"
+  },
+  "actualInsideFeed": false,
+  "actualControl": "Refocus player",
+  "freshReplayOpenPassed": true,
+  "feedFocusPassed": false
+}

@@ -1,0 +1,8 @@
+
+seed 31337
+  S1: 258 maps | blowout(<=2) 16.7% | close(>=8) 39.9% | top team 14/82 wins
+  S2: 258 maps | blowout(<=2) 19.4% | close(>=8) 39.9% | top team 14/82 wins
+  S3: 258 maps | blowout(<=2) 13.6% | close(>=8) 44.2% | top team 11/82 wins
+
+band: blowout <= 32%, close >= 24% per season
+snowball gate OK

@@ -1,0 +1,9 @@
+# Integration of actual 994-row publication - 2026-10-11
+
+PR394 actually merged at2026-10-11T11:28:21Z as main8e31dec231029568cc0f5762fa36b3b59d2cb6a2 after both remote checks succeeded and root review/guard. Current main now publishes994 rows, SHA25621026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631. PR366 had previously merged at11:25:41Z; its source and integration evidence are retained exactly from main. The earlier765/main5a statements in original1044 reports and proofs remain immutable dated evidence.
+
+This normal integration merge extends previous candidateaadc2e7bd56da89b97c27eeb1b8ff8719c588069 with actual main8e31. The only conflict was canonicalCSV (common765, main994, candidate1044). Resolution retains the exact previous1044 raw Git blob SHA256ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249. Main994 is an exact raw prefix and all20874 original fields match. Current delta is50 observations; no further observations or game actions are added by integration.
+
+All current main source outside playtest history and every existing main blob are retained, except advancing canonicalCSV and additive raw-byte attributes. All previous candidate history blobs, original reports/audits/pathinventory, all four finite evidence folders and124 supplemental artifacts remain exact. New main integration documents are additions. The original root review5483117273 and earlier head CI/proofs apply to historicalaadc2e7 only, never this changed head.
+
+No existing PR396/399/403 is closed or retargeted. PR404 remains the same PR with a normal integration commit, not a rewritten or replacement draft. Fresh independent root review and fresh exact-head remote CI SUCCESS are mandatory before merge. No local tests, Node/native helpers, gates, simulations, analytics commands or gameplay were run. Source retention and prefix receipts are bookkeeping, not runtime acceptance of new main promises code.

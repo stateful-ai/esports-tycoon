@@ -1,0 +1,195 @@
+### Page
+- Page URL: http://127.0.0.1:8519/
+- Page Title: esports-sim
+- Console: 2 errors, 0 warnings
+### Snapshot
+```yaml
+- generic [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]: ESPORTSSIM
+      - generic [ref=f2e26]: Season 1 · Week 21 · Playoffs — Team Nexus
+      - generic [ref=f2e27]: 1,814,812 cr
+      - button "Save" [active] [ref=f2e2194] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f2e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f2e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f2e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f2e7] [cursor=pointer]
+      - button "🛠️" [ref=f2e8] [cursor=pointer]
+      - button "🔇" [ref=f2e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f2e10] [cursor=pointer]: Guide
+    - navigation [ref=f2e11]:
+      - generic "Weekly" [ref=f2e12]:
+        - button "Dashboard" [ref=f2e1912] [cursor=pointer]
+        - button "Inbox 18" [ref=f2e2195] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f2e33]: "18"
+        - button "Match 2" [ref=f2e2196] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f2e2197]: "2"
+      - generic "Org" [ref=f2e17]:
+        - button "Club" [ref=f2e19] [cursor=pointer]
+        - button "Facilities" [ref=f2e20] [cursor=pointer]
+        - button "Season" [ref=f2e21] [cursor=pointer]
+        - button "Market" [ref=f2e22] [cursor=pointer]
+        - button "Stats" [ref=f2e23] [cursor=pointer]
+        - button "Company" [ref=f2e24] [cursor=pointer]
+    - main [ref=f2e25]:
+      - generic [ref=f2e3031]:
+        - generic [ref=f2e3032]:
+          - generic [ref=f2e3033]: Match
+          - generic [ref=f2e3034]: S1 · W21 · Playoffs
+          - generic [ref=f2e3035]:
+            - button "Strategy" [ref=f2e3036] [cursor=pointer]
+            - button "Game plan" [ref=f2e3037] [cursor=pointer]
+            - button "Prep" [ref=f2e3038] [cursor=pointer]
+          - button "Guide" [ref=f2e3039] [cursor=pointer]
+        - generic [ref=f2e3040]:
+          - generic [ref=f2e3041]:
+            - heading "Match preparation" [level=2] [ref=f2e3042]
+            - paragraph [ref=f2e3043]: "Current squad condition: Apex 100.0 · Echo 100.0 · Hollowlock 90.0 · Slyblade 92.0 · Ghost 88.5 · Vortex 100.0."
+            - paragraph [ref=f2e3044]: "Next: Team Vanguard vs Team Nexus · week 21"
+            - generic [ref=f2e3045]:
+              - generic [ref=f2e3046]:
+                - generic [ref=f2e3047]: Sparring partner
+                - combobox "Sparring partner" [ref=f2e3048]:
+                  - option "Adriatic Sirens" [selected]
+                  - option "Alpine Echo"
+                  - option "Anatolia Forge"
+                  - option "Apex Syndicate"
+                  - option "Azure Vanta"
+                  - option "Baltic Meridian"
+                  - option "Bayou Kings"
+                  - option "Berlin Wolves"
+                  - option "Busan Tempest"
+                  - option "Cascadia Youth"
+                  - option "Chao Phraya Owls"
+                  - option "Coral Sea Drakes"
+                  - option "Crimson Order"
+                  - option "Gallic Storm"
+                  - option "Ghostline"
+                  - option "Harbour City Nine"
+                  - option "Highlands Nine"
+                  - option "Hokkaido Drift"
+                  - option "Iron Pact"
+                  - option "Kathmandu Apex"
+                  - option "Kraken Unit"
+                  - option "Lisbon Tide"
+                  - option "Mekong Vipers"
+                  - option "Meridian Cross"
+                  - option "Midnight Polders"
+                  - option "Nordic Frost"
+                  - option "Nova Rift"
+                  - option "Outback Sentinels"
+                  - option "Patagonia Sur"
+                  - option "Phantom Core"
+                  - option "Prairie Signal"
+                  - option "Rust Belt Gaming"
+                  - option "Sahara Compass"
+                  - option "Saracen Guard"
+                  - option "Seoul Dynasty Prime"
+                  - option "Solar Flare"
+                  - option "Taipei Circuit"
+                  - option "Tokyo Drift Six"
+                  - option "Volga Reign"
+                  - option "Yucatan Ceibas"
+              - generic [ref=f2e3049]:
+                - generic [ref=f2e3050]: Preparation map
+                - combobox "Preparation map" [ref=f2e3051]:
+                  - option "Haven" [selected]
+                  - option "Ascent"
+                  - option "Lotus"
+              - generic [ref=f2e3052]:
+                - generic [ref=f2e3053]: Session objective
+                - combobox "Session objective" [ref=f2e3054]:
+                  - option "Anti Exec" [selected]
+                  - option "Retakes"
+                  - option "Lineup Test"
+                  - option "Mental Reset"
+              - generic [ref=f2e3055]:
+                - generic [ref=f2e3056]: Session intensity
+                - combobox "Session intensity" [ref=f2e3057]:
+                  - option "Light" [selected]
+                  - option "Normal"
+                  - option "Intense"
+            - paragraph [ref=f2e3058]: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+            - paragraph [ref=f2e3059]: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+            - button "Book session" [ref=f2e3060] [cursor=pointer]
+            - generic [ref=f2e3061]:
+              - generic [ref=f2e3062]:
+                - generic [ref=f2e3063]: Coach proposal
+                - generic [ref=f2e3064]: Anti Exec on Haven
+              - paragraph [ref=f2e3065]: "Partner: Coral Sea Drakes. Intensity: Normal."
+              - paragraph [ref=f2e3066]: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+              - paragraph [ref=f2e3067]: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+              - button "Accept coach plan" [ref=f2e3068] [cursor=pointer]
+            - generic [ref=f2e3069]:
+              - text: "Prep artifact: ascent retake playbook +2.1"
+              - generic [ref=f2e3070]: +0.0 edge
+              - text: Knowledge +2.12; stamina −4.
+            - paragraph [ref=f2e3071]: Defense trails attack on ascent, 50.0% to 54.4% round wins.
+            - generic [ref=f2e3072]: "Dev note: FA 0 — Map mastery projects Hollowlock as a bench option for ascent; no scrim performance was measured. Consider a focused development block before trying that rotation."
+          - generic [ref=f2e3073]:
+            - heading "Tournament six locked" [level=2] [ref=f2e3074]:
+              - text: Tournament six
+              - generic [ref=f2e3075]: locked
+            - paragraph [ref=f2e3076]: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+            - generic [ref=f2e3077]:
+              - 'checkbox "Apex 26 · Promised squad role: Starter" [checked] [disabled] [ref=f2e3078]'
+              - generic [ref=f2e3079]: Apex
+              - generic [ref=f2e3080]: "26 · Promised squad role: Starter"
+            - generic [ref=f2e3081]:
+              - 'checkbox "Echo 23 · Promised squad role: Starter" [checked] [disabled] [ref=f2e3082]'
+              - generic [ref=f2e3083]: Echo
+              - generic [ref=f2e3084]: "23 · Promised squad role: Starter"
+            - generic [ref=f2e3085]:
+              - 'checkbox "Hollowlock 26 · Promised squad role: Bench" [checked] [disabled] [ref=f2e3086]'
+              - generic [ref=f2e3087]: Hollowlock
+              - generic [ref=f2e3088]: "26 · Promised squad role: Bench"
+            - generic [ref=f2e3089]:
+              - 'checkbox "Slyblade 28 · Promised squad role: Starter" [checked] [disabled] [ref=f2e3090]'
+              - generic [ref=f2e3091]: Slyblade
+              - generic [ref=f2e3092]: "28 · Promised squad role: Starter"
+            - generic [ref=f2e3093]:
+              - 'checkbox "Ghost 19 · Promised squad role: Starter" [checked] [disabled] [ref=f2e3094]'
+              - generic [ref=f2e3095]: Ghost
+              - generic [ref=f2e3096]: "19 · Promised squad role: Starter"
+            - generic [ref=f2e3097]:
+              - 'checkbox "Vortex 22 · Promised squad role: Starter" [checked] [disabled] [ref=f2e3098]'
+              - generic [ref=f2e3099]: Vortex
+              - generic [ref=f2e3100]: "22 · Promised squad role: Starter"
+          - generic [ref=f2e3101]:
+            - heading "Series plan" [level=2] [ref=f2e3102]
+            - paragraph [ref=f2e3103]: Set a between-map response that applies after map one when its condition is met.
+            - generic [ref=f2e3104]:
+              - combobox [ref=f2e3105]:
+                - option "Trailing" [selected]
+                - option "After Loss"
+                - option "Always"
+              - combobox [ref=f2e3106]:
+                - option "Steady" [selected]
+                - option "Press"
+                - option "Stabilize"
+                - option "Reset"
+              - combobox [ref=f2e3107]:
+                - option "No substitution" [selected]
+                - option "Hollowlock"
+              - combobox [ref=f2e3108]:
+                - option "No substitution" [selected]
+                - option "Apex"
+                - option "Echo"
+                - option "Slyblade"
+                - option "Ghost"
+                - option "Vortex"
+            - button "Save series card" [ref=f2e3109] [cursor=pointer]
+  - generic [ref=f2e913]: World saved.
+  - tooltip "Save Save your campaign":
+    - heading "Save" [level=4]
+    - generic: Save your campaign
+```

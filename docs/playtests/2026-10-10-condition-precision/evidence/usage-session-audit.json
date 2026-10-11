@@ -1,0 +1,53 @@
+{
+  "29667f78c3e913a77083fa674d196aa4": {
+    "events": 2,
+    "kinds": {
+      "visible_time": 1,
+      "session_end": 1
+    },
+    "views": []
+  },
+  "5001be1b6a8afa2fb3645007cf1ff88e": {
+    "events": 6,
+    "kinds": {
+      "session_start": 1,
+      "view": 1,
+      "visible_time": 4
+    },
+    "views": [
+      "lobby"
+    ]
+  },
+  "f0309246d356a3e2818813b53f652a6c": {
+    "events": 15,
+    "kinds": {
+      "session_start": 1,
+      "view": 4,
+      "visible_time": 8,
+      "attempt": 1,
+      "result": 1
+    },
+    "views": [
+      "lobby",
+      "dashboard",
+      "tactics/strategy",
+      "tactics/prep"
+    ]
+  },
+  "fe3bf569dc541d2efa248479dfa8e050": {
+    "events": 10,
+    "kinds": {
+      "session_start": 1,
+      "view": 4,
+      "visible_time": 3,
+      "attempt": 1,
+      "result": 1
+    },
+    "views": [
+      "lobby",
+      "dashboard",
+      "tactics/strategy",
+      "tactics/prep"
+    ]
+  }
+}

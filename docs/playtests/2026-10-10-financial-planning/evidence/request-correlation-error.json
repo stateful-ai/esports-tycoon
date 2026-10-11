@@ -1,0 +1,19 @@
+{
+  "recorded_at_utc": "2026-10-10T19:38:15.490100+00:00",
+  "error": "AssertionError comparing different request-ID namespaces",
+  "mcp_network_observer_indices": [
+    39,
+    51,
+    68,
+    80,
+    118
+  ],
+  "usage_request_ids": [
+    11,
+    17,
+    28,
+    37,
+    53
+  ],
+  "recovery": "Correlate within Usage session/request ID namespace and by coarse endpoint; preserve failed CSV row9"
+}

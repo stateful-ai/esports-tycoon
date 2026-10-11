@@ -1,0 +1,626 @@
+{
+  "profile": {
+    "player": {
+      "id": "fa_0",
+      "handle": "Hollowlock",
+      "age": 26,
+      "role": "controller",
+      "team_id": "team_nexus",
+      "team_name": "Team Nexus",
+      "team_logo": "/assets/logos/logo_1.webp",
+      "portrait": "/assets/portraits/controller_0.webp",
+      "is_user_team": true,
+      "is_free_agent": false,
+      "can_talk": true,
+      "hierarchy_role": "core",
+      "mentor_id": null,
+      "mentor_handle": null,
+      "mentor_progress": null,
+      "promises": [],
+      "tenure_weeks": 3,
+      "transfer_ask": null,
+      "seller_stance": null,
+      "ask_breakdown": [],
+      "followers": 67406,
+      "stream_load": 18.2,
+      "stream_status": "practice-focused",
+      "stream_income": 110,
+      "stream_growth_mult": 0.94,
+      "can_rein_streaming": true,
+      "can_change_assignment": true,
+      "can_assign_igl": true,
+      "is_igl": false,
+      "confidence": 50,
+      "is_starter": true,
+      "dev_focus": "auto",
+      "training_intensity": "normal",
+      "country": "US",
+      "languages": [
+        {
+          "lang": "en",
+          "level": 96
+        }
+      ]
+    },
+    "overview": {
+      "ovr": 63,
+      "ovr_stars": 2,
+      "current_ability_band": [
+        65.8,
+        68.8
+      ],
+      "comfort": 100,
+      "igl_experience": null,
+      "igl_effectiveness": null,
+      "potential": 61,
+      "potential_stars": 2,
+      "potential_band": [
+        55,
+        66
+      ],
+      "skill_ceilings": {
+        "aim_precision": [
+          61.7,
+          73.8
+        ],
+        "aim_reactivity": [
+          56.1,
+          65.3
+        ],
+        "clutch_factor": [
+          64.3,
+          75
+        ],
+        "comms_quality": [
+          65.3,
+          67.9
+        ],
+        "composure": [
+          65.2,
+          67.3
+        ],
+        "game_sense": [
+          73.9,
+          75.3
+        ],
+        "movement": [
+          65.9,
+          65.9
+        ],
+        "positioning": [
+          61.5,
+          73.6
+        ],
+        "tilt_resistance": [
+          64.4,
+          77
+        ],
+        "utility_usage": [
+          69.8,
+          69.8
+        ]
+      },
+      "form": 40.2,
+      "morale": 71.7,
+      "condition": 55.9,
+      "market_value": 166000,
+      "salary": 4000,
+      "contract_weeks": 55,
+      "contract_terms": {
+        "stream_share": 70,
+        "release_fee": 28000,
+        "buyout": 126000,
+        "no_transfer": false,
+        "roster_role": "bench"
+      },
+      "playstyle": "igl",
+      "fogged": false
+    },
+    "traits": [
+      {
+        "name": "analytical",
+        "desc": "spreadsheet gamer",
+        "revealed": true
+      }
+    ],
+    "badges": [
+      {
+        "id": "inconsistent",
+        "name": "Inconsistent",
+        "emoji": "🎲",
+        "polarity": -1,
+        "blurb": "a different player week to week",
+        "kind": "negative",
+        "impact": "While held: -2 Composure.",
+        "decay": "It can fade after 2 seasons without re-qualifying.",
+        "art": "/assets/badges/inconsistent.webp",
+        "season": 1
+      }
+    ],
+    "attributes": [
+      {
+        "key": "aim_precision",
+        "label": "Aim Precision",
+        "value": 51.5,
+        "band": "average",
+        "description": "How tight the crosshair placement is at range. Dominates first-bullet accuracy on rifles and long-range Op duels."
+      },
+      {
+        "key": "aim_reactivity",
+        "label": "Aim Reactivity",
+        "value": 56.1,
+        "band": "solid",
+        "description": "Reaction speed + flick repeatability. Matters for peek duels, clutch flicks, re-fragging teammates who die mid-trade."
+      },
+      {
+        "key": "clutch_factor",
+        "label": "Clutch Factor",
+        "value": 64.3,
+        "band": "solid",
+        "description": "Performance uplift in 1vX and late-round situations. Stacks on top of raw aim; two players with identical mechanics can have wildly different clutch win rates."
+      },
+      {
+        "key": "comms_quality",
+        "label": "Comms Quality",
+        "value": 65.3,
+        "band": "solid",
+        "description": "Signal-to-noise of callouts. High comms_quality improves teammates' observation fidelity — they \"see\" enemies earlier via calls."
+      },
+      {
+        "key": "composure",
+        "label": "Composure",
+        "value": 65.2,
+        "band": "solid",
+        "description": "Steadiness under ult-heavy rounds, match points, final maps. Modulates how well the player executes *planned* strats under pressure."
+      },
+      {
+        "key": "game_sense",
+        "label": "Game Sense",
+        "value": 73.9,
+        "band": "strong",
+        "description": "Reads the enemy mid-round. Higher game_sense shortens the latency between a teammate dying and correctly repositioning."
+      },
+      {
+        "key": "movement",
+        "label": "Movement",
+        "value": 65.9,
+        "band": "solid",
+        "description": "Counter-strafing, jiggle peeks, bunny-hop defusing. Higher movement reduces the accuracy penalty of strafe-shots and helps first-peek timing."
+      },
+      {
+        "key": "positioning",
+        "label": "Positioning",
+        "value": 54.6,
+        "band": "average",
+        "description": "How often the player is in the right angle for the situation. Reduces the chance of dying to crossfires and increases the odds of an anchor holding a site 1vN."
+      },
+      {
+        "key": "tilt_resistance",
+        "label": "Tilt Resistance",
+        "value": 63.8,
+        "band": "solid",
+        "description": "How much performance degrades after losing rounds / pistols / duels. Low tilt_resistance is a volatility multiplier on a match."
+      },
+      {
+        "key": "utility_usage",
+        "label": "Utility Usage",
+        "value": 69.8,
+        "band": "strong",
+        "description": "Precision of smokes, molly placements, recon dart lineups. Scales the *effect* of utility, not just whether it's thrown."
+      }
+    ],
+    "agents": [
+      {
+        "agent_id": "harbor",
+        "name": "Harbor",
+        "icon": "/assets/agents/harbor.webp",
+        "mastery": 73.14,
+        "role": "controller"
+      },
+      {
+        "agent_id": "jett",
+        "name": "Jett",
+        "icon": "/assets/agents/jett.webp",
+        "mastery": 73,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "clove",
+        "name": "Clove",
+        "icon": "/assets/agents/clove.webp",
+        "mastery": 70.8,
+        "role": "controller"
+      },
+      {
+        "agent_id": "veto",
+        "name": "Veto",
+        "icon": "/assets/agents/veto.webp",
+        "mastery": 55.7,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "astra",
+        "name": "Astra",
+        "icon": "/assets/agents/astra.webp",
+        "mastery": 54.4,
+        "role": "controller"
+      },
+      {
+        "agent_id": "brimstone",
+        "name": "Brimstone",
+        "icon": "/assets/agents/brimstone.webp",
+        "mastery": 53.9,
+        "role": "controller"
+      },
+      {
+        "agent_id": "viper",
+        "name": "Viper",
+        "icon": "/assets/agents/viper.webp",
+        "mastery": 52.3,
+        "role": "controller"
+      },
+      {
+        "agent_id": "kayo",
+        "name": "KAY/O",
+        "icon": "/assets/agents/kayo.webp",
+        "mastery": 50.2,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "reyna",
+        "name": "Reyna",
+        "icon": "/assets/agents/reyna.webp",
+        "mastery": 49.6,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "omen",
+        "name": "Omen",
+        "icon": "/assets/agents/omen.webp",
+        "mastery": 48.9,
+        "role": "controller"
+      },
+      {
+        "agent_id": "miks",
+        "name": "Miks",
+        "icon": "/assets/agents/miks.webp",
+        "mastery": 46.8,
+        "role": "controller"
+      },
+      {
+        "agent_id": "skye",
+        "name": "Skye",
+        "icon": "/assets/agents/skye.webp",
+        "mastery": 46.8,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "gekko",
+        "name": "Gekko",
+        "icon": "/assets/agents/gekko.webp",
+        "mastery": 46.6,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "iso",
+        "name": "Iso",
+        "icon": "/assets/agents/iso.webp",
+        "mastery": 46.4,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "fade",
+        "name": "Fade",
+        "icon": "/assets/agents/fade.webp",
+        "mastery": 43.4,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "deadlock",
+        "name": "Deadlock",
+        "icon": "/assets/agents/deadlock.webp",
+        "mastery": 43.2,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "raze",
+        "name": "Raze",
+        "icon": "/assets/agents/raze.webp",
+        "mastery": 39.8,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "phoenix",
+        "name": "Phoenix",
+        "icon": "/assets/agents/phoenix.webp",
+        "mastery": 39.6,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "waylay",
+        "name": "Waylay",
+        "icon": "/assets/agents/waylay.webp",
+        "mastery": 39.3,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "neon",
+        "name": "Neon",
+        "icon": "/assets/agents/neon.webp",
+        "mastery": 39.2,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "sova",
+        "name": "Sova",
+        "icon": "/assets/agents/sova.webp",
+        "mastery": 38.7,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "yoru",
+        "name": "Yoru",
+        "icon": "/assets/agents/yoru.webp",
+        "mastery": 37.8,
+        "role": "duelist"
+      },
+      {
+        "agent_id": "chamber",
+        "name": "Chamber",
+        "icon": "/assets/agents/chamber.webp",
+        "mastery": 37.2,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "breach",
+        "name": "Breach",
+        "icon": "/assets/agents/breach.webp",
+        "mastery": 35.7,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "tejo",
+        "name": "Tejo",
+        "icon": "/assets/agents/tejo.webp",
+        "mastery": 34.7,
+        "role": "initiator"
+      },
+      {
+        "agent_id": "killjoy",
+        "name": "Killjoy",
+        "icon": "/assets/agents/killjoy.webp",
+        "mastery": 32.3,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "sage",
+        "name": "Sage",
+        "icon": "/assets/agents/sage.webp",
+        "mastery": 27.4,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "vyse",
+        "name": "Vyse",
+        "icon": "/assets/agents/vyse.webp",
+        "mastery": 7.3,
+        "role": "sentinel"
+      },
+      {
+        "agent_id": "cypher",
+        "name": "Cypher",
+        "icon": "/assets/agents/cypher.webp",
+        "mastery": 5.4,
+        "role": "sentinel"
+      }
+    ],
+    "season": {
+      "matches": 3,
+      "kills": 20,
+      "deaths": 42,
+      "kd": 0.48,
+      "first_kills": 3,
+      "rating": 0.53,
+      "analytics_tier": 0,
+      "assists": null,
+      "acs": null,
+      "hs_pct": null,
+      "first_deaths": null,
+      "fk_fd": null,
+      "clutches": null,
+      "clutch_1v1": null,
+      "clutch_1v2": null,
+      "clutch_1v3": null,
+      "kast_pct": null,
+      "trade_kills": null,
+      "eco_kills": null,
+      "save_kills": null,
+      "pistol_kills": null,
+      "multikills": null,
+      "aces": null,
+      "kills_by_weapon": null,
+      "xduel_expected_wins": null,
+      "xduel_actual_wins": null,
+      "xde": null
+    },
+    "weekly": [
+      {
+        "season": 1,
+        "week": 5,
+        "opponent": "Rust Belt Gaming",
+        "result": "W",
+        "kills": 6,
+        "deaths": 12,
+        "acs": null
+      },
+      {
+        "season": 1,
+        "week": 6,
+        "opponent": "Baltic Meridian",
+        "result": "W",
+        "kills": 8,
+        "deaths": 15,
+        "acs": null
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "opponent": "Team Vanguard",
+        "result": "L",
+        "kills": 6,
+        "deaths": 15,
+        "acs": null
+      }
+    ],
+    "splits": null,
+    "charts": {
+      "performance": null,
+      "development": [
+        {
+          "season": 1,
+          "week": 5,
+          "ca": 63,
+          "confidence": 44.3,
+          "form": 34.3,
+          "morale": 69.3,
+          "followers": 66342,
+          "attributes": {
+            "aim_precision": 51.5,
+            "aim_reactivity": 56.1,
+            "clutch_factor": 64.3,
+            "comms_quality": 65.3,
+            "composure": 65.2,
+            "game_sense": 73.9,
+            "movement": 65.9,
+            "positioning": 54.1,
+            "tilt_resistance": 63.8,
+            "utility_usage": 69.8
+          }
+        },
+        {
+          "season": 1,
+          "week": 6,
+          "ca": 63,
+          "confidence": 46.7,
+          "form": 38.5,
+          "morale": 73.7,
+          "followers": 67105,
+          "attributes": {
+            "aim_precision": 51.5,
+            "aim_reactivity": 56.1,
+            "clutch_factor": 64.3,
+            "comms_quality": 65.3,
+            "composure": 65.2,
+            "game_sense": 73.9,
+            "movement": 65.9,
+            "positioning": 54.2,
+            "tilt_resistance": 63.8,
+            "utility_usage": 69.8
+          }
+        },
+        {
+          "season": 1,
+          "week": 7,
+          "ca": 63,
+          "confidence": 50,
+          "form": 40.2,
+          "morale": 71.7,
+          "followers": 67406,
+          "attributes": {
+            "aim_precision": 51.5,
+            "aim_reactivity": 56.1,
+            "clutch_factor": 64.3,
+            "comms_quality": 65.3,
+            "composure": 65.2,
+            "game_sense": 73.9,
+            "movement": 65.9,
+            "positioning": 54.6,
+            "tilt_resistance": 63.8,
+            "utility_usage": 69.8
+          }
+        }
+      ],
+      "analytics_tier": 0
+    },
+    "relationships": [
+      {
+        "pid": "fa_13",
+        "handle": "Slyblade",
+        "kind": "neutral",
+        "arc": null,
+        "strength": 53.2
+      },
+      {
+        "pid": "ghost",
+        "handle": "Ghost",
+        "kind": "neutral",
+        "arc": null,
+        "strength": 53.1
+      },
+      {
+        "pid": "echo",
+        "handle": "Echo",
+        "kind": "neutral",
+        "arc": null,
+        "strength": 53
+      },
+      {
+        "pid": "apex",
+        "handle": "Apex",
+        "kind": "neutral",
+        "arc": null,
+        "strength": 52.4
+      },
+      {
+        "pid": "vortex",
+        "handle": "Vortex",
+        "kind": "neutral",
+        "arc": null,
+        "strength": 51.6
+      }
+    ],
+    "arcs": [],
+    "scouting": {
+      "progress": 0,
+      "active": false,
+      "guidance": null,
+      "guidance_unlock": 0.25,
+      "bonus_mult": 1.05,
+      "report": null
+    },
+    "career": [],
+    "career_totals": {
+      "maps": 3,
+      "kills": 20,
+      "deaths": 42,
+      "kd": 0.48,
+      "first_kills": 3,
+      "clutches": 0,
+      "seasons": 1,
+      "honours": 0,
+      "mvps": 0,
+      "all_stars": 0
+    },
+    "career_arc": [
+      {
+        "season": 1,
+        "events": [
+          {
+            "kind": "signing",
+            "text": "Team Nexus sign Hollowlock."
+          },
+          {
+            "kind": "badge",
+            "text": "Hollowlock is saddled with the Inconsistent badge."
+          }
+        ]
+      }
+    ],
+    "honours": [],
+    "epithet": null,
+    "memories": [
+      "S1: Hollowlock is saddled with the Inconsistent badge.",
+      "S1: Team Nexus sign Hollowlock."
+    ]
+  }
+}

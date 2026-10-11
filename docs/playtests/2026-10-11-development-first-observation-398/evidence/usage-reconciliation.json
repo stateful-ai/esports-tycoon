@@ -1,0 +1,45 @@
+{
+  "baseline_events": 10,
+  "end_events": 28,
+  "baseline_is_exact_prefix": true,
+  "scoped_world_events": 28,
+  "scoped_kind_counts": {
+    "session_start": 2,
+    "view": 5,
+    "visible_time": 16,
+    "session_end": 1,
+    "attempt": 2,
+    "result": 2
+  },
+  "scoped_view_targets": {
+    "lobby": 2,
+    "dashboard": 1,
+    "club/squad": 1,
+    "club/development": 1
+  },
+  "paired_attempts": [
+    {
+      "target": "/api/actions/advance",
+      "request_id": 13,
+      "matches": [
+        {
+          "outcome": "http_error",
+          "status": 409,
+          "duration_ms": 4
+        }
+      ]
+    },
+    {
+      "target": "/api/actions/save",
+      "request_id": 14,
+      "matches": [
+        {
+          "outcome": "success",
+          "status": 200,
+          "duration_ms": 39
+        }
+      ]
+    }
+  ],
+  "note": "Raw bounded browser usage, synthetic world only. Counts include reads/navigation and do not imply accepted gameplay decisions or attention duration. Profile link identity itself is not a dedicated view event."
+}

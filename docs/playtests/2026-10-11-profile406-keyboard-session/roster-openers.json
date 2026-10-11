@@ -1,0 +1,107 @@
+[
+  {
+    "tag": "SPAN",
+    "text": "Apex",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"apex\">Apex</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Vortex",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"vortex\">Vortex</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Ghost",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"ghost\">Ghost</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Slyblade",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"fa_13\">Slyblade</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Echo",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"echo\">Echo</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Hollowlock",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"fa_0\">Hollowlock</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Nightsurge",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"team_kraken_unit_p0\">Nightsurge</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Frostdash",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"fa_12\">Frostdash</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Apex",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"apex\">Apex</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Echo",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"echo\">Echo</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Apex",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"apex\">Apex</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Vortex",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"vortex\">Vortex</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Ghost",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"ghost\">Ghost</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Slyblade",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"fa_13\">Slyblade</span>"
+  },
+  {
+    "tag": "SPAN",
+    "text": "Echo",
+    "tabIndex": -1,
+    "role": null,
+    "outerHTML": "<span class=\"plink \" data-pid=\"echo\">Echo</span>"
+  }
+]

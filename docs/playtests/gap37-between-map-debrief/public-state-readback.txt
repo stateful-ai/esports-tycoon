@@ -1,0 +1,182 @@
+### Result
+{
+  "season": 1,
+  "week": 22,
+  "review": {
+    "fixture_id": "s1csf0",
+    "won": false,
+    "contested": true,
+    "best_of": 3,
+    "your_maps": 1,
+    "their_maps": 2,
+    "your_rounds": 26,
+    "their_rounds": 34,
+    "opp_id": "team_vanguard",
+    "opp_name": "Team Vanguard",
+    "potm": {
+      "player_id": "slice",
+      "handle": "Slice",
+      "badges": [
+        {
+          "id": "aim_demon",
+          "name": "Aim Demon",
+          "emoji": "🎯",
+          "polarity": 1,
+          "blurb": "raw mechanical menace",
+          "kind": "positive",
+          "impact": "Applied when earned (while held): +2 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 1.1.",
+          "decay": "It can fade after 2 seasons without re-qualifying.",
+          "art": "/assets/badges/aim_demon.webp",
+          "season": 1
+        }
+      ]
+    },
+    "tier": 0,
+    "tier_label": "box scores only",
+    "momentum_beat": null,
+    "your_calls": {
+      "plan_set": true,
+      "dials": [
+        {
+          "key": "aggression",
+          "label": "Aggression",
+          "planned": 30,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "map_control",
+          "label": "Map control",
+          "planned": 70,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "pace",
+          "label": "Pace",
+          "planned": 30,
+          "base": 50,
+          "impact_delta": null
+        },
+        {
+          "key": "util_discipline",
+          "label": "Utility discipline",
+          "planned": 70,
+          "base": 50,
+          "impact_delta": null
+        }
+      ],
+      "site_focus": null,
+      "focus_target": null,
+      "team_talk": null,
+      "lineup": null,
+      "prep": {
+        "edge": null,
+        "maps_played": [
+          "Haven",
+          "Ascent",
+          "Lotus"
+        ],
+        "maps_missed": []
+      }
+    },
+    "series_notes": [
+      "VGD: targeting Vortex.",
+      "VGD: stabilize response after map 1.",
+      "NXS: stabilize response after map 2."
+    ],
+    "working": [],
+    "breaking": [
+      {
+        "code": "player_under",
+        "category": "player",
+        "tone": "bad",
+        "headline": "Echo off-colour",
+        "detail": "0.63 average rating across the series.",
+        "player_id": "echo",
+        "handle": "Echo",
+        "site": null,
+        "badges": [
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "❄️",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.4.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          },
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "🥶",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          }
+        ],
+        "dev_note": "Young with room (proj. 65–80) — a development call, not a bench."
+      },
+      {
+        "code": "def_side",
+        "category": "defense",
+        "tone": "bad",
+        "headline": "Defense is leaking",
+        "detail": "14/36 defense rounds won (39%).",
+        "player_id": null,
+        "handle": null,
+        "site": null,
+        "badges": []
+      }
+    ],
+    "levers": [
+      {
+        "code": "player_form",
+        "tab": "roster",
+        "specialty": "team",
+        "on_focus": false,
+        "text": "Echo is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.",
+        "adjustment": null
+      },
+      {
+        "code": "def_setups",
+        "tab": "tactics",
+        "specialty": "tactical",
+        "on_focus": false,
+        "text": "Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.",
+        "adjustment": {
+          "dial": "map_control",
+          "label": "Map control",
+          "current": 50,
+          "target": 30,
+          "at_limit": false,
+          "reason": "Stack more tightly and simplify the defensive setup.",
+          "coach_step": 20,
+          "analyst_precision": 10
+        }
+      }
+    ],
+    "coach": {
+      "present": true,
+      "specialty": "mechanical"
+    },
+    "locked": true,
+    "locked_hint": "A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches)."
+  },
+  "save": {
+    "dirty": false,
+    "autosave_enabled": true,
+    "autosave_every_weeks": 1
+  }
+}
+### Ran Playwright code
+```js
+await page.evaluate('async () => { const s = await (await fetch(\'/api/state\')).json(); return {season:s.season,week:s.week,review:s.last_match_review,save:s.save}; }');
+```

@@ -1,0 +1,32 @@
+[
+  {
+    "method": "GET",
+    "path": "/assets/badges/clutch_master.webp",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "method": "GET",
+    "path": "/assets/badges/choker.webp",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "method": "GET",
+    "path": "/assets/maps/haven.webp",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "method": "GET",
+    "path": "/assets/maps/ascent.webp",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "method": "GET",
+    "path": "/assets/maps/lotus.webp",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "method": "GET",
+    "path": "/api/state",
+    "failure": "net::ERR_CONNECTION_REFUSED"
+  }
+]

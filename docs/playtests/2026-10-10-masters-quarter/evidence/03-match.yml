@@ -1,0 +1,193 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 17 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 989,505 cr
+      - button "Save" [ref=f1e27] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 19" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "19"
+        - button "Match 2" [active] [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market" [ref=f1e21] [cursor=pointer]
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e743]:
+        - generic [ref=f1e744]:
+          - generic [ref=f1e745]: Match
+          - generic [ref=f1e746]: S1 · W17 · Playoffs
+          - generic [ref=f1e747]:
+            - button "Strategy" [ref=f1e748] [cursor=pointer]
+            - button "Game plan" [ref=f1e749] [cursor=pointer]
+            - button "Prep" [ref=f1e750] [cursor=pointer]
+          - button "Guide" [ref=f1e751] [cursor=pointer]
+        - generic [ref=f1e752]:
+          - generic [ref=f1e754]:
+            - heading "Coaching strategy" [level=2] [ref=f1e755]
+            - paragraph [ref=f1e756]: The identity your squad plays with. Every dial sits neutral at 50 — push it off centre and the match engine rewards a roster built for that style and punishes one that isn't. Team chemistry is 73.
+            - generic [ref=f1e757]:
+              - generic [ref=f1e758]: Execution edge
+              - generic [ref=f1e759]: "0.0"
+              - generic [ref=f1e760]: duel points from how your roster fits this system (neutral = 0, capped ±8)
+            - generic [ref=f1e761]:
+              - generic [ref=f1e762]:
+                - generic [ref=f1e763]:
+                  - generic [ref=f1e764]:
+                    - text: Aggression
+                    - generic [ref=f1e765]: i
+                  - generic [ref=f1e766]: Neutral
+                  - generic [ref=f1e767]: "50"
+                - generic [ref=f1e768]:
+                  - generic [ref=f1e769]:
+                    - generic [ref=f1e770]: Hold & anchor
+                    - generic [ref=f1e771]: safe spacing, patient angles
+                  - generic [ref=f1e772]:
+                    - generic [ref=f1e773]: Swing & refrag
+                    - generic [ref=f1e774]: peek hard, trade every duel
+                - slider [ref=f1e776] [cursor=pointer]: "50"
+                - generic [ref=f1e777]:
+                  - generic [ref=f1e778]:
+                    - generic [ref=f1e779]: Roster fit by system
+                    - generic [ref=f1e780]: ↓ 82 (Positioning · Game Sense · Composure)
+                    - generic [ref=f1e781]: ↑ 76 (Aim Reactivity · Aim Precision · Movement)
+                  - generic [ref=f1e782]:
+                    - generic [ref=f1e783]: Echo
+                    - generic [ref=f1e785]: neutral
+                    - generic [ref=f1e786]:
+                      - generic [ref=f1e787] [cursor=pointer]: Vortex
+                      - generic [ref=f1e788] [cursor=pointer]: Slyblade
+              - generic [ref=f1e789]:
+                - generic [ref=f1e790]:
+                  - generic [ref=f1e791]:
+                    - text: Pace
+                    - generic [ref=f1e792]: i
+                  - generic [ref=f1e793]: Neutral
+                  - generic [ref=f1e794]: "50"
+                - generic [ref=f1e795]:
+                  - generic [ref=f1e796]:
+                    - generic [ref=f1e797]: Slow default
+                    - generic [ref=f1e798]: read it out, pull off bad hits
+                  - generic [ref=f1e799]:
+                    - generic [ref=f1e800]: Fast execute
+                    - generic [ref=f1e801]: early timings, ram the site
+                - slider [ref=f1e803] [cursor=pointer]: "50"
+                - generic [ref=f1e804]:
+                  - generic [ref=f1e805]:
+                    - generic [ref=f1e806]: Roster fit by system
+                    - generic [ref=f1e807]: ↓ 80 (Game Sense · Utility Usage · Comms Quality)
+                    - generic [ref=f1e808]: ↑ 75 (Movement · Aim Reactivity · Comms Quality)
+                  - generic [ref=f1e809]:
+                    - generic [ref=f1e810]:
+                      - generic [ref=f1e811] [cursor=pointer]: Apex
+                      - generic [ref=f1e812] [cursor=pointer]: Ghost
+                      - generic [ref=f1e813] [cursor=pointer]: Hollowlock
+                    - generic [ref=f1e814]: neutral
+                    - generic [ref=f1e815]: Slyblade
+              - generic [ref=f1e817]:
+                - generic [ref=f1e818]:
+                  - generic [ref=f1e819]:
+                    - text: Utility discipline
+                    - generic [ref=f1e820]: i
+                  - generic [ref=f1e821]: Neutral
+                  - generic [ref=f1e822]: "50"
+                - generic [ref=f1e823]:
+                  - generic [ref=f1e824]:
+                    - generic [ref=f1e825]: Dump on the hit
+                    - generic [ref=f1e826]: spend util entering
+                  - generic [ref=f1e827]:
+                    - generic [ref=f1e828]: Hold for retakes
+                    - generic [ref=f1e829]: bank util to swing & retake
+                - slider [ref=f1e831] [cursor=pointer]: "50"
+                - generic [ref=f1e832]:
+                  - generic [ref=f1e833]:
+                    - generic [ref=f1e834]: Roster fit by system
+                    - generic [ref=f1e835]: ↓ 75 (Utility Usage · Movement · Aim Reactivity)
+                    - generic [ref=f1e836]: ↑ 80 (Game Sense · Utility Usage · Comms Quality)
+                  - generic [ref=f1e837]:
+                    - generic [ref=f1e838]: Slyblade
+                    - generic [ref=f1e840]: neutral
+                    - generic [ref=f1e841]: —
+                  - generic [ref=f1e843]: ↑ side is coordination-heavy — leans on team chemistry (73)
+              - generic [ref=f1e844]:
+                - generic [ref=f1e845]:
+                  - generic [ref=f1e846]:
+                    - text: Eco greed
+                    - generic [ref=f1e847]: i
+                  - generic [ref=f1e848]: Neutral
+                  - generic [ref=f1e849]: "50"
+                - generic [ref=f1e850]:
+                  - generic [ref=f1e851]:
+                    - generic [ref=f1e852]: Disciplined save
+                    - generic [ref=f1e853]: bank credits when broke
+                  - generic [ref=f1e854]:
+                    - generic [ref=f1e855]: Force-buy often
+                    - generic [ref=f1e856]: gamble on half-buys
+                - slider [ref=f1e858] [cursor=pointer]: "50"
+                - generic [ref=f1e859]: Economy call — no duel effect, but a greedy force can snowball or bankrupt you.
+              - generic [ref=f1e862]:
+                - generic [ref=f1e863]:
+                  - generic [ref=f1e864]:
+                    - text: Map control
+                    - generic [ref=f1e865]: i
+                  - generic [ref=f1e866]: Neutral
+                  - generic [ref=f1e867]: "50"
+                - generic [ref=f1e868]:
+                  - generic [ref=f1e869]:
+                    - generic [ref=f1e870]: Stack & hit five
+                    - generic [ref=f1e871]: simple, cohesion-light
+                  - generic [ref=f1e872]:
+                    - generic [ref=f1e873]: Spread & lurk
+                    - generic [ref=f1e874]: flank presence, pick timings
+                - slider [ref=f1e876] [cursor=pointer]: "50"
+                - generic [ref=f1e877]:
+                  - generic [ref=f1e878]:
+                    - generic [ref=f1e879]: Roster fit by system
+                    - generic [ref=f1e880]: ↓ 76 (Aim Precision · Aim Reactivity · Utility Usage)
+                    - generic [ref=f1e881]: ↑ 82 (Game Sense · Positioning · Comms Quality)
+                  - generic [ref=f1e882]:
+                    - generic [ref=f1e883]: Slyblade
+                    - generic [ref=f1e885]: neutral
+                    - generic [ref=f1e886]: Ghost
+                  - generic [ref=f1e888]: ↑ side is coordination-heavy — leans on team chemistry (73)
+          - generic [ref=f1e889]:
+            - generic [ref=f1e890]:
+              - heading "Site focus i" [level=2] [ref=f1e891]:
+                - text: Site focus
+                - generic [ref=f1e892]: i
+              - paragraph [ref=f1e893]: Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels.
+              - generic [ref=f1e894]:
+                - button "Balanced" [ref=f1e895] [cursor=pointer]
+                - button "A site" [ref=f1e896] [cursor=pointer]
+                - button "B site" [ref=f1e897] [cursor=pointer]
+                - button "C site" [ref=f1e898] [cursor=pointer]
+            - generic [ref=f1e899]:
+              - heading "Set strategy" [level=2] [ref=f1e900]
+              - paragraph [ref=f1e901]: Scout a rival to 50%+ to read their coaching identity on their roster page.
+              - button "Set strategy" [ref=f1e903] [cursor=pointer]
+  - tooltip "Match Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan. Check the opponent report, then adjust only the dials or lineup you have a reason to change.":
+    - heading "Match" [level=4]
+    - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+    - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.

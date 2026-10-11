@@ -1,0 +1,376 @@
+{
+  "checked_at_utc": "2026-10-10T18:47:32.286832+00:00",
+  "csv_sha256": "d06a9679bdd4cdaf402a909bcb966a171ac44f3784803d06b4c874909c07ca46",
+  "observation_rows": 665,
+  "session_ids": 40,
+  "outcomes": {
+    "met": 575,
+    "partial": 38,
+    "blocked": 35,
+    "unexpected": 17
+  },
+  "capture_annotations": {
+    "not_instrumented": 228,
+    "recorded": 397,
+    "missing": 1,
+    "unverified": 34,
+    "unannotated": 5
+  },
+  "model_effort_observations": [
+    {
+      "model": "GPT-6 (exact runtime model ID unavailable)",
+      "effort": "unknown (not exposed in session)",
+      "rows": 287
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "rows": 215
+    },
+    {
+      "model": "unknown (not exposed)",
+      "effort": "unknown (not exposed)",
+      "rows": 163
+    }
+  ],
+  "game_versions": {
+    "0.0.1": 665
+  },
+  "distinct_tested_commits": 11,
+  "sessions_with_uncertain_capture": [
+    {
+      "session": "2026-10-06-preparation-gpt6",
+      "rows": 25,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "21",
+          "status": "missing",
+          "result": "met"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-06-ui-usage",
+      "rows": 9,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "4",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-development-feedback-refresh",
+      "rows": 17,
+      "uncertain": 4,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "5",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "27",
+          "status": "unverified",
+          "result": "met"
+        },
+        {
+          "step": "28",
+          "status": "unverified",
+          "result": "met"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-usage-control-hooks",
+      "rows": 9,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "5",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "8",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-market-search-usage",
+      "rows": 18,
+      "uncertain": 4,
+      "step_status": [
+        {
+          "step": "2",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "10",
+          "status": "unverified",
+          "result": "unexpected"
+        },
+        {
+          "step": "19",
+          "status": "unverified",
+          "result": "met"
+        },
+        {
+          "step": "20",
+          "status": "unverified",
+          "result": "unexpected"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-dashboard-roster-readiness",
+      "rows": 7,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "2",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "3",
+          "status": "unverified",
+          "result": "met"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-current-roster-review",
+      "rows": 5,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "2",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-ten-gap-validation",
+      "rows": 15,
+      "uncertain": 3,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "unverified",
+          "result": "met"
+        },
+        {
+          "step": "2",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "3",
+          "status": "unverified",
+          "result": "partial"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-default-lineup-count",
+      "rows": 7,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "4",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-preparation-decision-clarity",
+      "rows": 27,
+      "uncertain": 3,
+      "step_status": [
+        {
+          "step": "4",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "5",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "6",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-preparation-form-retention",
+      "rows": 16,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "3",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "9",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-decision-choice-telemetry",
+      "rows": 12,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "unverified",
+          "result": "unexpected"
+        },
+        {
+          "step": "11",
+          "status": "unverified",
+          "result": "unexpected"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-mid-split-budget",
+      "rows": 7,
+      "uncertain": 7,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "",
+          "result": "met"
+        },
+        {
+          "step": "2",
+          "status": "",
+          "result": "met"
+        },
+        {
+          "step": "3",
+          "status": "",
+          "result": "met"
+        },
+        {
+          "step": "4",
+          "status": "",
+          "result": "met"
+        },
+        {
+          "step": "5",
+          "status": "",
+          "result": "met"
+        },
+        {
+          "step": "6",
+          "status": "unverified",
+          "result": "partial"
+        },
+        {
+          "step": "7",
+          "status": "unverified",
+          "result": "partial"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-10-rotation-preparation",
+      "rows": 13,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-10-preparation-retention-integration",
+      "rows": 17,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "2",
+          "status": "unverified",
+          "result": "blocked"
+        },
+        {
+          "step": "8",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-08-flavor-hint",
+      "rows": 3,
+      "uncertain": 2,
+      "step_status": [
+        {
+          "step": "6",
+          "status": "unverified",
+          "result": "met"
+        },
+        {
+          "step": "7",
+          "status": "unverified",
+          "result": "met"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-10-preparation-provenance",
+      "rows": 8,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "1",
+          "status": "unverified",
+          "result": "blocked"
+        }
+      ]
+    },
+    {
+      "session": "2026-10-10-media-sponsor",
+      "rows": 9,
+      "uncertain": 1,
+      "step_status": [
+        {
+          "step": "4",
+          "status": "unverified",
+          "result": "partial"
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": [
+    "Rows are player-intent observations including navigation, diagnostics and corrections, not distinct accepted game decisions",
+    "Recorded can reference decision or usage instrumentation; it is not a common decision coverage denominator",
+    "Historical capture gaps stay historical; later fixes do not retroactively instrument earlier actions",
+    "Repeated world codes include isolated copied fixtures and do not count independent players or production careers",
+    "Different model, seed, version and task mixes are not a controlled model performance comparison",
+    "Explicit correction rows may resolve an earlier uncertainty without rewriting the earlier annotation"
+  ]
+}

@@ -1,0 +1,486 @@
+### Page
+- Page URL: http://127.0.0.1:8514/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e26]: Season 1 · Week 17 · Playoffs — Team Nexus
+      - generic [ref=f1e27]: 989,505 cr
+      - button "Save" [ref=f1e28] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e7] [cursor=pointer]
+      - button "🛠️" [ref=f1e8] [cursor=pointer]
+      - button "🔇" [ref=f1e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e10] [cursor=pointer]: Guide
+    - navigation [ref=f1e11]:
+      - generic "Weekly" [ref=f1e12]:
+        - button "Dashboard" [ref=f1e14] [cursor=pointer]
+        - button "Inbox 19" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "19"
+        - button "Match 2" [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e17]:
+        - button "Club" [ref=f1e19] [cursor=pointer]
+        - button "Facilities" [ref=f1e20] [cursor=pointer]
+        - button "Season" [ref=f1e21] [cursor=pointer]
+        - button "Market" [ref=f1e22] [cursor=pointer]
+        - button "Stats" [ref=f1e23] [cursor=pointer]
+        - button "Company" [ref=f1e24] [cursor=pointer]
+    - main [ref=f1e25]:
+      - generic [ref=f1e477]:
+        - generic [ref=f1e478]:
+          - generic [ref=f1e479]: Match
+          - generic [ref=f1e480]: S1 · W17 · Playoffs
+          - generic [ref=f1e481]:
+            - button "Strategy" [ref=f1e482] [cursor=pointer]
+            - button "Game plan" [ref=f1e483] [cursor=pointer]
+            - button "Prep" [ref=f1e484] [cursor=pointer]
+          - button "Guide" [ref=f1e485] [cursor=pointer]
+        - generic [ref=f1e486]:
+          - generic [ref=f1e488]:
+            - heading "Game plan — vs Meridian Cross MRC" [level=2] [ref=f1e489]:
+              - text: Game plan — vs
+              - generic [ref=f1e490]: Meridian Cross
+              - generic [ref=f1e491]: MRC
+            - paragraph [ref=f1e492]: "Masters QF · best of 3 · ascent, lotus, split · their record 11-3 · world #3. A plan is one match's prep — consumed when the match sims; your standing strategy above is untouched."
+            - generic [ref=f1e493]:
+              - generic [ref=f1e494]: Prep edge
+              - generic [ref=f1e495]: "+0.5"
+              - generic [ref=f1e496]:
+                - generic "scout" [ref=f1e497]: scout +0.3
+                - generic "book" [ref=f1e498]: book +0.0
+                - generic "coach" [ref=f1e499]: coach +0.2
+              - generic [ref=f1e500]: duel points while a plan is set — from scouting, your map book and your coach. Meridian Cross is 0% scouted · capped at +1.5.
+            - generic [ref=f1e501]:
+              - text: "Prep artifact: haven anti-exec book +1.1"
+              - generic [ref=f1e502]: +0.0 edge
+            - generic [ref=f1e503]:
+              - generic [ref=f1e504]: Counter-strat
+              - generic [ref=f1e505]: "0.0"
+              - generic [ref=f1e506]: duel points against the public meta on these maps (346 team-maps). Opposing their dial lean helps; matching it reinforces their strength. Range ±3.0. Scout Meridian Cross to 50% for their private read.
+            - generic [ref=f1e507]:
+              - generic [ref=f1e508]:
+                - generic [ref=f1e509]: Focus target
+                - generic [ref=f1e510]: edge vs the hunted man, a small tax vs everyone else
+              - table [ref=f1e511]:
+                - rowgroup [ref=f1e512]:
+                  - row [ref=f1e513]:
+                    - columnheader [ref=f1e514] [cursor=pointer]
+                    - columnheader "Player" [ref=f1e515] [cursor=pointer]
+                    - columnheader "Role" [ref=f1e516] [cursor=pointer]
+                    - columnheader "Style" [ref=f1e517] [cursor=pointer]
+                    - columnheader "CA" [ref=f1e518] [cursor=pointer]
+                    - columnheader "Form" [ref=f1e519] [cursor=pointer]
+                    - columnheader [ref=f1e520] [cursor=pointer]
+                - rowgroup [ref=f1e521]:
+                  - row [ref=f1e522]:
+                    - cell [ref=f1e523]:
+                      - radio [checked] [ref=f1e524]
+                    - cell "No target — play our own game" [ref=f1e525]
+                  - row [ref=f1e526]:
+                    - cell [ref=f1e527]:
+                      - radio [ref=f1e528]
+                    - cell "Wraithsurge" [ref=f1e529]
+                    - cell "Controller" [ref=f1e531]
+                    - cell "IGL" [ref=f1e532]
+                    - cell "~87" [ref=f1e533]
+                    - cell "~56" [ref=f1e534]
+                    - cell [ref=f1e535]
+                  - row [ref=f1e536]:
+                    - cell [ref=f1e537]:
+                      - radio [ref=f1e538]
+                    - cell "Falconghost" [ref=f1e539]
+                    - cell "Duelist" [ref=f1e541]
+                    - cell "Entry" [ref=f1e542]
+                    - cell "~78" [ref=f1e543]
+                    - cell "~56" [ref=f1e544]
+                    - cell [ref=f1e545]
+                  - row [ref=f1e546]:
+                    - cell [ref=f1e547]:
+                      - radio [ref=f1e548]
+                    - cell "Voltblade" [ref=f1e549]
+                    - cell "Duelist" [ref=f1e551]
+                    - cell "Awper" [ref=f1e552]
+                    - cell "~68" [ref=f1e553]
+                    - cell "~53" [ref=f1e554]
+                    - cell [ref=f1e555]
+                  - row [ref=f1e556]:
+                    - cell [ref=f1e557]:
+                      - radio [ref=f1e558]
+                    - cell "Slystep" [ref=f1e559]
+                    - cell "Initiator" [ref=f1e561]
+                    - cell "Support" [ref=f1e562]
+                    - cell "~77" [ref=f1e563]
+                    - cell "~46" [ref=f1e564]
+                    - cell [ref=f1e565]
+                  - row [ref=f1e566]:
+                    - cell [ref=f1e567]:
+                      - radio [ref=f1e568]
+                    - cell "Emberwing" [ref=f1e569]
+                    - cell "Sentinel" [ref=f1e571]
+                    - cell "Anchor" [ref=f1e572]
+                    - cell "~68" [ref=f1e573]
+                    - cell "~44" [ref=f1e574]
+                    - cell [ref=f1e575]
+              - paragraph [ref=f1e576]: Scout them past 35% and your analyst will name the weak link.
+            - generic [ref=f1e577]:
+              - generic [ref=f1e578]:
+                - generic [ref=f1e579]: Dial overrides
+                - generic [ref=f1e580]: unchecked dials play the standing book
+              - generic [ref=f1e581]:
+                - checkbox [ref=f1e582]
+                - generic [ref=f1e583]: Aggression
+                - slider [disabled] [ref=f1e584]: "50"
+                - generic [ref=f1e585]: 50 (book)
+              - generic [ref=f1e586]:
+                - checkbox [ref=f1e587]
+                - generic [ref=f1e588]: Pace
+                - slider [disabled] [ref=f1e589]: "50"
+                - generic [ref=f1e590]: 50 (book)
+              - generic [ref=f1e591]:
+                - checkbox [ref=f1e592]
+                - generic [ref=f1e593]: Utility discipline
+                - slider [disabled] [ref=f1e594]: "50"
+                - generic [ref=f1e595]: 50 (book)
+              - generic [ref=f1e596]:
+                - checkbox [ref=f1e597]
+                - generic [ref=f1e598]: Eco greed
+                - slider [disabled] [ref=f1e599]: "50"
+                - generic [ref=f1e600]: 50 (book)
+              - generic [ref=f1e601]:
+                - checkbox [ref=f1e602]
+                - generic [ref=f1e603]: Map control
+                - slider [disabled] [ref=f1e604]: "50"
+                - generic [ref=f1e605]: 50 (book)
+              - generic [ref=f1e606]:
+                - generic [ref=f1e607]: Site focus
+                - generic [ref=f1e608]:
+                  - button "Book" [ref=f1e609] [cursor=pointer]
+                  - button "Balanced" [ref=f1e610] [cursor=pointer]
+                  - button "A site" [ref=f1e611] [cursor=pointer]
+                  - button "B site" [ref=f1e612] [cursor=pointer]
+                  - button "C site" [ref=f1e613] [cursor=pointer]
+            - generic [ref=f1e614]:
+              - generic [ref=f1e615]:
+                - generic [ref=f1e616]: One-match lineup
+                - generic [ref=f1e617]: pick exactly five, or leave the standing five
+              - generic [ref=f1e618]:
+                - button "Apex IGL 78 100 sta starter" [ref=f1e619] [cursor=pointer]:
+                  - generic [ref=f1e620]: Apex
+                  - generic [ref=f1e621]: IGL
+                  - generic [ref=f1e622]: "78"
+                  - generic [ref=f1e623]: 100 sta
+                  - generic [ref=f1e624]: starter
+                - button "Echo Anchor 76 100 sta starter" [ref=f1e625] [cursor=pointer]:
+                  - generic [ref=f1e626]: Echo
+                  - generic [ref=f1e627]: Anchor
+                  - generic [ref=f1e628]: "76"
+                  - generic [ref=f1e629]: 100 sta
+                  - generic [ref=f1e630]: starter
+                - button "Hollowlock IGL 63 100 sta" [ref=f1e631] [cursor=pointer]:
+                  - generic [ref=f1e632]: Hollowlock
+                  - generic [ref=f1e633]: IGL
+                  - generic [ref=f1e634]: "63"
+                  - generic [ref=f1e635]: 100 sta
+                - button "Slyblade Entry 73 100 sta starter" [ref=f1e636] [cursor=pointer]:
+                  - generic [ref=f1e637]: Slyblade
+                  - generic [ref=f1e638]: Entry
+                  - generic [ref=f1e639]: "73"
+                  - generic [ref=f1e640]: 100 sta
+                  - generic [ref=f1e641]: starter
+                - button "Ghost Lurker 78 36 sta starter" [ref=f1e642] [cursor=pointer]:
+                  - generic [ref=f1e643]: Ghost
+                  - generic [ref=f1e644]: Lurker
+                  - generic [ref=f1e645]: "78"
+                  - generic [ref=f1e646]: 36 sta
+                  - generic [ref=f1e647]: starter
+                - button "Vortex Awper 75 100 sta starter" [ref=f1e648] [cursor=pointer]:
+                  - generic [ref=f1e649]: Vortex
+                  - generic [ref=f1e650]: Awper
+                  - generic [ref=f1e651]: "75"
+                  - generic [ref=f1e652]: 100 sta
+                  - generic [ref=f1e653]: starter
+              - generic [ref=f1e654]:
+                - button "Use standing five" [ref=f1e655] [cursor=pointer]
+                - generic [ref=f1e656]: standing five
+            - generic [ref=f1e657]:
+              - text: Team talk
+              - generic [ref=f1e658]:
+                - button "None — let them focus" [ref=f1e659] [cursor=pointer]
+                - button "Fire them up (lift, best for ambitious players)" [ref=f1e660] [cursor=pointer]
+                - button "Reassure (steadies fragile nerves)" [ref=f1e661] [cursor=pointer]
+                - button "Refocus (settle tilt and hubris alike)" [ref=f1e662] [cursor=pointer]
+            - button "Lock in game plan" [ref=f1e664] [cursor=pointer]
+          - generic [ref=f1e666]:
+            - heading "This week's lineup" [level=2] [ref=f1e667]
+            - paragraph [ref=f1e668]: Choose one agent per player for every map they play. When a fixture is listed, use its maps to plan; otherwise, pick for comfort. Auto fields their best-mastery agent. Off-role picks work but low mastery hurts duels.
+            - table [ref=f1e669]:
+              - rowgroup [ref=f1e670]:
+                - row [ref=f1e671]:
+                  - columnheader "Player" [ref=f1e672] [cursor=pointer]
+                  - columnheader "Role" [ref=f1e673] [cursor=pointer]
+                  - columnheader "Agent" [ref=f1e674] [cursor=pointer]
+                  - columnheader "Mastery" [ref=f1e675] [cursor=pointer]
+                  - columnheader "Edge" [ref=f1e676] [cursor=pointer]
+              - rowgroup [ref=f1e677]:
+                - row [ref=f1e678]:
+                  - cell "Apex" [ref=f1e679]
+                  - cell "Controller IGL" [ref=f1e681]:
+                    - generic [ref=f1e682]:
+                      - generic [ref=f1e683]: Controller
+                      - generic [ref=f1e684]: IGL
+                  - cell "Auto — Omen" [ref=f1e685]:
+                    - combobox [ref=f1e686]:
+                      - option "Auto — Omen" [selected]
+                      - option "Omen"
+                      - option "Astra"
+                      - option "Brimstone"
+                      - option "Clove"
+                      - option "Miks"
+                      - option "Viper"
+                      - option "Harbor"
+                      - option "Sova"
+                      - option "Chamber"
+                      - option "Cypher"
+                      - option "Deadlock"
+                      - option "Fade"
+                      - option "Jett"
+                      - option "KAY/O"
+                      - option "Killjoy"
+                      - option "Phoenix"
+                      - option "Reyna"
+                      - option "Tejo"
+                      - option "Vyse"
+                      - option "Yoru"
+                      - option "Veto"
+                      - option "Breach"
+                      - option "Raze"
+                      - option "Waylay"
+                      - option "Skye"
+                      - option "Iso"
+                      - option "Neon"
+                      - option "Sage"
+                      - option "Gekko"
+                  - cell "93" [ref=f1e687]
+                  - cell "+1.7" [ref=f1e688]
+                - row [ref=f1e689]:
+                  - cell "Vortex" [ref=f1e690]
+                  - cell "Duelist Awper" [ref=f1e692]:
+                    - generic [ref=f1e693]:
+                      - generic [ref=f1e694]: Duelist
+                      - generic [ref=f1e695]: Awper
+                  - cell "Auto — Jett" [ref=f1e696]:
+                    - combobox [ref=f1e697]:
+                      - option "Auto — Jett" [selected]
+                      - option "Jett"
+                      - option "Phoenix"
+                      - option "Yoru"
+                      - option "Iso"
+                      - option "Neon"
+                      - option "Raze"
+                      - option "Reyna"
+                      - option "Waylay"
+                      - option "Brimstone"
+                      - option "Gekko"
+                      - option "Miks"
+                      - option "Sova"
+                      - option "Tejo"
+                      - option "Veto"
+                      - option "Astra"
+                      - option "Chamber"
+                      - option "Vyse"
+                      - option "Skye"
+                      - option "Deadlock"
+                      - option "Breach"
+                      - option "Killjoy"
+                      - option "Sage"
+                      - option "Harbor"
+                      - option "KAY/O"
+                      - option "Viper"
+                      - option "Cypher"
+                      - option "Fade"
+                      - option "Clove"
+                      - option "Omen"
+                  - cell "95" [ref=f1e698]
+                  - cell "+1.8" [ref=f1e699]
+                - row [ref=f1e700]:
+                  - cell "Ghost" [ref=f1e701]
+                  - cell "Initiator Lurker" [ref=f1e703]:
+                    - generic [ref=f1e704]:
+                      - generic [ref=f1e705]: Initiator
+                      - generic [ref=f1e706]: Lurker
+                  - cell "Auto — Sova" [ref=f1e707]:
+                    - combobox [ref=f1e708]:
+                      - option "Auto — Sova" [selected]
+                      - option "Sova"
+                      - option "KAY/O"
+                      - option "Fade"
+                      - option "Gekko"
+                      - option "Skye"
+                      - option "Tejo"
+                      - option "Breach"
+                      - option "Clove"
+                      - option "Iso"
+                      - option "Neon"
+                      - option "Raze"
+                      - option "Viper"
+                      - option "Brimstone"
+                      - option "Miks"
+                      - option "Vyse"
+                      - option "Reyna"
+                      - option "Sage"
+                      - option "Cypher"
+                      - option "Deadlock"
+                      - option "Killjoy"
+                      - option "Yoru"
+                      - option "Astra"
+                      - option "Jett"
+                      - option "Veto"
+                      - option "Phoenix"
+                      - option "Waylay"
+                      - option "Chamber"
+                      - option "Harbor"
+                      - option "Omen"
+                  - cell "84" [ref=f1e709]
+                  - cell "+1.4" [ref=f1e710]
+                - row [ref=f1e711]:
+                  - cell "Slyblade" [ref=f1e712]
+                  - cell "Duelist Entry" [ref=f1e714]:
+                    - generic [ref=f1e715]:
+                      - generic [ref=f1e716]: Duelist
+                      - generic [ref=f1e717]: Entry
+                  - cell "Auto — Yoru" [ref=f1e718]:
+                    - combobox [ref=f1e719]:
+                      - option "Auto — Yoru" [selected]
+                      - option "Yoru"
+                      - option "Sage"
+                      - option "Raze"
+                      - option "Neon"
+                      - option "Phoenix"
+                      - option "Jett"
+                      - option "Iso"
+                      - option "Reyna"
+                      - option "Viper"
+                      - option "Waylay"
+                      - option "Skye"
+                      - option "Clove"
+                      - option "Astra"
+                      - option "Killjoy"
+                      - option "Tejo"
+                      - option "Miks"
+                      - option "Omen"
+                      - option "Harbor"
+                      - option "KAY/O"
+                      - option "Brimstone"
+                      - option "Fade"
+                      - option "Gekko"
+                      - option "Deadlock"
+                      - option "Veto"
+                      - option "Vyse"
+                      - option "Cypher"
+                      - option "Breach"
+                      - option "Chamber"
+                      - option "Sova"
+                  - cell "96" [ref=f1e720]
+                  - cell "+1.8" [ref=f1e721]
+                - row [ref=f1e722]:
+                  - cell "Echo" [ref=f1e723]
+                  - cell "Sentinel Anchor" [ref=f1e725]:
+                    - generic [ref=f1e726]:
+                      - generic [ref=f1e727]: Sentinel
+                      - generic [ref=f1e728]: Anchor
+                  - cell "Auto — Killjoy" [ref=f1e729]:
+                    - combobox [ref=f1e730]:
+                      - option "Auto — Killjoy" [selected]
+                      - option "Killjoy"
+                      - option "Veto"
+                      - option "Cypher"
+                      - option "Deadlock"
+                      - option "Vyse"
+                      - option "Sage"
+                      - option "Chamber"
+                      - option "Gekko"
+                      - option "KAY/O"
+                      - option "Omen"
+                      - option "Reyna"
+                      - option "Sova"
+                      - option "Jett"
+                      - option "Waylay"
+                      - option "Iso"
+                      - option "Yoru"
+                      - option "Harbor"
+                      - option "Astra"
+                      - option "Skye"
+                      - option "Tejo"
+                      - option "Brimstone"
+                      - option "Fade"
+                      - option "Miks"
+                      - option "Neon"
+                      - option "Phoenix"
+                      - option "Raze"
+                      - option "Breach"
+                      - option "Clove"
+                      - option "Viper"
+                  - cell "91" [ref=f1e731]
+                  - cell "+1.7" [ref=f1e732]
+                - row [ref=f1e733]:
+                  - cell "Hollowlock" [ref=f1e734]
+                  - cell "Controller IGL" [ref=f1e736]:
+                    - generic [ref=f1e737]:
+                      - generic [ref=f1e738]: Controller
+                      - generic [ref=f1e739]: IGL
+                  - cell "Harbor" [ref=f1e740]:
+                    - combobox [ref=f1e741]:
+                      - option "Auto — Harbor"
+                      - option "Harbor" [selected]
+                      - option "Jett"
+                      - option "Clove"
+                      - option "Veto"
+                      - option "Astra"
+                      - option "Brimstone"
+                      - option "Viper"
+                      - option "KAY/O"
+                      - option "Reyna"
+                      - option "Omen"
+                      - option "Gekko"
+                      - option "Miks"
+                      - option "Skye"
+                      - option "Iso"
+                      - option "Deadlock"
+                      - option "Fade"
+                      - option "Phoenix"
+                      - option "Raze"
+                      - option "Neon"
+                      - option "Sova"
+                      - option "Waylay"
+                      - option "Yoru"
+                      - option "Chamber"
+                      - option "Breach"
+                      - option "Tejo"
+                      - option "Killjoy"
+                      - option "Sage"
+                      - option "Vyse"
+                      - option "Cypher"
+                  - cell "75" [ref=f1e742]
+                  - cell "+1.0" [ref=f1e743]
+            - generic [ref=f1e744]:
+              - button "Lock agents" [ref=f1e745] [cursor=pointer]
+              - generic [ref=f1e746]: Saved agents stay in place until changed — rivals need 50%+ scouting to read them.
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Match
+    - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+    - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.
+```

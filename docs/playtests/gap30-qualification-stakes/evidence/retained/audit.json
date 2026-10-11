@@ -1,0 +1,69 @@
+{
+  "original_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "saved_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "season_week_phase": [
+    1,
+    14,
+    "regular"
+  ],
+  "baseline_accepted_decisions": 63,
+  "end_accepted_decisions": 63,
+  "accepted_decisions_identical": true,
+  "baseline_snapshot_streams": 1,
+  "end_snapshot_streams": 1,
+  "baseline_snapshots": 13,
+  "end_snapshots": 13,
+  "snapshots_identical": true,
+  "standings_identical": true,
+  "fixtures_identical": true,
+  "usage_empty_baseline": true,
+  "usage_all_retained_events": 32,
+  "usage_scoped_world_events": 28,
+  "usage_sessions": [
+    "4b41939aefb860b7eaec935e164fce7c",
+    "5ad2a8a18c01e146ae2f62e0848bee1a"
+  ],
+  "usage_kind_counts": {
+    "visible_time": 20,
+    "session_end": 1,
+    "session_start": 1,
+    "view": 4,
+    "attempt": 1,
+    "result": 1
+  },
+  "usage_view_counts": {
+    "lobby": 1,
+    "dashboard": 1,
+    "season/league": 1,
+    "season/fixtures": 1
+  },
+  "usage_request_events": [
+    {
+      "schema_version": 1,
+      "session_id": "4b41939aefb860b7eaec935e164fce7c",
+      "received_at": "2026-10-10T22:38:48.543185+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 14,
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 15
+    },
+    {
+      "schema_version": 1,
+      "session_id": "4b41939aefb860b7eaec935e164fce7c",
+      "received_at": "2026-10-10T22:38:48.543185+00:00",
+      "world": "26UHC",
+      "team": "team_nexus",
+      "season": 1,
+      "week": 14,
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 15,
+      "outcome": "success",
+      "status": 200,
+      "duration_ms": 50
+    }
+  ]
+}

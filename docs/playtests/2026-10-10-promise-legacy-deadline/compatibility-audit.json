@@ -1,0 +1,30 @@
+{
+  "comparison_head": "8ce7e505a0d4d07c0afb1916d326d75662be579f",
+  "intentional_legacy_mechanical_change": "create_promise now freezes inferred play_time duration before resetting remaining evaluations; this corrects requirement inflation. No all-mechanical-bodies-unchanged claim.",
+  "authored_state_byte_comparisons": 21,
+  "traces": [
+    {
+      "type": "play_time",
+      "initial_duration": 8,
+      "result": "kept"
+    },
+    {
+      "type": "make_captain",
+      "initial_duration": 0,
+      "result": "broken"
+    },
+    {
+      "type": "unknown",
+      "initial_duration": 0,
+      "result": "active"
+    }
+  ],
+  "legacy_before_requirement": 5,
+  "legacy_old_after_requirement": 8,
+  "legacy_fixed_after_requirement": 5,
+  "legacy_only_game_state_diff_before_tick": {
+    "old_initial_duration": 0,
+    "new_initial_duration": 8
+  },
+  "source_freeze_matches": 545
+}

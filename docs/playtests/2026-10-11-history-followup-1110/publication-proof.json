@@ -1,0 +1,62 @@
+{
+  "parent410": "655e8476282bb28832da51f500cff317cd29f8ad",
+  "parent1079_rows": 1079,
+  "finite_rows": 1110,
+  "sessions": 100,
+  "columns": 21,
+  "unique_session_step_ids": 1110,
+  "canonical_sha256": "ba6da15176aa2611cfbf6545fe8cf39d8cbf0ba459a44cb05ecf497e1a326be4",
+  "parent1079_raw_prefix_bytes": 1645745,
+  "parent1079_raw_prefix_and_all_fields_exact": true,
+  "new_original_rows": 28,
+  "new_original_fields_exact": 588,
+  "separate_root_rows": 3,
+  "separate_root_fields_exact": 63,
+  "root_runtime": "unknown (not exposed)",
+  "safe_session_files": 148,
+  "root_reports": 3,
+  "original_bookkeeping_copies": 7,
+  "source_proofs": [
+    {
+      "session": "2026-10-11-fatigue-rotation-recovery",
+      "played_head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+      "source_entries": 425,
+      "before_after_raw_exact": true,
+      "index425_exact_played_Git": true,
+      "Git_archive_raw_matches": 425,
+      "Git_archive_newline_only_matches": 0,
+      "candidate_source_substitution": false
+    },
+    {
+      "session": "2026-10-11-profile406-keyboard-session",
+      "played_head": "9d859741d80fb8a6fbb6d5802dfbac93fc195664",
+      "source_entries": 425,
+      "before_after_raw_exact": true,
+      "index425_exact_played_Git": true,
+      "Git_archive_raw_matches": 425,
+      "Git_archive_newline_only_matches": 0,
+      "candidate_source_substitution": false
+    },
+    {
+      "session": "2026-10-11-profile411-keyboard-session",
+      "played_head": "3cf2fa1a61030683cd79d125a108275b11be3c31",
+      "source_entries": 425,
+      "before_after_raw_exact": true,
+      "index425_exact_played_Git": true,
+      "Git_archive_raw_matches": 425,
+      "Git_archive_newline_only_matches": 0,
+      "candidate_source_substitution": false
+    }
+  ],
+  "candidate_source_is_not_played_source": true,
+  "local_tests_syntax_checks_game_imports_gates_analytics_run": false,
+  "new_gameplay": false,
+  "held_until_actual410_publication_retarget_freshreview_exactheadCI": true,
+  "worktree_registration_error": "thread attachment identity count exceeds 100",
+  "all_copied158_paths_staged_raw_exact": true,
+  "all_parent_blobs_exact_except_additive_csv_attrs": true,
+  "parent_blobs_verified": 3704,
+  "parent_source_schema_version_exact": true,
+  "only_six_new_narrow_raw_rules": true,
+  "changed_paths": 165
+}

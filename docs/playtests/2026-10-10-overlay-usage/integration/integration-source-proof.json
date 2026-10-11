@@ -1,0 +1,10 @@
+{
+  "head": "28cb13a6cf48ce8937f18ac17f7bc9534eb2d203",
+  "merge_base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "uncommitted_index_tree": "9ba15524598f1593827dfef14835d510ad8459e7",
+  "scoped_runtime_patch_sha256": "bc024f72b98dd9d6e63b6b598fe8052a17076d42afa12921b16fde8ffe10361b",
+  "focused_summary": "61 passed in 10.07s",
+  "original_csv_sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f",
+  "source_package_path": "C:\\Users\\aidan\\.codex\\worktrees\\overlay-inspection-usage\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "native_original_gate_preserved": "runs/overlay-usage/gate-receipt.json + full-pytest.log + source-freeze manifests; original 1262 results do not validate integrated source"
+}

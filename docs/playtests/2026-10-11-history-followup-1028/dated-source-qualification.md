@@ -1,0 +1,7 @@
+# Dated source qualification - 2026-10-11
+
+The fixed-head academy browser session belongs to archived Git commit `679fdb313cc8004fb0a34db271ff62c736cbf099` (PR397); the development browser session belongs to archived Git commit `7bee7d747dd1bf651ac4e38b55336be0a4db9847` (PR398). Their original source-before/source-after receipts are preserved byte-for-byte. Root independently checked 524 academy source paths and three development changed paths. The latter is a changed-path freeze, not a whole-tree 524-path audit. Git commit references identify archived source; raw CRLF SHA256 receipts identify original worktree bytes, separately from normalized Git blob identities.
+
+Academy proves disabled promotion reasons, age candidate visibility and Save on that head. Successful movement, stale/closed/full-window scenarios remain unverified. Development proves Club first observation versus real flat comparison and weekly feedback; the profile still showed a misleading one-week self-comparison and omitted weekly feedback. Advance returned409, so a two-point transition remains unexercised. No browser acceptance attaches to later mentorship PR400 repair fa6d622 or profile PR401 5ebc668. The gap observed in these originating sessions is retained, without replacing it with later source-only review conclusions.
+
+This supplement does not rewrite PR399 or earlier finite snapshot reports. It provides no new runtime evidence on the publication branch and claims no historical gate result as a current pass.

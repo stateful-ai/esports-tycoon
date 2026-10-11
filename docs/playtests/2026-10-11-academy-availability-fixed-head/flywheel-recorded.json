@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0244",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Bench recovery depends on actual send-down age",
+    "problem": "Only bench Hollowlock is27 and academy send-down limit23.",
+    "solution": "Inspect visible server candidates Ghost20 starter and Vortex23 starter, retain original five instead of inventing eligible bench recovery.",
+    "lesson": "Explanation is verified; successful recovery is unverified when the current bench has no eligible player. Log the blocked player goal separately.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "academy",
+      "roster",
+      "blocked"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0243",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Promotion blocker explained before request",
+    "problem": "Five-player affiliate cannot lose a prospect.",
+    "solution": "Club Operations renders server-derived disabled Promote and visible exact minimum-depth reason plus current roster counts.",
+    "lesson": "On fixed397 head679, all five prospects were disabled before any academy_move request; shared constraints remain intact.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "academy",
+      "availability",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0245",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Hidden overlay remains in browser accessibility queries",
+    "problem": "ARIA snapshot and Playwright isVisible include profile DOM after Close, despite opacity0 and pointer-events none.",
+    "solution": "Retain blocked targeting attempt; independently inspect overlay hidden class/computed CSS and append correction. No force-click or duplicate Save.",
+    "lesson": "DOM accessibility output alone can misclassify opacity-hidden overlays as visible; confirm pointer/opacity state before inferring failed close.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "browser",
+      "harness",
+      "visibility"
+    ],
+    "kind": "pain-point"
+  }
+]

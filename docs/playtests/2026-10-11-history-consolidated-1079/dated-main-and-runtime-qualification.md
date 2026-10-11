@@ -1,0 +1,7 @@
+# Main and runtime qualification - 2026-10-11
+
+Actual main is pinned to `ba3f5894af70fc6616e5ceccb71982fcb27d47e1`, with 994 published observations. This replacement publication candidate merges #409 `2b8622fdac07b2828f7a68036019aea90277fff9` into actual main, then appends seven observations to the finite 1079-row history. It preserves main's source and nonhistory blobs and #409's history blobs. Pending #404, #407, #408 and #409 remain unchanged; their historical publication and CI/review qualifications remain dated records. No intermediate remote merge is claimed.
+
+The prior staged merge was conflict-free and matched the independently computed tree `f2d315e55fc57ad50c92260672eaf8a84d00e58a`. This new draft targets main directly. Actual replacement publication requires fresh independent review, inline review resolution, exact-head remote CI success and confirmation of current-main retention. The existing drafts must remain open until actual replacement publication is confirmed.
+
+The Apparel session belongs to played actual main ba3, copied 26UHC/seed 2038/S2 W6, game 0.0.1. Original six rows remain immutable GPT-6.1-sol/medium records. Root correction row 7 retains unknown (not exposed) model/effort and receipt-only corrections. One signed steady Apparel contract is verified; no calendar advance or future sponsor payout is asserted. No new gameplay, local tests, syntax checks, gates or analytics commands ran on this publication checkout.

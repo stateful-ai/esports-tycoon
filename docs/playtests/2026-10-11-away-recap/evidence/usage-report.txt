@@ -1,0 +1,48 @@
+{
+  "attempts": 4,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:dashboard": 3,
+    "view:lobby": 2,
+    "view:tactics/gameplan": 2,
+    "view:tactics/prep": 1,
+    "visible_time:dashboard": 8,
+    "visible_time:lobby": 2,
+    "visible_time:tactics/gameplan": 6,
+    "visible_time:tactics/prep": 3
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "22706d4c3f101fc59bcb267da02b7950": 164995,
+    "7cecafe303c254fd2258a4d2517acbc3": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 4,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 98405,
+    "lobby": 377,
+    "tactics/gameplan": 63787,
+    "tactics/prep": 21447
+  },
+  "world_events": {
+    "26UHC": 38
+  }
+}

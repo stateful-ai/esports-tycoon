@@ -1,0 +1,12 @@
+{
+  "verified_at_utc": "2026-10-11T07:11:25.693876+00:00",
+  "verification_kind": "read-only hash/CSV/Git byte inspection; no local test or acceptance helper",
+  "original_artifact_raw_and_index_matches": 180,
+  "named_reference_raw_and_index_hashes": 90,
+  "all_parent_playtest_artifact_blobs_unchanged": true,
+  "source612_raw_and_Git_tree_equal_tested64": true,
+  "canonical808_sha256": "29ff8f6ae1674d72d6fd72edf0fefbe5ebf8cf5e8a7702ff753346fc88d2875a",
+  "parent765_exact_Git_blob_prefix": true,
+  "docs_only_staged_paths_before_this_receipt": 188,
+  "raw_historical_whitespace_preserved": "Original snapshot DOM tabs and original migration helper final blank line retained; current report/handoff whitespace check clean."
+}

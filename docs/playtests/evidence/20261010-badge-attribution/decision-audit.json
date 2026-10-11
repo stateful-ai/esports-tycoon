@@ -1,0 +1,24 @@
+{
+  "world": "247PG",
+  "seed": 2026,
+  "time": [
+    1,
+    2
+  ],
+  "decisions": [
+    {
+      "index": 0,
+      "record": {
+        "season": 1,
+        "week": 1,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "advance",
+        "params": {},
+        "source": "web"
+      }
+    }
+  ],
+  "snapshots": 1
+}

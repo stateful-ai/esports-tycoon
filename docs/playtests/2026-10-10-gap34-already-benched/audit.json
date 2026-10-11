@@ -1,0 +1,70 @@
+{
+  "save_sha256": "999038d35e4e45460fa2b495591599dcf4042fc44206fdb4b84d586dca18186f",
+  "save_bytes_identical": true,
+  "accepted_actions_before": 75,
+  "accepted_actions_after": 75,
+  "accepted_action_prefix_identical": true,
+  "manager_snapshot_counts": {
+    "mgr_team_nexus": 17
+  },
+  "snapshot_prefix_identical": true,
+  "retained_usage_prefixes_match": true,
+  "new_retained_usage_events": 21,
+  "new_world_usage_events": 18,
+  "new_world_session_count": 2,
+  "usage_kind_target_counts": [
+    {
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "count": 1
+    },
+    {
+      "kind": "result",
+      "target": "/api/actions/save",
+      "count": 1
+    },
+    {
+      "kind": "session_end",
+      "target": "",
+      "count": 1
+    },
+    {
+      "kind": "session_start",
+      "target": "",
+      "count": 1
+    },
+    {
+      "kind": "view",
+      "target": "club/squad",
+      "count": 1
+    },
+    {
+      "kind": "view",
+      "target": "dashboard",
+      "count": 1
+    },
+    {
+      "kind": "view",
+      "target": "lobby",
+      "count": 1
+    },
+    {
+      "kind": "visible_time",
+      "target": "club/squad",
+      "count": 7
+    },
+    {
+      "kind": "visible_time",
+      "target": "dashboard",
+      "count": 2
+    },
+    {
+      "kind": "visible_time",
+      "target": "lobby",
+      "count": 2
+    }
+  ],
+  "first_receipt": "2026-10-10T23:51:33.966537+00:00",
+  "last_receipt": "2026-10-10T23:53:34.009063+00:00",
+  "limitations": "Bounded best-effort usage; visible time is visibility, not attention. Read-only navigation and Save add no accepted manager decisions."
+}

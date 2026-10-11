@@ -1,0 +1,6 @@
+### Result
+{"url":"http://127.0.0.1:8535/api/actions/gameplan","status":200,"request":{"site_focus":null,"focus_target":null,"starter_ids":[],"team_talk":null,"aggression":null,"pace":null,"util_discipline":null,"eco_greed":null,"map_control":null},"body":{"ok":true,"message":"Game plan confirmed for the next match."}}
+### Ran Playwright code
+```js
+await (async page => { const response=page.waitForResponse(r=>r.url().includes('/api/actions/')&&r.request().method()==='POST'); await page.getByRole('button',{name:'Lock in game plan',exact:true}).click(); const r=await response; return {url:r.url(),status:r.status(),request:r.request().postDataJSON(),body:await r.json()}; })(page);
+```
