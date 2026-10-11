@@ -1,0 +1,28 @@
+[
+  {
+    "completed_events": 59,
+    "retained_maps": 6121,
+    "discarded_partial_rows": {
+      "map_outcomes.csv": 91,
+      "player_map_stats.csv": 910,
+      "round_outcomes.csv": 1914,
+      "round_economy.csv": 3828,
+      "player_map_performance.csv": 880
+    },
+    "checkpoint_hashes_verified": false,
+    "rule": "Retain only fully checkpointed event maps; reparse the interrupted event from immutable cache."
+  },
+  {
+    "completed_events": 63,
+    "retained_maps": 6391,
+    "discarded_partial_rows": {
+      "map_outcomes.csv": 6,
+      "player_map_stats.csv": 60,
+      "round_outcomes.csv": 126,
+      "round_economy.csv": 252,
+      "player_map_performance.csv": 40
+    },
+    "checkpoint_hashes_verified": true,
+    "rule": "Retain only fully checkpointed event maps; reparse the interrupted event from immutable cache."
+  }
+]

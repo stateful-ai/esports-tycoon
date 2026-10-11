@@ -1,0 +1,80 @@
+{
+  "world": "26UHC",
+  "played_pages": [
+    "346e5ee7c1d648067f99cc81d7e50f4d"
+  ],
+  "retained_events": 93,
+  "all_events": 93,
+  "request_pairs": [
+    {
+      "attempt_index": 16,
+      "result_index": 17,
+      "target": "/api/actions/preparation",
+      "request_id": 14,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 28,
+      "result_index": 29,
+      "target": "/api/actions/scout-directive",
+      "request_id": 27,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 65,
+      "result_index": 66,
+      "target": "/api/actions/dev_plan",
+      "request_id": 35,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 69,
+      "result_index": 70,
+      "target": "/api/actions/advance",
+      "request_id": 38,
+      "outcome": "http_error",
+      "status": 409
+    },
+    {
+      "attempt_index": 77,
+      "result_index": 78,
+      "target": "/api/actions/flavor_event",
+      "request_id": 51,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 81,
+      "result_index": 83,
+      "target": "/api/actions/advance",
+      "request_id": 61,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 88,
+      "result_index": 89,
+      "target": "/api/actions/save",
+      "request_id": 74,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "views": {
+    "lobby": 1,
+    "dashboard": 3,
+    "tactics/strategy": 1,
+    "tactics/prep": 1,
+    "market/scouting": 1,
+    "club/squad": 1,
+    "club/development": 1
+  },
+  "interactions": {},
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "bounded_best_effort": true,
+  "note": "Five accepted decisions versus seven browser pairs: rejected Advance409 and Save outside accepted ledger. Navigation/visible_time retained counts do not prove complete attention or semantic correctness."
+}

@@ -1,0 +1,12 @@
+{
+  "same": true,
+  "connected": true,
+  "visible": true,
+  "disabled": false,
+  "active": "<button class=\"btn btn-sm\">Career ▸</button>",
+  "closed": {
+    "inert": true,
+    "ariaHidden": "true",
+    "descendantFocus": false
+  }
+}

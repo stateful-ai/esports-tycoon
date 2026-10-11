@@ -1,0 +1,44 @@
+{
+  "actual_main": "df9b105f7f79fa54357c677e835cf965cf2235cb",
+  "previous_candidate": "685d78b19386fdfb4d59530f35f822c073b4be9d",
+  "sole_conflict": ".gitattributes",
+  "resolution": "Union of all currentmain and candidate attribute rules",
+  "previous_candidate_attribute_rules": [
+    "data/research/war-history/map_context.csv -whitespace",
+    "docs/playtests/actions.csv -text",
+    "docs/playtests/2026-10-11-academy-availability-fixed-head/** -text",
+    "docs/playtests/2026-10-11-development-first-observation-398/** -text",
+    "docs/playtests/2026-10-11-history-followup-1028/original-root-audit.json -text",
+    "docs/playtests/2026-10-11-fixed-head-sessions-and-analytics.md -text",
+    "docs/playtests/2026-10-11-history-consolidated-1044/** -text",
+    "docs/playtests/2026-10-11-mentorship-profile-supplemental-and-analytics.md -text"
+  ],
+  "currentmain_attribute_rules": [
+    "data/research/war-history/map_context.csv -whitespace",
+    "docs/playtests/gap37-between-map-debrief/** -text"
+  ],
+  "resolved_attribute_rules": [
+    "data/research/war-history/map_context.csv -whitespace",
+    "docs/playtests/actions.csv -text",
+    "docs/playtests/2026-10-11-academy-availability-fixed-head/** -text",
+    "docs/playtests/2026-10-11-development-first-observation-398/** -text",
+    "docs/playtests/2026-10-11-history-followup-1028/original-root-audit.json -text",
+    "docs/playtests/2026-10-11-fixed-head-sessions-and-analytics.md -text",
+    "docs/playtests/2026-10-11-history-consolidated-1044/** -text",
+    "docs/playtests/2026-10-11-mentorship-profile-supplemental-and-analytics.md -text",
+    "docs/playtests/gap37-between-map-debrief/** -text"
+  ],
+  "all_attribute_rules_retained": true,
+  "canonical_sha256": "ac87fda4104ec9c2fa0ff34d7c5d52c88f47c004eb0d4de6d9d4d5702df2b249",
+  "main994_raw_prefix_preserved": true,
+  "main994_prefix_bytes": 1568755,
+  "main_source_outside_history_exact": true,
+  "old_candidate_all_history_blobs_preserved": true,
+  "main_existing_blobs_preserved_except_csv_and_additive_attributes": true,
+  "rows": 1044,
+  "main_rows": 994,
+  "row_delta": 50,
+  "new_game_session": false,
+  "local_tests_run": false,
+  "fresh_rootreview_and_exacthead_remoteCI_success_required": true
+}

@@ -1,0 +1,37 @@
+{
+  "head": "806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca",
+  "source_count": 425,
+  "source_freeze_equal": true,
+  "save_bytes_equal": true,
+  "save_before_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+  "save_after_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+  "season": 2,
+  "week": 5,
+  "actions_before": 120,
+  "actions_after": 120,
+  "actions_equal": true,
+  "snaps_before": 27,
+  "snaps_after": 27,
+  "snaps_equal": true,
+  "usage_rows": 27,
+  "usage_kinds": {
+    "session_start": 1,
+    "view": 3,
+    "visible_time": 21,
+    "attempt": 1,
+    "result": 1
+  },
+  "paired_requests": [
+    {
+      "session_id": "cb52fb86eae924e934a6325eff05c963",
+      "target": "/api/actions/save",
+      "request_id": 13,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "unmatched_attempts": 0,
+  "unmatched_results": 0,
+  "wire_save_requests": 1,
+  "wire_events": 254
+}

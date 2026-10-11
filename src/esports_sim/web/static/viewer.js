@@ -59,8 +59,8 @@ function feedLabel(pid) {
   const icon = src
     ? `<img class="feed-agent" src="${src}" onerror="this.style.display='none'" alt="">`
     : "";
-  if (!name) return `${icon}<b class="feed-name plink" data-pid="${pid}">${handle}</b>`;
-  return `${icon}<b class="feed-name plink" data-pid="${pid}">${name}</b> <span class="muted feed-handle">(${handle})</span>`;
+  if (!name) return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${handle}</button></b>`;
+  return `${icon}<b><button type="button" class="feed-name plink" data-pid="${pid}">${name}</button></b> <span class="muted feed-handle">(${handle})</span>`;
 }
 
 const viewerHumanize = (value) => window.humanize
@@ -181,9 +181,9 @@ const pos = (cid) => {
 
 // Projected floor rect corners for a region (grid coords, y-flip applied,
 // elevation shift included), ordered around the parallelogram.
-function regionCorners(rid) {
-  const r = V.floor.regions[rid];
-  const z = V.iso ? (r.z || 0) : 0;
+function regionCorners(rid, floorRect = null) {
+  const r = floorRect || V.floor.regions[rid];
+  const z = V.iso ? (V.floor.regions[rid].z || 0) : 0;
   const g = [
     [r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h],
   ];
@@ -674,6 +674,12 @@ function drawFloor(svg) {
       points: corners.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
       class: "floor" + (isSite ? " floor-site" : "") + (z > 0 ? " floor-raised" : ""),
     }));
+    for (const rect of V.floor.regions[rid].floor_extensions || []) {
+      svg.appendChild(svgEl("polygon", {
+        points: regionCorners(rid, rect).map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
+        class: "floor" + (isSite ? " floor-site" : "") + (z > 0 ? " floor-raised" : ""),
+      }));
+    }
     if (c) {
       const [lx, ly] = pos(rid);
       const label = svgEl("text", { x: lx, y: ly + S(1.2), class: "callout-label" });
@@ -778,7 +784,8 @@ function isoContentViewBox() {
   if (!V.floor) return ISO_VIEWBOX;
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const rid of Object.keys(V.floor.regions)) {
-    for (const [x, y] of regionCorners(rid)) {
+    const parts = [null, ...(V.floor.regions[rid].floor_extensions || [])];
+    for (const [x, y] of parts.flatMap(rect => regionCorners(rid, rect))) {
       if (x < minX) minX = x;
       if (x > maxX) maxX = x;
       if (y < minY) minY = y;
@@ -922,6 +929,48 @@ function getPlayerEls(pid) {
     e = V.playerEls[pid] = { ring, icon, fallback, label };
   }
   return e;
+}
+
+// Reuse unchanged event rows so playback does not discard a focused player
+// control. Keep authored HTML separately: an image's onerror can change its DOM.
+function renderFeed(feed, items) {
+  const previous = V._feedEl === feed ? (V._feedRows || []) : [];
+  if (previous.length === items.length && feed.childNodes.length === items.length &&
+      previous.every((row, i) => row.html === items[i].html && feed.childNodes[i] === row.el)) {
+    return;
+  }
+
+  const available = new Map();
+  for (const row of previous) {
+    if (row.el.parentNode !== feed) continue;
+    if (!available.has(row.html)) available.set(row.html, []);
+    available.get(row.html).push(row);
+  }
+  const focused = feed.contains(document.activeElement) ? document.activeElement : null;
+  const rows = items.map(({ html }) => {
+    const reused = available.get(html)?.shift();
+    if (reused) return reused;
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    return { html, el: template.content.firstElementChild };
+  });
+  // Insert additions before existing rows; do not move a row already in place.
+  let next = feed.firstChild;
+  for (const row of rows) {
+    if (row.el === next) next = next.nextSibling;
+    else feed.insertBefore(row.el, next);
+  }
+  while (next) {
+    const removed = next;
+    next = next.nextSibling;
+    removed.remove();
+  }
+  V._feedEl = feed;
+  V._feedRows = rows;
+  // Reordering can blur a retained control in browsers; restore that same node.
+  if (focused && feed.contains(focused) && document.activeElement !== focused) {
+    focused.focus({ preventScroll: true });
+  }
 }
 
 function drawFrame() {
@@ -1085,11 +1134,9 @@ function drawFrame() {
       }));
 
   const feed = document.getElementById("v-feed");
-  feed.innerHTML = feedItems
+  renderFeed(feed, feedItems
     .sort((a, b) => a.tick - b.tick)
-    .reverse()
-    .map((it) => it.html)
-    .join("");
+    .reverse());
 
   document.getElementById("v-scrub").max = round.maxTick;
   document.getElementById("v-scrub").value = Math.min(t, round.maxTick);
@@ -1370,7 +1417,7 @@ function buildLineup() {
             : `<span class="lu-icon"></span>`;
           return `<div class="lu-row" data-follow="${pid}" title="Follow ${handleOf(pid)} with the camera (click again to release)">${icon}` +
             `<span class="lu-agent">${agentName(pid) || handleOf(pid)}</span>` +
-            `<span class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</span></div>`;
+            `<button type="button" class="lu-handle muted plink" data-pid="${pid}">${handleOf(pid)}</button></div>`;
         })
         .join("");
       return `<div class="lu-team"><div class="lu-team-name ${cls} tlink" data-tid="${tid}">${V.names[tid]}</div>${rows}</div>`;
@@ -1411,6 +1458,7 @@ function buildTimeline() {
     .join("");
   el.querySelectorAll(".v-tl-round").forEach((b) => {
     b.onclick = () => {
+      window.Usage?.replay("round");
       setRound(Number(b.dataset.round));
       V.playing = false;
       updatePlayBtn();
@@ -1447,13 +1495,13 @@ function buildMatchSummary() {
       const cls = r.team_id === V.teamA ? "a" : "b";
       const xdeText = r.xde != null ? ` <span class="muted" style="font-size:0.8em; margin-left: 4px;">(xDE: ${r.xde >= 0 ? "+" : ""}${r.xde.toFixed(2)})</span>` : "";
       return `<div class="v-sum-row"><span class="v-sum-dot ${cls}"></span>` +
-        `<span class="plink" data-pid="${r.player_id}">${r.handle}</span>` +
+        `<button type="button" class="plink" data-pid="${r.player_id}">${r.handle}</button>` +
         `<span class="mono muted">${r.kills}/${r.deaths}${xdeText}</span>` +
         `<b class="mono">${r.rating.toFixed(2)}</b></div>`;
     })
     .join("");
   el.innerHTML =
-    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b class="plink" data-pid="${mvp.player_id}">${mvp.handle}</b>` : ""}</div>` +
+    `<div class="v-sum-lab">Box score${mvp ? ` · MVP <b><button type="button" class="plink" data-pid="${mvp.player_id}">${mvp.handle}</button></b>` : ""}</div>` +
     rows;
   side.insertBefore(el, document.getElementById("v-feed"));
 }
@@ -1659,6 +1707,7 @@ async function openReplay(fixtureId, mapIndex) {
   drawStatic();
   drawFrame();
   document.getElementById("viewer").classList.remove("hidden");
+  window.Usage?.replay("open");
   updatePlayBtn();
   paintEvBtn();
   paintSfxBtn();
@@ -1669,6 +1718,7 @@ async function openReplay(fixtureId, mapIndex) {
 }
 
 function closeViewer() {
+  if (V) window.Usage?.replay("close");
   if (V) V.playing = false;
   V = null;
   const lineup = document.getElementById("v-lineup");
@@ -1686,6 +1736,7 @@ window.closeViewer = closeViewer;
 document.getElementById("v-play").onclick = () => {
   if (!V) return;
   V.playing = !V.playing;
+  window.Usage?.replay(V.playing ? "play" : "pause");
   V.lastTs = null;
   updatePlayBtn();
   if (V.playing) requestAnimationFrame(loop);
@@ -1709,16 +1760,19 @@ document.getElementById("v-cones").onclick = () => {
   b.setAttribute("aria-pressed", V.cones ? "true" : "false");
   drawFrame();
 };
-document.getElementById("v-prev").onclick = () => V && setRound(V.roundIdx - 1);
-document.getElementById("v-next").onclick = () => V && setRound(V.roundIdx + 1);
+document.getElementById("v-prev").onclick = () => { if (V) { window.Usage?.replay("round"); setRound(V.roundIdx - 1); } };
+document.getElementById("v-next").onclick = () => { if (V) { window.Usage?.replay("round"); setRound(V.roundIdx + 1); } };
 document.getElementById("v-scrub").oninput = (e) => {
   if (!V) return;
   V.tick = parseFloat(e.target.value);
   drawFrame();
 };
+document.getElementById("v-scrub").addEventListener("change", () => { if (V) window.Usage?.replay("seek"); });
+
 document.querySelectorAll(".speed").forEach((b) => {
   b.onclick = () => {
     if (!V) return;
+    window.Usage?.replay(`speed_${b.dataset.speed}`);
     document.querySelectorAll(".speed").forEach((x) => x.classList.remove("active"));
     b.classList.add("active");
     if (b.dataset.speed === "inst") {

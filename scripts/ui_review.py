@@ -58,7 +58,7 @@ async def main():
         # week 1) and intercepts all pointer events. Dismiss it so tab clicks
         # work; this mirrors a real user closing the guide.
         await page.evaluate(
-            "const h = document.getElementById('help'); if (h) { h.classList.add('hidden'); h.setAttribute('aria-hidden','true'); }"
+            "() => { if (window.closeHelp) window.closeHelp(); }"
         )
 
         for tab in [t.strip() for t in args.tabs.split(",") if t.strip()]:

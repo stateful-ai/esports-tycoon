@@ -299,6 +299,8 @@ def get_map_schema() -> dict[str, Any]:
             ],
             "runtime_compile_limits": [
                 "walkable surfaces and prop footprints must be axis-aligned rectangles",
+                "a surface may add connected rectangular floor_extensions without moving its navigation core",
+                "role: wall carves solid volumes without creating crate holding positions",
                 "each navigational semantic zone maps to exactly one surface",
                 "plant zones are overlays that share their site's surface",
                 "each non-plant zone needs a tactical legacy_zone",
@@ -393,7 +395,7 @@ def update_map_metadata(
     changes: dict[str, Any],
     if_match_hash: str,
 ) -> dict[str, Any]:
-    allowed = {"display_name", "sites", "attacker_spawn", "defender_spawn"}
+    allowed = {"display_name", "sites", "attacker_spawn", "defender_spawn", "reference", "links_define_adjacency", "movement_model"}
     unknown = set(changes) - allowed
     if unknown:
         raise MapMcpError(f"unsupported metadata fields: {sorted(unknown)}")
@@ -421,7 +423,7 @@ def apply_map_patch(
 ) -> dict[str, Any]:
     """Apply a coherent typed element batch in one revision-locked save."""
     metadata = metadata or {}
-    allowed_metadata = {"display_name", "sites", "attacker_spawn", "defender_spawn"}
+    allowed_metadata = {"display_name", "sites", "attacker_spawn", "defender_spawn", "reference", "links_define_adjacency", "movement_model"}
     unknown = set(metadata) - allowed_metadata
     if unknown:
         raise MapMcpError(f"unsupported metadata fields: {sorted(unknown)}")

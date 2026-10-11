@@ -1,0 +1,67 @@
+{
+  "model_version": 1,
+  "features": "Signed pre-match player identities (+1 team1, -1 team2); no same-map statistics",
+  "source_maps": 1567,
+  "eligible_maps": 1470,
+  "excluded_incomplete_lineup_maps": 97,
+  "target": "team1 map win",
+  "ridge_penalty": 20.0,
+  "tuning": [
+    {
+      "ridge_penalty": 1.0,
+      "log_loss": 0.739099,
+      "brier_score": 0.26864,
+      "accuracy": 0.526667
+    },
+    {
+      "ridge_penalty": 5.0,
+      "log_loss": 0.690771,
+      "brier_score": 0.249271,
+      "accuracy": 0.53
+    },
+    {
+      "ridge_penalty": 20.0,
+      "log_loss": 0.681903,
+      "brier_score": 0.244648,
+      "accuracy": 0.53
+    }
+  ],
+  "team_baseline_ridge_penalty": 5.0,
+  "split": {
+    "validation_start_utc_date": "2026-05-12",
+    "test_start_utc_date": "2026-06-17",
+    "train_maps": 1165,
+    "test_maps": 305,
+    "unit": "UTC date, entire series stays together"
+  },
+  "test_lineup_model": {
+    "log_loss": 0.665745,
+    "brier_score": 0.236555,
+    "accuracy": 0.583607
+  },
+  "test_team_identity_baseline": {
+    "log_loss": 0.666217,
+    "brier_score": 0.23676,
+    "accuracy": 0.580328
+  },
+  "test_even_probability_baseline": {
+    "log_loss": 0.693147,
+    "brier_score": 0.25,
+    "accuracy": 0.540984
+  },
+  "classification_tie_rule": "p=0.5 predicts team1. Even-probability accuracy is the team1 win frequency, not expected random coin-flip accuracy.",
+  "beats_team_baseline_log_loss": true,
+  "exactly_inseparable_players": 545,
+  "total_players": 680,
+  "connected_components": 4,
+  "replacement_definition": "25th percentile coefficient of same-component, same-dominant-role players with >=10 tier-2 maps; component-wide fallback if <8 peers; blank if still <8. Not the actual free-agent market.",
+  "war_definition": "Sum over played maps of fitted P(win with player) minus fitted P(win replacing their coefficient with replacement); full-data refit after test evaluation.",
+  "limits": [
+    "Observational association, not causal WAR",
+    "Teammate and opponent strengths enter through signed lineups but stable rosters cannot separate individual contributions",
+    "No economy, coaching, map/side preferences, patch, or schedule adjustments",
+    "Regional disconnected coefficients are not comparable",
+    "No calibrated uncertainty intervals; map observations within a series are dependent",
+    "No automatic use in roster ratings"
+  ]
+}

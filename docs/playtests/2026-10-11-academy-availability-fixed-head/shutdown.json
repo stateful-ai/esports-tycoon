@@ -1,0 +1,8 @@
+{
+  "closed_pid": 25940,
+  "verified_command": "\"C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe\" -m uvicorn esports_sim.web.server:app --host 127.0.0.1 --port 8538",
+  "parent_pid": 19652,
+  "browser": "only isolated owned context closed",
+  "user8421": "untouched",
+  "at_utc": "2026-10-11T10:30:24.9568300Z"
+}

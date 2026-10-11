@@ -1,0 +1,432 @@
+{
+  "desk": {
+    "team_id": "team_nexus",
+    "pro": {
+      "directive": "scout_opponents",
+      "opponent": null,
+      "shortlist": []
+    },
+    "amateur": {
+      "directive": null,
+      "academy": [
+        {
+          "player_id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "role": "controller",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p1",
+          "handle": "Grimpulse",
+          "role": "duelist",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p2",
+          "handle": "Voltflare",
+          "role": "duelist",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p3",
+          "handle": "Pyroecho",
+          "role": "initiator",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p4",
+          "handle": "Nightecho",
+          "role": "sentinel",
+          "progress": 0.0
+        }
+      ],
+      "youth_progress": 0.0
+    },
+    "recommended": [
+      {
+        "player_id": "team_kraken_unit_p2",
+        "handle": "Voltflare",
+        "role": "duelist",
+        "depth": 0.0,
+        "assignment": "player:team_kraken_unit_p2"
+      },
+      {
+        "player_id": "team_kraken_unit_p4",
+        "handle": "Nightecho",
+        "role": "sentinel",
+        "depth": 0.0,
+        "assignment": "player:team_kraken_unit_p4"
+      },
+      {
+        "player_id": "team_kraken_unit_p0",
+        "handle": "Nightsurge",
+        "role": "controller",
+        "depth": 0.0,
+        "assignment": "player:team_kraken_unit_p0"
+      },
+      {
+        "player_id": "team_kraken_unit_p3",
+        "handle": "Pyroecho",
+        "role": "initiator",
+        "depth": 0.0,
+        "assignment": "player:team_kraken_unit_p3"
+      }
+    ],
+    "player_evals": [],
+    "directives": {
+      "pro": [
+        "scout_opponents",
+        "fill_gap"
+      ],
+      "amateur": [
+        "track_academy"
+      ],
+      "calibers": [
+        "any",
+        "star",
+        "starter",
+        "tier1",
+        "tier2"
+      ]
+    },
+    "target": "player:slice",
+    "target_kind": "player"
+  },
+  "lanes": {
+    "pro": {
+      "directive": "scout_opponents",
+      "opponent": null,
+      "shortlist": [],
+      "role_options": [
+        "duelist",
+        "controller",
+        "initiator",
+        "sentinel",
+        "flex"
+      ],
+      "caliber_options": [
+        "any",
+        "star",
+        "starter",
+        "tier1",
+        "tier2"
+      ]
+    },
+    "amateur": {
+      "directive": null,
+      "academy": [
+        {
+          "player_id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "role": "controller",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p1",
+          "handle": "Grimpulse",
+          "role": "duelist",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p2",
+          "handle": "Voltflare",
+          "role": "duelist",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p3",
+          "handle": "Pyroecho",
+          "role": "initiator",
+          "progress": 0.0
+        },
+        {
+          "player_id": "team_kraken_unit_p4",
+          "handle": "Nightecho",
+          "role": "sentinel",
+          "progress": 0.0
+        }
+      ],
+      "youth_progress": 0.0
+    }
+  },
+  "shortlist": [],
+  "deep_dive_recommendations": [
+    {
+      "player_id": "team_kraken_unit_p2",
+      "handle": "Voltflare",
+      "role": "duelist",
+      "depth": 0.0,
+      "assignment": "player:team_kraken_unit_p2"
+    },
+    {
+      "player_id": "team_kraken_unit_p4",
+      "handle": "Nightecho",
+      "role": "sentinel",
+      "depth": 0.0,
+      "assignment": "player:team_kraken_unit_p4"
+    },
+    {
+      "player_id": "team_kraken_unit_p0",
+      "handle": "Nightsurge",
+      "role": "controller",
+      "depth": 0.0,
+      "assignment": "player:team_kraken_unit_p0"
+    },
+    {
+      "player_id": "team_kraken_unit_p3",
+      "handle": "Pyroecho",
+      "role": "initiator",
+      "depth": 0.0,
+      "assignment": "player:team_kraken_unit_p3"
+    }
+  ],
+  "target": "player:slice",
+  "target_kind": "player",
+  "target_name": "Slice",
+  "progress": 0.5,
+  "reports": [
+    {
+      "player_id": "slice",
+      "own_player": false,
+      "handle": "Slice",
+      "age": 23,
+      "role": "duelist",
+      "playstyle": "awper",
+      "ca_stars": [
+        3.0,
+        4.5
+      ],
+      "current_ability_projection": [
+        90.3,
+        99.0
+      ],
+      "comfort": 100,
+      "pa_stars": [
+        3.0,
+        5.0
+      ],
+      "pa_projection": [
+        75.2,
+        99.0
+      ],
+      "traits": [
+        {
+          "id": "confident",
+          "blurb": ""
+        },
+        {
+          "id": "media_favorite",
+          "blurb": ""
+        }
+      ],
+      "traits_hidden": 1,
+      "strengths": [
+        "aim_precision",
+        "aim_reactivity"
+      ],
+      "weaknesses": [],
+      "ceiling_reads": [],
+      "agent_comfort": [
+        {
+          "agent_id": "jett",
+          "mastery": 96
+        },
+        {
+          "agent_id": "iso",
+          "mastery": 80
+        },
+        {
+          "agent_id": "reyna",
+          "mastery": 73
+        }
+      ],
+      "style_read": "plays fast and takes space aggressively; excellent utility",
+      "mental_read": "",
+      "curve_read": "",
+      "training_hint": null,
+      "verdict": "",
+      "progress": 0.5
+    }
+  ],
+  "match_report": null,
+  "teams": [
+    {
+      "id": "team_adriatic_sirens",
+      "name": "Adriatic Sirens"
+    },
+    {
+      "id": "team_alpine_echo",
+      "name": "Alpine Echo"
+    },
+    {
+      "id": "team_anatolia_forge",
+      "name": "Anatolia Forge"
+    },
+    {
+      "id": "team_apex_syndicate",
+      "name": "Apex Syndicate"
+    },
+    {
+      "id": "team_azure_vanta",
+      "name": "Azure Vanta"
+    },
+    {
+      "id": "team_baltic_meridian",
+      "name": "Baltic Meridian"
+    },
+    {
+      "id": "team_bayou_kings",
+      "name": "Bayou Kings"
+    },
+    {
+      "id": "team_berlin_wolves",
+      "name": "Berlin Wolves"
+    },
+    {
+      "id": "team_busan_tempest",
+      "name": "Busan Tempest"
+    },
+    {
+      "id": "team_cascadia_youth",
+      "name": "Cascadia Youth"
+    },
+    {
+      "id": "team_chao_phraya_owls",
+      "name": "Chao Phraya Owls"
+    },
+    {
+      "id": "team_coral_sea_drakes",
+      "name": "Coral Sea Drakes"
+    },
+    {
+      "id": "team_crimson_order",
+      "name": "Crimson Order"
+    },
+    {
+      "id": "team_gallic_storm",
+      "name": "Gallic Storm"
+    },
+    {
+      "id": "team_ghostline",
+      "name": "Ghostline"
+    },
+    {
+      "id": "team_harbour_city_nine",
+      "name": "Harbour City Nine"
+    },
+    {
+      "id": "team_highlands_nine",
+      "name": "Highlands Nine"
+    },
+    {
+      "id": "team_hokkaido_drift",
+      "name": "Hokkaido Drift"
+    },
+    {
+      "id": "team_iron_pact",
+      "name": "Iron Pact"
+    },
+    {
+      "id": "team_kathmandu_apex",
+      "name": "Kathmandu Apex"
+    },
+    {
+      "id": "team_kraken_unit",
+      "name": "Kraken Unit"
+    },
+    {
+      "id": "team_lisbon_tide",
+      "name": "Lisbon Tide"
+    },
+    {
+      "id": "team_mekong_vipers",
+      "name": "Mekong Vipers"
+    },
+    {
+      "id": "team_meridian_cross",
+      "name": "Meridian Cross"
+    },
+    {
+      "id": "team_midnight_polders",
+      "name": "Midnight Polders"
+    },
+    {
+      "id": "team_nordic_frost",
+      "name": "Nordic Frost"
+    },
+    {
+      "id": "team_nova_rift",
+      "name": "Nova Rift"
+    },
+    {
+      "id": "team_outback_sentinels",
+      "name": "Outback Sentinels"
+    },
+    {
+      "id": "team_patagonia_sur",
+      "name": "Patagonia Sur"
+    },
+    {
+      "id": "team_phantom_core",
+      "name": "Phantom Core"
+    },
+    {
+      "id": "team_prairie_signal",
+      "name": "Prairie Signal"
+    },
+    {
+      "id": "team_rust_belt_gaming",
+      "name": "Rust Belt Gaming"
+    },
+    {
+      "id": "team_sahara_compass",
+      "name": "Sahara Compass"
+    },
+    {
+      "id": "team_saracen_guard",
+      "name": "Saracen Guard"
+    },
+    {
+      "id": "team_seoul_dynasty_prime",
+      "name": "Seoul Dynasty Prime"
+    },
+    {
+      "id": "team_solar_flare",
+      "name": "Solar Flare"
+    },
+    {
+      "id": "team_taipei_circuit",
+      "name": "Taipei Circuit"
+    },
+    {
+      "id": "team_tokyo_drift_six",
+      "name": "Tokyo Drift Six"
+    },
+    {
+      "id": "team_vanguard",
+      "name": "Team Vanguard"
+    },
+    {
+      "id": "team_volga_reign",
+      "name": "Volga Reign"
+    },
+    {
+      "id": "team_yucatan_ceibas",
+      "name": "Yucatan Ceibas"
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "s1mfinal",
+      "week": 19,
+      "stage": "masters_final",
+      "label": "Team Vanguard vs Solar Flare"
+    }
+  ],
+  "planning_opponent": null,
+  "caps": {
+    "survey": 0.5,
+    "match": 0.75,
+    "deep_dive": 1.0
+  }
+}

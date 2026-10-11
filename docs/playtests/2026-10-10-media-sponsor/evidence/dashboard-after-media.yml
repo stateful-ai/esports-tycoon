@@ -1,0 +1,27 @@
+- main [ref=e32]:
+  - generic [ref=e1368]:
+    - generic [ref=e1369]:
+      - generic [ref=e1370]: Dashboard
+      - generic [ref=e1371]: S1 · W8 · Regular
+      - button "Guide" [ref=e1372] [cursor=pointer]
+      - button "Career ▸" [ref=e1373] [cursor=pointer]
+    - generic [ref=e1374]:
+      - generic [ref=e1376]:
+        - generic [ref=e1377]
+        - button "2nd League Americas" [ref=e1381] [cursor=pointer]
+        - generic [ref=e1385]
+        - button "441,090 cr Balance" [ref=e1388] [cursor=pointer]
+        - generic [ref=e1391]
+        - button "70 Condition" [ref=e1394] [cursor=pointer]
+      - generic [ref=e1397]:
+        - generic [ref=e1398]
+        - generic [ref=e1407]
+        - generic [ref=e1420]
+        - generic [ref=e1455]
+      - generic [ref=e1523]:
+        - generic [ref=e1524]
+        - generic [ref=e1560]
+      - generic [ref=e1603]:
+        - generic [ref=e1604]
+        - generic [ref=e1611]
+        - generic [ref=e1617]

@@ -1,0 +1,89 @@
+{
+  "world": "26UHC",
+  "played_pages": [
+    "53a2ed1677a3d32c33dd07f10457e1bb"
+  ],
+  "retained_events": 95,
+  "all_events": 95,
+  "request_pairs": [
+    {
+      "attempt_index": 25,
+      "result_index": 26,
+      "target": "/api/negotiation",
+      "request_id": 12,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 30,
+      "result_index": 31,
+      "target": "/api/negotiation",
+      "request_id": 13,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 61,
+      "result_index": 62,
+      "target": "/api/actions/mentor",
+      "request_id": 21,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 65,
+      "result_index": 66,
+      "target": "/api/actions/dev_plan",
+      "request_id": 25,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 74,
+      "result_index": 75,
+      "target": "/api/actions/gameplan",
+      "request_id": 31,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 77,
+      "result_index": 79,
+      "target": "/api/actions/advance",
+      "request_id": 35,
+      "outcome": "success",
+      "status": 200
+    },
+    {
+      "attempt_index": 86,
+      "result_index": 87,
+      "target": "/api/actions/save",
+      "request_id": 44,
+      "outcome": "success",
+      "status": 200
+    }
+  ],
+  "pair_targets": {
+    "/api/negotiation": 2,
+    "/api/actions/mentor": 1,
+    "/api/actions/dev_plan": 1,
+    "/api/actions/gameplan": 1,
+    "/api/actions/advance": 1,
+    "/api/actions/save": 1
+  },
+  "interaction_targets": {
+    "week/full_report_open": 1
+  },
+  "views": {
+    "lobby": 1,
+    "dashboard": 1,
+    "club/squad": 1,
+    "club/development": 1,
+    "tactics/strategy": 1,
+    "tactics/gameplan": 1
+  },
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "bounded_best_effort": true,
+  "note": "Retained counts, not complete funnel or attention. Subject/attribution correctness is CSV/DOM only."
+}

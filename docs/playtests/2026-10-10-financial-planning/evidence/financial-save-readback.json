@@ -1,0 +1,658 @@
+{
+  "state": {
+    "season": 1,
+    "week": 11,
+    "phase": "regular",
+    "user_team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 395538,
+      "reputation": 64.7,
+      "fan_count": 315287,
+      "world_rank": 3,
+      "chemistry": 87.8,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "starter_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo"
+      ],
+      "record": {
+        "wins": 9,
+        "losses": 1,
+        "diff": 58
+      }
+    }
+  },
+  "finances": {
+    "balance": 395538,
+    "weekly_payroll": 42200,
+    "marketability": 1.19,
+    "marketability_breakdown": {
+      "score": 1.19,
+      "facility_mult": 1.05,
+      "reach": 1580314,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.71
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": 0.16
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.08
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.05
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": 0.03
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        }
+      ]
+    },
+    "last_week_income": 109232,
+    "last_week_expenses": 47100,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": {
+          "name": "Polar Compute",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 41300,
+          "per_win": 0,
+          "weeks_left": 36,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 424000,
+              "met": null
+            },
+            {
+              "kind": "make_masters",
+              "bonus": 445000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 424000,
+            "met": null,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 2nd of 8"
+            }
+          },
+          {
+            "kind": "make_masters",
+            "bonus": 445000,
+            "met": null,
+            "label": "qualify for Masters",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 2nd of 8"
+            }
+          }
+        ]
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 21,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": null,
+            "label": "win the regional split",
+            "status": {
+              "state": "on_track",
+              "detail": "currently 2nd of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": null,
+        "offer": null,
+        "market": [
+          {
+            "brand": "Deadzone Desks",
+            "slot": "peripheral",
+            "weeks": 18,
+            "expires_week": 11,
+            "upfront": {
+              "signing_bonus": 110000,
+              "weekly": 1300,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 5200,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 1800,
+              "per_win": 3500
+            },
+            "objectives": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 19000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 19000,
+                "label": "make the regional playoffs"
+              }
+            ]
+          },
+          {
+            "brand": "Redline Chairs",
+            "slot": "peripheral",
+            "weeks": 17,
+            "expires_week": 12,
+            "upfront": {
+              "signing_bonus": 66000,
+              "weekly": 800,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 5000,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 2700,
+              "per_win": 3300
+            },
+            "objectives": [
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "beat_top4",
+                "bonus": 2000,
+                "label": "beat a world top-4 team (per win)"
+              }
+            ]
+          }
+        ],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "stream": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": false,
+        "locked_reason": "requires Marketing Office level 2",
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "kind": "field_rookie",
+        "fixture_id": "s1w11m2am",
+        "opponent_id": "team_saracen_guard",
+        "player_id": "ghost",
+        "issued_season": 1,
+        "issued_week": 10,
+        "deadline_week": 11,
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "pending",
+        "resolved_season": null,
+        "resolved_week": null,
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 19 with 9 career maps (rookie limit: 10).",
+        "opponent_name": "Saracen Guard",
+        "player_name": "Ghost",
+        "relation": 52,
+        "can_respond": true
+      }
+    ],
+    "commitments": [],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 1,
+        "max_level": 3,
+        "next_cost": 350000,
+        "upkeep": 1500
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 42200,
+      "staff": 4900,
+      "sponsors_base": 47368,
+      "sponsors_by_slot": {
+        "title": 41300,
+        "jersey": 10100,
+        "peripheral": 0
+      },
+      "sponsors_total": 98768,
+      "merch": 3518,
+      "tickets": 2345,
+      "streaming": 6398,
+      "facility_upkeep": 1500,
+      "prizes": 0,
+      "income_total": 111029,
+      "expense_total": 48600,
+      "net": 62429
+    },
+    "projection": [
+      {
+        "week": 12,
+        "net": 62429,
+        "balance": 457967
+      },
+      {
+        "week": 13,
+        "net": 62429,
+        "balance": 520396
+      },
+      {
+        "week": 14,
+        "net": 62429,
+        "balance": 582825
+      },
+      {
+        "week": 15,
+        "net": 62429,
+        "balance": 645254
+      },
+      {
+        "week": 16,
+        "net": 62429,
+        "balance": 707683
+      },
+      {
+        "week": 17,
+        "net": 62429,
+        "balance": 770112
+      },
+      {
+        "week": 18,
+        "net": 62429,
+        "balance": 832541
+      },
+      {
+        "week": 19,
+        "net": 62429,
+        "balance": 894970
+      }
+    ]
+  },
+  "facilities": {
+    "balance": 395538,
+    "total_upkeep": 1500,
+    "built_count": 1,
+    "total_levels": 1,
+    "facilities": [
+      {
+        "id": "training_center",
+        "label": "Training Centre",
+        "description": "A purpose-built practice wing that improves weekly player development and gives the coaching staff better tools.",
+        "level": 0,
+        "max_level": 3,
+        "level_name": "Unbuilt",
+        "status": "Planned",
+        "operator_label": "Coach",
+        "operator": {
+          "id": "staff_incumbent_team_nexus",
+          "name": "Ren Novak",
+          "role": "coach",
+          "effectiveness": 74.1
+        },
+        "operator_detail": "74.1 effectiveness",
+        "current_effects": [
+          {
+            "label": "Weekly development",
+            "value": "+0%",
+            "detail": "Applied after coaching and training-plan effects."
+          }
+        ],
+        "next_level": 1,
+        "next_level_name": "Practice Lab",
+        "next_effects": [
+          {
+            "label": "Weekly development",
+            "value": "+6%",
+            "detail": "Applied after coaching and training-plan effects."
+          }
+        ],
+        "next_cost": 150000,
+        "current_upkeep": 0,
+        "next_upkeep": 1800,
+        "affordable": true,
+        "maxed": false
+      },
+      {
+        "id": "analytics_suite",
+        "label": "VOD Review Room",
+        "description": "Screens, servers, and review stations improve your Analyst's scouting throughput and unlock deeper performance reporting.",
+        "level": 0,
+        "max_level": 3,
+        "level_name": "Unbuilt",
+        "status": "Planned",
+        "operator_label": "Analyst",
+        "operator": null,
+        "operator_detail": "No Analyst hired",
+        "current_effects": [
+          {
+            "label": "Analyst scouting efficiency",
+            "value": "+0%",
+            "detail": "Multiplies weekly scouting progress."
+          },
+          {
+            "label": "Reporting access",
+            "value": "Tier 0/3",
+            "detail": "box scores only"
+          }
+        ],
+        "next_level": 1,
+        "next_level_name": "VOD Review Room",
+        "next_effects": [
+          {
+            "label": "Analyst scouting efficiency",
+            "value": "+8%",
+            "detail": "Multiplies weekly scouting progress."
+          },
+          {
+            "label": "Reporting access",
+            "value": "Tier 1/3",
+            "detail": "duel detail (FK/FD, HS%, ACS, clutches)"
+          }
+        ],
+        "next_cost": 150000,
+        "current_upkeep": 0,
+        "next_upkeep": 2200,
+        "affordable": true,
+        "maxed": false
+      },
+      {
+        "id": "marketing_office",
+        "label": "Media Department",
+        "description": "A commercial and content wing that improves sponsor value and opens new partnership categories.",
+        "level": 1,
+        "max_level": 3,
+        "level_name": "Content Desk",
+        "status": "Operational",
+        "operator_label": "Commercial team",
+        "operator": null,
+        "operator_detail": "Club commercial operations",
+        "current_effects": [
+          {
+            "label": "Sponsor offer value",
+            "value": "+5%",
+            "detail": "Applied to generated sponsorship terms."
+          },
+          {
+            "label": "Commercial access",
+            "value": "Stream partnerships unlocked",
+            "detail": "New sponsor categories stay subject to reputation gates."
+          }
+        ],
+        "next_level": 2,
+        "next_level_name": "Media Studio",
+        "next_effects": [
+          {
+            "label": "Sponsor offer value",
+            "value": "+10%",
+            "detail": "Applied to generated sponsorship terms."
+          },
+          {
+            "label": "Commercial access",
+            "value": "Stream and apparel partnerships unlocked",
+            "detail": "New sponsor categories stay subject to reputation gates."
+          }
+        ],
+        "next_cost": 350000,
+        "current_upkeep": 1500,
+        "next_upkeep": 3000,
+        "affordable": true,
+        "maxed": false
+      },
+      {
+        "id": "recovery_suite",
+        "label": "Recovery Suite",
+        "description": "Sports-science equipment and treatment space restore player condition every week, whether or not a Physio is on staff.",
+        "level": 0,
+        "max_level": 3,
+        "level_name": "Unbuilt",
+        "status": "Planned",
+        "operator_label": "Physio",
+        "operator": null,
+        "operator_detail": "No Physio hired",
+        "current_effects": [
+          {
+            "label": "Weekly stamina recovery",
+            "value": "+0",
+            "detail": "Applied to every rostered player after staff recovery."
+          }
+        ],
+        "next_level": 1,
+        "next_level_name": "Treatment Room",
+        "next_effects": [
+          {
+            "label": "Weekly stamina recovery",
+            "value": "+1.5",
+            "detail": "Applied to every rostered player after staff recovery."
+          }
+        ],
+        "next_cost": 150000,
+        "current_upkeep": 0,
+        "next_upkeep": 1700,
+        "affordable": true,
+        "maxed": false
+      },
+      {
+        "id": "strategy_lab",
+        "label": "Strategy Lab",
+        "description": "Dedicated tactical workstations make scheduled preparation more productive while reducing its physical load on the roster.",
+        "level": 0,
+        "max_level": 3,
+        "level_name": "Unbuilt",
+        "status": "Planned",
+        "operator_label": "Coach",
+        "operator": {
+          "id": "staff_incumbent_team_nexus",
+          "name": "Ren Novak",
+          "role": "coach",
+          "effectiveness": 74.1
+        },
+        "operator_detail": "74.1 effectiveness",
+        "current_effects": [
+          {
+            "label": "Preparation knowledge",
+            "value": "+0%",
+            "detail": "Multiplies knowledge earned from scheduled preparation."
+          },
+          {
+            "label": "Preparation stamina cost",
+            "value": "0",
+            "detail": "Reduces condition spent by each session participant."
+          }
+        ],
+        "next_level": 1,
+        "next_level_name": "Tactics Room",
+        "next_effects": [
+          {
+            "label": "Preparation knowledge",
+            "value": "+10%",
+            "detail": "Multiplies knowledge earned from scheduled preparation."
+          },
+          {
+            "label": "Preparation stamina cost",
+            "value": "-0.5",
+            "detail": "Reduces condition spent by each session participant."
+          }
+        ],
+        "next_cost": 150000,
+        "current_upkeep": 0,
+        "next_upkeep": 2500,
+        "affordable": true,
+        "maxed": false
+      },
+      {
+        "id": "team_house",
+        "label": "Team House",
+        "description": "Shared living and wellbeing space helps struggling players recover confidence and morale toward a stable baseline each week.",
+        "level": 0,
+        "max_level": 3,
+        "level_name": "Unbuilt",
+        "status": "Planned",
+        "operator_label": "Psychologist",
+        "operator": null,
+        "operator_detail": "No Psychologist hired",
+        "current_effects": [
+          {
+            "label": "Confidence recovery",
+            "value": "+0/wk",
+            "detail": "Pulls confidence toward 50, never above it."
+          },
+          {
+            "label": "Morale recovery",
+            "value": "+0/wk",
+            "detail": "Pulls morale toward 50, never above it."
+          }
+        ],
+        "next_level": 1,
+        "next_level_name": "Player Lounge",
+        "next_effects": [
+          {
+            "label": "Confidence recovery",
+            "value": "+0.5/wk",
+            "detail": "Pulls confidence toward 50, never above it."
+          },
+          {
+            "label": "Morale recovery",
+            "value": "+0.5/wk",
+            "detail": "Pulls morale toward 50, never above it."
+          }
+        ],
+        "next_cost": 150000,
+        "current_upkeep": 0,
+        "next_upkeep": 1300,
+        "affordable": true,
+        "maxed": false
+      }
+    ]
+  }
+}

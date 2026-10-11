@@ -1,0 +1,138 @@
+[
+  {
+    "id": "esports-playtest-0258",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Away fixture result surfaces disagree in form strip",
+    "problem": "Knownawayformstrip says1to13 whileactualNexusroundscore3to13; rawfixtureRBG13Nexus3.",
+    "solution": "Preserved screenshot/publicfixture; treatedknown392 scope withoutduplicatefix.",
+    "lesson": "Use fixtureteamids and results to verify away scores; visibleformlabel can still confuse assessment onba3.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0257",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Team moment blocker has recoverable route",
+    "problem": "Firstadvance409pendingNightsurgevideo.",
+    "solution": "FollowedDashboardNeedsYou selectedfilm_grind; crew ranlong andplayerflat; retrycompletedoneweek.",
+    "lesson": "Rejected advance is browserusage only; flavor response and completed advance are separate accepteddecisions.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0256",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Light mental reset resolves with explicit costs and zero match edge",
+    "problem": "Echo40.5 andApex48.5condition beforeawaymatch.",
+    "solution": "Chose lightreset1.5condition; freshcompletedreport methodology0.67morale2.5chemistry0.3edge0; lost3to13.",
+    "lesson": "Preparation has observable bounded effects without guaranteeing competitive improvement; tiredstarters stayedtired.",
+    "confidence": "high",
+    "source": "2026-10-11-media2-league-week ba3 world26UHCseed2038 S2W5to6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "preparation",
+      "league",
+      "company"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0255",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Brand commercial action discovery",
+    "problem": "Brand feed is long and read only; no direct campaign choices.",
+    "solution": "Returned to Facilities from commercial goal; upgraded Media then verified Company.",
+    "lesson": "Commercial investment is actionable through Facilities while Brand explains reach and streaming tradeoffs; sponsor shopping unavailable in this world without advancing.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0254",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Media investment visibly opens Apparel",
+    "problem": "Apparel locked at Media1.",
+    "solution": "Affordable350000upgrade kept2218240bank; Media2 public readback marketability1.11 upkeep3000.",
+    "lesson": "Facility upgrade raises sponsor access/value and ongoing costs immediately; no suitors means access alone does not guarantee a deal.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0253",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Company merged run rate includes Stream sponsor",
+    "problem": "Prior display omitted Stream/Apparel slots.",
+    "solution": "Played merged388 in copied career;9400Stream is listed and income125784 matches public breakdown.",
+    "lesson": "Merged display and projection now include active Stream revenue; Apparel nonzero path still unplayed.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0252",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Correction: closed profile accessibility exposure",
+    "problem": "Prior transfer session interpreted unsigned DOM as visually stale profile",
+    "solution": "Root PNG inspection shows no visible profile; exactdf9 CSS hidden overlay staysdisplayflex opacity0 pointereventsnone and closeProfile lacks aria-hidden/inert",
+    "lesson": "Supersedes prior stale unsigned/cache claim: closed overlay content must be excluded from accessibility/focus; pointerblockedClose targetedalreadyclosedcontrol. Contract persisted correctly.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0251",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Stale unsigned profile after successful signing",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Signing succeeds but old profile remains unsigned behind app and its Close is pointer-blocked",
+    "lesson": "Refresh or close existing profile after accepted signing; failed pointer action is not anHTTP rejection",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  }
+]

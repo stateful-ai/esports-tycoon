@@ -1,0 +1,102 @@
+[
+  {
+    "id": "esports-playtest-0041",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Combine player feedback fixes without changing seeded results",
+    "problem": "Independent browser acceptance cannot establish interaction between five proposed patches",
+    "solution": "Play release, four-player rejection, replacement contract, Rest, fixture guidance, advance, Full report and replay on one combined source tree",
+    "lesson": "Same seed and actions retained13-2Lotus and427505 balance while release confirmation, immediate Recovery feedback and historical replay labels all worked together",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0042",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Verify historical replay against the current roster",
+    "problem": "Weekly AI replaced Grimveil with Frostecho immediately after the match",
+    "solution": "Read current Sahara roster, replay participants, named feed and box score separately",
+    "lesson": "Grimveil remains Jett/Sahara with11K12D while Frostecho appears only in current roster; Rest preserves Vortex match learning with condition32to43",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0043",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Full report omits weekly development feedback",
+    "problem": "Full report showed fixtures and finances without the expected Rest or match-learning attribution",
+    "solution": "Read Club Development separately and delegate a server-computed resolved-week development summary for Full report",
+    "lesson": "A captured full_report_open event proves control use, not that the report answered the player question",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0044",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Roster rejection points browser players to a CLI action",
+    "problem": "The real HTTP409 tells a browser player that the sign action lists free agents",
+    "solution": "Recover through visible Market and delegate browser-specific actionable guidance",
+    "lesson": "Keep the minimum-roster rule and rejected request evidence while naming the recovery control the player can actually use",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0045",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Market player search lacks a dedicated usage count",
+    "problem": "Searching Slyblade returned three players but the sidecar only captured subsequent navigation and negotiation",
+    "solution": "Retain partial capture annotation and queue a bounded search-use hook without query text or player names",
+    "lesson": "Negotiation receipts cannot quantify player search use; count coarse searches separately from accepted manager decisions",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

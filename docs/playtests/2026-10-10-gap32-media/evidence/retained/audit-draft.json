@@ -1,0 +1,40 @@
+{
+  "baseline": 68,
+  "final": 70,
+  "snapshots": 1,
+  "accepted": [
+    {
+      "season": 1,
+      "week": 16,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "media_choice",
+      "params": {
+        "choice_id": "respect_rival",
+        "event_id": "d2c6ee7fa625f074"
+      },
+      "source": "web"
+    },
+    {
+      "season": 1,
+      "week": 16,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "usage_kinds": {
+    "visible_time": 30,
+    "session_end": 3,
+    "session_start": 3,
+    "view": 13,
+    "attempt": 3,
+    "result": 3
+  },
+  "request_examples": [],
+  "original_hash_unchanged": true
+}

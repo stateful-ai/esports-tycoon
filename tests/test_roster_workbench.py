@@ -91,6 +91,35 @@ def test_install_compiles_partial_world_and_preserves_authored_meta(tmp_path: Pa
     assert gs1.roster_pack == "my-roster-pack"
 
 
+def test_player_tags_are_open_vocabulary_and_round_trip(tmp_path: Path):
+    """Src sheets may tag players ("rookie", or invented ones like
+    "pure_aimer" in vct-2021) — the builder has always consumed them, and
+    personality.py no-ops unknown tags, so the editable schema must
+    accept any well-formed slug and preserve it through install."""
+    raw = example_document()
+    raw["teams"][0]["players"][0]["tags"] = ["veteran", "pure_aimer"]
+    result = validate_document(raw)
+    assert result["valid"] is True, result["errors"]
+
+    install_document(raw, tmp_path)
+    portable = load_document(raw["id"], tmp_path)
+    assert portable.teams[0].players[0].tags == ["veteran", "pure_aimer"]
+    # The compiled bundle carries them as runtime personality_tags.
+    pack = load_roster_pack(raw["id"], tmp_path)
+    caller = next(
+        p for p in pack.players.values() if p.handle == "caller"
+    )
+    assert {"veteran", "pure_aimer"} <= set(caller.personality_tags)
+
+    # Malformed tags are still rejected: not a slug / duplicates.
+    bad = example_document()
+    bad["teams"][0]["players"][0]["tags"] = ["Not A Slug"]
+    assert validate_document(bad)["valid"] is False
+    dup = example_document()
+    dup["teams"][0]["players"][0]["tags"] = ["rookie", "rookie"]
+    assert validate_document(dup)["valid"] is False
+
+
 def test_failed_install_does_not_touch_an_existing_pack(tmp_path: Path):
     raw = example_document()
     install_document(raw, tmp_path)
@@ -109,7 +138,7 @@ def test_source_metadata_is_not_mistaken_for_a_region_sheet(tmp_path: Path):
     source_meta = yaml.safe_load(
         (tmp_path / "rosters" / raw["id"] / "src" / "pack.yaml").read_text()
     )
-    assert source_meta["schema_version"] == 1
+    assert source_meta["schema_version"] == 2
     assert source_meta["world"]["tier2_per_region"] == 4
 
 

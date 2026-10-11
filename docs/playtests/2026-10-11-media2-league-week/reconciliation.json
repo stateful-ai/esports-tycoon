@@ -1,0 +1,117 @@
+{
+  "head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "before_decisions": 124,
+  "after_decisions": 127,
+  "decision_prefix_all_fields_order": true,
+  "before_snaps": 27,
+  "after_snaps": 28,
+  "snapshot_prefix_all_fields_order": true,
+  "source_count": 425,
+  "source_unchanged": true,
+  "before_sha256": "46291fd1c9adc262568eebf6dd84e2f9f69da6ed6d574d705ea44b2ed4bf3d57",
+  "after_sha256": "066bff080e5145f5184ba39ce1182f07d5c00c101f0e4f5c5f0b75dbeb393f8a",
+  "before_season": 2,
+  "before_week": 5,
+  "after_season": 2,
+  "after_week": 6,
+  "usage_events": 47,
+  "usage_baseline_events": 0,
+  "pairs": [
+    {
+      "request_id": 12,
+      "target": "/api/actions/preparation",
+      "result": {
+        "schema_version": 1,
+        "session_id": "6c5a2805dd83d14c59b404f6009a1bbe",
+        "received_at": "2026-10-11T12:50:19.854156+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/preparation",
+        "request_id": 12,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 3
+      }
+    },
+    {
+      "request_id": 16,
+      "target": "/api/actions/advance",
+      "result": {
+        "schema_version": 1,
+        "session_id": "6c5a2805dd83d14c59b404f6009a1bbe",
+        "received_at": "2026-10-11T12:50:29.786951+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/advance",
+        "request_id": 16,
+        "outcome": "http_error",
+        "status": 409,
+        "duration_ms": 10
+      }
+    },
+    {
+      "request_id": 23,
+      "target": "/api/actions/flavor_event",
+      "result": {
+        "schema_version": 1,
+        "session_id": "6c5a2805dd83d14c59b404f6009a1bbe",
+        "received_at": "2026-10-11T12:51:16.325864+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 5,
+        "kind": "result",
+        "target": "/api/actions/flavor_event",
+        "request_id": 23,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 3
+      }
+    },
+    {
+      "request_id": 32,
+      "target": "/api/actions/advance",
+      "result": {
+        "schema_version": 1,
+        "session_id": "6c5a2805dd83d14c59b404f6009a1bbe",
+        "received_at": "2026-10-11T12:51:46.004715+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 6,
+        "kind": "result",
+        "target": "/api/actions/advance",
+        "request_id": 32,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 12454
+      }
+    },
+    {
+      "request_id": 49,
+      "target": "/api/actions/save",
+      "result": {
+        "schema_version": 1,
+        "session_id": "6c5a2805dd83d14c59b404f6009a1bbe",
+        "received_at": "2026-10-11T12:53:39.213819+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 6,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 49,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 34
+      }
+    }
+  ],
+  "unmatched_attempts": 0
+}

@@ -1,0 +1,65 @@
+{
+  "verified_at_utc": "2026-10-11T08:22:57.092960+00:00",
+  "root_and_away": [
+    {
+      "session": "2026-10-11-season2-preparation",
+      "old_saved_decisions": 107,
+      "new_decisions": 3,
+      "success_pairs": 4,
+      "retained_events": 78,
+      "saved_snapshot_prefix_preserved": true,
+      "original_report_exit_receipts": {
+        "usage_exit": 0,
+        "decision_exit": 0
+      },
+      "qualification": "Original exit receipt inspected, no subprocess reports rerun; step8 preserves original incorrect step7 and corrects saved kind."
+    },
+    {
+      "session": "2026-10-11-away-recap",
+      "accepted_decision_delta_matches_root_original": 3,
+      "fixture_identical_to_root_original": true,
+      "bounded_audit_events": 36,
+      "later_report_events": 38,
+      "publication_raw_sidecar_events": 42,
+      "success_pairs_each_snapshot": 4,
+      "raw_original_mapping_receipts_verified": 24,
+      "qualification": "Original bounded captures preserve differing capture times; absent Advance observer stdout and individual report exit receipts are unverified. Full private saved state is not published; comparison uses retained audit against independently published root original."
+    }
+  ],
+  "gap40": [
+    {
+      "session": "2026-10-11-gap40-status-retry",
+      "historical_head": "bbcab656e0d1d678f17f0ad1129ab4aea7564391",
+      "raw_freeze_paths": 1856,
+      "freeze_before_after_bytes_equal": true,
+      "indexed_decisions": [
+        100,
+        101
+      ],
+      "accepted_delta": 2,
+      "usage_events": 27,
+      "success_pairs": 3,
+      "injected_state503_pairs": 1,
+      "first_manager_advance_post_count": 1,
+      "qualification": "Original sanitized public/indexed/usage evidence; complete private owner saves excluded. Intentional browser fault503 is not an accepted action. No current PR387 validation."
+    },
+    {
+      "session": "2026-10-11-gap40-ready-reload",
+      "historical_head": "bf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e",
+      "raw_freeze_paths": 1887,
+      "freeze_before_after_bytes_equal": true,
+      "indexed_decisions": [
+        100,
+        101
+      ],
+      "accepted_delta": 2,
+      "usage_events": 32,
+      "success_pairs": 3,
+      "injected_state503_pairs": 1,
+      "first_manager_advance_post_count": 1,
+      "qualification": "Original sanitized public/indexed/usage evidence; complete private owner saves excluded. Intentional browser fault503 is not an accepted action. No current PR387 validation."
+    }
+  ],
+  "away425_finalGit_mapping_matches": true,
+  "execution": "Read-only JSON/JSONL/hash/Git inspection; no historical helper execution, tests or gameplay"
+}

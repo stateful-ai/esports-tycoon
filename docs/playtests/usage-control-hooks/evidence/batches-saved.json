@@ -1,0 +1,46 @@
+[
+  {
+    "page_id": "b7afab3afa83ef9cb9a2de708919e429",
+    "events": [
+      {
+        "kind": "session_start"
+      },
+      {
+        "kind": "view",
+        "target": "lobby"
+      },
+      {
+        "kind": "visible_time",
+        "target": "lobby",
+        "duration_ms": 206
+      },
+      {
+        "kind": "view",
+        "target": "dashboard"
+      },
+      {
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 10
+      },
+      {
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 10,
+        "outcome": "success",
+        "duration_ms": 22,
+        "status": 200
+      }
+    ]
+  },
+  {
+    "page_id": "b7afab3afa83ef9cb9a2de708919e429",
+    "events": [
+      {
+        "kind": "visible_time",
+        "target": "dashboard",
+        "duration_ms": 639
+      }
+    ]
+  }
+]

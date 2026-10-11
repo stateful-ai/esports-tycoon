@@ -1,0 +1,62 @@
+{
+  "attempts": 7,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/dev_plan": 1,
+    "attempt:/api/actions/release": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/negotiation": 2,
+    "attempt:/api/new": 1,
+    "replay:close": 1,
+    "replay:open": 1,
+    "replay:pause": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/dev_plan": 1,
+    "result:/api/actions/release": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/negotiation": 2,
+    "result:/api/new": 1,
+    "session_start:": 1,
+    "view:club/development": 2,
+    "view:club/squad": 2,
+    "view:dashboard": 1,
+    "view:lobby": 1,
+    "view:market/players": 1,
+    "view:replay": 1,
+    "visible_time:club/development": 7,
+    "visible_time:club/squad": 4,
+    "visible_time:dashboard": 2,
+    "visible_time:lobby": 3,
+    "visible_time:market/players": 2,
+    "visible_time:replay": 4
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "b1930baa18a60e15209adfb315ccbe0f": 194995
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/dev_plan:success": 1,
+    "/api/actions/release:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/negotiation:success": 2,
+    "/api/new:success": 1
+  },
+  "paired_results": 7,
+  "retention_bytes": 8388608,
+  "sessions": 1,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 96329,
+    "club/squad": 28930,
+    "dashboard": 17890,
+    "lobby": 23074,
+    "market/players": 9908,
+    "replay": 33872
+  },
+  "world_events": {
+    "WJBF7": 43,
+    "lobby": 5
+  }
+}

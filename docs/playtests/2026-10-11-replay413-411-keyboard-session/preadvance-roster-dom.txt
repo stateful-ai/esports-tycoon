@@ -1,0 +1,256 @@
+- main:
+  - text: Club Team Nexus · 8/10
+  - button "Squad"
+  - button "Development"
+  - button "Locker Room"
+  - button "Operations"
+  - button "Guide"
+  - text: Default five 5/5
+  - button "Save lineup"
+  - table:
+    - rowgroup:
+      - row "★ Player Role Agent Age OVR Ceiling Form Morale Condition Confidence Salary Wks":
+        - columnheader "★"
+        - columnheader "Player"
+        - columnheader "Role"
+        - columnheader "Agent"
+        - columnheader "Age"
+        - columnheader "OVR"
+        - columnheader "Ceiling"
+        - columnheader "Form"
+        - columnheader "Morale"
+        - columnheader "Condition"
+        - columnheader "Confidence"
+        - columnheader "Salary"
+        - columnheader "Wks"
+        - columnheader
+    - rowgroup:
+      - 'row "☆ Apex IGL Clutch Master: wants the round with the game on the line bench Controller IGL Omen ? 27 79 ★★★★ 52 ▲ 76 62 57 ▼ 10,500 cr/wk 23w Talk Renew Release"':
+        - cell "☆":
+          - button "☆"
+        - 'cell "Apex IGL Clutch Master: wants the round with the game on the line bench"':
+          - button "Apex"
+          - text: IGL
+          - 'img "Clutch Master: wants the round with the game on the line"'
+          - text: bench
+        - cell "Controller IGL"
+        - cell "Omen ?"
+        - cell "27"
+        - cell "79"
+        - cell "★★★★"
+        - cell "52 ▲"
+        - cell "76"
+        - cell "62"
+        - cell "57 ▼"
+        - cell "10,500 cr/wk"
+        - cell "23w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - 'row "★ Vortex Aim Demon: raw mechanical menace Clutch Master: wants the round with the game on the line Heavy streaming Duelist Awper Jett ? 23 76.8 ★★★ 57 ▲ 82 100 62 ▼ 9,200 cr/wk 24w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Vortex Aim Demon: raw mechanical menace Clutch Master: wants the round with the game on the line Heavy streaming"':
+          - button "Vortex"
+          - 'img "Aim Demon: raw mechanical menace"'
+          - 'img "Clutch Master: wants the round with the game on the line"'
+          - text: 📺
+        - cell "Duelist Awper"
+        - cell "Jett ?"
+        - cell "23"
+        - cell "76.8"
+        - cell "★★★"
+        - cell "57 ▲"
+        - cell "82"
+        - cell "100"
+        - cell "62 ▼"
+        - cell "9,200 cr/wk"
+        - cell "24w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - 'row "★ Ghost Mentored player Clutch Master: wants the round with the game on the line Choker: tightens up when it matters most Initiator Lurker Sova ? 20 79.2 ★★★★★ 52 ▼ 79 36 55 ▼ 4,500 cr/wk 16w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Ghost Mentored player Clutch Master: wants the round with the game on the line Choker: tightens up when it matters most"':
+          - button "Ghost"
+          - text: 🎓
+          - 'img "Clutch Master: wants the round with the game on the line"'
+          - 'img "Choker: tightens up when it matters most"'
+        - cell "Initiator Lurker"
+        - cell "Sova ?"
+        - cell "20"
+        - cell "79.2"
+        - cell "★★★★★"
+        - cell "52 ▼"
+        - cell "79"
+        - cell "36"
+        - cell "55 ▼"
+        - cell "4,500 cr/wk"
+        - cell "16w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - 'row "★ Slyblade Clutch Master: wants the round with the game on the line Duelist Entry Yoru ? 29 72.9 ★★★½ 55 ▼ 84 100 60 ▼ 6,300 cr/wk 34w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Slyblade Clutch Master: wants the round with the game on the line"':
+          - button "Slyblade"
+          - 'img "Clutch Master: wants the round with the game on the line"'
+        - cell "Duelist Entry"
+        - cell "Yoru ?"
+        - cell "29"
+        - cell "72.9"
+        - cell "★★★½"
+        - cell "55 ▼"
+        - cell "84"
+        - cell "100"
+        - cell "60 ▼"
+        - cell "6,300 cr/wk"
+        - cell "34w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - 'row "★ Echo Choker: tightens up when it matters most Sentinel Anchor Killjoy ? 24 75.1 ★★★ 50 79 41 53 ▼ 7,700 cr/wk 28w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Echo Choker: tightens up when it matters most"':
+          - button "Echo"
+          - 'img "Choker: tightens up when it matters most"'
+        - cell "Sentinel Anchor"
+        - cell "Killjoy ?"
+        - cell "24"
+        - cell "75.1"
+        - cell "★★★"
+        - cell "50"
+        - cell "79"
+        - cell "41"
+        - cell "53 ▼"
+        - cell "7,700 cr/wk"
+        - cell "28w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - 'row "★ Hollowlock Choker: tightens up when it matters most Inconsistent: a different player week to week Controller IGL Harbor 27 62.8 ★★ 48 66 100 54 ▼ 4,000 cr/wk 34w Talk Renew Release"':
+        - cell "★":
+          - button "★"
+        - 'cell "Hollowlock Choker: tightens up when it matters most Inconsistent: a different player week to week"':
+          - button "Hollowlock"
+          - 'img "Choker: tightens up when it matters most"'
+          - 'img "Inconsistent: a different player week to week"'
+        - cell "Controller IGL"
+        - cell "Harbor"
+        - cell "27"
+        - cell "62.8"
+        - cell "★★"
+        - cell "48"
+        - cell "66"
+        - cell "100"
+        - cell "54 ▼"
+        - cell "4,000 cr/wk"
+        - cell "34w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "☆ Nightsurge Mentored player bench Controller IGL Miks ? 18 52.8 ★★★½ 46 50 68 37 3,100 cr/wk 28w Talk Renew Release":
+        - cell "☆":
+          - button "☆"
+        - cell "Nightsurge Mentored player bench":
+          - button "Nightsurge"
+          - text: 🎓 bench
+        - cell "Controller IGL"
+        - cell "Miks ?"
+        - cell "18"
+        - cell "52.8"
+        - cell "★★★½"
+        - cell "46"
+        - cell "50"
+        - cell "68"
+        - cell "37"
+        - cell "3,100 cr/wk"
+        - cell "28w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+      - row "☆ Frostdash bench Controller IGL Astra ? 29 50.7 ★ 50 62 88 50 2,200 cr/wk 63w Talk Renew Release":
+        - cell "☆":
+          - button "☆"
+        - cell "Frostdash bench":
+          - button "Frostdash"
+          - text: bench
+        - cell "Controller IGL"
+        - cell "Astra ?"
+        - cell "29"
+        - cell "50.7"
+        - cell "★"
+        - cell "50"
+        - cell "62"
+        - cell "88"
+        - cell "50"
+        - cell "2,200 cr/wk"
+        - cell "63w"
+        - cell "Talk Renew Release":
+          - button "Talk"
+          - button "Renew"
+          - button "Release"
+  - heading "Form & fitness" [level=2]
+  - text: Your movers · this week
+  - button "Nightsurge"
+  - text: ▲ 0.4 Burnout watch
+  - button "Ghost"
+  - text: 6 maps 36 sta Cumulative wins
+  - img "cumulative wins"
+  - text: 2W in 6 played
+  - heading "Squad profile" [level=2]
+  - paragraph: Average age 24.6
+  - text: Youth ≤21 2 Prime 22–26 2 Veteran 27+ 4
+  - heading "Scouting book" [level=2]
+  - paragraph: Balanced
+  - heading "Locker room" [level=2]
+  - paragraph: No standout duos or feuds.
+  - paragraph: Comms 49 shared languages feed chemistry.
+  - heading "Map lineups" [level=2]
+  - paragraph: vs Team Vanguard · Bo1
+  - text: Lotus default
+  - button "Vortex"
+  - text: ·
+  - button "Ghost"
+  - text: ·
+  - button "Slyblade"
+  - text: ·
+  - button "Echo"
+  - text: ·
+  - button "Hollowlock"
+  - button "Edit ▸"
+  - heading "Lineups — vs Team Vanguard (Bo1)" [level=2]
+  - paragraph: Dress exactly 5 for each map. A map with no pick uses your default five (★).
+  - heading "Default five" [level=3]
+  - button "Apex"
+  - button "Vortex"
+  - button "Ghost"
+  - button "Slyblade"
+  - button "Echo"
+  - button "Hollowlock"
+  - button "Nightsurge"
+  - button "Frostdash"
+  - text: 5/5
+  - button "Save"
+  - button "Clear (auto top-5)"
+  - heading "Lotus · default" [level=3]
+  - button "Apex"
+  - button "Vortex"
+  - button "Ghost"
+  - button "Slyblade"
+  - button "Echo"
+  - button "Hollowlock"
+  - button "Nightsurge"
+  - button "Frostdash"
+  - text: 5/5
+  - button "Save"

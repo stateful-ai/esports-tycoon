@@ -1,0 +1,188 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 16 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 805,569 cr
+      - button "Save •" [ref=f1e787] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e788] [cursor=pointer]
+        - button "Inbox 19" [ref=f1e32] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e33]: "19"
+        - button "Match 2" [ref=f1e34] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e35]: "2"
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market" [ref=f1e21] [cursor=pointer]
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e1233]:
+        - generic [ref=f1e1234]:
+          - generic [ref=f1e1235]: Match
+          - generic [ref=f1e1236]: S1 · W16 · Playoffs
+          - generic [ref=f1e1237]:
+            - button "Strategy" [ref=f1e1238] [cursor=pointer]
+            - button "Game plan" [ref=f1e1239] [cursor=pointer]
+            - button "Prep" [ref=f1e1240] [cursor=pointer]
+          - button "Guide" [ref=f1e1241] [cursor=pointer]
+        - generic [ref=f1e1242]:
+          - generic [ref=f1e1243]:
+            - heading "Match preparation" [level=2] [ref=f1e1244]
+            - paragraph [ref=f1e1245]: "Current squad condition: Apex 97 · Echo 97 · Hollowlock 94.9 · Slyblade 97 · Ghost 57 · Vortex 97."
+            - paragraph [ref=f1e1246]: "Next: Team Vanguard vs Team Nexus · week 16"
+            - generic [ref=f1e1247]:
+              - generic [ref=f1e1248]:
+                - generic [ref=f1e1249]: Sparring partner
+                - combobox "Sparring partner" [ref=f1e1250]:
+                  - option "Adriatic Sirens" [selected]
+                  - option "Alpine Echo"
+                  - option "Anatolia Forge"
+                  - option "Apex Syndicate"
+                  - option "Azure Vanta"
+                  - option "Baltic Meridian"
+                  - option "Bayou Kings"
+                  - option "Berlin Wolves"
+                  - option "Busan Tempest"
+                  - option "Cascadia Youth"
+                  - option "Chao Phraya Owls"
+                  - option "Coral Sea Drakes"
+                  - option "Crimson Order"
+                  - option "Gallic Storm"
+                  - option "Ghostline"
+                  - option "Harbour City Nine"
+                  - option "Highlands Nine"
+                  - option "Hokkaido Drift"
+                  - option "Iron Pact"
+                  - option "Kathmandu Apex"
+                  - option "Kraken Unit"
+                  - option "Lisbon Tide"
+                  - option "Mekong Vipers"
+                  - option "Meridian Cross"
+                  - option "Midnight Polders"
+                  - option "Nordic Frost"
+                  - option "Nova Rift"
+                  - option "Outback Sentinels"
+                  - option "Patagonia Sur"
+                  - option "Phantom Core"
+                  - option "Prairie Signal"
+                  - option "Rust Belt Gaming"
+                  - option "Sahara Compass"
+                  - option "Saracen Guard"
+                  - option "Seoul Dynasty Prime"
+                  - option "Solar Flare"
+                  - option "Taipei Circuit"
+                  - option "Tokyo Drift Six"
+                  - option "Volga Reign"
+                  - option "Yucatan Ceibas"
+              - generic [ref=f1e1251]:
+                - generic [ref=f1e1252]: Preparation map
+                - combobox "Preparation map" [ref=f1e1253]:
+                  - option "Haven" [selected]
+                  - option "Ascent"
+                  - option "Lotus"
+              - generic [ref=f1e1254]:
+                - generic [ref=f1e1255]: Session objective
+                - combobox "Session objective" [ref=f1e1256]:
+                  - option "Anti Exec" [selected]
+                  - option "Retakes"
+                  - option "Lineup Test"
+                  - option "Mental Reset"
+              - generic [ref=f1e1257]:
+                - generic [ref=f1e1258]: Session intensity
+                - combobox "Session intensity" [ref=f1e1259]:
+                  - option "Light" [selected]
+                  - option "Normal"
+                  - option "Intense"
+            - paragraph [ref=f1e1260]: "Session condition cost: up to 1.5 points per squad player, including the bench (condition floors at 0)."
+            - paragraph [ref=f1e1261]: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+            - button "Book session" [ref=f1e1262] [cursor=pointer]
+            - generic [ref=f1e1263]:
+              - generic [ref=f1e1264]:
+                - generic [ref=f1e1265]: Coach proposal
+                - generic [ref=f1e1266]: Anti Exec on Haven
+              - paragraph [ref=f1e1267]: "Partner: Mekong Vipers. Intensity: Normal."
+              - paragraph [ref=f1e1268]: "Session condition cost: up to 4 points per squad player, including the bench (condition floors at 0)."
+              - paragraph [ref=f1e1269]: This is an extra session cost when preparation resolves before the fixture; weekly training and recovery also change condition. Skipping the session avoids this cost. Mental reset can lift morale; the displayed condition cost applies to every objective. Knowledge and match edge depend on the resolved report and game plan; a session does not guarantee a win.
+              - button "Accept coach plan" [ref=f1e1270] [cursor=pointer]
+            - generic [ref=f1e1271]:
+              - text: "Prep artifact: lotus retake playbook +1.9"
+              - generic [ref=f1e1272]: +0.0 edge
+              - text: Knowledge +1.95; stamina −4.
+            - paragraph [ref=f1e1273]: Defense trails attack on lotus, 50.0% to 61.8% round wins.
+            - generic [ref=f1e1274]: "Dev note: FA 0 — Hollowlock pushed the starters on lotus; a focused development block could make that rotation real."
+          - generic [ref=f1e1275]:
+            - heading "Tournament six locked" [level=2] [ref=f1e1276]:
+              - text: Tournament six
+              - generic [ref=f1e1277]: locked
+            - paragraph [ref=f1e1278]: Five starters plus one between-map substitute.
+            - generic [ref=f1e1279]:
+              - checkbox "Apex 26 · Starter" [checked] [disabled] [ref=f1e1280]
+              - generic [ref=f1e1281]: Apex
+              - generic [ref=f1e1282]: 26 · Starter
+            - generic [ref=f1e1283]:
+              - checkbox "Echo 23 · Starter" [checked] [disabled] [ref=f1e1284]
+              - generic [ref=f1e1285]: Echo
+              - generic [ref=f1e1286]: 23 · Starter
+            - generic [ref=f1e1287]:
+              - checkbox "Hollowlock 26 · Bench" [checked] [disabled] [ref=f1e1288]
+              - generic [ref=f1e1289]: Hollowlock
+              - generic [ref=f1e1290]: 26 · Bench
+            - generic [ref=f1e1291]:
+              - checkbox "Slyblade 28 · Starter" [checked] [disabled] [ref=f1e1292]
+              - generic [ref=f1e1293]: Slyblade
+              - generic [ref=f1e1294]: 28 · Starter
+            - generic [ref=f1e1295]:
+              - checkbox "Ghost 19 · Starter" [checked] [disabled] [ref=f1e1296]
+              - generic [ref=f1e1297]: Ghost
+              - generic [ref=f1e1298]: 19 · Starter
+            - generic [ref=f1e1299]:
+              - checkbox "Vortex 22 · Starter" [checked] [disabled] [ref=f1e1300]
+              - generic [ref=f1e1301]: Vortex
+              - generic [ref=f1e1302]: 22 · Starter
+          - generic [ref=f1e1303]:
+            - heading "Series plan" [level=2] [ref=f1e1304]
+            - paragraph [ref=f1e1305]: Set a between-map response that applies after map one when its condition is met.
+            - generic [ref=f1e1306]:
+              - combobox [ref=f1e1307]:
+                - option "Trailing" [selected]
+                - option "After Loss"
+                - option "Always"
+              - combobox [ref=f1e1308]:
+                - option "Steady" [selected]
+                - option "Press"
+                - option "Stabilize"
+                - option "Reset"
+              - combobox [ref=f1e1309]:
+                - option "No substitution" [selected]
+                - option "Hollowlock"
+              - combobox [ref=f1e1310]:
+                - option "No substitution" [selected]
+                - option "Apex"
+                - option "Echo"
+                - option "Slyblade"
+                - option "Ghost"
+                - option "Vortex"
+            - button "Save series card" [ref=f1e1311] [cursor=pointer]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Match
+    - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+    - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.

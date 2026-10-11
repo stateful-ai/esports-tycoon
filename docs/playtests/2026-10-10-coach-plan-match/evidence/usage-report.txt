@@ -1,0 +1,53 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 2,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 2,
+    "session_end:": 2,
+    "session_start:": 3,
+    "view:dashboard": 2,
+    "view:lobby": 3,
+    "view:tactics/gameplan": 1,
+    "view:tactics/prep": 2,
+    "view:tactics/strategy": 2,
+    "visible_time:dashboard": 8,
+    "visible_time:lobby": 3,
+    "visible_time:tactics/gameplan": 5,
+    "visible_time:tactics/prep": 21,
+    "visible_time:tactics/strategy": 3
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "2faf333fad9a9228e7a60df71d08c4b0": 194971,
+    "9fa0d0f9330d93bdcbc014808e8485fe": 0,
+    "a70d8a7444efe81df025c7f0092646ec": 247613
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 2
+  },
+  "paired_results": 5,
+  "retention_bytes": 8388608,
+  "sessions": 3,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 98853,
+    "lobby": 4759,
+    "tactics/gameplan": 64240,
+    "tactics/prep": 289168,
+    "tactics/strategy": 19485
+  },
+  "world_events": {
+    "26UHC": 66
+  }
+}

@@ -1,0 +1,2296 @@
+{
+  "matches_per_map": 300,
+  "gates_passed": false,
+  "simulation_code_sha256": "99c3fccc401364a3af3575989b4623fe6d3333250e929927fe87472c2fdb12ed",
+  "published": false,
+  "maps": [
+    {
+      "map_id": "pearl-layout-v2",
+      "revision_hash": "c46ee314af1bc2709b29f56b87a75e20bcaeb79d39847f76aaaae2ef5ff94ffc",
+      "geometry_valid": true,
+      "compiled_sha256": "de6f19fcf5b688876c81d7d175e0f86cdf5b9760a177522b627d9254249faf9a",
+      "floor_comparison": {
+        "map_id": "pearl-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9532274515517996,
+        "floor_precision": 0.9720974772156915,
+        "floor_recall": 0.9800422790751868,
+        "outside_area": 105.625,
+        "missing_area": 74.9375,
+        "description": "Pearl - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 1412,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/pearl.png",
+        "description": "Pearl - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "5e0e7d4a80d830d9b8bb0f265cb14245be583bce87a69d3f53a07e9083ca810c",
+        "rotation": "180",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "defender_spawn",
+          "point": [
+            47.25,
+            94.25
+          ],
+          "resolved_pos": [
+            47.25,
+            94.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "a_site",
+          "point": [
+            8.75,
+            59.75
+          ],
+          "resolved_pos": [
+            8.75,
+            59.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_site",
+          "point": [
+            74.75,
+            53.75
+          ],
+          "resolved_pos": [
+            74.75,
+            53.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            55.75,
+            4.25
+          ],
+          "resolved_pos": [
+            55.75,
+            4.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            13.75,
+            64.25
+          ],
+          "resolved_pos": [
+            13.75,
+            64.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            82.25,
+            58.75
+          ],
+          "resolved_pos": [
+            82.25,
+            58.75
+          ],
+          "blocked_by": null,
+          "clearance": 1.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_screen",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_screen",
+          "zone_id": "b_screen",
+          "reachable_zones": [
+            "a_art",
+            "a_dugout",
+            "a_flowers",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_restaurant",
+            "a_secret",
+            "a_site",
+            "attacker_spawn",
+            "b_hall",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_ramp",
+            "b_screen",
+            "b_site",
+            "b_tower",
+            "b_tunnel",
+            "defender_side_records",
+            "defender_side_water",
+            "defender_spawn",
+            "mid_connector",
+            "mid_doors",
+            "mid_plaza",
+            "mid_shops",
+            "mid_top"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "pearl",
+        "hash": "c46ee314af1bc2709b29f56b87a75e20bcaeb79d39847f76aaaae2ef5ff94ffc",
+        "rooms": 25,
+        "routes": 37,
+        "recorded_only": 0,
+        "extensions": 554,
+        "plants": 2,
+        "iou": 95.32,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 42.7,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "spike_defused": 2912,
+          "spike_detonation": 1130,
+          "elim": 1857
+        },
+        "rounds_simulated": 5899
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 20.4,
+          "b": 13.1
+        },
+        "attacker_rotate_seconds_reported": 33.5,
+        "defender_rotate_seconds_reported": 25.4,
+        "passed": false
+      },
+      "probe_summary": {
+        "probes": 6,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.25,
+        "clearance_is_authoring_diagnostic": true
+      }
+    },
+    {
+      "map_id": "fracture-layout-v2",
+      "revision_hash": "de7d02cea64409f14ed87d5b8053daf74af8edd87917511b1523158c73cd227b",
+      "geometry_valid": true,
+      "compiled_sha256": "b5569365770ab1faf29582e812f96422b30998d480472081523b631e819f1299",
+      "floor_comparison": {
+        "map_id": "fracture-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9421911938534279,
+        "floor_precision": 0.9699954365682993,
+        "floor_recall": 0.9704752121142944,
+        "outside_area": 98.625,
+        "missing_area": 97.0,
+        "description": "Fracture - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 1442,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/fracture.png",
+        "description": "Fracture - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "d41e013eca94e680a61a4d4572929e46d818efce0fb3f065410d9d36399d1a6b",
+        "rotation": "180",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "b_site",
+          "point": [
+            90.75,
+            48.25
+          ],
+          "resolved_pos": [
+            90.75,
+            48.25
+          ],
+          "blocked_by": null,
+          "clearance": 2.37,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        },
+        {
+          "zone": "defender_spawn",
+          "point": [
+            49.75,
+            55.75
+          ],
+          "resolved_pos": [
+            49.75,
+            55.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        },
+        {
+          "zone": "a_site",
+          "point": [
+            17.75,
+            47.75
+          ],
+          "resolved_pos": [
+            17.75,
+            47.75
+          ],
+          "blocked_by": null,
+          "clearance": 3.55,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            51.75,
+            18.25
+          ],
+          "resolved_pos": [
+            51.75,
+            18.25
+          ],
+          "blocked_by": null,
+          "clearance": 4.37,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            89.25,
+            49.25
+          ],
+          "resolved_pos": [
+            89.25,
+            49.25
+          ],
+          "blocked_by": null,
+          "clearance": 3.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            14.25,
+            50.75
+          ],
+          "resolved_pos": [
+            14.25,
+            50.75
+          ],
+          "blocked_by": null,
+          "clearance": 3.02,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_dish",
+            "a_door",
+            "a_drop",
+            "a_gate",
+            "a_hall",
+            "a_link",
+            "a_main",
+            "a_plant_1",
+            "a_rope",
+            "a_site",
+            "attacker_side_bridge",
+            "attacker_spawn",
+            "b_arcade",
+            "b_bench",
+            "b_canteen",
+            "b_generator",
+            "b_link",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "b_tree",
+            "b_tunnel",
+            "defender_spawn"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "fracture",
+        "hash": "de7d02cea64409f14ed87d5b8053daf74af8edd87917511b1523158c73cd227b",
+        "rooms": 22,
+        "routes": 35,
+        "recorded_only": 2,
+        "extensions": 531,
+        "plants": 2,
+        "iou": 94.22,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 32.6,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "spike_defused": 3240,
+          "elim": 1679,
+          "spike_detonation": 588,
+          "time": 16
+        },
+        "rounds_simulated": 5523
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 8.8,
+          "b": 7.5
+        },
+        "attacker_rotate_seconds_reported": 16.3,
+        "defender_rotate_seconds_reported": 15.6,
+        "passed": false
+      },
+      "probe_summary": {
+        "probes": 6,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.75,
+        "clearance_is_authoring_diagnostic": true
+      }
+    },
+    {
+      "map_id": "corrode-layout-v2",
+      "revision_hash": "a8ba6a8182a968c4326e4f07017bf175cd60d53d938477bfa9fd46bc0eacf90b",
+      "geometry_valid": true,
+      "compiled_sha256": "42a556b8aadb03be1cfdcd7ffb6e63d0ac96f658ea7ed9683bbc4360c71082dc",
+      "floor_comparison": {
+        "map_id": "corrode-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9471214248762102,
+        "floor_precision": 0.9770145612563849,
+        "floor_recall": 0.9687063003136929,
+        "outside_area": 75.375,
+        "missing_area": 103.5,
+        "description": "Corrode - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 1602,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/corrode.png",
+        "description": "Corrode - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "9f9ed010f502a1146435e779ec2979ce2eb72f78559df19fb89d47e36c98a483",
+        "rotation": "ccw",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "a_site",
+          "point": [
+            25.75,
+            60.25
+          ],
+          "resolved_pos": [
+            25.75,
+            60.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            50.25,
+            7.75
+          ],
+          "resolved_pos": [
+            50.25,
+            7.75
+          ],
+          "blocked_by": null,
+          "clearance": 2.85,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        },
+        {
+          "zone": "b_site",
+          "point": [
+            69.25,
+            55.75
+          ],
+          "resolved_pos": [
+            69.25,
+            55.75
+          ],
+          "blocked_by": null,
+          "clearance": 1.46,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        },
+        {
+          "zone": "defender_spawn",
+          "point": [
+            49.75,
+            87.75
+          ],
+          "resolved_pos": [
+            49.75,
+            87.75
+          ],
+          "blocked_by": null,
+          "clearance": 4.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            19.75,
+            59.25
+          ],
+          "resolved_pos": [
+            19.75,
+            59.25
+          ],
+          "blocked_by": null,
+          "clearance": 2.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            76.75,
+            59.75
+          ],
+          "resolved_pos": [
+            76.75,
+            59.75
+          ],
+          "blocked_by": null,
+          "clearance": 2.57,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_crane",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_pocket",
+            "a_site",
+            "a_yard",
+            "attacker_spawn",
+            "b_arch",
+            "b_elbow",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_stairs",
+            "mid_top",
+            "mid_window"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "corrode",
+        "hash": "a8ba6a8182a968c4326e4f07017bf175cd60d53d938477bfa9fd46bc0eacf90b",
+        "rooms": 21,
+        "routes": 32,
+        "recorded_only": 0,
+        "extensions": 399,
+        "plants": 2,
+        "iou": 94.71,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 40.1,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "elim": 1223,
+          "spike_defused": 3190,
+          "spike_detonation": 1445,
+          "time": 4
+        },
+        "rounds_simulated": 5862
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 13.8,
+          "b": 8.7
+        },
+        "attacker_rotate_seconds_reported": 22.5,
+        "defender_rotate_seconds_reported": 20.8,
+        "passed": false
+      },
+      "probe_summary": {
+        "probes": 6,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.75,
+        "clearance_is_authoring_diagnostic": true
+      }
+    },
+    {
+      "map_id": "abyss-layout-v2",
+      "revision_hash": "4f2271cd99fec0172a42b1dd3550f1fab9f1c29ae746df0fda05424613ff9084",
+      "geometry_valid": true,
+      "compiled_sha256": "4f99af9cd838f9048184c05c74e4cd71f48976a58c60f3f8315dfaa1c1c7fa66",
+      "floor_comparison": {
+        "map_id": "abyss-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9395921626435723,
+        "floor_precision": 0.964290216843167,
+        "floor_recall": 0.9734639982182061,
+        "outside_area": 141.625,
+        "missing_area": 104.25,
+        "description": "Abyss - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 1342,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/abyss.png",
+        "description": "Abyss - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "466a3d18f78c251b416533959471bdef80b75e9dd3f8a89b1601e6c1ed4d299f",
+        "rotation": "ccw",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "a_site",
+          "point": [
+            15.25,
+            51.75
+          ],
+          "resolved_pos": [
+            15.25,
+            51.75
+          ],
+          "blocked_by": null,
+          "clearance": 2.57,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            42.25,
+            9.75
+          ],
+          "resolved_pos": [
+            42.25,
+            9.75
+          ],
+          "blocked_by": null,
+          "clearance": 5.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_site",
+          "point": [
+            85.75,
+            59.75
+          ],
+          "resolved_pos": [
+            85.75,
+            59.75
+          ],
+          "blocked_by": null,
+          "clearance": 2.85,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "defender_spawn",
+          "point": [
+            42.25,
+            92.75
+          ],
+          "resolved_pos": [
+            42.25,
+            92.75
+          ],
+          "blocked_by": null,
+          "clearance": 3.26,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            9.75,
+            61.25
+          ],
+          "resolved_pos": [
+            9.75,
+            61.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_security",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_security",
+          "zone_id": "a_security",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            90.25,
+            64.25
+          ],
+          "resolved_pos": [
+            90.25,
+            64.25
+          ],
+          "blocked_by": null,
+          "clearance": 2.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_secret",
+            "a_security",
+            "a_site",
+            "a_tower",
+            "a_vent",
+            "attacker_spawn",
+            "b_danger",
+            "b_link",
+            "b_lobby",
+            "b_main",
+            "b_nest",
+            "b_plant_1",
+            "b_site",
+            "b_tower",
+            "defender_spawn",
+            "mid_bend",
+            "mid_bottom",
+            "mid_catwalk",
+            "mid_library",
+            "mid_top"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "abyss",
+        "hash": "4f2271cd99fec0172a42b1dd3550f1fab9f1c29ae746df0fda05424613ff9084",
+        "rooms": 23,
+        "routes": 33,
+        "recorded_only": 0,
+        "extensions": 481,
+        "plants": 2,
+        "iou": 93.96,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 33.3,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "elim": 1582,
+          "spike_detonation": 759,
+          "spike_defused": 3604
+        },
+        "rounds_simulated": 5945
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 7.7,
+          "b": 17.2
+        },
+        "attacker_rotate_seconds_reported": 24.9,
+        "defender_rotate_seconds_reported": 24.4,
+        "passed": false
+      },
+      "probe_summary": {
+        "probes": 6,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.25,
+        "clearance_is_authoring_diagnostic": true
+      }
+    },
+    {
+      "map_id": "breeze-layout-v2",
+      "revision_hash": "fa0bb2bbf54c2c1e8aaa489c2d9a911ad2dc83beef81bf21fcd4ab587c1582d3",
+      "geometry_valid": true,
+      "compiled_sha256": "7523e2c26c988b77aac96f2336453b27fa04892c2307b038d7a32de4817b8a1c",
+      "floor_comparison": {
+        "map_id": "breeze-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9546695166063794,
+        "floor_precision": 0.9774257625749108,
+        "floor_recall": 0.9761932782999042,
+        "outside_area": 83.8125,
+        "missing_area": 88.5,
+        "description": "Breeze - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 1366,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/breeze.png",
+        "description": "Breeze - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "82c6472afe6f34ac4c0d979fbf6df0a739c174292edf593f29b9495f3b3f84a2",
+        "rotation": "180",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "defender_spawn",
+          "point": [
+            28.75,
+            78.75
+          ],
+          "resolved_pos": [
+            28.75,
+            78.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "b_site",
+          "point": [
+            93.25,
+            61.75
+          ],
+          "resolved_pos": [
+            93.25,
+            61.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "a_site",
+          "point": [
+            9.25,
+            50.25
+          ],
+          "resolved_pos": [
+            9.25,
+            50.25
+          ],
+          "blocked_by": null,
+          "clearance": 2.37,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            56.75,
+            12.75
+          ],
+          "resolved_pos": [
+            56.75,
+            12.75
+          ],
+          "blocked_by": null,
+          "clearance": 3.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            85.75,
+            73.75
+          ],
+          "resolved_pos": [
+            85.75,
+            73.75
+          ],
+          "blocked_by": null,
+          "clearance": 1.06,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_wall",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_wall",
+          "zone_id": "b_wall",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            6.25,
+            55.75
+          ],
+          "resolved_pos": [
+            6.25,
+            55.75
+          ],
+          "blocked_by": null,
+          "clearance": 2.37,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        },
+        {
+          "zone": "a_plant_2",
+          "point": [
+            16.75,
+            51.75
+          ],
+          "resolved_pos": [
+            16.75,
+            51.75
+          ],
+          "blocked_by": null,
+          "clearance": 3.02,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_pyramids",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_pyramids",
+          "zone_id": "a_pyramids",
+          "reachable_zones": [
+            "a_bridge",
+            "a_lobby",
+            "a_plant_1",
+            "a_plant_2",
+            "a_pyramids",
+            "a_ramp",
+            "a_shop",
+            "a_site",
+            "attacker_spawn",
+            "b_back",
+            "b_elbow",
+            "b_main",
+            "b_plant_1",
+            "b_site",
+            "b_tunnel",
+            "b_wall",
+            "b_window",
+            "defender_side_arches",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_cannon",
+            "mid_hall",
+            "mid_nest",
+            "mid_pillar",
+            "mid_top",
+            "mid_wood_doors"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "breeze",
+        "hash": "fa0bb2bbf54c2c1e8aaa489c2d9a911ad2dc83beef81bf21fcd4ab587c1582d3",
+        "rooms": 23,
+        "routes": 36,
+        "recorded_only": 0,
+        "extensions": 616,
+        "plants": 3,
+        "iou": 95.47,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 33.1,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "spike_defused": 3959,
+          "spike_detonation": 1147,
+          "elim": 842,
+          "time": 9
+        },
+        "rounds_simulated": 5957
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 13.4,
+          "b": 15.0
+        },
+        "attacker_rotate_seconds_reported": 28.4,
+        "defender_rotate_seconds_reported": 22.5,
+        "passed": true
+      },
+      "probe_summary": {
+        "probes": 7,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.75,
+        "clearance_is_authoring_diagnostic": true
+      }
+    },
+    {
+      "map_id": "sunset-layout-v2",
+      "revision_hash": "20583b933e9367d63d3655d38d46c85a10bddd25fab5574df7644b68be167e8e",
+      "geometry_valid": true,
+      "compiled_sha256": "14de0a2db6e2eb3919a02b597c33a028192c53e2e9b1979098f16b11fcb7876e",
+      "floor_comparison": {
+        "map_id": "sunset-layout-v2",
+        "grid_step": 0.25,
+        "iou": 0.9428915819650768,
+        "floor_precision": 0.9764844804318489,
+        "floor_recall": 0.9647988266275542,
+        "outside_area": 87.125,
+        "missing_area": 132.0,
+        "description": "Sunset - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks"
+      },
+      "physical_route_audit": {
+        "holding_routes_checked": 968,
+        "blocked_routes": [],
+        "off_floor_routes": []
+      },
+      "reference": {
+        "image_path": "/assets/maps/references/sunset.png",
+        "description": "Sunset - extracted game minimap/callouts, retrieved 2026-10-04; floor excludes white wall marks",
+        "source_sha256": "1188642e2f94f4fbb17d6c61feb9071d349dec21c9749349db710afbc1bbb228",
+        "rotation": "180",
+        "floor_color_max": 200,
+        "x": 0.0,
+        "y": 0.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "probes": [
+        {
+          "zone": "b_site",
+          "point": [
+            95.25,
+            43.75
+          ],
+          "resolved_pos": [
+            95.25,
+            43.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_site",
+          "zone_id": "b_site",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "a_site",
+          "point": [
+            25.25,
+            56.25
+          ],
+          "resolved_pos": [
+            25.25,
+            56.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_site",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_site",
+          "zone_id": "a_site",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "defender_spawn",
+          "point": [
+            65.25,
+            79.75
+          ],
+          "resolved_pos": [
+            65.25,
+            79.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_defender_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_defender_spawn",
+          "zone_id": "defender_spawn",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "attacker_spawn",
+          "point": [
+            52.75,
+            1.75
+          ],
+          "resolved_pos": [
+            52.75,
+            1.75
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_attacker_spawn",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_attacker_spawn",
+          "zone_id": "attacker_spawn",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_plant_1",
+          "point": [
+            87.25,
+            60.75
+          ],
+          "resolved_pos": [
+            87.25,
+            60.75
+          ],
+          "blocked_by": null,
+          "clearance": 1.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_boba",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_boba",
+          "zone_id": "b_boba",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "b_plant_2",
+          "point": [
+            81.25,
+            52.75
+          ],
+          "resolved_pos": [
+            81.25,
+            52.75
+          ],
+          "blocked_by": null,
+          "clearance": 1.75,
+          "closest_blocker": {
+            "id": "surf_bound_surf_b_market",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_b_market",
+          "zone_id": "b_market",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        },
+        {
+          "zone": "a_plant_1",
+          "point": [
+            17.75,
+            65.25
+          ],
+          "resolved_pos": [
+            17.75,
+            65.25
+          ],
+          "blocked_by": null,
+          "clearance": 0.25,
+          "closest_blocker": {
+            "id": "surf_bound_surf_a_alley",
+            "type": "boundary"
+          },
+          "los": true,
+          "blocking_sight": null,
+          "surface_id": "surf_a_alley",
+          "zone_id": "a_alley",
+          "reachable_zones": [
+            "a_alley",
+            "a_elbow",
+            "a_link",
+            "a_lobby",
+            "a_main",
+            "a_plant_1",
+            "a_site",
+            "attacker_spawn",
+            "b_boba",
+            "b_lobby",
+            "b_main",
+            "b_market",
+            "b_plant_1",
+            "b_plant_2",
+            "b_site",
+            "defender_spawn",
+            "mid_bottom",
+            "mid_courtyard",
+            "mid_tiles",
+            "mid_top"
+          ]
+        }
+      ],
+      "inventory": {
+        "map": "sunset",
+        "hash": "20583b933e9367d63d3655d38d46c85a10bddd25fab5574df7644b68be167e8e",
+        "rooms": 17,
+        "routes": 27,
+        "recorded_only": 0,
+        "extensions": 419,
+        "plants": 3,
+        "iou": 94.29,
+        "valid": true
+      },
+      "floor_audit_passed": true,
+      "balance": {
+        "attack_win_percent_reported": 23.8,
+        "required_attack_win_percent": [
+          45,
+          65
+        ],
+        "passed": false,
+        "round_end_reasons": {
+          "spike_defused": 4287,
+          "elim": 555,
+          "spike_detonation": 795,
+          "time": 17
+        },
+        "rounds_simulated": 5654
+      },
+      "pacing": {
+        "spawn_to_entry_seconds_reported": {
+          "a": 13.6,
+          "b": 7.4
+        },
+        "attacker_rotate_seconds_reported": 21.0,
+        "defender_rotate_seconds_reported": 21.2,
+        "passed": false
+      },
+      "probe_summary": {
+        "probes": 7,
+        "all_resolve_to_floor": true,
+        "minimum_own_surface_clearance": 0.25,
+        "clearance_is_authoring_diagnostic": true
+      }
+    }
+  ],
+  "reviewed_at_utc": "2026-10-05T00:24:24.022925+00:00",
+  "source": "Valorant API extracted minimaps and callouts, snapshot 2026-10-04",
+  "gate_logs": {
+    "map_floor_audit": "abyss    clean\nbreeze   clean\ncorrode  clean\nfracture clean\npearl    clean\nsunset   clean\n\nOK: all movement stays on painted floor\n",
+    "pacing_report": "abyss    stage: A= 7.7s!  B=17.2s\n         atk A->B via spawn:  24.9s   def rotate:  24.4s  <-- OUT OF BAND\nbreeze   stage: A=13.4s  B=15.0s\n         atk A->B via spawn:  28.4s   def rotate:  22.5s\ncorrode  stage: A=13.8s  B= 8.7s\n         atk A->B via spawn:  22.5s   def rotate:  20.8s  <-- OUT OF BAND\nfracture stage: A= 8.8s  B= 7.5s!\n         atk A->B via spawn:  16.3s   def rotate:  15.6s  <-- OUT OF BAND\npearl    stage: A=20.4s!  B=13.1s\n         atk A->B via spawn:  33.5s   def rotate:  25.4s\nsunset   stage: A=13.6s  B= 7.4s!\n         atk A->B via spawn:  21.0s   def rotate:  21.2s  <-- OUT OF BAND\n\ntarget: attacker rotate 25-35s via spawn; spawn->entry stage 8-18s\n",
+    "balance_report": "abyss    atk 33.3%  favorite 245/300  median loser rounds 6  {'elim': 1582, 'spike_detonation': 759, 'spike_defused': 3604}  <-- atk 33.3% out of 45%-65%\nbreeze   atk 33.1%  favorite 239/300  median loser rounds 7  {'spike_defused': 3959, 'spike_detonation': 1147, 'elim': 842, 'time': 9}  <-- atk 33.1% out of 45%-65%\ncorrode  atk 40.1%  favorite 258/300  median loser rounds 6  {'elim': 1223, 'spike_defused': 3190, 'spike_detonation': 1445, 'time': 4}  <-- atk 40.1% out of 45%-65%\nfracture atk 32.6%  favorite 262/300  median loser rounds 5  {'spike_defused': 3240, 'elim': 1679, 'spike_detonation': 588, 'time': 16}  <-- atk 32.6% out of 45%-65%\npearl    atk 42.7%  favorite 248/300  median loser rounds 7  {'spike_defused': 2912, 'spike_detonation': 1130, 'elim': 1857}  <-- atk 42.7% out of 45%-65%\nsunset   atk 23.8%  favorite 266/300  median loser rounds 6  {'spike_defused': 4287, 'elim': 555, 'spike_detonation': 795, 'time': 17}  <-- atk 23.8% out of 45%-65%\n\nband: attack 45%-65% per map, elim/detonation/defuse present\nBALANCE GATE FAIL:\n  abyss: atk 33.3% out of 45%-65%\n  breeze: atk 33.1% out of 45%-65%\n  corrode: atk 40.1% out of 45%-65%\n  fracture: atk 32.6% out of 45%-65%\n  pearl: atk 42.7% out of 45%-65%\n  sunset: atk 23.8% out of 45%-65%\n"
+  },
+  "tests": {
+    "engine_and_golden_passed": 141,
+    "authoring_studio_and_mcp_passed": 61,
+    "frontend_stress_cases_passed": 9,
+    "floor_union_outline_test_passed": true,
+    "web_and_registry_passed": 327,
+    "counts_overlap": true,
+    "full_suite_passed": 1022,
+    "full_suite_elapsed_seconds": 2135.61,
+    "full_suite_command": "python -m pytest -q",
+    "full_suite_completed_at_utc": "2026-10-05T01:42:56.240790+00:00"
+  },
+  "commit_runtime_validation": {
+    "matches_per_map": 300,
+    "maps": [
+      "ascent",
+      "bind",
+      "haven",
+      "lotus",
+      "split"
+    ],
+    "floor_passed": true,
+    "pacing_passed": true,
+    "balance_passed": true,
+    "attack_win_percent_reported": {
+      "ascent": 55.6,
+      "bind": 49.5,
+      "haven": 51.9,
+      "lotus": 56.0,
+      "split": 50.1
+    },
+    "logs": {
+      "floor": "ascent   clean\nbind     clean\nhaven    clean\nlotus    clean\nsplit    clean\n\nOK: all movement stays on painted floor\n",
+      "pacing": "ascent   stage: A=17.3s  B= 9.1s\n         atk A->B via spawn:  26.5s   def rotate:  16.0s\nbind     stage: A=14.2s  B=11.5s\n         atk A->B via spawn:  25.6s   def rotate:  11.3s\nhaven    stage: A=14.1s  B=12.2s  C=12.7s\n         atk A->B via spawn:  26.4s   def rotate:  11.3s\n         atk A->C via spawn:  26.8s   def rotate:  15.4s\n         atk B->C via spawn:  27.5s   def rotate:   5.8s\nlotus    stage: A=17.7s  B=14.5s  C=12.4s\n         atk A->B via spawn:  32.1s   def rotate:   8.7s\n         atk A->C via spawn:  30.0s   def rotate:  21.9s\n         atk B->C via spawn:  26.9s   def rotate:  17.8s\nsplit    stage: A=13.3s  B=12.5s\n         atk A->B via spawn:  25.9s   def rotate:  17.0s\n\ntarget: attacker rotate 25-35s via spawn; spawn->entry stage 8-18s\n",
+      "balance": "ascent   atk 55.6%  favorite 218/300  median loser rounds 8  {'spike_defused': 2777, 'spike_detonation': 1404, 'elim': 2219}\nbind     atk 49.5%  favorite 245/300  median loser rounds 8  {'spike_defused': 2859, 'elim': 2323, 'spike_detonation': 1042, 'time': 27}\nhaven    atk 51.9%  favorite 237/300  median loser rounds 8  {'elim': 1905, 'spike_detonation': 1380, 'spike_defused': 2933}\nlotus    atk 56.0%  favorite 215/300  median loser rounds 8  {'spike_defused': 2257, 'elim': 2848, 'spike_detonation': 924, 'time': 194}\nsplit    atk 50.1%  favorite 233/300  median loser rounds 7  {'spike_defused': 2811, 'elim': 2103, 'spike_detonation': 1241, 'time': 1}\n\nband: attack 45%-65% per map, elim/detonation/defuse present\nbalance gate OK\n"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0086",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Partial defaults resolve to full five after churn",
+    "problem": "Saved three and resolved five appeared contradictory",
+    "solution": "Render server effective selection and provenance; copied W5 shows3saved2automatic",
+    "lesson": "Keep saved preference separate from effective participant selection",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0087",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Auto clear keeps a full effective default",
+    "problem": "Empty saved preference can look like no players selected",
+    "solution": "Clear and reload shows0saved5automatic and matching5of5; four persisted actions matched",
+    "lesson": "Verify cleared preferences and resolved participants independently",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0088",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Lineup decision telemetry lacks exact selected IDs",
+    "problem": "set_lineup records only flags",
+    "solution": "Persisted readbacks document exact five; separate gap17 owns telemetry correction",
+    "lesson": "Do not infer exact player selection from coarse accepted-action flags",
+    "confidence": "medium",
+    "source": "Browser8468 world26UHC seed2038 S1W5 C:\\Users\\aidan\\.codex\\worktrees\\default-lineup-count\\ESports Simulator\\docs\\playtests\\2026-10-08-default-lineup-count/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "lineup",
+      "counts",
+      "readback"
+    ],
+    "kind": "pain-point"
+  }
+]

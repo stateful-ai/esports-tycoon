@@ -1,0 +1,533 @@
+{
+  "reportBefore": {
+    "season": 1,
+    "week": 1,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "aim_precision": 0.04,
+                "aim_reactivity": 0.04
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Strong match performances are accelerating learning",
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 78.3,
+          "overall_current": 78.3,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.5,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "rest",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.02,
+              "skills": {
+                "comms_quality": 0.11,
+                "composure": 0.03,
+                "game_sense": 0.02,
+                "positioning": 0.01,
+                "utility_usage": 0.04
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 74.5,
+          "overall_current": 74.5,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.16,
+              "skills": {
+                "positioning": 0.45,
+                "utility_usage": 1.2
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.05,
+              "skills": {
+                "aim_precision": 0.2,
+                "aim_reactivity": 0.12,
+                "clutch_factor": 0.03,
+                "comms_quality": 0.04,
+                "composure": 0.04,
+                "positioning": 0.01,
+                "utility_usage": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Tactical practice reinforces skills used in matches",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.7,
+          "overall_delta": 0.2
+        }
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {
+                "positioning": 0.02,
+                "utility_usage": 0.01
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": null
+      }
+    ]
+  },
+  "reportAfter": {
+    "season": 1,
+    "week": 1,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.01,
+              "skills": {
+                "aim_precision": 0.04,
+                "aim_reactivity": 0.04
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Strong match performances are accelerating learning",
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 78.3,
+          "overall_current": 78.3,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Streaming is taking time away from practice",
+            "Coaching and club support are improving practice",
+            "This focus has little reachable headroom; try another skill area"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.5,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "rest",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "thriving",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.02,
+              "skills": {
+                "comms_quality": 0.11,
+                "composure": 0.03,
+                "game_sense": 0.02,
+                "positioning": 0.01,
+                "utility_usage": 0.04
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Individual recovery: practice paused, match experience retained"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 74.5,
+          "overall_current": 74.5,
+          "overall_delta": 0
+        }
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.16,
+              "skills": {
+                "positioning": 0.45,
+                "utility_usage": 1.2
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0.05,
+              "skills": {
+                "aim_precision": 0.2,
+                "aim_reactivity": 0.12,
+                "clutch_factor": 0.03,
+                "comms_quality": 0.04,
+                "composure": 0.04,
+                "positioning": 0.01,
+                "utility_usage": 0.02
+              }
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Tactical practice reinforces skills used in matches",
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": {
+          "overall_start": 75.5,
+          "overall_current": 75.7,
+          "overall_delta": 0.2
+        }
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "tactical",
+          "intensity": "normal",
+          "maps": 1,
+          "trend": "settling",
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0,
+              "skills": {
+                "positioning": 0.02,
+                "utility_usage": 0.01
+              }
+            },
+            "match_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0,
+              "skills": {}
+            }
+          },
+          "factors": [
+            "Coaching and club support are improving practice"
+          ],
+          "career_event": null
+        },
+        "measured": null
+      }
+    ]
+  },
+  "usage": {
+    "sessions": 2,
+    "events": {
+      "attempt:/api/actions/advance": 2,
+      "attempt:/api/actions/dev_plan": 1,
+      "attempt:/api/actions/release": 2,
+      "attempt:/api/actions/save": 1,
+      "attempt:/api/negotiation": 2,
+      "attempt:/api/new": 1,
+      "interaction:lobby/seed_change": 1,
+      "interaction:market/player_search": 1,
+      "interaction:week/full_report_open": 1,
+      "replay:close": 1,
+      "replay:open": 1,
+      "replay:pause": 1,
+      "result:/api/actions/advance": 2,
+      "result:/api/actions/dev_plan": 1,
+      "result:/api/actions/release": 2,
+      "result:/api/actions/save": 1,
+      "result:/api/negotiation": 2,
+      "result:/api/new": 1,
+      "session_start:": 2,
+      "view:club/development": 2,
+      "view:club/squad": 4,
+      "view:dashboard": 4,
+      "view:lobby": 2,
+      "view:market/players": 2,
+      "view:replay": 1,
+      "view:season/fixtures": 2,
+      "view:season/league": 1,
+      "view:tactics/gameplan": 2,
+      "view:tactics/strategy": 2,
+      "visible_time:club/development": 5,
+      "visible_time:club/squad": 8,
+      "visible_time:dashboard": 15,
+      "visible_time:lobby": 42,
+      "visible_time:market/players": 8,
+      "visible_time:replay": 6,
+      "visible_time:season/fixtures": 3,
+      "visible_time:season/league": 1,
+      "visible_time:tactics/gameplan": 8,
+      "visible_time:tactics/strategy": 3
+    },
+    "visible_ms": {
+      "club/development": 36189,
+      "club/squad": 74143,
+      "dashboard": 161103,
+      "lobby": 647432,
+      "market/players": 70881,
+      "replay": 73739,
+      "season/fixtures": 12145,
+      "season/league": 5601,
+      "tactics/gameplan": 89151,
+      "tactics/strategy": 19158
+    },
+    "outcomes": {
+      "/api/actions/advance:http_error": 1,
+      "/api/actions/advance:success": 1,
+      "/api/actions/dev_plan:success": 1,
+      "/api/actions/release:success": 2,
+      "/api/actions/save:success": 1,
+      "/api/negotiation:success": 2,
+      "/api/new:success": 1
+    },
+    "attempts": 9,
+    "paired_results": 9,
+    "unmatched_attempts": 0,
+    "orphan_results": 0,
+    "world_events": {
+      "26UHC": 100,
+      "lobby": 47
+    },
+    "observed_session_span_ms": {
+      "17d96d2400028c5c5be50b8aaecefed7": 580147,
+      "20adaf8a0965fc43f70eb186a8e8ca77": 579362
+    },
+    "malformed_lines": 0,
+    "retention_bytes": 8388608
+  }
+}

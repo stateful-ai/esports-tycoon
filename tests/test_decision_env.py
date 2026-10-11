@@ -7,13 +7,74 @@ import json
 import numpy as np
 import pytest
 
-from esports_sim.manager import career, sponsors
+from esports_sim.manager import career, sponsors, telemetry
 from esports_sim.manager.campaign import new_campaign
 from esports_sim.manager.decision_env import (
     HeadlessManagerEnv,
     InvalidManagerAction,
     manager_observation,
 )
+from esports_sim.manager.manager_policy import HeuristicManagerPolicy, generate_profile
+from esports_sim.manager.state import ManagerSeat
+
+
+@pytest.mark.parametrize("second_human", [False, True], ids=["solo", "second-human"])
+@pytest.mark.parametrize("populated", [False, True], ids=["absent", "populated"])
+def test_observations_features_and_policy_leave_saved_state_unchanged(
+    game_data, second_human, populated
+):
+    gs = new_campaign(game_data, seed=321)
+    tid = gs.user_team_id
+    if second_human:
+        tid = next(t for t in sorted(gs.teams) if t != tid)
+        gs.human_team_ids.append(tid)
+        gs.managers["mgr_second"] = ManagerSeat(
+            id="mgr_second", name="Second manager", team_id=tid
+        )
+    buckets = (
+        "facilities_by", "negotiations_by", "scout_progress_by",
+        "sponsor_demands_by", "sponsor_market_by", "sponsor_slots_by",
+        "talks_cooldown_by", "staff_by",
+    )
+    for name in buckets:
+        getattr(gs, name).pop(tid, None)
+    pid = sorted(gs.teams[tid].player_ids)[0]
+    if populated:
+        gs.facilities_by[tid] = {"analytics_suite": 1}
+        gs.scout_progress_by[tid] = {"market": 0.75}
+        gs.talks_cooldown_by[tid] = {pid: gs.week + 2}
+
+    # Materializing empty buckets used to be an observation side effect.
+    # Their absence must give the exact same policy contract as explicit empties.
+    explicit = gs.model_copy(deep=True)
+    for name in buckets:
+        getattr(explicit, name).setdefault(tid, [] if name == "sponsor_demands_by" else {})
+    profile = generate_profile(gs.seed, tid)
+    before = gs.model_dump_json()
+    explicit_before = explicit.model_dump_json()
+    acting_before = gs.acting_team_id
+    features = telemetry.state_features(gs, tid)
+    assert gs.model_dump_json() == before
+    assert gs.acting_team_id == acting_before
+    obs = manager_observation(gs, game_data, tid, manager_profile=profile.to_dict())
+    expected = manager_observation(
+        explicit, game_data, tid, manager_profile=profile.to_dict()
+    )
+    assert obs == expected
+    assert obs["features"] == features
+    assert explicit.model_dump_json() == explicit_before
+    env = HeadlessManagerEnv(gs, game_data, team_id=tid, manager_profile=profile.to_dict())
+    assert env.observe() == obs
+    assert env.observe()["legal_actions"] == expected["legal_actions"]
+    assert HeuristicManagerPolicy(profile).choose_action(obs) == (
+        HeuristicManagerPolicy(profile).choose_action(expected)
+    )
+    if populated:
+        assert obs["facilities"] == {"analytics_suite": 1}
+        assert features["scout_progress"] == 0.75
+        assert pid not in obs["legal_actions"]["negotiate_open"]["player_ids"]
+    assert gs.model_dump_json() == before
+    assert gs.acting_team_id == acting_before
 
 
 def test_observation_is_json_safe_visible_and_restores_acting_team(game_data):

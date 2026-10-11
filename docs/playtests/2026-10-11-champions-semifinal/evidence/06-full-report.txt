@@ -1,0 +1,168 @@
+### Page
+- Page URL: http://127.0.0.1:8525/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 22 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 1,880,533 cr
+      - button "Save" [ref=f1e1496] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "18"
+        - button "Match" [ref=f1e1421] [cursor=pointer]
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market 1" [ref=f1e1497] [cursor=pointer]:
+          - text: Market
+          - generic [ref=f1e1498]: "1"
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e1499]:
+        - generic [ref=f1e1500]:
+          - generic [ref=f1e1501]: Match
+          - generic [ref=f1e1502]: S1 · W22 · Playoffs
+          - generic [ref=f1e1503]:
+            - button "Strategy" [ref=f1e1504] [cursor=pointer]
+            - button "Game plan" [ref=f1e1505] [cursor=pointer]
+            - button "Prep" [ref=f1e1506] [cursor=pointer]
+          - button "Guide" [ref=f1e1507] [cursor=pointer]
+        - generic [ref=f1e1508]:
+          - generic [ref=f1e1509]:
+            - heading "Match preparation" [level=2] [ref=f1e1510]
+            - paragraph [ref=f1e1511]: "Current squad condition: Apex 95.5 · Echo 95.5 · Hollowlock 88.5 · Slyblade 87.5 · Ghost 84.0 · Vortex 95.5."
+            - paragraph [ref=f1e1512]: No fixture is available to prepare for.
+            - generic [ref=f1e1513]:
+              - text: "Prep artifact: haven anti-exec book +1.1"
+              - generic [ref=f1e1514]: +0.0 edge
+              - text: Knowledge +1.15; stamina −1.5.
+            - paragraph [ref=f1e1515]: The opponent has won 56.8% of recorded attack rounds on haven.
+            - generic [ref=f1e1516]: "Dev note: FA 0 — Map mastery projects Hollowlock as a bench option for haven; no scrim performance was measured. Consider a focused development block before trying that rotation."
+          - generic [ref=f1e1517]:
+            - heading "Tournament six locked" [level=2] [ref=f1e1518]:
+              - text: Tournament six
+              - generic [ref=f1e1519]: locked
+            - paragraph [ref=f1e1520]: "Register up to six eligible players: five starters plus one between-map substitute. Checkboxes select tournament eligibility. Promised squad roles describe contract expectations; the selected five are set separately in Club and the fixture game plan, including map overrides."
+            - generic [ref=f1e1521]:
+              - 'checkbox "Apex 26 · Promised squad role: Starter" [checked] [disabled] [ref=f1e1522]'
+              - generic [ref=f1e1523]: Apex
+              - generic [ref=f1e1524]: "26 · Promised squad role: Starter"
+            - generic [ref=f1e1525]:
+              - 'checkbox "Echo 23 · Promised squad role: Starter" [checked] [disabled] [ref=f1e1526]'
+              - generic [ref=f1e1527]: Echo
+              - generic [ref=f1e1528]: "23 · Promised squad role: Starter"
+            - generic [ref=f1e1529]:
+              - 'checkbox "Hollowlock 26 · Promised squad role: Bench" [checked] [disabled] [ref=f1e1530]'
+              - generic [ref=f1e1531]: Hollowlock
+              - generic [ref=f1e1532]: "26 · Promised squad role: Bench"
+            - generic [ref=f1e1533]:
+              - 'checkbox "Slyblade 28 · Promised squad role: Starter" [checked] [disabled] [ref=f1e1534]'
+              - generic [ref=f1e1535]: Slyblade
+              - generic [ref=f1e1536]: "28 · Promised squad role: Starter"
+            - generic [ref=f1e1537]:
+              - 'checkbox "Ghost 19 · Promised squad role: Starter" [checked] [disabled] [ref=f1e1538]'
+              - generic [ref=f1e1539]: Ghost
+              - generic [ref=f1e1540]: "19 · Promised squad role: Starter"
+            - generic [ref=f1e1541]:
+              - 'checkbox "Vortex 22 · Promised squad role: Starter" [checked] [disabled] [ref=f1e1542]'
+              - generic [ref=f1e1543]: Vortex
+              - generic [ref=f1e1544]: "22 · Promised squad role: Starter"
+          - generic [ref=f1e1545]:
+            - heading "Series plan" [level=2] [ref=f1e1546]
+            - paragraph [ref=f1e1547]: Set a between-map response that applies after map one when its condition is met.
+            - paragraph [ref=f1e1548]: No upcoming best-of-three is on the calendar.
+  - generic [ref=f1e1570]:
+    - heading "Season 1 · Week 21 results" [level=1] [ref=f1e1571]
+    - generic [ref=f1e1572]:
+      - generic [ref=f1e1573]:
+        - generic [ref=f1e1574]: Champions semi
+        - generic [ref=f1e1575]: Team Vanguard vs Team Nexus
+        - generic [ref=f1e1577]: 2–1
+        - button "▶ Haven" [ref=f1e1578] [cursor=pointer]
+        - button "▶ Ascent" [ref=f1e1579] [cursor=pointer]
+        - button "▶ Lotus" [ref=f1e1580] [cursor=pointer]
+      - generic [ref=f1e1581]:
+        - generic [ref=f1e1582]: Champions semi
+        - generic [ref=f1e1583]: Solar Flare vs Rust Belt Gaming
+        - generic [ref=f1e1584]: 1–2
+        - button "▶ Bind" [ref=f1e1585] [cursor=pointer]
+        - button "▶ Ascent" [ref=f1e1586] [cursor=pointer]
+        - button "▶ Split" [ref=f1e1587] [cursor=pointer]
+      - generic [ref=f1e1588]: The CHAMPIONS grand final is next week.
+      - paragraph [ref=f1e1590]: income 112,821 cr · expenses 47,100 cr
+      - generic [ref=f1e1591]:
+        - heading "Squad development · Season 1 · Week 21" [level=2] [ref=f1e1592]
+        - paragraph [ref=f1e1593]: Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+        - generic [ref=f1e1594]:
+          - generic [ref=f1e1595]: Apex
+          - text: OVR 78.9 → 79.0 (+0.1)
+          - generic [ref=f1e1596]: Rest / Light · 3 maps
+          - generic [ref=f1e1597]: Matches +0.02 OVR · Aim Precision +0.12 · Aim Reactivity +0.09 · Clutch Factor +0.01
+          - generic [ref=f1e1598]: No badge changes this week
+          - generic [ref=f1e1599]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e1600]:
+          - generic [ref=f1e1601]: Vortex
+          - text: OVR 75.7 → 76.2 (+0.5)
+          - generic [ref=f1e1602]: Rest / Normal · 3 maps
+          - generic [ref=f1e1603]: Matches +0.06 OVR · Aim Precision +0.02 · Aim Reactivity +0.03 · Comms Quality +0.32 · Composure +0.06 · Game Sense +0.07 · Positioning +0.03 · Utility Usage +0.08
+          - generic [ref=f1e1604]: Badges +0.50 OVR · Clutch Factor +3.00 · Composure +2.00
+          - generic [ref=f1e1605]: "Badge earned: Clutch Master · +0.50 OVR · Clutch Factor +3.00 · Composure +2.00"
+          - generic [ref=f1e1606]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e1607]:
+          - generic [ref=f1e1608]: Ghost
+          - text: OVR 78.2 → 78.5 (+0.3)
+          - generic [ref=f1e1609]: Rest / Normal · 3 maps
+          - generic [ref=f1e1610]: Matches +0.20 OVR · Aim Precision +0.68 · Aim Reactivity +0.48 · Clutch Factor +0.16 · Comms Quality +0.39 · Composure +0.16 · Game Sense +0.04 · Positioning +0.04 · Utility Usage +0.08
+          - generic [ref=f1e1611]: Career events +0.05 OVR · Composure +0.33 · Game Sense +0.16
+          - generic [ref=f1e1612]: No badge changes this week
+          - generic [ref=f1e1613]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e1614]:
+          - generic [ref=f1e1615]: Slyblade
+          - text: OVR 72.9 → 72.9 (0.0)
+          - generic [ref=f1e1616]: Rest / Normal · 3 maps
+          - generic [ref=f1e1617]: No measured skill gains
+          - generic [ref=f1e1618]: No badge changes this week
+          - generic [ref=f1e1619]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e1620]:
+          - generic [ref=f1e1621]: Echo
+          - text: OVR 75.5 → 75.5 (0.0)
+          - generic [ref=f1e1622]: Rest / Light · 3 maps
+          - generic [ref=f1e1623]: No measured skill gains
+          - generic [ref=f1e1624]: No badge changes this week
+          - generic [ref=f1e1625]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f1e1626]:
+          - generic [ref=f1e1627]: Hollowlock
+          - text: OVR 62.7 → 62.8 (+0.1)
+          - generic [ref=f1e1628]: Mental / Normal · 0 maps
+          - generic [ref=f1e1629]: Practice +0.02 OVR · Clutch Factor +0.17 · Tilt Resistance +0.06
+          - generic [ref=f1e1630]: Career events +0.06 OVR · Clutch Factor +0.36 · Tilt Resistance +0.26
+          - generic [ref=f1e1631]: No badge changes this week
+          - generic [ref=f1e1632]: Coaching and club support are improving practice
+    - button "Continue" [ref=f1e1633] [cursor=pointer]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Match
+    - generic: Prepare the dressed five, tactics, scouting plan, and fixture-specific game plan.
+    - generic: Check the opponent report, then adjust only the dials or lineup you have a reason to change.
+```

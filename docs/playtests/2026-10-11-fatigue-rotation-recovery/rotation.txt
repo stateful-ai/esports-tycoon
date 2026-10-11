@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async (page) => { for(const id of ["apex","fa_0"]){const cell=page.getByRole("cell").filter({has:page.locator("[data-pid="+id+"]")});const row=page.getByRole("row").filter({has:cell});const b=row.getByRole("button",{name:id==="apex"?"★":"☆",exact:true});if(await row.count()!==1||await b.count()!==1)throw new Error("Ambiguous identity control "+id);await b.click();} const response=page.waitForResponse(r=>r.url().endsWith("/api/actions/lineup")&&r.request().method()==="POST");await page.getByRole("button",{name:"Save lineup",exact:true}).click();await response; })(page);
+```

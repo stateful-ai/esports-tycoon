@@ -1,0 +1,10 @@
+{
+  "offline": true,
+  "source_issues_reviewed": 51,
+  "added_player_map_rows": 1020,
+  "resolved_maps": 103,
+  "unresolved_maps": 9,
+  "fallback_joins": 525,
+  "code_sha256": "45ee39d63e5c891301fb5bdd227363ed9baa7e33321f42c8083e15bc36db0edf",
+  "source_rule": "Only exact match-team-logo + unique normalized local handle + same agent resolves differing source tags. Raw collection issues retained."
+}

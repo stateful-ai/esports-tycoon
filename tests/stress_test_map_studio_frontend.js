@@ -161,6 +161,7 @@ global.requestAnimationFrame = (callback) => {
 
 // Mock MapTransform
 global.MapTransform = require(path.join(__dirname, '../src/esports_sim/web/static/map-transform.js'));
+global.MapAuthoring = require(path.join(__dirname, '../src/esports_sim/web/static/map-authoring.js'));
 
 // Load map-studio.js
 const studioCode = fs.readFileSync(path.join(__dirname, '../src/esports_sim/web/static/map-studio.js'), 'utf8');
@@ -173,6 +174,11 @@ global.undo = undo;
 global.redo = redo;
 if (!global.updateInspector) global.updateInspector = updateInspector;
 global.pushState = pushState;
+global.createRoomRectangle = createRoomRectangle;
+global.createFloorExtension = createFloorExtension;
+global.updateFloorExtensions = updateFloorExtensions;
+global.movePoint = movePoint;
+global.moveElement = moveElement;
 global.requestErrorMessage = requestErrorMessage;
 global.openDeleteMapDialog = openDeleteMapDialog;
 global.deleteMapPermanently = deleteMapPermanently;
@@ -452,7 +458,45 @@ async function runTests() {
   assert.strictEqual(globalDocument.querySelector("#empty-state").classList.contains("hidden"), false);
   console.log("  [PASS] Typed confirmation sends the exact revision and resets the editor after deletion.");
 
-  console.log("\nAll 7 verification cases PASSED successfully!");
+  console.log("\n8. Testing room creation and coupled geometry edits...");
+  await global.openMap('ascent');
+  const beforeRoom = JSON.stringify(Editor.doc);
+  global.createRoomRectangle([40, 50], [30, 35]);
+  const room = Editor.doc.semantic_zones.at(-1);
+  const floor = Editor.doc.walkable_surfaces.at(-1);
+  assert.deepStrictEqual(room.surface_ids, [floor.id]);
+  assert.ok(MapAuthoring.isRectangle(floor.polygon));
+  assert.deepStrictEqual(room.polygon, floor.polygon);
+  global.movePoint('zone', Editor.doc.semantic_zones.length - 1, 0, -2, -3);
+  assert.ok(MapAuthoring.isRectangle(floor.polygon));
+  assert.deepStrictEqual(room.polygon, floor.polygon);
+  const oldLabel = [...room.label_position];
+  global.moveElement('zone', Editor.doc.semantic_zones.length - 1, 5, 2);
+  assert.deepStrictEqual(room.polygon, floor.polygon);
+  assert.deepStrictEqual(room.label_position, [oldLabel[0] + 5, oldLabel[1] + 2]);
+  global.undo(); global.undo(); global.undo();
+  assert.strictEqual(JSON.stringify(Editor.doc), beforeRoom);
+  console.log("  [PASS] Rectangle rooms create linked callouts; resizing/moving preserves their compile shape; undo restores the document.");
+  console.log("\n9. Testing connected floor extensions and comparison invalidation...");
+  const firstFloor = Editor.doc.walkable_surfaces[0];
+  const right = Math.max(...firstFloor.polygon.map(p => p[0]));
+  const bottom = Math.min(...firstFloor.polygon.map(p => p[1]));
+  Editor.selectedItem = {type:'surface',index:0,id:firstFloor.id};
+  const roomCount = Editor.doc.semantic_zones.length;
+  const corePolygon = JSON.stringify(firstFloor.polygon);
+  Editor.floorComparison = {outside:[],missing:[]};
+  global.createFloorExtension([right,bottom+2],[right+4,bottom+6]);
+  assert.deepStrictEqual(firstFloor.floor_extensions.at(-1),{x:right,y:bottom+2,w:4,h:4});
+  assert.strictEqual(JSON.stringify(firstFloor.polygon),corePolygon);
+  assert.strictEqual(Editor.doc.semantic_zones.length,roomCount);
+  assert.strictEqual(Editor.floorComparison,null);
+  const validExtensions = JSON.stringify(firstFloor.floor_extensions);
+  global.updateFloorExtensions('1, 2, -3, 4');
+  assert.strictEqual(JSON.stringify(firstFloor.floor_extensions),validExtensions);
+  global.undo();
+  assert.ok(!Editor.doc.walkable_surfaces[0].floor_extensions?.length);
+  console.log("  [PASS] Extensions preserve the navigation core, reject invalid sizes, clear stale comparisons, and undo cleanly.");
+  console.log("\nAll 9 verification cases PASSED successfully!");
 }
 
 runTests().catch(err => {

@@ -1,0 +1,38 @@
+[
+  {
+    "text": "",
+    "tag": "SPAN",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "text": "Talk",
+    "tag": "BUTTON",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "text": "Renew",
+    "tag": "BUTTON",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "text": "Release",
+    "tag": "BUTTON",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "text": "★",
+    "tag": "BUTTON",
+    "pid": null,
+    "inProfile": false
+  },
+  {
+    "text": "Vortex",
+    "tag": "BUTTON",
+    "pid": "vortex",
+    "inProfile": false
+  }
+]

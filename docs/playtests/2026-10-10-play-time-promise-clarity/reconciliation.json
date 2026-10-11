@@ -1,0 +1,217 @@
+{
+  "baseline_action_count": 43,
+  "end_action_count": 45,
+  "new_actions": [
+    {
+      "index": 43,
+      "season": 1,
+      "week": 9,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "flavor_choice",
+      "params": {
+        "choice_id": "team_first",
+        "event_id": "72b29241b2f60658"
+      },
+      "source": "web"
+    },
+    {
+      "index": 44,
+      "season": 1,
+      "week": 9,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "matched_decisions": 2,
+  "expected_accepted_decisions": 2,
+  "decision_coverage_percent": 100,
+  "action_prefix_unchanged": true,
+  "snapshots_before": {
+    "mgr_team_nexus": 8
+  },
+  "snapshots_after": {
+    "mgr_team_nexus": 9
+  },
+  "ui_retained_events": 78,
+  "ui_kinds": {
+    "session_start": 2,
+    "view": 7,
+    "visible_time": 57,
+    "attempt": 5,
+    "result": 5,
+    "session_end": 1,
+    "interaction": 1
+  },
+  "request_pairs": [
+    {
+      "session_id": "71fcda0632e7d0d5f5630203e42a2656",
+      "request_id": 4,
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "71fcda0632e7d0d5f5630203e42a2656",
+        "received_at": "2026-10-10T19:03:54.064472+00:00",
+        "world": null,
+        "team": null,
+        "season": null,
+        "week": null,
+        "kind": "attempt",
+        "target": "/api/join",
+        "request_id": 4
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "71fcda0632e7d0d5f5630203e42a2656",
+        "received_at": "2026-10-10T19:03:54.070192+00:00",
+        "world": null,
+        "team": null,
+        "season": null,
+        "week": null,
+        "kind": "result",
+        "target": "/api/join",
+        "request_id": 4,
+        "outcome": "http_error",
+        "status": 409,
+        "duration_ms": 6
+      }
+    },
+    {
+      "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+      "request_id": 14,
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:09:10.298124+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "attempt",
+        "target": "/api/actions/advance",
+        "request_id": 14
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:09:10.298124+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "result",
+        "target": "/api/actions/advance",
+        "request_id": 14,
+        "outcome": "http_error",
+        "status": 409,
+        "duration_ms": 5
+      }
+    },
+    {
+      "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+      "request_id": 21,
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:10:24.910755+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "attempt",
+        "target": "/api/actions/flavor_event",
+        "request_id": 21
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:10:24.910755+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "result",
+        "target": "/api/actions/flavor_event",
+        "request_id": 21,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 63
+      }
+    },
+    {
+      "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+      "request_id": 30,
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:11:05.146727+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 9,
+        "kind": "attempt",
+        "target": "/api/actions/advance",
+        "request_id": 30
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:11:29.606522+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 10,
+        "kind": "result",
+        "target": "/api/actions/advance",
+        "request_id": 30,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 34609
+      }
+    },
+    {
+      "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+      "request_id": 47,
+      "attempt": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:14:11.367643+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 10,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 47
+      },
+      "result": {
+        "schema_version": 1,
+        "session_id": "e29fda2367cb11af14927ff06a4f81ec",
+        "received_at": "2026-10-10T19:14:11.367643+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 10,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 47,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 49
+      }
+    }
+  ],
+  "unmatched_attempts": 0,
+  "unmatched_results": 0,
+  "usage_baseline_events": 0,
+  "source_save_sha256": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "source_save_unchanged": true,
+  "source_freeze_files": 545,
+  "source_freeze_current_matches": true,
+  "profile_open_view_events": 0,
+  "limitation": "Retained usage does not emit a distinct profile-open view. Bounded best-effort stream and visible-time slices do not prove exact attention, duration, or complete funnels."
+}

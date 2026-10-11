@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0231",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Served flavor title continuity",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "Cache overlay title remains attached to the resolved receipt; action response may retain fallback prose.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0232",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement save parity",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "Isolated cached-overlay browser choice yields byte-identical saved state to current-loader migration of the historical deterministic small_group result; raw historical schema differs.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0233",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor copy serving contract",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "State and action response can name the same event differently; acceptance must compare visible moment and settled receipt.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "pain-point"
+  }
+]

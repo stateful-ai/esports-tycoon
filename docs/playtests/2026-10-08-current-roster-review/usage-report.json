@@ -1,0 +1,44 @@
+{
+  "attempts": 3,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/release": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/release": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 4,
+    "view:club/squad": 2,
+    "view:dashboard": 4,
+    "view:lobby": 4,
+    "visible_time:club/squad": 1,
+    "visible_time:dashboard": 12,
+    "visible_time:lobby": 4
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "12643408f666cfc047a9f8fba92a4ef9": 2576,
+    "8acd7529d4e02eff98df7440d47562e8": 15001,
+    "d293b25c90f88ec54ca1fecba01f3401": 104914,
+    "f5b053811eba7bf197cdc912067a53cc": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/release:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 3,
+  "retention_bytes": 8388608,
+  "sessions": 4,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/squad": 1431,
+    "dashboard": 151734,
+    "lobby": 4640
+  },
+  "world_events": {
+    "JEB4V": 38
+  }
+}

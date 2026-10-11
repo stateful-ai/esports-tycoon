@@ -1,0 +1,710 @@
+### Page
+- Page URL: http://127.0.0.1:8525/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 22 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 1,880,533 cr
+      - button "Save" [ref=f1e1496] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "18"
+        - button "Match" [ref=f1e1421] [cursor=pointer]
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market 1" [ref=f1e1497] [cursor=pointer]:
+          - text: Market
+          - generic [ref=f1e1498]: "1"
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e1831]:
+        - generic [ref=f1e1832]:
+          - generic [ref=f1e1833]: Company
+          - generic [ref=f1e1834]:
+            - button "Finances" [ref=f1e1835] [cursor=pointer]
+            - button "Brand" [active] [ref=f1e1836] [cursor=pointer]
+        - generic [ref=f1e2083]:
+          - paragraph [ref=f1e2084]: Reach 2M · 333.9K fans
+          - generic [ref=f1e2085]:
+            - generic [ref=f1e2087]:
+              - heading "Feed" [level=2] [ref=f1e2088]
+              - generic [ref=f1e2089]:
+                - generic [ref=f1e2090]:
+                  - generic [ref=f1e2091]:
+                    - text: 📈
+                    - generic [ref=f1e2092]: OneTapDaily
+                    - generic [ref=f1e2093]: S1 W21
+                  - generic [ref=f1e2094]: Slice is not human. someone check the demo.
+                  - generic [ref=f1e2095]: ♥ 235.8K
+                - generic [ref=f1e2096]:
+                  - generic [ref=f1e2097]:
+                    - text: ⚡
+                    - generic [ref=f1e2098]: "@Karmawire"
+                    - generic [ref=f1e2099]: S1 W21
+                  - generic [ref=f1e2100]: gg. don't @ me.
+                  - generic [ref=f1e2101]: ♥ 73.5K
+                - generic [ref=f1e2102]:
+                  - generic [ref=f1e2103]:
+                    - text: ⚡
+                    - generic [ref=f1e2104]: OneTapDaily
+                    - generic [ref=f1e2105]: S1 W21
+                  - generic [ref=f1e2106]: RBG just took down SOL. The timeline is working overtime.
+                  - generic [ref=f1e2107]: ♥ 13.6K
+                - generic [ref=f1e2108]:
+                  - generic [ref=f1e2109]:
+                    - text: 🔥
+                    - generic [ref=f1e2110]: Round Eleven
+                    - generic [ref=f1e2111]: S1 W21
+                  - generic [ref=f1e2112]: Frostpulse cannot miss right now.
+                  - generic [ref=f1e2113]: ♥ 7.9K
+                - generic [ref=f1e2114]:
+                  - generic [ref=f1e2115]:
+                    - text: 🔥
+                    - generic [ref=f1e2116]: "@Nightwing"
+                    - generic [ref=f1e2117]: S1 W21
+                  - generic [ref=f1e2118]: Monday during split should be optional.
+                  - generic [ref=f1e2119]: ♥ 12.5K
+                - generic [ref=f1e2120]:
+                  - generic [ref=f1e2121]:
+                    - text: 🎉
+                    - generic [ref=f1e2122]: "@Zenith"
+                    - generic [ref=f1e2123]: S1 W21
+                  - generic [ref=f1e2124]: 1M? That does not feel real. Thank you.
+                  - generic [ref=f1e2125]: ♥ 74.8K
+                - generic [ref=f1e2126]:
+                  - generic [ref=f1e2127]:
+                    - text: 🎉
+                    - generic [ref=f1e2128]: "@Driftstrike"
+                    - generic [ref=f1e2129]: S1 W21
+                  - generic [ref=f1e2130]: 100K of you now. Still processing it.
+                  - generic [ref=f1e2131]: ♥ 5.4K
+                - generic [ref=f1e2132]:
+                  - generic [ref=f1e2133]:
+                    - text: 🎉
+                    - generic [ref=f1e2134]: "@Slice"
+                    - generic [ref=f1e2135]: S1 W21
+                  - generic [ref=f1e2136]: 1M? That does not feel real. Thank you.
+                  - generic [ref=f1e2137]: ♥ 48.7K
+                - generic [ref=f1e2138]:
+                  - generic [ref=f1e2139]:
+                    - text: 🏁
+                    - generic [ref=f1e2140]: "@NXS"
+                    - generic [ref=f1e2141]: S1 W21
+                  - generic [ref=f1e2142]: "Not enough this week: 1-2 vs @VGD. VOD first thing Monday."
+                  - generic [ref=f1e2143]: ♥ 13.7K
+                - generic [ref=f1e2144]:
+                  - generic [ref=f1e2145]:
+                    - text: 🔥
+                    - generic [ref=f1e2146]: Round Eleven
+                    - generic [ref=f1e2147]: S1 W21
+                  - generic [ref=f1e2148]: "Player of the Week: Slice — 1.51 rating across 3 maps."
+                  - generic [ref=f1e2149]: ♥ 132.9K
+                - generic [ref=f1e2150]:
+                  - generic [ref=f1e2151]:
+                    - text: ⚡
+                    - generic [ref=f1e2152]: "@Frostbyte"
+                    - generic [ref=f1e2153]: S1 W21
+                  - generic [ref=f1e2154]: I said what I said.
+                  - generic [ref=f1e2155]: ♥ 4.5K
+                - generic [ref=f1e2156]:
+                  - generic [ref=f1e2157]:
+                    - text: 📈
+                    - generic [ref=f1e2158]: OneTapDaily
+                    - generic [ref=f1e2159]: S1 W21
+                  - generic [ref=f1e2160]: That Driftstrike clip is everywhere.
+                  - generic [ref=f1e2161]: ♥ 17.8K
+                - generic [ref=f1e2162]:
+                  - generic [ref=f1e2163]:
+                    - text: 📈
+                    - generic [ref=f1e2164]: OneTapDaily
+                    - generic [ref=f1e2165]: S1 W21
+                  - generic [ref=f1e2166]: That Hollowcore clip is everywhere.
+                  - generic [ref=f1e2167]: ♥ 7.5K
+                - generic [ref=f1e2168]:
+                  - generic [ref=f1e2169]:
+                    - text: 📈
+                    - generic [ref=f1e2170]: OneTapDaily
+                    - generic [ref=f1e2171]: S1 W20
+                  - generic [ref=f1e2172]: Apex is not human. someone check the demo.
+                  - generic [ref=f1e2173]: ♥ 52.9K
+                - generic [ref=f1e2174]:
+                  - generic [ref=f1e2175]:
+                    - text: ⚡
+                    - generic [ref=f1e2176]: "@Nightghost"
+                    - generic [ref=f1e2177]: S1 W20
+                  - generic [ref=f1e2178]: Anti-strat did not travel today.
+                  - generic [ref=f1e2179]: ♥ 41.6K
+                - generic [ref=f1e2180]:
+                  - generic [ref=f1e2181]:
+                    - text: 🔥
+                    - generic [ref=f1e2182]: Round Eleven
+                    - generic [ref=f1e2183]: S1 W20
+                  - generic [ref=f1e2184]: Pulse cannot miss right now.
+                  - generic [ref=f1e2185]: ♥ 112K
+                - generic [ref=f1e2186]:
+                  - generic [ref=f1e2187]:
+                    - text: 🔥
+                    - generic [ref=f1e2188]: "@Karmawire"
+                    - generic [ref=f1e2189]: S1 W20
+                  - generic [ref=f1e2190]: can't say much about scrims. can say we have film.
+                  - generic [ref=f1e2191]: ♥ 44.4K
+                - generic [ref=f1e2192]:
+                  - generic [ref=f1e2193]:
+                    - text: 🏁
+                    - generic [ref=f1e2194]: "@NXS"
+                    - generic [ref=f1e2195]: S1 W20
+                  - generic [ref=f1e2196]: "Series secured: 2-0 over @TD6."
+                  - generic [ref=f1e2197]: ♥ 18K
+                - generic [ref=f1e2198]:
+                  - generic [ref=f1e2199]:
+                    - text: 🔥
+                    - generic [ref=f1e2200]: Round Eleven
+                    - generic [ref=f1e2201]: S1 W20
+                  - generic [ref=f1e2202]: "Player of the Week: Vortex — 1.60 rating across 2 maps."
+                  - generic [ref=f1e2203]: ♥ 47.3K
+                - generic [ref=f1e2204]:
+                  - generic [ref=f1e2205]:
+                    - text: 📈
+                    - generic [ref=f1e2206]: OneTapDaily
+                    - generic [ref=f1e2207]: S1 W20
+                  - generic [ref=f1e2208]: That Pulse clip is everywhere.
+                  - generic [ref=f1e2209]: ♥ 161.5K
+                - generic [ref=f1e2210]:
+                  - generic [ref=f1e2211]:
+                    - text: ⚡
+                    - generic [ref=f1e2212]: "@Crimwolf"
+                    - generic [ref=f1e2213]: S1 W20
+                  - generic [ref=f1e2214]: I said what I said.
+                  - generic [ref=f1e2215]: ♥ 1.2K
+                - generic [ref=f1e2216]:
+                  - generic [ref=f1e2217]:
+                    - text: ⚡
+                    - generic [ref=f1e2218]: "@Jinxzero"
+                    - generic [ref=f1e2219]: S1 W20
+                  - generic [ref=f1e2220]: I said what I said.
+                  - generic [ref=f1e2221]: ♥ 7.8K
+                - generic [ref=f1e2222]:
+                  - generic [ref=f1e2223]:
+                    - text: 📈
+                    - generic [ref=f1e2224]: OneTapDaily
+                    - generic [ref=f1e2225]: S1 W20
+                  - generic [ref=f1e2226]: That Riftstorm clip is everywhere.
+                  - generic [ref=f1e2227]: ♥ 4.1K
+                - generic [ref=f1e2228]:
+                  - generic [ref=f1e2229]:
+                    - text: ⚡
+                    - generic [ref=f1e2230]: "@Karmawire"
+                    - generic [ref=f1e2231]: S1 W19
+                  - generic [ref=f1e2232]: deleting the first draft of the VOD notes. starting over.
+                  - generic [ref=f1e2233]: ♥ 141.6K
+                - generic [ref=f1e2234]:
+                  - generic [ref=f1e2235]:
+                    - text: 🔥
+                    - generic [ref=f1e2236]: Round Eleven
+                    - generic [ref=f1e2237]: S1 W19
+                  - generic [ref=f1e2238]: Slice cannot miss right now.
+                  - generic [ref=f1e2239]: ♥ 95K
+                - generic [ref=f1e2240]:
+                  - generic [ref=f1e2241]:
+                    - text: 🔥
+                    - generic [ref=f1e2242]: Round Eleven
+                    - generic [ref=f1e2243]: S1 W19
+                  - generic [ref=f1e2244]: Karmawire cannot miss right now.
+                  - generic [ref=f1e2245]: ♥ 39.1K
+                - generic [ref=f1e2246]:
+                  - generic [ref=f1e2247]:
+                    - text: 🔥
+                    - generic [ref=f1e2248]: "@Karmahawk"
+                    - generic [ref=f1e2249]: S1 W19
+                  - generic [ref=f1e2250]: Monday during split should be optional.
+                  - generic [ref=f1e2251]: ♥ 70K
+                - generic [ref=f1e2252]:
+                  - generic [ref=f1e2253]:
+                    - text: 🔥
+                    - generic [ref=f1e2254]: Round Eleven
+                    - generic [ref=f1e2255]: S1 W19
+                  - generic [ref=f1e2256]: "Player of the Week: Slice — 1.32 rating across 5 maps."
+                  - generic [ref=f1e2257]: ♥ 137.6K
+                - generic [ref=f1e2258]:
+                  - generic [ref=f1e2259]:
+                    - text: 📈
+                    - generic [ref=f1e2260]: OneTapDaily
+                    - generic [ref=f1e2261]: S1 W19
+                  - generic [ref=f1e2262]: That Nightecho clip is everywhere.
+                  - generic [ref=f1e2263]: ♥ 683
+                - generic [ref=f1e2264]:
+                  - generic [ref=f1e2265]:
+                    - text: ⚡
+                    - generic [ref=f1e2266]: "@Hollowwire"
+                    - generic [ref=f1e2267]: S1 W19
+                  - generic [ref=f1e2268]: I said what I said.
+                  - generic [ref=f1e2269]: ♥ 5.5K
+                - generic [ref=f1e2270]:
+                  - generic [ref=f1e2271]:
+                    - text: 📈
+                    - generic [ref=f1e2272]: OneTapDaily
+                    - generic [ref=f1e2273]: S1 W19
+                  - generic [ref=f1e2274]: That Voltblade clip is everywhere.
+                  - generic [ref=f1e2275]: ♥ 34.8K
+                - generic [ref=f1e2276]:
+                  - generic [ref=f1e2277]:
+                    - text: 📈
+                    - generic [ref=f1e2278]: OneTapDaily
+                    - generic [ref=f1e2279]: S1 W18
+                  - generic [ref=f1e2280]: Slice is not human. someone check the demo.
+                  - generic [ref=f1e2281]: ♥ 179.5K
+                - generic [ref=f1e2282]:
+                  - generic [ref=f1e2283]:
+                    - text: ⚡
+                    - generic [ref=f1e2284]: "@Karmahawk"
+                    - generic [ref=f1e2285]: S1 W18
+                  - generic [ref=f1e2286]: That series stays in the VOD room.
+                  - generic [ref=f1e2287]: ♥ 92.7K
+                - generic [ref=f1e2288]:
+                  - generic [ref=f1e2289]:
+                    - text: 🔥
+                    - generic [ref=f1e2290]: Round Eleven
+                    - generic [ref=f1e2291]: S1 W18
+                  - generic [ref=f1e2292]: Pulse cannot miss right now.
+                  - generic [ref=f1e2293]: ♥ 105.4K
+                - generic [ref=f1e2294]:
+                  - generic [ref=f1e2295]:
+                    - text: 🔥
+                    - generic [ref=f1e2296]: Round Eleven
+                    - generic [ref=f1e2297]: S1 W18
+                  - generic [ref=f1e2298]: Frostpulse cannot miss right now.
+                  - generic [ref=f1e2299]: ♥ 8.9K
+                - generic [ref=f1e2300]:
+                  - generic [ref=f1e2301]:
+                    - text: 🔥
+                    - generic [ref=f1e2302]: Round Eleven
+                    - generic [ref=f1e2303]: S1 W18
+                  - generic [ref=f1e2304]: Grimwing cannot miss right now.
+                  - generic [ref=f1e2305]: ♥ 14.8K
+                - generic [ref=f1e2306]:
+                  - generic [ref=f1e2307]:
+                    - text: 🔥
+                    - generic [ref=f1e2308]: Round Eleven
+                    - generic [ref=f1e2309]: S1 W18
+                  - generic [ref=f1e2310]: Hollowwing cannot miss right now.
+                  - generic [ref=f1e2311]: ♥ 8.4K
+                - generic [ref=f1e2312]:
+                  - generic [ref=f1e2313]:
+                    - text: 🔥
+                    - generic [ref=f1e2314]: "@Slice"
+                    - generic [ref=f1e2315]: S1 W18
+                  - generic [ref=f1e2316]: Monday during split should be optional.
+                  - generic [ref=f1e2317]: ♥ 25K
+                - generic [ref=f1e2318]:
+                  - generic [ref=f1e2319]:
+                    - text: 🎉
+                    - generic [ref=f1e2320]: "@Warden"
+                    - generic [ref=f1e2321]: S1 W18
+                  - generic [ref=f1e2322]: 1M? That does not feel real. Thank you.
+                  - generic [ref=f1e2323]: ♥ 26.3K
+                - generic [ref=f1e2324]:
+                  - generic [ref=f1e2325]:
+                    - text: 🎉
+                    - generic [ref=f1e2326]: "@Slyblade"
+                    - generic [ref=f1e2327]: S1 W18
+                  - generic [ref=f1e2328]: Hit 250K. Appreciate every one of you.
+                  - generic [ref=f1e2329]: ♥ 17.2K
+            - generic [ref=f1e2330]:
+              - generic [ref=f1e2331]:
+                - heading "Your reach" [level=2] [ref=f1e2332]
+                - generic [ref=f1e2333]:
+                  - generic [ref=f1e2334]: roster reach 2M
+                  - generic [ref=f1e2335]: org fans 333.9K
+                  - generic [ref=f1e2336]: fanbase neutral (49)
+                - generic [ref=f1e2337]:
+                  - generic [ref=f1e2338]: ↗
+                  - generic [ref=f1e2339]:
+                    - generic [ref=f1e2340]: Streamer revenue
+                    - generic [ref=f1e2341]: 8,832 cr/wk
+                    - generic [ref=f1e2342]: direct weekly org income
+                - paragraph [ref=f1e2343]: Reach feeds sponsor marketability; streaming pays the org a cut (heavy streamers develop slower — rein one in with a 1:1); the crowd's mood leaks into the locker room, and brands read the room too.
+                - text: Your streamers
+                - generic [ref=f1e2344]:
+                  - generic [ref=f1e2345]:
+                    - generic [ref=f1e2346]: Vortex
+                    - text: 653.6K · 3,435 cr/wk
+                  - generic [ref=f1e2347]:
+                    - generic [ref=f1e2348]: Apex
+                    - text: 388.1K · 1,809 cr/wk
+                  - generic [ref=f1e2349]:
+                    - generic [ref=f1e2350]: Echo
+                    - text: 356.5K · 1,610 cr/wk
+                  - generic [ref=f1e2351]:
+                    - generic [ref=f1e2352]: Slyblade
+                    - text: 256.1K · 1,015 cr/wk
+                  - generic [ref=f1e2353]:
+                    - generic [ref=f1e2354]: Ghost
+                    - text: 222.5K · 834 cr/wk
+                  - generic [ref=f1e2355]:
+                    - generic [ref=f1e2356]: Hollowlock
+                    - text: 73.5K · 129 cr/wk
+              - generic [ref=f1e2357]:
+                - heading "Fanbase mood" [level=2] [ref=f1e2358]
+                - table [ref=f1e2359]:
+                  - rowgroup [ref=f1e2360]:
+                    - row [ref=f1e2361]:
+                      - columnheader "Team" [ref=f1e2362] [cursor=pointer]
+                      - columnheader "Mood" [ref=f1e2363] [cursor=pointer]
+                  - rowgroup [ref=f1e2364]:
+                    - row [ref=f1e2365]:
+                      - cell "Team Vanguard VGD" [ref=f1e2366]:
+                        - generic [ref=f1e2367]: Team Vanguard
+                        - generic [ref=f1e2368]: VGD
+                      - cell "64 warm" [ref=f1e2369]
+                    - row [ref=f1e2370]:
+                      - cell "Rust Belt Gaming RBG" [ref=f1e2371]:
+                        - generic [ref=f1e2372]: Rust Belt Gaming
+                        - generic [ref=f1e2373]: RBG
+                      - cell "55 neutral" [ref=f1e2374]
+                    - row [ref=f1e2375]:
+                      - cell "Harbour City Nine HC9" [ref=f1e2376]:
+                        - generic [ref=f1e2377]: Harbour City Nine
+                        - generic [ref=f1e2378]: HC9
+                      - cell "54 neutral" [ref=f1e2379]
+                    - row [ref=f1e2380]:
+                      - cell "Solar Flare SOL" [ref=f1e2381]:
+                        - generic [ref=f1e2382]: Solar Flare
+                        - generic [ref=f1e2383]: SOL
+                      - cell "51 neutral" [ref=f1e2384]
+                    - row [ref=f1e2385]:
+                      - cell "Saracen Guard SRG" [ref=f1e2386]:
+                        - generic [ref=f1e2387]: Saracen Guard
+                        - generic [ref=f1e2388]: SRG
+                      - cell "51 neutral" [ref=f1e2389]
+                    - row [ref=f1e2390]:
+                      - cell "Meridian Cross MRC" [ref=f1e2391]:
+                        - generic [ref=f1e2392]: Meridian Cross
+                        - generic [ref=f1e2393]: MRC
+                      - cell "47 neutral" [ref=f1e2394]
+                    - row [ref=f1e2395]:
+                      - cell "Tokyo Drift Six TD6" [ref=f1e2396]:
+                        - generic [ref=f1e2397]: Tokyo Drift Six
+                        - generic [ref=f1e2398]: TD6
+                      - cell "47 neutral" [ref=f1e2399]
+                    - row [ref=f1e2400]:
+                      - cell "Coral Sea Drakes CSD" [ref=f1e2401]:
+                        - generic [ref=f1e2402]: Coral Sea Drakes
+                        - generic [ref=f1e2403]: CSD
+                      - cell "46 neutral" [ref=f1e2404]
+              - generic [ref=f1e2405]:
+                - heading "Most followed" [level=2] [ref=f1e2406]
+                - table [ref=f1e2407]:
+                  - rowgroup [ref=f1e2408]:
+                    - row [ref=f1e2409]:
+                      - columnheader "#" [ref=f1e2410] [cursor=pointer]
+                      - columnheader "Player" [ref=f1e2411] [cursor=pointer]
+                      - columnheader "Team" [ref=f1e2412] [cursor=pointer]
+                      - columnheader "Followers" [ref=f1e2413] [cursor=pointer]
+                  - rowgroup [ref=f1e2414]:
+                    - row [ref=f1e2415]:
+                      - cell "1" [ref=f1e2416]
+                      - cell "Wraithsurge" [ref=f1e2417]
+                      - cell "MRC" [ref=f1e2419]
+                      - cell "1.4M" [ref=f1e2420]
+                    - row [ref=f1e2421]:
+                      - cell "2" [ref=f1e2422]
+                      - cell "Warden" [ref=f1e2423]
+                      - cell "VGD" [ref=f1e2425]
+                      - cell "1.1M" [ref=f1e2426]
+                    - row [ref=f1e2427]:
+                      - cell "3" [ref=f1e2428]
+                      - cell "Slice" [ref=f1e2429]
+                      - cell "VGD" [ref=f1e2431]
+                      - cell "1M" [ref=f1e2432]
+                    - row [ref=f1e2433]:
+                      - cell "4" [ref=f1e2434]
+                      - cell "Zenith" [ref=f1e2435]
+                      - cell "VGD" [ref=f1e2437]
+                      - cell "1M" [ref=f1e2438]
+                    - row [ref=f1e2439]:
+                      - cell "5" [ref=f1e2440]
+                      - cell "Karmawire" [ref=f1e2441]
+                      - cell "SOL" [ref=f1e2443]
+                      - cell "979K" [ref=f1e2444]
+                    - row [ref=f1e2445]:
+                      - cell "6" [ref=f1e2446]
+                      - cell "Shade" [ref=f1e2447]
+                      - cell "VGD" [ref=f1e2449]
+                      - cell "912.2K" [ref=f1e2450]
+                    - row [ref=f1e2451]:
+                      - cell "7" [ref=f1e2452]
+                      - cell "Karmahawk" [ref=f1e2453]
+                      - cell "ADS" [ref=f1e2455]
+                      - cell "909.4K" [ref=f1e2456]
+                    - row [ref=f1e2457]:
+                      - cell "8" [ref=f1e2458]
+                      - cell "Pulse" [ref=f1e2459]
+                      - cell "VGD" [ref=f1e2461]
+                      - cell "888.1K" [ref=f1e2462]
+                    - row [ref=f1e2463]:
+                      - cell "9" [ref=f1e2464]
+                      - cell "Vortex" [ref=f1e2465]
+                      - cell "NXS" [ref=f1e2467]
+                      - cell "653.6K" [ref=f1e2468]
+                    - row [ref=f1e2469]:
+                      - cell "10" [ref=f1e2470]
+                      - cell "Riftbyte" [ref=f1e2471]
+                      - cell "HC9" [ref=f1e2473]
+                      - cell "590K" [ref=f1e2474]
+                    - row [ref=f1e2475]:
+                      - cell "11" [ref=f1e2476]
+                      - cell "Crimghost" [ref=f1e2477]
+                      - cell "SRG" [ref=f1e2479]
+                      - cell "542.9K" [ref=f1e2480]
+                    - row [ref=f1e2481]:
+                      - cell "12" [ref=f1e2482]
+                      - cell "Nightwing" [ref=f1e2483]
+                      - cell "ALE" [ref=f1e2485]
+                      - cell "534.2K" [ref=f1e2486]
+                    - row [ref=f1e2487]:
+                      - cell "13" [ref=f1e2488]
+                      - cell "Nightghost" [ref=f1e2489]
+                      - cell "CSD" [ref=f1e2491]
+                      - cell "494.6K" [ref=f1e2492]
+                    - row [ref=f1e2493]:
+                      - cell "14" [ref=f1e2494]
+                      - cell "Emberveil" [ref=f1e2495]
+                      - cell "ADS" [ref=f1e2497]
+                      - cell "442.2K" [ref=f1e2498]
+                    - row [ref=f1e2499]:
+                      - cell "15" [ref=f1e2500]
+                      - cell "Falconghost" [ref=f1e2501]
+                      - cell "MRC" [ref=f1e2503]
+                      - cell "416.9K" [ref=f1e2504]
+              - generic [ref=f1e2505]:
+                - heading "Movement tracker" [level=2] [ref=f1e2506]
+                - paragraph [ref=f1e2507]: Every move in the league, newest first — watch what rival orgs are doing.
+                - generic [ref=f1e2509]:
+                  - generic [ref=f1e2510]:
+                    - generic [ref=f1e2511]: renewal
+                    - text: S1·W21
+                    - generic [ref=f1e2512]: SDP
+                    - text: Riftstrike re-signs with Seoul Dynasty Prime.
+                  - generic [ref=f1e2513]:
+                    - generic [ref=f1e2514]: renewal
+                    - text: S1·W21
+                    - generic [ref=f1e2515]: PSU
+                    - text: Ashsnap re-signs with Patagonia Sur.
+                  - generic [ref=f1e2516]:
+                    - generic [ref=f1e2517]: renewal
+                    - text: S1·W21
+                    - generic [ref=f1e2518]: BLM
+                    - text: Cipherstrike re-signs with Baltic Meridian.
+                  - generic [ref=f1e2519]:
+                    - generic [ref=f1e2520]: renewal
+                    - text: S1·W20
+                    - generic [ref=f1e2521]: RBG
+                    - text: Havocrush re-signs with Rust Belt Gaming.
+                  - generic [ref=f1e2522]:
+                    - generic [ref=f1e2523]: renewal
+                    - text: S1·W19
+                    - generic [ref=f1e2524]: IRP
+                    - text: Cipherlock re-signs with Iron Pact.
+                  - generic [ref=f1e2525]:
+                    - generic [ref=f1e2526]: renewal
+                    - text: S1·W18
+                    - generic [ref=f1e2527]: NFR
+                    - text: Riftlock re-signs with Nordic Frost.
+                  - generic [ref=f1e2528]:
+                    - generic [ref=f1e2529]: renewal
+                    - text: S1·W18
+                    - generic [ref=f1e2530]: HKD
+                    - text: Slystorm re-signs with Hokkaido Drift.
+                  - generic [ref=f1e2531]:
+                    - generic [ref=f1e2532]: renewal
+                    - text: S1·W18
+                    - generic [ref=f1e2533]: BWV
+                    - text: Lunarhawk re-signs with Berlin Wolves.
+                  - generic [ref=f1e2534]:
+                    - generic [ref=f1e2535]: renewal
+                    - text: S1·W17
+                    - generic [ref=f1e2536]: PRS
+                    - text: Riftsnap re-signs with Prairie Signal.
+                  - generic [ref=f1e2537]:
+                    - generic [ref=f1e2538]: renewal
+                    - text: S1·W17
+                    - generic [ref=f1e2539]: MKV
+                    - text: Frostzero re-signs with Mekong Vipers.
+                  - generic [ref=f1e2540]:
+                    - generic [ref=f1e2541]: renewal
+                    - text: S1·W17
+                    - generic [ref=f1e2542]: IRP
+                    - text: Pyromark re-signs with Iron Pact.
+                  - generic [ref=f1e2543]:
+                    - generic [ref=f1e2544]: renewal
+                    - text: S1·W17
+                    - generic [ref=f1e2545]: HKD
+                    - text: Frostbyte re-signs with Hokkaido Drift.
+                  - generic [ref=f1e2546]:
+                    - generic [ref=f1e2547]: renewal
+                    - text: S1·W17
+                    - generic [ref=f1e2548]: BWV
+                    - text: Hollowveil re-signs with Berlin Wolves.
+                  - generic [ref=f1e2549]:
+                    - generic [ref=f1e2550]: renewal
+                    - text: S1·W16
+                    - generic [ref=f1e2551]: VGD
+                    - text: Slice re-signs with Team Vanguard.
+                  - generic [ref=f1e2552]:
+                    - generic [ref=f1e2553]: renewal
+                    - text: S1·W16
+                    - generic [ref=f1e2554]: TD6
+                    - text: Staticstrike re-signs with Tokyo Drift Six.
+                  - generic [ref=f1e2555]:
+                    - generic [ref=f1e2556]: renewal
+                    - text: S1·W16
+                    - generic [ref=f1e2557]: MRC
+                    - text: Slystep re-signs with Meridian Cross.
+                  - generic [ref=f1e2558]:
+                    - generic [ref=f1e2559]: renewal
+                    - text: S1·W15
+                    - generic [ref=f1e2560]: TD6
+                    - text: Ciphersurge re-signs with Tokyo Drift Six.
+                  - generic [ref=f1e2561]:
+                    - generic [ref=f1e2562]: renewal
+                    - text: S1·W15
+                    - generic [ref=f1e2563]: IRP
+                    - text: Neoveil re-signs with Iron Pact.
+                  - generic [ref=f1e2564]:
+                    - generic [ref=f1e2565]: renewal
+                    - text: S1·W14
+                    - generic [ref=f1e2566]: BWV
+                    - text: Falconzero re-signs with Berlin Wolves.
+                  - generic [ref=f1e2567]:
+                    - generic [ref=f1e2568]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2569]: SOL
+                    - text: Karmawire re-signs with Solar Flare.
+                  - generic [ref=f1e2570]:
+                    - generic [ref=f1e2571]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2572]: HL9
+                    - text: Driftrush re-signs with Highlands Nine.
+                  - generic [ref=f1e2573]:
+                    - generic [ref=f1e2574]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2575]: GST
+                    - text: Karmasnap re-signs with Gallic Storm.
+                  - generic [ref=f1e2576]:
+                    - generic [ref=f1e2577]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2578]: CRO
+                    - text: Havocfade re-signs with Crimson Order.
+                  - generic [ref=f1e2579]:
+                    - generic [ref=f1e2580]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2581]: CSY
+                    - text: Karmaveil re-signs with Cascadia Youth.
+                  - generic [ref=f1e2582]:
+                    - generic [ref=f1e2583]: renewal
+                    - text: S1·W13
+                    - generic [ref=f1e2584]: BLM
+                    - text: Frostlock re-signs with Baltic Meridian.
+                  - generic [ref=f1e2585]:
+                    - generic [ref=f1e2586]: renewal
+                    - text: S1·W12
+                    - generic [ref=f1e2587]: CRO
+                    - text: Falconlock re-signs with Crimson Order.
+                  - generic [ref=f1e2588]:
+                    - generic [ref=f1e2589]: renewal
+                    - text: S1·W12
+                    - generic [ref=f1e2590]: CSD
+                    - text: Lunarhawk re-signs with Coral Sea Drakes.
+                  - generic [ref=f1e2591]:
+                    - generic [ref=f1e2592]: renewal
+                    - text: S1·W12
+                    - generic [ref=f1e2593]: BST
+                    - text: Neowire re-signs with Busan Tempest.
+                  - generic [ref=f1e2594]:
+                    - generic [ref=f1e2595]: renewal
+                    - text: S1·W12
+                    - generic [ref=f1e2596]: BLM
+                    - text: Karmafade re-signs with Baltic Meridian.
+                  - generic [ref=f1e2597]:
+                    - generic [ref=f1e2598]: renewal
+                    - text: S1·W12
+                    - generic [ref=f1e2599]: APX
+                    - text: Nightdash re-signs with Apex Syndicate.
+                  - generic [ref=f1e2600]:
+                    - generic [ref=f1e2601]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2602]: TD6
+                    - text: Falconzero re-signs with Tokyo Drift Six.
+                  - generic [ref=f1e2603]:
+                    - generic [ref=f1e2604]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2605]: SRG
+                    - text: Staticstorm re-signs with Saracen Guard.
+                  - generic [ref=f1e2606]:
+                    - generic [ref=f1e2607]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2608]: KRK
+                    - text: Nightecho re-signs with Kraken Unit.
+                  - generic [ref=f1e2609]:
+                    - generic [ref=f1e2610]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2611]: IRP
+                    - text: Ciphermark re-signs with Iron Pact.
+                  - generic [ref=f1e2612]:
+                    - generic [ref=f1e2613]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2614]: BST
+                    - text: Hollowwire re-signs with Busan Tempest.
+                  - generic [ref=f1e2615]:
+                    - generic [ref=f1e2616]: renewal
+                    - text: S1·W11
+                    - generic [ref=f1e2617]: ADS
+                    - text: Karmahawk re-signs with Adriatic Sirens.
+                  - generic [ref=f1e2618]:
+                    - generic [ref=f1e2619]: renewal
+                    - text: S1·W10
+                    - generic [ref=f1e2620]: OBS
+                    - text: Nightlock re-signs with Outback Sentinels.
+                  - generic [ref=f1e2621]:
+                    - generic [ref=f1e2622]: renewal
+                    - text: S1·W10
+                    - generic [ref=f1e2623]: BWV
+                    - text: Ashpulse re-signs with Berlin Wolves.
+                  - generic [ref=f1e2624]:
+                    - generic [ref=f1e2625]: renewal
+                    - text: S1·W10
+                    - generic [ref=f1e2626]: ADS
+                    - text: Ironbyte re-signs with Adriatic Sirens.
+                  - generic [ref=f1e2627]:
+                    - generic [ref=f1e2628]: renewal
+                    - text: S1·W9
+                    - generic [ref=f1e2629]: GHL
+                    - text: Nightflare re-signs with Ghostline.
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Company
+    - generic: Keep the club solvent while growing sponsors, supporters, reach, and public sentiment.
+    - generic: Check weekly net cash flow before accepting costs, then review sponsor demands and brand momentum.
+```

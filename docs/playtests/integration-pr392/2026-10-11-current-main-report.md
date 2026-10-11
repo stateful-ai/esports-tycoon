@@ -1,0 +1,11 @@
+# PR392 current-main integration qualification - 2026-10-11
+
+PR392 original head `f63dbd11a02b2b994c72a9657d18ee037a53e85b` was merged normally with exact main `df9b105f7f79fa54357c677e835cf965cf2235cb` after PR384. Integration merge `229529dd47ff4c2d3f32714134b43b8cd4b588fd` has those two parents, in that order. The only conflict was `.gitattributes`; resolution retains the research whitespace rule and unions gap37 and away-recap exact-byte receipt rules. No source conflict required judgment.
+
+The [machine-readable proof](2026-10-11-current-main-proof.json) inventories exact Git blobs and raw-file SHA256s. The original narrative and regression-test patch is byte-identical against current main. All 2,003 main historical playtest paths retain exact blobs; all 29 original away-recap paths retain exact blobs; all 24 published receipt mappings retain recorded raw lengths, SHA256s and Git IDs. No original dated proof was rewritten.
+
+Canonical `docs/playtests/actions.csv` remains 994 rows and exact bytes: Git and dedicated worktree raw SHA256 `21026ae7ac34bc51cdfc045f754821a46a5b6f8937821d3d2ee3950f57985631`. All five original away-recap session/step rows occur exactly once in that actual main canonical CSV and match all 21 fields. The primary checkout's current raw CSV already has later rows; the canonical994 byte prefix is preserved there. The proof explicitly distinguishes that later primary raw snapshot from the canonical Git and dedicated worktree bytes.
+
+This is source and evidence integration qualification only. No local tests, Node/syntax commands, simulation, gameplay, or analytics scripts were launched. Fresh CI and independent review are required on the new published head. Prior browser acceptance remains limited to the reproduced away BO1 win; historical limitations remain in the original report. A broad staged whitespace check flagged inherited main CRLF receipt lines; exact historical blobs were preserved. The current-main source/attributes/new proof diff is checked separately, without modifying those inherited receipts.
+
+The companion proof records the exact merge commit. Its subsequent documentation commit adds only this report and the companion JSON, so its own commit ID is supplied in the PR body and remote readback rather than self-referenced inside its content.

@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:8552/api/actions/flavor_event",
+  "status": 200,
+  "body": {
+    "ok": true,
+    "message": "The answer lands as composed and the room settles."
+  }
+}
