@@ -26,6 +26,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 from urllib.error import URLError
@@ -346,6 +347,33 @@ class PlaytestSession:
         if self._page is None:
             raise RuntimeError("session is not started; call start() first")
         return self._page
+
+    @contextmanager
+    def isolated_page(self):  # noqa: ANN201 - Playwright type, not imported here
+        """A throwaway page in its OWN context, for DOM-level assertions.
+
+        Tests that exercise an injected script against hand-built markup need
+        a page they can scribble on without touching the live campaign the
+        other tests read. `self.page` is the browser's OWNER page, so
+        `self.page.context.new_page()` raises "Please use
+        browser.new_context()" -- a regression test written that way cannot
+        run at all, which is how three of them reached this branch failing.
+
+        Yields the page and disposes of the whole context afterwards, so no
+        state leaks back into the shared session.
+        """
+        if self._browser is None:
+            raise RuntimeError("session is not started; call start() first")
+        context = self._browser.new_context(
+            viewport={"width": self.width, "height": self.height}
+        )
+        try:
+            yield context.new_page()
+        finally:
+            try:
+                context.close()
+            except Exception:  # noqa: BLE001 - teardown must not mask a failure
+                pass
 
     def _settle(self, ms: int = 700) -> None:
         """Let the app finish its fetch-and-render cycle before we look."""
@@ -702,15 +730,33 @@ class PlaytestSession:
                 break
             page.wait_for_timeout(500)
         after = self._context()
-        if not before or not after or after == before or busy:
+        # The week moving is the only thing that decides success. An earlier
+        # version also failed when `busy` was still set, which conflated two
+        # different facts: the reveal overlay is dismissed BY THE PLAYER, so
+        # it legitimately outlives the tick, and a perfectly good advance
+        # (week 1 -> 2, HTTP 200) was reported as "the week did not move —
+        # still 'Week 2'". That message contradicted itself and cost a real
+        # debugging session chasing a product bug that did not exist.
+        moved = bool(before) and bool(after) and after != before
+        if not moved:
+            detail = (
+                f"still {after!r}" if after else "the screen reports no week at all"
+            )
+            if busy:
+                detail += " (the week overlay never cleared, so the tick may still be running)"
             return self.observe(
                 "advance_week", ok=False,
                 message=(
-                    f"the week did not move — still {after!r}. Something is blocking the "
+                    f"the week did not move — {detail}. Something is blocking the "
                     "advance (an open overlay, or a decision the game is waiting on)."
                 ),
             )
-        return self.observe("advance_week", message=f"{before or '?'} -> {after or '?'}")
+        message = f"{before} -> {after}"
+        if busy:
+            # Worth saying out loud: the reveal is the week's results, so an
+            # agent should read it, and every later click needs it closed.
+            message += " (the week reveal is still open — read it, then `close`)"
+        return self.observe("advance_week", message=message)
 
     def read_api(self, path: str) -> dict[str, Any]:
         """Fetch a JSON endpoint through the page's own session.

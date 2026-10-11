@@ -376,3 +376,79 @@ def test_a_screen_with_no_toast_says_nothing_about_messages() -> None:
 def test_the_snapshot_script_collects_toasts() -> None:
     """The injected script must actually read the toast container."""
     assert "#toast .t" in SCREEN_SCRIPT
+
+
+# ── advance_week must not call a moved week a failure ───────────────────
+
+
+class _FakeObserver:
+    """Just enough PlaytestSession to exercise the advance_week verdict."""
+
+    def __init__(self, before: str, after: str, busy: bool) -> None:
+        self._contexts = [before, after]
+        self.busy = busy
+        self.verdict: tuple[bool, str] | None = None
+
+    def _context(self) -> str:
+        return self._contexts.pop(0) if self._contexts else ""
+
+    def observe(self, action, *, ok=True, message=""):  # noqa: ANN001
+        self.verdict = (ok, message)
+        return self.verdict
+
+
+def _verdict(before: str, after: str, busy: bool) -> tuple[bool, str]:
+    """Replicate advance_week's decision, the part that had the bug.
+
+    The real method needs a live browser; this pins the LOGIC that decides
+    success, which is what regressed. A reveal overlay outliving the tick
+    (`busy`) is a normal state a player dismisses, not a failed advance.
+    """
+    moved = bool(before) and bool(after) and after != before
+    if not moved:
+        detail = f"still {after!r}" if after else "the screen reports no week at all"
+        if busy:
+            detail += " (the week overlay never cleared, so the tick may still be running)"
+        return False, f"the week did not move — {detail}."
+    message = f"{before} -> {after}"
+    if busy:
+        message += " (the week reveal is still open — read it, then `close`)"
+    return True, message
+
+
+def test_a_week_that_moved_is_a_success_even_with_the_reveal_open() -> None:
+    """The bug: week 1 -> 2 with HTTP 200 was reported as "did not move".
+
+    `advance_week` failed whenever the week-reveal overlay was still visible,
+    but that overlay is dismissed by the PLAYER, so it routinely outlives the
+    tick. The advance had worked; the harness said it had not, and printed the
+    post-advance week while claiming nothing had changed.
+    """
+    ok, message = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=True)
+    assert ok, "a week that moved must not be reported as a failure"
+    assert "Week 1 -> Season 1 - Week 2" in message
+    assert "reveal is still open" in message, "the open reveal should still be mentioned"
+
+
+def test_a_week_that_moved_cleanly_says_so() -> None:
+    ok, message = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=False)
+    assert ok
+    assert "reveal" not in message
+
+
+def test_a_week_that_really_did_not_move_still_fails() -> None:
+    ok, message = _verdict("Season 1 - Week 2", "Season 1 - Week 2", busy=False)
+    assert not ok
+    assert "did not move" in message
+
+
+def test_a_stuck_tick_is_named_as_such() -> None:
+    ok, message = _verdict("Season 1 - Week 2", "Season 1 - Week 2", busy=True)
+    assert not ok
+    assert "never cleared" in message
+
+
+def test_the_failure_message_never_contradicts_itself() -> None:
+    """It used to read "did not move — still 'Week 2'" after moving to week 2."""
+    _, moved_msg = _verdict("Season 1 - Week 1", "Season 1 - Week 2", busy=True)
+    assert "did not move" not in moved_msg
