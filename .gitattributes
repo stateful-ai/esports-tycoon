@@ -5,3 +5,5 @@ docs/playtests/2026-10-11-gap40-rollover/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-rollover/actions.csv -text -whitespace
 docs/playtests/2026-10-11-gap40-shared-ready/evidence/** -text -whitespace
 docs/playtests/2026-10-11-gap40-shared-ready/actions.csv -text -whitespace
+docs/playtests/2026-10-11-gap40-status-retry/evidence/** -text -whitespace
+docs/playtests/2026-10-11-gap40-status-retry/actions.csv -text -whitespace
