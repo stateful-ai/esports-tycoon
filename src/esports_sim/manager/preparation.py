@@ -108,6 +108,8 @@ class PrepReport(BaseModel):
     prep_edge_contribution: float = 0.0
     dev_suggestion_player_id: str = ""
     dev_suggestion: str = ""
+    # Empty means a legacy report whose target may have used hidden potential.
+    dev_suggestion_basis: Literal["", "age", "map_mastery"] = ""
 
 
 def _stable_id(*parts: object) -> str:
@@ -398,24 +400,76 @@ def _dev_suggestion(
             "no scrim performance was measured. Consider a focused development "
             "block before trying that rotation."
         )
-    best_pid = ""
-    best_gap = 0.0
-    for pid in _participants(gs, plan.team_id):
-        p = gs.players.get(pid)
-        if p is None or p.age > 23 or not p.attributes:
-            continue
-        ca = sum(p.attributes.values()) / len(p.attributes)
-        pa = p.potential if p.potential > 0 else ca
-        gap = pa - ca
-        if gap > best_gap:
-            best_gap, best_pid = gap, pid
-    if best_pid and best_gap >= 6.0:
-        p = gs.players[best_pid]
-        return best_pid, (
-            f"{p.handle} has ~{best_gap:.0f} points of untapped ceiling; a "
-            "targeted development focus would compound these reps."
-        )
-    return "", ""
+    return _youth_development_lead(gs, _participants(gs, plan.team_id))
+
+
+def _youth_development_lead(gs: "GameState", participant_ids: list[str]) -> tuple[str, str]:
+    """A public-age lead, independent of hidden ability and potential.
+
+    Age explains the recommendation; it is not evidence of untapped ceiling.
+    Stable IDs break ties without consulting a private player rating.
+    """
+    candidates = sorted(
+        (gs.players[pid].age, pid)
+        for pid in participant_ids
+        if pid in gs.players and gs.players[pid].age <= 23
+    )
+    if not candidates:
+        return "", ""
+    age, pid = candidates[0]
+    return pid, (
+        f"At age {age}, this participant is a youth development option. "
+        "Consider a focused development block and review progress afterwards. "
+        "This is an age-based lead; the session did not measure individual "
+        "performance or remaining ceiling. Use the scouting development report "
+        "for guidance when coverage is sufficient."
+    )
+
+
+def public_dev_suggestion(gs: "GameState", report: PrepReport) -> tuple[str, str]:
+    """Project old reports without exposing their hidden-potential target.
+
+    New reports retain their authored public evidence. Legacy youth leads are
+    replaced from public ages of the recorded participants, never from the old
+    selected ID or numerical claim. Historical truth in the save is untouched.
+    """
+    if report.dev_suggestion_basis:
+        return report.dev_suggestion_player_id, report.dev_suggestion
+    if not report.dev_suggestion:
+        return "", ""
+    if report.dev_suggestion.startswith("Map mastery projects "):
+        return report.dev_suggestion_player_id, report.dev_suggestion
+    pid, text = _youth_development_lead(gs, report.participant_ids)
+    if not text:
+        return pid, text
+    return pid, (
+        "Reconstructed legacy lead using current public ages of the recorded "
+        "participants; this is not the session's original recommendation. "
+        + text.replace("At age ", "At current age ", 1)
+    )
+
+
+def public_report(gs: "GameState", report: PrepReport) -> dict:
+    """Shared manager-facing projection for web and decision/MCP observations."""
+    result = report.model_dump(mode="json")
+    pid, text = public_dev_suggestion(gs, report)
+    result.update(dev_suggestion_player_id=pid, dev_suggestion=text)
+    return result
+
+
+def public_prep_inbox_body(body: str) -> str:
+    """Retain saved inbox history while withholding legacy private PA claims.
+
+    Old inbox items outlive the latest report, so their targets cannot safely
+    be reconstructed. Remove the whole affected line, including its PA-ranked
+    identity, and retain the rest of the preparation artifact.
+    """
+    return "\n".join(
+        "Development lead: review youth participants and their scouting reports; "
+        "this session did not measure individual performance or remaining ceiling."
+        if "points of untapped ceiling" in line else line
+        for line in body.split("\n")
+    )
 
 
 def stamina_cost(gs: "GameState", team_id: str, intensity: str) -> float:
@@ -562,6 +616,10 @@ def _resolve(
         prep_edge_contribution=edge_contribution,
         dev_suggestion_player_id=dev_pid,
         dev_suggestion=dev_text,
+        dev_suggestion_basis=(
+            "map_mastery" if dev_pid and dev_pid == evidence.rotation_candidate_id
+            else "age" if dev_pid else ""
+        ),
     )
 
 
@@ -768,7 +826,7 @@ def view(gs: "GameState", team_id: str) -> dict:
 
     return {
         "current": plan_view(current),
-        "last": last.model_dump(mode="json") if last is not None else None,
+        "last": public_report(gs, last) if last is not None else None,
         "proposal": plan_view(proposal),
         "condition_costs": {
             intensity: stamina_cost(gs, team_id, intensity)

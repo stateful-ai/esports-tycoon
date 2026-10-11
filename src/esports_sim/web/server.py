@@ -6555,6 +6555,7 @@ def _last_prep_artifact(gs: GameState, tid: str) -> dict | None:
     label = getattr(rep, "artifact_label", "") or ""
     if not label:
         return None
+    public = preparation.public_report(gs, rep)
     return {
         "season": rep.season,
         "week": rep.week,
@@ -6562,11 +6563,11 @@ def _last_prep_artifact(gs: GameState, tid: str) -> dict | None:
         "prep_edge_contribution": round(
             getattr(rep, "prep_edge_contribution", 0.0), 3
         ),
-        "dev_suggestion": getattr(rep, "dev_suggestion", "") or "",
-        "dev_suggestion_player_id": getattr(rep, "dev_suggestion_player_id", "") or "",
+        "dev_suggestion": public["dev_suggestion"],
+        "dev_suggestion_player_id": public["dev_suggestion_player_id"],
         "dev_suggestion_handle": (
-            gs.players[rep.dev_suggestion_player_id].handle
-            if rep.dev_suggestion_player_id in gs.players else ""
+            gs.players[public["dev_suggestion_player_id"]].handle
+            if public["dev_suggestion_player_id"] in gs.players else ""
         ),
     }
 
