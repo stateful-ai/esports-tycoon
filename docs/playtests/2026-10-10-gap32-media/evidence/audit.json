@@ -54,21 +54,24 @@
       "request_id": 18,
       "result": 200,
       "attempt_received": "2026-10-10T23:31:52.834594+00:00",
-      "result_received": "2026-10-10T23:31:52.834594+00:00"
+      "result_received": "2026-10-10T23:31:52.834594+00:00",
+      "session_id": "f05f83216da62e88495ef1663e55cb77"
     },
     {
       "target": "/api/actions/advance",
       "request_id": 29,
       "result": 200,
       "attempt_received": "2026-10-10T23:33:02.402084+00:00",
-      "result_received": "2026-10-10T23:33:02.402084+00:00"
+      "result_received": "2026-10-10T23:33:02.402084+00:00",
+      "session_id": "f05f83216da62e88495ef1663e55cb77"
     },
     {
       "target": "/api/actions/save",
       "request_id": 11,
       "result": 200,
       "attempt_received": "2026-10-10T23:34:08.358878+00:00",
-      "result_received": "2026-10-10T23:34:08.358878+00:00"
+      "result_received": "2026-10-10T23:34:08.358878+00:00",
+      "session_id": "1d1bcb068d994bfaac710858850787dd"
     }
   ],
   "media_record": {
@@ -225,5 +228,10 @@
     }
   },
   "commitment_consumed": true,
-  "limits": "Bounded usage is a retained visibility/request proxy, not a complete funnel or attention duration. Stale-reference save did not send HTTP."
+  "limits": "Bounded usage is a retained visibility/request proxy, not a complete funnel or attention duration. Stale-reference save did not send HTTP.",
+  "request_pair_key": [
+    "session_id",
+    "request_id",
+    "target"
+  ]
 }
