@@ -1,0 +1,30 @@
+{
+  "complete_GS_equal": true,
+  "byte_equal": true,
+  "patched_sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+  "baseline_sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+  "patched_income": 180160,
+  "baseline_income": 110160,
+  "bank_before": 608307,
+  "bank_after": 741367,
+  "expenses": 47100,
+  "notes": [
+    "Regular season complete \u2014 regional playoffs next week.",
+    "Team Nexus received 70,000 cr in tournament prize income this week (included in reported income)."
+  ],
+  "decision_count_before": 64,
+  "decision_count_after": 65,
+  "new_actions": [
+    {
+      "season": 1,
+      "week": 14,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "telemetry_snaps": 1
+}

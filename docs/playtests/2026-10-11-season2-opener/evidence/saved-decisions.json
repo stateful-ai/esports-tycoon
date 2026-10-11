@@ -1,0 +1,53 @@
+[
+  {
+    "index": 104,
+    "season": 2,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "flavor_choice",
+    "params": {
+      "choice_id": "measured",
+      "event_id": "4d09a8049f293b2b"
+    },
+    "source": "web"
+  },
+  {
+    "index": 105,
+    "season": 2,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "set_game_plan",
+    "params": {
+      "aggression": "",
+      "choice_encoding": "json-v1",
+      "eco_greed": "",
+      "fixture_id": "s2w1m2am",
+      "focus_target": "",
+      "map_control": "",
+      "n_dials": "0",
+      "one_match_lineup": "False",
+      "opponent": "team_sahara_compass",
+      "pace": "",
+      "site_focus": "",
+      "starter_ids": "[]",
+      "team_talk": "",
+      "util_discipline": ""
+    },
+    "source": "web"
+  },
+  {
+    "index": 106,
+    "season": 2,
+    "week": 1,
+    "phase": "regular",
+    "manager_id": "mgr_team_nexus",
+    "team_id": "team_nexus",
+    "kind": "advance",
+    "params": {},
+    "source": "web"
+  }
+]

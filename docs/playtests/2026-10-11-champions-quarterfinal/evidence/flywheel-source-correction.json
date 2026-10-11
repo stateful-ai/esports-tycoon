@@ -1,0 +1,14 @@
+{
+  "id": "esports-playtest-0188",
+  "ts": "2026-10-11",
+  "domain": "esports-playtest",
+  "topic": "Unplayed map books can still contribute to fixture-wide preparation",
+  "problem": "The initial wording proposal called an unplayed scheduled book unused",
+  "solution": "Read prep_bonus,fixture plan construction and the per-map retained edge; appended step10 correction and returnedPR383 for factual wording",
+  "lesson": "Stored books are averaged across all scheduled maps before the series. Say stored book/map not played; never infer unused or no contribution from maps_missed. The full prep edge also includes scout and coach terms.",
+  "confidence": "high",
+  "source": "2026-10-11-champions-quarterfinal correction10; world26UHC seed2038; recordedafter sourceaudit 2026-10-11T06:11:14.337339+00:00",
+  "code": "",
+  "tags": [],
+  "kind": "learning"
+}

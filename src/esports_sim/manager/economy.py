@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import math
 
-from esports_sim.labels import humanize_identifier
 from esports_sim.manager.state import (
     PRIZE_CHAMPION,
     PRIZE_FINAL_LOSER,
@@ -185,6 +184,9 @@ def facility_upgrade_cost(current_level: int) -> int | None:
 
 def upgrade_facility(gs: GameState, name: str) -> tuple[bool, str]:
     """Upgrade one facility for the acting org through a shared domain path."""
+    # The presentation registry imports economy for costs and effects.
+    from esports_sim.manager.facilities import facility_label
+
     if name not in FACILITY_NAMES:
         return False, f"unknown facility {name}"
     team = gs.teams[gs.acting_team_id]
@@ -197,10 +199,10 @@ def upgrade_facility(gs: GameState, name: str) -> tuple[bool, str]:
     team.balance -= cost
     gs.facilities[name] = level + 1
     gs.push_news(
-        f"{team.name} upgrade {humanize_identifier(name)} to "
+        f"{team.name} upgrade {facility_label(name)} to "
         f"level {level + 1} ({cost:,} cr)."
     )
-    return True, f"{humanize_identifier(name)} upgraded to level {level + 1}"
+    return True, f"{facility_label(name)} upgraded to level {level + 1}"
 
 
 def facility_weekly_upkeep(facilities: dict[str, int]) -> int:

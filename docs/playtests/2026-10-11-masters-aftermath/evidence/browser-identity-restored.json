@@ -1,0 +1,12 @@
+{
+  "restored_at_utc": "2026-10-11T02:17:43.679880+00:00",
+  "browser_session": "masters-aftermath",
+  "cookie_name": "esports_sid",
+  "domain": "127.0.0.1",
+  "fixture_sessions_sha256": "705ec5364c643725d91ab3ec8aaa193e0f86c34660b8d3f40e4f9db751f89828",
+  "matching_test_memberships": 1,
+  "world": "26UHC",
+  "team": "team_nexus",
+  "command_exit_code": 0,
+  "limits": "Harness restoration of copied test identity only; no gameplay decision or user browser change."
+}

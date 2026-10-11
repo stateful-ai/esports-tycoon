@@ -1,0 +1,17 @@
+{
+  "correction_of": "save-audit.json snaps=1 counted manager streams, not snapshots; original receipt preserved",
+  "source_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "copy_sha256": "4d61cb3de347969f7eea33a9894c929a62b947f19cffbb89709b31ebd2e1186c",
+  "byte_equal": true,
+  "full_state_equal": true,
+  "decisions": 63,
+  "telemetry_stream_count": 1,
+  "telemetry_snapshot_count": 13,
+  "snapshots_by_stream": {
+    "mgr_team_nexus": 13
+  },
+  "action_log_equal": true,
+  "telemetry_snaps_equal": true,
+  "frozen_changed_files": [],
+  "frozen_equal": true
+}

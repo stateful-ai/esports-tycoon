@@ -1,0 +1,11 @@
+{
+  "rows": 11,
+  "results": {
+    "partial": 1,
+    "met": 7,
+    "blocked": 3
+  },
+  "protected_fields_preserved": true,
+  "before_sha256": "08a8d56cfd8bd7ca288ae4cb1de47ff937e332e0a92abccbaeb9b836a6c512c8",
+  "after_sha256": "f7b5ab85cd60aea3b2a8719b8f128b2ed0f1a8fb8e4f20f2ced8140d119d8b32"
+}

@@ -1,0 +1,144 @@
+{
+  "audited_at_utc": "2026-10-11T00:09:02.935418+00:00",
+  "commit": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "actual_seed": 2038,
+  "baseline_actions": 75,
+  "final_actions": 79,
+  "old_prefix_unchanged": true,
+  "accepted_coverage": {
+    "matched": 4,
+    "accepted": 4
+  },
+  "standing_five_unchanged": true,
+  "plans_consumed": true,
+  "snapshot_prefix_unchanged": true,
+  "manager_streams": 1,
+  "snapshots_before_after": [
+    17,
+    18
+  ],
+  "bank_before_after": [
+    1499208,
+    1564014
+  ],
+  "report_income": 111906,
+  "report_expenses": 47100,
+  "bank_delta": 64806,
+  "unreported_cash": 0,
+  "ghost_condition": [
+    59.5,
+    70.5
+  ],
+  "hollowlock_condition": [
+    97,
+    100
+  ],
+  "hollowlock_maps": 2,
+  "ghost_maps": 1,
+  "scout_deep": [
+    0,
+    0.29
+  ],
+  "effective_scout_progress": 0.5,
+  "source_paths_unchanged": 545,
+  "fixture_unchanged": true,
+  "end_save_sha256": "222d4fdb5763cbade7dc28479704e9475ed4fa30004850391e2d251315b68a6b",
+  "usage_events_at_audit": 73,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 12,
+    "visible_time": 45,
+    "session_end": 1,
+    "attempt": 6,
+    "result": 6,
+    "interaction": 1
+  },
+  "usage_target_counts": {
+    "view": {
+      "lobby": 2,
+      "dashboard": 3,
+      "club/squad": 1,
+      "tactics/strategy": 1,
+      "tactics/prep": 2,
+      "market/scouting": 2,
+      "tactics/gameplan": 1
+    },
+    "interaction": {
+      "week/full_report_open": 1
+    },
+    "replay": {}
+  },
+  "request_pairs": 6,
+  "pairs": [
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 21,
+      "target": "/api/actions/scout"
+    },
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 24,
+      "target": "/api/actions/series_directive"
+    },
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 31,
+      "target": "/api/actions/gameplan"
+    },
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 34,
+      "target": "/api/actions/save"
+    },
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 35,
+      "target": "/api/actions/advance"
+    },
+    {
+      "session_id": "6807afd244af4e9d78ad3b92386bd081",
+      "request_id": 46,
+      "target": "/api/actions/save"
+    }
+  ],
+  "unmatched_attempts": 0,
+  "orphan_results": 0,
+  "report_exitcodes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "server_stopped": [
+    {
+      "pid": 31768,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 38240,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8516",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 12436,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8516",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Bounded usage is not attention or complete funnels. Interpretation and public readbacks lack semantic hooks; observer reference/file/kind assertions are not rejected gamechoices. No causal inference from1-2. Gap35 delegated; existing358/33/34 not duplicated."
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+    "request_id": 10,
+    "target": "/api/actions/flavor_event",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "received_at": "2026-10-11T08:24:33.593657+00:00",
+        "world": "FLV42",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/flavor_event",
+        "request_id": 10
+      },
+      {
+        "schema_version": 1,
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "received_at": "2026-10-11T08:24:33.593657+00:00",
+        "world": "FLV42",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/flavor_event",
+        "request_id": 10,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 13
+      }
+    ]
+  },
+  {
+    "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+    "request_id": 26,
+    "target": "/api/actions/save",
+    "events": [
+      {
+        "schema_version": 1,
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "received_at": "2026-10-11T08:24:34.465573+00:00",
+        "world": "FLV42",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 26
+      },
+      {
+        "schema_version": 1,
+        "session_id": "3c37488804ddb32dab4a3b32ef759c68",
+        "received_at": "2026-10-11T08:24:34.465573+00:00",
+        "world": "FLV42",
+        "team": "team_nexus",
+        "season": 1,
+        "week": 12,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 26,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 39
+      }
+    ]
+  }
+]
