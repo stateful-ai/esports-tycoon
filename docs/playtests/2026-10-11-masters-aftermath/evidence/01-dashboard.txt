@@ -1,0 +1,195 @@
+### Page
+- Page URL: http://127.0.0.1:8518/
+- Page Title: esports-sim
+### Snapshot
+```yaml
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e5]: Season 1 · Week 19 · Playoffs — Team Nexus
+      - generic [ref=f1e6]: 1,564,014 cr
+      - button "Save" [ref=f1e7] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e11] [cursor=pointer]
+      - button "🛠️" [ref=f1e12] [cursor=pointer]
+      - button "🔇" [ref=f1e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e14] [cursor=pointer]: Guide
+    - navigation [ref=f1e15]:
+      - generic "Weekly" [ref=f1e16]:
+        - button "Dashboard" [ref=f1e18] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e19] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e20]: "18"
+        - button "Match" [ref=f1e21] [cursor=pointer]
+      - generic "Org" [ref=f1e22]:
+        - button "Club" [ref=f1e24] [cursor=pointer]
+        - button "Facilities" [ref=f1e25] [cursor=pointer]
+        - button "Season" [ref=f1e26] [cursor=pointer]
+        - button "Market" [ref=f1e27] [cursor=pointer]
+        - button "Stats" [ref=f1e28] [cursor=pointer]
+        - button "Company" [ref=f1e29] [cursor=pointer]
+    - main [ref=f1e30]:
+      - generic [ref=f1e31]:
+        - generic [ref=f1e32]:
+          - generic [ref=f1e33]: Dashboard
+          - generic [ref=f1e34]: S1 · W19 · Playoffs
+          - button "Guide" [ref=f1e35] [cursor=pointer]
+          - button "Career ▸" [ref=f1e36] [cursor=pointer]
+        - generic [ref=f1e37]:
+          - generic [ref=f1e39]:
+            - generic [ref=f1e40]:
+              - generic [ref=f1e41]: 11–3
+              - generic [ref=f1e42]: Record
+              - generic [ref=f1e43]: +69 rd
+            - button "2nd League Americas" [ref=f1e44] [cursor=pointer]:
+              - generic [ref=f1e45]: 2nd
+              - generic [ref=f1e46]: League
+              - generic [ref=f1e47]: Americas
+            - generic [ref=f1e48]:
+              - generic [ref=f1e49]: L1
+              - generic [ref=f1e50]: Streak
+            - button "1,564,014 cr Balance" [ref=f1e51] [cursor=pointer]:
+              - generic [ref=f1e52]: 1,564,014 cr
+              - generic [ref=f1e53]: Balance
+            - generic [ref=f1e54]:
+              - generic [ref=f1e55]: "93"
+              - generic [ref=f1e56]: Morale
+            - button "91 Condition" [ref=f1e57] [cursor=pointer]:
+              - generic [ref=f1e58]: "91"
+              - generic [ref=f1e59]: Condition
+          - generic [ref=f1e60]:
+            - heading "Match day" [level=2] [ref=f1e61]
+            - paragraph [ref=f1e62]: No fixture scheduled — playoffs.
+          - generic [ref=f1e63]:
+            - generic [ref=f1e64]:
+              - heading "Match review" [level=2] [ref=f1e65]
+              - paragraph [ref=f1e66]: "Last time out — Lost to Team Vanguard 1-2. Standout: Vortex (1.20). Off-colour: Hollowlock (0.54)."
+              - generic [ref=f1e67]:
+                - generic [ref=f1e68]: L
+                - generic [ref=f1e69]: vs Team Vanguard
+                - generic [ref=f1e70]: 1–2
+              - generic [ref=f1e71]:
+                - generic [ref=f1e72]: ★
+                - text: POTM
+                - generic [ref=f1e73] [cursor=pointer]: Slice
+                - 'img "Aim Demon: raw mechanical menace" [ref=f1e74]'
+              - generic [ref=f1e75]:
+                - generic [ref=f1e76]:
+                  - generic [ref=f1e77]: What worked
+                  - generic [ref=f1e79] [cursor=pointer]:
+                    - generic [ref=f1e80]:
+                      - text: Vortex carried
+                      - 'img "Aim Demon: raw mechanical menace" [ref=f1e81]'
+                    - generic [ref=f1e82]: Team-high 1.2 average rating.
+                - generic [ref=f1e83]:
+                  - generic [ref=f1e84]: Where it broke down
+                  - generic [ref=f1e85]:
+                    - generic [ref=f1e86] [cursor=pointer]:
+                      - generic [ref=f1e87]:
+                        - text: Hollowlock off-colour
+                        - 'img "Choker: tightens up when it matters most" [ref=f1e88]'
+                        - 'img "Inconsistent: a different player week to week" [ref=f1e89]'
+                      - generic [ref=f1e90]: 0.55 average rating across the series.
+                      - generic [ref=f1e91]: Near their ceiling (proj. 55–66) — a lineup call.
+                    - generic [ref=f1e92]:
+                      - generic [ref=f1e93]: Defense is leaking
+                      - generic [ref=f1e94]: 18/43 defense rounds won (42%).
+              - text: What to tweak
+              - generic [ref=f1e95]:
+                - generic [ref=f1e96] [cursor=pointer]: ▸ Hollowlock is off-colour — consider a bench or agent swap on the Roster screen.
+                - generic [ref=f1e97] [cursor=pointer]: ▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.
+              - paragraph [ref=f1e98]: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+            - generic [ref=f1e99]:
+              - heading "Americas league" [level=2] [ref=f1e100]
+              - table [ref=f1e101]:
+                - rowgroup [ref=f1e102]:
+                  - row [ref=f1e103]:
+                    - columnheader "#" [ref=f1e104]
+                    - columnheader "Team" [ref=f1e105]
+                    - columnheader "W" [ref=f1e106]
+                    - columnheader "L" [ref=f1e107]
+                    - columnheader "+/-" [ref=f1e108]
+                - rowgroup [ref=f1e109]:
+                  - row [ref=f1e110]:
+                    - cell "1" [ref=f1e111]
+                    - cell "Team Vanguard" [ref=f1e112]
+                    - cell "13" [ref=f1e113]
+                    - cell "1" [ref=f1e114]
+                    - cell "+82" [ref=f1e115]
+                  - row [ref=f1e116]:
+                    - cell "2" [ref=f1e117]
+                    - cell "Team Nexus" [ref=f1e118]
+                    - cell "11" [ref=f1e119]
+                    - cell "3" [ref=f1e120]
+                    - cell "+69" [ref=f1e121]
+                  - row [ref=f1e122]:
+                    - cell "3" [ref=f1e123]
+                    - cell "Rust Belt Gaming" [ref=f1e124]
+                    - cell "10" [ref=f1e125]
+                    - cell "4" [ref=f1e126]
+                    - cell "+55" [ref=f1e127]
+                  - row [ref=f1e128]:
+                    - cell "4" [ref=f1e129]
+                    - cell "Saracen Guard" [ref=f1e130]
+                    - cell "8" [ref=f1e131]
+                    - cell "6" [ref=f1e132]
+                    - cell "+26" [ref=f1e133]
+              - text: Last result
+              - generic [ref=f1e134]:
+                - generic [ref=f1e135]: L
+                - generic [ref=f1e136] [cursor=pointer]: Team Vanguard
+                - generic [ref=f1e137]: 1–2
+                - generic [ref=f1e138]:
+                  - img "haven" [ref=f1e139]
+                  - img "ascent" [ref=f1e140]
+                  - img "lotus" [ref=f1e141]
+              - paragraph [ref=f1e142]: "World #4 · Rep 66 · Fans 330.1K"
+              - button "Full table ▸" [ref=f1e143] [cursor=pointer]
+          - generic [ref=f1e144]:
+            - generic [ref=f1e145]:
+              - heading "Needs you" [level=2] [ref=f1e146]
+              - generic [ref=f1e147]:
+                - generic [ref=f1e148] [cursor=pointer]: ▸ 18 unread inbox messages
+                - generic [ref=f1e149] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f1e150]: "Echo: Clutch Merchant Award · In Contention · 2nd · 12"
+                - generic [ref=f1e151] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f1e152]: "Slyblade: Clutch Merchant Award · In Contention · 3rd · 12"
+            - generic [ref=f1e153]:
+              - heading "Your calls" [level=2] [ref=f1e154]
+              - text: Last match
+              - generic [ref=f1e155]:
+                - generic [ref=f1e156]: ▸ Focused prep on Slice
+                - generic [ref=f1e157]: ▸ Dressed Hollowlock over the suggested five — went 0.54
+                - generic [ref=f1e158]: "▸ Preparation: book on Haven, Ascent, Lotus"
+              - text: Decisions settled
+              - generic [ref=f1e160]:
+                - generic [ref=f1e161]: backfired
+                - text: "Game plan hunted Slice: 1.45 rating in the series vs 1.33 season form."
+            - generic [ref=f1e162]:
+              - heading "News" [level=2] [ref=f1e163]
+              - generic [ref=f1e164]:
+                - generic [ref=f1e165]: "[S1 W18] Zenith (Team Vanguard) passes 200 kills this season."
+                - generic [ref=f1e166]: "[S1 W18] Grimwing (Solar Flare) passes 300 kills this season."
+                - generic [ref=f1e167]: "[S1 W18] Falconghost (Adriatic Sirens) passes 300 kills this season."
+                - generic [ref=f1e168]: "[S1 W18] Shade (Team Vanguard) passes 300 kills this season."
+                - generic [ref=f1e169]: "[S1 W18] Ghost (Team Nexus) passes 200 kills this season."
+                - generic [ref=f1e170]: "[S1 W18] Apex (Team Nexus) passes 300 kills this season."
+                - generic [ref=f1e171]: "[S1 W18] [MASTERS_SF] Solar Flare beat Adriatic Sirens, 2-0."
+                - generic [ref=f1e172]: "[S1 W18] [MASTERS_SF] 2-1 loss to Team Vanguard on haven, ascent, lotus. Pulse put up 23 kills (1.61). On disciplined, utility-perfect retakes. Team Vanguard have fourth straight over them now."
+                - generic [ref=f1e173]: "[S1 W18] Riftlock re-signs with Nordic Frost at 4,900/wk."
+                - generic [ref=f1e174]: "[S1 W18] Slystorm re-signs with Hokkaido Drift at 3,700/wk."
+                - generic [ref=f1e175]: "[S1 W18] Lunarhawk re-signs with Berlin Wolves at 3,900/wk."
+                - generic [ref=f1e176]: "[S1 W18] Deadzone Desks are courting the peripheral slot (7,100/wk steady, alternatives available). On the table until week 20."
+  - tooltip [aria-hidden]
+```

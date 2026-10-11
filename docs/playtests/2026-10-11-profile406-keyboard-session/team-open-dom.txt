@@ -1,0 +1,210 @@
+- banner:
+  - text: ESPORTSSIM Season 2 · Week 6 · Regular — Team Nexus 2,287,871 cr
+  - button "Save"
+  - combobox:
+    - option "Autosave off"
+    - option "Every week" [selected]
+    - option "Every 2 weeks"
+    - option "Every 3 weeks"
+    - option "Every 5 weeks"
+    - option "Every 8 weeks"
+  - button "Campaigns"
+  - button "Advance Week ▸"
+  - button "Sim ahead ▸▸"
+  - button "🛠️"
+  - button "🔇"
+  - button "Open manager handbook": Guide
+- navigation:
+  - text: Weekly
+  - button "Dashboard 1"
+  - button "Inbox 13"
+  - button "Match 2"
+  - text: Org
+  - button "Club"
+  - button "Facilities"
+  - button "Season"
+  - button "Market 1"
+  - button "Stats"
+  - button "Company"
+- main:
+  - text: Dashboard S2 · W6 · Regular
+  - button "Guide"
+  - button "Career ▸"
+  - text: 2–3 Record -7 rd
+  - button "5th League Americas"
+  - text: L2 Streak
+  - button "2,287,871 cr Balance"
+  - text: 80 Morale
+  - button "69 Condition"
+  - text: W6 · Staff briefing
+  - heading "Match day" [level=2]
+  - paragraph: Everything to settle before you advance the week.
+  - text: Plan needed Scout elsewhere 2 load risk
+  - button "Match day briefing ▸"
+  - text: Team Nexus 5th · 2–3 VS S2 · W6 Americas League Best of 1 vs Andre Santos · Custodian Baltic Meridian 6th · 1–4 Today's prep Baltic Meridian in W6 Set the five, build the plan, sharpen the week. Assistant coach Review Protect Apex's legs
+  - paragraph: Apex is carrying a heavy map load. Check the rotation before locking the lineup.
+  - button "Open roster ▸"
+  - text: Head coach Priority Turn the brief into a game plan
+  - paragraph: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+  - button "Build plan ▸"
+  - text: Analyst Unassigned Put the book on Baltic Meridian
+  - paragraph: Your scout is not assigned to Baltic Meridian. Switch coverage if this match is the priority.
+  - button "Scouting desk ▸"
+  - text: Performance Mental Ease the load, keep growth targeted
+  - paragraph: Balance individual intensity against match readiness, then choose the team focus for the week.
+  - button "Development plans ▸"
+  - text: Match intelligence Opponent read, your stakes, maps and run-in
+  - paragraph: Team Nexus arrive on a 2-match losing run. A win would haul Team Nexus back toward the playoff places. Watch Cipherstrike — Baltic Meridian's form pick at 1.32.
+  - text: Map
+  - figure "bind":
+    - img "bind"
+    - text: bind
+  - text: Run-in W6 Baltic Meridian W7 Team Vanguard W8 Sahara Compass W9 Nordic Frost W10 Kathmandu Apex Baltic Meridian — last 5 L L L L W Danger men Voltblade Duelist ~77 Cipherstrike Duelist ~72 Pyromark Controller ~69 Your map pool & veto Ban Ascent (Baltic Meridian 100% · you 100%) Pick Bind (you 33% · them 0%) Team Nexus — season map record (wins / played) Ascent 100% 1/1 Bind 33% 1/3 Lotus 0% 0/1
+  - heading "Match review" [level=2]
+  - paragraph: "Last time out — Lost to Rust Belt Gaming 3-13. Standout: Vortex (1.08). Off-colour: Echo (0.50)."
+  - text: L vs Rust Belt Gaming 3–13 ★ POTM Zephyrpulse
+  - 'img "Aim Demon: raw mechanical menace"'
+  - text: What worked — Where it broke down Pistols lost 0/2 pistol rounds (0%). Echo off-colour
+  - 'img "Choker: tightens up when it matters most"'
+  - text: 0.5 average rating across the series. Near their ceiling (proj. 66–80) — a lineup call. Defense is leaking 3/12 defense rounds won (25%). What to tweak ▸ Set Eco greed to 30 (currently 50) — Save more often so pistol losses do not distort the buy cycle. ▸ Echo is off-colour — consider a bench or agent swap on the Roster screen. ▸ Set Map control to 30 (currently 50) — Stack more tightly and simplify the defensive setup.
+  - paragraph: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+  - heading "Americas league" [level=2]
+  - table:
+    - rowgroup:
+      - row "# Team W L +/-":
+        - columnheader "#"
+        - columnheader "Team"
+        - columnheader "W"
+        - columnheader "L"
+        - columnheader "+/-"
+    - rowgroup:
+      - row "1 Rust Belt Gaming 5 0 +43":
+        - cell "1"
+        - cell "Rust Belt Gaming"
+        - cell "5"
+        - cell "0"
+        - cell "+43"
+      - row "2 Team Vanguard 5 0 +35":
+        - cell "2"
+        - cell "Team Vanguard"
+        - cell "5"
+        - cell "0"
+        - cell "+35"
+      - row "3 Saracen Guard 3 2 +7":
+        - cell "3"
+        - cell "Saracen Guard"
+        - cell "3"
+        - cell "2"
+        - cell "+7"
+      - row "4 Sahara Compass 3 2 +2":
+        - cell "4"
+        - cell "Sahara Compass"
+        - cell "3"
+        - cell "2"
+        - cell "+2"
+      - row "5 Team Nexus 2 3 -7":
+        - cell "5"
+        - cell "Team Nexus"
+        - cell "2"
+        - cell "3"
+        - cell "-7"
+  - text: Last result L Rust Belt Gaming 3–13
+  - img "bind"
+  - paragraph: "World #28 · Rep 67 · Fans 341.6K"
+  - button "Full table ▸"
+  - heading "Needs you" [level=2]
+  - text: Team moment
+  - heading "A sponsor wants a quick Team Nexus shoot" [level=3]
+  - paragraph: A partner offers Team Nexus a compact campaign shoot with a modest appearance fee. The crew can work around practice, but not invisibly.
+  - button "Take the shoot"
+  - button "Ask for a leaner setup"
+  - button "Pass on the campaign"
+  - text: ▸ Scout report ready — Slice ▸ No game plan set for W6 ▸ 13 unread inbox messages ▸ Coach proposed a scrim plan Match · Prep ▸ make the regional playoffs Sponsor · At Risk · currently 5th of 8 ▸ make the regional playoffs Sponsor · At Risk · currently 5th of 8
+  - heading "Your calls" [level=2]
+  - text: Last match · Series notes
+  - paragraph: Recorded calls for both teams, including applied between-map responses.
+  - text: "RBG: targeting Slyblade."
+  - heading "News" [level=2]
+  - text: "[S2 W6] Team Nexus sign a apparel deal with GG Threads (5,900/wk, objectives: make the regional playoffs → 16,000 for 21 weeks). [S2 W5] Slyecho (Chao Phraya Owls) passes 100 kills this season. [S2 W5] Driftshot (Taipei Circuit) passes 100 kills this season. [S2 W5] Karmawire (Solar Flare) passes 100 kills this season. [S2 W5] Zephyrdash (Seoul Dynasty Prime) passes 100 kills this season. [S2 W5] Riftstrike (Seoul Dynasty Prime) passes 100 kills this season. [S2 W5] Crimrush (Nordic Frost) passes 100 kills this season. [S2 W5] Ironhawk (Midnight Polders) passes 100 kills this season. [S2 W5] Ironstrike (Hokkaido Drift) passes 100 kills this season. [S2 W5] Riftbyte (Harbour City Nine) passes 100 kills this season. [S2 W5] Zephyrsurge (Ghostline) passes 100 kills this season. [S2 W5] Wraithghost (Crimson Order) passes 100 kills this season. On this day 1yr Team Vanguard win Champions."
+- button "Back to previous profile": ← Back
+- button "Close profile": ✕
+- text: "Team Nexus AMERICAS · 1 Balanced 2–3 · #5 · -7 rd · L2"
+- button "View roster ▸"
+- heading "Manager" [level=3]
+- paragraph: NXS manager Showman
+- paragraph: In charge since S1 (season 2)
+- heading "Round-win split" [level=3]
+- text: ATK 45% 47% DEF
+- heading "Map winrate" [level=3]
+- text: Ascent 1–0 100% Bind 1–2 33% Lotus 0–1 0%
+- heading "Roster" [level=3]
+- table:
+  - rowgroup:
+    - row "Player Role Maps K/D ACS":
+      - columnheader "Player"
+      - columnheader "Role"
+      - columnheader "Maps"
+      - columnheader "K/D"
+      - columnheader "ACS"
+  - rowgroup:
+    - row "Vortex Duelist 5 1.22 —":
+      - cell "Vortex"
+      - cell "Duelist"
+      - cell "5"
+      - cell "1.22"
+      - cell "—"
+    - row "Slyblade Duelist 5 1.43 —":
+      - cell "Slyblade"
+      - cell "Duelist"
+      - cell "5"
+      - cell "1.43"
+      - cell "—"
+    - row "Ghost Initiator 5 1.02 —":
+      - cell "Ghost"
+      - cell "Initiator"
+      - cell "5"
+      - cell "1.02"
+      - cell "—"
+    - row "Apex Controller 5 0.74 —":
+      - cell "Apex"
+      - cell "Controller"
+      - cell "5"
+      - cell "0.74"
+      - cell "—"
+    - row "Echo Sentinel 5 0.68 —":
+      - cell "Echo"
+      - cell "Sentinel"
+      - cell "5"
+      - cell "0.68"
+      - cell "—"
+    - row "Nightsurge Controller 3 0.30 —":
+      - cell "Nightsurge"
+      - cell "Controller"
+      - cell "3"
+      - cell "0.30"
+      - cell "—"
+    - row "Frostdash Controller 0 — —":
+      - cell "Frostdash"
+      - cell "Controller"
+      - cell "0"
+      - cell "—"
+      - cell "—"
+    - row "Hollowlock Controller 0 — —":
+      - cell "Hollowlock"
+      - cell "Controller"
+      - cell "0"
+      - cell "—"
+      - cell "—"
+- heading "Form" [level=3]
+- text: L W W L L
+- heading "Squad chemistry · cohesion 53" [level=3]
+- text: a settled, unremarkable dressing room
+- heading "Development" [level=3]
+- text: Ghost 20y · CA 79 · peak 86–99 · support +1.9 86% — Apex 27y · CA 79 · peak 80–87 · support +1.6 · 🎓83 95% — Nightsurge 18y · CA 52 · peak 65–99 · support +2.5 64% — Slyblade 29y · CA 73 · peak 74–87 · support +2.5 · 🎓72 91% — Vortex 23y · CA 77 · peak 68–85 · support +2.3 100% ◆ Echo 24y · CA 75 · peak 66–80 · support +1.6 100% ◆ Hollowlock 27y · CA 63 · peak 55–66 · support +0.3 100% ◆ Frostdash 29y · CA 51 · peak 41–51 · support +0.1 100% ◆
+- heading "Squad strength" [level=3]
+- text: Aim & mechanics 76 Tactical IQ 78.7 Mentals 76.6 Teamplay 72
+- heading "Agent pool" [level=3]
+- text: Yoru 2x·96 Jett 4x·96 Omen 2x·94 Killjoy 2x·92 Sage 2x·90 Sova 3x·86 Raze 2x·83 Harbor 2x·76 Astra 2x·75 Brimstone 2x·73
+- heading "Playbook &amp; knowledge" [level=3]
+- paragraph: Methodology 8.8 — training-ground know-how that survives roster churn
+- text: Map playbooks Lotus10.6 Ascent10.0 Bind7.3 Haven3.3 Split2.5 Anti-strat books Nordic Frost7.0 Team Vanguard6.9 Rust Belt Gaming6.6 Saracen Guard5.7 Kathmandu Apex5.4

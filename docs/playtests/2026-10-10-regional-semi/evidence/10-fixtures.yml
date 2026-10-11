@@ -1,0 +1,110 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]: ESPORTSSIM
+      - generic [ref=f2e5]: Season 1 · Week 16 · Playoffs — Team Nexus
+      - generic [ref=f2e6]: 805,569 cr
+      - button "Save" [ref=f2e7] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f2e8]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f2e9] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f2e10] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f2e11] [cursor=pointer]
+      - button "🛠️" [ref=f2e12] [cursor=pointer]
+      - button "🔇" [ref=f2e13] [cursor=pointer]
+      - button "Open manager handbook" [ref=f2e14] [cursor=pointer]: Guide
+    - navigation [ref=f2e15]:
+      - generic "Weekly" [ref=f2e16]:
+        - button "Dashboard 1" [ref=f2e1027] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f2e1028]: "1"
+        - button "Inbox 19" [ref=f2e1029] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f2e20]: "19"
+        - button "Match 2" [ref=f2e31] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f2e32]: "2"
+      - generic "Org" [ref=f2e22]:
+        - button "Club" [ref=f2e24] [cursor=pointer]
+        - button "Facilities" [ref=f2e25] [cursor=pointer]
+        - button "Season" [ref=f2e26] [cursor=pointer]
+        - button "Market" [ref=f2e27] [cursor=pointer]
+        - button "Stats" [ref=f2e28] [cursor=pointer]
+        - button "Company" [ref=f2e29] [cursor=pointer]
+    - main [ref=f2e30]:
+      - generic [ref=f2e2799]:
+        - generic [ref=f2e2800]:
+          - generic [ref=f2e2801]: Season
+          - generic [ref=f2e2802]: S1 · W16 · Playoffs
+          - generic [ref=f2e2803]:
+            - button "League" [ref=f2e2804] [cursor=pointer]
+            - button "Fixtures" [ref=f2e2805] [cursor=pointer]
+            - button "Playoffs" [ref=f2e2806] [cursor=pointer]
+            - button "Records" [ref=f2e2807] [cursor=pointer]
+          - button "Guide" [ref=f2e2808] [cursor=pointer]
+        - generic [ref=f2e2809]:
+          - generic [ref=f2e2810]:
+            - generic [ref=f2e2812]:
+              - button "My matches" [ref=f2e2813] [cursor=pointer]
+              - button "All" [ref=f2e2814] [cursor=pointer]
+              - button "Americas" [ref=f2e2815] [cursor=pointer]
+              - button "Emea" [ref=f2e2816] [cursor=pointer]
+              - button "Pacific" [ref=f2e2817] [cursor=pointer]
+            - generic [ref=f2e2818]:
+              - heading "Week 16 — this week" [level=2] [ref=f2e2819]
+              - generic [ref=f2e2820]:
+                - generic [ref=f2e2821]: regional final
+                - generic [ref=f2e2822]: Team Vanguard vs Team Nexus
+              - generic [ref=f2e2824]:
+                - generic [ref=f2e2825]: "veto:"
+                - generic [ref=f2e2826]:
+                  - img "split" [ref=f2e2827]
+                  - text: VGD ban split
+                - generic [ref=f2e2828]:
+                  - img "bind" [ref=f2e2829]
+                  - text: NXS ban bind
+                - generic [ref=f2e2830]:
+                  - img "haven" [ref=f2e2831]
+                  - text: VGD pick haven
+                - generic [ref=f2e2832]:
+                  - img "ascent" [ref=f2e2833]
+                  - text: NXS pick ascent
+                - generic [ref=f2e2834]:
+                  - img "lotus" [ref=f2e2835]
+                  - text: decider lotus
+            - group [ref=f2e2836]:
+              - heading "Played weeks — 15 weeks" [level=2] [ref=f2e2838]:
+                - text: Played weeks
+                - generic [ref=f2e2839]: — 15 weeks
+          - generic [ref=f2e2841]:
+            - heading "This week" [level=2] [ref=f2e2842]
+            - generic [ref=f2e2843]:
+              - generic [ref=f2e2844]: W16
+              - generic [ref=f2e2845]: vs Team Vanguard
+              - generic [ref=f2e2846]: Bo3 · regional final
+            - text: Across the league
+            - generic [ref=f2e2848]:
+              - generic [ref=f2e2849]:
+                - generic [ref=f2e2850]: region
+                - generic [ref=f2e2851]: Team Vanguard
+                - generic [ref=f2e2852]: vs
+                - generic [ref=f2e2853]: Team Nexus
+              - generic [ref=f2e2854]:
+                - generic [ref=f2e2855]: region
+                - generic [ref=f2e2856]: Meridian Cross
+                - generic [ref=f2e2857]: vs
+                - generic [ref=f2e2858]: Adriatic Sirens
+              - generic [ref=f2e2859]:
+                - generic [ref=f2e2860]: region
+                - generic [ref=f2e2861]: Solar Flare
+                - generic [ref=f2e2862]: vs
+                - generic [ref=f2e2863]: Coral Sea Drakes
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Season
+    - generic: Track the table, schedule, playoff cut, records, and the rest of the league.
+    - generic: Use Fixtures for timing and League for the playoff race; team names open full profiles.

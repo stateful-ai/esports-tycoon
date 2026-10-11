@@ -1,0 +1,18 @@
+{
+  "command": "primary .venv-win/Scripts/python.exe -m pytest -q",
+  "unfiltered": true,
+  "xdist": "auto/default",
+  "base_head": "042d86d3161fc5fa3185091031ba546193b2e97e",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "started_utc": "2026-10-10T19:03:17.119129+00:00",
+  "finished_utc": "2026-10-10T19:44:28.828736+00:00",
+  "terminal_summary": "1269 passed in 2470.53s (0:41:10)",
+  "stderr_empty": true,
+  "freeze_files": 545,
+  "independent_post_exit_hash_verification": true,
+  "freeze_sha256": "42fa36d00e0d4118e9b0610e9b2c352667806184900cd31c50025e7714f06e19",
+  "runner_pid": 38144,
+  "pytest_pid": 35736,
+  "local_receipt_path": "runs\\playtests\\2026-10-10-play-time-promise-clarity\\gate-result.json"
+}

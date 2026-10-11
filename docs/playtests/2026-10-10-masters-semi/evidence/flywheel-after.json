@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0167",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Conditional substitution executes and explains itself",
+    "problem": "Protect Ghost after a lost opener without changing opening five",
+    "solution": "Save AfterLoss/Stabilize/Hollowlockin/Ghostout, no scrim, Slice focus then Advance once",
+    "lesson": "Ghost plays Haven17-19; named notes show Hollowlock replaces him aftermap1 and Stabilize. Hollowlock plays Ascent14-12/Lotus6-13. Directives consumed, defaultfive unchanged, Ghost59.5->70.5; loss1-2 does not prove causal benefit.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-semi main64ee15f browser8516 world26UHC seed2038 W18-W19",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-card",
+      "scouting",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0168",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Effective scouting depth can mask early deep-dive progress",
+    "problem": "Slice still displays50percent after assignment and Advance",
+    "solution": "Compare public effective depth with saved per-player work after completing decisions",
+    "lesson": "Individual player:slice progresses0->0.29; broadVanguard0.50 remains effectivefloor. UI50percent alone cannot establish stalled scouting. Standing upcoming lane alreadyVanguard despite Dashboard warning; existingPR358 owns warning.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-semi main64ee15f browser8516 world26UHC seed2038 W18-W19",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-card",
+      "scouting",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0169",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Series-card editor must reflect saved substitution",
+    "problem": "Revisit saved conditional card without accidentally overwriting it",
+    "solution": "Save AfterLoss/Stabilize/fa_0in/ghostout, compare fresh Prep form with public exactdirective",
+    "lesson": "Save correct; form resetsTrailing/Steady/no substitutes, current summary omits pair. Confirmed gap35 explicit6.1-sol/medium owner has immutable preAdvance e8c864a4... fixture. Actual match substitution stillworks; editor feedback is separate.",
+    "confidence": "high",
+    "source": "2026-10-10-masters-semi main64ee15f browser8516 world26UHC seed2038 W18-W19",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "series-card",
+      "scouting",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

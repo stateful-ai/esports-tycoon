@@ -1,0 +1,356 @@
+[
+  {
+    "url": "http://127.0.0.1:8550/api/lobby",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.869Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/state",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.886Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/inbox",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.886Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/gameplan",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.901Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/schedule",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.906Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/career",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.907Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.907Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_vanguard",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.908Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/standings",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.908Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/gameplan",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:32:56.908Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/state",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:04.839Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:05.467Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:33:11.552Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/apex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:16.736Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:16.783Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:33:26.550Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/vortex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:35.002Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:35.038Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:33:41.548Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/ghost/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:48.178Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:48.217Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/vortex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:52.419Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:33:52.432Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:33:56.547Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/finances",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:05.131Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:34:11.548Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/ghost/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:14.370Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:14.390Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:34:26.550Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/tactics",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:29.299Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/club",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:36.739Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:34:41.549Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:34:56.552Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/apex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:58.447Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:34:58.506Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:35:11.549Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:35:26.549Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/apex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:35:41.053Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:35:41.066Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:35:41.549Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:35:56.550Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/teams/team_nexus/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:36:01.540Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:36:11.547Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/vortex/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:36:12.427Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/roster/team_nexus",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:36:12.455Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/market",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:36:25.811Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:36:26.547Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/players/fa_14/profile",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:36:37.510Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:36:41.547Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:36:56.548Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/finances",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:37:06.569Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/actions/save",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:06.603Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:06.606Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/state",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:37:06.611Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:11.547Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:26.548Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:41.549Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/market",
+    "status": 200,
+    "method": "GET",
+    "at": "2026-10-11T13:37:43.024Z"
+  },
+  {
+    "url": "http://127.0.0.1:8550/api/usage/events",
+    "status": 200,
+    "method": "POST",
+    "at": "2026-10-11T13:37:56.548Z"
+  }
+]

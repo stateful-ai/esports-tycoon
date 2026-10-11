@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0131",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Rest explains why practice pauses",
+    "problem": "Follow development advice for the young starter without treating zero mentor progress as a defect",
+    "solution": "Read recovery tooltip, latest-week source attribution and existing Apex mentorship before choosing Mechanical/Normal",
+    "lesson": "Ghost retained measured match experience on Rest/light; current recovery explains paused practice. Setting an active plan does not immediately grow skills",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0132",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Individual plan updates preserve their other settings",
+    "problem": "Verify focus and intensity independently after two UI requests",
+    "solution": "Read selected Mechanical/Normal/Apex values after explicit Save and reload, then compare every persisted player record",
+    "lesson": "The two accepted dev-plan records preserve mentor and all other player fields; player plans match their own IDs",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0133",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement hides realized social effect",
+    "problem": "The clinic resolves with narrative feedback only and unchanged headline indicators",
+    "solution": "Capture actual200 response and later public screens; separately audit the saved social change and assign scoped reporting-only gap28",
+    "lesson": "Narrative result alone does not show the realized sentiment change. Preserve future-outcome secrecy while exposing already-applied effects after choice",
+    "confidence": "high",
+    "source": "2026-10-10-rookie-clinic main64ee15f browser8490 world26UHC seed2038 W12",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "development",
+      "flavor",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

@@ -1,0 +1,98 @@
+{
+  "baselineHash": "7c3a062247df9aefe5aa77b42a16dba25c7a608237dd2f1cf0baa8165885b11e",
+  "finalHash": "7c3a062247df9aefe5aa77b42a16dba25c7a608237dd2f1cf0baa8165885b11e",
+  "saveByteEqual": true,
+  "actionLogBefore": 128,
+  "actionLogAfter": 128,
+  "actionLogFullEqual": true,
+  "snapBefore": 28,
+  "snapAfter": 28,
+  "snapsFullEqual": true,
+  "sourceFreezeEqual": true,
+  "beforeKeys": [
+    "seed",
+    "season",
+    "week",
+    "media_last_week_by",
+    "autosave_every_weeks",
+    "talked_weeks",
+    "ai_gm_last_action_week_by",
+    "masters_seeds",
+    "champions_seeds",
+    "season_start_ca"
+  ],
+  "finalGameTime": {
+    "season": 2,
+    "week": 6,
+    "seed": 2038
+  },
+  "usage": {
+    "retained": 41,
+    "byKind": {
+      "session_start": 2,
+      "view": 10,
+      "visible_time": 26,
+      "attempt": 1,
+      "result": 1,
+      "session_end": 1
+    },
+    "bySession": {
+      "76c799d3a26cf76443549a2b21ce985d": 31,
+      "f0bb6b50c96b2d3047c78f35fdc55e62": 10
+    },
+    "attempts": 1,
+    "results": 1,
+    "matchedAttempts": 1,
+    "unmatchedAttempts": 0,
+    "worlds": [
+      "26UHC"
+    ],
+    "outcomes": {
+      "success": 1
+    },
+    "profileEvents": [],
+    "navigation": [],
+    "views": [
+      "lobby",
+      "dashboard",
+      "club/squad",
+      "company/finances",
+      "dashboard",
+      "club/squad",
+      "company/finances",
+      "lobby",
+      "dashboard",
+      "company/finances"
+    ],
+    "saveEvents": [
+      {
+        "schema_version": 1,
+        "session_id": "76c799d3a26cf76443549a2b21ce985d",
+        "received_at": "2026-10-11T13:27:04.434887+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 6,
+        "kind": "attempt",
+        "target": "/api/actions/save",
+        "request_id": 23
+      },
+      {
+        "schema_version": 1,
+        "session_id": "76c799d3a26cf76443549a2b21ce985d",
+        "received_at": "2026-10-11T13:27:04.434887+00:00",
+        "world": "26UHC",
+        "team": "team_nexus",
+        "season": 2,
+        "week": 6,
+        "kind": "result",
+        "target": "/api/actions/save",
+        "request_id": 23,
+        "outcome": "success",
+        "status": 200,
+        "duration_ms": 40
+      }
+    ],
+    "visibleTimeIsProxy": true
+  }
+}

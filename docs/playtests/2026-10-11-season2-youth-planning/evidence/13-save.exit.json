@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-11T09:57:53.942958+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=season2-youth-planning",
+    "run-code",
+    "async (page) => {  const next=page.getByRole('button',{name:'Continue',exact:true});if(await next.count()!==1)throw new Error('Expected one reveal Continue');await next.click();  const save=page.getByRole('banner').getByRole('button',{name:/^Save(?: \u2022)?$/});if(await save.count()!==1)throw new Error('Expected one topbar Save');  const pending=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/api/actions/save'));  await save.click();const response=await pending;  const state=await (await page.request.get(new URL('/api/state',page.url()).href)).json();  return {status:response.status(),result:await response.json(),state:{season:state.season,week:state.week,phase:state.phase,user_team:state.user_team,save:state.save},dom:await page.locator('body').innerText()}; }"
+  ],
+  "stdout_bytes": 7844,
+  "stderr_bytes": 0
+}

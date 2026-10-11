@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-11T13:03:57.180259+00:00",
+  "canonical_rows": 1072,
+  "sessions": 96,
+  "columns": 21,
+  "canonical_sha256": "bfa3f0664675f946bd28b3cea3b3d4e4032b0d2ea4f7729bf594506b9693b855",
+  "prior1061_raw_prefix_exact": true,
+  "prior1061_all21fields_exact": true,
+  "original10_rows_all210fields_exact": true,
+  "root_separate_correction_step11": true,
+  "original_recovered_shard_sha256": "5d01503a17285cb2f84d14b3b932f840cd23339089cc04117e32aa9eae5d87fe",
+  "agent_metadata_edited_copy_preserved_sha256": "2cdb22d8e8a97f3b152d06b808f592575d52baaa666e577608aee8fb705fa892",
+  "root_correction_sha256": "b1dd0897e96719617ddccf24b9affca9b9c5ad6d91d1980ba7b88917480aae18",
+  "safe_artifacts_published": 39,
+  "played_head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "accepted_decision_coverage": "3/3",
+  "observed_request_pair_coverage": "5/5",
+  "local_tests_launched": false
+}

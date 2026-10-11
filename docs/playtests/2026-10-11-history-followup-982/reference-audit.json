@@ -1,0 +1,951 @@
+{
+  "audited_at_utc": "2026-10-11T08:20:25.673967+00:00",
+  "rows": 25,
+  "named_row_refs": 38,
+  "report_refs": 43,
+  "references": [
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/audit.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-status-retry/evidence/audit.json",
+      "sha256": "6a80328e0afeb2aa19013aa4b05a1844c84b528298fe3f25c318e1b1c6a6f0b6",
+      "byte_count": 10009,
+      "git_blob_sha256": "6a80328e0afeb2aa19013aa4b05a1844c84b528298fe3f25c318e1b1c6a6f0b6",
+      "git_blob_byte_count": 10009
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "evidence/usage-summary.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-status-retry/evidence/usage-summary.json",
+      "sha256": "6dfe9159c09b38bdc53adddba8e1a240009331a14e8bcc0e13001991ad674275",
+      "byte_count": 1909,
+      "git_blob_sha256": "6dfe9159c09b38bdc53adddba8e1a240009331a14e8bcc0e13001991ad674275",
+      "git_blob_byte_count": 1909
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "01-dashboard-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/01-dashboard-public.txt",
+      "sha256": "47bdea405bde36ceb2dc590da57b88125113ea3ee9bda08f8a26a351f33d2086",
+      "byte_count": 44917,
+      "git_blob_sha256": "47bdea405bde36ceb2dc590da57b88125113ea3ee9bda08f8a26a351f33d2086",
+      "git_blob_byte_count": 44917
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "02-prep.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/02-prep.txt",
+      "sha256": "6c0124f8604b49e608e80bafdf3d6fda4d983718033d609db6c346c3ae6a812b",
+      "byte_count": 262,
+      "git_blob_sha256": "6c0124f8604b49e608e80bafdf3d6fda4d983718033d609db6c346c3ae6a812b",
+      "git_blob_byte_count": 262
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "02-prep-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/02-prep-readback.txt",
+      "sha256": "dbf3fe4178a303e1bfbd5a30e4c854eebe6877697b8b60ffc20f0e2c10c02ad6",
+      "byte_count": 3921,
+      "git_blob_sha256": "dbf3fe4178a303e1bfbd5a30e4c854eebe6877697b8b60ffc20f0e2c10c02ad6",
+      "git_blob_byte_count": 3921
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-coach-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/03-coach-response.txt",
+      "sha256": "221e65213744f17510dce9d5e1e36ed52e0e331485714fc06942fbe666c16ebb",
+      "byte_count": 535,
+      "git_blob_sha256": "221e65213744f17510dce9d5e1e36ed52e0e331485714fc06942fbe666c16ebb",
+      "git_blob_byte_count": 535
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "03-coach-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/03-coach-readback.txt",
+      "sha256": "9c08af89689fc41ad2ad66cebfec5d24a823a5456b19e56875c2218507387e39",
+      "byte_count": 15694,
+      "git_blob_sha256": "9c08af89689fc41ad2ad66cebfec5d24a823a5456b19e56875c2218507387e39",
+      "git_blob_byte_count": 15694
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-plan-controls.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/04-plan-controls.txt",
+      "sha256": "ab5354e305c4f8d40e85eaca403adad2de3e936a0b3d4d853ed0b12998fddc90",
+      "byte_count": 6296,
+      "git_blob_sha256": "ab5354e305c4f8d40e85eaca403adad2de3e936a0b3d4d853ed0b12998fddc90",
+      "git_blob_byte_count": 6296
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-dial-structure.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/04-dial-structure.txt",
+      "sha256": "3ab12fcc5ae1fad71869b9d0c950de2ada4c62560e6bb573323b2581f06bc09d",
+      "byte_count": 832,
+      "git_blob_sha256": "3ab12fcc5ae1fad71869b9d0c950de2ada4c62560e6bb573323b2581f06bc09d",
+      "git_blob_byte_count": 832
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-plan-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/04-plan-response.txt",
+      "sha256": "67f6dcf0d7211e77d6da99401f434b123394ec438e637e6db3cba068a66fb16b",
+      "byte_count": 1136,
+      "git_blob_sha256": "67f6dcf0d7211e77d6da99401f434b123394ec438e637e6db3cba068a66fb16b",
+      "git_blob_byte_count": 1136
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "04-plan-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/04-plan-readback.txt",
+      "sha256": "cca9bb5d9082b384c9542718d1ccfe5901ddc3d828eeb61189910f654141abba",
+      "byte_count": 40267,
+      "git_blob_sha256": "cca9bb5d9082b384c9542718d1ccfe5901ddc3d828eeb61189910f654141abba",
+      "git_blob_byte_count": 40267
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "05-advance-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/05-advance-response.txt",
+      "sha256": "932ba3a94027fa4fddcd347c150279fd4c0de78ae096cd8819c5d0be53c2c90f",
+      "byte_count": 33714,
+      "git_blob_sha256": "932ba3a94027fa4fddcd347c150279fd4c0de78ae096cd8819c5d0be53c2c90f",
+      "git_blob_byte_count": 33714
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "05-week3-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/05-week3-readback.txt",
+      "sha256": "9f4738283555599c60a7741d40b6568d6812174a03de2333a7c1f4996d11f748",
+      "byte_count": 48923,
+      "git_blob_sha256": "9f4738283555599c60a7741d40b6568d6812174a03de2333a7c1f4996d11f748",
+      "git_blob_byte_count": 48923
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "06-full-report.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/06-full-report.txt",
+      "sha256": "de30fcd8c944ae6c5f1bafae62f9c429830829e3da27d6737612661bedacbd21",
+      "byte_count": 7692,
+      "git_blob_sha256": "de30fcd8c944ae6c5f1bafae62f9c429830829e3da27d6737612661bedacbd21",
+      "git_blob_byte_count": 7692
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "06-prep-inbox-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/06-prep-inbox-readback.txt",
+      "sha256": "c1f5f2778f70645859a999b16a24eba8edc64c6ec5196d8f38a4818bd1e6f9f3",
+      "byte_count": 165,
+      "git_blob_sha256": "c1f5f2778f70645859a999b16a24eba8edc64c6ec5196d8f38a4818bd1e6f9f3",
+      "git_blob_byte_count": 165
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "06-prep-inbox-recovered.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/06-prep-inbox-recovered.txt",
+      "sha256": "a01b9ab032f0e7010cc02c09b7f8d69f9fdfc39098369ae60287e0ba81efdcd1",
+      "byte_count": 119934,
+      "git_blob_sha256": "a01b9ab032f0e7010cc02c09b7f8d69f9fdfc39098369ae60287e0ba81efdcd1",
+      "git_blob_byte_count": 119934
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "narrative-source.py",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/narrative-source.py",
+      "sha256": "8a390c7a44c5787e3b1c487aef51e3425f377451d61cf11062bed78fb1f20cc3",
+      "byte_count": 30977,
+      "git_blob_sha256": "8a390c7a44c5787e3b1c487aef51e3425f377451d61cf11062bed78fb1f20cc3",
+      "git_blob_byte_count": 30977
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "6",
+      "field": "evidence",
+      "historical_reference": "development-source.py",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/development-source.py",
+      "sha256": "9eac39807f2ecf923900f6745cdcd17a96de04b3c63c1621e77693733e26ff6b",
+      "byte_count": 63968,
+      "git_blob_sha256": "9eac39807f2ecf923900f6745cdcd17a96de04b3c63c1621e77693733e26ff6b",
+      "git_blob_byte_count": 63968
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "07-save-response.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/07-save-response.txt",
+      "sha256": "728644191838420c5d6355d135cf440f6e58c1717bed1080c5148507642a7386",
+      "byte_count": 384,
+      "git_blob_sha256": "728644191838420c5d6355d135cf440f6e58c1717bed1080c5148507642a7386",
+      "git_blob_byte_count": 384
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "07-saved-public.txt",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/07-saved-public.txt",
+      "sha256": "10d81b24c516ac3cfae71682ecc51d71f80cfa94dcaeac5db1b84e5c8a8a9a71",
+      "byte_count": 44573,
+      "git_blob_sha256": "10d81b24c516ac3cfae71682ecc51d71f80cfa94dcaeac5db1b84e5c8a8a9a71",
+      "git_blob_byte_count": 44573
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "7",
+      "field": "evidence",
+      "historical_reference": "reconciliation.json",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/reconciliation.json",
+      "sha256": "b1c7acd019c1d17c69d4964fd6d6a2ff3398c911cb3696c5753dc6771e45e6ee",
+      "byte_count": 3554,
+      "git_blob_sha256": "b1c7acd019c1d17c69d4964fd6d6a2ff3398c911cb3696c5753dc6771e45e6ee",
+      "git_blob_byte_count": 3554
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "evidence/reconciliation.json",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/reconciliation.json",
+      "sha256": "b1c7acd019c1d17c69d4964fd6d6a2ff3398c911cb3696c5753dc6771e45e6ee",
+      "byte_count": 3554,
+      "git_blob_sha256": "b1c7acd019c1d17c69d4964fd6d6a2ff3398c911cb3696c5753dc6771e45e6ee",
+      "git_blob_byte_count": 3554
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "evidence/usage.raw.jsonl",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/usage.raw.jsonl",
+      "sha256": "0380d5d6e01b60e4e3c9dc5e68df46e70eb3be77538ad2ec6a0538f1a949af6f",
+      "byte_count": 18658,
+      "git_blob_sha256": "0380d5d6e01b60e4e3c9dc5e68df46e70eb3be77538ad2ec6a0538f1a949af6f",
+      "git_blob_byte_count": 18658
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "evidence/saved-decisions.json",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/saved-decisions.json",
+      "sha256": "4bc7e918f611d193d993e19c69400047c4fd074ae891ccb8e576763239a1646f",
+      "byte_count": 1426,
+      "git_blob_sha256": "4bc7e918f611d193d993e19c69400047c4fd074ae891ccb8e576763239a1646f",
+      "git_blob_byte_count": 1426
+    },
+    {
+      "session_id": "2026-10-11-season2-preparation",
+      "step": "8",
+      "field": "evidence",
+      "historical_reference": "evidence/report-command-exits.json",
+      "published_path": "docs/playtests/2026-10-11-season2-preparation/evidence/report-command-exits.json",
+      "sha256": "2f6d371ff087d5dbb325ef9549bced25a7f079db02c06108a93550cff83c655e",
+      "byte_count": 46,
+      "git_blob_sha256": "2f6d371ff087d5dbb325ef9549bced25a7f079db02c06108a93550cff83c655e",
+      "git_blob_byte_count": 46
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "1",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/01-dashboard.txt",
+      "sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "byte_count": 4519,
+      "git_blob_sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "git_blob_byte_count": 4519
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "2",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/02-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-readback.txt",
+      "sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "byte_count": 3185,
+      "git_blob_sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "git_blob_byte_count": 3185
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "2",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-retained.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-retained.json",
+      "sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "byte_count": 11297,
+      "git_blob_sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "git_blob_byte_count": 11297
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "3",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/03-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-readback.txt",
+      "sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "byte_count": 4235,
+      "git_blob_sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "git_blob_byte_count": 4235
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "3",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-retained.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-retained.json",
+      "sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "byte_count": 11297,
+      "git_blob_sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "git_blob_byte_count": 11297
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "4",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/04-public.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.txt",
+      "sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "byte_count": 47252,
+      "git_blob_sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "git_blob_byte_count": 47252
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "4",
+      "field": "analytics_evidence",
+      "historical_reference": "usage-retained.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-retained.json",
+      "sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "byte_count": 11297,
+      "git_blob_sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "git_blob_byte_count": 11297
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/telemetry-report.txt",
+      "sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "byte_count": 2226,
+      "git_blob_sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "git_blob_byte_count": 2226
+    },
+    {
+      "session_id": "2026-10-11-away-recap",
+      "step": "5",
+      "field": "evidence",
+      "historical_reference": "usage-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-report.txt",
+      "sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "byte_count": 1302,
+      "git_blob_sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "git_blob_byte_count": 1302
+    }
+  ],
+  "report_references": [
+    {
+      "report_path": "docs/playtests/2026-10-11-gap40-status-retry/REPORT.md",
+      "historical_reference": "evidence/actions-before-status-annotation.csv",
+      "published_path": "docs/playtests/2026-10-11-gap40-status-retry/evidence/actions-before-status-annotation.csv",
+      "sha256": "0a53f2768a2421fec6e80850fb7e263b489b21c9307f4dec7fb53e0ad2d6a849",
+      "byte_count": 4031,
+      "git_blob_sha256": "0a53f2768a2421fec6e80850fb7e263b489b21c9307f4dec7fb53e0ad2d6a849",
+      "git_blob_byte_count": 4031
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-gap40-ready-reload/REPORT.md",
+      "historical_reference": "usage-summary.json",
+      "published_path": "docs/playtests/2026-10-11-gap40-ready-reload/evidence/usage-summary.json",
+      "sha256": "2e7bc4ab53c3c3c5615aa265153c700026478c02fdfc299c20fc0fdd5e752823",
+      "byte_count": 1907,
+      "git_blob_sha256": "2e7bc4ab53c3c3c5615aa265153c700026478c02fdfc299c20fc0fdd5e752823",
+      "git_blob_byte_count": 1907
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "raw-git-mapping.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/raw-git-mapping.json",
+      "sha256": "1dbd8f5f80cab901dd20b89d6da8ce0734da1adcb03cd4aa26d89d78982a7033",
+      "byte_count": 9550,
+      "git_blob_sha256": "1dbd8f5f80cab901dd20b89d6da8ce0734da1adcb03cd4aa26d89d78982a7033",
+      "git_blob_byte_count": 9550
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/01-dashboard.txt",
+      "sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "byte_count": 4519,
+      "git_blob_sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "git_blob_byte_count": 4519
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/01-dashboard.txt",
+      "sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "byte_count": 4519,
+      "git_blob_sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "git_blob_byte_count": 4519
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/02-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-readback.txt",
+      "sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "byte_count": 3185,
+      "git_blob_sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "git_blob_byte_count": 3185
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "02-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-readback.txt",
+      "sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "byte_count": 3185,
+      "git_blob_sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "git_blob_byte_count": 3185
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/03-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-readback.txt",
+      "sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "byte_count": 4235,
+      "git_blob_sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "git_blob_byte_count": 4235
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "03-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-readback.txt",
+      "sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "byte_count": 4235,
+      "git_blob_sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "git_blob_byte_count": 4235
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/04-public.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.txt",
+      "sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "byte_count": 47252,
+      "git_blob_sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "git_blob_byte_count": 47252
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "04-public.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.txt",
+      "sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "byte_count": 47252,
+      "git_blob_sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "git_blob_byte_count": 47252
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "runs/playtests/2026-10-11-away-recap/audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/telemetry-report.txt",
+      "sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "byte_count": 2226,
+      "git_blob_sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "git_blob_byte_count": 2226
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "usage-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-report.txt",
+      "sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "byte_count": 1302,
+      "git_blob_sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "git_blob_byte_count": 1302
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "usage-retained.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-retained.json",
+      "sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "byte_count": 11297,
+      "git_blob_sha256": "1c192f010c0dad22738aab61a8b0e138eb2bc26fdb8b94ef113ea1e031fe4e38",
+      "git_blob_byte_count": 11297
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "original-comparison.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/original-comparison.json",
+      "sha256": "37cb1fad1cd811780f1e8bfbbfb075b8645e1b2631ca9c0902fc525e44e1475d",
+      "byte_count": 160,
+      "git_blob_sha256": "37cb1fad1cd811780f1e8bfbbfb075b8645e1b2631ca9c0902fc525e44e1475d",
+      "git_blob_byte_count": 160
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "03-plan.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-plan.txt",
+      "sha256": "7eb09fdbac99a987189d37219d72d5b603c6db9456d62179dee4588f3d02681e",
+      "byte_count": 1374,
+      "git_blob_sha256": "7eb09fdbac99a987189d37219d72d5b603c6db9456d62179dee4588f3d02681e",
+      "git_blob_byte_count": 1374
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "05-save.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/05-save.txt",
+      "sha256": "e766e767d538ea3315528d64a6ed959f316a9aef5a004603977d9f5b9da3c531",
+      "byte_count": 401,
+      "git_blob_sha256": "e766e767d538ea3315528d64a6ed959f316a9aef5a004603977d9f5b9da3c531",
+      "git_blob_byte_count": 401
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "02-prep.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-prep.txt",
+      "sha256": "144a91dd89aec986516112d2de8cae9b89e162579d6e11d8f77638f3d1ec406f",
+      "byte_count": 597,
+      "git_blob_sha256": "144a91dd89aec986516112d2de8cae9b89e162579d6e11d8f77638f3d1ec406f",
+      "git_blob_byte_count": 597
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "04-advance.js",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-advance.js",
+      "sha256": "b531492b0ff34d7458ba703905aaf4aab32182fb1d4a05e8902ed17f46f0b53c",
+      "byte_count": 346,
+      "git_blob_sha256": "b531492b0ff34d7458ba703905aaf4aab32182fb1d4a05e8902ed17f46f0b53c",
+      "git_blob_byte_count": 346
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "04-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-readback.txt",
+      "sha256": "11a82c32320f504907f034b1683487189402b89e1c95fa02974b994652d918ea",
+      "byte_count": 157,
+      "git_blob_sha256": "11a82c32320f504907f034b1683487189402b89e1c95fa02974b994652d918ea",
+      "git_blob_byte_count": 157
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage.0.jsonl",
+      "sha256": "5377ae4d72cbaf0eee14cd43febb22074e8b27b941c781b6e7496586853c0732",
+      "byte_count": 9901,
+      "git_blob_sha256": "5377ae4d72cbaf0eee14cd43febb22074e8b27b941c781b6e7496586853c0732",
+      "git_blob_byte_count": 9901
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "flywheel-before.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/flywheel-before.json",
+      "sha256": "16e93d6817a0cd63b97cd563f2034dcf1ec6d70eb9a91bc701f2821682818620",
+      "byte_count": 5608,
+      "git_blob_sha256": "16e93d6817a0cd63b97cd563f2034dcf1ec6d70eb9a91bc701f2821682818620",
+      "git_blob_byte_count": 5608
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "flywheel-after.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/flywheel-after.json",
+      "sha256": "6d623664fbc505e40ce3607f3639f9ec02fc5e9b69b0c0c722f26b178d53e4e2",
+      "byte_count": 75,
+      "git_blob_sha256": "6d623664fbc505e40ce3607f3639f9ec02fc5e9b69b0c0c722f26b178d53e4e2",
+      "git_blob_byte_count": 75
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/source-manifest.json",
+      "sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7",
+      "byte_count": 51487,
+      "git_blob_sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7",
+      "git_blob_byte_count": 51487
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "tested-source-git-mapping.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/tested-source-git-mapping.json",
+      "sha256": "2f02cb3c1743ee0521197e193c063d0ffc6d26d637ca9ed7618db55ba5f1bb41",
+      "byte_count": 158913,
+      "git_blob_sha256": "2f02cb3c1743ee0521197e193c063d0ffc6d26d637ca9ed7618db55ba5f1bb41",
+      "git_blob_byte_count": 158913
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "server-running.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/server-running.json",
+      "sha256": "96ea8d0a164f557a84f9e408642caaa836f4ce6b772080b7811ef80c8722cc21",
+      "byte_count": 483,
+      "git_blob_sha256": "96ea8d0a164f557a84f9e408642caaa836f4ce6b772080b7811ef80c8722cc21",
+      "git_blob_byte_count": 483
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "src/esports_sim/__init__.py",
+      "published_path": "src/esports_sim/__init__.py",
+      "sha256": "1496580b027be299eb895b37953ba97df8893a7bc98457f5e17980448ea6f122",
+      "byte_count": 884,
+      "historical_Git_ref": "20273cd7ab885e7d409dec46f511d915d6e08ff4:src/esports_sim/__init__.py",
+      "historical_git_sha256": "9d538189f8a1070f8fb9192909d8a29500e100cd03f879fb7421c83a5fe52171",
+      "qualification": "Package import path is unchanged at historical20273; source Git bytes and Windows checkout bytes are recorded separately, not current runtime validation.",
+      "git_blob_sha256": "9d538189f8a1070f8fb9192909d8a29500e100cd03f879fb7421c83a5fe52171",
+      "git_blob_byte_count": 866,
+      "raw_vs_Git_qualification": "Unchanged package file has Windows CRLF raw bytes and historical Git LF bytes; both hashes retained."
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "2026-10-11-away-recap/actions.csv",
+      "published_path": "docs/playtests/2026-10-11-away-recap/actions.csv",
+      "sha256": "9472d18cf6c5cbf685002794ba436917263a9c97ec189a7c78a31b334358ad8c",
+      "byte_count": 3503,
+      "git_blob_sha256": "9472d18cf6c5cbf685002794ba436917263a9c97ec189a7c78a31b334358ad8c",
+      "git_blob_byte_count": 3503
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "01-dashboard.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/01-dashboard.txt",
+      "sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "byte_count": 4519,
+      "git_blob_sha256": "43df2578a7e33823e1e1e57ea9ad78b81401e1d55e2190778d1b13835fd779ce",
+      "git_blob_byte_count": 4519
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "02-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/02-readback.txt",
+      "sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "byte_count": 3185,
+      "git_blob_sha256": "493cd1ad72635444ad49001b5206c42384a9be07cc810a82f1065905a9064063",
+      "git_blob_byte_count": 3185
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "03-readback.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/03-readback.txt",
+      "sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "byte_count": 4235,
+      "git_blob_sha256": "79682277eb927dd44b541afb444a9814896b453d579d88caf0244f302741c722",
+      "git_blob_byte_count": 4235
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "04-public.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/04-public.txt",
+      "sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "byte_count": 47252,
+      "git_blob_sha256": "c9c8d187e6d07e71b4c7ca500583361230f8f6d126e67c99849e28cb6d1eb8be",
+      "git_blob_byte_count": 47252
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "05-save.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/05-save.txt",
+      "sha256": "e766e767d538ea3315528d64a6ed959f316a9aef5a004603977d9f5b9da3c531",
+      "byte_count": 401,
+      "git_blob_sha256": "e766e767d538ea3315528d64a6ed959f316a9aef5a004603977d9f5b9da3c531",
+      "git_blob_byte_count": 401
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "audit.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/audit.json",
+      "sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "byte_count": 4277,
+      "git_blob_sha256": "801d482f2c49cee439826a5da190d5a39062244aac86b22dfb1e72ecf4162f05",
+      "git_blob_byte_count": 4277
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "original-comparison.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/original-comparison.json",
+      "sha256": "37cb1fad1cd811780f1e8bfbbfb075b8645e1b2631ca9c0902fc525e44e1475d",
+      "byte_count": 160,
+      "git_blob_sha256": "37cb1fad1cd811780f1e8bfbbfb075b8645e1b2631ca9c0902fc525e44e1475d",
+      "git_blob_byte_count": 160
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "source-manifest.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/source-manifest.json",
+      "sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7",
+      "byte_count": 51487,
+      "git_blob_sha256": "f8692460b498bc443648fbcb47c22f3dcf17f4b04d8118e8adc22938ba1fc4a7",
+      "git_blob_byte_count": 51487
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "telemetry-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/telemetry-report.txt",
+      "sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "byte_count": 2226,
+      "git_blob_sha256": "f97d25eb5b8f56d048bd1d47a49bef090ba45d63f554689eb3f485837a98e256",
+      "git_blob_byte_count": 2226
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "usage-report.txt",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/usage-report.txt",
+      "sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "byte_count": 1302,
+      "git_blob_sha256": "86d0936bf1be20b9b3681f21dd682f579beff5bd5bdca70448b71447a81165f5",
+      "git_blob_byte_count": 1302
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "2026-10-11-away-recap/evidence/README.md",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "sha256": "fc2275fe2c1f439be62f57392424cc24c8553d3e459a491ba939519fb17bf165",
+      "byte_count": 5098,
+      "git_blob_sha256": "fc2275fe2c1f439be62f57392424cc24c8553d3e459a491ba939519fb17bf165",
+      "git_blob_byte_count": 5098
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "2026-10-11-away-recap/evidence/raw-git-mapping.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/raw-git-mapping.json",
+      "sha256": "1dbd8f5f80cab901dd20b89d6da8ce0734da1adcb03cd4aa26d89d78982a7033",
+      "byte_count": 9550,
+      "git_blob_sha256": "1dbd8f5f80cab901dd20b89d6da8ce0734da1adcb03cd4aa26d89d78982a7033",
+      "git_blob_byte_count": 9550
+    },
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap-score-perspective.md",
+      "historical_reference": "2026-10-11-away-recap/evidence/tested-source-git-mapping.json",
+      "published_path": "docs/playtests/2026-10-11-away-recap/evidence/tested-source-git-mapping.json",
+      "sha256": "2f02cb3c1743ee0521197e193c063d0ffc6d26d637ca9ed7618db55ba5f1bb41",
+      "byte_count": 158913,
+      "git_blob_sha256": "2f02cb3c1743ee0521197e193c063d0ffc6d26d637ca9ed7618db55ba5f1bb41",
+      "git_blob_byte_count": 158913
+    }
+  ],
+  "unavailable": [
+    {
+      "report_path": "docs/playtests/2026-10-11-away-recap/evidence/README.md",
+      "historical_reference": "04-advance.txt",
+      "qualification": "Original report explicitly says observer awaited wrong route and was interrupted; original response stdout not retained. The original JS observer and independent public/saved/usage receipts are present. No fabricated response or replay."
+    }
+  ],
+  "directory_reference_mapping": [
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "1",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "2",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "3",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "4",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "5",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-status-retry",
+      "step": "6",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-status-retry/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "1",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "2",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "3",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "4",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "5",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    },
+    {
+      "session_id": "2026-10-11-gap40-ready-reload",
+      "step": "6",
+      "historical_reference": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "published_directory": "docs/playtests/2026-10-11-gap40-ready-reload/evidence",
+      "qualification": "Historical directory reference maps to original retained manifest/artifacts; no single terminal capture is inferred."
+    }
+  ],
+  "narrative_only_observations": [],
+  "historical_Git_source_mapping": [
+    {
+      "original_git_ref": "bbcab656e0d1d678f17f0ad1129ab4aea7564391:src/esports_sim/web/static/app.js",
+      "published_path": "docs/playtests/2026-10-11-history-followup-982/historical-source/bbcab656/src/esports_sim/web/static/app.js",
+      "sha256": "ceaebba5f89de9d797ef22d9d64160c260d0672a581519fb13444d1882afd434",
+      "byte_count": 398920,
+      "source_receipt": "2026-10-11-gap40-status-retry/evidence/tested-git-blobs.json",
+      "qualification": "Exact retained tested Git object bytes, not reconstructed raw Windows checkout and not current PR387 source. Local tests remain UNRUN; source archive is not test execution evidence."
+    },
+    {
+      "original_git_ref": "bbcab656e0d1d678f17f0ad1129ab4aea7564391:tests/test_advance_transition_frontend.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-982/historical-source/bbcab656/tests/test_advance_transition_frontend.py",
+      "sha256": "0397d384934abfa988315876b3175b64cfdd1b563b055771500c1debca09c4d5",
+      "byte_count": 2951,
+      "source_receipt": "2026-10-11-gap40-status-retry/evidence/tested-git-blobs.json",
+      "qualification": "Exact retained tested Git object bytes, not reconstructed raw Windows checkout and not current PR387 source. Local tests remain UNRUN; source archive is not test execution evidence."
+    },
+    {
+      "original_git_ref": "bf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e:src/esports_sim/web/static/app.js",
+      "published_path": "docs/playtests/2026-10-11-history-followup-982/historical-source/bf3dc140/src/esports_sim/web/static/app.js",
+      "sha256": "8bf7da15359829866f7a722646b97e380b14c995b7b592c9abeed9c284349a2d",
+      "byte_count": 399301,
+      "source_receipt": "2026-10-11-gap40-ready-reload/evidence/tested-git-blobs.json",
+      "qualification": "Exact retained tested Git object bytes, not reconstructed raw Windows checkout and not current PR387 source. Local tests remain UNRUN; source archive is not test execution evidence."
+    },
+    {
+      "original_git_ref": "f63dbd11a02b2b994c72a9657d18ee037a53e85b:src/esports_sim/manager/narrative.py",
+      "published_path": "docs/playtests/2026-10-11-history-followup-982/historical-source/f63dbd11/src/esports_sim/manager/narrative.py",
+      "sha256": "0b7cce9589b0e7e0a231b1f11757d612b2140290e6d9508d50845c426527337c",
+      "byte_count": 30372,
+      "historical_tested_windows_sha256": "eb2519ba0aba8e7633804c9833de7c1455ffb0284af3b7362fbe584d9754fc9d",
+      "source_receipt": "docs/playtests/2026-10-11-away-recap/evidence/tested-source-git-mapping.json",
+      "qualification": "Exact final f63dbd narrative Git bytes equal original dirty tested-source mapping at b5ca3ce. Original 425 src/data freeze excludes tests/scripts/untracked files and does not prove gameplay on a clean final head."
+    }
+  ],
+  "execution_qualification": "Root season2-preparation step7 incorrectly named accept_preparation; exact saved kind set_preparation is corrected by original step8, preserving step7 and all21 fields. Hidden-option/CSS-title observers remain partial. Both gap40 browser503 injections are intentional faults; paired failed usage results are retained, not accepted gameplay. Away Advance observer stdout absent and literal NEWS observer timed out; original JS/timeout/public/usage receipts retained. Away grouped command exit0 does not certify individual report exit codes. No new tests, gates, archived helpers or gameplay.",
+  "private_inputs": "Complete original gap40 and away owner/source saves, auth/session/launch inputs excluded. Sanitized public receipts and original hashes retained; root fictional preparation before/after saves are scoped. Telemetry session_id is not authentication.",
+  "new_tests_helpers_gameplay": false
+}

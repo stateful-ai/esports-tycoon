@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0137",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migrated pro targets still cover the fixture",
+    "problem": "Migrated rival and match assignments live outside the deep-dive slot",
+    "solution": "Recognize exact current rival or match value in the pro lane",
+    "lesson": "Coverage follows effective assignment, not slot presence",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0138",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration guidance survives persistence",
+    "problem": "Migration clears old target but keeps the active lane",
+    "solution": "Use browser Save and native restart public readback in two isolated worlds",
+    "lesson": "Initial in-memory guidance is insufficient for persistence acceptance",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0139",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Migration gap escaped initial coverage tests",
+    "problem": "First regression suite covered only modern pro directive",
+    "solution": "Add actual schema32 migration/load cases including negative targets",
+    "lesson": "Legacy values need their own acceptance and contract cases",
+    "confidence": "medium",
+    "source": "PR358 migrated scouting MG35R/MG35M seed2038 S1W5 session2026-10-10-dashboard-migrated-scouting",
+    "code": "MG35R",
+    "tags": [
+      "scouting",
+      "migration",
+      "browser"
+    ],
+    "kind": "pain-point"
+  }
+]

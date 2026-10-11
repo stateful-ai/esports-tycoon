@@ -1,0 +1,9 @@
+### Ran Playwright code
+```js
+await page.goto('http://127.0.0.1:8539');
+```
+### Page
+- Page URL: http://127.0.0.1:8539/
+- Page Title: esports-sim
+### Snapshot
+- [Snapshot](.playwright-cli\page-2026-10-11T11-03-14-120Z.yml)

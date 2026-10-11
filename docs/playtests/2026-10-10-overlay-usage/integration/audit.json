@@ -1,0 +1,55 @@
+{
+  "tested_head": "28cb13a6cf48ce8937f18ac17f7bc9534eb2d203",
+  "tested_uncommitted_merge_base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "world": "26UHC",
+  "seed": 2038,
+  "season": 1,
+  "week": 9,
+  "usage_baseline_prefix_preserved": true,
+  "scoped_retained_events": 31,
+  "interaction_counts": {
+    "market/player_search": 1,
+    "profile/player_open": 1,
+    "profile/player_close": 1,
+    "handbook/open": 1,
+    "handbook/section_first_week": 1,
+    "handbook/section_screens": 1,
+    "handbook/section_glossary": 1,
+    "handbook/close": 1
+  },
+  "action_count_before": 43,
+  "action_count_after": 43,
+  "action_log_unchanged": true,
+  "snapshot_group_count_before": 1,
+  "snapshot_group_count_after": 1,
+  "snapshot_counts_by_manager_before": {
+    "mgr_team_nexus": 8
+  },
+  "snapshot_counts_by_manager_after": {
+    "mgr_team_nexus": 8
+  },
+  "snapshot_entry_total_before": 8,
+  "snapshot_entry_total_after": 8,
+  "snapshots_unchanged": true,
+  "raw_save_bytes_unchanged": true,
+  "save_sha256_before": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "save_sha256_after": "89637d44d2c73cf60a7c027d3b7d9cdf3634d02e88439f9427aa1ddb2a26cb11",
+  "original_csv_sha256": "c163803ac5412f5000a02ae0a6d9394cc9a27bd97d131c5b7f6ace547139aa2f",
+  "save_requests": {
+    "attempts": 1,
+    "paired_results": 1,
+    "unmatched_attempts": 0,
+    "orphan_results": 0
+  },
+  "interaction_fields": [
+    "kind",
+    "received_at",
+    "schema_version",
+    "season",
+    "session_id",
+    "target",
+    "team",
+    "week",
+    "world"
+  ]
+}

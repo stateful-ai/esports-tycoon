@@ -1,0 +1,77 @@
+{
+  "verified_at_utc": "2026-10-11T01:42:34.955697+00:00",
+  "gap": 31,
+  "native": {
+    "runner_pid": 29132,
+    "pytest_pid": 38084,
+    "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\gap31-regional-prize-report\\ESports Simulator",
+    "command": [
+      "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-n",
+      "2"
+    ],
+    "started_at": "2026-10-10T22:43:48.524038+00:00",
+    "status": "completed",
+    "exit_code": 0,
+    "completed_at": "2026-10-11T00:28:24.462579+00:00",
+    "freeze_unchanged": true,
+    "frozen_file_count": 625
+  },
+  "terminal": "1279 passed in 6275.09s (1:44:35)",
+  "frozen_paths": 625,
+  "pre_post_current_exact": true,
+  "complete_runtime_scope": true,
+  "local_tests_launched": false,
+  "independent_saved_state_cases": [
+    {
+      "case": "W14",
+      "source_sha256": "963099a66623ba63c343901a4841bc54eb6f4dffd2353928ba0960174f7cd622",
+      "identical_baseline_patched_sha256": "8e8b3f1706501000e8599c0951633f506f7f43d4ea1f0e3b8ef45691f3b03984",
+      "accepted_before": 64,
+      "accepted_after": 65,
+      "new_accepted": {
+        "season": 1,
+        "week": 14,
+        "phase": "regular",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "advance",
+        "params": {},
+        "source": "web"
+      },
+      "snapshots_before": 13,
+      "snapshots_after": 14
+    },
+    {
+      "case": "W16",
+      "source_sha256": "9cf48a1c6e44d70ab5a911acdbce9122a603b1f6a2de43cebecaf787fddbdef4",
+      "identical_baseline_patched_sha256": "32d6564f38d0adff259bd59e53aaf3b45d44df3de8b10470ca301e1b6719bba6",
+      "accepted_before": 71,
+      "accepted_after": 72,
+      "new_accepted": {
+        "season": 1,
+        "week": 16,
+        "phase": "playoffs",
+        "manager_id": "mgr_team_nexus",
+        "team_id": "team_nexus",
+        "kind": "advance",
+        "params": {},
+        "source": "web"
+      },
+      "snapshots_before": 15,
+      "snapshots_after": 16
+    }
+  ],
+  "report_bank_exactly_reconciles": true,
+  "direct_http_browser_usage_unavailable": true,
+  "limits": "Direct HTTP acceptance, no browser visual or usage coverage claim. Harness wrapper failures and subsequent read-only correction are preserved; no Advance replayed during publication.",
+  "scoped_rows": 8,
+  "scoped_csv_sha256": "79b0b353747ae6d172c4069c969291cfa07d207370f8b9bd3d7487ce019560fb",
+  "outcomes": {
+    "blocked": 2,
+    "met": 6
+  }
+}

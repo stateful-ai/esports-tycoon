@@ -1,0 +1,6 @@
+{
+  "original_manifest_snapshot_count": 1,
+  "count_unit": "team partitions",
+  "correct_total_snapshots": 26,
+  "correction": "telemetry_snaps is a dict of team lists, not a flat list; UTF8 read corrected a cp1252 harness exception; no baseline state changes"
+}

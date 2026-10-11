@@ -1,0 +1,80 @@
+{
+  "retained_events": 42,
+  "counts": {
+    "session_start ": 6,
+    "view lobby": 6,
+    "visible_time lobby": 6,
+    "session_end ": 2,
+    "view dashboard": 5,
+    "visible_time dashboard": 8,
+    "attempt /api/actions/advance": 4,
+    "result /api/actions/advance": 3,
+    "attempt /api/actions/save": 1,
+    "result /api/actions/save": 1
+  },
+  "request_result_receipts": [
+    {
+      "session_id": "fd818515e5f444436bae44e7240b24bd",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": null
+    },
+    {
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": null
+    },
+    {
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": 200
+    },
+    {
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 20,
+      "status": null
+    },
+    {
+      "session_id": "0e098e6ef4fcf0b167e8f04a9d54b9d2",
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 20,
+      "status": 200
+    },
+    {
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "kind": "attempt",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": null
+    },
+    {
+      "session_id": "5903535b1da1d5ef0ff57aef8c8c1331",
+      "kind": "result",
+      "target": "/api/actions/advance",
+      "request_id": 7,
+      "status": 200
+    },
+    {
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "kind": "attempt",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "status": null
+    },
+    {
+      "session_id": "06c473a6992042090a7a6224ef258675",
+      "kind": "result",
+      "target": "/api/actions/save",
+      "request_id": 10,
+      "status": 200
+    }
+  ]
+}

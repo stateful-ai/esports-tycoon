@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-11T11:03:14.150804+00:00",
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\nodejs\\npx.cmd",
+    "--package",
+    "@playwright/cli",
+    "playwright-cli",
+    "-s=mentor400-week-progress",
+    "goto",
+    "http://127.0.0.1:8539"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "pid": 29284,
+  "port": 8547,
+  "package": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "started_at_utc": "2026-10-11T13:19:45.384339+00:00",
+  "head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "source_before_sha256": "0a2e9fe72eac0311df93357736ca6155cb512215656770f2eedab86380900fdc",
+  "source_before_filesystem_created_utc_observed_after_play": "2026-10-11T13:19:45.310664+00:00"
+}

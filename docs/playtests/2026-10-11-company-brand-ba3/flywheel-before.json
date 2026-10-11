@@ -1,0 +1,133 @@
+[
+  {
+    "id": "esports-playtest-0252",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Correction: closed profile accessibility exposure",
+    "problem": "Prior transfer session interpreted unsigned DOM as visually stale profile",
+    "solution": "Root PNG inspection shows no visible profile; exactdf9 CSS hidden overlay staysdisplayflex opacity0 pointereventsnone and closeProfile lacks aria-hidden/inert",
+    "lesson": "Supersedes prior stale unsigned/cache claim: closed overlay content must be excluded from accessibility/focus; pointerblockedClose targetedalreadyclosedcontrol. Contract persisted correctly.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0251",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Stale unsigned profile after successful signing",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Signing succeeds but old profile remains unsigned behind app and its Close is pointer-blocked",
+    "lesson": "Refresh or close existing profile after accepted signing; failed pointer action is not anHTTP rejection",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0250",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Verify contracts from fresh profile and raw save",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Club roster and fresh profile agree2200/65/70streams/16krelease/32kbuyout/bench",
+    "lesson": "Reopen profile independently after signing before asserting persistence",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0249",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Negotiate a discount while preserving contract security",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Frostdash demanded2300/wk65weeks;2000 countered2200 and accepted",
+    "lesson": "A counteroffer is a successful accepted decision with countered status; do not classify HTTP200 as signed",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0248",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Expected flat wording caused one browser locator timeout",
+    "problem": "Scroll target expected No measurable CA change, absent for Hollowlock cumulative regression.",
+    "solution": "Preserved30s timeout in step5 and added step6 correction using observed season skill text; did not repeat failed locator.",
+    "lesson": "Use observed wording and screenshots for browser navigation; source expectations cannot establish actual visual acceptance.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0247",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Measured season skill flatness differs from cumulative regression",
+    "problem": "A flat-player expectation overstated Hollowlock cumulative history.",
+    "solution": "Hollowlock shows CA63.0 to62.8 S1W5 toS2W4 across23 observations; season skills S2W0 toS2W4 are measurably flat.",
+    "lesson": "Interpret each dated scope independently and preserve corrections; unchanged save120 actions27 snapshots bounds this read-only session.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0246",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Corrected profile first observation and weekly growth coexist",
+    "problem": "One snapshot previously implied a measured flat interval.",
+    "solution": "Nightsurge visibly shows first observation S2W4, no earlier comparison; latest practice+0.31 bench+0.01 badges0.00 remain visible.",
+    "lesson": "First-observation availability and latest-week sources are separate truths; three season matches are separate from zero latest-week senior maps.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0245",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Hidden overlay remains in browser accessibility queries",
+    "problem": "ARIA snapshot and Playwright isVisible include profile DOM after Close, despite opacity0 and pointer-events none.",
+    "solution": "Retain blocked targeting attempt; independently inspect overlay hidden class/computed CSS and append correction. No force-click or duplicate Save.",
+    "lesson": "DOM accessibility output alone can misclassify opacity-hidden overlays as visible; confirm pointer/opacity state before inferring failed close.",
+    "confidence": "high",
+    "source": "Actual browser session on679fdb313cc8004fb0a34db271ff62c736cbf099; copied26UHC seed2038 S2W4; runs\\playtests\\2026-10-11-academy-availability-fixed-head\\report.md",
+    "code": "",
+    "tags": [
+      "browser",
+      "harness",
+      "visibility"
+    ],
+    "kind": "pain-point"
+  }
+]

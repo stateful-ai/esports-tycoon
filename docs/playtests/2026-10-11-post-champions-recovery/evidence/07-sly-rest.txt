@@ -1,0 +1,6 @@
+### Result
+{"status":200}
+### Ran Playwright code
+```js
+await (async page => { await page.getByRole('button',{name:'Development',exact:true}).click(); const row = page.getByRole('row').filter({has:page.getByRole('cell',{name:/^Slyblade/})}).first(); const response = page.waitForResponse(r=>r.url().endsWith('/api/actions/dev_plan') && r.request().method()==='POST'); await row.getByRole('combobox').first().selectOption('rest'); return {status:(await response).status()}; })(page);
+```

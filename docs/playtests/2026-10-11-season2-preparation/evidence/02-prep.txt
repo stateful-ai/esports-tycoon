@@ -1,0 +1,6 @@
+### Error
+TimeoutError: locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByText('Adriatic Sirens').first() to be visible[22m
+[2m    62 × locator resolved to hidden <option value="team_adriatic_sirens">Adriatic Sirens</option>[22m
+

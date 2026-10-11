@@ -1,0 +1,173 @@
+{
+  "published_at_utc": "2026-10-10T21:57:40.180411+00:00",
+  "tested_base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6",
+  "full_gate": {
+    "command": [
+      "C:/Users/aidan/workspace/esports-simulator/ESports Simulator/.venv-win/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-n",
+      "2"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-10T19:55:54.718860+00:00",
+    "finished_at": "2026-10-10T21:56:41.938594+00:00",
+    "import_path": "C:\\Users\\aidan\\.codex\\worktrees\\playtest-history-evidence-recovery\\ESports Simulator\\src\\esports_sim\\__init__.py",
+    "source_files": 612,
+    "source_unchanged": true,
+    "changed_files": [],
+    "base": "64ee15f19f7acf80a2dbb7e5035d8c037128fea6"
+  },
+  "source_manifest_files": 612,
+  "source_manifest_raw_match": true,
+  "original685_sha256": "a4ab52cb1a0760b18ec97fd681ff2421a287b36e7a24d9a283141b7dda8cd5cb",
+  "original_recovery_audit_sha256": "897cc5a62fbb68092b373b31b747f87a686d74b8ca0f297bef1d121948fa0204",
+  "original_recovery_audit_unchanged": true,
+  "historical_prefixes": {
+    "597": {
+      "sha256": "9b27202d85ef0dd68357a77e8456e9bdc2774b2dba1c845485482326d17794bc",
+      "byte_length": 1113251,
+      "exact_prefix": true
+    },
+    "684": {
+      "sha256": "8bd8fa790427a14beeed479f805483e9e77002966a28b035872adbb500333556",
+      "byte_length": 1273578,
+      "exact_prefix": true
+    },
+    "698": {
+      "sha256": "c5c96567ecd0f2e3002b778599d83eec06ba797a48aba73afbe5fa9ef5077a9b",
+      "byte_length": 1288136,
+      "exact_prefix": true
+    },
+    "699": {
+      "sha256": "38c490a9e88b4d9f2c07b611094dc0c95fa82d08e26d2f89320e134f3d06e199",
+      "byte_length": 1289514,
+      "exact_prefix": true
+    },
+    "706": {
+      "sha256": "aa8f7b443b1be5473e044cd8b7d75e606b8e984409f440e7b87cc46914671d4c",
+      "byte_length": 1298258,
+      "exact_prefix": true
+    }
+  },
+  "published_rows": 724,
+  "published_unique_keys": 724,
+  "published_sha256": "0597857c221b2f60818472dfd1c07eca7435d081759d6e00b6ac659393604697",
+  "exact_correction_record_position": 699,
+  "correction_shard_sha256": "81d435dcaed1ef14ecc94e939f6bfa8477945c3defdf632456a56dfb547cfcfc",
+  "correction_record_raw_sha256": "556adf16ce43ca5228475f945361b5adf6deb2a0aa8664bc6b54f73d69cd0003",
+  "original132_copy_hashes_verified": true,
+  "additional_files_sha256": {
+    "docs/playtests/2026-10-10-sponsor-obligation/actions.csv": "2994e6218496f9238f63703e33838fb583bf82b3016abc9f09a80bf51942b9d8",
+    "docs/playtests/2026-10-10-sponsor-obligation/report.md": "72265f5e106d2d02978f4b78522403714621939494ef07a7afb27ed598a8957c",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/actions-before-analytics.csv": "ce625a114fb238995366a6786135ca611c934641544a65afff9e6634701304a0",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/audit.json": "dfaa475514feac3d8269169690bc084d996eccf2d0e440e906f4384c2acc8706",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/decision-indexed.json": "e2eaa0dc7be01ec048dfcd176cd08a059de4d857e745772073fffa20157dd5ae",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/decision-report.txt": "fa532ed092a7e25e2862e00f8fa782313590dd2f270fe9017ad3f2d90c1027b3",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/flywheel-after.json": "730f6bc1bac693c72ecf1f178d53b228c30d2b6e4202771330b181a9f3099b30",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/flywheel-before.json": "0ac3ea9cd8023f43c35e0c5851d8669429f558566ce152c03e693c6edf166ae4",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/initial-audit-error.json": "bdc5d163ba7a7a5b5b977226701400145154e941596f378f6d9e92b74b646a8e",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/request-pairs.json": "4cf3076274581c6b6a2e89379923ac966831b929afd9edfe4c7f34f3d79b5850",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-dashboard-before.txt": "c6e063f6c773d0ac6f672c6ed5c559031bdaa03337d21d0e4942a5292eb9c1e5",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-demand-accepted.txt": "a6f4a1b8d67d492d70bea409345c14878b95c6f3399713f060fefd02d225c652",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-demand-honored.txt": "f1dfd0a1653179b169fc766bcb97209deac33551f30a42890a0398409c0629ce",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-final-public-state.json": "16814014f333195f4bfbdee8432597acf6fcd443ba6a3da6e616d9afb33fed95",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-full-report.txt": "0f85def8c1f5fe8d1fbbbc41602ad5ba0643bf592dc695a4e4346883c326b605",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-game-plan-readback.json": "d6b56ba881605bb499a713f395ca13f846d52570a180c0b73bbb9e26ec0c26ab",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-game-plan-request.json": "a713cd98e014181f129f603458e33eb9aba3b9b901f498e16522806b64fc16ff",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-ghost-profile.txt": "8e88ea1c3307267e0170479e813980f89f9b6709062b5a592d80aa936e31ac3c",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-honored.png": "88d492e344a02af8f5e03e9214340cbbaf628fa95f301a6ff64c52cc7ee3e4aa",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-lineup-after-reload.txt": "c5d5ac403415675aa13d0666db4633cc539a5a22e6ef3126edb7b116269e9970",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-lineup-public-readback.json": "c3305017edf12db8bbcb2a39984d23f1ff04640444330c27a057c7d3d32e8088",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-lineup-request.json": "f27afa9ec317f0ff88727450ec541ed9688ebc87a36813bd48ec5673a84f8b3d",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-lineup-saved.txt": "c5d5ac403415675aa13d0666db4633cc539a5a22e6ef3126edb7b116269e9970",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-network-actions.txt": "7761b5c285cc7bd2e8899ac104621d5b3fcf06b86c08c39e4362fe02268fe70f",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-roster-before.txt": "e77ff46d7dccc9eaf9e2cc8a96805d4ab77fa5429f784517911957133f2b42b2",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-saved-readback.txt": "f1dfd0a1653179b169fc766bcb97209deac33551f30a42890a0398409c0629ce",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/sponsor-obligation-shoot-resolved.json": "c13a6a7fb27a83391d35eb78bfecb4263537651936c14dece0aa993e371ea92f",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/usage-report.txt": "09ab63c529deff5c03ee4a0238247c581d5c592e2600d5adcbbb4a6f9f144879",
+    "docs/playtests/2026-10-10-sponsor-obligation/evidence/usage.0.jsonl": "bb2fa27b9eeff9b69a6539e987192fa422919e4d0e2f18ee14bf00375f47779e",
+    "docs/playtests/2026-10-10-rookie-clinic/actions.csv": "2cbb0c0cc114183862d8f756bca5af14c68c87fbb61c53b76680d852eb5a9dc9",
+    "docs/playtests/2026-10-10-rookie-clinic/report.md": "aa5738359afdcffb723e0626ad7b3a1889313cf191f9d190aa9cb86404415be2",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/01-club-readback.json": "39e3e1d637606c46ef92d0625890ed316c5c5fc7d6a9e61f6fa1378a22456423",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/02-clinic-options.json": "01cfca844afad9c7f7f313efcf39a90b0b397e16eb8220a1705292f679a39507",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/03-clinic-public-readback.json": "c413982c17c4dd17bfaaca8772dc7f13c191bffa5ebf63b8d5f6b01f20e865db",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/03-clinic-settlement.json": "10faf0e27f7e0d43c1aaeb2868a07f70dfa546e887cf40da853610ecee489304",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/04-development-before.json": "d5aaa1226caea6e765b88e13b2c29833b0fe8e73e4219e1e33883b9ee3126d9b",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/05-development-readback.json": "4f300ed5b19c58e05b9b9a865b655d8c9e1523f117ce4f47e55f0ab0f4d63fb5",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/06-save-reload.json": "9e94188a8c56f20c24815f41da9d38912f0e03dc7dbb4c4714b27afdccb7483f",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/actions-before-analytics.csv": "e1b4a5a7589d55fa0a714ea78e12ddadd4c2527c75e17d26dcc74d3988b5631c",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/audit.json": "d6023821c85dbb2b4767a9efce81a03373ef0b53953616d656b8c135a35971e5",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/decision-indexed.json": "54687fc8e9f10423212bb5d04a7ed6303036c901766ec200f70bf94d455d3269",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/decision-report.txt": "bb2c430dc1edf5b445c9c4e305190c059291c59ef0ee9a3aae90b26be216b287",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/flywheel-after.json": "719a0f74a266f6ae98419d3cbb30547150ad2f42100561c40e8c106be9568bf6",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/flywheel-before.json": "3cf379d1b3c0d3840c59f265b2c16cb52849b8b33199b683042fbb00007fa28b",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/request-pairs.json": "310dc5ea2e9e5784d5dc005f84871c1d3d9566dfb986acd1cb74cc630f91c3a6",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/usage-report.txt": "718090a5872c029e180e350428d56d37f45b3e94272fc5feb409de36312fcdf7",
+    "docs/playtests/2026-10-10-rookie-clinic/evidence/usage.0.jsonl": "321c4ba9cdeb3f987cd8525501198ed03cee1cf69d846622294e46477cb000c5",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/actions.csv": "428fb5335dd39a5d5d48b0cfacb107399e5f6316f8cf7da599414579d6a9a18a",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/browser-assertions.json": "be11e464c1a809f3e3885b2e16baf35e1de2a43502160fc0db9f657d42477562",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/echo-promise-w9.png": "4f896dccdf8825f0d1e6343cf3f02d021e6af44203bfe29717b24fc413b5212f",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/evaluator-equivalence.json": "b5d5842a62f3e3f1036f53f80257d7f96132f0724a4583f1e6632def00407160",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/gate-proof.json": "172f8943241ff6b490a5118424094d18ba6243687011970d74be4d8721b058bf",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/HANDOFF.md": "0601bc9160b069cce36446cba2a17e0822aa3f1c98353da4a09b8b288a86dca2",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/reconciliation.json": "d41dddb4eee4b3b30343d2352ea0636ab558c862d4287885fcb9b5c455c3fe45",
+    "docs/playtests/2026-10-10-play-time-promise-clarity/REPORT.md": "c6b220706ff435120b3b67f23d198738030fcca6b29f187da35535dc7f8a2a13",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/actions.csv": "d80c39191b49d6db419283b268d1a4551da4f942383e615758ebfe380d9b15bc",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/browser-assertions.json": "bd05b5e0f58ec7ce315d01c92f9d5dc51f758bfa6426d7acef737e17f372ec6d",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/fixture-definition.json": "a90432b437b788f3002b76d09304e3600b30f9c1fef52ee9a943f0d44d44b7bd",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/gate-proof.json": "40b48eb361ea874232b958213ed8e8b132a0676a47d630da3fc2a0bcd8014208",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/HANDOFF.md": "65ac2bbc14e30e4a8caf173844313c439b66540c85f2f031824b0149446808fe",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/locker-fixed-natural-w9.yml": "24e7bc9d180f532f23931156607820e86c162f016a9350c280ebdb6ea7a9872d",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/locker-fixed-w11.yml": "56eb6839fec9fba39e3a6be6c82d820d0ed90b76c80e4f1df0f90cc47d0e4063",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/locker-original-overflow-w11.yml": "5bb87d73ac9634d03b5e5e25bc6eefef0ec05ba48dc7abcc12f22d1fb43589e2",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/natural-fixed.png": "d4fd57bbda154b81aa891653a8ef0009a094b5fb0966de20a679162a395b7505",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/profile-fixed-natural-w9.yml": "456e256a6faf1f8c1fa3852d093db3ae4974605e95e4072d825da34613a98eb2",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/profile-fixed-w11.yml": "0468ec32f5a0e5bed463702402c5ad482dec6a66ba91ffbd8a6fa4dd70b8bcfe",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/profile-original-overflow-w11.yml": "0e4023a7d06bb026333c7f3e59031696029011311393c7c5bcaa27ee1e695d3b",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/reconciliation.json": "7ba0c22ab582667d4bb53eac03a31aef14d570010114fea7df84c839975dd129",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/renewal-equivalence.json": "5c9546d9bf35a6dc689250e9d48bccd9d233752520141dbd510bd23bef776d9d",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/renewed-fixed.png": "1c2ca8492603161ec5776770918c1aac80e5a73a4c2d83ba0d1964651e0af739",
+    "docs/playtests/2026-10-10-play-time-promise-renewal/REPORT.md": "53d427c5647b4d7db9571ddf37752513eb4b78e09ed27864016c4f7c4c69fbda"
+  },
+  "append_receipts_sha256": {
+    "history-forensic-correction-appended.json": "8fbfbefeca9b4f96db753f4403297e9972fcb94953e2d31462d831df7199f7f4",
+    "sponsor-obligation-history-appended.json": "74174cfb41a32b1acb1ba06daea1423947fa0fc884bfa5d6ea3cb4c1f2372708",
+    "rookie-clinic-history-appended.json": "1663073be559508351284c586ced3816c49bd8fc237dd3f91af53d47392ded8c",
+    "promise-renewal-history-appended.json": "be4302fa69fd79c13c93778a68f63845803686ce20a1f56ec4412c3ac45e5ab5"
+  },
+  "new_sessions_counts": {
+    "2026-10-10-sponsor-obligation": 14,
+    "2026-10-10-rookie-clinic": 7,
+    "2026-10-10-play-time-promise-clarity": 7,
+    "2026-10-10-play-time-promise-renewal": 11
+  },
+  "scope": "Documentation publication only; runtime proof covers unchanged64ee15f source. Later histories not imported.",
+  "new_session_shards": {
+    "2026-10-10-sponsor-obligation": {
+      "rows": 14,
+      "exact_all21columns_match": true,
+      "sha256": "2994e6218496f9238f63703e33838fb583bf82b3016abc9f09a80bf51942b9d8"
+    },
+    "2026-10-10-rookie-clinic": {
+      "rows": 7,
+      "exact_all21columns_match": true,
+      "sha256": "2cbb0c0cc114183862d8f756bca5af14c68c87fbb61c53b76680d852eb5a9dc9"
+    },
+    "2026-10-10-play-time-promise-clarity": {
+      "rows": 7,
+      "exact_all21columns_match": true,
+      "sha256": "428fb5335dd39a5d5d48b0cfacb107399e5f6316f8cf7da599414579d6a9a18a"
+    },
+    "2026-10-10-play-time-promise-renewal": {
+      "rows": 11,
+      "exact_all21columns_match": true,
+      "sha256": "d80c39191b49d6db419283b268d1a4551da4f942383e615758ebfe380d9b15bc"
+    }
+  },
+  "new_session_shard_rows": 39,
+  "published_git_blob_files_exact": 203,
+  "published_git_blob_sha256_match": true,
+  "archive685_blob_sha256": "a4ab52cb1a0760b18ec97fd681ff2421a287b36e7a24d9a283141b7dda8cd5cb"
+}

@@ -1,0 +1,128 @@
+{
+  "audited_at_utc": "2026-10-10T19:38:18.001537+00:00",
+  "baseline_action_count": 46,
+  "final_action_count": 50,
+  "old_action_prefix_unchanged": true,
+  "new_decision_indices": [
+    46,
+    47,
+    48,
+    49
+  ],
+  "accepted_coverage": {
+    "matched": 4,
+    "attempted": 4
+  },
+  "snapshot_counts_before": {
+    "mgr_team_nexus": 9
+  },
+  "snapshot_counts_after": {
+    "mgr_team_nexus": 10
+  },
+  "snapshot_prefix_unchanged": true,
+  "saved_facilities": {
+    "marketing_office": 1
+  },
+  "saved_sponsor_summary": {
+    "jersey": {
+      "name": "Streamforge",
+      "kind": "steady",
+      "weekly": 10100,
+      "weeks_left": 21
+    },
+    "title": {
+      "name": "Polar Compute",
+      "kind": "steady",
+      "weekly": 41300,
+      "weeks_left": 36
+    }
+  },
+  "bank_before": 483406,
+  "bank_after": 395538,
+  "upfront_spend": 150000,
+  "settled_net": 62132,
+  "reported_income": 109232,
+  "reported_expenses": 47100,
+  "upkeep_netted_in_report_income": 1500,
+  "reclassified_gross_income": 110732,
+  "reclassified_expenses": 48600,
+  "source_paths_unchanged": 543,
+  "fixture_unchanged": true,
+  "end_save_sha256": "15c57edcea6c3c38d8f10120dd60e3be105ac5d58f5c9ead76f315a1107717dc",
+  "report_exit_codes": {
+    "decision": 0,
+    "usage": 0
+  },
+  "usage_events": 69,
+  "usage_kind_counts": {
+    "session_start": 2,
+    "view": 10,
+    "visible_time": 44,
+    "attempt": 5,
+    "result": 5,
+    "interaction": 1,
+    "session_end": 2
+  },
+  "page_session_ids": [
+    "6306c100edde11a46e90af8771cbba88",
+    "cc96b0970cdf0f62f254dda135481499"
+  ],
+  "paired_requests": 5,
+  "usage_request_ids": [
+    11,
+    17,
+    28,
+    37,
+    53
+  ],
+  "usage_request_targets": {
+    "11": "/api/actions/sponsor",
+    "17": "/api/actions/facility_upgrade",
+    "28": "/api/actions/flavor_event",
+    "37": "/api/actions/advance",
+    "53": "/api/actions/save"
+  },
+  "mcp_network_observer_indices": [
+    39,
+    51,
+    68,
+    80,
+    118
+  ],
+  "unmatched_attempts": [],
+  "orphan_results": [],
+  "server_family_stopped": [
+    {
+      "pid": 2284,
+      "command": [
+        "\\??\\C:\\WINDOWS\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 10352,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8485",
+        "--no-browser"
+      ]
+    },
+    {
+      "pid": 26484,
+      "command": [
+        "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+        "-m",
+        "esports_sim",
+        "--web",
+        "--port",
+        "8485",
+        "--no-browser"
+      ]
+    }
+  ],
+  "limits": "Retained best-effort visibility proxy; four accepted operations separate from five UI requests. Report reclassification arithmetic is not a second simulation or causal match claim. Failed saved-alias inspection and request namespace assertion retained in rows8/9."
+}

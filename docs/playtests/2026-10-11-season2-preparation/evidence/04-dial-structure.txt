@@ -1,0 +1,6 @@
+### Result
+["<div class=\"gp-dial\"><input type=\"checkbox\"><span class=\"gp-dial-lab\">Pace</span><input type=\"range\" min=\"0\" max=\"100\" step=\"1\" disabled=\"\"><span class=\"gp-dial-val mono\">50 (book)</span><span class=\"microlabel\" hidden=\"\">book 50</span></div>","<div class=\"gp-dial\"><input type=\"checkbox\"><span class=\"gp-dial-lab\">Map control</span><input type=\"range\" min=\"0\" max=\"100\" step=\"1\" disabled=\"\"><span class=\"gp-dial-val mono\">50 (book)</span><span class=\"microlabel\" hidden=\"\">book 50</span></div>"]
+### Ran Playwright code
+```js
+await (async page => { return await page.locator('input[type=range]').evaluateAll(es=>es.filter(e=>e.parentElement.innerText.startsWith('Pace')||e.parentElement.innerText.startsWith('Map control')).map(e=>e.parentElement.outerHTML)); })(page);
+```

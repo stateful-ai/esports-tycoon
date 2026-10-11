@@ -1,0 +1,41 @@
+{
+  "attempts": 1,
+  "events": {
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:dashboard": 1,
+    "view:lobby": 2,
+    "view:season/fixtures": 1,
+    "view:season/league": 1,
+    "visible_time:dashboard": 3,
+    "visible_time:lobby": 4,
+    "visible_time:season/fixtures": 9,
+    "visible_time:season/league": 6
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "4b41939aefb860b7eaec935e164fce7c": 224982,
+    "5ad2a8a18c01e146ae2f62e0848bee1a": 0,
+    "6224ae9166ed0b26fa1651d1e5c983a2": 14979
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 1,
+  "retention_bytes": 8388608,
+  "sessions": 3,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "dashboard": 38482,
+    "lobby": 39109,
+    "season/fixtures": 130185,
+    "season/league": 71272
+  },
+  "world_events": {
+    "26UHC": 28,
+    "lobby": 4
+  }
+}

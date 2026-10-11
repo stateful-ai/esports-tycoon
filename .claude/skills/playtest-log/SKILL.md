@@ -37,6 +37,39 @@ Classify outcomes semantically, including no-ops, partial changes, rejected
 attempts, and sim-ahead stops. If a later check contradicts an earlier judgment,
 append a correction observation and identify it in the report; preserve history.
 
+For browser roster edits, target the intended player's identity cell, not a
+name appearing anywhere in a row: mentor options and linked-player text can
+contain other roster members' names. Use the visible identity's `data-pid`
+when available, or an anchored identity-cell name after inspecting the current
+DOM. Require exactly one matching row and exactly one intended control; do not
+use `.first()` to hide ambiguous matches. For example, with a player ID read
+from the current public roster/identity link, scope to editable focus rows
+(the development report also contains player identity links):
+
+```javascript
+const identityCell = page.getByRole('cell').filter({
+  has: page.locator('[data-pid="fa_13"]'),
+});
+const row = page.getByRole('row')
+  .filter({ has: identityCell })
+  .filter({ has: page.locator('select[data-act="focus"]') });
+const focus = row.locator('select[data-act="focus"]');
+if (await row.count() !== 1 || await focus.count() !== 1)
+  throw new Error('Ambiguous player identity or focus control');
+```
+
+Before each mutation, register a wait for its response (for development plans,
+the POST `/api/actions/dev_plan` with the intended `player_id` and field/value).
+Await the response, inspect its accepted/rejected result, and wait for the
+control's refresh to finish before the next mutation; reacquire locators after
+a render. Independently read the public roster/profile and verify each intended
+player ID and setting, including unchanged players, rather than trusting a
+toast, selected option, or aggregate count. If targeting or readback fails,
+finish the pending attempt with its observed partial/error outcome, append a
+correction to any earlier contradicted claim, and log a new intent before
+retrying. Preserve the original evidence and distinguish a harness targeting
+mistake from a game persistence defect.
+
 Use `.venv-win\Scripts\python.exe scripts/playtest_log.py` from the repo root:
 
 ```powershell

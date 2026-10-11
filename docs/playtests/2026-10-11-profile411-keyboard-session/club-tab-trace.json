@@ -1,0 +1,80 @@
+[
+  {
+    "tag": "BUTTON",
+    "text": "Facilities",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Season",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Market1",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Stats",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Company",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Squad",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Development",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Locker Room",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Operations",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Guide",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Save lineup",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "☆",
+    "pid": null,
+    "type": null
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Apex",
+    "pid": "apex",
+    "type": "button"
+  }
+]

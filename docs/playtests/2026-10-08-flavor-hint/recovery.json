@@ -1,0 +1,29 @@
+{
+  "recovery_date": "2026-10-10",
+  "original_checkout": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint\\ESports Simulator",
+  "recovered_checkout": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint-recovered\\ESports Simulator",
+  "branch": "codex/advance-flavor-recovery-hint",
+  "base_head": "121e55ed36e5538eeee80a2c17c656a8021ccf22",
+  "source_freeze_sha256": "703a39db83eb79e160d4acb0dc3da9e304d3365a8844ac0f1146727559a88635",
+  "matched_source_files": 606,
+  "source_mismatches": [],
+  "owned_files": {
+    "src/esports_sim/web/server.py": "14fd76cbad44cd34b83b4eb60270a3986bae9b1810fd6f9820461d3d989d2ad3",
+    "tests/test_web_advance_flavor_recovery.py": "9fd98ae07f51ec5c69354a4336a334927670bfdb5db12bd35491ac6155ef6689"
+  },
+  "preservation": "Original checkout remnants untouched. Interrupted test results copied byte-for-byte to interrupted-full-* before replacement gate.",
+  "recovered_original_csv_steps": [
+    6,
+    7,
+    8
+  ],
+  "unrecoverable_original_csv_steps": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "transcript_id": "01a11d87-5cc6-7553-b1ad-18efd7f0cdf4",
+  "fresh_acceptance": "../2026-10-10-flavor-hint/report.md"
+}

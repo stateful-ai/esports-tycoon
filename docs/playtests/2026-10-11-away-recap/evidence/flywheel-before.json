@@ -1,0 +1,122 @@
+[
+  {
+    "id": "esports-playtest-0221",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Enabled waiting after reload can submit an unseen week",
+    "problem": "Enabled waiting after reload can submit an unseen week",
+    "solution": "Resume polling and disable action on ready-seat refresh, retaining status-only retry",
+    "lesson": "Treat loaded ready=true as a pending status-observation state, not as permission to submit another advance.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-ready-reload seed2038 RLOD4 testedbf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0220",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Reload polling and status-only retry work together",
+    "problem": "Reload polling and status-only retry work together",
+    "solution": "Resume polling and disable action on ready-seat refresh, retaining status-only retry",
+    "lesson": "Injected failure after reload remained actionable; retry restored polling before the other manager rolled the season.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-ready-reload seed2038 RLOD4 testedbf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0219",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Ready-seat reload must resume observation",
+    "problem": "Ready-seat reload must resume observation",
+    "solution": "Resume polling and disable action on ready-seat refresh, retaining status-only retry",
+    "lesson": "A real browser reload of server ready=true auto-polled with disabled Waiting and no extra advance POST.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-ready-reload seed2038 RLOD4 testedbf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0218",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Stale ready state can disguise stopped polling",
+    "problem": "Stale ready state can disguise stopped polling",
+    "solution": "Expose retry status and reconnect polling without resubmitting advance",
+    "lesson": "Waiting from stale server you_ready is misleading after polling failure; preserve a separate retry transport state.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0217",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Status retry must avoid duplicate advance",
+    "problem": "Status retry must avoid duplicate advance",
+    "solution": "Expose retry status and reconnect polling without resubmitting advance",
+    "lesson": "Other manager completed rollover while disconnected; Retry issued no advance POST and reconnected at S2W1 without ticking week2.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0216",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Stopped shared polling needs an actionable retry",
+    "problem": "Stopped shared polling needs an actionable retry",
+    "solution": "Expose retry status and reconnect polling without resubmitting advance",
+    "lesson": "Injected state-poll503 produced enabled Retry status while server-ready flag remained true.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-status-retry seed2038 RTRY4 testedbbcab656e0d1d678f17f0ad1129ab4aea7564391",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0215",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Response observer watched wrong flavor endpoint",
+    "problem": "Choice succeeded but endpoint mismatch timed out.",
+    "solution": "Retained timeout, checked public clearedevent, usage200 and saved measuredchoice without repeat.",
+    "lesson": "Resolve ambiguous browser timeout from independent saved evidence before retrying mutation.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-opener copied26UHC seed2038 rootunknown runtime 2026-10-11T07:42:32.726856+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "development",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0214",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Individual plans show ordinary weekly causality",
+    "problem": "Offseason rollover did not exercise Ghost practice.",
+    "solution": "W1 ordinary tick showed mechanical/light0.09practice,0.01match and mentorship factor; Sly rest0practice.",
+    "lesson": "Compare authored attribution plus independent ID-based settings after a real weekly tick.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-opener copied26UHC seed2038 rootunknown runtime 2026-10-11T07:42:32.726856+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "development",
+      "evidence"
+    ],
+    "kind": "learning"
+  }
+]
