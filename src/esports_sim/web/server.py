@@ -4949,8 +4949,9 @@ def finances() -> dict:
             }
 
         facilities = {}
+        owned_facilities = gs.facilities_by.get(gs.acting_team_id, {})
         for name in economy.FACILITY_NAMES:
-            level = gs.facilities.get(name, 0)
+            level = owned_facilities.get(name, 0)
             facilities[name] = {
                 "level": level,
                 "max_level": economy.FACILITY_MAX_LEVEL,
