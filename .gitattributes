@@ -1,6 +1,8 @@
 # Preserve whitespace inside quoted source stage labels in the research CSV.
 data/research/war-history/map_context.csv -whitespace
 
+# Raw acceptance evidence for the served-title follow-up; preserve original bytes.
+docs/playtests/2026-10-11-flavor-served-title/** -text -whitespace
 # Preserve exact original raw playtest receipts and append-only CSV bytes.
 docs/playtests/actions.csv -text
 docs/playtests/2026-10-11-academy-availability-fixed-head/** -text

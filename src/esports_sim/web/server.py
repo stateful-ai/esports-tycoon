@@ -7405,7 +7405,10 @@ def resolve_flavor_event(body: FlavorEventChoiceBody) -> dict:
         event = flavor_events.pending_for(gs)
         if event is None or event.id != body.event_id:
             raise HTTPException(409, "That flavor event is no longer waiting.")
-        ok, message, _effects = flavor_events.resolve(
+        from esports_sim.web import flavor_feedback
+
+        before = flavor_feedback.snapshot(gs, event)
+        ok, message, effects = flavor_events.resolve(
             gs, gs.acting_team_id, body.choice_id
         )
         if not ok:
@@ -7415,8 +7418,9 @@ def resolve_flavor_event(body: FlavorEventChoiceBody) -> dict:
             "flavor_choice",
             {"event_id": body.event_id, "choice_id": body.choice_id},
         )
+        realized = flavor_feedback.settlement(gs, event, effects, before)
         S.save()
-        return {"ok": True, "message": message}
+        return {"ok": True, "message": message, "event_title": event.title, "realized_effects": realized}
 
 
 class MediaEventChoiceBody(BaseModel):

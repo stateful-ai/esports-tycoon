@@ -2445,12 +2445,29 @@ async function dashboard(v) {
     card.dataset.tourNeeds = "true";
     card.appendChild(el("h2", "", "Needs you"));
 
+    if (App.flavorSettlement && App.flavorSettlementWorld === App.mp?.code && App.flavorSettlementTeam === s.user_team.id) {
+      const receipt = App.flavorSettlement;
+      const settled = el("div", "flavor-event");
+      settled.appendChild(el("div", "microlabel", "Team moment resolved"));
+      settled.appendChild(el("h3", "", esc(receipt.event_title || "Your response")));
+      settled.appendChild(el("p", "", esc(receipt.message)));
+      const effects = el("ul", "");
+      for (const effect of receipt.realized_effects || []) effects.appendChild(el("li", "", esc(effect.text)));
+      settled.appendChild(effects);
+      if (!receipt.realized_effects?.length) settled.appendChild(el("p", "muted", "No tracked meters changed."));
+      const dismiss = el("button", "btn btn-sm", "Dismiss result");
+      dismiss.onclick = () => { App.flavorSettlement = null; renderApp(); };
+      settled.appendChild(dismiss);
+      card.appendChild(settled);
+    }
+
     // Interactive event prompts render in full (a list row can't hold the
     // choice buttons); computeNeedsYou still counts them for the badges.
     const eventBlock = (ev, kicker, endpoint, fallbackDone) => {
+      const displayedTitle = ev.title || "A decision is waiting";
       const event = el("div", "flavor-event");
       event.appendChild(el("div", "microlabel", kicker));
-      event.appendChild(el("h3", "", ev.title || "A decision is waiting"));
+      event.appendChild(el("h3", "", displayedTitle));
       event.appendChild(el("p", "", ev.prompt || "Choose how to respond."));
       const choices = el("div", "row flavor-choices");
       for (const choice of ev.choices ?? []) {
@@ -2459,8 +2476,18 @@ async function dashboard(v) {
         button.onclick = async () => {
           const all = [...choices.querySelectorAll("button")];
           all.forEach((b) => (b.disabled = true));
+          const originWorld = App.mp?.code;
+          const originTeam = s.user_team.id;
           try {
             const r = await api(endpoint, { event_id: ev.id, choice_id: choice.id });
+            if (endpoint === "/api/actions/flavor_event") {
+              if (App.mp?.code !== originWorld || App.state?.user_team?.id !== originTeam) return;
+              // Serving-layer prose may differ from the deterministic fallback
+              // title in the response. Keep the moment the manager actually saw.
+              App.flavorSettlement = { ...r, event_title: displayedTitle };
+              App.flavorSettlementWorld = originWorld;
+              App.flavorSettlementTeam = originTeam;
+            }
             toast(r.message || fallbackDone); refresh();
           } catch (_e) {
             all.forEach((b) => (b.disabled = false));
