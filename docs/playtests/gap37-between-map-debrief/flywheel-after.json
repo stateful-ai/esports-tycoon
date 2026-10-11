@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0195",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Last-match series notes are discoverable",
+    "problem": "Dashboard formerly showed only initial plan dials.",
+    "solution": "Both teams fixture notes now appear below Initial plan in Your calls.",
+    "lesson": "Expose recorded series events alongside initial plans; do not attribute results to them.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0196",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Read-only debrief preserved campaign",
+    "problem": "Saving could have changed copied acceptance career.",
+    "solution": "Independent complete save hashes match;90 decisions and21 snapshots unchanged.",
+    "lesson": "Compare complete saved bytes as well as decision telemetry for read-only acceptance.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0197",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Series note ownership is shorthand",
+    "problem": "Both-team notes use VGD and NXS abbreviations.",
+    "solution": "Clear both-teams explanatory text preserves raw engine-owned notes without English parsing.",
+    "lesson": "Team shorthand remains a minor readability friction; a structured future contract could identify owners.",
+    "confidence": "high",
+    "source": "gap37 26UHC seed2038 S1W22 a2ca33f browser acceptance",
+    "code": "",
+    "tags": [
+      "gap37",
+      "debrief",
+      "series-notes"
+    ],
+    "kind": "pain-point"
+  }
+]
