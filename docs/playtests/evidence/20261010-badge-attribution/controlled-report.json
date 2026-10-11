@@ -1,0 +1,249 @@
+{
+  "advanced": true,
+  "season": 1,
+  "week": 1,
+  "phase": "regular",
+  "fixtures": [],
+  "user_income": 0,
+  "user_expenses": 0,
+  "notes": [
+    "CONTROLLED RENDERING FIXTURE: badge bounds, not a simulated week."
+  ],
+  "development": {
+    "season": 1,
+    "week": 1,
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [
+            {
+              "badge": "clutch_master",
+              "action": "earned",
+              "skills": {
+                "clutch_factor": 0.5,
+                "composure": 0.2
+              },
+              "name": "Clutch Master",
+              "overall_gain": 0.07
+            }
+          ],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.07,
+              "skills": {
+                "clutch_factor": 0.5,
+                "composure": 0.2
+              }
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "phantom",
+        "handle": "Phantom",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [
+            {
+              "badge": "choker",
+              "action": "earned",
+              "skills": {
+                "clutch_factor": -1.0,
+                "composure": -0.5
+              },
+              "name": "Choker",
+              "overall_gain": -0.15
+            }
+          ],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": -0.15,
+              "skills": {
+                "clutch_factor": -1.0,
+                "composure": -0.5
+              }
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "attribution": {
+          "season": 1,
+          "week": 1,
+          "focus": "auto",
+          "intensity": "normal",
+          "maps": 0,
+          "trend": "settling",
+          "badge_tracking": true,
+          "badge_events": [],
+          "sources": {
+            "practice_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "match_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "scrim_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "event_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            },
+            "badge_gains": {
+              "overall_gain": 0.0,
+              "skills": {}
+            }
+          },
+          "factors": [],
+          "career_event": null
+        },
+        "measured": null
+      }
+    ]
+  },
+  "week_reveal": {
+    "fixture_id": null,
+    "standings": {
+      "prev": null,
+      "now": 2,
+      "of": 8
+    }
+  }
+}

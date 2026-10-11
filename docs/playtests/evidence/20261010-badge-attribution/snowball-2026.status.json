@@ -1,0 +1,15 @@
+{
+  "runner_pid": 31928,
+  "start": "2026-10-10T17:17:26.697635+00:00",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "scripts/snowball_report.py",
+    "2026"
+  ],
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\badge-attribution-rebuild\\ESports Simulator",
+  "head": "063452905f69edd85ea866d0278ce609494308a9",
+  "child_pid": 25788,
+  "exit_code": 0,
+  "end": "2026-10-10T17:35:38.937074+00:00",
+  "source_unchanged": true
+}
