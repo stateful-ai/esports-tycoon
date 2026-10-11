@@ -1,0 +1,476 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e26]: Season 1 · Week 11 · Regular — Team Nexus
+      - generic [ref=f1e27]: 505,738 cr
+      - button "Save" [ref=f1e28] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e7] [cursor=pointer]
+      - button "🛠️" [ref=f1e8] [cursor=pointer]
+      - button "🔇" [ref=f1e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e10] [cursor=pointer]: Guide
+    - navigation [ref=f1e11]:
+      - generic "Weekly" [ref=f1e12]:
+        - button "Dashboard 1" [ref=f1e30] [cursor=pointer]:
+          - text: Dashboard
+          - generic [ref=f1e31]: "1"
+        - button "Inbox 18" [ref=f1e32] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e33]: "18"
+        - button "Match 2" [ref=f1e34] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e35]: "2"
+      - generic "Org" [ref=f1e17]:
+        - button "Club" [ref=f1e19] [cursor=pointer]
+        - button "Facilities" [ref=f1e20] [cursor=pointer]
+        - button "Season" [ref=f1e21] [cursor=pointer]
+        - button "Market" [ref=f1e22] [cursor=pointer]
+        - button "Stats" [ref=f1e23] [cursor=pointer]
+        - button "Company" [ref=f1e24] [cursor=pointer]
+    - main [ref=f1e25]:
+      - generic [ref=f1e413]:
+        - generic [ref=f1e414]:
+          - generic [ref=f1e415]: Club
+          - generic [ref=f1e416]: S1 · W11
+          - generic [ref=f1e417]:
+            - button "Squad" [ref=f1e418] [cursor=pointer]
+            - button "Development" [ref=f1e419] [cursor=pointer]
+            - button "Locker Room" [ref=f1e420] [cursor=pointer]
+            - button "Operations" [ref=f1e421] [cursor=pointer]
+          - button "Guide" [ref=f1e422] [cursor=pointer]
+        - generic [ref=f1e424]:
+          - heading "Locker Room" [level=2] [ref=f1e425]
+          - paragraph [ref=f1e426]: Check the squad hierarchy, cliques, duos, feuds and manager promises.
+          - generic [ref=f1e427]:
+            - generic [ref=f1e428]:
+              - heading "Team Leaders" [level=3] [ref=f1e429]
+              - generic [ref=f1e431]:
+                - generic [ref=f1e432]: Apex
+                - generic [ref=f1e433]: Incumbent Leader
+            - generic [ref=f1e435]:
+              - heading "Influential" [level=3] [ref=f1e436]
+              - generic [ref=f1e438]:
+                - generic [ref=f1e439]: Vortex
+                - generic [ref=f1e440]: Key Influencer
+            - generic [ref=f1e442]:
+              - heading "Core & Rookies" [level=3] [ref=f1e443]
+              - generic [ref=f1e444]:
+                - generic [ref=f1e445]:
+                  - generic [ref=f1e446]: Ghost
+                  - generic [ref=f1e447]: Rookie
+                - generic [ref=f1e449]:
+                  - generic [ref=f1e450]: Slyblade
+                  - generic [ref=f1e451]: Core
+                - generic [ref=f1e453]:
+                  - generic [ref=f1e454]: Echo
+                  - generic [ref=f1e455]: Core
+                - generic [ref=f1e457]:
+                  - generic [ref=f1e458]: Hollowlock
+                  - generic [ref=f1e459]: Core
+            - generic [ref=f1e461]:
+              - heading "Rebels & Outcasts" [level=3] [ref=f1e462]
+              - paragraph [ref=f1e464]: None
+          - generic [ref=f1e465]:
+            - heading "Relationships & Cliques" [level=2] [ref=f1e466]
+            - generic [ref=f1e467]:
+              - generic [ref=f1e468]:
+                - heading "Duos Active" [level=3] [ref=f1e469]:
+                  - text: Duos
+                  - generic [ref=f1e470]: Active
+                - paragraph [ref=f1e471]: No close duos in the squad.
+              - generic [ref=f1e472]:
+                - heading "Feuds Tension" [level=3] [ref=f1e473]:
+                  - text: Feuds
+                  - generic [ref=f1e474]: Tension
+                - paragraph [ref=f1e475]: No active feuds in the squad.
+          - generic [ref=f1e476]:
+            - heading "Promises" [level=2] [ref=f1e477]
+            - paragraph [ref=f1e478]: Monitor active manager promises, kept/broken history and morale/chemistry outcomes.
+            - generic [ref=f1e479]:
+              - heading "Active Promises" [level=3] [ref=f1e480]
+              - generic [ref=f1e481]:
+                - generic [ref=f1e482]:
+                  - generic [ref=f1e483]:
+                    - strong [ref=f1e484]: Vortex
+                    - text: ": Play Time"
+                  - generic [ref=f1e485]:
+                    - paragraph [ref=f1e486]: "Target: 5 dressed-week credits (60% of the original 8-week promise, rounded up)."
+                    - paragraph [ref=f1e487]: "Progress: 5 accumulated dressed-week credits; 5 required. Target reached."
+                    - paragraph [ref=f1e488]: "Deadline: after 3 more weekly evaluations."
+                    - paragraph [ref=f1e489]: "Next evaluation: if dressed, 6 accumulated credits (promise stays active); if not dressed, 5 credits (promise stays active)."
+                    - paragraph [ref=f1e490]: "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits."
+                  - generic [ref=f1e491]: Progress toward dressed-week requirement
+                - generic [ref=f1e494]:
+                  - generic [ref=f1e495]:
+                    - strong [ref=f1e496]: Echo
+                    - text: ": Play Time"
+                  - generic [ref=f1e497]:
+                    - paragraph [ref=f1e498]: "Target: 3 dressed-week credits (60% of the original 4-week promise, rounded up)."
+                    - paragraph [ref=f1e499]: "Progress: 5 accumulated dressed-week credits; 3 required. Target reached."
+                    - paragraph [ref=f1e500]: "Deadline: after 4 more weekly evaluations."
+                    - paragraph [ref=f1e501]: "Next evaluation: if dressed, 6 accumulated credits (promise stays active); if not dressed, 5 credits (promise stays active)."
+                    - paragraph [ref=f1e502]: "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits."
+                  - generic [ref=f1e503]: Progress toward dressed-week requirement
+            - generic [ref=f1e506]:
+              - heading "Promise History" [level=3] [ref=f1e507]
+              - generic [ref=f1e508]:
+                - generic [ref=f1e509]:
+                  - generic [ref=f1e510]: Slyblade · Play Time
+                  - generic [ref=f1e511]: kept
+                - generic [ref=f1e512]:
+                  - generic [ref=f1e513]: Apex · Play Time
+                  - generic [ref=f1e514]: kept
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Club
+    - generic: Manage the squad, weekly development, locker room, academy, and staff delegation.
+    - generic: Name a default five, check condition and confidence, then set team and player training plans.
+  - generic [ref=f1e516]:
+    - button "Close profile" [ref=f1e517] [cursor=pointer]: ✕
+    - generic [ref=f1e519]:
+      - generic [ref=f1e520]:
+        - generic [ref=f1e521]:
+          - generic [ref=f1e522]:
+            - text: Echo
+            - generic [ref=f1e523]: Core
+          - generic [ref=f1e524]:
+            - generic [ref=f1e525]: Sentinel
+            - generic [ref=f1e526]: Anchor
+            - generic "nationality" [ref=f1e527]: BR
+            - generic "spoken languages (fluency)" [ref=f1e528]: PT 90 · EN 14
+            - generic [ref=f1e529]: age 23
+            - generic "social reach" [ref=f1e530]: 303.6K followers
+            - generic "org cut 1,223 cr/wk · heavy streaming slows development to ×0.83" [ref=f1e531]: 🎥 balanced · 1,223 cr/wk
+            - generic "development plan" [ref=f1e532]: rest · light
+            - generic "View team" [ref=f1e533] [cursor=pointer]: Team Nexus
+          - generic [ref=f1e535]: 46w left · 7,700 cr/wk
+          - generic [ref=f1e536]: 72% streams · 92,000 cr release · 400,000 cr buyout · starter
+        - button "Rein in streaming…" [ref=f1e537] [cursor=pointer]
+        - button "Change role/style…" [ref=f1e538] [cursor=pointer]
+        - button "Make IGL" [ref=f1e539] [cursor=pointer]
+        - button "Scout development" [ref=f1e540] [cursor=pointer]
+      - generic [ref=f1e541]:
+        - generic [ref=f1e542]:
+          - generic [ref=f1e543]: "76"
+          - generic [ref=f1e544]: OVR
+          - generic [ref=f1e545]: ★★★
+        - generic [ref=f1e546]:
+          - generic [ref=f1e547]: 80–83
+          - generic [ref=f1e548]: Current ability
+          - generic [ref=f1e549]: 100 comfort
+        - generic [ref=f1e550]:
+          - generic [ref=f1e551]: 65–80
+          - generic [ref=f1e552]: Potential
+          - generic [ref=f1e553]: peak forecast
+        - generic [ref=f1e554]:
+          - generic [ref=f1e555]: "55"
+          - generic [ref=f1e556]: Form
+        - generic [ref=f1e557]:
+          - generic [ref=f1e558]: "100"
+          - generic [ref=f1e559]: Morale
+        - generic [ref=f1e560]:
+          - generic [ref=f1e561]: "100"
+          - generic [ref=f1e562]: Condition
+        - generic [ref=f1e563]:
+          - generic [ref=f1e564]: "72"
+          - generic [ref=f1e565]: Confidence
+          - generic [ref=f1e566]: drives duels & nerve
+        - generic [ref=f1e567]:
+          - generic [ref=f1e568]: 357,000 cr
+          - generic [ref=f1e569]: Value
+      - generic [ref=f1e570]:
+        - heading "Development report" [level=3] [ref=f1e571]
+        - paragraph [ref=f1e572]: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+      - generic [ref=f1e573]:
+        - heading "Badges" [level=3] [ref=f1e574]
+        - 'generic "Clutch Master: wants the round with the game on the line" [ref=f1e576]': Clutch Master
+      - generic [ref=f1e577]:
+        - generic [ref=f1e578]:
+          - heading "Attributes" [level=3] [ref=f1e579]
+          - generic [ref=f1e580]:
+            - generic [ref=f1e581]:
+              - generic [ref=f1e582]: Aim Precision
+              - generic [ref=f1e586]:
+                - text: "68"
+                - generic "projected outcome range for this skill" [ref=f1e587]: →69.9–80.6
+            - generic [ref=f1e588]:
+              - generic [ref=f1e589]: Aim Reactivity
+              - generic [ref=f1e593]:
+                - text: "64"
+                - generic "projected outcome range for this skill" [ref=f1e594]: →79.5–90.8
+            - generic [ref=f1e595]:
+              - generic [ref=f1e596]: Clutch Factor
+              - generic [ref=f1e600]:
+                - text: "68"
+                - generic "projected outcome range for this skill" [ref=f1e601]: →75.1–86.2
+            - generic [ref=f1e602]:
+              - generic [ref=f1e603]: Comms Quality
+              - generic [ref=f1e607]:
+                - text: "78"
+                - generic "projected outcome range for this skill" [ref=f1e608]: →79.3–90.7
+            - generic [ref=f1e609]:
+              - generic [ref=f1e610]: Composure
+              - generic [ref=f1e614]: "92"
+            - generic [ref=f1e615]:
+              - generic [ref=f1e616]: Game Sense
+              - generic [ref=f1e620]:
+                - text: "76"
+                - generic "projected outcome range for this skill" [ref=f1e621]: →76–80.4
+            - generic [ref=f1e622]:
+              - generic [ref=f1e623]: Movement
+              - generic [ref=f1e627]:
+                - text: "58"
+                - generic "projected outcome range for this skill" [ref=f1e628]: →76.4–87.5
+            - generic [ref=f1e629]:
+              - generic [ref=f1e630]: Positioning
+              - generic [ref=f1e634]: "86"
+            - generic [ref=f1e635]:
+              - generic [ref=f1e636]: Tilt Resistance
+              - generic [ref=f1e640]:
+                - text: "88"
+                - generic "projected outcome range for this skill" [ref=f1e641]: →88–89.9
+            - generic [ref=f1e642]:
+              - generic [ref=f1e643]: Utility Usage
+              - generic [ref=f1e647]:
+                - text: "82"
+                - generic "projected outcome range for this skill" [ref=f1e648]: →82–90.7
+        - generic [ref=f1e649]:
+          - generic [ref=f1e650]:
+            - heading "Traits" [level=3] [ref=f1e651]
+            - generic [ref=f1e652]:
+              - generic "lets the clips talk" [ref=f1e653]: Quiet
+              - generic "never the reason you lost" [ref=f1e654]: Reliable
+              - generic "glue" [ref=f1e655]: Team Player
+          - generic [ref=f1e656]:
+            - heading "Agent pool" [level=3] [ref=f1e657]
+            - generic "Role & playstyle comfort grows as this player settles into an assignment; a fresh role/style resets it low." [ref=f1e659]:
+              - generic [ref=f1e660]: Role comfort
+              - generic [ref=f1e664]: "100"
+            - generic [ref=f1e665]:
+              - generic [ref=f1e666]:
+                - generic [ref=f1e667]:
+                  - generic [ref=f1e668]: Killjoy
+                  - generic [ref=f1e672]: "91"
+                - generic [ref=f1e673]:
+                  - generic [ref=f1e674]: Veto
+                  - generic [ref=f1e678]: "73"
+                - generic [ref=f1e679]:
+                  - generic [ref=f1e680]: Cypher
+                  - generic [ref=f1e684]: "71"
+                - generic [ref=f1e685]:
+                  - generic [ref=f1e686]: Deadlock
+                  - generic [ref=f1e690]: "70"
+                - generic [ref=f1e691]:
+                  - generic [ref=f1e692]: Vyse
+                  - generic [ref=f1e696]: "68"
+              - button "Show all (29)" [ref=f1e697] [cursor=pointer]
+      - generic [ref=f1e698]:
+        - heading "Season — analytics" [level=3] [ref=f1e699]
+        - generic [ref=f1e700]:
+          - generic [ref=f1e701]:
+            - generic [ref=f1e702]:
+              - generic [ref=f1e703]: "0.87"
+              - generic [ref=f1e704]: Rating
+            - generic [ref=f1e705]:
+              - generic [ref=f1e706]: "0.97"
+              - generic [ref=f1e707]: K/D
+            - generic [ref=f1e708]:
+              - generic [ref=f1e709]: "15"
+              - generic [ref=f1e710]: "FK : FD"
+          - paragraph [ref=f1e711]: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+          - paragraph [ref=f1e712]: 8 matches · 99 / 102 / — K / D / A
+        - generic [ref=f1e713]:
+          - generic [ref=f1e714]: ACS by week
+          - generic [ref=f1e716]:
+            - generic [ref=f1e717]:
+              - text: Kills &amp; deaths by week
+              - generic [ref=f1e718]: KD
+            - img "Kills and deaths by week" [ref=f1e721]:
+              - generic [ref=f1e722]:
+                - 'generic "S1·W1: 7 kills" [ref=f1e723]'
+                - 'generic "S1·W1: 10 deaths" [ref=f1e724]'
+              - generic [ref=f1e725]:
+                - 'generic "S1·W2: 19 kills" [ref=f1e726]'
+                - 'generic "S1·W2: 17 deaths" [ref=f1e727]'
+              - generic [ref=f1e728]:
+                - 'generic "S1·W3: 19 kills" [ref=f1e729]'
+                - 'generic "S1·W3: 16 deaths" [ref=f1e730]'
+              - generic [ref=f1e731]:
+                - 'generic "S1·W4: 13 kills" [ref=f1e732]'
+                - 'generic "S1·W4: 15 deaths" [ref=f1e733]'
+              - generic [ref=f1e734]:
+                - 'generic "S1·W5: 6 kills" [ref=f1e735]'
+                - 'generic "S1·W5: 11 deaths" [ref=f1e736]'
+              - generic [ref=f1e737]:
+                - 'generic "S1·W6: 8 kills" [ref=f1e738]'
+                - 'generic "S1·W6: 11 deaths" [ref=f1e739]'
+              - generic [ref=f1e740]:
+                - 'generic "S1·W9: 18 kills" [ref=f1e741]'
+                - 'generic "S1·W9: 12 deaths" [ref=f1e742]'
+              - generic [ref=f1e743]:
+                - 'generic "S1·W10: 9 kills" [ref=f1e744]'
+                - 'generic "S1·W10: 10 deaths" [ref=f1e745]'
+      - generic [ref=f1e746]:
+        - heading "Development" [level=3] [ref=f1e747]
+        - generic [ref=f1e748]:
+          - generic [ref=f1e749]:
+            - text: Ability &amp; confidence over time
+            - generic [ref=f1e750]: CAConf
+          - img "Ability and confidence over time" [ref=f1e753]:
+            - 'generic "S1·W0: CA 75.5 / conf 50" [ref=f1e756]'
+            - 'generic "S1·W1: CA 75.5 / conf 52" [ref=f1e757]'
+            - 'generic "S1·W2: CA 75.5 / conf 54" [ref=f1e758]'
+            - 'generic "S1·W3: CA 76.0 / conf 57" [ref=f1e759]'
+            - 'generic "S1·W4: CA 76.0 / conf 61" [ref=f1e760]'
+            - 'generic "S1·W5: CA 76.0 / conf 62" [ref=f1e761]'
+            - 'generic "S1·W6: CA 76.0 / conf 64" [ref=f1e762]'
+            - 'generic "S1·W7: CA 76.0 / conf 62" [ref=f1e763]'
+            - 'generic "S1·W8: CA 76.0 / conf 63" [ref=f1e764]'
+            - 'generic "S1·W9: CA 76.0 / conf 65" [ref=f1e765]'
+            - 'generic "S1·W10: CA 76.0 / conf 72" [ref=f1e766]'
+            - generic [ref=f1e767]: "76"
+            - generic [ref=f1e768]: "50"
+        - paragraph [ref=f1e769]: CA 75.5 to 76.0 over 11 weeks / 303.6K followers
+        - generic [ref=f1e770]:
+          - generic [ref=f1e771]: Season growth
+          - generic [ref=f1e772]:
+            - generic [ref=f1e773]: Clutch Factor this season
+            - img "Clutch Factor trajectory this season" [ref=f1e774]:
+              - 'generic "S1·W0: 65.0" [ref=f1e776]'
+              - 'generic "S1·W1: 65.0" [ref=f1e777]'
+              - 'generic "S1·W2: 65.0" [ref=f1e778]'
+              - 'generic "S1·W3: 68.0" [ref=f1e779]'
+              - 'generic "S1·W4: 68.0" [ref=f1e780]'
+              - 'generic "S1·W5: 68.0" [ref=f1e781]'
+              - 'generic "S1·W6: 68.0" [ref=f1e782]'
+              - 'generic "S1·W7: 68.0" [ref=f1e783]'
+              - 'generic "S1·W8: 68.0" [ref=f1e784]'
+              - 'generic "S1·W9: 68.0" [ref=f1e785]'
+              - 'generic "S1·W10: 68.0" [ref=f1e786]'
+              - generic [ref=f1e787]: "68.0"
+              - generic [ref=f1e788]: "65.0"
+          - generic [ref=f1e789]:
+            - button "Clutch Factor 68+3.0 ▲" [ref=f1e790] [cursor=pointer]:
+              - generic [ref=f1e791]: Clutch Factor
+              - generic [ref=f1e795]:
+                - text: "68"
+                - generic "change since the start of the season" [ref=f1e796]: +3.0 ▲
+            - button "Composure 92+2.0 ▲" [ref=f1e797] [cursor=pointer]:
+              - generic [ref=f1e798]: Composure
+              - generic [ref=f1e802]:
+                - text: "92"
+                - generic "change since the start of the season" [ref=f1e803]: +2.0 ▲
+            - button "Aim Precision 680.0 —" [ref=f1e804] [cursor=pointer]:
+              - generic [ref=f1e805]: Aim Precision
+              - generic [ref=f1e809]:
+                - text: "68"
+                - generic "change since the start of the season" [ref=f1e810]: 0.0 —
+            - button "Aim Reactivity 640.0 —" [ref=f1e811] [cursor=pointer]:
+              - generic [ref=f1e812]: Aim Reactivity
+              - generic [ref=f1e816]:
+                - text: "64"
+                - generic "change since the start of the season" [ref=f1e817]: 0.0 —
+            - button "Comms Quality 780.0 —" [ref=f1e818] [cursor=pointer]:
+              - generic [ref=f1e819]: Comms Quality
+              - generic [ref=f1e823]:
+                - text: "78"
+                - generic "change since the start of the season" [ref=f1e824]: 0.0 —
+            - button "Game Sense 760.0 —" [ref=f1e825] [cursor=pointer]:
+              - generic [ref=f1e826]: Game Sense
+              - generic [ref=f1e830]:
+                - text: "76"
+                - generic "change since the start of the season" [ref=f1e831]: 0.0 —
+            - button "Movement 580.0 —" [ref=f1e832] [cursor=pointer]:
+              - generic [ref=f1e833]: Movement
+              - generic [ref=f1e837]:
+                - text: "58"
+                - generic "change since the start of the season" [ref=f1e838]: 0.0 —
+            - button "Positioning 860.0 —" [ref=f1e839] [cursor=pointer]:
+              - generic [ref=f1e840]: Positioning
+              - generic [ref=f1e844]:
+                - text: "86"
+                - generic "change since the start of the season" [ref=f1e845]: 0.0 —
+      - generic [ref=f1e846]:
+        - heading "Relationships" [level=3] [ref=f1e847]
+        - generic [ref=f1e848]:
+          - generic "Neutral · strength 54" [ref=f1e849] [cursor=pointer]:
+            - text: Slyblade
+            - generic [ref=f1e850]: Neutral
+          - generic "Neutral · strength 54" [ref=f1e851] [cursor=pointer]:
+            - text: Hollowlock
+            - generic [ref=f1e852]: Neutral
+          - generic "Neutral · strength 52" [ref=f1e853] [cursor=pointer]:
+            - text: Ghost
+            - generic [ref=f1e854]: Neutral
+          - generic "Neutral · strength 51" [ref=f1e855] [cursor=pointer]:
+            - text: Apex
+            - generic [ref=f1e856]: Neutral
+          - generic "Neutral · strength 50" [ref=f1e857] [cursor=pointer]:
+            - text: Vortex
+            - generic [ref=f1e858]: Neutral
+      - generic [ref=f1e859]:
+        - heading "Career" [level=3] [ref=f1e860]
+        - generic [ref=f1e861]:
+          - generic [ref=f1e862]:
+            - generic [ref=f1e863]: "1"
+            - generic [ref=f1e864]: Seasons
+          - generic [ref=f1e865]:
+            - generic [ref=f1e866]: "8"
+            - generic [ref=f1e867]: Maps
+          - generic [ref=f1e868]:
+            - generic [ref=f1e869]: "99"
+            - generic [ref=f1e870]: Kills
+          - generic [ref=f1e871]:
+            - generic [ref=f1e872]: "0.97"
+            - generic [ref=f1e873]: K/D
+          - generic [ref=f1e874]:
+            - generic [ref=f1e875]: "0"
+            - generic [ref=f1e876]: Honours
+          - generic [ref=f1e877]:
+            - generic [ref=f1e878]: "0"
+            - generic [ref=f1e879]: MVPs
+          - generic [ref=f1e880]:
+            - generic [ref=f1e881]: "0"
+            - generic [ref=f1e882]: All-Star
+        - generic [ref=f1e883]:
+          - generic [ref=f1e884]: Timeline
+          - generic [ref=f1e886]:
+            - generic [ref=f1e887]: S1
+            - generic [ref=f1e888]:
+              - generic [ref=f1e889]: Team Nexus release Echo.
+              - generic [ref=f1e890]: Team Nexus sign Echo.
+              - generic [ref=f1e891]: Echo earns the Clutch Master badge.
+        - generic [ref=f1e892]:
+          - generic [ref=f1e893]: Memories
+          - list [ref=f1e894]:
+            - listitem [ref=f1e895]: "S1: Echo earns the Clutch Master badge."
+            - listitem [ref=f1e896]: "S1: Team Nexus sign Echo."
+            - listitem [ref=f1e897]: "S1: Team Nexus release Echo."
+      - generic [ref=f1e898]:
+        - heading "Active Promises" [level=3] [ref=f1e899]
+        - generic [ref=f1e901]:
+          - strong [ref=f1e903]: Play Time
+          - generic [ref=f1e904]:
+            - paragraph [ref=f1e905]: "Target: 3 dressed-week credits (60% of the original 4-week promise, rounded up)."
+            - paragraph [ref=f1e906]: "Progress: 5 accumulated dressed-week credits; 3 required. Target reached."
+            - paragraph [ref=f1e907]: "Deadline: after 4 more weekly evaluations."
+            - paragraph [ref=f1e908]: "Next evaluation: if dressed, 6 accumulated credits (promise stays active); if not dressed, 5 credits (promise stays active)."
+            - paragraph [ref=f1e909]: "Each weekly evaluation counts at most once: dress for at least one played map to earn credit. Weeks without a played map still use time. Repeating this promise resets evaluations left, keeping the original target and earned credits."
+          - generic [ref=f1e910]: Progress toward dressed-week requirement
+      - generic [ref=f1e913]:
+        - heading "Compare" [level=3] [ref=f1e914]
+        - combobox [ref=f1e915]:
+          - option "compare with a teammate…" [selected]
+          - option "Apex"
+          - option "Vortex"
+          - option "Ghost"
+          - option "Slyblade"
+          - option "Hollowlock"

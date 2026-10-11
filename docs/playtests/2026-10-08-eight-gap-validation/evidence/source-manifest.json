@@ -1,0 +1,61 @@
+{
+  "base_commit": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+  "combined_tree": "833ae36edda98357c6f88b012a6fdfbba94104e0",
+  "source_sha256": {
+    "src/esports_sim/manager/market.py": "1591b69d499c7e4dfcb6d4a7c0578f5d922279336f73fdaf4eb9f3d7887752ac",
+    "src/esports_sim/schemas/team.py": "350556ffd522096b1300e77346627876a6c57122273d0fb62ed9860d7e34ee47",
+    "src/esports_sim/web/server.py": "59c22b3d9294d3333bfc2a56b273d3af6849ce9cf4b663262868a531529d5d36",
+    "src/esports_sim/web/static/app.js": "2ea5c70caece8493149941cd875f6bcc4abbb069d35996888a9d24df45c2dd22",
+    "src/esports_sim/web/static/usage.js": "386cfe4afc89912cee5e78356e6738b4d34276435ae08f48e45bfcc8353d945b",
+    "src/esports_sim/web/usage_telemetry.py": "7e1f30179103e952368839abb35f1ff9ef0cd746882ff79b964ba26e02e3c42e",
+    "tests/development_feedback_check.cjs": "ec979b4cea3d64dfa93ee21ede6e5e657839e69e5e1fb5e5bad3190e63f21f85",
+    "tests/market_search_usage_check.cjs": "b1e813b0a5f795c04a481ad8fece3a1cee6075314a75417daeb777ca77b23bb9",
+    "tests/test_development_feedback_frontend.py": "c6abbf7518f8adb371d2b6c90f20ed8b60de71b3a7eff1c6991768c211ea94ed",
+    "tests/test_release_cost.py": "bde99cf4b46d138613b0348470e3bb5cac9ec2487aafa52ad24cc3b9cd19a0f9",
+    "tests/test_usage_telemetry.py": "c840052fbce26486925288fe2fc18c2284b1b2f5a8e3a7c3521cf8f5b0a7e7ee",
+    "tests/test_web_advance_roster_recovery.py": "95544d3728dc4966e516ee1d7862e58a5fe1ddab50a625a1722a25bcd8755c25",
+    "tests/test_web_replay_identity.py": "22fd4596e90a87cc057d948757698fcafaba02f469ec34042bb626df996761e7",
+    "tests/test_weekly_development_report.py": "adfb14472df1dc6a27555e66a85466c8a09b82c3977b88194d48f8380ecc51c2",
+    "tests/usage_frontend_check.cjs": "74bd8c56641919b4b3c42dc87ff1ab1d55196aaab07c09608867061c5dd9a5eb"
+  },
+  "components": [
+    {
+      "name": "advance-roster-recovery-hint",
+      "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+      "working_source_tree": "70ed9b0cdccf2db55331f631ca80ede2cf3aeef0",
+      "patch_sha256": "de94708622870112cb923f571dda25dee7e0844e3cefc94375a8060cbd70cbc1"
+    },
+    {
+      "name": "weekly-development-report",
+      "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+      "working_source_tree": "a50c94431dba6bee747bba07d6a7b962d175f2f9",
+      "patch_sha256": "351168f2cd008cecf1fe168f0a57863ab7a925c78a68709ae2b5da9315159d62"
+    },
+    {
+      "name": "market-search-usage",
+      "base": "3ac34df3a476543d9e79dc4dc03bb381c04e397d",
+      "working_source_tree": "16671ad5dbef434fa929fe4937554ed5ebceac89",
+      "patch_sha256": "9866da0f9dbfacc43907e8304104da5d05ce114b4ffc08e4edcb98757c051924"
+    }
+  ],
+  "application": "Six and seven clean; repeated five/eight allowlist edits resolved by exact superset comparison",
+  "syntax": "Python AST and Node checks passed",
+  "full_gate": "Not yet run on eight-change tree; five-change gate remains separate",
+  "working_file_sha256": {
+    "src/esports_sim/manager/market.py": "9be7b35aa559bfcdbc8fdd4f7afe9b57f098036d3e9cadfe0e8f7b1703cdd7b9",
+    "src/esports_sim/schemas/team.py": "88b22e604c703a6c688a7b82fbbcb05da7f845b65349d3831236886d6c7c4b5a",
+    "src/esports_sim/web/server.py": "4bf3baaccedd33afc5f10de2ef75366de15d80c6e74fd8b32d45e8433a340e2a",
+    "src/esports_sim/web/static/app.js": "abe87c968d2090b34ab6d1591a9ec095fe7d94b1a46026dbb3b1c89dad38ea05",
+    "src/esports_sim/web/static/usage.js": "afafc055e4f36a3f7ce332c5741512542fd63e0d40d8c9874217218dc20b460e",
+    "src/esports_sim/web/usage_telemetry.py": "f85b7927b2dc55e9b6ba7c8225e9170fdb825e5abd5c9869bba63a1b53d78d46",
+    "tests/development_feedback_check.cjs": "57ea2c36bfa8df0615b65546c12dc265ec66b44d40037874865dc9113b56a4a8",
+    "tests/market_search_usage_check.cjs": "66467e3278ba91933940274c09199206812278fa0f0d8572757efd9081e815f2",
+    "tests/test_development_feedback_frontend.py": "e0d993869be54359e63d31f2c7358ca2413d378cf0a30ecb494d37b648c68152",
+    "tests/test_release_cost.py": "0d5214a9eb6a385fcd4c8c6cd7101740b0da25e957737cb72b6117d180cfe322",
+    "tests/test_usage_telemetry.py": "38abadd6cb97db785f878ee4b8fa4a83aaed99935e763b3b262cffdfe561539f",
+    "tests/test_web_advance_roster_recovery.py": "8ac3cca199e35239f12ea638585136748ac3027d182941919be48ddae9697b44",
+    "tests/test_web_replay_identity.py": "eba73dc01c410b45ecd00cc4ab4b50b296797582a4e14f32fa5ed1de9c6aabbf",
+    "tests/test_weekly_development_report.py": "3d075f6fa41262a8bbf97f52f586dd999dd9a5ece80ebcb6861ad6fa815e1373",
+    "tests/usage_frontend_check.cjs": "824f5e819c478ca6c0bf02c375ad98e2185fc2ea6047289b374b86c0d7f31064"
+  }
+}

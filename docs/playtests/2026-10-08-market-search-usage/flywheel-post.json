@@ -1,0 +1,59 @@
+[
+  {
+    "id": "esports-playtest-0050",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Search control counts need explicit initiation semantics",
+    "problem": "Market navigation and negotiation counts cannot quantify searches",
+    "solution": "Play rapid typing, clear, short input and Enter with retained coarse receipts",
+    "lesson": "Final browser page issued2 searches and retained2 coarse search interactions; no accepted decision was expected",
+    "confidence": "medium",
+    "source": "S9FSG seed2040 S1W1; codex/market-search-usage dirty3ac34df; docs/playtests/2026-10-08-market-search-usage/report.md",
+    "code": "S9FSG",
+    "tags": [
+      "browser",
+      "market",
+      "privacy",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0051",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Detached Preact roots can retain pending timers",
+    "problem": "Tab replacement removes a container without Preact unmount cleanup",
+    "solution": "Guard the actual search callback with connected input ref and test navigation",
+    "lesson": "Navigation before timer firing must suppress a detached search callback; unmount cleanup alone is insufficient here",
+    "confidence": "medium",
+    "source": "S9FSG seed2040 S1W1; codex/market-search-usage dirty3ac34df; docs/playtests/2026-10-08-market-search-usage/report.md",
+    "code": "S9FSG",
+    "tags": [
+      "browser",
+      "market",
+      "privacy",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0052",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Abrupt browser automation exits lose queued usage",
+    "problem": "An absent seed2040 Slyblade match aborted a run before sidecar flush",
+    "solution": "Retain unexpected row and unverified receipt gap; retry using visible Hollowlock result and explicit bounded drains",
+    "lesson": "Retained search counts are best-effort evidence; incomplete runs cannot establish complete funnels",
+    "confidence": "medium",
+    "source": "S9FSG seed2040 S1W1; codex/market-search-usage dirty3ac34df; docs/playtests/2026-10-08-market-search-usage/report.md",
+    "code": "S9FSG",
+    "tags": [
+      "browser",
+      "market",
+      "privacy",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  }
+]

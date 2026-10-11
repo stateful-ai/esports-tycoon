@@ -1,0 +1,275 @@
+MARKET
+PLAYERS
+SCOUTING
+STAFF
+~12,361 CR/WK FREE · STABLE
+OPENING WINDOW · CLOSES AFTER WEEK 5.
+FIND A PLAYER
+PLAYER	ROLE	AGE	OVR	CLUB	PRICE	
+Hollowlock Pablo Herrera
+ES
+EN
+	DUELISTENTRY	26	~76	FREE AGENT	
+6,200 cr/wk
+	Negotiate…
+FREE AGENTS
+— 18
+
+Market coverage 0% — estimates only; assign your scout to the market to see ceilings.
+
+🛠️ FILTER FREE AGENTS
+Show Filters ▾
+PLAYER	ROLE	AGE	OVR	ABILITY	CEILING	LANGUAGES	STREAM REVENUE	ASKING		SWAP OUT
+Hollowlock
+Room fit 50
+	DUELISTENTRY	26	~73	★★–★★★★½	unknown	ESEN	820 cr/wk	6,200 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Grimbyte
+Room fit 50
+	INITIATORLURKER	18	~69	★½–★★★★	unknown	EN	135 cr/wk	4,400 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Hollowsurge
+Room fit 50
+	DUELISTENTRY	17	~74	★★–★★★★½	unknown	EN	358 cr/wk	4,300 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Emberhawk
+Room fit 50
+	CONTROLLERIGL	28	~65	★½–★★★½	unknown	ESEN	138 cr/wk	5,000 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Zephyrsnap
+Room fit 50
+	CONTROLLERIGL	24	~61	★½–★★★½	unknown	EN	330 cr/wk	4,900 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Ironghost
+Room fit 50
+	INITIATORSUPPORT	28	~63	★½–★★★	unknown	EN	139 cr/wk	4,800 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Voltsurge
+Room fit 50
+	DUELISTENTRY	22	~69	★–★★★	unknown	EN	220 cr/wk	4,700 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Falconrush
+Room fit 50
+	INITIATORLURKER	24	~62	★–★★★	unknown	EN	194 cr/wk	4,700 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Jinxfade
+Room fit 50
+	SENTINELANCHOR	28	~60	★★–★★★★	unknown	PTEN	91 cr/wk	4,400 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Slysnap
+Room fit 50
+	SENTINELANCHOR	18	~62	★–★★½	unknown	PTEN	20 cr/wk	3,400 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Slywire
+Room fit 50
+	CONTROLLERIGL	25	~59	★½–★★★	unknown	ESEN	42 cr/wk	4,100 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Ashzero
+Room fit 50
+	INITIATORSUPPORT	27	~56	½–★★	unknown	ESEN	42 cr/wk	3,800 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Cipherwing
+Room fit 50
+	INITIATORLURKER	26	~61	½–★★½	unknown	ENES	33 cr/wk	3,700 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Staticbyte
+Room fit 50
+	DUELISTAWPER	20	~51	★–★★★	unknown	ESEN	17 cr/wk	3,300 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Wraithbyte
+Room fit 50
+	DUELISTAWPER	27	~52	½–★★	unknown	ESEN	26 cr/wk	3,200 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Voltlock
+Room fit 50
+	SENTINELANCHOR	19	~52	½–★★½	unknown	PTEN	11 cr/wk	2,500 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Jinxghost
+Room fit 50
+	INITIATORSUPPORT	20	~48	½–★★½	unknown	ESEN	14 cr/wk	2,600 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+
+Grimrush
+Room fit 50
+	DUELISTAWPER	25	~39	½–★½	unknown	EN	2 cr/wk	2,200 cr/wk	Negotiate…	
+— drop —
+Apex (78)
+Phantom (65)
+Echo (76)
+Vortex (74)
+Ghost (76)
+Swap
+SQUAD INTELLIGENCE
+Duelist 2
+Controller 1
+Initiator 1
+Sentinel 1
+Flex 0
+
+Weakest: Duelist (69.8)
+
+SIGNING HEADROOM
+Weekly net 12,361 cr
+Affordable wage 12,361 cr/wk
+stable
+SUGGESTED SIGNINGS
+Hollowlock
+Duelist
+76.3
+Hollowsurge
+Duelist
+70
+Voltsurge
+Duelist
+64.7
+CONTRACT WATCH
+Apex
+yours · Controller
+3w
+Vortex
+yours · Duelist
+8w
+WONDERKIDS
+— ≤20
+Hollowsurge
+17y · Duelist · free agent
+★★★★★
+Slysnap
+18y · Sentinel · free agent
+★★★★★
+Ghost
+19y · Initiator · Team Nexus
+★★★★★
+Pyrowing
+18y · Controller · Adriatic Sirens
+★★★★★
+Neoecho
+17y · Initiator · Berlin Wolves
+★★★★★
+Neowolf
+19y · Sentinel · Berlin Wolves
+★★★★★
+RUMOUR MILL
+Rivals are circling Apex with just 3w left on his deal.
+Rivals are circling Vortex with just 8w left on his deal.
+Free agent Hollowlock (duelist) linked with a move to Team Nexus.
+Free agent Grimbyte (initiator) linked with a move to Team Nexus.
+Free agent Hollowsurge (duelist) linked with a move to Team Nexus.

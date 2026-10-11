@@ -1,0 +1,137 @@
+[
+  {
+    "id": "esports-playtest-0118",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Copied solo sessions need legitimate browser attachment",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Initial IAB Match reached lobby; use standalone context with legitimate copied SID cookie and ordinary server for acceptance. Transport-middleware preliminary check is superseded.",
+    "lesson": "Initial IAB Match reached lobby; use standalone context with legitimate copied SID cookie and ordinary server for acceptance. Transport-middleware preliminary check is superseded.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0117",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Decimal boundaries preserve condition interpretation",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Consumer check covers0,100,integer56,round55.96 and escaping while preserving values; browser Light cost1.5 remains unchanged.",
+    "lesson": "Consumer check covers0,100,integer56,round55.96 and escaping while preserving values; browser Light cost1.5 remains unchanged.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0116",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation condition presentation precision",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Natural W8 raw55.900000000000006 renders55.9 in actual ordinary-server Prep; public club and saved players stay unchanged.",
+    "lesson": "Natural W8 raw55.900000000000006 renders55.9 in actual ordinary-server Prep; public club and saved players stay unchanged.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0115",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Copied-career browser recovery",
+    "problem": "IAB join stalls and existing human seat is disabled; pending media blocks advance",
+    "solution": "Standalone browser with owned fixture session history; resolve visible media choice before advance",
+    "lesson": "Keep blocked attempts and HTTP409 separate from accepted decisions; wait for reveal completion before navigation",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\docs\\playtests\\2026-10-10-preparation-provenance\\evidence\\audit.json",
+    "code": "",
+    "tags": [
+      "preparation",
+      "provenance",
+      "26UHC",
+      "seed2038"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0114",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Historical preparation reports",
+    "problem": "Corrected generator does not change old persisted strings",
+    "solution": "Read original W8 note and generate a fresh W9 report",
+    "lesson": "Retain historical reports as evidence and verify wording in newly resolved reports",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\docs\\playtests\\2026-10-10-preparation-provenance\\evidence\\audit.json",
+    "code": "",
+    "tags": [
+      "preparation",
+      "provenance",
+      "26UHC",
+      "seed2038"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0113",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation advice provenance",
+    "problem": "Mental-reset report said Echo pushed starters despite no simulated scrim",
+    "solution": "Future report labels map-mastery rotation projection and no measured scrim",
+    "lesson": "Bench candidate ranking is a projected development lead, not evidence of performance; W8/W9 copied 26UHC seed2038 confirms it",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\docs\\playtests\\2026-10-10-preparation-provenance\\evidence\\audit.json",
+    "code": "",
+    "tags": [
+      "preparation",
+      "provenance",
+      "26UHC",
+      "seed2038"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0112",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Forecast bench advice sounded like observed performance",
+    "problem": "Mental reset said Echo pushed starters although candidate was selected by map mastery and Echo playedzero maps",
+    "solution": "Preserve current report and isolate deterministic wording/provenance gap20",
+    "lesson": "A candidate ranking should be described as projected advice, not a measured scrim performance",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0111",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate promised role from selected match five",
+    "problem": "Tournament six called Echo Starter and Hollowlock Bench opposite the saved five",
+    "solution": "Inspect registration.role versus public starters and fixture roster; preserve both contracts",
+    "lesson": "Contractual roster_role is not current selection; visible labels need to explain the distinction",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "learning"
+  }
+]

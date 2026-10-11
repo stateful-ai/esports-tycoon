@@ -1,0 +1,17 @@
+{
+  "started_at_utc": "2026-10-08T22:07:50.989880+00:00",
+  "runner_pid": 30972,
+  "source_freeze_sha256": "703a39db83eb79e160d4acb0dc3da9e304d3365a8844ac0f1146727559a88635",
+  "base_head": "121e55ed36e5538eeee80a2c17c656a8021ccf22",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint\\ESports Simulator",
+  "pytest_pid": 464,
+  "exit_code": 1,
+  "exception": "Traceback (most recent call last):\n  File \"C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint\\ESports Simulator\\runs\\playtests\\2026-10-08-flavor-hint\\full_gate.py\", line 21, in <module>\n    check()\n    ~~~~~^^\n  File \"C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint\\ESports Simulator\\runs\\playtests\\2026-10-08-flavor-hint\\full_gate.py\", line 10, in check\n    assert all(hashlib.sha256((root/p).read_bytes()).hexdigest()==h for p,h in freeze['sha256'].items()), 'Frozen source changed'\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\aidan\\.codex\\worktrees\\advance-flavor-recovery-hint\\ESports Simulator\\runs\\playtests\\2026-10-08-flavor-hint\\full_gate.py\", line 10, in <genexpr>\n    assert all(hashlib.sha256((root/p).read_bytes()).hexdigest()==h for p,h in freeze['sha256'].items()), 'Frozen source changed'\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_abc.py\", line 625, in read_bytes\n    with self.open(mode='rb') as f:\n         ~~~~~~~~~^^^^^^^^^^^\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\aidan\\\\.codex\\\\worktrees\\\\advance-flavor-recovery-hint\\\\ESports Simulator\\\\data\\\\agents.yaml'\n",
+  "finished_at_utc": "2026-10-09T00:21:13.640763+00:00"
+}

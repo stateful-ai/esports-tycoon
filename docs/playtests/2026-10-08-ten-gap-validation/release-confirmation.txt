@@ -1,0 +1,2 @@
+Observed native confirmation: Release Echo? Severance = 92,000 cr.
+Handled with accept=false. Public roster readback: five players including Echo, S1 W2, 361505cr. Final saved ledger and usage contain no new release.

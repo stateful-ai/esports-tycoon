@@ -1,0 +1,14 @@
+{
+  "runner_pid": 39896,
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator",
+  "interpreter": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+  "import": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\src\\esports_sim\\__init__.py",
+  "started_utc": "2026-10-10T21:12:43.944655+00:00",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "pytest_pid": 40552
+}

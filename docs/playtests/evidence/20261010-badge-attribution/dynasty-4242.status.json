@@ -1,0 +1,16 @@
+{
+  "runner_pid": 30768,
+  "start": "2026-10-10T17:17:26.335161+00:00",
+  "command": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\.venv-win\\Scripts\\python.exe",
+    "scripts/dynasty_report.py",
+    "10",
+    "4242"
+  ],
+  "cwd": "C:\\Users\\aidan\\.codex\\worktrees\\badge-attribution-rebuild\\ESports Simulator",
+  "head": "063452905f69edd85ea866d0278ce609494308a9",
+  "child_pid": 27056,
+  "exit_code": 0,
+  "end": "2026-10-10T18:05:01.584903+00:00",
+  "source_unchanged": true
+}

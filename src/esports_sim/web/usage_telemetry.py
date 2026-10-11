@@ -37,7 +37,7 @@ SUBTABS = {"overview", "squad", "development", "locker_room", "operations", "str
            "leaders", "races", "meta", "history", "teams", "agents", "maps", "finances", "brand"}
 REPLAY = {"open", "close", "play", "pause", "seek", "round", "speed_1", "speed_4", "speed_16", "speed_inst"}
 # Coarse control use only: never values, labels, selectors, or report contents.
-INTERACTIONS = {"lobby/seed_change", "week/full_report_open"}
+INTERACTIONS = {"lobby/seed_change", "week/full_report_open", "market/player_search"}
 
 
 def validate_events(batch: UsageBatch, endpoints: set[str]) -> None:

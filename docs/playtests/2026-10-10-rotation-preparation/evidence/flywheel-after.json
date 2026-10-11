@@ -1,0 +1,56 @@
+[
+  {
+    "id": "esports-playtest-0110",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Recovery rotation survived a defeat",
+    "problem": "Bench choice needed public outcome evidence beyond a saved flag",
+    "solution": "Bench Echo32.5, start Ghost49.5, keep Rest/Light, choose mental-reset/light1.5; read FullReport and replay",
+    "lesson": "Echo zero maps recovered to55 and Ghost one map rose to59 after9-13defeat; this verifies rotation and recovery, not win causality",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0111",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate promised role from selected match five",
+    "problem": "Tournament six called Echo Starter and Hollowlock Bench opposite the saved five",
+    "solution": "Inspect registration.role versus public starters and fixture roster; preserve both contracts",
+    "lesson": "Contractual roster_role is not current selection; visible labels need to explain the distinction",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0112",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Forecast bench advice sounded like observed performance",
+    "problem": "Mental reset said Echo pushed starters although candidate was selected by map mastery and Echo playedzero maps",
+    "solution": "Preserve current report and isolate deterministic wording/provenance gap20",
+    "lesson": "A candidate ranking should be described as projected advice, not a measured scrim performance",
+    "confidence": "high",
+    "source": "2026-10-10-rotation-preparation main042d86d browser8474 world26UHC seed2038 W7-W8",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "rotation",
+      "preparation"
+    ],
+    "kind": "pain-point"
+  }
+]

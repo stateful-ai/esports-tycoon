@@ -1,0 +1,139 @@
+[
+  {
+    "id": "esports-playtest-0121",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Save action needs current dirty-label selector",
+    "problem": "Exact Save locator missed actual Save-dot; response observer timedout",
+    "solution": "Preserve blocked/unproven attempt, resnapshot observed #save-btn, capture actualHTTP200 and independent saved ledger",
+    "lesson": "Save-dot is a distinct exact name; a tooling timeout is not proof a game request was rejected or even sent",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0120",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Separate settled cash, live run rate and forecast",
+    "problem": "A signed contract changes recurring income while weekly world factors also change",
+    "solution": "Sign jersey steady10100/24weeks, advanceonce, read report income67874/expenses47100 and bank461864",
+    "lesson": "Settled net20774 matched bankdelta; preweek forecast20150 and postweeklive20933 were different. Contract persisted23weeks; no separate settled sponsor payment row exposed",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0119",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Media choice has measurable state effects",
+    "problem": "Qualitative promise needed independent readback",
+    "solution": "Defend Hollowlock publicly; compare sentiment, saved trust and pending decision",
+    "lesson": "Sentiment52.1->55.1 immediately and saved manager trust50->58; no active sponsors meant sponsor effectzero, not an implied controversy charge",
+    "confidence": "high",
+    "source": "2026-10-10-media-sponsor main042d86d browser8478 world26UHC seed2038 W8-W9",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "media",
+      "sponsors",
+      "finances"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0118",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Copied solo sessions need legitimate browser attachment",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Initial IAB Match reached lobby; use standalone context with legitimate copied SID cookie and ordinary server for acceptance. Transport-middleware preliminary check is superseded.",
+    "lesson": "Initial IAB Match reached lobby; use standalone context with legitimate copied SID cookie and ordinary server for acceptance. Transport-middleware preliminary check is superseded.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0117",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Decimal boundaries preserve condition interpretation",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Consumer check covers0,100,integer56,round55.96 and escaping while preserving values; browser Light cost1.5 remains unchanged.",
+    "lesson": "Consumer check covers0,100,integer56,round55.96 and escaping while preserving values; browser Light cost1.5 remains unchanged.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0116",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Preparation condition presentation precision",
+    "problem": "Gap21 preparation condition acceptance",
+    "solution": "Natural W8 raw55.900000000000006 renders55.9 in actual ordinary-server Prep; public club and saved players stay unchanged.",
+    "lesson": "Natural W8 raw55.900000000000006 renders55.9 in actual ordinary-server Prep; public club and saved players stay unchanged.",
+    "confidence": "high",
+    "source": "2026-10-10-condition-precision base042d86d browser8477 copied26UHC seed2038 S1W8",
+    "code": "26UHC",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0115",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Copied-career browser recovery",
+    "problem": "IAB join stalls and existing human seat is disabled; pending media blocks advance",
+    "solution": "Standalone browser with owned fixture session history; resolve visible media choice before advance",
+    "lesson": "Keep blocked attempts and HTTP409 separate from accepted decisions; wait for reveal completion before navigation",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\docs\\playtests\\2026-10-10-preparation-provenance\\evidence\\audit.json",
+    "code": "",
+    "tags": [
+      "preparation",
+      "provenance",
+      "26UHC",
+      "seed2038"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0114",
+    "ts": "2026-10-10",
+    "domain": "esports-playtest",
+    "topic": "Historical preparation reports",
+    "problem": "Corrected generator does not change old persisted strings",
+    "solution": "Read original W8 note and generate a fresh W9 report",
+    "lesson": "Retain historical reports as evidence and verify wording in newly resolved reports",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\preparation-advice-provenance\\ESports Simulator\\docs\\playtests\\2026-10-10-preparation-provenance\\evidence\\audit.json",
+    "code": "",
+    "tags": [
+      "preparation",
+      "provenance",
+      "26UHC",
+      "seed2038"
+    ],
+    "kind": "learning"
+  }
+]

@@ -1,0 +1,108 @@
+{
+  "recovered_at_utc": "2026-10-11T05:56:51.763924+00:00",
+  "finding_id": 4239926419,
+  "source_worktree": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator",
+  "source_worktree_current_head": "a0181e9db15f2621771aeaacace382a0998fcf0b",
+  "artifact_mappings": [
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\early-profile.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/early-profile.txt",
+      "raw_sha256": "89e7005ffdfc89aa080c2152e7350a67044319138e2bdc61d13a2943c4f6c3d2",
+      "byte_count": 15754,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\gate-freeze.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/gate-freeze.json",
+      "raw_sha256": "fa3d79fa66b7f723a32452a44fa4e1088680d5b837c3323137f1181b0058ae32",
+      "byte_count": 64421,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\gate-running.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/gate-running.json",
+      "raw_sha256": "da10912d89d2a4072cdaaa480cdb9b264aa903722c1ee5bde3ce0e4ab92893b9",
+      "byte_count": 612,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\legacy-renewed-dom.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/legacy-renewed-dom.txt",
+      "raw_sha256": "6e62e77a89c59c321c8edf360816d0a6a6e2e47745fd0c8a5c3dcddb9412401c",
+      "byte_count": 2148,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\public-before.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-before.txt",
+      "raw_sha256": "6a62c216e798b7c555755bbe9e7b54590abecb83f5560227476bcdc245082a38",
+      "byte_count": 32149,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\public-reloaded.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-reloaded.json",
+      "raw_sha256": "fdc6e27d360c8926cb754f6ec7a56cd57a073f18d3ac72af598f886bfb3fb1a1",
+      "byte_count": 97091,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\public-renewed.txt",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/public-renewed.txt",
+      "raw_sha256": "e687af58de0c5645605d4e5e9213190682aea3997e34b899c4c8925f428b5d16",
+      "byte_count": 44218,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\saved-before-reload.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/saved-before-reload.json",
+      "raw_sha256": "b43c2b8daac6744a17ecaa1ed4d8edf966250ffb3fa74aa359a0018a3960402f",
+      "byte_count": 4139257,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\state-saved.json",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/state-saved.json",
+      "raw_sha256": "4fa22a0988798cde918cdfd7bcace3dabe6dcc4cf1c50c887ffc7806bef729d1",
+      "byte_count": 14591,
+      "source_bytes_unmodified": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\play-time-promise-clarity\\ESports Simulator\\runs\\playtests\\2026-10-10-promise-legacy-deadline\\saves\\usage\\usage.0.jsonl",
+      "published_path": "docs/playtests/2026-10-10-promise-legacy-deadline/evidence/usage.0.jsonl",
+      "raw_sha256": "7f837a9fa092aad5e9f8040467ceb1e08b3db7111faa1cb44d49c6bd10f64551",
+      "byte_count": 11636,
+      "source_bytes_unmodified": true
+    }
+  ],
+  "privacy_review": "Three cited JSON receipts recursively checked: no cookie, authorization, password, API key, secret or session-token keys. Controlled LGE22 campaign gameplay state only. Separate sessions.json and campaign metadata excluded; usage has closed telemetry envelope/page-session hashes only. Original files copied unchanged, no sanitized values invented.",
+  "saved_legacy_promise": {
+    "id": "legacy",
+    "team_id": "team_nexus",
+    "player_id": "apex",
+    "promise_type": "play_time",
+    "target_value": 60,
+    "weeks_left": 6,
+    "created_week": 2,
+    "created_season": 1,
+    "status": "active",
+    "dressed_count": 5,
+    "initial_duration": 8,
+    "source": "talk"
+  },
+  "public_reload_promise_initial_duration": 8,
+  "public_reload_required_credits": 5,
+  "public_reload_earned_credits": 5,
+  "public_reload_weeks_left": 6,
+  "accepted_action_count": 44,
+  "retained_usage_records": 50,
+  "all_CSV_evidence_references_present": true,
+  "canonical765_sha256": "bb487d17e5f50c0c53e3b7ced193bae5ba785313413f39fdbbe17ec5c6783b4c",
+  "original_observations_and_manifests_unchanged": true,
+  "same612_raw_source_and_git_tree": true,
+  "local_tests_launched": false,
+  "limits": [
+    "Recovered original controlled-fixture evidence, not a natural appearance count or new replay.",
+    "Direct API renewal and cold restart do not create frontend request-pair receipts; Save usage is separate."
+  ]
+}

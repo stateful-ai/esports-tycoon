@@ -1,0 +1,194 @@
+[
+  {
+    "id": "esports-playtest-0045",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Market player search lacks a dedicated usage count",
+    "problem": "Searching Slyblade returned three players but the sidecar only captured subsequent navigation and negotiation",
+    "solution": "Retain partial capture annotation and queue a bounded search-use hook without query text or player names",
+    "lesson": "Negotiation receipts cannot quantify player search use; count coarse searches separately from accepted manager decisions",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0044",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Roster rejection points browser players to a CLI action",
+    "problem": "The real HTTP409 tells a browser player that the sign action lists free agents",
+    "solution": "Recover through visible Market and delegate browser-specific actionable guidance",
+    "lesson": "Keep the minimum-roster rule and rejected request evidence while naming the recovery control the player can actually use",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0043",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Full report omits weekly development feedback",
+    "problem": "Full report showed fixtures and finances without the expected Rest or match-learning attribution",
+    "solution": "Read Club Development separately and delegate a server-computed resolved-week development summary for Full report",
+    "lesson": "A captured full_report_open event proves control use, not that the report answered the player question",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0042",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Verify historical replay against the current roster",
+    "problem": "Weekly AI replaced Grimveil with Frostecho immediately after the match",
+    "solution": "Read current Sahara roster, replay participants, named feed and box score separately",
+    "lesson": "Grimveil remains Jett/Sahara with11K12D while Frostecho appears only in current roster; Rest preserves Vortex match learning with condition32to43",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0041",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Combine player feedback fixes without changing seeded results",
+    "problem": "Independent browser acceptance cannot establish interaction between five proposed patches",
+    "solution": "Play release, four-player rejection, replacement contract, Rest, fixture guidance, advance, Full report and replay on one combined source tree",
+    "lesson": "Same seed and actions retained13-2Lotus and427505 balance while release confirmation, immediate Recovery feedback and historical replay labels all worked together",
+    "confidence": "medium",
+    "source": "Fresh isolated26UHC seed2038 Team Nexus S1W1-W2; dirty3ac34df combined five patches tree32781d2; docs/playtests/2026-10-08-combined-gap-acceptance/report.md",
+    "code": "26UHC",
+    "tags": [
+      "browser",
+      "integration",
+      "replay",
+      "development",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0040",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Classic report does not close with Escape",
+    "problem": "After Full report, Escape left the overlay covering Save and the driver click was blocked",
+    "solution": "Use the visible Continue control or reopen the same test world before saving; no production change in this analytics patch",
+    "lesson": "Results overlay currently requires its visible Continue control; Escape cannot be assumed to dismiss it",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0039",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Browser recovery must retain blocked attempts separately from requests",
+    "problem": "Guide intercepted Advance and report intercepted Save without an emitted request",
+    "solution": "Keep blocked rows, resume same world, use Close Guide and Save, reconcile one accepted advance and one snapshot",
+    "lesson": "A timed-out browser click is not an HTTP rejection; preserve its gap and the subsequent successful action as separate observations",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0038",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Coarse control hooks capture previously invisible seed and full-report use",
+    "problem": "Lobby seed edits and explicit report opening were absent from retained browser usage",
+    "solution": "Exercise actual Seed change and Full report controls; reconcile one event each with isolated sidecar",
+    "lesson": "Interaction counts can record control use without seed values or report contents; they do not establish accepted decisions or attention",
+    "confidence": "medium",
+    "source": "M74LG seed2040 Baltic Meridian S1W1-W2; dirty3ac34df; docs/playtests/usage-control-hooks/report.md",
+    "code": "M74LG",
+    "tags": [
+      "browser",
+      "usage",
+      "telemetry"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0037",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Current roster rewrote historical replay identities",
+    "problem": "Original replay showed Frostecho/Reyna who never played, omitted Grimveil/Jett and lost his team in the box score",
+    "solution": "Pure serializer preserves match-time participant, agent and team evidence; focused tests cover release, transfer, lock edits and substitutes",
+    "lesson": "A replay must not consult mutable current rosters or agent locks to label historical events",
+    "confidence": "medium",
+    "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+    "code": "WJBF7",
+    "tags": [
+      "browser",
+      "replay",
+      "historical-identity",
+      "telemetry"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0036",
+    "ts": "2026-10-08",
+    "domain": "esports-playtest",
+    "topic": "Keep match participation separate from training recovery",
+    "problem": "Vortex rest focus could be mistaken for a bench instruction",
+    "solution": "Read the actual played lineup and development report after advancing",
+    "lesson": "Vortex rest pauses practice but retains match experience; he still appeared on the actual Lotus13-2 map",
+    "confidence": "medium",
+    "source": "WJBF7 seed2038 fictional Sandbox Team Nexus S1W1-W2; 3ac34df dirty replay identity patch; docs/playtests/2026-10-08-replay-identity-fix.md",
+    "code": "WJBF7",
+    "tags": [
+      "browser",
+      "replay",
+      "historical-identity",
+      "telemetry"
+    ],
+    "kind": "learning"
+  }
+]

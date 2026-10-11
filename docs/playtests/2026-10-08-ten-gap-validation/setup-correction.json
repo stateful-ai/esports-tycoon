@@ -1,0 +1,18 @@
+{
+  "reason": "Initial fixture copied game JSON alone; required saved-world metadata and auth-session mapping omitted",
+  "copied_files": [
+    {
+      "name": "sessions.json",
+      "sha256": "705ec5364c643725d91ab3ec8aaa193e0f86c34660b8d3f40e4f9db751f89828"
+    },
+    {
+      "name": "campaign_f2977bf6e97d789a.meta.json",
+      "sha256": "4d70a209ae4881544e11b492993a054119efa2e6f158017fd598c849bc6dedd5"
+    },
+    {
+      "name": "match_review_26UHC.jsonl",
+      "sha256": "9a4e61a76ec455026b5d3c63cd4bfeac2349a43157b4f02ef99ca8440e6d6fc3"
+    }
+  ],
+  "original_game_json_unchanged": true
+}

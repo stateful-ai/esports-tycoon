@@ -1,0 +1,58 @@
+{
+  "recovered_at_utc": "2026-10-11T06:36:28.596105+00:00",
+  "finding_id": 4240465394,
+  "new_original_artifacts": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests\\verify-next-fixture-lineup.py",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/verify-next-fixture-lineup.py",
+      "sha256": "eb290d0dab6e2528008d912bd53b9deb5a8661389bcaad7c9bf9db8ea8c62e9a",
+      "byte_count": 771,
+      "raw_source_bytes_equal": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\.playwright-cli\\page-2026-10-10T21-46-08-971Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-08-971Z.yml",
+      "sha256": "1f08036256ed94ee260b6fdc02fdd0acdec9fd06782da4ab4ff272af82a9f244",
+      "byte_count": 22962,
+      "raw_source_bytes_equal": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\.playwright-cli\\page-2026-10-10T21-46-40-052Z.yml",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/page-2026-10-10T21-46-40-052Z.yml",
+      "sha256": "32143b5b338d8ac5914d2116e88e0aad646cddd401a7b09bbb89d205655befa6",
+      "byte_count": 19292,
+      "raw_source_bytes_equal": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\.codex\\worktrees\\sponsor-demand-spacing\\runs\\playtests\\gap26\\browser_accept.py",
+      "published_path": "docs/playtests/2026-10-10-gap26-spacing/evidence/browser_accept.py",
+      "sha256": "9ef8332f51ca60ee0b5711f4b746df5993ad3bf8d8e7a3a73dbf42127e1d9669",
+      "byte_count": 2822,
+      "raw_source_bytes_equal": true
+    }
+  ],
+  "existing_original_input_receipts": [
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-next-fixture-development\\03-roster-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-roster-response.txt",
+      "sha256": "68b61ac751d369bcc56c49a927c1334e0caf5a5846e2542c209c7a1df36b849d",
+      "raw_source_bytes_equal": true
+    },
+    {
+      "original_path": "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-next-fixture-development\\03-tactics-response.txt",
+      "published_path": "docs/playtests/2026-10-10-next-fixture-development/evidence/03-tactics-response.txt",
+      "sha256": "32824c681c7b067f174153cc2bdd0369ef1e2d5ee26c12d2b21a54a7721364bc",
+      "raw_source_bytes_equal": true
+    }
+  ],
+  "script_not_executed": true,
+  "privacy_review": "Saved script has no embedded credentials; helper references a local sessions file but no SID/auth value was copied. DOM snapshots and public responses contain player-facing controlled-test state only. Original script preserved, absolute source paths mapped instead of modified.",
+  "original_native_stdout_or_exit_receipt_status": "unavailable_in_searched_retained_runs",
+  "output_search_locations": [
+    "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\runs\\playtests",
+    "C:\\Users\\aidan\\workspace\\esports-sponsor-playtest-20261010\\runs\\playtests\\2026-10-10-next-fixture-development"
+  ],
+  "execution_evidence_effective_status": "unverified",
+  "qualification": "Historical step5 records a successful native audit; no independent original stdout/exit-status receipt was found. Retained script, DOM and public inputs support inspectable assertions but cannot prove original script execution. No stdout was generated, reconstructed from its print statement or presented as a captured result.",
+  "historical_CSV_expectations_outcomes_timestamps_unchanged": true
+}

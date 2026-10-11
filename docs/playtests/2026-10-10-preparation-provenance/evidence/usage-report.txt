@@ -1,0 +1,63 @@
+{
+  "attempts": 5,
+  "events": {
+    "attempt:/api/actions/advance": 2,
+    "attempt:/api/actions/media_event": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 1,
+    "result:/api/actions/advance": 2,
+    "result:/api/actions/media_event": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 1,
+    "session_end:": 1,
+    "session_start:": 9,
+    "view:club/development": 2,
+    "view:club/squad": 2,
+    "view:dashboard": 4,
+    "view:lobby": 9,
+    "view:tactics/prep": 4,
+    "view:tactics/strategy": 4,
+    "visible_time:club/development": 2,
+    "visible_time:club/squad": 2,
+    "visible_time:dashboard": 4,
+    "visible_time:lobby": 53,
+    "visible_time:tactics/prep": 7,
+    "visible_time:tactics/strategy": 4
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "05bf2381fe8b02b5aee199bdfb426c7c": 15001,
+    "24c415485fe46182b1e4c8fed6d5d2a9": 0,
+    "8f84605b1716ecf2878e6b0b5eea765f": 15001,
+    "915a3c6e112b615f8ef29e6f0b5c9278": 15013,
+    "91fa8df1cf5f85b37c82d4492eb557ab": 44030,
+    "b411920c8ec3bd4907792ab17da66838": 28635,
+    "c7e003e76d23617dbdb5a2cbeaf09c56": 40820,
+    "fad30dfbc14af2a272c91f2188874167": 585013,
+    "ff0d51e2f82308a4d64ca998c51c87de": 15012
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:http_error": 1,
+    "/api/actions/advance:success": 1,
+    "/api/actions/media_event:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 1
+  },
+  "paired_results": 5,
+  "retention_bytes": 8388608,
+  "sessions": 9,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "club/development": 27983,
+    "club/squad": 719,
+    "dashboard": 3037,
+    "lobby": 731866,
+    "tactics/prep": 73802,
+    "tactics/strategy": 783
+  },
+  "world_events": {
+    "26UHC": 57,
+    "lobby": 60
+  }
+}
