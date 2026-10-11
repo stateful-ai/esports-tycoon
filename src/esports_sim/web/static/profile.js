@@ -1952,6 +1952,7 @@ async function pfAssignIgl(p) {
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
+let pfOpener = null; // original focus target across loading and profile navigation
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
@@ -1994,6 +1995,8 @@ function pfEnsureOverlay() {
   const ov = document.createElement("div");
   ov.id = "profile";
   ov.className = "overlay hidden";
+  ov.inert = true;
+  ov.setAttribute("aria-hidden", "true");
   ov.innerHTML =
     `<div class="panel pf-panel">` +
     `<button class="pf-back btn btn-sm hidden" aria-label="Back to previous profile">← Back</button>` +
@@ -2010,20 +2013,37 @@ function pfEnsureOverlay() {
 
 function pfShow(vnode) {
   const ov = pfEnsureOverlay();
+  if (!isProfileOpen()) pfOpener = document.activeElement;
   const body = ov.querySelector("#profile-body");
   render(vnode, body);
   ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
   body.scrollTop = 0;
   ov.classList.remove("hidden");
+  ov.inert = false;
+  ov.removeAttribute("aria-hidden");
 }
 
 function closeProfile() {
   pfEndInspection();  pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
+  const opener = pfOpener;
+  pfOpener = null;
   if (pfOverlayEl) {
+    // The fade keeps this subtree displayed; closed controls must leave focus
+    // and the accessibility tree immediately, even while opacity animates.
+    if (pfOverlayEl.contains(document.activeElement)) document.activeElement.blur();
+    pfOverlayEl.inert = true;
+    pfOverlayEl.setAttribute("aria-hidden", "true");
     pfOverlayEl.classList.add("hidden");
     pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
+  }
+  // A mutation may have replaced the opener or made it unavailable.
+  if (opener instanceof HTMLElement && opener !== document.body
+      && opener.isConnected && !opener.matches(":disabled")
+      && !opener.closest("[inert]") && opener.getClientRects().length
+      && getComputedStyle(opener).visibility === "visible") {
+    try { opener.focus({ preventScroll: true }); } catch {}
   }
 }
 
