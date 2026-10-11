@@ -1,2 +1,5 @@
 # Preserve whitespace inside quoted source stage labels in the research CSV.
 data/research/war-history/map_context.csv -whitespace
+# Keep gap40 acceptance receipt hashes equal to the raw captured bytes.
+docs/playtests/2026-10-11-gap40-rollover/evidence/** -text
+docs/playtests/2026-10-11-gap40-rollover/actions.csv -text
