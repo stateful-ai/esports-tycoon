@@ -1000,7 +1000,8 @@ def test_map_pool_board_shape(env):
     gs, gd, h = env
     _bind(gs, gd)
     mp = server_mod._map_pool_board(gs, h.user_team)
-    assert set(mp) == {"team_id", "team_name", "maps", "veto"}
+    assert set(mp) == {"team_id", "team_name", "maps", "veto", "fixture"}
+    assert mp["fixture"] is None
     assert mp["team_id"] == h.user_team
     assert mp["team_name"] == gs.teams[h.user_team].name
     for m in mp["maps"]:
@@ -1443,4 +1444,56 @@ def test_next_fixture_names_stakes_and_owns_map_record(env, reverse, acting):
     assert (mp["team_id"], mp["team_name"]) == (tid, name)
     records = {m["map_id"]: (m["wins"], m["played"]) for m in mp["maps"]}
     assert records == ({"ascent": (1, 1), "lotus": (1, 1)} if tid == own else {"bind": (1, 2)})
+    assert mp["veto"] is None
+    assert mp["fixture"]["maps"] == [{
+        "map_id": "bind", "map": gd.maps["bind"].display_name,
+        "ours": {"played": 0, "wins": 0, "win_rate": None} if tid == own else
+                {"played": 2, "wins": 1, "win_rate": 50},
+        "theirs": {"played": 2, "wins": 1, "win_rate": 50} if tid == own else
+                  {"played": 0, "wins": 0, "win_rate": None},
+    }]
+    assert not mp["fixture"]["veto_locked"]
     assert gs.model_dump_json() == before
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+@pytest.mark.parametrize("empty_records", [False, True])
+def test_locked_fixture_map_read_never_recommends_unavailable_maps(env, monkeypatch, reverse, empty_records):
+    original, gd, h = env
+    gs = original.model_copy(deep=True)
+    _bind(gs, gd)
+    own, opponent = h.user_team, h.rival_team
+    fixture = Fixture(id="locked-series", week=gs.week, best_of=3,
+                      team_a=opponent if reverse else own,
+                      team_b=own if reverse else opponent,
+                      maps=["ascent", "lotus", "split"],
+                      veto=["MRC ban haven", "NXS ban bind", "MRC pick ascent",
+                            "NXS pick lotus", "decider split"])
+    records = {own: {"bind": [4, 4], "ascent": [2, 1], "haven": [3, 0]},
+               opponent: {"bind": [4, 0], "ascent": [3, 2], "haven": [3, 3]}}
+    monkeypatch.setattr(server_mod, "_team_map_record",
+                        lambda state, tid: {} if empty_records else records[tid])
+    gs.fixtures = [fixture]
+    before = gs.model_dump_json()
+    board, _ = server_mod._next_fixture_board(gs)
+    mp = board["map_pool"]
+    assert mp["veto"] is None
+    current = mp["fixture"]
+    assert current["fixture_id"] == fixture.id
+    assert current["veto_locked"] is True
+    assert current["veto"] == fixture.veto
+    assert [m["map_id"] for m in current["maps"]] == fixture.maps
+    assert current["maps"][0]["ours"] == (
+        {"played": 0, "wins": 0, "win_rate": None} if empty_records else
+        {"played": 2, "wins": 1, "win_rate": 50})
+    assert current["maps"][1]["ours"]["win_rate"] is None
+    assert {m["map_id"] for m in mp["maps"]} == (set() if empty_records else set(records[own]))
+    assert gs.model_dump_json() == before
+    # General history remains available independently of a fixture.
+    historical = server_mod._map_pool_board(gs, own, opponent)
+    assert historical["fixture"] is None
+    if not empty_records:
+        assert historical["veto"]["pick"]["map_id"] == "bind"
+        assert historical["veto"]["ban"]["map_id"] == "haven"
+    gs.fixtures = []
+    assert server_mod._next_fixture_board(gs) == (None, None)

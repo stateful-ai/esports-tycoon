@@ -1,0 +1,8 @@
+{
+  "at_utc": "2026-10-11T01:50:00.376275+00:00",
+  "rows": 4,
+  "all19_observation_fields_unchanged": true,
+  "changed_analytics_step": 4,
+  "original_csv_sha256": "bbaef9c6897db17a388655928d2b8e45612376825b98992410d51ad0310592ff",
+  "corrected_csv_sha256": "8e7b6b0a42a2cad455f4c8dfa8e639d733473e6522f5927f5116ed74a97d6b96"
+}
