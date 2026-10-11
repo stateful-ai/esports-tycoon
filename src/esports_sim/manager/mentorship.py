@@ -25,7 +25,8 @@ def pair_mentorship(gs: GameState, mentee_id: str, mentor_id: str) -> bool:
     # Must be on the same team
     mentor_team_id = None
     mentee_team_id = None
-    for team in gs.teams.values():
+    for tid in sorted(gs.teams):
+        team = gs.teams[tid]
         if mentor_id in team.player_ids:
             mentor_team_id = team.id
         if mentee_id in team.player_ids:
@@ -46,16 +47,28 @@ def pair_mentorship(gs: GameState, mentee_id: str, mentor_id: str) -> bool:
     return True
 
 
-def tick_mentorship(gs: GameState) -> None:
-    """Apply weekly mentorship progress and rewards."""
+def tick_mentorship(gs: GameState, *, apply_rewards: bool = True) -> None:
+    """Settle weekly program progress and dissolve completed/invalid pairs.
+
+    Campaign development already owns ceiling and breakthrough rewards, so
+    its caller disables the legacy standalone rewards here. Program validity
+    is roster continuity; development separately gates teaching gains on the
+    mentor's ability. Aging or a protege overtaking a mentor does not reset
+    an admitted program's progress.
+    """
     from esports_sim.manager import locker_room
 
     if not hasattr(gs, "mentorship_progress"):
         object.__setattr__(gs, "mentorship_progress", {})
 
-    for mentee_id, mentor_id in list(gs.mentorships.items()):
+    for mentee_id in sorted(gs.mentorships):
+        mentor_id = gs.mentorships[mentee_id]
         # Check if players exist
-        if mentee_id not in gs.players or mentor_id not in gs.players:
+        if (
+            mentee_id == mentor_id
+            or mentee_id not in gs.players
+            or mentor_id not in gs.players
+        ):
             gs.mentorships.pop(mentee_id, None)
             gs.mentorship_progress.pop(mentee_id, None)
             continue
@@ -63,7 +76,8 @@ def tick_mentorship(gs: GameState) -> None:
         # Check if they are still on the same team
         mentor_team_id = None
         mentee_team_id = None
-        for team in gs.teams.values():
+        for tid in sorted(gs.teams):
+            team = gs.teams[tid]
             if mentor_id in team.player_ids:
                 mentor_team_id = team.id
             if mentee_id in team.player_ids:
@@ -102,29 +116,37 @@ def tick_mentorship(gs: GameState) -> None:
         new_progress = current_progress + inc
         gs.mentorship_progress[mentee_id] = new_progress
 
-        from esports_sim.rng.tree import RngTree
-        import unittest.mock
-        rng = RngTree(gs.seed).derive("mentorship", gs.season, gs.week, mentee_id, mentor_id)
-        use_rng = not isinstance(random.random, unittest.mock.Mock)
+        if apply_rewards:
+            _apply_legacy_rewards(gs, mentee_id, mentor_id)
 
-        # Potential boost chance
-        prob = rng.random() if use_rng else random.random()
-        if prob < 0.1:
-            if mentee.potential < 100.0:
-                mentee.potential = min(100.0, mentee.potential + 2.0)
-
-        # Tag transfer chance
-        prob2 = rng.random() if use_rng else random.random()
-        if prob2 < 0.1:
-            transferrable = [t for t in mentor.personality_tags if t not in mentee.personality_tags]
-            if transferrable:
-                if use_rng:
-                    chosen = transferrable[rng.integers(0, len(transferrable))]
-                else:
-                    chosen = random.choice(transferrable)
-                mentee.personality_tags.append(chosen)
-
-        # Completion check
+        # Completion check: rewards for the final week have already settled.
         if new_progress >= 100.0:
             gs.mentorships.pop(mentee_id, None)
             gs.mentorship_progress.pop(mentee_id, None)
+
+
+def _apply_legacy_rewards(gs: GameState, mentee_id: str, mentor_id: str) -> None:
+    """Compatibility rewards for standalone callers, outside campaign growth."""
+    mentor = gs.players[mentor_id]
+    mentee = gs.players[mentee_id]
+    from esports_sim.rng.tree import RngTree
+    import unittest.mock
+    rng = RngTree(gs.seed).derive("mentorship", gs.season, gs.week, mentee_id, mentor_id)
+    use_rng = not isinstance(random.random, unittest.mock.Mock)
+
+    # Potential boost chance
+    prob = rng.random() if use_rng else random.random()
+    if prob < 0.1:
+        if mentee.potential < 100.0:
+            mentee.potential = min(100.0, mentee.potential + 2.0)
+
+    # Tag transfer chance
+    prob2 = rng.random() if use_rng else random.random()
+    if prob2 < 0.1:
+        transferrable = [t for t in mentor.personality_tags if t not in mentee.personality_tags]
+        if transferrable:
+            if use_rng:
+                chosen = transferrable[rng.integers(0, len(transferrable))]
+            else:
+                chosen = random.choice(transferrable)
+            mentee.personality_tags.append(chosen)
