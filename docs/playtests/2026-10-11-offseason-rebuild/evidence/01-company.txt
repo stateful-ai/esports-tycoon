@@ -1,0 +1,6 @@
+### Result
+"ESPORTSSIM\nSeason 1 · Week 23 · Offseason — Team Nexus\n2,266,822 cr\nSave\nAutosave off\nEvery week\nEvery 2 weeks\nEvery 3 weeks\nEvery 5 weeks\nEvery 8 weeks\nCampaigns\nAdvance Week ▸\nSim ahead ▸▸\n🛠️\n🔇\nGuide\nWEEKLY\nDASHBOARD\nINBOX18\nMATCH\nORG\nCLUB\nFACILITIES\nSEASON\nMARKET1\nSTATS\nCOMPANY\nCOMPANY\nFINANCES\nBRAND\nLoading finances...\nCOMPANY\nKeep the club solvent while growing sponsors, supporters, reach, and public sentiment.\nCheck weekly net cash flow before accepting costs, then review sponsor demands and brand momentum."
+### Ran Playwright code
+```js
+await (async page => { await page.getByRole('button',{name:'Company',exact:true}).click(); return await page.locator('body').innerText(); })(page);
+```

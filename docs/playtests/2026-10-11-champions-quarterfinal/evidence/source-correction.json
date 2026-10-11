@@ -1,0 +1,33 @@
+{
+  "at_utc": "2026-10-11T06:11:14.337339+00:00",
+  "original_nine_rows_exact_prefix": true,
+  "step10": {
+    "session_id": "2026-10-11-champions-quarterfinal",
+    "step": "10",
+    "started_at_utc": "2026-10-11T06:10:24.561+00:00",
+    "finished_at_utc": "2026-10-11T06:10:36.156+00:00",
+    "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+    "working_tree_dirty": "true",
+    "game_version": "0.0.1",
+    "model": "unknown (not exposed)",
+    "effort": "unknown (not exposed)",
+    "surface": "source-audit",
+    "world_code": "26UHC",
+    "seed": "2038",
+    "game_time": "S1 W21",
+    "intent": "Verify whether an unplayed scheduled map book can still contribute to the quarterfinal",
+    "action": "Inspect knowledge.prep_bonus and fixture plan edge construction to distinguish not played from unused",
+    "expected_outcome": "Source identifies the map set used in aggregated preparation edge, allowing a factual correction without modifying the saved career or previous observations.",
+    "actual_outcome": "Correction tostep9: notplayed does not mean unused. knowledge.prep_bonus averages books across allscheduledfixturemaps, includingLotus, before the series; _fixture_plans combines scout/book/coach edge and mapplans retain it. Thus Lotusbook can contribute to Ascent/Split despite Lotusnotplayed. Gap36 owner instructed to say storedbook/mapnotplayed, preserve Preparation prefix, and make no unused/no-contribution claim. Savedcareer unchanged.",
+    "result": "met",
+    "evidence": "knowledge.py:122;campaign.py:1944;campaign.py:2042;PR383 review finding4240484108",
+    "analytics_status": "not_instrumented",
+    "analytics_evidence": "Read-only source audit outside gameplay and browser usage streams."
+  },
+  "correction": "Unplayed scheduled map books may still contribute to the aggregate fixture preparation edge; avoid unused/no-contribution claims.",
+  "current_saved_sha256": "c35f370c1525615cc8d5c4d2b1187535e8159d7ff5acad74aec10ddbd78f4051",
+  "saved_career_unchanged": true,
+  "original_reconciliation_scope": 9,
+  "new_source_audit_only": true,
+  "local_tests_run": false
+}

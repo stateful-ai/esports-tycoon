@@ -1299,7 +1299,7 @@ def can_open_negotiation(gs: GameState, pid: str) -> tuple[bool, str, str | None
         )
         if not allowed:
             return False, why, kind
-    until = gs.talks_cooldown.get(pid, 0)
+    until = gs.talks_cooldown_by.get(gs.acting_team_id, {}).get(pid, 0)
     if until > gs.week:
         return False, (
             f"{p.handle} isn't taking your calls after the last talks "

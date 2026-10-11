@@ -1,0 +1,419 @@
+### Page
+- Page URL: http://127.0.0.1:8519/
+- Page Title: esports-sim
+- Console: 2 errors, 0 warnings
+### Snapshot
+```yaml
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]: ESPORTSSIM
+      - generic [ref=f2e26]: Season 1 · Week 21 · Playoffs — Team Nexus
+      - generic [ref=f2e27]: 1,814,812 cr
+      - button "Save" [ref=f2e2194] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f2e29]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f2e5] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f2e6] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f2e7] [cursor=pointer]
+      - button "🛠️" [ref=f2e8] [cursor=pointer]
+      - button "🔇" [ref=f2e9] [cursor=pointer]
+      - button "Open manager handbook" [ref=f2e10] [cursor=pointer]: Guide
+    - navigation [ref=f2e11]:
+      - generic "Weekly" [ref=f2e12]:
+        - button "Dashboard" [ref=f2e1912] [cursor=pointer]
+        - button "Inbox 18" [ref=f2e2195] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f2e33]: "18"
+        - button "Match 2" [ref=f2e2196] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f2e2197]: "2"
+      - generic "Org" [ref=f2e17]:
+        - button "Club" [ref=f2e19] [cursor=pointer]
+        - button "Facilities" [ref=f2e20] [cursor=pointer]
+        - button "Season" [ref=f2e21] [cursor=pointer]
+        - button "Market" [ref=f2e22] [cursor=pointer]
+        - button "Stats" [ref=f2e23] [cursor=pointer]
+        - button "Company" [ref=f2e24] [cursor=pointer]
+    - main [ref=f2e25]:
+      - generic [ref=f2e2198]:
+        - generic [ref=f2e2199]:
+          - generic [ref=f2e2200]: Dashboard
+          - generic [ref=f2e2201]: S1 · W21 · Playoffs
+          - button "Guide" [ref=f2e2202] [cursor=pointer]
+          - button "Career ▸" [ref=f2e2203] [cursor=pointer]
+        - generic [ref=f2e2204]:
+          - generic [ref=f2e2206]:
+            - generic [ref=f2e2207]:
+              - generic [ref=f2e2208]: 11–3
+              - generic [ref=f2e2209]: Record
+              - generic [ref=f2e2210]: +69 rd
+            - button "2nd League Americas" [ref=f2e2211] [cursor=pointer]:
+              - generic [ref=f2e2212]: 2nd
+              - generic [ref=f2e2213]: League
+              - generic [ref=f2e2214]: Americas
+            - generic [ref=f2e2215]:
+              - generic [ref=f2e2216]: W1
+              - generic [ref=f2e2217]: Streak
+            - button "1,814,812 cr Balance" [ref=f2e2218] [cursor=pointer]:
+              - generic [ref=f2e2219]: 1,814,812 cr
+              - generic [ref=f2e2220]: Balance
+            - generic [ref=f2e2221]:
+              - generic [ref=f2e2222]: "97"
+              - generic [ref=f2e2223]: Morale
+            - button "95 Condition" [ref=f2e2224] [cursor=pointer]:
+              - generic [ref=f2e2225]: "95"
+              - generic [ref=f2e2226]: Condition
+          - generic [ref=f2e2227]:
+            - generic [ref=f2e2228]:
+              - generic [ref=f2e2229]:
+                - text: W21 · Staff briefing
+                - heading "Match day" [level=2] [ref=f2e2230]
+                - paragraph [ref=f2e2231]: Everything to settle before you advance the week.
+              - generic [ref=f2e2232]:
+                - generic [ref=f2e2233]: Plan needed
+                - generic [ref=f2e2234]: Scout elsewhere
+                - generic [ref=f2e2235]: Squad ready
+                - button "Match day briefing ▸" [ref=f2e2236] [cursor=pointer]
+            - generic [ref=f2e2237]:
+              - generic [ref=f2e2238]:
+                - generic [ref=f2e2239] [cursor=pointer]: Team Nexus
+                - generic [ref=f2e2240]: 2nd · 11–3
+              - generic [ref=f2e2241]:
+                - generic [ref=f2e2242]: VS
+                - generic [ref=f2e2243]: S1 · W21
+                - generic [ref=f2e2244]: CHAMPIONS SEMI
+                - generic [ref=f2e2245]: Best of 3
+                - generic "The manager across the aisle" [ref=f2e2246]: vs Ethan Lopez · Connector
+              - generic [ref=f2e2247]:
+                - generic [ref=f2e2248] [cursor=pointer]: Team Vanguard
+                - generic [ref=f2e2249]: 1st · 13–1
+            - generic [ref=f2e2250]:
+              - generic [ref=f2e2251]:
+                - generic [ref=f2e2252]:
+                  - generic [ref=f2e2253]: Today's prep
+                  - generic [ref=f2e2254]: Team Vanguard in W21
+                - generic [ref=f2e2255]: Set the five, build the plan, sharpen the week.
+              - generic [ref=f2e2256]:
+                - generic [ref=f2e2257]:
+                  - generic [ref=f2e2258]:
+                    - generic [ref=f2e2259]: Assistant coach
+                    - generic [ref=f2e2260]: Stable
+                  - generic [ref=f2e2261]: Keep the match five settled
+                  - paragraph [ref=f2e2262]: No lineup change is being flagged. Use the roster desk for roles, map lineups, and final availability.
+                  - button "Open roster ▸" [ref=f2e2263] [cursor=pointer]
+                - generic [ref=f2e2264]:
+                  - generic [ref=f2e2265]:
+                    - generic [ref=f2e2266]: Head coach
+                    - generic [ref=f2e2267]: Priority
+                  - generic [ref=f2e2268]: Turn the brief into a game plan
+                  - paragraph [ref=f2e2269]: No opponent-specific plan is set yet. Commit the tactical approach and prep edge before the match.
+                  - button "Build plan ▸" [ref=f2e2270] [cursor=pointer]
+                - generic [ref=f2e2271]:
+                  - generic [ref=f2e2272]:
+                    - generic [ref=f2e2273]: Analyst
+                    - generic [ref=f2e2274]: Unassigned
+                  - generic [ref=f2e2275]: Put the book on Team Vanguard
+                  - paragraph [ref=f2e2276]: Your scout is not assigned to Team Vanguard. Switch coverage if this match is the priority.
+                  - button "Scouting desk ▸" [ref=f2e2277] [cursor=pointer]
+                - generic [ref=f2e2278]:
+                  - generic [ref=f2e2279]:
+                    - generic [ref=f2e2280]: Performance
+                    - generic [ref=f2e2281]: Tactical
+                  - generic [ref=f2e2282]: Check Ghost's development plan
+                  - paragraph [ref=f2e2283]: Ghost moved up this week. Confirm focus, intensity, and mentorship while setting team training.
+                  - button "Development plans ▸" [ref=f2e2284] [cursor=pointer]
+            - generic [ref=f2e2285]:
+              - generic [ref=f2e2286]:
+                - generic [ref=f2e2287]: Match intelligence
+                - generic [ref=f2e2288]: Opponent read, your stakes, maps and run-in
+              - generic [ref=f2e2289]:
+                - generic [ref=f2e2290]:
+                  - generic [ref=f2e2291]: "Head-to-head this season: 0–4 (you trail) · L4"
+                  - paragraph [ref=f2e2292]: Team Vanguard have taken all 4 this season. Watch Slice — Team Vanguard's form pick at 1.33.
+                  - generic [ref=f2e2293]:
+                    - generic [ref=f2e2294]: Veto
+                    - generic [ref=f2e2295]:
+                      - img "split" [ref=f2e2296]
+                      - text: VGD ban split
+                    - generic [ref=f2e2297]:
+                      - img "bind" [ref=f2e2298]
+                      - text: NXS ban bind
+                    - generic [ref=f2e2299]:
+                      - img "haven" [ref=f2e2300]
+                      - text: VGD pick haven
+                    - generic [ref=f2e2301]:
+                      - img "ascent" [ref=f2e2302]
+                      - text: NXS pick ascent
+                    - generic [ref=f2e2303]:
+                      - img "lotus" [ref=f2e2304]
+                      - text: decider lotus
+                - generic [ref=f2e2305]:
+                  - generic [ref=f2e2306]:
+                    - generic [ref=f2e2307]: Team Vanguard — last 5
+                    - generic [ref=f2e2308]:
+                      - generic "vs Saracen Guard · 2–1" [ref=f2e2309]: W
+                      - generic "vs Team Nexus · 2–0" [ref=f2e2310]: W
+                      - generic "vs Team Nexus · 2–1" [ref=f2e2311]: W
+                      - generic "vs Solar Flare · 3–2" [ref=f2e2312]: W
+                      - generic "vs Coral Sea Drakes · 2–0" [ref=f2e2313]: W
+                  - generic [ref=f2e2314]:
+                    - generic [ref=f2e2315]: Danger men
+                    - generic [ref=f2e2316]:
+                      - generic [ref=f2e2317]:
+                        - generic [ref=f2e2318] [cursor=pointer]: Zenith
+                        - generic [ref=f2e2319]: Controller
+                        - generic [ref=f2e2320]: ~85
+                      - generic [ref=f2e2321]:
+                        - generic [ref=f2e2322] [cursor=pointer]: Pulse
+                        - generic [ref=f2e2323]: Duelist
+                        - generic [ref=f2e2324]: ~84
+                      - generic [ref=f2e2325]:
+                        - generic [ref=f2e2326] [cursor=pointer]: Warden
+                        - generic [ref=f2e2327]: Sentinel
+                        - generic [ref=f2e2328]: ~84
+                  - generic [ref=f2e2329]:
+                    - generic [ref=f2e2330]: Playstyle
+                    - generic [ref=f2e2331]: Map-spreading
+                    - generic [ref=f2e2332]: swings angles aggressively · hits sites fast · spreads wide and lurks for picks
+                  - generic [ref=f2e2333]:
+                    - text: Your map pool & veto
+                    - generic [ref=f2e2334]:
+                      - generic [ref=f2e2335]:
+                        - generic [ref=f2e2336]: Ban Haven (Team Vanguard 100% · you 33%)
+                        - generic [ref=f2e2337]: Pick Split (you 100% · them 33%)
+                      - text: Team Nexus — season map record (wins / played)
+                      - generic [ref=f2e2338]:
+                        - generic [ref=f2e2339]:
+                          - generic [ref=f2e2340]: Bind
+                          - generic [ref=f2e2343]: 100%
+                          - generic [ref=f2e2344]: 4/4
+                        - generic [ref=f2e2345]:
+                          - generic [ref=f2e2346]: Split
+                          - generic [ref=f2e2349]: 100%
+                          - generic [ref=f2e2350]: 3/3
+                        - generic [ref=f2e2351]:
+                          - generic [ref=f2e2352]: Ascent
+                          - generic [ref=f2e2355]: 62%
+                          - generic [ref=f2e2356]: 5/8
+                        - generic [ref=f2e2357]:
+                          - generic [ref=f2e2358]: Lotus
+                          - generic [ref=f2e2361]: 56%
+                          - generic [ref=f2e2362]: 5/9
+                        - generic [ref=f2e2363]:
+                          - generic [ref=f2e2364]: Haven
+                          - generic [ref=f2e2367]: 33%
+                          - generic [ref=f2e2368]: 1/3
+          - generic [ref=f2e2369]:
+            - generic [ref=f2e2370]:
+              - heading "Match review" [level=2] [ref=f2e2371]
+              - paragraph [ref=f2e2372]: "Last time out — Beat Tokyo Drift Six 2-0. Standout: Vortex (1.60). Off-colour: Echo (0.79)."
+              - paragraph [ref=f2e2373]: “Team Nexus have put themselves in the title picture from second.”
+              - generic [ref=f2e2374]:
+                - generic [ref=f2e2375]: W
+                - generic [ref=f2e2376]: vs Tokyo Drift Six
+                - generic [ref=f2e2377]: 2–0
+              - generic [ref=f2e2378]:
+                - generic [ref=f2e2379]: ★
+                - text: POTM
+                - generic [ref=f2e2380] [cursor=pointer]: Vortex
+                - 'img "Aim Demon: raw mechanical menace" [ref=f2e2381]'
+              - generic [ref=f2e2382]:
+                - generic [ref=f2e2383]: hot
+                - generic [ref=f2e2384]: Vortex got hot mid-map (14-round run).
+              - generic [ref=f2e2385]:
+                - generic [ref=f2e2386]:
+                  - generic [ref=f2e2387]: What worked
+                  - generic [ref=f2e2388]:
+                    - generic [ref=f2e2389]:
+                      - generic [ref=f2e2390]: Pistols won
+                      - generic [ref=f2e2391]: 4/4 pistol rounds (100%).
+                    - generic [ref=f2e2392] [cursor=pointer]:
+                      - generic [ref=f2e2393]:
+                        - text: Vortex carried
+                        - 'img "Aim Demon: raw mechanical menace" [ref=f2e2394]'
+                      - generic [ref=f2e2395]: Team-high 1.6 average rating.
+                    - generic [ref=f2e2396]:
+                      - generic [ref=f2e2397]: Attack is clicking
+                      - generic [ref=f2e2398]: 19/24 attack rounds won (79%).
+                    - generic [ref=f2e2399]:
+                      - generic [ref=f2e2400]: Defense is a wall
+                      - generic [ref=f2e2401]: 7/9 defense rounds won (78%).
+                - generic [ref=f2e2402]:
+                  - generic [ref=f2e2403]: Where it broke down
+                  - generic [ref=f2e2405] [cursor=pointer]:
+                    - generic [ref=f2e2406]:
+                      - text: Echo off-colour
+                      - 'img "Clutch Master: wants the round with the game on the line" [ref=f2e2407]'
+                      - 'img "Choker: tightens up when it matters most" [ref=f2e2408]'
+                    - generic [ref=f2e2409]: 0.8 average rating across the series.
+                    - generic [ref=f2e2410]: Young with room (proj. 65–80) — a development call, not a bench.
+              - text: What to tweak
+              - generic [ref=f2e2411]: ▸ Echo is off-colour but still developing — set their dev focus or pair a mentor on the Roster screen.
+              - paragraph [ref=f2e2413]: A stronger analyst would surface duel detail (FK/FD, HS%, ACS, clutches).
+            - generic [ref=f2e2414]:
+              - heading "Americas league" [level=2] [ref=f2e2415]
+              - table [ref=f2e2416]:
+                - rowgroup [ref=f2e2417]:
+                  - row [ref=f2e2418]:
+                    - columnheader "#" [ref=f2e2419]
+                    - columnheader "Team" [ref=f2e2420]
+                    - columnheader "W" [ref=f2e2421]
+                    - columnheader "L" [ref=f2e2422]
+                    - columnheader "+/-" [ref=f2e2423]
+                - rowgroup [ref=f2e2424]:
+                  - row [ref=f2e2425]:
+                    - cell "1" [ref=f2e2426]
+                    - cell "Team Vanguard" [ref=f2e2427]
+                    - cell "13" [ref=f2e2428]
+                    - cell "1" [ref=f2e2429]
+                    - cell "+82" [ref=f2e2430]
+                  - row [ref=f2e2431]:
+                    - cell "2" [ref=f2e2432]
+                    - cell "Team Nexus" [ref=f2e2433]
+                    - cell "11" [ref=f2e2434]
+                    - cell "3" [ref=f2e2435]
+                    - cell "+69" [ref=f2e2436]
+                  - row [ref=f2e2437]:
+                    - cell "3" [ref=f2e2438]
+                    - cell "Rust Belt Gaming" [ref=f2e2439]
+                    - cell "10" [ref=f2e2440]
+                    - cell "4" [ref=f2e2441]
+                    - cell "+55" [ref=f2e2442]
+                  - row [ref=f2e2443]:
+                    - cell "4" [ref=f2e2444]
+                    - cell "Saracen Guard" [ref=f2e2445]
+                    - cell "8" [ref=f2e2446]
+                    - cell "6" [ref=f2e2447]
+                    - cell "+26" [ref=f2e2448]
+              - text: Last result
+              - generic [ref=f2e2449]:
+                - generic [ref=f2e2450]: W
+                - generic [ref=f2e2451] [cursor=pointer]: Tokyo Drift Six
+                - generic [ref=f2e2452]: 2–0
+                - generic [ref=f2e2453]:
+                  - img "ascent" [ref=f2e2454]
+                  - img "split" [ref=f2e2455]
+              - paragraph [ref=f2e2456]: "World #4 · Rep 67 · Fans 333.9K"
+              - button "Full table ▸" [ref=f2e2457] [cursor=pointer]
+          - generic [ref=f2e2458]:
+            - generic [ref=f2e2459]:
+              - heading "Needs you" [level=2] [ref=f2e2460]
+              - generic [ref=f2e2461]:
+                - generic [ref=f2e2462] [cursor=pointer]: ▸ No game plan set for W21
+                - generic [ref=f2e2463] [cursor=pointer]: ▸ 18 unread inbox messages
+                - generic [ref=f2e2464] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f2e2465]: Coach proposed a scrim plan Match · Prep
+                - generic [ref=f2e2466] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=f2e2467]: "Vortex: Season MVP Award · In Contention · 3rd · 1.42"
+            - generic [ref=f2e2468]:
+              - heading "Your calls" [level=2] [ref=f2e2469]
+              - text: Last match
+              - generic [ref=f2e2470]:
+                - generic [ref=f2e2471]: ▸ Map control 30 vs book 50
+                - generic [ref=f2e2472]: "▸ Preparation: book on Ascent, Split · prepped Lotus (never played)"
+            - generic [ref=f2e2473]:
+              - heading "News" [level=2] [ref=f2e2474]
+              - generic [ref=f2e2475]:
+                - generic [ref=f2e2476]: "[S1 W20] Ghostline part with NorthernLights and appoint Jhein after a 4-match losing streak."
+                - generic [ref=f2e2477]: "[S1 W20] Zenith (Team Vanguard) passes 300 kills this season."
+                - generic [ref=f2e2478]: "[S1 W20] Ciphersurge (Tokyo Drift Six) passes 300 kills this season."
+                - generic [ref=f2e2479]: "[S1 W20] Havocrush (Rust Belt Gaming) passes 200 kills this season."
+                - generic [ref=f2e2480]: "[S1 W20] Karmastep (Rust Belt Gaming) passes 300 kills this season."
+                - generic [ref=f2e2481]: "[S1 W20] Slystep (Meridian Cross) passes 300 kills this season."
+                - generic [ref=f2e2482]: "[S1 W20] Nightghost (Coral Sea Drakes) passes 300 kills this season."
+                - generic [ref=f2e2483]: "[S1 W20] Emberveil (Adriatic Sirens) passes 300 kills this season."
+                - generic [ref=f2e2484]: "[S1 W20] Ironbyte (Adriatic Sirens) passes 300 kills this season."
+                - generic [ref=f2e2485]: "[S1 W20] Echo (Team Nexus) passes 300 kills this season."
+                - generic [ref=f2e2486]: "[S1 W20] #3 Meridian Cross stumble against #7 Rust Belt Gaming (1-2)."
+                - generic [ref=f2e2487]: "[S1 W20] [CHAMP_QF] Solar Flare beat Adriatic Sirens, 2-1."
+  - generic [ref=f2e2506]:
+    - heading "Season 1 · Week 20 results" [level=1] [ref=f2e2507]
+    - generic [ref=f2e2508]:
+      - generic [ref=f2e2509]:
+        - generic [ref=f2e2510]: Champions QF
+        - generic [ref=f2e2511]: Team Vanguard vs Coral Sea Drakes
+        - generic [ref=f2e2512]: 2–0
+        - button "▶ Lotus" [ref=f2e2513] [cursor=pointer]
+        - button "▶ Ascent" [ref=f2e2514] [cursor=pointer]
+      - generic [ref=f2e2515]:
+        - generic [ref=f2e2516]: Champions QF
+        - generic [ref=f2e2517]: Team Nexus vs Tokyo Drift Six
+        - generic [ref=f2e2519]: 2–0
+        - button "▶ Ascent" [ref=f2e2520] [cursor=pointer]
+        - button "▶ Split" [ref=f2e2521] [cursor=pointer]
+      - generic [ref=f2e2522]:
+        - generic [ref=f2e2523]: Champions QF
+        - generic [ref=f2e2524]: Solar Flare vs Adriatic Sirens
+        - generic [ref=f2e2525]: 2–1
+        - button "▶ Lotus" [ref=f2e2526] [cursor=pointer]
+        - button "▶ Bind" [ref=f2e2527] [cursor=pointer]
+        - button "▶ Ascent" [ref=f2e2528] [cursor=pointer]
+      - generic [ref=f2e2529]:
+        - generic [ref=f2e2530]: Champions QF
+        - generic [ref=f2e2531]: Meridian Cross vs Rust Belt Gaming
+        - generic [ref=f2e2532]: 1–2
+        - button "▶ Split" [ref=f2e2533] [cursor=pointer]
+        - button "▶ Ascent" [ref=f2e2534] [cursor=pointer]
+        - button "▶ Bind" [ref=f2e2535] [cursor=pointer]
+      - generic [ref=f2e2536]: Champions semifinals next week.
+      - paragraph [ref=f2e2538]: income 112,809 cr · expenses 47,100 cr
+      - generic [ref=f2e2539]:
+        - heading "Squad development · Season 1 · Week 20" [level=2] [ref=f2e2540]
+        - paragraph [ref=f2e2541]: Resolved preparation and match learning for your squad. Source gains can be smaller than the displayed overall rating precision.
+        - generic [ref=f2e2542]:
+          - generic [ref=f2e2543]: Apex
+          - text: OVR 78.9 → 78.9 (0.0)
+          - generic [ref=f2e2544]: Rest / Light · 2 maps
+          - generic [ref=f2e2545]: Matches +0.02 OVR · Aim Precision +0.09 · Aim Reactivity +0.07
+          - generic [ref=f2e2546]: No badge changes this week
+          - generic [ref=f2e2547]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f2e2548]:
+          - generic [ref=f2e2549]: Vortex
+          - text: OVR 75.6 → 75.7 (+0.1)
+          - generic [ref=f2e2550]: Rest / Normal · 2 maps
+          - generic [ref=f2e2551]: Matches +0.05 OVR · Aim Precision +0.02 · Aim Reactivity +0.03 · Comms Quality +0.22 · Composure +0.09 · Game Sense +0.03 · Positioning +0.02 · Utility Usage +0.08
+          - generic [ref=f2e2552]: No badge changes this week
+          - generic [ref=f2e2553]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f2e2554]:
+          - generic [ref=f2e2555]: Ghost
+          - text: OVR 77.6 → 78.2 (+0.6)
+          - generic [ref=f2e2556]: Rest / Normal · 2 maps
+          - generic [ref=f2e2557]: Matches +0.08 OVR · Aim Precision +0.21 · Aim Reactivity +0.25 · Clutch Factor +0.08 · Comms Quality +0.13 · Composure +0.09 · Game Sense +0.02 · Positioning +0.03 · Utility Usage +0.02
+          - generic [ref=f2e2558]: Badges +0.50 OVR · Clutch Factor +3.00 · Composure +2.00
+          - generic [ref=f2e2559]: "Badge earned: Clutch Master · +0.50 OVR · Clutch Factor +3.00 · Composure +2.00"
+          - generic [ref=f2e2560]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f2e2561]:
+          - generic [ref=f2e2562]: Slyblade
+          - text: OVR 72.9 → 72.9 (0.0)
+          - generic [ref=f2e2563]: Rest / Normal · 2 maps
+          - generic [ref=f2e2564]: No measured skill gains
+          - generic [ref=f2e2565]: No badge changes this week
+          - generic [ref=f2e2566]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f2e2567]:
+          - generic [ref=f2e2568]: Echo
+          - text: OVR 75.5 → 75.5 (0.0)
+          - generic [ref=f2e2569]: Rest / Light · 2 maps
+          - generic [ref=f2e2570]: No measured skill gains
+          - generic [ref=f2e2571]: No badge changes this week
+          - generic [ref=f2e2572]: "Individual recovery: practice paused, match experience retained"
+        - generic [ref=f2e2573]:
+          - generic [ref=f2e2574]: Hollowlock
+          - text: OVR 62.7 → 62.7 (0.0)
+          - generic [ref=f2e2575]: Mental / Normal · 0 maps
+          - generic [ref=f2e2576]: Practice +0.02 OVR · Clutch Factor +0.13 · Tilt Resistance +0.07
+          - generic [ref=f2e2577]: No badge changes this week
+          - generic [ref=f2e2578]: Coaching and club support are improving practice
+    - button "Continue" [ref=f2e2579] [cursor=pointer]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Dashboard
+    - generic: See what changed, what needs a decision, and what the next fixture demands.
+    - generic: Begin with Needs You, then scan the next fixture and recent form.
+```

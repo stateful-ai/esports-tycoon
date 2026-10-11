@@ -1,0 +1,11 @@
+### Result
+- [Screenshot of element](.playwright-cli\element-2026-10-11T10-24-08-384Z.png)
+### Ran Playwright code
+```js
+// Screenshot element and save it as .playwright-cli\element-2026-10-11T10-24-08-384Z.png
+await page.locator('div').filter({ hasText: 'Development ReportSeason 2 ·' }).nth(4).screenshot({
+  path: '.playwright-cli\\element-2026-10-11T10-24-08-384Z.png',
+  scale: 'css',
+  type: 'png'
+});
+```

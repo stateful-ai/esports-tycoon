@@ -1,0 +1,22 @@
+{
+  "recorded_at_utc": "2026-10-11T01:43:07.246788+00:00",
+  "phase": "late publication recovery, not a new play session",
+  "pre_play_inheritance_unavailable_in_original_agent": true,
+  "entries": [
+    {
+      "id": "esports-playtest-0173",
+      "kind": "learning",
+      "topic": "Qualification preview must distinguish clinch from seeding"
+    },
+    {
+      "id": "esports-playtest-0174",
+      "kind": "learning",
+      "topic": "Tied ceilings require conservative qualification feedback"
+    },
+    {
+      "id": "esports-playtest-0175",
+      "kind": "pain-point",
+      "topic": "Misleading stakes weaken visible campaign causality"
+    }
+  ]
+}

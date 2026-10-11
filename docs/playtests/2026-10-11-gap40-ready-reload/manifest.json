@@ -1,0 +1,115 @@
+{
+  "tested_code_head": "bf3dc1401708e5d3d11e9f34e2b7e0408cf8d97e",
+  "historical_acceptance": "Prior rollover, shared-ready and status-retry folders remain unchanged",
+  "limits": "No credentials/bootstrap registry, launcher scripts or full save published. One503 intentionally injected through browser routing; server remained healthy. No local pytest/gates run.",
+  "receipts": {
+    "actions.csv": {
+      "bytes": 4078,
+      "sha256": "fade194f8dddfd8b03b7115ccfd29286416950cd5ff99afe6a99fa79b68e31e2"
+    },
+    "evidence/01-initial-state.json": {
+      "bytes": 15093,
+      "sha256": "be74c5d4cbe2bd05f5a435d244b5f718b2bf9b9f80871314eb41b383af605a75"
+    },
+    "evidence/01-join-readback.json": {
+      "bytes": 15217,
+      "sha256": "9a86aff6c094ce1a0c66a2ab490f1eeacb6645f6879d82060047c264efe95aa4"
+    },
+    "evidence/01-public-choices.json": {
+      "bytes": 37065,
+      "sha256": "4fe6be2c688608d29806443319177cc47a0404290c9ffb071b04c71a1b166a5a"
+    },
+    "evidence/02-ready.json": {
+      "bytes": 111,
+      "sha256": "a8d5e99943e302bb24e57ede9f263770ca3c9e7fd01d8f48b361274220181980"
+    },
+    "evidence/03-auto-poll.json": {
+      "bytes": 15241,
+      "sha256": "de427ca5eb9762495b706ee467e164ce646416d551efe219a0dd9ac80704e9a0"
+    },
+    "evidence/03-ready-reloaded.png": {
+      "bytes": 285325,
+      "sha256": "b67a03d704a5e1a767740dee87c523e5a935e8e08fb2a0be17b17e0edc803eb8"
+    },
+    "evidence/03-reload-requests.json": {
+      "bytes": 6079,
+      "sha256": "45ef20e4f584d1affd79d7439433020562bea1b282852adc7598b3f24dcf5d2a"
+    },
+    "evidence/04-fault.json": {
+      "bytes": 136,
+      "sha256": "ebab5b52aab3baaee6ffdef8869f1141824d82fc9311ee9dba9ad54bbe805e32"
+    },
+    "evidence/04-recovered-poll.json": {
+      "bytes": 15241,
+      "sha256": "de427ca5eb9762495b706ee467e164ce646416d551efe219a0dd9ac80704e9a0"
+    },
+    "evidence/04-retry.png": {
+      "bytes": 298318,
+      "sha256": "08b5bacfb50c25a25aba1b814cd90e27a178c5933ee745220edffe07c3d3c8c2"
+    },
+    "evidence/05-auto-readback.json": {
+      "bytes": 13798,
+      "sha256": "d1b075fc326b674b2f30681d74a7324810e039b89edd8963dfbefd03e483ea90"
+    },
+    "evidence/05-observed-rollover.png": {
+      "bytes": 256973,
+      "sha256": "9090ca68f7d8e73e9ac7ef25086f804ea7cae488c9ad57bb09dac55fc5c6124b"
+    },
+    "evidence/05-primary-network.json": {
+      "bytes": 7438,
+      "sha256": "3a0042957babbc130f66afad70847b2ff7fe8b588bc22b07fb2c3bd36908f147"
+    },
+    "evidence/05-response.json": {
+      "bytes": 6540,
+      "sha256": "3258c579daa2abb058250a5520e93b5abfe5903d36fcb688e7dab8d691493f02"
+    },
+    "evidence/06-save.json": {
+      "bytes": 48,
+      "sha256": "4901a3e982eb8be471408125dcd65f76fe1d6e70bcc5df1bfc138666ac430668"
+    },
+    "evidence/audit.json": {
+      "bytes": 11551,
+      "sha256": "5cb72ccda879dafdddd2935c1a479a3940d5e773b985189e67e1aadcf2c1bc3b"
+    },
+    "evidence/flywheel-after.json": {
+      "bytes": 2255,
+      "sha256": "6972efb641c0f7832a4da3f497bcca3a5b3230be8645d5605ea82d25a4e0b8c6"
+    },
+    "evidence/flywheel-before.json": {
+      "bytes": 3749,
+      "sha256": "d924c00f30aa0b3841a87d8d9b034676ec04cc12d269f3d5d877c7c71ddc11d4"
+    },
+    "evidence/freeze-after.json": {
+      "bytes": 245348,
+      "sha256": "97199908d53fbcbdc608bcb619a5a5ec93034afaf08a0205b5f844beebbdaac9"
+    },
+    "evidence/freeze-before.json": {
+      "bytes": 245348,
+      "sha256": "97199908d53fbcbdc608bcb619a5a5ec93034afaf08a0205b5f844beebbdaac9"
+    },
+    "evidence/indexed-decisions.json": {
+      "bytes": 571,
+      "sha256": "0edeb5ee3905e7e02589891d63b9d02a6b09e52627946620061152d0911c55ce"
+    },
+    "evidence/tested-git-blobs.json": {
+      "bytes": 312694,
+      "sha256": "184baf1d94b28cf12d2d4f6a4d1ec20e9d95bd509812df8397fd017676989109"
+    },
+    "evidence/usage-summary.json": {
+      "bytes": 1907,
+      "sha256": "2e7bc4ab53c3c3c5615aa265153c700026478c02fdfc299c20fc0fdd5e752823"
+    },
+    "evidence/usage-world.jsonl": {
+      "bytes": 7351,
+      "sha256": "552d88ca1ebdc2986a4b14f03db930fcae8afcec1ffdddea570d8ae9ddd4a96b"
+    },
+    "evidence/telemetry-report.txt": {
+      "bytes": 2090,
+      "sha256": "f468a41f04259e3ec40af3921cbf6f58ae76d6dee478f89e14b7a52d5def2768"
+    },
+    "evidence/usage-report.json": {
+      "bytes": 288,
+      "sha256": "98dd94d2d3bd6759e7c4371f946e2ada42349459d9e7049596fca67eae83c056"
+    }
+  }
+}

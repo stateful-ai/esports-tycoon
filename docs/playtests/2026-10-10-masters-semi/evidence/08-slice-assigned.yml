@@ -1,0 +1,165 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]: ESPORTSSIM
+      - generic [ref=f1e25]: Season 1 · Week 18 · Playoffs — Team Nexus
+      - generic [ref=f1e26]: 1,499,208 cr
+      - button "Save" [ref=f1e27] [cursor=pointer]
+      - combobox "Choose how often the campaign saves automatically. When off, save it yourself." [ref=f1e28]:
+        - option "Autosave off"
+        - option "Every week" [selected]
+        - option "Every 2 weeks"
+        - option "Every 3 weeks"
+        - option "Every 5 weeks"
+        - option "Every 8 weeks"
+      - button "Campaigns" [ref=f1e29] [cursor=pointer]
+      - button "Advance Week ▸" [ref=f1e5] [cursor=pointer]
+      - button "Sim ahead ▸▸" [ref=f1e6] [cursor=pointer]
+      - button "🛠️" [ref=f1e7] [cursor=pointer]
+      - button "🔇" [ref=f1e8] [cursor=pointer]
+      - button "Open manager handbook" [ref=f1e9] [cursor=pointer]: Guide
+    - navigation [ref=f1e10]:
+      - generic "Weekly" [ref=f1e11]:
+        - button "Dashboard" [ref=f1e13] [cursor=pointer]
+        - button "Inbox 18" [ref=f1e30] [cursor=pointer]:
+          - text: Inbox
+          - generic [ref=f1e31]: "18"
+        - button "Match 2" [ref=f1e32] [cursor=pointer]:
+          - text: Match
+          - generic [ref=f1e33]: "2"
+      - generic "Org" [ref=f1e16]:
+        - button "Club" [ref=f1e18] [cursor=pointer]
+        - button "Facilities" [ref=f1e19] [cursor=pointer]
+        - button "Season" [ref=f1e20] [cursor=pointer]
+        - button "Market" [ref=f1e21] [cursor=pointer]
+        - button "Stats" [ref=f1e22] [cursor=pointer]
+        - button "Company" [ref=f1e23] [cursor=pointer]
+    - main [ref=f1e24]:
+      - generic [ref=f1e1360]:
+        - generic [ref=f1e1361]:
+          - generic [ref=f1e1362]: Market
+          - generic [ref=f1e1363]:
+            - button "Players" [ref=f1e1364] [cursor=pointer]
+            - button "Scouting" [ref=f1e1365] [cursor=pointer]
+            - button "Staff" [ref=f1e1366] [cursor=pointer]
+        - generic [ref=f1e1368]:
+          - generic [ref=f1e1369]:
+            - generic [ref=f1e1370]:
+              - heading "Scouting lanes" [level=2] [ref=f1e1371]
+              - paragraph [ref=f1e1372]: Two standing directives run in parallel — set them once and the department works them every week. No weekly re-picks.
+              - generic [ref=f1e1373]:
+                - generic [ref=f1e1374]:
+                  - generic [ref=f1e1375]:
+                    - generic [ref=f1e1376]: Pro
+                    - generic [ref=f1e1377]: Opponents & market
+                  - combobox [ref=f1e1378]:
+                    - option "— no standing directive —"
+                    - option "Scout upcoming opponents" [selected]
+                    - option "Find a player to fill a gap"
+                  - button "Set pro lane" [ref=f1e1379] [cursor=pointer]
+                  - generic [ref=f1e1380]: "This week: Team Vanguard"
+                - generic [ref=f1e1381]:
+                  - generic [ref=f1e1382]:
+                    - generic [ref=f1e1383]: Amateur
+                    - generic [ref=f1e1384]: Academy & youth
+                  - combobox [ref=f1e1385]:
+                    - option "— no standing directive —" [selected]
+                    - option "Track our academy & youth intake"
+                  - button "Set amateur lane" [ref=f1e1386] [cursor=pointer]
+            - generic [ref=f1e1387]:
+              - heading "Deep-dive desk" [level=2] [ref=f1e1388]
+              - paragraph [ref=f1e1389]: "Your standing lanes run continuously above. Use the desk for a one-off deep assignment: attend a specific match, or build the book on one player (100% depth — comfort picks, how they play, their mentality, the full verdict)."
+              - paragraph [ref=f1e1390]:
+                - generic [ref=f1e1391]: Deep-diving
+                - text: Slice — coverage 50% · style read
+              - generic "50" [ref=f1e1393]
+              - generic [ref=f1e1395]:
+                - generic [ref=f1e1396]:
+                  - generic [ref=f1e1397]:
+                    - generic [ref=f1e1398]: "1"
+                    - generic [ref=f1e1399]: Attend a match
+                  - generic [ref=f1e1400]: One-shot behavioral intel on both teams, up to 75%.
+                  - combobox [ref=f1e1401]:
+                    - option "— choose a fixture —" [selected]
+                    - option "Solar Flare vs Adriatic Sirens (W18 · masters_sf)"
+                - generic [ref=f1e1402]:
+                  - generic [ref=f1e1403]:
+                    - generic [ref=f1e1404]: "2"
+                    - generic [ref=f1e1405]: Deep-dive a player
+                  - generic [ref=f1e1406]: External full books stay uncertain; own-player books add weekly training guidance.
+                  - 'textbox "deep-dive a player: search by name…" [ref=f1e1407]'
+            - generic [ref=f1e1408]:
+              - heading "The book on Slice — style read (50%)" [level=2] [ref=f1e1409]:
+                - text: The book on
+                - generic [ref=f1e1410]: Slice
+                - generic [ref=f1e1411]: — style read (50%)
+              - generic [ref=f1e1412]:
+                - generic [ref=f1e1413]:
+                  - generic [ref=f1e1414]: Duelist
+                  - generic [ref=f1e1415]: Awper
+                  - text: age 23 · ability ★★★–★★★★½ · ceiling ★★★–★★★★★ (proj. 75.2–99)
+                - generic [ref=f1e1416]:
+                  - text: "Comfort picks:"
+                  - generic [ref=f1e1417]: jett 96
+                  - generic [ref=f1e1418]: iso 80
+                  - generic [ref=f1e1419]: reyna 73
+                - generic [ref=f1e1420]: "How they play: plays fast and takes space aggressively; excellent utility"
+                - generic [ref=f1e1421]: Mental read unlocks at 75%.
+                - generic [ref=f1e1422]:
+                  - text: "Character:"
+                  - generic [ref=f1e1423]: Confident
+                  - generic [ref=f1e1424]: Media Favorite
+                  - text: +1 unknown
+                - generic [ref=f1e1425]: "Read: +Aim Precision, Aim Reactivity"
+                - generic [ref=f1e1426]: The verdict lands with the complete book.
+          - generic [ref=f1e1427]:
+            - generic [ref=f1e1428]:
+              - heading "Player intel tiers" [level=2] [ref=f1e1429]
+              - paragraph [ref=f1e1430]: Deep-diving Slice — style read (50%)
+              - generic "50" [ref=f1e1432]
+              - generic [ref=f1e1434]:
+                - generic [ref=f1e1435]: ✓ First looks
+                - generic [ref=f1e1436]: role, ability band
+                - generic [ref=f1e1437]: 0%
+              - generic [ref=f1e1438]:
+                - generic [ref=f1e1439]: ✓ Basics
+                - generic [ref=f1e1440]: comfort picks (agents + mastery)
+                - generic [ref=f1e1441]: 25%
+              - generic [ref=f1e1442]:
+                - generic [ref=f1e1443]: ✓ Style read
+                - generic [ref=f1e1444]: how they play
+                - generic [ref=f1e1445]: 50%
+              - generic [ref=f1e1446]:
+                - generic [ref=f1e1447]: Mental read
+                - generic [ref=f1e1448]: mentality, development fit
+                - generic [ref=f1e1449]: 75%
+              - generic [ref=f1e1450]:
+                - generic [ref=f1e1451]: Complete book
+                - generic [ref=f1e1452]: the verdict + full ceilings
+                - generic [ref=f1e1453]: 95%
+            - generic [ref=f1e1454]:
+              - heading "Recommended deep-dives" [level=2] [ref=f1e1455]
+              - paragraph [ref=f1e1456]: The department flags these for a closer look — click to build the book.
+              - generic [ref=f1e1457]:
+                - generic [ref=f1e1458]: Voltflare
+                - generic [ref=f1e1459]: flagged by scouting
+                - button "Assign" [ref=f1e1460] [cursor=pointer]
+              - generic [ref=f1e1461]:
+                - generic [ref=f1e1462]: Nightecho
+                - generic [ref=f1e1463]: flagged by scouting
+                - button "Assign" [ref=f1e1464] [cursor=pointer]
+              - generic [ref=f1e1465]:
+                - generic [ref=f1e1466]: Nightsurge
+                - generic [ref=f1e1467]: flagged by scouting
+                - button "Assign" [ref=f1e1468] [cursor=pointer]
+              - generic [ref=f1e1469]:
+                - generic [ref=f1e1470]: Pyroecho
+                - generic [ref=f1e1471]: flagged by scouting
+                - button "Assign" [ref=f1e1472] [cursor=pointer]
+            - generic [ref=f1e1473]:
+              - heading "Quick assign" [level=2] [ref=f1e1474]
+              - button "Sweep the free-agent market" [ref=f1e1476] [cursor=pointer]
+  - tooltip [aria-hidden]:
+    - heading [level=4]: Dashboard
+    - generic: See what changed, what needs a decision, and what the next fixture demands.
+    - generic: Begin with Needs You, then scan the next fixture and recent form.

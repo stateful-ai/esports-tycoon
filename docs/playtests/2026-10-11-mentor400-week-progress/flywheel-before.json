@@ -1,0 +1,138 @@
+[
+  {
+    "id": "esports-playtest-0236",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Streaming workload and revenue share copy conflict",
+    "problem": "Practice-focused Hollow tooltip called him heavy streamer;70% streams ambiguous.",
+    "solution": "Public stream_load19.7/statuspractice-focused/mult0.93 separate from contractshare70; dedicated6.1solmedium PR395.",
+    "lesson": "Use server status and distinguish contractual revenue share from streaming workload.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0235",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Weekly reveal blocks topbar until complete",
+    "problem": "Two manual Save observations failed with no HTTP attempt.",
+    "solution": "Fresh click log showed week-reveal interception; Continue then Save200 recovered.",
+    "lesson": "Inspect visible modal state before classifying a timeout as API failure.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0234",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Recovery can preserve match learning",
+    "problem": "Fatigued Vortex59.5 needed a lower practice workload.",
+    "solution": "Set rest/normal, public focus persisted; next tick70.5,0practiceOVR,0.01matchOVR. Bench Hollow65\u219289.",
+    "lesson": "Read condition and authored source attribution separately; recovery does not remove the player from the five.",
+    "confidence": "high",
+    "source": "2026-10-11-season2-roster-recovery copied26UHC seed2038 rootunknown runtime 2026-10-11T09:24:09.780880+00:00",
+    "code": "",
+    "tags": [
+      "playtest",
+      "recovery",
+      "evidence"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0233",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor copy serving contract",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "State and action response can name the same event differently; acceptance must compare visible moment and settled receipt.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0232",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Flavor settlement save parity",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "Isolated cached-overlay browser choice yields byte-identical saved state to current-loader migration of the historical deterministic small_group result; raw historical schema differs.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0231",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Served flavor title continuity",
+    "problem": "Cached flavor title differs from deterministic action response.",
+    "solution": "Capture the title rendered before the choice; preserve response effects and stale-world/team guard.",
+    "lesson": "Cache overlay title remains attached to the resolved receipt; action response may retain fallback prose.",
+    "confidence": "high",
+    "source": "docs/playtests/2026-10-11-flavor-served-title/report.md; FLV42 seed2038 S1W12",
+    "code": "",
+    "tags": [
+      "flavor",
+      "receipt",
+      "cached-overlay"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0230",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Waiting for a calendar change can lock a canceled seat",
+    "problem": "Waiting for a calendar change can lock a canceled seat",
+    "solution": "Treat lost readiness as cancellation and render server-owned transition loading copy",
+    "lesson": "A successful same-calendar status response with ready=false must end observation and return the manager to review/re-ready.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-readiness-loading seed2038 RSET4 tested1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0229",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Offseason loading needs the same server transition facts",
+    "problem": "Offseason loading needs the same server transition facts",
+    "solution": "Treat lost readiness as cancellation and render server-owned transition loading copy",
+    "lesson": "Actual pending rollover overlay matched server loading_title/detail and explicitly excluded ordinary weekly processing.",
+    "confidence": "high",
+    "source": "Codex gpt-6.1-sol medium; 2026-10-11-gap40-readiness-loading seed2038 RSET4 tested1851bc484a0d19b70eb24ed2eb5c684c61ec7ba7",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  }
+]

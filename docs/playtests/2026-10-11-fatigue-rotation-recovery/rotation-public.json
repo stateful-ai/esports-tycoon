@@ -1,0 +1,3564 @@
+{
+  "roster": {
+    "team": {
+      "id": "team_nexus",
+      "name": "Team Nexus",
+      "tag": "NXS",
+      "logo": "/assets/logos/logo_1.webp",
+      "region": "americas",
+      "balance": 2287871,
+      "reputation": 66.6,
+      "fan_count": 341634,
+      "world_rank": 28,
+      "chemistry": 59.6,
+      "captain_id": "apex",
+      "player_ids": [
+        "apex",
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0",
+        "team_kraken_unit_p0",
+        "fa_12"
+      ],
+      "starter_ids": [
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0"
+      ],
+      "record": {
+        "wins": 2,
+        "losses": 3,
+        "diff": -7
+      }
+    },
+    "players": [
+      {
+        "id": "apex",
+        "handle": "Apex",
+        "real_name": "Carlos Reyes",
+        "age": 27,
+        "role": "controller",
+        "playstyle": "igl",
+        "is_igl": true,
+        "region": "americas",
+        "salary": 10500,
+        "release_cost": 126000,
+        "contract_weeks_left": 24,
+        "morale": 84.8,
+        "stamina": 37,
+        "form": 51.7,
+        "confidence": 58.8,
+        "followers": 403068,
+        "stream_load": 57,
+        "stream_status": "balanced",
+        "stream_heavy": false,
+        "stream_income": 1929,
+        "stream_growth_mult": 0.8,
+        "dev_focus": "auto",
+        "training_intensity": "light",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 63.02,
+          "aim_reactivity": 60.79,
+          "clutch_factor": 77.25,
+          "comms_quality": 92,
+          "composure": 90,
+          "game_sense": 94,
+          "movement": 58,
+          "positioning": 82.03,
+          "tilt_resistance": 85,
+          "utility_usage": 88
+        },
+        "overall": 79,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "omen",
+            "mastery": 94.07
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 75.4
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 73.2
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 69.7
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 69.2
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 68.6
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 67.8
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 65
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 60
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 60
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 60
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 60
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 60
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 60
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 60
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 60
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 60
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 60
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 59.3
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 58.6
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 58.3
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 57.3
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 56.8
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 56.7
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 55.5
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 54.6
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 54.2
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 53.7
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 52.6
+          }
+        ],
+        "personality": [
+          {
+            "id": "calm",
+            "blurb": "flat heartbeat"
+          },
+          {
+            "id": "veteran",
+            "blurb": "seen every meta"
+          },
+          {
+            "id": "shotcaller",
+            "blurb": "runs the room"
+          }
+        ],
+        "potential_stars": 4,
+        "ca_stars": 3.5,
+        "is_free_agent": false,
+        "asking_salary": 6500,
+        "portrait": "/assets/portraits/controller_1.webp",
+        "badges": [
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "\u2744\ufe0f",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.5.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "incumbent_leader",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Omen",
+        "planned_agent_id": "omen",
+        "planned_locked": false,
+        "planned_agent_edge": 1.76,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "flat",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "mental",
+          "skills": [
+            "clutch_factor",
+            "tilt_resistance",
+            "composure"
+          ],
+          "condition_cost": 3,
+          "advice": "Fatigue is reducing learning. A lighter plan or recovery week can help."
+        },
+        "not_developing": null,
+        "mentor_skill": 83,
+        "starter": false
+      },
+      {
+        "id": "vortex",
+        "handle": "Vortex",
+        "real_name": "Ji-hoon Park",
+        "age": 23,
+        "role": "duelist",
+        "playstyle": "awper",
+        "is_igl": false,
+        "region": "americas",
+        "salary": 9200,
+        "release_cost": 110000,
+        "contract_weeks_left": 25,
+        "morale": 89.1,
+        "stamina": 91,
+        "form": 52.7,
+        "confidence": 64.2,
+        "followers": 720473,
+        "stream_load": 69.9,
+        "stream_status": "heavy streamer",
+        "stream_heavy": true,
+        "stream_income": 3928,
+        "stream_growth_mult": 0.76,
+        "dev_focus": "rest",
+        "training_intensity": "normal",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 98.13,
+          "aim_reactivity": 94.24,
+          "clutch_factor": 92.1,
+          "comms_quality": 58.72,
+          "composure": 73.94,
+          "game_sense": 73.18,
+          "movement": 87,
+          "positioning": 78.33,
+          "tilt_resistance": 52.13,
+          "utility_usage": 60.05
+        },
+        "overall": 76.8,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "jett",
+            "mastery": 95.6
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 68.4
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 68
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 67.1
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 65.5
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 62.5
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 62.1
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 62
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 60
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 60
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 60
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 60
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 60
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 59.5
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 58.5
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 57.7
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 57.5
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 55.7
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 55.2
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 52.3
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 52
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 51.5
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 50.6
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 50.5
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 50.4
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 49.3
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 49
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 48
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 0.7
+          }
+        ],
+        "personality": [
+          {
+            "id": "star_player",
+            "blurb": "the poster"
+          },
+          {
+            "id": "volatile",
+            "blurb": "week to week, a different player"
+          },
+          {
+            "id": "perfectionist",
+            "blurb": "own worst critic"
+          }
+        ],
+        "potential_stars": 3,
+        "ca_stars": 3,
+        "is_free_agent": false,
+        "asking_salary": 6200,
+        "portrait": "/assets/portraits/duelist_0.webp",
+        "badges": [
+          {
+            "id": "aim_demon",
+            "name": "Aim Demon",
+            "emoji": "\ud83c\udfaf",
+            "polarity": 1,
+            "blurb": "raw mechanical menace",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Aim Precision, +2 Aim Reactivity. Earning it permanently raised potential by 1.4.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/aim_demon.webp",
+            "season": 1
+          },
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "\u2744\ufe0f",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.3.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "key_influencer",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Jett",
+        "planned_agent_id": "jett",
+        "planned_locked": false,
+        "planned_agent_edge": 1.82,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "down",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "rest",
+          "skills": [],
+          "condition_cost": 0,
+          "advice": "Recovery pauses practice and restores condition; match learning still counts."
+        },
+        "not_developing": null,
+        "mentor_skill": 35,
+        "starter": true
+      },
+      {
+        "id": "ghost",
+        "handle": "Ghost",
+        "real_name": "Emmanuel Okafor",
+        "age": 20,
+        "role": "initiator",
+        "playstyle": "lurker",
+        "is_igl": false,
+        "region": "americas",
+        "salary": 4500,
+        "release_cost": 54000,
+        "contract_weeks_left": 17,
+        "morale": 87.8,
+        "stamina": 44.5,
+        "form": 52.4,
+        "confidence": 57.3,
+        "followers": 241615,
+        "stream_load": 44,
+        "stream_status": "balanced",
+        "stream_heavy": false,
+        "stream_income": 956,
+        "stream_growth_mult": 0.85,
+        "dev_focus": "mechanical",
+        "training_intensity": "light",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 83.05,
+          "aim_reactivity": 82.95,
+          "clutch_factor": 80.79,
+          "comms_quality": 62.03,
+          "composure": 75.47,
+          "game_sense": 85.95,
+          "movement": 81.63,
+          "positioning": 84.29,
+          "tilt_resistance": 72,
+          "utility_usage": 83.84
+        },
+        "overall": 79.2,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "sova",
+            "mastery": 85.57
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 71.9
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 68.5
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 68.5
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 67.6
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 65.2
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 62.4
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 60
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 60
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 60
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 59.5
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 59.5
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 59.3
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 58.5
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 58
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 55.4
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 54.6
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 53.5
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 53.5
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 53.2
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 52.9
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 52.4
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 52.3
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 51.8
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 50.9
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 50.5
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 49.4
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 4.1
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 2.3
+          }
+        ],
+        "personality": [
+          {
+            "id": "rookie",
+            "blurb": "first contract"
+          },
+          {
+            "id": "underrated",
+            "blurb": "always the discount pick"
+          },
+          {
+            "id": "independent",
+            "blurb": "self-managed"
+          }
+        ],
+        "potential_stars": 5,
+        "ca_stars": 3.5,
+        "is_free_agent": false,
+        "asking_salary": 6500,
+        "portrait": "/assets/portraits/initiator_1.webp",
+        "badges": [
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "\u2744\ufe0f",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.3.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          },
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "\ud83e\udd76",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "rookie",
+        "mentor_id": "apex",
+        "mentor_handle": "Apex",
+        "mentor_progress": 0,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Sova",
+        "planned_agent_id": "sova",
+        "planned_locked": false,
+        "planned_agent_edge": 1.42,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "down",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "mechanical",
+          "skills": [
+            "aim_precision",
+            "aim_reactivity",
+            "movement"
+          ],
+          "condition_cost": 3,
+          "advice": "Fatigue is reducing learning. A lighter plan or recovery week can help."
+        },
+        "not_developing": null,
+        "mentor_skill": 21,
+        "starter": true
+      },
+      {
+        "id": "fa_13",
+        "handle": "Slyblade",
+        "real_name": "Andre Costa",
+        "age": 29,
+        "role": "duelist",
+        "playstyle": "entry",
+        "is_igl": false,
+        "region": "americas",
+        "salary": 6300,
+        "release_cost": 76000,
+        "contract_weeks_left": 35,
+        "morale": 91.6,
+        "stamina": 100,
+        "form": 57.1,
+        "confidence": 62.5,
+        "followers": 279519,
+        "stream_load": 47.6,
+        "stream_status": "balanced",
+        "stream_heavy": false,
+        "stream_income": 1157,
+        "stream_growth_mult": 0.83,
+        "dev_focus": "rest",
+        "training_intensity": "normal",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 77.1,
+          "aim_reactivity": 84.7,
+          "clutch_factor": 79.4,
+          "comms_quality": 69.43,
+          "composure": 65.64,
+          "game_sense": 72.32,
+          "movement": 78.7,
+          "positioning": 64.37,
+          "tilt_resistance": 66.92,
+          "utility_usage": 70.35
+        },
+        "overall": 72.9,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "yoru",
+            "mastery": 96.37
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 89.7
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 83
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 67.9
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 67.5
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 61.6
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 60.6
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 59
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 58.8
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 58.7
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 57.6
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 57
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 55.7
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 55.5
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 53.5
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 52.9
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 52.7
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 52.4
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 51.5
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 51.1
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 50.9
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 50.6
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 50.4
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 50.3
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 48
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 46.6
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 44.6
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 44.4
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 40.2
+          }
+        ],
+        "personality": [
+          {
+            "id": "veteran",
+            "blurb": "seen every meta"
+          }
+        ],
+        "potential_stars": 3.5,
+        "ca_stars": 3,
+        "is_free_agent": false,
+        "asking_salary": 4300,
+        "portrait": "/assets/portraits/duelist_0.webp",
+        "badges": [
+          {
+            "id": "clutch_master",
+            "name": "Clutch Master",
+            "emoji": "\u2744\ufe0f",
+            "polarity": 1,
+            "blurb": "wants the round with the game on the line",
+            "kind": "positive",
+            "impact": "Applied when earned (while held): +3 Clutch Factor, +2 Composure. Earning it permanently raised potential by 1.6.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/clutch_master.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "core",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Yoru",
+        "planned_agent_id": "yoru",
+        "planned_locked": false,
+        "planned_agent_edge": 1.85,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "down",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "rest",
+          "skills": [],
+          "condition_cost": 0,
+          "advice": "Recovery pauses practice and restores condition; match learning still counts."
+        },
+        "not_developing": null,
+        "mentor_skill": 72,
+        "starter": true
+      },
+      {
+        "id": "echo",
+        "handle": "Echo",
+        "real_name": "Noa Fischer",
+        "age": 24,
+        "role": "sentinel",
+        "playstyle": "anchor",
+        "is_igl": false,
+        "region": "americas",
+        "salary": 7700,
+        "release_cost": 92000,
+        "contract_weeks_left": 29,
+        "morale": 86.5,
+        "stamina": 29,
+        "form": 48.6,
+        "confidence": 55,
+        "followers": 375805,
+        "stream_load": 55.2,
+        "stream_status": "balanced",
+        "stream_heavy": false,
+        "stream_income": 1742,
+        "stream_growth_mult": 0.81,
+        "dev_focus": "auto",
+        "training_intensity": "light",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 68,
+          "aim_reactivity": 64.01,
+          "clutch_factor": 62.05,
+          "comms_quality": 78,
+          "composure": 88,
+          "game_sense": 76,
+          "movement": 58.6,
+          "positioning": 86,
+          "tilt_resistance": 88,
+          "utility_usage": 82
+        },
+        "overall": 75.1,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "killjoy",
+            "mastery": 92.48
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 72.8
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 70.8
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 69.9
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 67.9
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 64.8
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 61.7
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 60
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 60
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 60
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 60
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 60
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 58.7
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 58.3
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 57.1
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 56.6
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 56.2
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 53.2
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 53.1
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 52.7
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 52.3
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 52
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 51.6
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 51.4
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 50.7
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 50.4
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 49
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 48.7
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 7.6
+          }
+        ],
+        "personality": [
+          {
+            "id": "team_player",
+            "blurb": "glue"
+          },
+          {
+            "id": "quiet",
+            "blurb": "lets the clips talk"
+          },
+          {
+            "id": "reliable",
+            "blurb": "never the reason you lost"
+          }
+        ],
+        "potential_stars": 3,
+        "ca_stars": 3,
+        "is_free_agent": false,
+        "asking_salary": 6000,
+        "portrait": "/assets/portraits/sentinel_1.webp",
+        "badges": [
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "\ud83e\udd76",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "core",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Killjoy",
+        "planned_agent_id": "killjoy",
+        "planned_locked": false,
+        "planned_agent_edge": 1.7,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "down",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "mental",
+          "skills": [
+            "clutch_factor",
+            "tilt_resistance",
+            "composure"
+          ],
+          "condition_cost": 3,
+          "advice": "Fatigue is reducing learning. A lighter plan or recovery week can help."
+        },
+        "not_developing": "exhausted",
+        "mentor_skill": 49,
+        "starter": true
+      },
+      {
+        "id": "fa_0",
+        "handle": "Hollowlock",
+        "real_name": "Noah Vargas",
+        "age": 27,
+        "role": "controller",
+        "playstyle": "igl",
+        "is_igl": true,
+        "region": "americas",
+        "salary": 4000,
+        "release_cost": 28000,
+        "contract_weeks_left": 35,
+        "morale": 72.5,
+        "stamina": 100,
+        "form": 47.1,
+        "confidence": 56.1,
+        "followers": 74159,
+        "stream_load": 19.7,
+        "stream_status": "practice-focused",
+        "stream_heavy": false,
+        "stream_income": 131,
+        "stream_growth_mult": 0.93,
+        "dev_focus": "rest",
+        "training_intensity": "normal",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 52.23,
+          "aim_reactivity": 56.22,
+          "clutch_factor": 62.09,
+          "comms_quality": 65.3,
+          "composure": 63.2,
+          "game_sense": 73.9,
+          "movement": 65.9,
+          "positioning": 54.98,
+          "tilt_resistance": 64.24,
+          "utility_usage": 69.8
+        },
+        "overall": 62.8,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "harbor",
+            "mastery": 76.35
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 73
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 70.8
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 55.7
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 54.4
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 53.9
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 52.3
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 50.2
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 49.6
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 48.9
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 46.8
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 46.8
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 46.6
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 46.4
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 43.4
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 43.2
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 39.8
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 39.6
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 39.3
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 39.2
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 38.7
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 37.8
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 37.2
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 35.7
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 34.7
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 32.3
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 27.4
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 7.3
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 5.4
+          }
+        ],
+        "personality": [
+          {
+            "id": "analytical",
+            "blurb": "spreadsheet gamer"
+          }
+        ],
+        "potential_stars": 2,
+        "ca_stars": 2,
+        "is_free_agent": false,
+        "asking_salary": 4500,
+        "portrait": "/assets/portraits/controller_0.webp",
+        "badges": [
+          {
+            "id": "choker",
+            "name": "Choker",
+            "emoji": "\ud83e\udd76",
+            "polarity": -1,
+            "blurb": "tightens up when it matters most",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -3 Clutch Factor, -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/choker.webp",
+            "season": 1
+          },
+          {
+            "id": "inconsistent",
+            "name": "Inconsistent",
+            "emoji": "\ud83c\udfb2",
+            "polarity": -1,
+            "blurb": "a different player week to week",
+            "kind": "negative",
+            "impact": "Applied when earned (while held): -2 Composure.",
+            "decay": "It can fade after 2 seasons without re-qualifying.",
+            "art": "/assets/badges/inconsistent.webp",
+            "season": 1
+          }
+        ],
+        "hierarchy_role": "core",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Harbor",
+        "planned_agent_id": "harbor",
+        "planned_locked": true,
+        "planned_agent_edge": 1.05,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "flat",
+          "confidence": "down"
+        },
+        "development_plan": {
+          "focus": "rest",
+          "skills": [],
+          "condition_cost": 0,
+          "advice": "Recovery pauses practice and restores condition; match learning still counts."
+        },
+        "not_developing": null,
+        "mentor_skill": 47,
+        "starter": true
+      },
+      {
+        "id": "team_kraken_unit_p0",
+        "handle": "Nightsurge",
+        "real_name": "Pablo Costa",
+        "age": 18,
+        "role": "controller",
+        "playstyle": "igl",
+        "is_igl": true,
+        "region": "americas",
+        "salary": 3100,
+        "release_cost": 37000,
+        "contract_weeks_left": 29,
+        "morale": 58.3,
+        "stamina": 64,
+        "form": 46,
+        "confidence": 37.7,
+        "followers": 14997,
+        "stream_load": 4.8,
+        "stream_status": "practice-focused",
+        "stream_heavy": false,
+        "stream_income": 6,
+        "stream_growth_mult": 0.98,
+        "dev_focus": "tactical",
+        "training_intensity": "light",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 47,
+          "aim_reactivity": 47.55,
+          "clutch_factor": 48.12,
+          "comms_quality": 64.36,
+          "composure": 57.29,
+          "game_sense": 59.98,
+          "movement": 48.97,
+          "positioning": 52.71,
+          "tilt_resistance": 46.99,
+          "utility_usage": 51.46
+        },
+        "overall": 52.4,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "miks",
+            "mastery": 56.84
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 54.5
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 52.6
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 40.7
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 39.7
+          },
+          {
+            "agent_id": "astra",
+            "mastery": 35.9
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 35
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 35
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 35
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 31.5
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 29.7
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 29.1
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 26.9
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 23.4
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 22.5
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 22.3
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 22.3
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 20.4
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 20.2
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 19.1
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 18.9
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 17.6
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 17
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 14.7
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 14.2
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 12.7
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 12
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 4.2
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 1.6
+          }
+        ],
+        "personality": [
+          {
+            "id": "calm",
+            "blurb": "flat heartbeat"
+          },
+          {
+            "id": "perfectionist",
+            "blurb": "own worst critic"
+          },
+          {
+            "id": "quiet",
+            "blurb": "lets the clips talk"
+          }
+        ],
+        "potential_stars": 3.5,
+        "ca_stars": 1.5,
+        "is_free_agent": false,
+        "asking_salary": 2700,
+        "portrait": "/assets/portraits/controller_1.webp",
+        "badges": [],
+        "hierarchy_role": "rookie",
+        "mentor_id": "apex",
+        "mentor_handle": "Apex",
+        "mentor_progress": 0,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Miks",
+        "planned_agent_id": "miks",
+        "planned_locked": false,
+        "planned_agent_edge": 0.27,
+        "condition_trend": {
+          "ca": "flat",
+          "form": "flat",
+          "confidence": "flat"
+        },
+        "development_plan": {
+          "focus": "tactical",
+          "skills": [
+            "game_sense",
+            "utility_usage",
+            "positioning"
+          ],
+          "condition_cost": 3,
+          "advice": "Fatigue is reducing learning. A lighter plan or recovery week can help."
+        },
+        "not_developing": null,
+        "mentor_skill": 24,
+        "starter": false
+      },
+      {
+        "id": "fa_12",
+        "handle": "Frostdash",
+        "real_name": "Diego Costa",
+        "age": 29,
+        "role": "controller",
+        "playstyle": "igl",
+        "is_igl": true,
+        "region": "americas",
+        "salary": 2200,
+        "release_cost": 16000,
+        "contract_weeks_left": 64,
+        "morale": 71.1,
+        "stamina": 86.5,
+        "form": 50.1,
+        "confidence": 51,
+        "followers": 25098,
+        "stream_load": 7.6,
+        "stream_status": "practice-focused",
+        "stream_heavy": false,
+        "stream_income": 17,
+        "stream_growth_mult": 0.97,
+        "dev_focus": "auto",
+        "training_intensity": "normal",
+        "learning_language": "",
+        "attributes": {
+          "aim_precision": 36.8,
+          "aim_reactivity": 42.3,
+          "clutch_factor": 46.03,
+          "comms_quality": 63.2,
+          "composure": 50.5,
+          "game_sense": 63.5,
+          "movement": 54.8,
+          "positioning": 40.9,
+          "tilt_resistance": 40.67,
+          "utility_usage": 68.3
+        },
+        "overall": 50.7,
+        "fog": 0,
+        "agents": [
+          {
+            "agent_id": "astra",
+            "mastery": 62.97
+          },
+          {
+            "agent_id": "jett",
+            "mastery": 46.9
+          },
+          {
+            "agent_id": "clove",
+            "mastery": 45.7
+          },
+          {
+            "agent_id": "miks",
+            "mastery": 42
+          },
+          {
+            "agent_id": "harbor",
+            "mastery": 38.5
+          },
+          {
+            "agent_id": "omen",
+            "mastery": 35.9
+          },
+          {
+            "agent_id": "brimstone",
+            "mastery": 35
+          },
+          {
+            "agent_id": "viper",
+            "mastery": 35
+          },
+          {
+            "agent_id": "sage",
+            "mastery": 34.8
+          },
+          {
+            "agent_id": "skye",
+            "mastery": 34.2
+          },
+          {
+            "agent_id": "gekko",
+            "mastery": 34.1
+          },
+          {
+            "agent_id": "kayo",
+            "mastery": 29.7
+          },
+          {
+            "agent_id": "killjoy",
+            "mastery": 28.9
+          },
+          {
+            "agent_id": "neon",
+            "mastery": 28.4
+          },
+          {
+            "agent_id": "reyna",
+            "mastery": 27.3
+          },
+          {
+            "agent_id": "chamber",
+            "mastery": 26.4
+          },
+          {
+            "agent_id": "vyse",
+            "mastery": 26.1
+          },
+          {
+            "agent_id": "fade",
+            "mastery": 25.9
+          },
+          {
+            "agent_id": "yoru",
+            "mastery": 25.2
+          },
+          {
+            "agent_id": "sova",
+            "mastery": 24.4
+          },
+          {
+            "agent_id": "iso",
+            "mastery": 22.5
+          },
+          {
+            "agent_id": "phoenix",
+            "mastery": 21.6
+          },
+          {
+            "agent_id": "breach",
+            "mastery": 21.1
+          },
+          {
+            "agent_id": "deadlock",
+            "mastery": 19
+          },
+          {
+            "agent_id": "cypher",
+            "mastery": 18.4
+          },
+          {
+            "agent_id": "waylay",
+            "mastery": 3.5
+          },
+          {
+            "agent_id": "veto",
+            "mastery": 3.3
+          },
+          {
+            "agent_id": "raze",
+            "mastery": 3.2
+          },
+          {
+            "agent_id": "tejo",
+            "mastery": 0.7
+          }
+        ],
+        "personality": [
+          {
+            "id": "independent",
+            "blurb": "self-managed"
+          },
+          {
+            "id": "analytical",
+            "blurb": "spreadsheet gamer"
+          }
+        ],
+        "potential_stars": 1,
+        "ca_stars": 1.5,
+        "is_free_agent": false,
+        "asking_salary": 2400,
+        "portrait": "/assets/portraits/controller_1.webp",
+        "badges": [],
+        "hierarchy_role": "core",
+        "mentor_id": null,
+        "mentor_handle": null,
+        "mentor_progress": null,
+        "promises": [],
+        "transfer_request": false,
+        "planned_agent": "Astra",
+        "planned_agent_id": "astra",
+        "planned_locked": false,
+        "planned_agent_edge": 0.52,
+        "condition_trend": null,
+        "development_plan": {
+          "focus": "mental",
+          "skills": [
+            "clutch_factor",
+            "tilt_resistance",
+            "composure"
+          ],
+          "condition_cost": 6,
+          "advice": "Consistent practice and useful match minutes build development momentum."
+        },
+        "not_developing": null,
+        "mentor_skill": 49,
+        "starter": false
+      }
+    ],
+    "is_user_team": true,
+    "lineup_ids": [
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "effective_lineup_ids": [
+      "vortex",
+      "ghost",
+      "fa_13",
+      "echo",
+      "fa_0"
+    ],
+    "default_lineup_selection": {
+      "saved_count": 5,
+      "automatic_count": 0
+    },
+    "roster_min": 5,
+    "roster_max": 10,
+    "upcoming": {
+      "fixture_id": "s2w6m0am",
+      "opponent": "Baltic Meridian",
+      "opponent_id": "team_baltic_meridian",
+      "best_of": 1,
+      "maps": [
+        {
+          "map_id": "bind",
+          "dressed": [
+            "vortex",
+            "ghost",
+            "fa_13",
+            "echo",
+            "fa_0"
+          ],
+          "has_override": false
+        }
+      ]
+    },
+    "hierarchy": {
+      "apex": "incumbent_leader",
+      "vortex": "key_influencer",
+      "ghost": "rookie",
+      "fa_13": "core",
+      "echo": "core",
+      "fa_0": "core",
+      "team_kraken_unit_p0": "rookie",
+      "fa_12": "core"
+    },
+    "promises": [],
+    "relationships": {
+      "duos": [],
+      "feuds": []
+    },
+    "dev_focus_options": [
+      "auto",
+      "mechanical",
+      "tactical",
+      "mental",
+      "team",
+      "language",
+      "rest"
+    ],
+    "intensity_options": [
+      "light",
+      "normal",
+      "intense"
+    ],
+    "language_options": [
+      "ar",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "id",
+      "ja",
+      "ko",
+      "ms",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "tr",
+      "vi",
+      "zh"
+    ],
+    "has_language_coach": false,
+    "development_report": {
+      "season": 2,
+      "start_week": 0,
+      "end_week": 5,
+      "overall_delta": 0.1,
+      "grown": 4,
+      "regressed": 0,
+      "steady": 4,
+      "players": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 78.7,
+          "overall_current": 79.2,
+          "overall_delta": 0.5,
+          "status": "grown",
+          "attribute_tracking": true,
+          "changes": [
+            {
+              "id": "movement",
+              "name": "Movement",
+              "category": "mechanical",
+              "start": 79.7,
+              "current": 81.6,
+              "delta": 1.9
+            },
+            {
+              "id": "aim_precision",
+              "name": "Aim Precision",
+              "category": "mechanical",
+              "start": 81.7,
+              "current": 83,
+              "delta": 1.3
+            },
+            {
+              "id": "aim_reactivity",
+              "name": "Aim Reactivity",
+              "category": "mechanical",
+              "start": 81.9,
+              "current": 83,
+              "delta": 1.1
+            },
+            {
+              "id": "composure",
+              "name": "Composure",
+              "category": "mental",
+              "start": 75.1,
+              "current": 75.5,
+              "delta": 0.4
+            },
+            {
+              "id": "comms_quality",
+              "name": "Comms Quality",
+              "category": "team",
+              "start": 61.8,
+              "current": 62,
+              "delta": 0.2
+            },
+            {
+              "id": "game_sense",
+              "name": "Game Sense",
+              "category": "tactical",
+              "start": 85.8,
+              "current": 86,
+              "delta": 0.2
+            },
+            {
+              "id": "clutch_factor",
+              "name": "Clutch Factor",
+              "category": "mental",
+              "start": 80.7,
+              "current": 80.8,
+              "delta": 0.1
+            },
+            {
+              "id": "positioning",
+              "name": "Positioning",
+              "category": "tactical",
+              "start": 84.2,
+              "current": 84.3,
+              "delta": 0.1
+            }
+          ],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "mechanical",
+            "intensity": "light",
+            "maps": 1,
+            "trend": "settling",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0.03,
+                "skills": {
+                  "aim_precision": 0.05,
+                  "aim_reactivity": 0.1,
+                  "movement": 0.19
+                }
+              },
+              "match_gains": {
+                "overall_gain": 0.02,
+                "skills": {
+                  "aim_precision": 0.05,
+                  "aim_reactivity": 0.03,
+                  "clutch_factor": 0.03,
+                  "comms_quality": 0.05,
+                  "composure": 0.03,
+                  "positioning": 0.01,
+                  "utility_usage": 0.01
+                }
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0.04,
+                "skills": {
+                  "composure": 0.25,
+                  "game_sense": 0.15
+                }
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Mechanical practice reinforces skills used in matches",
+              "Tired legs are reducing practice quality; ease intensity or rest",
+              "Streaming is taking time away from practice",
+              "Coaching and club support are improving practice"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 76.5,
+          "overall_current": 76.8,
+          "overall_delta": 0.3,
+          "status": "grown",
+          "attribute_tracking": true,
+          "changes": [
+            {
+              "id": "tilt_resistance",
+              "name": "Tilt Resistance",
+              "category": "mental",
+              "start": 50,
+              "current": 52.1,
+              "delta": 2.1
+            },
+            {
+              "id": "composure",
+              "name": "Composure",
+              "category": "mental",
+              "start": 73.6,
+              "current": 73.9,
+              "delta": 0.3
+            },
+            {
+              "id": "comms_quality",
+              "name": "Comms Quality",
+              "category": "team",
+              "start": 58.5,
+              "current": 58.7,
+              "delta": 0.2
+            },
+            {
+              "id": "clutch_factor",
+              "name": "Clutch Factor",
+              "category": "mental",
+              "start": 92,
+              "current": 92.1,
+              "delta": 0.1
+            },
+            {
+              "id": "game_sense",
+              "name": "Game Sense",
+              "category": "tactical",
+              "start": 73.1,
+              "current": 73.2,
+              "delta": 0.1
+            }
+          ],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "rest",
+            "intensity": "normal",
+            "maps": 1,
+            "trend": "thriving",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "match_gains": {
+                "overall_gain": 0.01,
+                "skills": {
+                  "comms_quality": 0.06,
+                  "composure": 0.01,
+                  "game_sense": 0.02,
+                  "utility_usage": 0.03
+                }
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Individual recovery: practice paused, match experience retained"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "start_week": 4,
+          "end_week": 5,
+          "tracked_points": 2,
+          "overall_start": 52.2,
+          "overall_current": 52.4,
+          "overall_delta": 0.2,
+          "status": "grown",
+          "attribute_tracking": true,
+          "changes": [
+            {
+              "id": "utility_usage",
+              "name": "Utility Usage",
+              "category": "tactical",
+              "start": 50.2,
+              "current": 51.5,
+              "delta": 1.3
+            },
+            {
+              "id": "positioning",
+              "name": "Positioning",
+              "category": "tactical",
+              "start": 51.8,
+              "current": 52.7,
+              "delta": 0.9
+            },
+            {
+              "id": "game_sense",
+              "name": "Game Sense",
+              "category": "tactical",
+              "start": 59.2,
+              "current": 60,
+              "delta": 0.8
+            }
+          ],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "tactical",
+            "intensity": "light",
+            "maps": 0,
+            "trend": "struggling",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0.29,
+                "skills": {
+                  "game_sense": 0.71,
+                  "positioning": 0.91,
+                  "utility_usage": 1.23
+                }
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "scrim_gains": {
+                "overall_gain": 0.01,
+                "skills": {
+                  "game_sense": 0.03,
+                  "positioning": 0.03
+                }
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Poor match performances are slowing learning; useful practice still counts",
+              "Tired legs are reducing practice quality; ease intensity or rest",
+              "Mentorship is accelerating practice",
+              "Coaching and club support are improving practice"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 75,
+          "overall_current": 75.1,
+          "overall_delta": 0.1,
+          "status": "grown",
+          "attribute_tracking": true,
+          "changes": [
+            {
+              "id": "movement",
+              "name": "Movement",
+              "category": "mechanical",
+              "start": 58,
+              "current": 58.6,
+              "delta": 0.6
+            }
+          ],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "mental",
+            "intensity": "light",
+            "maps": 1,
+            "trend": "struggling",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Poor match performances are slowing learning; useful practice still counts",
+              "Tired legs are reducing practice quality; ease intensity or rest",
+              "Streaming is taking time away from practice",
+              "Coaching and club support are improving practice"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 79,
+          "overall_current": 79,
+          "overall_delta": 0,
+          "status": "steady",
+          "attribute_tracking": true,
+          "changes": [
+            {
+              "id": "aim_precision",
+              "name": "Aim Precision",
+              "category": "mechanical",
+              "start": 62.9,
+              "current": 63,
+              "delta": 0.1
+            },
+            {
+              "id": "aim_reactivity",
+              "name": "Aim Reactivity",
+              "category": "mechanical",
+              "start": 60.7,
+              "current": 60.8,
+              "delta": 0.1
+            },
+            {
+              "id": "clutch_factor",
+              "name": "Clutch Factor",
+              "category": "mental",
+              "start": 77.1,
+              "current": 77.2,
+              "delta": 0.1
+            }
+          ],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "mental",
+            "intensity": "light",
+            "maps": 1,
+            "trend": "thriving",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0,
+                "skills": {
+                  "clutch_factor": 0.01
+                }
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {
+                  "aim_precision": 0.02,
+                  "aim_reactivity": 0.02
+                }
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Strong match performances are accelerating learning",
+              "Tired legs are reducing practice quality; ease intensity or rest",
+              "Streaming is taking time away from practice",
+              "Coaching and club support are improving practice"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "start_week": 5,
+          "end_week": 5,
+          "tracked_points": 1,
+          "overall_start": 50.7,
+          "overall_current": 50.7,
+          "overall_delta": 0,
+          "status": "steady",
+          "attribute_tracking": true,
+          "changes": [],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "mental",
+            "intensity": "normal",
+            "maps": 0,
+            "trend": "settling",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0.01,
+                "skills": {
+                  "clutch_factor": 0.03,
+                  "tilt_resistance": 0.07
+                }
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Coaching and club support are improving practice"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 62.8,
+          "overall_current": 62.8,
+          "overall_delta": 0,
+          "status": "steady",
+          "attribute_tracking": true,
+          "changes": [],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "rest",
+            "intensity": "normal",
+            "maps": 0,
+            "trend": "settling",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Individual recovery: practice paused, match experience retained"
+            ],
+            "career_event": null
+          }
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "start_week": 0,
+          "end_week": 5,
+          "tracked_points": 6,
+          "overall_start": 72.9,
+          "overall_current": 72.9,
+          "overall_delta": 0,
+          "status": "steady",
+          "attribute_tracking": true,
+          "changes": [],
+          "latest_week": {
+            "season": 2,
+            "week": 5,
+            "focus": "rest",
+            "intensity": "normal",
+            "maps": 1,
+            "trend": "thriving",
+            "badge_tracking": true,
+            "badge_events": [],
+            "sources": {
+              "practice_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "match_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "scrim_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "event_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              },
+              "badge_gains": {
+                "overall_gain": 0,
+                "skills": {}
+              }
+            },
+            "factors": [
+              "Individual recovery: practice paused, match experience retained"
+            ],
+            "career_event": null
+          }
+        }
+      ]
+    },
+    "dev_digest": {
+      "risers": [
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 20,
+          "delta": 0.5,
+          "ca": 79.2,
+          "series": [
+            78.7,
+            78.8,
+            78.9,
+            79,
+            79.1,
+            79.2
+          ]
+        }
+      ],
+      "milestones": [],
+      "academy_standouts": [
+        {
+          "id": "team_kraken_unit_p1",
+          "handle": "Grimpulse",
+          "age": 21,
+          "ability": 50.5,
+          "potential_band": [
+            62.8,
+            88.1
+          ],
+          "rating": 0.83,
+          "maps": 5
+        },
+        {
+          "id": "team_kraken_unit_p3",
+          "handle": "Pyroecho",
+          "age": 18,
+          "ability": 44.9,
+          "potential_band": [
+            53.1,
+            84.5
+          ],
+          "rating": 0.41,
+          "maps": 5
+        },
+        {
+          "id": "team_kraken_unit_p4",
+          "handle": "Nightecho",
+          "age": 20,
+          "ability": 49.9,
+          "potential_band": [
+            56.5,
+            79.1
+          ],
+          "rating": 0.75,
+          "maps": 5
+        },
+        {
+          "id": "team_kraken_unit_p2",
+          "handle": "Voltflare",
+          "age": 23,
+          "ability": 49.8,
+          "potential_band": [
+            56,
+            73.2
+          ],
+          "rating": 1.2,
+          "maps": 5
+        },
+        {
+          "id": "team_cascadia_youth_p1",
+          "handle": "Frostwire",
+          "age": 18,
+          "ability": 43.8,
+          "potential_band": [
+            42.2,
+            70.8
+          ],
+          "rating": 0.58,
+          "maps": 2
+        }
+      ],
+      "prospect_updates": []
+    },
+    "pipeline": {
+      "youth": [],
+      "academy": [
+        {
+          "id": "team_kraken_unit_p1",
+          "handle": "Grimpulse",
+          "age": 21,
+          "ability": 50.5,
+          "series": []
+        },
+        {
+          "id": "team_kraken_unit_p3",
+          "handle": "Pyroecho",
+          "age": 18,
+          "ability": 44.9,
+          "series": []
+        },
+        {
+          "id": "team_kraken_unit_p4",
+          "handle": "Nightecho",
+          "age": 20,
+          "ability": 49.9,
+          "series": []
+        },
+        {
+          "id": "team_kraken_unit_p2",
+          "handle": "Voltflare",
+          "age": 23,
+          "ability": 49.8,
+          "series": []
+        },
+        {
+          "id": "team_cascadia_youth_p1",
+          "handle": "Frostwire",
+          "age": 18,
+          "ability": 43.8,
+          "series": []
+        }
+      ],
+      "bench": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 27,
+          "ability": 79,
+          "series": [
+            79,
+            79,
+            79,
+            79,
+            79,
+            79
+          ]
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "age": 29,
+          "ability": 50.7,
+          "series": [
+            50.7
+          ]
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "age": 18,
+          "ability": 52.4,
+          "series": [
+            52.2,
+            52.4
+          ]
+        }
+      ],
+      "starters": [
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 23,
+          "ability": 76.8,
+          "series": [
+            76.5,
+            76.7,
+            76.8,
+            76.8,
+            76.8,
+            76.8
+          ]
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 20,
+          "ability": 79.2,
+          "series": [
+            78.7,
+            78.8,
+            78.9,
+            79,
+            79.1,
+            79.2
+          ]
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 29,
+          "ability": 72.9,
+          "series": [
+            72.9,
+            72.9,
+            72.9,
+            72.9,
+            72.9,
+            72.9
+          ]
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 24,
+          "ability": 75.1,
+          "series": [
+            75,
+            75.1,
+            75.1,
+            75.1,
+            75.1,
+            75.1
+          ]
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 27,
+          "ability": 62.8,
+          "series": [
+            62.8,
+            62.8,
+            62.8,
+            62.8,
+            62.8,
+            62.8
+          ]
+        }
+      ]
+    },
+    "fog": 0,
+    "lineup_revealed": true,
+    "scouting_this": false,
+    "scout_progress": 0,
+    "scout_cap": 0.5,
+    "tendencies": [],
+    "identity": "Balanced",
+    "comms_cohesion": 48.6,
+    "chemistry_pairs": {
+      "duos": [],
+      "feuds": []
+    },
+    "chemistry_pair_ids": {
+      "duos": [],
+      "feuds": []
+    }
+  },
+  "club": {
+    "market_window": {
+      "open": false,
+      "kind": "closed",
+      "label": "Window closed",
+      "detail": "Closed until the mid-split window in week 7.",
+      "next_open_week": 7
+    },
+    "academy": {
+      "parent_id": "team_nexus",
+      "parent_name": "Team Nexus",
+      "affiliate_id": "team_kraken_unit",
+      "affiliate_name": "Kraken Unit",
+      "level": 1,
+      "roster": [
+        {
+          "id": "team_kraken_unit_p1",
+          "handle": "Grimpulse",
+          "age": 21,
+          "role": "duelist",
+          "roster_role": "starter",
+          "ability": 50.5,
+          "potential_band": [
+            62.8,
+            88.1
+          ],
+          "maps": 5,
+          "rating": 0.83,
+          "owned": true
+        },
+        {
+          "id": "team_kraken_unit_p3",
+          "handle": "Pyroecho",
+          "age": 18,
+          "role": "initiator",
+          "roster_role": "starter",
+          "ability": 44.9,
+          "potential_band": [
+            53.1,
+            84.5
+          ],
+          "maps": 5,
+          "rating": 0.41,
+          "owned": true
+        },
+        {
+          "id": "team_kraken_unit_p4",
+          "handle": "Nightecho",
+          "age": 20,
+          "role": "sentinel",
+          "roster_role": "starter",
+          "ability": 49.9,
+          "potential_band": [
+            56.5,
+            79.1
+          ],
+          "maps": 5,
+          "rating": 0.75,
+          "owned": true
+        },
+        {
+          "id": "team_kraken_unit_p2",
+          "handle": "Voltflare",
+          "age": 23,
+          "role": "duelist",
+          "roster_role": "starter",
+          "ability": 49.8,
+          "potential_band": [
+            56,
+            73.2
+          ],
+          "maps": 5,
+          "rating": 1.2,
+          "owned": true
+        },
+        {
+          "id": "team_cascadia_youth_p1",
+          "handle": "Frostwire",
+          "age": 18,
+          "role": "duelist",
+          "roster_role": "academy",
+          "ability": 43.8,
+          "potential_band": [
+            42.2,
+            70.8
+          ],
+          "maps": 2,
+          "rating": 0.58,
+          "owned": true
+        }
+      ],
+      "reports": [
+        {
+          "kind": "intake",
+          "season": 2,
+          "week": 1,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "player_ids": []
+        },
+        {
+          "kind": "weekly",
+          "season": 2,
+          "week": 1,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "level": 1,
+          "series": 1,
+          "wins": 0,
+          "players_used": 5,
+          "gains": {
+            "team_kraken_unit_p0": 0.03,
+            "team_kraken_unit_p1": 0.03,
+            "team_kraken_unit_p2": 0.03,
+            "team_kraken_unit_p3": 0.03,
+            "team_kraken_unit_p4": 0.03
+          }
+        },
+        {
+          "kind": "weekly",
+          "season": 2,
+          "week": 2,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "level": 1,
+          "series": 1,
+          "wins": 0,
+          "players_used": 5,
+          "gains": {
+            "team_kraken_unit_p0": 0.03,
+            "team_kraken_unit_p1": 0.03,
+            "team_kraken_unit_p2": 0.03,
+            "team_kraken_unit_p3": 0.03,
+            "team_kraken_unit_p4": 0.03
+          }
+        },
+        {
+          "kind": "weekly",
+          "season": 2,
+          "week": 3,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "level": 1,
+          "series": 1,
+          "wins": 0,
+          "players_used": 5,
+          "gains": {
+            "team_kraken_unit_p0": 0.03,
+            "team_kraken_unit_p1": 0.03,
+            "team_kraken_unit_p2": 0.03,
+            "team_kraken_unit_p3": 0.03,
+            "team_kraken_unit_p4": 0.03
+          }
+        },
+        {
+          "kind": "move",
+          "season": 2,
+          "week": 4,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "player_id": "team_cascadia_youth_p1",
+          "direction": "send_down"
+        },
+        {
+          "kind": "move",
+          "season": 2,
+          "week": 4,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "player_id": "team_kraken_unit_p0",
+          "direction": "promote"
+        },
+        {
+          "kind": "weekly",
+          "season": 2,
+          "week": 4,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "level": 1,
+          "series": 1,
+          "wins": 0,
+          "players_used": 5,
+          "gains": {
+            "team_cascadia_youth_p1": 0.03,
+            "team_kraken_unit_p1": 0.03,
+            "team_kraken_unit_p2": 0.03,
+            "team_kraken_unit_p3": 0.03,
+            "team_kraken_unit_p4": 0.03
+          }
+        },
+        {
+          "kind": "weekly",
+          "season": 2,
+          "week": 5,
+          "parent_id": "team_nexus",
+          "affiliate_id": "team_kraken_unit",
+          "level": 1,
+          "series": 1,
+          "wins": 0,
+          "players_used": 5,
+          "gains": {
+            "team_cascadia_youth_p1": 0.03,
+            "team_kraken_unit_p1": 0.03,
+            "team_kraken_unit_p2": 0.03,
+            "team_kraken_unit_p3": 0.03,
+            "team_kraken_unit_p4": 0.03
+          }
+        }
+      ],
+      "next_upgrade_cost": 300000
+    },
+    "preparation": {
+      "current": null,
+      "last": {
+        "plan_id": "87bc0f9f0ddb7936",
+        "team_id": "team_nexus",
+        "fixture_id": "s2w5m1am",
+        "opponent_id": "team_rust_belt_gaming",
+        "partner_id": "team_adriatic_sirens",
+        "map_id": "bind",
+        "objective": "mental_reset",
+        "intensity": "light",
+        "season": 2,
+        "week": 5,
+        "status": "completed",
+        "finding_code": "composure_ready",
+        "finding": "Squad morale entered at 82.0/100; the group reset without changing the game plan.",
+        "evidence": {
+          "own_map_samples": 2,
+          "opponent_map_samples": 0,
+          "partner_map_samples": 1,
+          "own_attack_win_pct": 59.1,
+          "own_defense_win_pct": 38.1,
+          "opponent_attack_win_pct": 0,
+          "opponent_defense_win_pct": 0,
+          "partner_map_win_pct": 100,
+          "scouting_confidence": 0.34,
+          "average_stamina": 72.1,
+          "average_morale": 82,
+          "rotation_candidate_id": "fa_0"
+        },
+        "participant_ids": [
+          "apex",
+          "echo",
+          "fa_0",
+          "fa_12",
+          "fa_13",
+          "ghost",
+          "team_kraken_unit_p0",
+          "vortex"
+        ],
+        "knowledge_key": "methodology",
+        "knowledge_gain": 0.67,
+        "stamina_cost": 1.5,
+        "morale_delta": 2.5,
+        "chemistry_delta": 0.3,
+        "artifact_label": "Methodology +0.7",
+        "prep_edge_contribution": 0,
+        "dev_suggestion_player_id": "fa_0",
+        "dev_suggestion": "Map mastery projects Hollowlock as a bench option for bind; no scrim performance was measured. Consider a focused development block before trying that rotation."
+      },
+      "proposal": {
+        "id": "5dea26b85ff710d5",
+        "team_id": "team_nexus",
+        "fixture_id": "s2w6m0am",
+        "opponent_id": "team_baltic_meridian",
+        "partner_id": "team_chao_phraya_owls",
+        "map_id": "bind",
+        "objective": "retakes",
+        "intensity": "normal",
+        "created_season": 2,
+        "created_week": 6,
+        "partner_name": "Chao Phraya Owls",
+        "condition_cost": 4
+      },
+      "condition_costs": {
+        "light": 1.5,
+        "normal": 4,
+        "intense": 7.5
+      },
+      "participants": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "condition": 37
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "condition": 29
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "condition": 100
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "condition": 86.5
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "condition": 100
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "condition": 44.5
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "condition": 64
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "condition": 91
+        }
+      ],
+      "fixture": {
+        "id": "s2w6m0am",
+        "week": 6,
+        "stage": "regular",
+        "best_of": 1,
+        "team_a": "team_nexus",
+        "team_b": "team_baltic_meridian",
+        "team_a_name": "Team Nexus",
+        "team_b_name": "Baltic Meridian",
+        "rivalry": null,
+        "potm": null,
+        "maps": [
+          "bind"
+        ],
+        "map_thumbs": {
+          "bind": "/assets/maps/bind.webp"
+        },
+        "veto": [],
+        "series_notes": [],
+        "played": false,
+        "winner_id": null,
+        "map_score": [
+          0,
+          0
+        ],
+        "results": []
+      },
+      "opponent_id": "team_baltic_meridian",
+      "maps": [
+        "bind"
+      ],
+      "partners": [
+        {
+          "id": "team_adriatic_sirens",
+          "name": "Adriatic Sirens"
+        },
+        {
+          "id": "team_alpine_echo",
+          "name": "Alpine Echo"
+        },
+        {
+          "id": "team_anatolia_forge",
+          "name": "Anatolia Forge"
+        },
+        {
+          "id": "team_apex_syndicate",
+          "name": "Apex Syndicate"
+        },
+        {
+          "id": "team_azure_vanta",
+          "name": "Azure Vanta"
+        },
+        {
+          "id": "team_bayou_kings",
+          "name": "Bayou Kings"
+        },
+        {
+          "id": "team_berlin_wolves",
+          "name": "Berlin Wolves"
+        },
+        {
+          "id": "team_busan_tempest",
+          "name": "Busan Tempest"
+        },
+        {
+          "id": "team_cascadia_youth",
+          "name": "Cascadia Youth"
+        },
+        {
+          "id": "team_chao_phraya_owls",
+          "name": "Chao Phraya Owls"
+        },
+        {
+          "id": "team_coral_sea_drakes",
+          "name": "Coral Sea Drakes"
+        },
+        {
+          "id": "team_crimson_order",
+          "name": "Crimson Order"
+        },
+        {
+          "id": "team_gallic_storm",
+          "name": "Gallic Storm"
+        },
+        {
+          "id": "team_ghostline",
+          "name": "Ghostline"
+        },
+        {
+          "id": "team_harbour_city_nine",
+          "name": "Harbour City Nine"
+        },
+        {
+          "id": "team_highlands_nine",
+          "name": "Highlands Nine"
+        },
+        {
+          "id": "team_hokkaido_drift",
+          "name": "Hokkaido Drift"
+        },
+        {
+          "id": "team_iron_pact",
+          "name": "Iron Pact"
+        },
+        {
+          "id": "team_kathmandu_apex",
+          "name": "Kathmandu Apex"
+        },
+        {
+          "id": "team_kraken_unit",
+          "name": "Kraken Unit"
+        },
+        {
+          "id": "team_lisbon_tide",
+          "name": "Lisbon Tide"
+        },
+        {
+          "id": "team_mekong_vipers",
+          "name": "Mekong Vipers"
+        },
+        {
+          "id": "team_meridian_cross",
+          "name": "Meridian Cross"
+        },
+        {
+          "id": "team_midnight_polders",
+          "name": "Midnight Polders"
+        },
+        {
+          "id": "team_nordic_frost",
+          "name": "Nordic Frost"
+        },
+        {
+          "id": "team_nova_rift",
+          "name": "Nova Rift"
+        },
+        {
+          "id": "team_outback_sentinels",
+          "name": "Outback Sentinels"
+        },
+        {
+          "id": "team_patagonia_sur",
+          "name": "Patagonia Sur"
+        },
+        {
+          "id": "team_phantom_core",
+          "name": "Phantom Core"
+        },
+        {
+          "id": "team_prairie_signal",
+          "name": "Prairie Signal"
+        },
+        {
+          "id": "team_rust_belt_gaming",
+          "name": "Rust Belt Gaming"
+        },
+        {
+          "id": "team_sahara_compass",
+          "name": "Sahara Compass"
+        },
+        {
+          "id": "team_saracen_guard",
+          "name": "Saracen Guard"
+        },
+        {
+          "id": "team_seoul_dynasty_prime",
+          "name": "Seoul Dynasty Prime"
+        },
+        {
+          "id": "team_solar_flare",
+          "name": "Solar Flare"
+        },
+        {
+          "id": "team_taipei_circuit",
+          "name": "Taipei Circuit"
+        },
+        {
+          "id": "team_tokyo_drift_six",
+          "name": "Tokyo Drift Six"
+        },
+        {
+          "id": "team_vanguard",
+          "name": "Team Vanguard"
+        },
+        {
+          "id": "team_volga_reign",
+          "name": "Volga Reign"
+        },
+        {
+          "id": "team_yucatan_ceibas",
+          "name": "Yucatan Ceibas"
+        }
+      ],
+      "objectives": [
+        "anti_exec",
+        "retakes",
+        "lineup_test",
+        "mental_reset"
+      ],
+      "intensities": [
+        "light",
+        "normal",
+        "intense"
+      ]
+    },
+    "registration": {
+      "player_ids": [
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0",
+        "apex"
+      ],
+      "locked": false,
+      "limit": 6,
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 27,
+          "role": "starter"
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 24,
+          "role": "starter"
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 27,
+          "role": "bench"
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "age": 29,
+          "role": "bench"
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 29,
+          "role": "starter"
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 20,
+          "role": "starter"
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "age": 18,
+          "role": "bench"
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 23,
+          "role": "starter"
+        }
+      ]
+    },
+    "series": {
+      "fixture": null,
+      "directive": null,
+      "triggers": [
+        "trailing",
+        "after_loss",
+        "always"
+      ],
+      "responses": [
+        "steady",
+        "press",
+        "stabilize",
+        "reset"
+      ],
+      "starter_ids": [],
+      "bench_ids": [
+        "vortex",
+        "ghost",
+        "fa_13",
+        "echo",
+        "fa_0",
+        "apex"
+      ]
+    },
+    "culture": {
+      "team_id": "team_nexus",
+      "captain_id": "apex",
+      "council_ids": [
+        "echo",
+        "ghost"
+      ],
+      "principle": "balanced",
+      "cohesion": 53.4,
+      "leadership": 71.2,
+      "stability": 49.3,
+      "principle_fit": 50,
+      "overall": 58.6,
+      "flags": [
+        "broken_role_promises"
+      ],
+      "commitment": {
+        "principle": "balanced",
+        "conviction": 50,
+        "committed": false
+      },
+      "recent_violations": [],
+      "identity_betrayed": false,
+      "players": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "age": 27,
+          "tenure_weeks": 45,
+          "leadership": 74.4
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "age": 24,
+          "tenure_weeks": 26,
+          "leadership": 63.4
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "age": 27,
+          "tenure_weeks": 23,
+          "leadership": 59
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "age": 29,
+          "tenure_weeks": 1,
+          "leadership": 54.7
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "age": 29,
+          "tenure_weeks": 27,
+          "leadership": 64
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "age": 20,
+          "tenure_weeks": 128,
+          "leadership": 64
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "age": 18,
+          "tenure_weeks": 56,
+          "leadership": 57.4
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "age": 23,
+          "tenure_weeks": 121,
+          "leadership": 61.2
+        }
+      ]
+    },
+    "principles": [
+      "balanced",
+      "accountability",
+      "player_led",
+      "development"
+    ],
+    "culture_sessions": {
+      "available_actions": [
+        "accountability",
+        "player_led",
+        "reset",
+        "welcome"
+      ],
+      "welcome_player_ids": [
+        "echo",
+        "fa_0",
+        "fa_12"
+      ],
+      "cooldown_weeks": 0
+    },
+    "delegation": {
+      "policy": {
+        "auto_training": false,
+        "auto_renew_core": false,
+        "renewal_salary_min": 800,
+        "renewal_salary_max": 8000,
+        "renewal_trigger_weeks": 8,
+        "auto_scout": false,
+        "scout_region": "pacific",
+        "scout_roles": [
+          "initiator"
+        ],
+        "scout_max_age": 21,
+        "alert_level": "tier1_ready"
+      },
+      "regions": [
+        "americas",
+        "emea",
+        "pacific",
+        "china"
+      ],
+      "roles": [
+        "duelist",
+        "controller",
+        "initiator",
+        "sentinel",
+        "flex"
+      ],
+      "alert_levels": [
+        "all_matches",
+        "shortlist",
+        "tier1_ready"
+      ],
+      "matching_count": 0,
+      "active_scout_player_id": "slice",
+      "latest_report": {
+        "season": 2,
+        "week": 5,
+        "renewed_player_ids": [],
+        "scout_player_id": "",
+        "alerts": [],
+        "exceptions": []
+      }
+    },
+    "media": {
+      "pending": null,
+      "commitment": null,
+      "history": [
+        {
+          "event_id": "841e9532e560ba1e",
+          "season": 1,
+          "week": 8,
+          "team_id": "team_nexus",
+          "type_id": "defend_player",
+          "choice_id": "defend_publicly",
+          "player_id": "fa_0",
+          "fixture_id": "",
+          "summary": "The manager stands between the player and the criticism.",
+          "sentiment_delta": 3,
+          "sponsor_delta": 0,
+          "trust_delta": 8,
+          "settlement": ""
+        },
+        {
+          "event_id": "d2c6ee7fa625f074",
+          "season": 1,
+          "week": 16,
+          "team_id": "team_nexus",
+          "type_id": "derby_expectations",
+          "choice_id": "respect_rival",
+          "player_id": "",
+          "fixture_id": "s1amfinal",
+          "summary": "The manager backs the group without dismissing the rival.",
+          "sentiment_delta": 0,
+          "sponsor_delta": 0,
+          "trust_delta": 4,
+          "settlement": "The public derby stance is settled: Team Nexus lost, and the earlier words now carry weight."
+        }
+      ],
+      "player_trust": [
+        {
+          "id": "apex",
+          "handle": "Apex",
+          "trust": 54
+        },
+        {
+          "id": "echo",
+          "handle": "Echo",
+          "trust": 54
+        },
+        {
+          "id": "fa_0",
+          "handle": "Hollowlock",
+          "trust": 62
+        },
+        {
+          "id": "fa_12",
+          "handle": "Frostdash",
+          "trust": 50
+        },
+        {
+          "id": "fa_13",
+          "handle": "Slyblade",
+          "trust": 54
+        },
+        {
+          "id": "ghost",
+          "handle": "Ghost",
+          "trust": 54
+        },
+        {
+          "id": "team_kraken_unit_p0",
+          "handle": "Nightsurge",
+          "trust": 50
+        },
+        {
+          "id": "vortex",
+          "handle": "Vortex",
+          "trust": 54
+        }
+      ],
+      "cooldown_weeks": 0
+    }
+  },
+  "wire": [
+    {
+      "url": "/api/actions/lineup",
+      "method": "POST",
+      "body": "{\"lineup_ids\":[\"vortex\",\"ghost\",\"fa_13\",\"echo\",\"fa_0\"]}",
+      "status": 200,
+      "response": "{\"ok\":true,\"message\":\"Lineup saved.\",\"lineup\":{\"players\":[{\"id\":\"apex\",\"handle\":\"Apex\",\"role\":\"controller\",\"playstyle\":\"igl\",\"options\":[{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":94,\"edge\":1.76},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":75,\"edge\":1.02},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":73,\"edge\":0.93},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":70,\"edge\":0.79},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":69,\"edge\":0.74},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":69,\"edge\":0.77},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":68,\"edge\":0.71},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":65,\"edge\":0.6},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":60,\"edge\":0.4},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":60,\"edge\":0.4},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":60,\"edge\":0.4},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":60,\"edge\":0.4},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":59,\"edge\":0.34},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":59,\"edge\":0.37},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":58,\"edge\":0.33},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":57,\"edge\":0.27},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":57,\"edge\":0.27},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":57,\"edge\":0.29},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":56,\"edge\":0.22},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":55,\"edge\":0.18},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":54,\"edge\":0.17},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":54,\"edge\":0.15},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":53,\"edge\":0.1}],\"assigned\":null,\"auto_id\":\"omen\",\"auto_name\":\"Omen\",\"resolved_id\":\"omen\",\"resolved_name\":\"Omen\"},{\"id\":\"vortex\",\"handle\":\"Vortex\",\"role\":\"duelist\",\"playstyle\":\"awper\",\"options\":[{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":96,\"edge\":1.82},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":68,\"edge\":0.72},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":68,\"edge\":0.74},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":67,\"edge\":0.68},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":66,\"edge\":0.62},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":62,\"edge\":0.48},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":62,\"edge\":0.5},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":62,\"edge\":0.48},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":60,\"edge\":0.4},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":60,\"edge\":0.4},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.38},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":60,\"edge\":0.4},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":58,\"edge\":0.31},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":58,\"edge\":0.34},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":58,\"edge\":0.3},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":56,\"edge\":0.23},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":55,\"edge\":0.21},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":52,\"edge\":0.09},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":52,\"edge\":0.08},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":52,\"edge\":0.06},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":51,\"edge\":0.02},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":50,\"edge\":0.02},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":50,\"edge\":0.02},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":49,\"edge\":-0.03},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":49,\"edge\":-0.04},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":48,\"edge\":-0.08},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":1,\"edge\":-1.97}],\"assigned\":null,\"auto_id\":\"jett\",\"auto_name\":\"Jett\",\"resolved_id\":\"jett\",\"resolved_name\":\"Jett\"},{\"id\":\"ghost\",\"handle\":\"Ghost\",\"role\":\"initiator\",\"playstyle\":\"lurker\",\"options\":[{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":86,\"edge\":1.42},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":72,\"edge\":0.88},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":68,\"edge\":0.74},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":68,\"edge\":0.74},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":68,\"edge\":0.7},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":65,\"edge\":0.61},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":62,\"edge\":0.5},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":60,\"edge\":0.38},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.38},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":60,\"edge\":0.4},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":59,\"edge\":0.37},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":58,\"edge\":0.34},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":58,\"edge\":0.32},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":55,\"edge\":0.18},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":55,\"edge\":0.22},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":54,\"edge\":0.14},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":54,\"edge\":0.14},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":53,\"edge\":0.13},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":53,\"edge\":0.12},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":52,\"edge\":0.07},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":52,\"edge\":0.09},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":52,\"edge\":0.1},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":51,\"edge\":0.04},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":50,\"edge\":0.02},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":49,\"edge\":-0.02},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":4,\"edge\":-1.84},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":2,\"edge\":-1.91}],\"assigned\":null,\"auto_id\":\"sova\",\"auto_name\":\"Sova\",\"resolved_id\":\"sova\",\"resolved_name\":\"Sova\"},{\"id\":\"fa_13\",\"handle\":\"Slyblade\",\"role\":\"duelist\",\"playstyle\":\"entry\",\"options\":[{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":96,\"edge\":1.85},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":90,\"edge\":1.59},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":83,\"edge\":1.32},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":68,\"edge\":0.72},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":68,\"edge\":0.7},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":62,\"edge\":0.46},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":61,\"edge\":0.42},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":59,\"edge\":0.35},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":59,\"edge\":0.35},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":59,\"edge\":0.36},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":58,\"edge\":0.3},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":57,\"edge\":0.28},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":56,\"edge\":0.23},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":56,\"edge\":0.22},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":54,\"edge\":0.14},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":53,\"edge\":0.12},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":53,\"edge\":0.11},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":52,\"edge\":0.1},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":52,\"edge\":0.06},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":51,\"edge\":0.04},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":51,\"edge\":0.02},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":51,\"edge\":0.04},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":50,\"edge\":0.02},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":50,\"edge\":0.01},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":48,\"edge\":-0.08},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":47,\"edge\":-0.14},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":45,\"edge\":-0.22},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":44,\"edge\":-0.22},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":40,\"edge\":-0.39}],\"assigned\":null,\"auto_id\":\"yoru\",\"auto_name\":\"Yoru\",\"resolved_id\":\"yoru\",\"resolved_name\":\"Yoru\"},{\"id\":\"echo\",\"handle\":\"Echo\",\"role\":\"sentinel\",\"playstyle\":\"anchor\",\"options\":[{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":92,\"edge\":1.7},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":73,\"edge\":0.91},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":71,\"edge\":0.83},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":70,\"edge\":0.8},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":68,\"edge\":0.72},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":65,\"edge\":0.59},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":62,\"edge\":0.47},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":60,\"edge\":0.4},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":60,\"edge\":0.4},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":60,\"edge\":0.4},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":59,\"edge\":0.35},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":58,\"edge\":0.33},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":57,\"edge\":0.26},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":57,\"edge\":0.28},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":56,\"edge\":0.25},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":53,\"edge\":0.13},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":53,\"edge\":0.12},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":53,\"edge\":0.11},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":52,\"edge\":0.06},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":52,\"edge\":0.09},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":52,\"edge\":0.08},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":51,\"edge\":0.06},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":51,\"edge\":0.03},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":50,\"edge\":0.02},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":49,\"edge\":-0.05},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":49,\"edge\":-0.04},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":8,\"edge\":-1.7}],\"assigned\":null,\"auto_id\":\"killjoy\",\"auto_name\":\"Killjoy\",\"resolved_id\":\"killjoy\",\"resolved_name\":\"Killjoy\"},{\"id\":\"fa_0\",\"handle\":\"Hollowlock\",\"role\":\"controller\",\"playstyle\":\"igl\",\"options\":[{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":76,\"edge\":1.05},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":73,\"edge\":0.92},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":71,\"edge\":0.83},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":56,\"edge\":0.23},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":54,\"edge\":0.18},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":54,\"edge\":0.16},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":52,\"edge\":0.09},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":50,\"edge\":0.01},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":50,\"edge\":-0.02},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":49,\"edge\":-0.04},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":47,\"edge\":-0.14},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":47,\"edge\":-0.13},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":47,\"edge\":-0.13},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":46,\"edge\":-0.14},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":43,\"edge\":-0.27},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":43,\"edge\":-0.26},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":40,\"edge\":-0.42},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":40,\"edge\":-0.41},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":39,\"edge\":-0.43},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":39,\"edge\":-0.45},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":39,\"edge\":-0.43},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":38,\"edge\":-0.49},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":37,\"edge\":-0.51},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":36,\"edge\":-0.57},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":35,\"edge\":-0.61},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":32,\"edge\":-0.71},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":27,\"edge\":-0.9},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":7,\"edge\":-1.71},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":5,\"edge\":-1.78}],\"assigned\":\"harbor\",\"auto_id\":\"harbor\",\"auto_name\":\"Harbor\",\"resolved_id\":\"harbor\",\"resolved_name\":\"Harbor\"},{\"id\":\"team_kraken_unit_p0\",\"handle\":\"Nightsurge\",\"role\":\"controller\",\"playstyle\":\"igl\",\"options\":[{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":57,\"edge\":0.27},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":54,\"edge\":0.18},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":53,\"edge\":0.1},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":41,\"edge\":-0.37},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":40,\"edge\":-0.41},{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":36,\"edge\":-0.56},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":35,\"edge\":-0.6},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":35,\"edge\":-0.6},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":35,\"edge\":-0.6},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":32,\"edge\":-0.74},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":30,\"edge\":-0.81},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":29,\"edge\":-0.84},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":27,\"edge\":-0.92},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":23,\"edge\":-1.06},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":22,\"edge\":-1.11},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":22,\"edge\":-1.1},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":22,\"edge\":-1.11},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":20,\"edge\":-1.18},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":20,\"edge\":-1.19},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":19,\"edge\":-1.24},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":19,\"edge\":-1.24},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":18,\"edge\":-1.3},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":17,\"edge\":-1.32},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":15,\"edge\":-1.41},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":14,\"edge\":-1.43},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":13,\"edge\":-1.49},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":12,\"edge\":-1.52},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":4,\"edge\":-1.83},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":2,\"edge\":-1.94}],\"assigned\":null,\"auto_id\":\"miks\",\"auto_name\":\"Miks\",\"resolved_id\":\"miks\",\"resolved_name\":\"Miks\"},{\"id\":\"fa_12\",\"handle\":\"Frostdash\",\"role\":\"controller\",\"playstyle\":\"igl\",\"options\":[{\"id\":\"astra\",\"name\":\"Astra\",\"role\":\"controller\",\"mastery\":63,\"edge\":0.52},{\"id\":\"jett\",\"name\":\"Jett\",\"role\":\"duelist\",\"mastery\":47,\"edge\":-0.12},{\"id\":\"clove\",\"name\":\"Clove\",\"role\":\"controller\",\"mastery\":46,\"edge\":-0.17},{\"id\":\"miks\",\"name\":\"Miks\",\"role\":\"controller\",\"mastery\":42,\"edge\":-0.32},{\"id\":\"harbor\",\"name\":\"Harbor\",\"role\":\"controller\",\"mastery\":38,\"edge\":-0.46},{\"id\":\"omen\",\"name\":\"Omen\",\"role\":\"controller\",\"mastery\":36,\"edge\":-0.56},{\"id\":\"brimstone\",\"name\":\"Brimstone\",\"role\":\"controller\",\"mastery\":35,\"edge\":-0.6},{\"id\":\"sage\",\"name\":\"Sage\",\"role\":\"sentinel\",\"mastery\":35,\"edge\":-0.61},{\"id\":\"viper\",\"name\":\"Viper\",\"role\":\"controller\",\"mastery\":35,\"edge\":-0.6},{\"id\":\"gekko\",\"name\":\"Gekko\",\"role\":\"initiator\",\"mastery\":34,\"edge\":-0.64},{\"id\":\"skye\",\"name\":\"Skye\",\"role\":\"initiator\",\"mastery\":34,\"edge\":-0.63},{\"id\":\"kayo\",\"name\":\"KAY/O\",\"role\":\"initiator\",\"mastery\":30,\"edge\":-0.81},{\"id\":\"killjoy\",\"name\":\"Killjoy\",\"role\":\"sentinel\",\"mastery\":29,\"edge\":-0.84},{\"id\":\"neon\",\"name\":\"Neon\",\"role\":\"duelist\",\"mastery\":28,\"edge\":-0.86},{\"id\":\"reyna\",\"name\":\"Reyna\",\"role\":\"duelist\",\"mastery\":27,\"edge\":-0.91},{\"id\":\"chamber\",\"name\":\"Chamber\",\"role\":\"sentinel\",\"mastery\":26,\"edge\":-0.94},{\"id\":\"fade\",\"name\":\"Fade\",\"role\":\"initiator\",\"mastery\":26,\"edge\":-0.96},{\"id\":\"vyse\",\"name\":\"Vyse\",\"role\":\"sentinel\",\"mastery\":26,\"edge\":-0.96},{\"id\":\"yoru\",\"name\":\"Yoru\",\"role\":\"duelist\",\"mastery\":25,\"edge\":-0.99},{\"id\":\"sova\",\"name\":\"Sova\",\"role\":\"initiator\",\"mastery\":24,\"edge\":-1.02},{\"id\":\"iso\",\"name\":\"Iso\",\"role\":\"duelist\",\"mastery\":22,\"edge\":-1.1},{\"id\":\"phoenix\",\"name\":\"Phoenix\",\"role\":\"duelist\",\"mastery\":22,\"edge\":-1.14},{\"id\":\"breach\",\"name\":\"Breach\",\"role\":\"initiator\",\"mastery\":21,\"edge\":-1.16},{\"id\":\"deadlock\",\"name\":\"Deadlock\",\"role\":\"sentinel\",\"mastery\":19,\"edge\":-1.24},{\"id\":\"cypher\",\"name\":\"Cypher\",\"role\":\"sentinel\",\"mastery\":18,\"edge\":-1.26},{\"id\":\"waylay\",\"name\":\"Waylay\",\"role\":\"duelist\",\"mastery\":4,\"edge\":-1.86},{\"id\":\"raze\",\"name\":\"Raze\",\"role\":\"duelist\",\"mastery\":3,\"edge\":-1.87},{\"id\":\"veto\",\"name\":\"Veto\",\"role\":\"sentinel\",\"mastery\":3,\"edge\":-1.87},{\"id\":\"tejo\",\"name\":\"Tejo\",\"role\":\"initiator\",\"mastery\":1,\"edge\":-1.97}],\"assigned\":null,\"auto_id\":\"astra\",\"auto_name\":\"Astra\",\"resolved_id\":\"astra\",\"resolved_name\":\"Astra\"}]}}"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "captured_utc": "2026-10-11T10:20:00.7585461Z",
+  "head": "7bee7d747dd1bf651ac4e38b55336be0a4db9847",
+  "raw_hashes": [
+    {
+      "git_blob": "cdbbaa9b37b3c32ec4b275a58fe1b1fcbc8dc55d",
+      "path": "src/esports_sim/web/server.py",
+      "working_git_blob": "cdbbaa9b37b3c32ec4b275a58fe1b1fcbc8dc55d",
+      "sha256": "83E8681440D53FAF2C2799469C88748D9CF1EDBF889D76331D7EF4206DACF376"
+    },
+    {
+      "git_blob": "b2c9bdeb8c71b14314b59e55d9633d312f99a1f2",
+      "path": "src/esports_sim/web/static/app.js",
+      "working_git_blob": "b2c9bdeb8c71b14314b59e55d9633d312f99a1f2",
+      "sha256": "4A1C4E81FAE27B9BBD87C4D8C75918C81C00F8D27BDE23395BC73B0D7C856174"
+    },
+    {
+      "git_blob": "b5847297d131716d09276110611fffb0ec7cc15d",
+      "path": "tests/test_development_report_comparison.py",
+      "working_git_blob": "b5847297d131716d09276110611fffb0ec7cc15d",
+      "sha256": "413CB3DA535324C1DD8B5015ED8D1A575AD3A7B0FC400E105AB8EB8E83C92940"
+    }
+  ],
+  "status": []
+}

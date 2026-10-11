@@ -1,0 +1,14 @@
+{
+  "verified_at_utc": "2026-10-11T07:30:46.622263+00:00",
+  "verification_kind": "Read-only raw/Git hash, CSV and original JSON/JSONL inspection; no local tests or acceptance helper execution",
+  "original_artifact_raw_and_Git_byte_matches": 290,
+  "named_row_reference_hashes": 151,
+  "report_reference_hashes": 79,
+  "all_parent_artifact_blobs_unchanged": true,
+  "source612_raw_and_Git_tree_equal_tested64": true,
+  "canonical885_sha256": "46b7cf5e328b3a50298d2f2e79d8cd5ceea5f138b847ad8f5f0f06cc1670e27f",
+  "parent808_exact_raw_prefix": true,
+  "docs_only_staged_paths_before_this_receipt": 300,
+  "JSON_format_limit": "All originally mapped .json files parse except original04-public-readback.json CLI text, renamed/mapped to exact .txt bytes; no response synthesized",
+  "privacy": "Private auth/session/bootstrap inputs excluded; sessions keys in three aggregate usage reports are numeric counts, not membership credentials"
+}

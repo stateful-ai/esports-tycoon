@@ -1,0 +1,131 @@
+[
+  {
+    "id": "esports-playtest-0255",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Brand commercial action discovery",
+    "problem": "Brand feed is long and read only; no direct campaign choices.",
+    "solution": "Returned to Facilities from commercial goal; upgraded Media then verified Company.",
+    "lesson": "Commercial investment is actionable through Facilities while Brand explains reach and streaming tradeoffs; sponsor shopping unavailable in this world without advancing.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0254",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Media investment visibly opens Apparel",
+    "problem": "Apparel locked at Media1.",
+    "solution": "Affordable350000upgrade kept2218240bank; Media2 public readback marketability1.11 upkeep3000.",
+    "lesson": "Facility upgrade raises sponsor access/value and ongoing costs immediately; no suitors means access alone does not guarantee a deal.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0253",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Company merged run rate includes Stream sponsor",
+    "problem": "Prior display omitted Stream/Apparel slots.",
+    "solution": "Played merged388 in copied career;9400Stream is listed and income125784 matches public breakdown.",
+    "lesson": "Merged display and projection now include active Stream revenue; Apparel nonzero path still unplayed.",
+    "confidence": "high",
+    "source": "2026-10-11-company-brand-ba3 exactba3 world26UHC seed2038 S2W5 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "company",
+      "brand",
+      "sponsors"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0252",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Correction: closed profile accessibility exposure",
+    "problem": "Prior transfer session interpreted unsigned DOM as visually stale profile",
+    "solution": "Root PNG inspection shows no visible profile; exactdf9 CSS hidden overlay staysdisplayflex opacity0 pointereventsnone and closeProfile lacks aria-hidden/inert",
+    "lesson": "Supersedes prior stale unsigned/cache claim: closed overlay content must be excluded from accessibility/focus; pointerblockedClose targetedalreadyclosedcontrol. Contract persisted correctly.",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0251",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Stale unsigned profile after successful signing",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Signing succeeds but old profile remains unsigned behind app and its Close is pointer-blocked",
+    "lesson": "Refresh or close existing profile after accepted signing; failed pointer action is not anHTTP rejection",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0250",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Verify contracts from fresh profile and raw save",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Club roster and fresh profile agree2200/65/70streams/16krelease/32kbuyout/bench",
+    "lesson": "Reopen profile independently after signing before asserting persistence",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0249",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Negotiate a discount while preserving contract security",
+    "problem": "Browser26UHCseed2038S2W5df9b105 transfer-contract play",
+    "solution": "Frostdash demanded2300/wk65weeks;2000 countered2200 and accepted",
+    "lesson": "A counteroffer is a successful accepted decision with countered status; do not classify HTTP200 as signed",
+    "confidence": "high",
+    "source": "C:\\Users\\aidan\\.codex\\worktrees\\transfer-contract-playtest\\ESports Simulator\\runs\\playtests\\2026-10-11-transfer-contract\\report.md",
+    "code": "",
+    "tags": [],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0248",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Expected flat wording caused one browser locator timeout",
+    "problem": "Scroll target expected No measurable CA change, absent for Hollowlock cumulative regression.",
+    "solution": "Preserved30s timeout in step5 and added step6 correction using observed season skill text; did not repeat failed locator.",
+    "lesson": "Use observed wording and screenshots for browser navigation; source expectations cannot establish actual visual acceptance.",
+    "confidence": "high",
+    "source": "2026-10-11-profile401-first-week copied26UHC seed2038 S2W5 head806eb37881ff9a49f7cfdf71785c99e5e5d5c7ca gpt-6.1-sol medium screenshots/public-readbacks.json",
+    "code": "",
+    "tags": [
+      "profile",
+      "development",
+      "read-only",
+      "playtest"
+    ],
+    "kind": "pain-point"
+  }
+]

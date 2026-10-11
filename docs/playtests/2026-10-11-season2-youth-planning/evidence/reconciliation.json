@@ -1,0 +1,181 @@
+{
+  "at_utc": "2026-10-11T10:02:02.075138+00:00",
+  "source_head": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+  "save_after_sha256": "699c475c39b34cfc49748d0fe774f0ea8e753ac675cd36fc3ea5d82d27e8996f",
+  "before_decisions": 112,
+  "after_decisions": 120,
+  "new_decisions": [
+    {
+      "index": 112,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_open",
+      "params": {
+        "player_id": "team_cascadia_youth_p1"
+      },
+      "source": "web"
+    },
+    {
+      "index": 113,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "negotiate_offer",
+      "params": {
+        "buyout": "22000",
+        "no_transfer": "False",
+        "player_id": "team_cascadia_youth_p1",
+        "release_fee": "6000",
+        "role": "academy",
+        "salary": "1500",
+        "status": "accepted",
+        "stream_share": "70",
+        "weeks": "40"
+      },
+      "source": "web"
+    },
+    {
+      "index": 114,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "academy_move",
+      "params": {
+        "direction": "send_down",
+        "player_id": "team_cascadia_youth_p1"
+      },
+      "source": "web"
+    },
+    {
+      "index": 115,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "academy_move",
+      "params": {
+        "direction": "promote",
+        "player_id": "team_kraken_unit_p0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 116,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "tactical",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "team_kraken_unit_p0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 117,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "tactical",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "team_kraken_unit_p0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 118,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "mentor",
+      "params": {
+        "mentor_id": "apex",
+        "protege_id": "team_kraken_unit_p0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 119,
+      "season": 2,
+      "week": 4,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 26,
+  "snapshots_after": 27,
+  "old_snapshot_prefix_preserved": true,
+  "accepted_decision_coverage": "8/8",
+  "accepted_decision_usage_ids": [
+    14,
+    15,
+    21,
+    25,
+    30,
+    32,
+    34,
+    36
+  ],
+  "failed_promotion_usage_id": 12,
+  "explicit_save_usage_id": 40,
+  "raw_usage_events": 87,
+  "world_usage_events": 87,
+  "world_event_counts": {
+    "session_start": 2,
+    "view": 8,
+    "visible_time": 56,
+    "session_end": 1,
+    "attempt": 10,
+    "result": 10
+  },
+  "paired_requests": 10,
+  "request_status_counts": {
+    "200": 9,
+    "422": 1
+  },
+  "original_starting_five_unchanged": true,
+  "other_six_player_plans_unchanged": true,
+  "academy_roster_final": 5,
+  "senior_roster_final": 7,
+  "local_tests_launched": false,
+  "report_commands_launched": false,
+  "owned_server_closed": true,
+  "user8421_untouched": true,
+  "limits": [
+    "Runtime model and effort unknown (not exposed).",
+    "Source20273 played; PR397/398 corrections have no fresh acceptance here.",
+    "Retained best-effort usage does not prove complete funnels or attention duration;2start/1end retained.",
+    "Initial stale Club ref and disabled language discovery had no action HTTP request. Actual academy rejection422 is distinct.",
+    "Dev-plan observer intensity predicate used wrong wire field and timed out after both changes; public/network/saved readback recovered without repeating mutation.",
+    "Public readback helper syntax then relative-URL failures retained; direct public GETs emit no UI usage.",
+    "Full GameState read only after final Save; private auth/session/bootstrap files excluded from publication."
+  ]
+}

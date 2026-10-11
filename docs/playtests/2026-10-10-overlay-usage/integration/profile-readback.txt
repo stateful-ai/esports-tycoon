@@ -1,0 +1,6 @@
+### Result
+"ECHOCORE\nSENTINEL\nANCHOR\nBR\nPT 90 · EN 14\nage 23\nBENCH\n264K FOLLOWERS\n🎥 BALANCED · 1,029 CR/WK\nREST · LIGHT\nTeam Nexus\n48w left · 7,700 cr/wk\n72% streams · 92,000 cr release · 400"
+### Ran Playwright code
+```js
+await page.evaluate('async () => {const text=document.getElementById("profile-body").innerText.slice(0,180);window.closeProfile();return text}');
+```

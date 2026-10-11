@@ -1,0 +1,76 @@
+- text: Team Nexus vs Team Vanguard · Lotus 0 — 0
+- button "Vision" [pressed]
+- button "2D"
+- button "🔇"
+- button "✕ Close"
+- img: Tree Dock Defender Spawn A Link B Link A Site Diamond Tower Tunnel Mid Tree B Site A Main C Dock C Alley B Main Alley Mid C Site Attacker Spawn C Main A B C Echo Hollowlock Slyblade Ghost Pulse Shade Slice Vortex Warden Zenith
+- complementary:
+  - text: Round 1 · ATK Team Nexus Team Nexus Killjoy
+  - button "Echo"
+  - text: Harbor
+  - button "Hollowlock"
+  - text: Yoru
+  - button "Slyblade"
+  - text: Sova
+  - button "Ghost"
+  - text: Jett
+  - button "Vortex"
+  - text: Team Vanguard Raze
+  - button "Pulse"
+  - text: Sova
+  - button "Shade"
+  - text: Jett
+  - button "Slice"
+  - text: Killjoy
+  - button "Warden"
+  - text: Omen
+  - button "Zenith"
+  - button "1◈"
+  - button "2◈"
+  - button "3◈"
+  - button "4◈"
+  - button "5◈"
+  - button "6◈"
+  - button "7◈"
+  - button "8◈"
+  - button "9◈"
+  - button "10◈"
+  - button "11◈"
+  - button "12◈"
+  - button "13◈"
+  - button "14◈"
+  - button "15◈"
+  - button "16◈"
+  - button "17◈"
+  - button "18◈"
+  - button "19◈"
+  - button "20◈"
+  - button "21◈"
+  - button "22◈"
+  - heading "In-round calls" [level=4]
+  - button "Refocus player"
+  - button "Steady the group (0 lost)" [disabled]
+  - button "Raise the pressure"
+  - text: Box score · MVP
+  - button "Vortex"
+  - button "Vortex"
+  - text: "30/16 (xDE: +0.00) 1.72"
+  - button "Slice"
+  - text: "23/14 (xDE: +0.00) 1.36"
+  - button "Zenith"
+  - text: "19/18 (xDE: +0.00) 1.09"
+  - button "Slyblade"
+  - text: "17/13 (xDE: +0.00) 1.01"
+  - button "Pulse"
+  - text: "13/11 (xDE: +0.00) 0.89"
+- button "⏮"
+- button "⏸"
+- button "⏭"
+- button "1×"
+- button "4×"
+- button "16×"
+- button "▸▸"
+- button "Action cam"
+- button "Reframe"
+- slider: "17"
+- text: 1:31

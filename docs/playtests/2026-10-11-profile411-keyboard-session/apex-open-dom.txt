@@ -1,0 +1,60 @@
+- button "Close profile": ✕
+- text: Apex Incumbent Leader Controller IGL IGL US EN 86 age 27 bench 403.7K followers 🎥 balanced · 1,935 cr/wk 46w at club rest · light Team Nexus 23w left · 10,500 cr/wk 72% streams · 126,000 cr release · 340,000 cr buyout · starter · no-transfer
+- button "Rein in streaming…"
+- button "Change role/style…"
+- button "Scout development"
+- text: 79 OVR ★★★½ 89–92 Current ability 100 comfort 93 IGL effectiveness 100 calling experience 80–87 Potential peak forecast 52 Form 76 Morale 62 Condition 57 Confidence drives duels & nerve 218,000 cr Value
+- heading "Development report" [level=3]
+- paragraph: Scout this player to 25% coverage to receive a training recommendation and ×1.05 weekly bonus.
+- heading "Badges" [level=3]
+- text: Clutch Master
+- heading "Attributes" [level=3]
+- text: Aim Precision 63 →73.6–82.3 Aim Reactivity 61 →72.1–80.8 Clutch Factor 77 →81.8–90.6 Comms Quality 92 Composure 90 Game Sense 94 Movement 58 →70.3–78.9 Positioning 82 →82–86.7 Tilt Resistance 85 Utility Usage 88
+- heading "Traits" [level=3]
+- text: Calm Shotcaller Veteran
+- heading "Agent pool" [level=3]
+- text: Role comfort 100 Omen 94 Astra 75 Brimstone 73 Clove 70 Viper 69
+- button "Show all (29)"
+- heading "Season — analytics" [level=3]
+- text: "0.80 Rating 0.74 K/D 9 FK : FD"
+- paragraph: Deeper numbers (KAST, trades, weapons, eco/save splits, trend charts) need a stronger analytics department.
+- paragraph: 5 matches · 51 / 69 / — K / D / A
+- text: ACS by week Kills &amp; deaths by week K D
+- img "Kills and deaths by week"
+- heading "Development" [level=3]
+- text: Ability &amp; confidence over time CA Conf
+- img "Ability and confidence over time": 79 50
+- paragraph: CA 78.3 to 79.0 over 30 weeks / 403.7K followers
+- text: Season growth Clutch Factor this season
+- img "Clutch Factor trajectory this season": 77.2 77.1
+- button "Clutch Factor 77+0.1 ▲"
+- button "Aim Precision 63+0.1 ▲"
+- button "Aim Reactivity 61+0.1 ▲"
+- button "Comms Quality 920.0 —"
+- button "Composure 900.0 —"
+- button "Game Sense 940.0 —"
+- button "Movement 580.0 —"
+- button "Positioning 820.0 —"
+- heading "Relationships" [level=3]
+- button "Slyblade Neutral"
+- button "Ghost Neutral"
+- button "Vortex Neutral"
+- button "Echo Neutral"
+- button "Hollowlock Neutral"
+- button "Nightsurge Neutral"
+- button "Frostdash Neutral"
+- heading "Career" [level=3]
+- text: 2 Seasons 34 Maps 444 Kills 0.85 K/D 0 Honours 0 MVPs 0 All-Star Timeline S1 Apex re-signs with Team Nexus. Apex earns the Clutch Master badge. Memories
+- list:
+  - listitem: "S1: Apex earns the Clutch Master badge."
+  - listitem: "S1: Apex re-signs with Team Nexus."
+- heading "Compare" [level=3]
+- combobox:
+  - option "compare with a teammate…" [selected]
+  - option "Vortex"
+  - option "Ghost"
+  - option "Slyblade"
+  - option "Echo"
+  - option "Hollowlock"
+  - option "Nightsurge"
+  - option "Frostdash"

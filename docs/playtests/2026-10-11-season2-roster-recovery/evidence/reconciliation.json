@@ -1,0 +1,96 @@
+{
+  "at_utc": "2026-10-11T09:24:09.780880+00:00",
+  "source_head": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "1efbf66a707d5f7185761f297883ff424aff86485abaefa66645ae6e53a5dbeb",
+  "save_after_sha256": "a1a9ccbdb830a6cca833e750d5b4f366d0693528ae59791cc4fac19deace47ca",
+  "before_decisions": 110,
+  "after_decisions": 112,
+  "new_decisions": [
+    {
+      "index": 110,
+      "season": 2,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "vortex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 111,
+      "season": 2,
+      "week": 3,
+      "phase": "regular",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 25,
+  "snapshots_after": 26,
+  "old_snapshot_prefix_preserved": true,
+  "new_accepted_coverage": "2/2",
+  "retained_usage_events": 50,
+  "world_usage_events": 47,
+  "all_event_counts": {
+    "session_start": 2,
+    "view": 5,
+    "visible_time": 36,
+    "session_end": 1,
+    "attempt": 3,
+    "result": 3
+  },
+  "world_event_counts": {
+    "visible_time": 35,
+    "session_end": 1,
+    "session_start": 1,
+    "view": 4,
+    "attempt": 3,
+    "result": 3
+  },
+  "paired_requests": 3,
+  "all_request_statuses": 200,
+  "requests": [
+    {
+      "session_id": "5a7f16d1c3db998f490b4069a10cae4c",
+      "request_id": 13,
+      "target": "/api/actions/dev_plan"
+    },
+    {
+      "session_id": "5a7f16d1c3db998f490b4069a10cae4c",
+      "request_id": 15,
+      "target": "/api/actions/advance"
+    },
+    {
+      "session_id": "5a7f16d1c3db998f490b4069a10cae4c",
+      "request_id": 19,
+      "target": "/api/actions/save"
+    }
+  ],
+  "local_tests_launched": false,
+  "report_commands_launched": false,
+  "owned_server_closed": true,
+  "user8421_untouched": true,
+  "limits": [
+    "Root runtime model and effort unknown (not exposed).",
+    "No fresh local tests, native checks, simulation gates or analytics report scripts launched; stream reconciliation is file readback only.",
+    "Original Advance response observer watched wrong URL and timed out30s; gameplay completed once and was independently recovered without repeat.",
+    "Save steps6/7 blocked by week-reveal overlay; no request or HTTP rejection inferred. Step8 Continue+Save has its own actual200 pair.",
+    "Direct helper GET /api/roster404, public GETs and source inspection are outside browser usage hooks.",
+    "Profile inspection is not captured on played source; PR369 adds separate future hooks. Visibility is not attention.",
+    "Initial browser open stdout was not separately retained; cookie/session bootstrap receipts are private and excluded from publication.",
+    "S2W3 streaming copy gap is original historical source evidence for PR395, not acceptance of its corrected head."
+  ]
+}

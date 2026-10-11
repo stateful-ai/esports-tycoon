@@ -1,0 +1,28 @@
+{
+  "at_utc": "2026-10-11T12:40:11.360100+00:00",
+  "canonical_rows": 1061,
+  "sessions": 95,
+  "columns": 21,
+  "canonical_sha256": "51619939e95d3bb1e9e4551ad498f57b7bf9b8daa88e58185dcdce57df43b4ab",
+  "previous1054_raw_prefix_exact": true,
+  "previous1054_all_original_fields_exact": true,
+  "original_six_agent_rows_all126fields_exact": true,
+  "agent_shard_raw_sha256": "b83756868c296794d5ff980581e0e391e6cc6f1b3830b8b9b3d2159ea1d2bb9f",
+  "root_separate_correction_step": 7,
+  "root_runtime_metadata": "unknown (not exposed)",
+  "root_correction_sha256": "12aa8fc2cc2b7d91707cc173e5fb83e4d93a449387f409dae1f18855ff011a22",
+  "original23_file_manifest_immutable": true,
+  "root_extra_raw_public_files": [
+    "upgrade-public.txt",
+    "finance-public.txt",
+    "finance-upgraded-public.txt"
+  ],
+  "safe_raw_files_copied": 26,
+  "played_commit": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "accepted_decision_coverage": "1/1",
+  "observed_request_pair_coverage": "2/2",
+  "nonzero_Apparel_acceptance_unplayed": true,
+  "no_final_Brand_readback": true,
+  "local_tests_launched": false,
+  "user8421_untouched": true
+}

@@ -1,0 +1,779 @@
+"""Narrative v0 — deterministic templated news from real match data.
+
+Grounding rule (from docs/salvage): every fact in a rendered string comes
+straight from GameState / MatchStats fields. Templates vary phrasing, never
+facts. Variant choice is seeded from stable string parts (salvaged
+templated-content pattern), so the same week renders the same copy.
+
+Voice (docs/game-voice.md): grounded desk language; restrained colour, no hype.
+"""
+
+from __future__ import annotations
+
+import random
+
+from esports_sim.manager.state import AwardRecord, GameState
+
+_MIN_AWARD_MAPS = 6
+_MIN_CLUTCHES = 4  # below this, "Clutch Merchant" is noise, not an honour
+_MIN_IMPROVEMENT = 3.0  # CA points; a season with no real riser awards no one
+
+
+def _rng(*parts) -> random.Random:
+    return random.Random("|".join(str(p) for p in parts))
+
+
+def _pick(rng: random.Random, variants: list[str], **facts) -> str:
+    return rng.choice(variants).format(**facts)
+
+
+# ---------------------------------------------------------------------------
+# Weekly news
+
+
+def weekly_news(gs: GameState, report, week_kills: dict[str, int]) -> None:
+    """Called at the end of advance_week, before the week increments.
+    `week_kills` is this week's per-player kill delta (for milestones)."""
+    for f in report.fixtures:
+        if not f.played or not f.results:
+            continue
+        is_user = gs.user_team_id in (f.team_a, f.team_b)
+        stats_list = report.match_stats.get(f.id, [])
+        if is_user:
+            _user_recap(gs, f, stats_list)
+        else:
+            _league_line(gs, f, stats_list)
+    _milestones(gs, week_kills)
+
+
+def _series_score(f) -> str:
+    if f.best_of > 1:
+        a, b = f.map_score
+        return f"{a}-{b}"
+    r = f.results[0]
+    return f"{r.score_a}-{r.score_b}"
+
+
+def _star_line(stats_list) -> tuple[str, float, int] | None:
+    """(player_id, best map rating, kills that map) for the series' top line."""
+    best = None
+    for stats in stats_list:
+        for pid, line in stats.lines.items():
+            if best is None or line.rating > best[1]:
+                best = (pid, line.rating, line.kills)
+    return best
+
+
+# ---------------------------------------------------------------------------
+# Head-to-head history (this season only — past seasons' fixtures are
+# discarded at rollover, see campaign._run_offseason).
+
+
+def _reigning_champion_id(gs: GameState) -> str | None:
+    """The team_id of the most recently crowned champion, or None if no
+    season has finished yet. `gs.champions` only ever records winners (never
+    runners-up or past finals), so this is the one piece of cross-season
+    history grounding can lean on."""
+    return gs.champions[-1].team_id if gs.champions else None
+
+
+def _ordinal(n: int) -> str:
+    """Small-int ordinal words for streak callbacks ("third straight loss").
+    Falls back to a numeric ordinal (11th, 23rd, ...) past the named range —
+    real seasons rarely see a streak beyond a handful of meetings, but this
+    keeps the function total instead of raising."""
+    words = {
+        1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth",
+        6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth",
+    }
+    if n in words:
+        return words[n]
+    if 10 <= n % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
+def head_to_head(gs: GameState, team_a: str, team_b: str) -> dict:
+    """Pure summary of every played meeting between `team_a` and `team_b`
+    this season, plus the one cross-season fact grounding allows (the
+    reigning champion's id). No RNG, no ordering dependency on which side of
+    a Fixture each team landed on — meetings are found by set membership and
+    sorted by week so the result is stable regardless of call order.
+
+    Only `gs.fixtures` is consulted: past seasons' fixtures are replaced
+    wholesale at rollover (`build_regular_season` overwrites the list), so
+    every played fixture found here is from the current season by
+    construction — there is nothing to invent and nothing older to filter
+    out.
+
+    Returns a dict with:
+      meetings: number of played fixtures between the two teams so far.
+      wins_a / wins_b: series wins for each side among those meetings.
+      last_meeting_week / last_winner_id: the most recent meeting.
+      streak_winner_id / streak_len: the team on a current unbroken run of
+        wins against the other, and how long that run is (0 / None if the
+        two haven't met, or if the last two meetings split).
+      revenge / revenge_week: True + the earlier week if the most recent
+        meeting's winner differs from the one before it — i.e. the last
+        result flipped the previous one.
+      reigning_champion_id: latest ChampionRecord.team_id, or None.
+    """
+    meetings = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None
+            and {f.team_a, f.team_b} == {team_a, team_b}
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+
+    wins_a = sum(1 for f in meetings if f.winner_id == team_a)
+    wins_b = sum(1 for f in meetings if f.winner_id == team_b)
+
+    last_meeting_week = meetings[-1].week if meetings else None
+    last_winner_id = meetings[-1].winner_id if meetings else None
+
+    streak_winner_id: str | None = None
+    streak_len = 0
+    for f in reversed(meetings):
+        if streak_winner_id is None:
+            streak_winner_id = f.winner_id
+            streak_len = 1
+        elif f.winner_id == streak_winner_id:
+            streak_len += 1
+        else:
+            break
+
+    revenge = False
+    revenge_week: int | None = None
+    if len(meetings) >= 2:
+        prev = meetings[-2]
+        if prev.winner_id != last_winner_id:
+            revenge = True
+            revenge_week = prev.week
+
+    return {
+        "meetings": len(meetings),
+        "wins_a": wins_a,
+        "wins_b": wins_b,
+        "last_meeting_week": last_meeting_week,
+        "last_winner_id": last_winner_id,
+        "streak_winner_id": streak_winner_id,
+        "streak_len": streak_len,
+        "revenge": revenge,
+        "revenge_week": revenge_week,
+        "reigning_champion_id": _reigning_champion_id(gs),
+    }
+
+
+_PLAYOFF_CUT = 4
+
+
+def match_preview(
+    gs: GameState, fixture, team_id: str | None = None, *, named_subject: bool = False,
+) -> list[str]:
+    """Grounded pre-match preview clauses from `team_id`'s perspective (the
+    acting team by default): recent form, the season head-to-head, the
+    stakes, and the opponent's danger man. Prose, not chips — each clause
+    cites live state; empty ones are dropped. Pure read."""
+    team_id = team_id or gs.user_team_id
+    opp = fixture.team_b if fixture.team_a == team_id else fixture.team_a
+    if opp not in gs.teams:
+        return []
+    opp_name = gs.teams[opp].name
+    # Web briefings mix both teams. Name the acting side without changing
+    # the default narrative used by other consumers or any persisted state.
+    subject = gs.teams[team_id].name if named_subject else "They"
+    possessive = subject + "'s" if named_subject else "their"
+    objective = subject if named_subject else "them"
+    bits: list[str] = []
+
+    def _streak(tid: str) -> str | None:
+        played = sorted(
+            (
+                f for f in gs.fixtures
+                if f.played and f.winner_id is not None and tid in (f.team_a, f.team_b)
+            ),
+            key=lambda f: (f.week, f.id),
+        )
+        if not played:
+            return None
+        won = played[-1].winner_id == tid
+        run = 0
+        for f in reversed(played):
+            if (f.winner_id == tid) == won:
+                run += 1
+            else:
+                break
+        if run < 2:
+            return None
+        return f"a {run}-match {'winning' if won else 'losing'} run"
+
+    st = _streak(team_id)
+    if st:
+        bits.append(f"{subject} arrive on {st}.")
+
+    h = head_to_head(gs, team_id, opp)
+    if h["meetings"] == 1:
+        won = h["last_winner_id"] == team_id
+        bits.append(f"{subject + ' won' if won else opp_name + ' won'} the season's only prior meeting.")
+    elif h["meetings"] >= 2:
+        if h["wins_a"] == h["meetings"]:
+            bits.append(f"{subject} have won all {h['meetings']} meetings this season." if named_subject
+                        else f"They've won all {h['meetings']} meetings this season.")
+        elif h["wins_b"] == h["meetings"]:
+            bits.append(f"{opp_name} have taken all {h['meetings']} this season.")
+        else:
+            holder = possessive if h["wins_a"] >= h["wins_b"] else opp_name + "'s"
+            bits.append(
+                f"The season series stands {h['wins_a']}-{h['wins_b']} in {holder} favour."
+            )
+
+    region = str(gs.teams[team_id].region)
+    order = gs.standings_order(region, tier=gs.teams[team_id].tier)
+    if team_id in order and opp in order and gs.phase == "regular":
+        pos = order.index(team_id) + 1
+        if pos > _PLAYOFF_CUT:
+            bits.append(f"A win would haul {objective} back toward the playoff places.")
+        elif pos <= _PLAYOFF_CUT:
+            bits.append(f"Three points here tighten {possessive} grip on a top-four berth.")
+
+    # Opponent danger man: their top-rated player this season (min a few maps).
+    opp_ids = set(gs.teams[opp].player_ids)
+    danger = max(
+        (
+            (pid, st) for pid, st in gs.player_stats.items()
+            if pid in opp_ids and st.maps >= 3
+        ),
+        key=lambda kv: (kv[1].rating, kv[0]),
+        default=None,
+    )
+    if danger is not None and danger[0] in gs.players:
+        bits.append(
+            f"Watch {gs.players[danger[0]].handle} — {opp_name}'s form pick at "
+            f"{danger[1].rating:.2f}."
+        )
+    return bits
+
+
+def press_reaction(gs: GameState, team_id: str | None = None) -> str | None:
+    """A dry one-line pundit take on `team_id`'s current standing — driven by
+    their recent form streak and league position. Deterministic; None when
+    there's nothing worth a column inch (too early / mid-table drift)."""
+    team_id = team_id or gs.user_team_id
+    if team_id not in gs.teams:
+        return None
+    played = sorted(
+        (
+            f for f in gs.fixtures
+            if f.played and f.winner_id is not None and team_id in (f.team_a, f.team_b)
+        ),
+        key=lambda f: (f.week, f.id),
+    )
+    if len(played) < 2:
+        return None
+    won = played[-1].winner_id == team_id
+    run = 0
+    for f in reversed(played):
+        if (f.winner_id == team_id) == won:
+            run += 1
+        else:
+            break
+    order = gs.standings_order(str(gs.teams[team_id].region), tier=gs.teams[team_id].tier)
+    pos = order.index(team_id) + 1 if team_id in order else None
+    name = gs.teams[team_id].name
+    if won and run >= 3:
+        return f"{name} are one of the form teams on a {run}-match run."
+    if won and pos is not None and pos <= 3:
+        return f"{name} have put themselves in the title picture from {_ordinal(pos)}."
+    if not won and run >= 3:
+        return f"{run} straight losses have put {name}'s approach under review."
+    if not won and pos is not None and pos > len(order) - 3:
+        return f"{name} are down in {_ordinal(pos)} and running out of easy weeks."
+    return None
+
+
+def match_debrief(gs: GameState, team_id: str | None = None) -> dict:
+    """A grounded debrief of `team_id`'s most recent played fixture: the
+    result, the standout, and any underperformer — from the stored box
+    score. Returns {result, standout, underperformer} display strings (empty
+    dict when nothing has been played). Pure read."""
+    team_id = team_id or gs.user_team_id
+    played = [f for f in gs.fixtures if f.played and team_id in (f.team_a, f.team_b)]
+    if not played:
+        return {}
+    f = max(played, key=lambda x: (x.week, x.id))
+    if f.winner_id is None:
+        return {}
+    opp = f.team_b if f.team_a == team_id else f.team_a
+    opp_name = gs.teams[opp].name if opp in gs.teams else opp
+    won = f.winner_id == team_id
+    if f.best_of > 1:
+        a, b = f.map_score
+        score = f"{a}-{b}" if f.team_a == team_id else f"{b}-{a}"
+    else:
+        r0 = f.results[0] if f.results else None
+        score = (
+            (f"{r0.score_a}-{r0.score_b}" if f.team_a == team_id
+             else f"{r0.score_b}-{r0.score_a}")
+            if r0 else "w/o"
+        )
+    out = {"result": f"{'Beat' if won else 'Lost to'} {opp_name} {score}", "won": won}
+
+    roster = set(gs.teams[team_id].player_ids)
+    agg: dict[str, list[float]] = {}
+    for r in f.results:
+        for ln in r.lines:
+            if ln.player_id in roster:
+                x = agg.setdefault(ln.player_id, [0.0, 0])
+                x[0] += ln.rating
+                x[1] += 1
+    rated = [(pid, s / m) for pid, (s, m) in agg.items() if m]
+    if rated:
+        top = max(rated, key=lambda kv: (kv[1], kv[0]))
+        if top[0] in gs.players:
+            out["standout"] = f"{gs.players[top[0]].handle} ({top[1]:.2f})"
+        low = min(rated, key=lambda kv: (kv[1], kv[0]))
+        if low[0] in gs.players and low[0] != top[0] and low[1] < 0.9:
+            out["underperformer"] = f"{gs.players[low[0]].handle} ({low[1]:.2f})"
+    return out
+
+
+def _h2h_callback(
+    rng: random.Random, h2h: dict, user_team_id: str, opp_id: str, opp: str, won: bool
+) -> str:
+    """One optional trailing sentence grounded in `h2h`, chosen by priority:
+    a live streak (>= 2) beats revenge beats a reigning-champions upset.
+    Returns "" when nothing is notable — silence beats filler."""
+    if h2h["streak_len"] >= 2 and h2h["streak_winner_id"] == opp_id:
+        return " " + _pick(
+            rng,
+            [
+                "That's the {n} straight loss to {opp} this season.",
+                "{opp} have {n} straight over them now.",
+            ],
+            n=_ordinal(h2h["streak_len"]), opp=opp,
+        )
+    if h2h["streak_len"] >= 2 and h2h["streak_winner_id"] == user_team_id:
+        return " " + _pick(
+            rng,
+            [
+                "That's the {n} straight win over {opp} this season.",
+                "{n} straight over {opp} now.",
+            ],
+            n=_ordinal(h2h["streak_len"]), opp=opp,
+        )
+    if h2h["revenge"]:
+        return " " + _pick(
+            rng,
+            [
+                "Flips the result from week {w}.",
+                "That reverses the week {w} meeting.",
+            ],
+            w=h2h["revenge_week"],
+        )
+    if won and h2h["reigning_champion_id"] == opp_id:
+        return " " + _pick(
+            rng,
+            [
+                "And it came against the reigning champions.",
+                "That's a scalp against the reigning champions, too.",
+            ],
+        )
+    return ""
+
+
+_TACTIC_FLAVOR: dict[tuple[str, str], str] = {
+    ("aggression", "hi"): "on the back of relentless aggression",
+    ("aggression", "lo"): "grinding out a patient, low-risk series",
+    ("pace", "hi"): "with a blistering fast-execute tempo",
+    ("util_discipline", "hi"): "on disciplined, utility-perfect retakes",
+    ("map_control", "hi"): "by suffocating the map with spread control",
+    ("map_control", "lo"): "hitting hard and fast as five",
+}
+
+
+def _tactic_flavor(tac) -> str:
+    """A grounded clause naming the winner's tactical identity — but only
+    when a dial is genuinely extreme. Deterministic: the single most
+    off-neutral dial wins. Gives the coaching dials a visible payoff in the
+    story instead of only living inside the sim."""
+    cands = []
+    for dial in ("aggression", "pace", "util_discipline", "map_control"):
+        v = getattr(tac, dial)
+        dev = abs(v - 50.0)
+        if dev >= 20.0:
+            cands.append((dev, dial, "hi" if v > 50.0 else "lo"))
+    if not cands:
+        return ""
+    cands.sort(reverse=True)
+    _, dial, side = cands[0]
+    clause = _TACTIC_FLAVOR.get((dial, side))
+    return f" {clause[0].upper()}{clause[1:]}." if clause else ""
+
+
+def _user_recap(gs: GameState, f, stats_list) -> None:
+    won = f.winner_id == gs.user_team_id
+    opp_id = f.team_b if f.team_a == gs.user_team_id else f.team_a
+    opp = gs.teams[opp_id].name
+    score = _series_score(f)
+    rng = _rng(gs.seed, gs.season, gs.week, f.id, "recap")
+
+    star = _star_line(stats_list)
+    star_txt = ""
+    if star is not None:
+        pid, rating, kills = star
+        p = gs.players.get(pid)
+        if p is not None:
+            star_txt = _pick(
+                rng,
+                [
+                    " {h} finished at {r:.2f}.",
+                    " {h} put up {k} kills ({r:.2f}).",
+                    " Top rating: {h}, {r:.2f}.",
+                ],
+                h=p.handle, r=rating, k=kills,
+            )
+
+    maps_txt = ", ".join(r.map_id for r in f.results)
+    if won:
+        msg = _pick(
+            rng,
+            [
+                "{score} over {opp} on {maps}.{star}",
+                "{opp} fall {score}; {maps} decided it.{star}",
+                "{score} win over {opp}.{star}",
+            ],
+            score=score, opp=opp, maps=maps_txt, star=star_txt,
+        )
+    else:
+        msg = _pick(
+            rng,
+            [
+                "{score} loss to {opp} on {maps}.{star}",
+                "{opp} take the series {score}.{star}",
+                "{score} against {opp}. They found the better answers.{star}",
+            ],
+            score=score, opp=opp, maps=maps_txt, star=star_txt,
+        )
+    # Name the WINNER's tactical identity — a user win credits their own
+    # system, a loss credits the opponent's (grounded: it's how they just
+    # played). f.winner_id is guaranteed set for a played fixture.
+    if f.winner_id is not None:
+        msg += _tactic_flavor(gs.teams[f.winner_id].tactics)
+    h2h = head_to_head(gs, gs.user_team_id, opp_id)
+    msg += _h2h_callback(rng, h2h, gs.user_team_id, opp_id, opp, won)
+    # A named rivalry colours the result — dry, and only when the heat is
+    # real (the rivalry graph, manager/rivalries.py).
+    from esports_sim.manager import rivalries as _riv
+
+    if _riv.get(gs, gs.user_team_id, opp_id) >= _riv.RIVALRY_BAR:
+        msg += _pick(
+            rng,
+            [
+                " No love lost between these two.",
+                " The rivalry ledger gets another page.",
+                " These teams do not like each other.",
+            ],
+        )
+    if f.stage != "regular":
+        msg = f"[{f.stage.upper()}] " + msg
+    gs.push_news(msg)
+
+
+def _league_line(gs: GameState, f, stats_list) -> None:
+    """One line for a notable non-user result: upsets and playoff results."""
+    assert f.winner_id is not None
+    loser_id = f.team_b if f.winner_id == f.team_a else f.team_a
+    w, l = gs.teams[f.winner_id], gs.teams[loser_id]
+    upset = (
+        w.world_rank is not None
+        and l.world_rank is not None
+        and w.world_rank - l.world_rank >= 3
+    )
+    if not (upset or f.stage != "regular"):
+        return
+    rng = _rng(gs.seed, gs.season, gs.week, f.id, "league")
+    score = _series_score(f)
+    if upset:
+        msg = _pick(
+            rng,
+            [
+                "Upset: #{wr} {w} take down #{lr} {l}, {score}.",
+                "#{lr} {l} stumble against #{wr} {w} ({score}).",
+            ],
+            w=w.name, l=l.name, wr=w.world_rank, lr=l.world_rank, score=score,
+        )
+        if _reigning_champion_id(gs) == l.id:
+            msg += " " + _pick(
+                rng,
+                [
+                    "Beat the reigning champions, too.",
+                    "The reigning champions, no less.",
+                ],
+            )
+    else:
+        msg = f"[{f.stage.upper()}] {w.name} beat {l.name}, {score}."
+    gs.push_news(msg)
+
+
+def _milestones(gs: GameState, week_kills: dict[str, int]) -> None:
+    for pid in sorted(week_kills):
+        st = gs.player_stats.get(pid)
+        p = gs.players.get(pid)
+        if st is None or p is None:
+            continue
+        for bar in (100, 200, 300):
+            # Aggregation already ran, so st.kills includes this week.
+            if st.kills >= bar and st.kills - week_kills[pid] < bar:
+                team = next(
+                    (t.name for t in gs.teams.values() if pid in t.player_ids),
+                    "free agency",
+                )
+                gs.push_news(f"{p.handle} ({team}) passes {bar} kills this season.")
+
+
+# ---------------------------------------------------------------------------
+# Season awards
+
+
+def season_awards(gs: GameState) -> list[AwardRecord]:
+    """Computed at season end from season aggregates. Grounded by
+    construction — every value comes from the stat line it cites."""
+
+    def team_of(pid: str) -> str:
+        return next(
+            (t.name for t in gs.teams.values() if pid in t.player_ids), "—"
+        )
+
+    def tier_of(pid: str) -> int:
+        return next(
+            (t.tier for t in gs.teams.values() if pid in t.player_ids), 1
+        )
+
+    # Main awards are tier-1 only — Challengers numbers come against
+    # Challengers competition and get their own award below.
+    eligible = {
+        pid: st
+        for pid, st in gs.player_stats.items()
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 1
+    }
+    out: list[AwardRecord] = []
+
+    def add(award: str, pid: str, value: str) -> None:
+        p = gs.players[pid]
+        rec = AwardRecord(
+            season=gs.season, award=award, player_id=pid,
+            handle=p.handle, team_name=team_of(pid), value=value,
+        )
+        out.append(rec)
+        gs.push_news(f"{award}: {p.handle} ({rec.team_name}) — {value}.")
+
+    if eligible:
+        mvp = max(eligible, key=lambda pid: (eligible[pid].rating, pid))
+        add("Season MVP", mvp,
+            f"{eligible[mvp].rating:.2f} rating over {eligible[mvp].maps} maps")
+
+        frag = max(eligible, key=lambda pid: (eligible[pid].kills, pid))
+        add("Top Fragger", frag, f"{eligible[frag].kills} kills")
+
+        opener = max(eligible, key=lambda pid: (eligible[pid].first_kills, pid))
+        add("Opening King", opener, f"{eligible[opener].first_kills} opening kills")
+
+        rookies = {pid: st for pid, st in eligible.items() if gs.players[pid].age <= 19}
+        if rookies:
+            rook = max(rookies, key=lambda pid: (rookies[pid].rating, pid))
+            add("Rookie of the Season", rook,
+                f"{rookies[rook].rating:.2f} rating at age {gs.players[rook].age}")
+
+        # Clutch Merchant — the name defenders don't want left alive. Ranked
+        # on hard clutches (1v2-or-worse; PlayerStats.clutches), citing the
+        # 1v3+ heroics when there are any. Skipped when nobody cleared the bar.
+        clutch = max(eligible, key=lambda pid: (eligible[pid].clutches, pid))
+        if eligible[clutch].clutches >= _MIN_CLUTCHES:
+            cst = eligible[clutch]
+            val = f"{cst.clutches} clutch rounds from a man down"
+            if cst.clutch_1v3:
+                val += f", incl. {cst.clutch_1v3} from 1v3+"
+            add("Clutch Merchant", clutch, val)
+
+        # Most Improved — biggest current-ability rise from the season's
+        # opening baseline (season_start_ca, frozen when the rosters settled)
+        # to now. Silent when the snapshot is missing (old save / season 1)
+        # or nobody made a real jump — a manufactured winner would be noise.
+        from esports_sim.manager import development
+
+        risers = {
+            pid: development.overall(gs.players[pid]) - gs.season_start_ca[pid]
+            for pid in eligible
+            if pid in gs.season_start_ca
+        }
+        if risers:
+            mip = max(risers, key=lambda pid: (risers[pid], pid))
+            if risers[mip] >= _MIN_IMPROVEMENT:
+                base = gs.season_start_ca[mip]
+                now = development.overall(gs.players[mip])
+                add("Most Improved", mip,
+                    f"+{risers[mip]:.0f} CA this season ({base:.0f} -> {now:.0f})")
+
+    # Challengers MVP: the tier-2 name every tier-1 scout now knows.
+    t2_eligible = {
+        pid: st
+        for pid, st in gs.player_stats.items()
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 2
+    }
+    if t2_eligible:
+        t2mvp = max(t2_eligible, key=lambda pid: (t2_eligible[pid].rating, pid))
+        add(
+            "Challengers MVP", t2mvp,
+            f"{t2_eligible[t2mvp].rating:.2f} rating, age {gs.players[t2mvp].age}",
+        )
+
+    # Best Defensive Team: the team-level aggregates in team_stats were
+    # written every week but surfaced nowhere. A team award anchors to the
+    # captain (or first player) so the record still points at a real person.
+    best_def, best_rate = None, -1.0
+    for tid in sorted(gs.team_stats):
+        team = gs.teams.get(tid)
+        ts = gs.team_stats[tid]
+        if team is None or team.tier != 1 or ts.def_rounds < 30:
+            continue
+        rate = ts.def_won / ts.def_rounds
+        if rate > best_rate:
+            best_rate, best_def = rate, tid
+    if best_def is not None:
+        team = gs.teams[best_def]
+        anchor = team.captain_id or (team.player_ids[0] if team.player_ids else "")
+        rec = AwardRecord(
+            season=gs.season, award="Best Defensive Team",
+            player_id=anchor, handle=team.name, team_name=team.name,
+            value=f"{best_rate:.0%} defensive round win rate",
+        )
+        out.append(rec)
+        gs.push_news(
+            f"Best Defensive Team: {team.name} - {best_rate:.0%} def round win."
+        )
+
+    gs.awards.extend(out)
+    del gs.awards[:-24]
+    return out
+
+
+_ALL_STAR_ROLES = ("duelist", "controller", "initiator", "sentinel", "flex")
+
+
+def season_all_star(gs: GameState) -> list[dict]:
+    """The season's All-Star Five: the top-rated eligible tier-1 player at
+    each role (min maps). Chronicled as 'all_star' entries plus one news
+    line. Grounded in season stats; a role with no eligible player is left
+    empty. Call at offseason, before player_stats resets."""
+    from esports_sim.manager import chronicle
+
+    def team_id_of(pid: str) -> str:
+        return next((t.id for t in gs.teams.values() if pid in t.player_ids), "")
+
+    def tier_of(pid: str) -> int:
+        return next((t.tier for t in gs.teams.values() if pid in t.player_ids), 1)
+
+    eligible = {
+        pid: st
+        for pid, st in gs.player_stats.items()
+        if st.maps >= _MIN_AWARD_MAPS and pid in gs.players and tier_of(pid) == 1
+    }
+    picks: list[dict] = []
+    for role in _ALL_STAR_ROLES:
+        cands = {
+            pid: st for pid, st in eligible.items()
+            if str(gs.players[pid].role) == role
+        }
+        if not cands:
+            continue
+        best = max(cands, key=lambda pid: (cands[pid].rating, pid))
+        p = gs.players[best]
+        picks.append(
+            {"role": role, "player_id": best, "handle": p.handle,
+             "rating": round(cands[best].rating, 2)}
+        )
+
+    if not picks:
+        return []
+    for pick in picks:
+        chronicle.record(
+            gs, "all_star",
+            f"{pick['handle']} named to the All-Star Five ({pick['role']}).",
+            team_id=team_id_of(pick["player_id"]),
+            player_id=pick["player_id"],
+            data={"role": pick["role"], "rating": f"{pick['rating']:.2f}"},
+        )
+    listing = ", ".join(f"{p['handle']} ({p['role']})" for p in picks)
+    gs.push_news(f"All-Star Five: {listing}.")
+    return picks
+
+
+def season_storylines(gs: GameState, season: int | None = None) -> list[str]:
+    """The season's grounded storyline clauses — champion, MVP, biggest
+    riser, a marquee retirement, the tactical era. Each cites a record on
+    GameState/chronicle. Shared by the news-feed season-in-review line AND
+    the headless season report (analytics.season_report). `season` defaults
+    to the current one; awards resolve from gs.awards first (current season)
+    then the chronicle (any past season), so it works either way."""
+    season = gs.season if season is None else season
+    bits: list[str] = []
+
+    champ = next((c for c in reversed(gs.champions) if c.season == season), None)
+    if champ is not None:
+        bits.append(f"{champ.team_name} were crowned world champions")
+
+    def _award_handle(name: str) -> str | None:
+        live = next(
+            (a.handle for a in gs.awards if a.season == season and a.award == name),
+            None,
+        )
+        if live:
+            return live
+        for e in gs.chronicle:
+            if e.kind == "award" and e.season == season and e.data.get("award") == name:
+                return e.text.split(" wins", 1)[0]
+        return None
+
+    mvp = _award_handle("Season MVP")
+    if mvp:
+        bits.append(f"{mvp} claimed MVP")
+    mip = _award_handle("Most Improved")
+    if mip:
+        bits.append(f"{mip} made the biggest leap")
+
+    # Marquee retirement: the highest-importance retirement chronicled this
+    # season (Pass-1 tributes lift decorated careers above the floor).
+    rets = [e for e in gs.chronicle if e.kind == "retirement" and e.season == season]
+    if rets:
+        top = max(rets, key=lambda e: (e.importance, e.id))
+        if top.importance > 45.0:  # only a genuinely notable career rates a line
+            handle = top.text.split(" retires", 1)[0]
+            bits.append(f"{handle} called time on a storied career")
+
+    # The tactical era (league-level meta_shift entry carries no team_id).
+    era = next(
+        (
+            e.text.split("closes as ", 1)[1].rstrip(".")
+            for e in reversed(gs.chronicle)
+            if e.kind == "meta_shift" and e.season == season and not e.team_id
+            and "closes as " in e.text
+        ),
+        None,
+    )
+    if era:
+        bits.append(f"the league settled into {era}")
+
+    return bits
+
+
+def season_in_review(gs: GameState) -> str | None:
+    """One grounded paragraph capping the season for the news feed. Built
+    from season_storylines; None when nothing rates a mention."""
+    bits = season_storylines(gs)
+    if not bits:
+        return None
+    return f"S{gs.season} in review: " + "; ".join(bits) + "."

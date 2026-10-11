@@ -1,0 +1,572 @@
+{
+  "finances": {
+    "balance": 2287871,
+    "weekly_payroll": 47500,
+    "marketability": 1.05,
+    "marketability_breakdown": {
+      "score": 1.05,
+      "facility_mult": 1.1,
+      "reach": 2134734,
+      "drivers": [
+        {
+          "key": "reputation",
+          "label": "Reputation",
+          "contrib": 0.73
+        },
+        {
+          "key": "reach",
+          "label": "Social reach",
+          "contrib": 0.11
+        },
+        {
+          "key": "stars",
+          "label": "Star power",
+          "contrib": 0.11
+        },
+        {
+          "key": "fans",
+          "label": "Fanbase",
+          "contrib": 0.06
+        },
+        {
+          "key": "international",
+          "label": "International run",
+          "contrib": 0
+        },
+        {
+          "key": "sentiment",
+          "label": "Community mood",
+          "contrib": -0.01
+        },
+        {
+          "key": "results",
+          "label": "Results",
+          "contrib": -0.04
+        }
+      ]
+    },
+    "last_week_income": 122031,
+    "last_week_expenses": 52400,
+    "sponsor": null,
+    "sponsor_offer": null,
+    "slots": {
+      "title": {
+        "deal": {
+          "name": "Polar Compute",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 41300,
+          "per_win": 0,
+          "weeks_left": 19,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 424000,
+              "met": false
+            },
+            {
+              "kind": "make_masters",
+              "bonus": 445000,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 55,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 424000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "at_risk",
+              "detail": "currently 5th of 8"
+            }
+          },
+          {
+            "kind": "make_masters",
+            "bonus": 445000,
+            "met": true,
+            "label": "qualify for Masters",
+            "status": {
+              "state": "at_risk",
+              "detail": "currently 5th of 8"
+            }
+          }
+        ]
+      },
+      "jersey": {
+        "deal": {
+          "name": "Streamforge",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 10100,
+          "per_win": 0,
+          "weeks_left": 4,
+          "objectives": [
+            {
+              "kind": "win_split",
+              "bonus": 117000,
+              "met": false
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "win_split",
+            "bonus": 117000,
+            "met": false,
+            "label": "win the regional split",
+            "status": {
+              "state": "at_risk",
+              "detail": "currently 5th of 8"
+            }
+          }
+        ]
+      },
+      "peripheral": {
+        "deal": {
+          "name": "Redline Chairs",
+          "kind": "upfront",
+          "signing_bonus": 106000,
+          "weekly": 1800,
+          "per_win": 0,
+          "weeks_left": 7,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 12600,
+              "met": true
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 12600,
+            "met": true,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "at_risk",
+              "detail": "currently 5th of 8"
+            }
+          }
+        ]
+      },
+      "stream": {
+        "deal": {
+          "name": "OrbitCast",
+          "kind": "steady",
+          "signing_bonus": 0,
+          "weekly": 9400,
+          "per_win": 0,
+          "weeks_left": 17,
+          "objectives": [
+            {
+              "kind": "make_playoffs",
+              "bonus": 43000,
+              "met": null
+            }
+          ]
+        },
+        "offer": null,
+        "market": [],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": [
+          {
+            "kind": "make_playoffs",
+            "bonus": 43000,
+            "met": null,
+            "label": "make the regional playoffs",
+            "status": {
+              "state": "at_risk",
+              "detail": "currently 5th of 8"
+            }
+          }
+        ]
+      },
+      "apparel": {
+        "deal": null,
+        "offer": null,
+        "market": [
+          {
+            "brand": "GG Threads",
+            "slot": "apparel",
+            "weeks": 21,
+            "expires_week": 7,
+            "upfront": {
+              "signing_bonus": 123000,
+              "weekly": 1300,
+              "per_win": 0
+            },
+            "steady": {
+              "signing_bonus": 0,
+              "weekly": 5900,
+              "per_win": 0
+            },
+            "performance": {
+              "signing_bonus": 0,
+              "weekly": 2300,
+              "per_win": 5100
+            },
+            "objectives": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 16000,
+                "met": null
+              }
+            ],
+            "relation": 50,
+            "objective_labels": [
+              {
+                "kind": "make_playoffs",
+                "bonus": 16000,
+                "label": "make the regional playoffs"
+              }
+            ]
+          }
+        ],
+        "rep_gate": 0,
+        "unlocked": true,
+        "locked_reason": null,
+        "objective_labels_deal": []
+      }
+    },
+    "demands": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "kind": "field_rookie",
+        "fixture_id": "s1w11m2am",
+        "opponent_id": "team_saracen_guard",
+        "player_id": "ghost",
+        "issued_season": 1,
+        "issued_week": 10,
+        "deadline_week": 11,
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 26 career maps (rookie limit: 10).",
+        "opponent_name": "Saracen Guard",
+        "player_name": "Ghost",
+        "relation": 51,
+        "can_respond": false
+      }
+    ],
+    "commitments": [
+      {
+        "id": "0981f9afb97a945c",
+        "brand": "Streamforge",
+        "slot": "jersey",
+        "label": "Field the named rookie",
+        "requirement": "Play Ghost against Saracen Guard",
+        "detail": "Ghost is age 20 with 26 career maps (rookie limit: 10).",
+        "deadline_week": 11,
+        "opponent_name": "Saracen Guard",
+        "reward": 20200,
+        "penalty": 10100,
+        "status": "met",
+        "resolved_season": 1,
+        "resolved_week": 11,
+        "relation_delta": 5
+      }
+    ],
+    "facilities": {
+      "training_center": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "analytics_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "marketing_office": {
+        "level": 2,
+        "max_level": 3,
+        "next_cost": 700000,
+        "upkeep": 3000
+      },
+      "recovery_suite": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "strategy_lab": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      },
+      "team_house": {
+        "level": 0,
+        "max_level": 3,
+        "next_cost": 150000,
+        "upkeep": 0
+      }
+    },
+    "breakdown": {
+      "salaries": 47500,
+      "staff": 4900,
+      "sponsors_base": 48729,
+      "sponsors_by_slot": {
+        "title": 41300,
+        "jersey": 10100,
+        "peripheral": 1800,
+        "stream": 9400,
+        "apparel": 0
+      },
+      "sponsors_total": 111329,
+      "merch": 2377,
+      "tickets": 1585,
+      "streaming": 9866,
+      "facility_upkeep": 3000,
+      "prizes": 0,
+      "income_total": 125157,
+      "expense_total": 55400,
+      "net": 69757
+    },
+    "projection": [
+      {
+        "week": 7,
+        "net": 69757,
+        "balance": 2357628
+      },
+      {
+        "week": 8,
+        "net": 69757,
+        "balance": 2427385
+      },
+      {
+        "week": 9,
+        "net": 69757,
+        "balance": 2497142
+      },
+      {
+        "week": 10,
+        "net": 69757,
+        "balance": 2566899
+      },
+      {
+        "week": 11,
+        "net": 59657,
+        "balance": 2626556
+      },
+      {
+        "week": 12,
+        "net": 59657,
+        "balance": 2686213
+      },
+      {
+        "week": 13,
+        "net": 59657,
+        "balance": 2745870
+      },
+      {
+        "week": 14,
+        "net": 57857,
+        "balance": 2803727
+      }
+    ]
+  },
+  "brand": {
+    "your_reach": 2134734,
+    "your_stream_income": 9866,
+    "fan_count": 341634,
+    "your_sentiment": 47.6,
+    "your_mood": {
+      "word": "neutral",
+      "tone": ""
+    }
+  },
+  "contract": {
+    "salary": 2200,
+    "contract_weeks": 64,
+    "contract_terms": {
+      "stream_share": 70,
+      "release_fee": 16000,
+      "buyout": 32000,
+      "no_transfer": false,
+      "roster_role": "bench"
+    }
+  },
+  "prep": {
+    "plan_id": "87bc0f9f0ddb7936",
+    "team_id": "team_nexus",
+    "fixture_id": "s2w5m1am",
+    "opponent_id": "team_rust_belt_gaming",
+    "partner_id": "team_adriatic_sirens",
+    "map_id": "bind",
+    "objective": "mental_reset",
+    "intensity": "light",
+    "season": 2,
+    "week": 5,
+    "status": "completed",
+    "finding_code": "composure_ready",
+    "finding": "Squad morale entered at 82.0/100; the group reset without changing the game plan.",
+    "evidence": {
+      "own_map_samples": 2,
+      "opponent_map_samples": 0,
+      "partner_map_samples": 1,
+      "own_attack_win_pct": 59.1,
+      "own_defense_win_pct": 38.1,
+      "opponent_attack_win_pct": 0,
+      "opponent_defense_win_pct": 0,
+      "partner_map_win_pct": 100,
+      "scouting_confidence": 0.34,
+      "average_stamina": 72.1,
+      "average_morale": 82,
+      "rotation_candidate_id": "fa_0"
+    },
+    "participant_ids": [
+      "apex",
+      "echo",
+      "fa_0",
+      "fa_12",
+      "fa_13",
+      "ghost",
+      "team_kraken_unit_p0",
+      "vortex"
+    ],
+    "knowledge_key": "methodology",
+    "knowledge_gain": 0.67,
+    "stamina_cost": 1.5,
+    "morale_delta": 2.5,
+    "chemistry_delta": 0.3,
+    "artifact_label": "Methodology +0.7",
+    "prep_edge_contribution": 0,
+    "dev_suggestion_player_id": "fa_0",
+    "dev_suggestion": "Map mastery projects Hollowlock as a bench option for bind; no scrim performance was measured. Consider a focused development block before trying that rotation."
+  },
+  "fixture": {
+    "id": "s2w5m1am",
+    "week": 5,
+    "stage": "regular",
+    "best_of": 1,
+    "team_a": "team_rust_belt_gaming",
+    "team_b": "team_nexus",
+    "team_a_name": "Rust Belt Gaming",
+    "team_b_name": "Team Nexus",
+    "rivalry": null,
+    "potm": {
+      "player_id": "team_rust_belt_gaming_p1",
+      "handle": "Zephyrpulse",
+      "rating": 2.26,
+      "kills": 31,
+      "on_winner": true
+    },
+    "maps": [
+      "bind"
+    ],
+    "map_thumbs": {
+      "bind": "/assets/maps/bind.webp"
+    },
+    "veto": [],
+    "series_notes": [
+      "RBG: targeting Slyblade."
+    ],
+    "played": true,
+    "winner_id": "team_rust_belt_gaming",
+    "map_score": [
+      1,
+      0
+    ],
+    "results": [
+      {
+        "map_id": "bind",
+        "map_thumb": "/assets/maps/bind.webp",
+        "score_a": 13,
+        "score_b": 3,
+        "winner_id": "team_rust_belt_gaming",
+        "has_replay": true,
+        "lines": [
+          {
+            "player_id": "apex",
+            "kills": 12,
+            "deaths": 16,
+            "rating": 0.96
+          },
+          {
+            "player_id": "echo",
+            "kills": 6,
+            "deaths": 16,
+            "rating": 0.5
+          },
+          {
+            "player_id": "fa_13",
+            "kills": 11,
+            "deaths": 14,
+            "rating": 0.78
+          },
+          {
+            "player_id": "ghost",
+            "kills": 9,
+            "deaths": 13,
+            "rating": 0.7
+          },
+          {
+            "player_id": "team_rust_belt_gaming_p0",
+            "kills": 14,
+            "deaths": 8,
+            "rating": 1.28
+          },
+          {
+            "player_id": "team_rust_belt_gaming_p1",
+            "kills": 31,
+            "deaths": 12,
+            "rating": 2.26
+          },
+          {
+            "player_id": "team_rust_belt_gaming_p2",
+            "kills": 8,
+            "deaths": 13,
+            "rating": 0.6
+          },
+          {
+            "player_id": "team_rust_belt_gaming_p3",
+            "kills": 14,
+            "deaths": 10,
+            "rating": 1.29
+          },
+          {
+            "player_id": "team_rust_belt_gaming_p4",
+            "kills": 5,
+            "deaths": 9,
+            "rating": 0.5
+          },
+          {
+            "player_id": "vortex",
+            "kills": 14,
+            "deaths": 13,
+            "rating": 1.08
+          }
+        ]
+      }
+    ]
+  }
+}
