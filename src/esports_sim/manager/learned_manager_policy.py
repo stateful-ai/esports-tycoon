@@ -370,8 +370,14 @@ class LearnedManagerModel:
             raise ValueError("checkpoint encoder version is incompatible")
         # SUPPORTED_ACTIONS only ever grows; a checkpoint whose vocabulary is
         # a subset of today's contract stays playable (it never emits the
-        # newer kinds). Reject only vocabularies the env cannot execute.
-        vocab = tuple(payload["action_vocab"])
+        # newer kinds). Preserve stored row order, but reject malformed or
+        # ambiguous vocabularies before inference can interpret the rows.
+        raw_vocab = payload.get("action_vocab")
+        if not isinstance(raw_vocab, list) or not all(isinstance(kind, str) for kind in raw_vocab):
+            raise ValueError("checkpoint action vocabulary is incompatible")
+        vocab = tuple(raw_vocab)
+        if len(set(vocab)) != len(vocab):
+            raise ValueError("checkpoint action vocabulary contains duplicate actions")
         unknown = sorted(set(vocab) - SUPPORTED_ACTIONS)
         if not vocab or unknown or "advance" not in vocab:
             raise ValueError(
@@ -380,8 +386,19 @@ class LearnedManagerModel:
             )
         if tuple(payload.get("profile_keys", ())) != PROFILE_KEYS:
             raise ValueError("checkpoint manager-profile schema is incompatible")
+        # Derive feature width through the pinned encoder itself, rather than
+        # trusting a checkpoint or duplicating its feature-count arithmetic.
+        feature_count = conditioned_features({"features": {}}).size
+        try:
+            action_weights = np.asarray(payload.get("action_weights"), dtype=np.float64)
+        except (ValueError, TypeError) as exc:
+            raise ValueError("checkpoint action weights are incompatible") from exc
+        if action_weights.shape != (len(vocab), feature_count):
+            raise ValueError("checkpoint action weight shape is incompatible with vocabulary and encoder")
+        if not np.isfinite(action_weights).all():
+            raise ValueError("checkpoint action weights must be finite")
         return cls(
-            action_weights=np.asarray(payload["action_weights"], dtype=np.float64),
+            action_weights=action_weights,
             action_vocab=vocab,
             categorical_weights={
                 key: np.asarray(value, dtype=np.float64)

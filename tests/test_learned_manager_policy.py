@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 import numpy as np
+import pytest
 
 from esports_sim.manager.learned_manager_policy import (
     ACTION_VOCAB,
@@ -191,3 +192,63 @@ def test_assignment_without_parameter_heads_has_a_legal_change(game_data):
     assert params["role"] in obs["legal_actions"]["assignment"]["roles"]
     assert params["playstyle"] in obs["legal_actions"]["assignment"]["playstyles"]
     assert (params["role"], params["playstyle"]) != (row["role"], row["playstyle"])
+
+
+@pytest.mark.parametrize("malformation", [
+    "duplicate", "rows", "columns", "rank", "ragged", "nonfinite", "nonstring", "string-vocab",
+])
+def test_checkpoint_rejects_ambiguous_vocabulary_and_bad_action_shapes(tmp_path, malformation):
+    width = len(conditioned_features({"features": {}}))
+    path = tmp_path / "malformed.json"
+    model = LearnedManagerModel(
+        action_weights=np.zeros((2, width)), action_vocab=("set_training", "advance")
+    )
+    model.save(path)
+    payload = json.loads(path.read_text())
+    if malformation == "duplicate":
+        payload["action_vocab"] = ["advance", "advance"]
+    elif malformation == "rows":
+        payload["action_weights"].pop()
+    elif malformation == "columns":
+        payload["action_weights"] = np.zeros((2, width - 1)).tolist()
+    elif malformation == "rank":
+        payload["action_weights"] = [0.0] * width
+    elif malformation == "ragged":
+        payload["action_weights"][0].pop()
+    elif malformation == "nonfinite":
+        payload["action_weights"][0][0] = float("nan")
+    elif malformation == "nonstring":
+        payload["action_vocab"] = ["advance", {}]
+    else:
+        payload["action_vocab"] = "advance"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="checkpoint action"):
+        LearnedManagerModel.load(path)
+
+
+def test_reordered_legacy_subset_retains_rows_across_load_clone_and_resave(tmp_path, game_data):
+    from esports_sim.manager.decision_env import HeadlessManagerEnv
+
+    obs = HeadlessManagerEnv(new_campaign(game_data, seed=1003), game_data).observe()
+    width = len(conditioned_features(obs))
+    vocab = ("set_training", "advance")
+    weights = np.zeros((len(vocab), width))
+    weights[0, 0] = 7.0
+    model = LearnedManagerModel(action_weights=weights, action_vocab=vocab)
+    path = tmp_path / "legacy-subset.json"
+    model.save(path)
+    loaded = LearnedManagerModel.load(path)
+    assert loaded.action_vocab == vocab
+    assert np.array_equal(loaded.action_weights, weights)
+    policy = loaded.make_policy(generate_profile(123, "subset-order"))
+    assert policy.choose_action(obs)["kind"] == "set_training"
+    cloned = loaded.clone()
+    assert cloned.action_vocab == vocab
+    assert np.array_equal(cloned.action_weights, weights)
+    # Fine-tuning changes weight rows in place; save must retain their labels.
+    cloned.action_weights[1, 0] = 3.0
+    cloned.save(path)
+    reloaded = LearnedManagerModel.load(path)
+    assert reloaded.action_vocab == vocab
+    assert np.array_equal(reloaded.action_weights, cloned.action_weights)
+    assert json.loads(path.read_text())["action_vocab"] == list(vocab)
