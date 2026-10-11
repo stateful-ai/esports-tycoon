@@ -25,6 +25,25 @@ path. Capture the tested checkout's commit, not the transport script's checkout.
 For a multi-season session, start a fresh world on that build, record rollover
 proof and each completed season report, and keep the same test save throughout.
 
+When auditing source provenance, freeze the scoped checkout files as raw bytes
+before play and again after play. Retain the path manifest, scope/count, hashes,
+HEAD and tree IDs, staged diff/index evidence, and dirty status for both moments.
+Report checkout pre/post equality separately from equality to committed blobs.
+Read raw committed bytes with `git cat-file blob <commit>:<path>` or byte-mode
+`git show <commit>:<path>`; capture stdout as bytes without text decoding or
+PowerShell text redirection. A `git archive`, exported tree, or filtered checkout
+may apply checkout conversion and cannot establish raw Git blob equality.
+Label comparisons to those representations explicitly.
+
+For each frozen path, distinguish exact raw-blob matches, verified CRLF-only
+matches, and other differences. Qualify CRLF-only equality only when replacing
+CRLF with LF in both byte sequences produces exact equality; retain original
+hashes and describe the normalization. Do not apply broader text normalization
+or call normalized equality raw equality. A later expanded source audit is
+retrospective evidence: state its time and scope, and never present files absent
+from the actual pre-play freeze as pre/post verified. Preserve original proofs
+and append an explicit correction if a prior comparison was misclassified.
+
 Choose a short player question for the session. Log meaningful navigation,
 searches, decisions, rejected attempts, and recovery actions, not merely
 successful mutations. Group clicks only when they implement one player intent.
@@ -90,7 +109,12 @@ world code at finish or backfill only that factual metadata after creation.
 Wall-clock metadata belongs in this sidecar, never deterministic GameState.
 
 At session end, save through the played surface. Inspect only the test world's
-persisted `action_log` and `telemetry_snaps` after decisions are complete. Export
+persisted `action_log` and `telemetry_snaps` after decisions are complete.
+`telemetry_snaps` is a mapping from manager IDs to record lists: report its
+manager-key count separately from its total record count, which is the sum of
+the lengths of those lists (`sum(len(records) for records in telemetry_snaps.values())`).
+For a session manager, also report that manager's list length and baseline/end
+counts; the number of manager keys is not the number of snapshots. Export
 the action records with their list indices and compare each decision's kind,
 params, team, source, season/week and order. Mark every CSV row with
 `analytics_status` (`recorded`, `not_instrumented`, `missing`, `unverified`) and

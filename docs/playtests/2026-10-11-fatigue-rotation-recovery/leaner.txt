@@ -1,0 +1,4 @@
+### Ran Playwright code
+```js
+await (async (page) => {const response=page.waitForResponse(r=>r.url().endsWith("/api/actions/flavor_event")&&r.request().method()==="POST");await page.getByRole("button",{name:"Ask for a leaner setup",exact:true}).click();await response;})(page);
+```

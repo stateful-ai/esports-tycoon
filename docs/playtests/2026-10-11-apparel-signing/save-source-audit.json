@@ -1,0 +1,17 @@
+{
+  "head": "ba3f5894af70fc6616e5ceccb71982fcb27d47e1",
+  "before_decisions": 127,
+  "after_decisions": 128,
+  "decision_prefix_all_fields_order": true,
+  "before_snaps": 28,
+  "after_snaps": 28,
+  "snapshots_all_fields_order": true,
+  "source_count": 425,
+  "source_unchanged": true,
+  "before_sha256": "066bff080e5145f5184ba39ce1182f07d5c00c101f0e4f5c5f0b75dbeb393f8a",
+  "after_sha256": "7c3a062247df9aefe5aa77b42a16dba25c7a608237dd2f1cf0baa8165885b11e",
+  "before_season": 2,
+  "before_week": 6,
+  "after_season": 2,
+  "after_week": 6
+}

@@ -606,7 +606,7 @@ const PlayerProfile = ({ data }) => {
 
   const contractDetail = ov.contract_terms;
   const contractTerms = (!p.is_free_agent && contractDetail)
-    ? `${contractDetail.stream_share}% streams · ${money(contractDetail.release_fee)} release · ` +
+    ? `player keeps ${contractDetail.stream_share}% of streaming revenue · ${money(contractDetail.release_fee)} release · ` +
       `${contractDetail.buyout ? money(contractDetail.buyout) + " buyout" : "no buyout"} · ${contractDetail.roster_role}` +
       `${contractDetail.no_transfer ? " · no-transfer" : ""}`
     : "";
@@ -703,11 +703,11 @@ const PlayerProfile = ({ data }) => {
               <span class="pill" title="social reach">${fmtFollowers(p.followers)} followers</span>
             `}
             ${p.stream_load != null && p.stream_load > 5 && html`
-              <span class="pill" title=${`org cut ${money(p.stream_income)}/wk · heavy streaming slows development to ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
+              <span class="pill" title=${`Streaming workload: ${p.stream_status} · org cut ${money(p.stream_income)}/wk · development multiplier from streaming: ×${p.stream_growth_mult}`}>🎥 ${p.stream_status} · ${money(p.stream_income)}/wk</span>
             `}
             ${p.mentor_id && html`
               <span class="pill" title=${`Mentored by ${p.mentor_handle || humanize(p.mentor_id)}`}>
-                Mentor: <span class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</span>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
+                Mentor: <button type="button" class="plink" data-pid=${p.mentor_id}>${p.mentor_handle || humanize(p.mentor_id)}</button>${p.mentor_progress != null ? " (" + Math.round(p.mentor_progress) + "%)" : ""}
               </span>
             `}
             ${p.tenure_weeks != null && p.tenure_weeks >= 26 && html`
@@ -1061,7 +1061,7 @@ const PlayerProfile = ({ data }) => {
                 ${hasMirror && html`
                   <div class="pf-chart-box">
                     <div class="pf-chart-cap">
-                      Kills &amp; deaths by week
+                      Kills & deaths by week
                       <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>K<span class="pf-sw pf-sw-d"></span>D</span>
                     </div>
                     <${KdMirrorBars} weekly=${weekly} />
@@ -1079,7 +1079,7 @@ const PlayerProfile = ({ data }) => {
           ${devSeries.length > 0 && html`
             <div class="pf-chart-box">
               <div class="pf-chart-cap">
-                Ability &amp; confidence over recorded observations
+                Ability & confidence over recorded observations
                 <span class="pf-legend"><span class="pf-sw pf-sw-k"></span>CA<span class="pf-sw pf-sw-d"></span>Conf</span>
               </div>
               <${DevChart} series=${devSeries} />
@@ -1160,9 +1160,9 @@ const PlayerProfile = ({ data }) => {
           <h3 class="pf-section-title">Relationships</h3>
           <div class="pf-chips">
             ${rels.map((r, i) => html`
-              <span key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
+              <button type="button" key=${i} class=${`pf-rel-chip plink rel-${r.kind || 'neutral'}`} data-pid=${r.pid} title=${r.strength != null ? `${humanize(r.arc || r.kind || "bond")} · strength ${Math.round(r.strength)}` : ""}>
                 ${r.handle ?? "—"}<span class="pf-rel-kind">${humanize(r.arc || r.kind || "")}</span>
-              </span>
+              </button>
             `)}
           </div>
         </div>
@@ -1451,7 +1451,7 @@ const TeamProfile = ({ data }) => {
             <tbody>
               ${players.map((pl) => html`
                 <tr key=${pl.pid} class="pf-rrow plink" data-pid=${pl.pid}>
-                  <td><b>${pl.handle ?? "—"}</b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
+                  <td><b><button type="button" class="plink" data-pid=${pl.pid}>${pl.handle ?? "—"}</button></b>${pl.retirement_risk && html` <span class="pill retire-pill" title="A veteran carrying real retirement odds this offseason">TWILIGHT</span>`}</td>
                   <td>${pl.role && html`<span class="pill">${humanize(pl.role)}</span>`}</td>
                   <td class="num">${pfNum(pl.matches)}</td>
                   <td class="num">${pfNum(pl.kd, 2)}</td>
@@ -1504,13 +1504,13 @@ const TeamProfile = ({ data }) => {
           <div class="pf-chips">
             ${chem.bonds.map((b, i) => html`
               <span key=${`bond-${i}`} class="pf-rel-chip rel-duo">
-                <span class="plink" data-pid=${b.a_id}>${b.a}</span> + <span class="plink" data-pid=${b.b_id}>${b.b}</span>
+                <button type="button" class="plink" data-pid=${b.a_id}>${b.a}</button> + <button type="button" class="plink" data-pid=${b.b_id}>${b.b}</button>
                 <span class="pf-rel-kind">${Math.round(b.strength)}</span>
               </span>
             `)}
             ${chem.frictions.map((f, i) => html`
               <span key=${`fric-${i}`} class="pf-rel-chip rel-feud">
-                <span class="plink" data-pid=${f.a_id}>${f.a}</span> + <span class="plink" data-pid=${f.b_id}>${f.b}</span>
+                <button type="button" class="plink" data-pid=${f.a_id}>${f.a}</button> + <button type="button" class="plink" data-pid=${f.b_id}>${f.b}</button>
                 <span class="pf-rel-kind">${Math.round(f.strength)}</span>
               </span>
             `)}
@@ -1531,7 +1531,7 @@ const TeamProfile = ({ data }) => {
                 <span class="pf-arcline-text">
                   ${a.text}${" "}
                   ${(a.pids || []).map((pid, j) => html`
-                    <span key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</span>
+                    <button type="button" key=${j} class="plink pf-arcline-who" data-pid=${pid}>${(a.handles || [])[j] || humanize(pid)}</button>
                   `)}
                 </span>
               </div>
@@ -1553,7 +1553,7 @@ const TeamProfile = ({ data }) => {
               const support = d.support_bonus > 0 ? html` · support +${d.support_bonus.toFixed(1)}` : "";
               return html`
                 <div key=${d.id} class="pf-dev-row">
-                  <span class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</span>
+                  <button type="button" class="plink pf-dev-name" data-pid=${d.id}>${d.handle}</button>
                   <span class="muted pf-dev-meta" title=${d.curve_read}>${d.age}y · CA ${d.ca} · peak ${ceilTxt}${above}${support}${teach}</span>
                   <span class="pf-dev-bar"><span class="pf-dev-fill" style=${{ width: `${d.progress_pct}%`, '--target-width': `${d.progress_pct}%` }}></span></span>
                   <span class=${`mono ${acls}`}>${d.progress_pct}% ${arrow}</span>
@@ -1602,7 +1602,7 @@ const TeamProfile = ({ data }) => {
 
       ${know && (know.methodology != null || (know.playbooks || []).length > 0 || (know.antistrats || []).length > 0) && html`
         <div class="pf-section">
-          <h3 class="pf-section-title">Playbook &amp; knowledge</h3>
+          <h3 class="pf-section-title">Playbook & knowledge</h3>
           ${know.methodology != null && html`
             <p class="pf-season-line muted">
               Methodology <b class="mono">${pfNum(know.methodology, 1)}</b> — training-ground know-how that survives roster churn
@@ -1952,6 +1952,7 @@ async function pfAssignIgl(p) {
 /* -- overlay plumbing ------------------------------------------------------- */
 
 let pfOverlayEl = null;
+let pfOpener = null; // original focus target across loading and profile navigation
 let pfSeq = 0;
 const pfStack = [];
 let pfCurrent = null; // {kind, id[, career]} currently showing (or loading)
@@ -1994,6 +1995,8 @@ function pfEnsureOverlay() {
   const ov = document.createElement("div");
   ov.id = "profile";
   ov.className = "overlay hidden";
+  ov.inert = true;
+  ov.setAttribute("aria-hidden", "true");
   ov.innerHTML =
     `<div class="panel pf-panel">` +
     `<button class="pf-back btn btn-sm hidden" aria-label="Back to previous profile">← Back</button>` +
@@ -2010,20 +2013,37 @@ function pfEnsureOverlay() {
 
 function pfShow(vnode) {
   const ov = pfEnsureOverlay();
+  if (!isProfileOpen()) pfOpener = document.activeElement;
   const body = ov.querySelector("#profile-body");
   render(vnode, body);
   ov.querySelector(".pf-back").classList.toggle("hidden", !pfStack.length);
   body.scrollTop = 0;
   ov.classList.remove("hidden");
+  ov.inert = false;
+  ov.removeAttribute("aria-hidden");
 }
 
 function closeProfile() {
   pfEndInspection();  pfStack.length = 0;
   pfCurrent = null;
   pfSeq++;
+  const opener = pfOpener;
+  pfOpener = null;
   if (pfOverlayEl) {
+    // The fade keeps this subtree displayed; closed controls must leave focus
+    // and the accessibility tree immediately, even while opacity animates.
+    if (pfOverlayEl.contains(document.activeElement)) document.activeElement.blur();
+    pfOverlayEl.inert = true;
+    pfOverlayEl.setAttribute("aria-hidden", "true");
     pfOverlayEl.classList.add("hidden");
     pfOverlayEl.querySelector(".pf-back").classList.add("hidden");
+  }
+  // A mutation may have replaced the opener or made it unavailable.
+  if (opener instanceof HTMLElement && opener !== document.body
+      && opener.isConnected && !opener.matches(":disabled")
+      && !opener.closest("[inert]") && opener.getClientRects().length
+      && getComputedStyle(opener).visibility === "visible") {
+    try { opener.focus({ preventScroll: true }); } catch {}
   }
 }
 

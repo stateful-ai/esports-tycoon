@@ -1,0 +1,146 @@
+[
+  {
+    "id": "esports-playtest-0267",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Club player profile names lack keyboard semantics",
+    "problem": "All fifteen visible player openers are plain spans without tabindex or role; eighty Tab presses stop at none.",
+    "solution": "Retained all markup and actual Tab trace; used visible pointer opening to isolate closed-profile behavior; root assigned separate fix.",
+    "lesson": "Closed-overlay improvement does not enable keyboard-only roster inspection; player entry controls need keyboard semantics.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0266",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Nested profile navigation preserves Career opener",
+    "problem": "Content updates and Back must retain the original valid opener.",
+    "solution": "Keyboard-opened Career; visible Team and Vortex links; Back twice and keyboard Close returned same Career button.",
+    "lesson": "Valid connected visible enabled Career opener survives nested async profile updates and Back; native player opener restoration remains unplayed.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0265",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Closed profile leaves keyboard focus order",
+    "problem": "Retained faded overlay controls could receive focus after closure.",
+    "solution": "Opened Apex, Tab focused a live control, Escape closed; Company click and eighty actual Tabs had zero hidden-profile stops.",
+    "lesson": "Exact9d makes closed profile inert and aria-hidden and releases descendant focus immediately; observed Company navigation passes.",
+    "confidence": "high",
+    "source": "2026-10-11-profile406-keyboard-session exact9d85974 world26UHC seed2038 S2W6 gpt-6.1-sol medium",
+    "code": "",
+    "tags": [
+      "profile",
+      "keyboard",
+      "accessibility"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0264",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Aggregate finance limits per-sponsor weekly receipt",
+    "problem": "GGThreadssteady5900oneweekcountdown21to20; actualincome127463expenses52400 butnoitemizedpastweek sponsorledger.",
+    "solution": "Preservedpre2291371/post2366434banks net75063 andactive5900deal20weeks; rawstaticweeklytickpaysactivefee but UI onlyaggregates.",
+    "lesson": "Reportcontract/countdownandaggregate actualweek finance; distinguish runrate from a dedicated individual sponsorship payment receipt.",
+    "confidence": "high",
+    "source": "2026-10-11-fatigue-rotation-recovery ba3copied26UHCseed2038S2W6to7 actualgpt-6.1-solmedium rawrosterprofilefixturewireprivateprefixreceipts",
+    "code": "",
+    "tags": [
+      "rotation",
+      "recovery",
+      "training"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0263",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Restplans remain individual and recovery is observable",
+    "problem": "Apex/Echo fatigue; broadname selectors riskothermentor/player rows.",
+    "solution": "Scopedidentitycells1row1focuscontrol; exactPOSTwaits/restreadbacks and unchangedother6plans; postweekApex62Echo41withApex0mapsEcho1.",
+    "lesson": "SeparateindividualRestplan frombenchmatchrest and sponsorconditionevent; withoutcounterfactual do not isolate causalcontributions or claimwin.",
+    "confidence": "high",
+    "source": "2026-10-11-fatigue-rotation-recovery ba3copied26UHCseed2038S2W6to7 actualgpt-6.1-solmedium rawrosterprofilefixturewireprivateprefixreceipts",
+    "code": "",
+    "tags": [
+      "rotation",
+      "recovery",
+      "training"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0262",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Registered restedcontroller actually replaces exhaustedstarter",
+    "problem": "Apex37condition and no benchsentinel forEcho29.",
+    "solution": "ChoseHollowlock100controller62.8alreadyregistered overApex79; saveddefault/effectivefive andactualfixturelines confirmHollowlock1mapApex0.",
+    "lesson": "Roleandregistration-aware defaultrotation is realized in league participation; lowerOVRtradeoff stays explicit and lossdoesnotprove rotation value.",
+    "confidence": "high",
+    "source": "2026-10-11-fatigue-rotation-recovery ba3copied26UHCseed2038S2W6to7 actualgpt-6.1-solmedium rawrosterprofilefixturewireprivateprefixreceipts",
+    "code": "",
+    "tags": [
+      "rotation",
+      "recovery",
+      "training"
+    ],
+    "kind": "learning"
+  },
+  {
+    "id": "esports-playtest-0261",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Refresh replaces Company Brand control references",
+    "problem": "Brandnavigation usedstale ref aftersigningrefresh; noobservedrequest.",
+    "solution": "Loggedblockedrow3thennewrecoveryintentrow4usingfresh Brandref andpublicreadback.",
+    "lesson": "ReacquireCompanycontrols aftermutation; preserve no-request browserfailures apartfromHTTP rejections.",
+    "confidence": "high",
+    "source": "2026-10-11-apparel-signing exactba3 copied26UHCseed2038 S2W6 actualgpt-6.1-solmedium publicreadbackscreensandrawsave",
+    "code": "",
+    "tags": [
+      "company",
+      "sponsor",
+      "apparel"
+    ],
+    "kind": "pain-point"
+  },
+  {
+    "id": "esports-playtest-0260",
+    "ts": "2026-10-11",
+    "domain": "esports-playtest",
+    "topic": "Steady Apparel choice supports predictability with ample cash",
+    "problem": "Visiblechoiceupfront123000plus1300/week orperformance2300plus5100/win; record2-3 andcash2.287M.",
+    "solution": "Chose5900/weeksteady,noimmediatebonus,perwin0;bankunchanged andconditionalplayoff16000atRisk.",
+    "lesson": "Contractstructures trade immediatecash and outcomevariability for recurringrate; conditions remain separatefromguaranteedrate.",
+    "confidence": "high",
+    "source": "2026-10-11-apparel-signing exactba3 copied26UHCseed2038 S2W6 actualgpt-6.1-solmedium publicreadbackscreensandrawsave",
+    "code": "",
+    "tags": [
+      "company",
+      "sponsor",
+      "apparel"
+    ],
+    "kind": "learning"
+  }
+]

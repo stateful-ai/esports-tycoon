@@ -1,0 +1,28 @@
+{
+  "previous_PR410_head": "f844d47a64eeed7fd579f3c7b553e35470a960c7",
+  "actual_main_integrated": "8a87642a2cf00fe0c08c53d6783961e77106f59f",
+  "normal_merge_conflict_paths": [
+    ".gitattributes"
+  ],
+  "conflict_type": "Independent additive raw-receipt attribute rules at the same insertion point; all three stage blobs retained.",
+  "resolution": "Preserve complete prior candidate attributes and append exactly the current-main away-recap comment/rule.",
+  "base_sha256": "f43a67706688637640f02972cff8ac328e5305c318d8a73484361d666f9a6ab1",
+  "ours_sha256": "8a10f73d3110e6386a9912463c61a95a30dc1be270f866f4868fe3c83a585651",
+  "theirs_sha256": "510e57c508f2cecbdda0db51af1cc0a97b91080862c2580d9afa57cf90848509",
+  "working_conflict_sha256": "2b0033edf4bd8fc6ebff6669157c6bf953fa65919bc656baa762c9397da57e7a",
+  "resolved_sha256": "0893aa5d0aa987b5b6d2485c25d5828af6a4a4812a77aafa0a72ec62cf06c3d5",
+  "current_main_attributes_union_exact": true,
+  "all_previous_candidate_history_blobs_exact": true,
+  "previous_history_paths_verified": 2683,
+  "all_current_main_nonhistory_blobs_exact": true,
+  "current_main_nonhistory_paths_verified": 1013,
+  "all_current_main_history_except_extended_canonical_exact": true,
+  "current_main_history_paths_verified": 2005,
+  "PR392_away_recap_artifacts_exact": 29,
+  "canonical1079_unchanged_sha256": "e427e36ad19fdb02a765d37a8bea1f897aee72bad6e30e0b1fc9eb052ac2dc4c",
+  "new_gameplay": false,
+  "local_tests_syntax_checks_imports_gates_analytics_run": false,
+  "source_only_integration": true,
+  "historical_played_ba3_freeze_remains_dated": true,
+  "fresh_exact_head_review_remote_CI_current_main_retention_required": true
+}
