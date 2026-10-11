@@ -3538,7 +3538,8 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
     This is a pure read of stored development snapshots. Attribute deltas are
     only emitted when both endpoints contain that attribute, which lets an old
     save begin tracking cleanly without pretending its current values were the
-    season-opening baseline.
+    season-opening baseline. A first observation establishes a baseline, not a
+    measured zero change; latest-week attribution remains independently useful.
     """
     from esports_sim.manager.development_path import report_view
 
@@ -3551,10 +3552,17 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
         if not snaps:
             continue
         first, last = snaps[0], snaps[-1]
-        delta = round(last.ca - first.ca, 1)
-        status = "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        comparison_available = len(snaps) >= 2 and first.week < last.week
+        delta = round(last.ca - first.ca, 1) if comparison_available else None
+        status = (
+            "first_observation" if not comparison_available else
+            "grown" if delta >= 0.1 else "regressed" if delta <= -0.1 else "steady"
+        )
         changes = []
-        for aid in sorted(set(first.attributes) & set(last.attributes)):
+        comparable_attributes = (
+            set(first.attributes) & set(last.attributes) if comparison_available else set()
+        )
+        for aid in sorted(comparable_attributes):
             change = round(last.attributes[aid] - first.attributes[aid], 1)
             if abs(change) < 0.1:
                 continue
@@ -3574,6 +3582,7 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "start_week": first.week,
             "end_week": last.week,
             "tracked_points": len(snaps),
+            "comparison_available": comparison_available,
             "overall_start": first.ca,
             "overall_current": last.ca,
             "overall_delta": delta,
@@ -3582,13 +3591,18 @@ def _development_report(gs: GameState, tid: str, attr_defs: dict) -> dict:
             "changes": changes,
             "latest_week": report_view(p),
         })
-    rows.sort(key=lambda row: (-row["overall_delta"], row["handle"].lower(), row["id"]))
-    deltas = [row["overall_delta"] for row in rows]
+    rows.sort(key=lambda row: (
+        not row["comparison_available"], -(row["overall_delta"] or 0),
+        row["handle"].lower(), row["id"],
+    ))
+    deltas = [row["overall_delta"] for row in rows if row["comparison_available"]]
     return {
         "season": gs.season,
         "start_week": min((row["start_week"] for row in rows), default=None),
         "end_week": max((row["end_week"] for row in rows), default=None),
-        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else 0.0,
+        "overall_delta": round(sum(deltas) / len(deltas), 1) if deltas else None,
+        "compared_players": len(deltas),
+        "first_observations": sum(not row["comparison_available"] for row in rows),
         "grown": sum(row["status"] == "grown" for row in rows),
         "regressed": sum(row["status"] == "regressed" for row in rows),
         "steady": sum(row["status"] == "steady" for row in rows),
