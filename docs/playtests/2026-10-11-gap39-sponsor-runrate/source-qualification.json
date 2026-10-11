@@ -1,0 +1,20 @@
+{
+  "source_head": "071ffd84e298655bc90ed644a29e776c6a374f6d",
+  "preplay_source_freeze": false,
+  "qualification": "Static current-head source hashes only; acceptance was observed with three-file patch dirty. No pre/post runtime source freeze exists. Root independently reviews current head.",
+  "first19_fields_preserved": true,
+  "source_files": [
+    {
+      "path": "src/esports_sim/manager/economy.py",
+      "git_blob_sha256": "b03852fe6aa4d4d2de54c75090011df9403bf1e8a61eac99c29851094ecefe87"
+    },
+    {
+      "path": "src/esports_sim/web/static/app.js",
+      "git_blob_sha256": "2ea141c37cd8934848ef28f3930d93d789f6c75cd9a969e4feffd5674a31af5c"
+    },
+    {
+      "path": "tests/test_finance.py",
+      "git_blob_sha256": "058f4c6602bd953be5b9964933c4b05d1778ece892c39e09a162aec0cb925ee4"
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "at_utc": "2026-10-11T06:58:13.121867+00:00",
+  "commit": "20273cd7ab885e7d409dec46f511d915d6e08ff4",
+  "world": "26UHC",
+  "seed": 2038,
+  "before_week": 22,
+  "after_week": 23,
+  "saved_decisions": 100,
+  "new_accepted_decisions": 10,
+  "new_decisions": [
+    {
+      "index": 90,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_training",
+      "params": {
+        "delegate_to_coach": "False",
+        "focus": "mental"
+      },
+      "source": "web"
+    },
+    {
+      "index": 91,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "apex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 92,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "vortex"
+      },
+      "source": "web"
+    },
+    {
+      "index": 93,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 94,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "light",
+        "learning_language": "",
+        "player_id": "echo"
+      },
+      "source": "web"
+    },
+    {
+      "index": 95,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "ghost"
+      },
+      "source": "web"
+    },
+    {
+      "index": 96,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "auto",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "fa_13"
+      },
+      "source": "web"
+    },
+    {
+      "index": 97,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "fa_0"
+      },
+      "source": "web"
+    },
+    {
+      "index": 98,
+      "season": 1,
+      "week": 22,
+      "phase": "playoffs",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "advance",
+      "params": {},
+      "source": "web"
+    },
+    {
+      "index": 99,
+      "season": 1,
+      "week": 23,
+      "phase": "offseason",
+      "manager_id": "mgr_team_nexus",
+      "team_id": "team_nexus",
+      "kind": "set_dev_plan",
+      "params": {
+        "dev_focus": "rest",
+        "intensity": "normal",
+        "learning_language": "",
+        "player_id": "fa_13"
+      },
+      "source": "web"
+    }
+  ],
+  "old_action_prefix_preserved": true,
+  "snapshots_before": 21,
+  "snapshots_after": 22,
+  "old_snapshot_prefix_preserved": true,
+  "source_paths_unchanged": 630,
+  "save_before_sha256": "9f66e859da37c117077091eeaa4fda946ab04af42bef01c74e7a552d069324c8",
+  "save_after_sha256": "3bfd798c8468af822e9233cbe331f07afcabd28ff983a58b9c0f573286c85ee3",
+  "final_focus": {
+    "apex": "auto",
+    "vortex": "auto",
+    "ghost": "rest",
+    "fa_13": "rest",
+    "echo": "auto",
+    "fa_0": "rest"
+  },
+  "condition_after": {
+    "apex": 92.5,
+    "vortex": 89.5,
+    "ghost": 100,
+    "fa_13": 81.5,
+    "echo": 92.5,
+    "fa_0": 100
+  },
+  "practice_vortex_ovr_reported": 0.24,
+  "own_maps": 0,
+  "bank_delta": 280289,
+  "reported_income": 127389,
+  "reported_expenses": 47100,
+  "unattributed_difference": 200000,
+  "existing_cash_gap_pr": 380,
+  "retained_usage": 72,
+  "page_sessions": 2,
+  "paired_requests": 11,
+  "successful_requests": 11,
+  "unmatched_requests": 0,
+  "event_counts": {
+    "session_start": 2,
+    "view": 9,
+    "visible_time": 38,
+    "session_end": 1,
+    "attempt": 11,
+    "result": 11
+  },
+  "views": {
+    "lobby": 2,
+    "dashboard": 2,
+    "club/squad": 1,
+    "club/development": 3,
+    "company/finances": 1
+  },
+  "decision_request_mapping": {
+    "90": 15,
+    "91": 18,
+    "92": 20,
+    "93": 22,
+    "94": 24,
+    "95": 26,
+    "96": 28,
+    "97": 30,
+    "98": 32,
+    "99": 39
+  },
+  "save_request": 41,
+  "local_tests_launched": false,
+  "limits": [
+    "All100 decisions are historical-save report scope, only10 are new session decisions.",
+    "Wrong-player Ghost auto/rest are accepted decisions, not rejected requests; they remain in logs and independent readbacks.",
+    "Step3 correction is direct public-state readback with no separate decision/view usage event.",
+    "Initial console-only readback captured no result and wrong /api/roster route404; successful return-based /api/roster/team_nexus captures retained separately.",
+    "Dashboard navigation was blocked by normal report overlay; no HTTP rejection was emitted for that click.",
+    "Sponsor1800/wk and objective12600 achieved status are visible; this session does not isolate exact payout from the income total.",
+    "Practice report describes server-computed skill sources, not proof that mental practice causes immediate confidence increase.",
+    "Source630 freeze unchanged; ownedbrowser/server closed, user8421untouched."
+  ]
+}

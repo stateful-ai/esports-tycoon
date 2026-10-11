@@ -1,0 +1,10 @@
+{
+  "original_acquisition_path": "C:\\Users\\aidan\\workspace\\esports-simulator\\ESports Simulator\\docs\\playtests\\2026-10-11-offseason-rebuild\\evidence\\owned-python-processes-before-stop.json",
+  "original_candidate_path": "docs/playtests/2026-10-11-offseason-rebuild/evidence/owned-python-processes-before-stop.json",
+  "published_path": "docs/playtests/2026-10-11-offseason-rebuild/evidence/owned-python-processes-before-stop-empty.txt",
+  "byte_count": 0,
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "original_bytes_unchanged": true,
+  "qualification": "No process-list body captured; this file proves no owned process identities. Independent later cleanup receipt retained, original source artifact-hashes manifest remains unchanged historical snapshot.",
+  "no_output_invented": true
+}

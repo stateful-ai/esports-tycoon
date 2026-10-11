@@ -1,0 +1,70 @@
+{
+  "attempts": 6,
+  "events": {
+    "attempt:/api/actions/advance": 1,
+    "attempt:/api/actions/gameplan": 1,
+    "attempt:/api/actions/preparation": 1,
+    "attempt:/api/actions/save": 1,
+    "attempt:/api/actions/series_directive": 1,
+    "attempt:/api/actions/sponsor": 1,
+    "interaction:week/full_report_open": 1,
+    "result:/api/actions/advance": 1,
+    "result:/api/actions/gameplan": 1,
+    "result:/api/actions/preparation": 1,
+    "result:/api/actions/save": 1,
+    "result:/api/actions/series_directive": 1,
+    "result:/api/actions/sponsor": 1,
+    "session_end:": 1,
+    "session_start:": 2,
+    "view:company/brand": 1,
+    "view:company/finances": 2,
+    "view:dashboard": 2,
+    "view:lobby": 2,
+    "view:season/fixtures": 1,
+    "view:season/league": 1,
+    "view:tactics/gameplan": 1,
+    "view:tactics/prep": 2,
+    "view:tactics/strategy": 2,
+    "visible_time:company/brand": 3,
+    "visible_time:company/finances": 12,
+    "visible_time:dashboard": 5,
+    "visible_time:lobby": 2,
+    "visible_time:season/fixtures": 7,
+    "visible_time:season/league": 1,
+    "visible_time:tactics/gameplan": 5,
+    "visible_time:tactics/prep": 10,
+    "visible_time:tactics/strategy": 5
+  },
+  "malformed_lines": 0,
+  "observed_session_span_ms": {
+    "051dc1073e95ca89ebc694b0abd23e2c": 539998,
+    "6a61563cfe6a744c0b95aa78b25957f7": 0
+  },
+  "orphan_results": 0,
+  "outcomes": {
+    "/api/actions/advance:success": 1,
+    "/api/actions/gameplan:success": 1,
+    "/api/actions/preparation:success": 1,
+    "/api/actions/save:success": 1,
+    "/api/actions/series_directive:success": 1,
+    "/api/actions/sponsor:success": 1
+  },
+  "paired_results": 6,
+  "retention_bytes": 8388608,
+  "sessions": 2,
+  "unmatched_attempts": 0,
+  "visible_ms": {
+    "company/brand": 27842,
+    "company/finances": 142197,
+    "dashboard": 55876,
+    "lobby": 4463,
+    "season/fixtures": 91662,
+    "season/league": 11312,
+    "tactics/gameplan": 55239,
+    "tactics/prep": 131716,
+    "tactics/strategy": 38864
+  },
+  "world_events": {
+    "26UHC": 80
+  }
+}
