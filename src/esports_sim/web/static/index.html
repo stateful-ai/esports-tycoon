@@ -19,7 +19,7 @@
     <div class="brand">ESPORTS<span>SIM</span></div>
     <div id="context" class="context"></div>
     <div class="spacer"></div>
-    <div id="balance" class="balance mono"></div>
+    <div id="balance" class="balance mono" data-tooltip-key="balance" tabindex="0"></div>
     <span id="mp-chip" class="pill hidden" title="Shared campaign — copy the join code"></span>
     <button id="save-btn" class="btn hidden" title="Save your campaign">Save</button>
     <select id="autosave-sel" class="hidden" title="Choose how often the campaign saves automatically. When off, save it yourself.">
@@ -31,7 +31,7 @@
       <option value="8">Every 8 weeks</option>
     </select>
   <button id="worlds-btn" class="btn hidden" title="Return to your campaign list. This career will be waiting there.">Campaigns</button>
-    <button id="advance-btn" class="btn btn-primary">Advance Week ▸</button>
+    <button id="advance-btn" class="btn btn-primary" data-tooltip="&lt;h4&gt;Advance the campaign&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;Moves every club forward one step: scheduled matches are played, then training, scouting, and finances settle and you get a report. Anything under Needs You is worth a look first.&lt;/div&gt;">Advance Week ▸</button>
     <button id="simahead-btn" class="btn" title="Sim up to 4 weeks under your delegation settings — stops the moment something needs you">Sim ahead ▸▸</button>
   <button id="admin-toggle" class="btn" title="Roster editor: open correction controls on player and team profiles" aria-pressed="false">🛠️</button>
     <button id="audio-toggle" class="btn" title="Sound: off" aria-pressed="false">🔇</button>
@@ -59,6 +59,9 @@
     </span>
   </nav>
 
+  <!-- First-week coach bar (rendered by app.js; hidden outside week one). -->
+  <div id="coach" class="coach hidden" role="region" aria-label="First-week guide"></div>
+
   <main id="view"></main>
 </div>
 
@@ -81,7 +84,7 @@
     </div>
     <div id="help-body" class="help-body"></div>
     <div class="help-footer">
-      <p class="muted help-footer-tip">Tip: hover table headings, badges, numbers, and controls for detail. The same text appears on keyboard focus. Press <kbd>Esc</kbd> or click outside to close.</p>
+      <p class="muted help-footer-tip">Tip: labels with a dotted underline, badges, and the small <span class="info-btn" aria-hidden="true">i</span> icons explain themselves on hover, tap, or keyboard focus. Press <kbd>Esc</kbd> or click outside to close.</p>
       <label class="help-footer-skip muted" id="help-skip-wrap" hidden>
         <input type="checkbox" id="help-skip" aria-label="Don't open this automatically again"> Don't open this automatically again
       </label>
@@ -111,7 +114,7 @@
     <div id="lobby-create" class="hidden">
       <p class="muted" id="lobby-create-hint">Pick your organisation. Seed controls the generated league.</p>
       <div class="row" style="gap:12px;flex-wrap:wrap;align-items:center">
-        <label>Seed <input id="ng-seed" class="mono" type="number" value="2026" aria-label="League seed"></label>
+        <label data-tooltip="&lt;h4&gt;World seed&lt;/h4&gt;&lt;div class='tooltip-desc'&gt;The number the fictional league is generated from. The same seed always builds the same clubs and players, so you can share a world or replay it.&lt;/div&gt;">Seed <input id="ng-seed" class="mono" type="number" value="2026" aria-label="League seed"></label>
         <span id="ng-worlds" class="row" style="gap:6px;flex-wrap:wrap"></span>
       </div>
       <div class="row" style="gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">

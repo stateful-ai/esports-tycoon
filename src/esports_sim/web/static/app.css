@@ -447,6 +447,41 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
 .help-screen-card .microlabel { display: block; margin-bottom: var(--es-space-1, 3px); color: var(--es-color-accent, #4fd8c0); }
 .help-screen-card .btn { justify-self: start; margin-top: var(--es-space-2, 4px); }
 .help-screen-head { display: flex; justify-content: space-between; align-items: center; gap: var(--es-space-3, 6px); }
+.help-loop {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--es-space-4, 10px); margin: var(--es-space-4, 10px) 0 var(--es-space-6, 16px);
+}
+.help-loop > div {
+  display: grid; align-content: start; gap: var(--es-space-2, 4px);
+  padding: var(--es-space-4, 10px) var(--es-space-5, 12px);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39);
+  border-radius: var(--es-radius-md, 6px);
+  color: var(--es-color-text-secondary, #aab2c3);
+}
+.help-loop .microlabel { color: var(--es-color-accent, #4fd8c0); }
+.help-steps li.done .help-step-num {
+  background: transparent; color: var(--es-color-accent, #4fd8c0);
+  border: var(--es-border-normal, 1px) solid var(--es-color-accent, #4fd8c0);
+}
+.help-steps li.done b { color: var(--es-color-text-secondary, #aab2c3); }
+.help-steps li.next {
+  border-radius: var(--es-radius-md, 6px);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 7%, transparent);
+}
+.help-note .btn { justify-self: start; margin-top: var(--es-space-2, 4px); }
+.help-search-row { display: flex; align-items: center; gap: var(--es-space-4, 10px); margin-bottom: var(--es-space-4, 10px); }
+.help-search-row input {
+  flex: 1 1 auto; max-width: 420px;
+  padding: var(--es-space-3, 6px) var(--es-space-4, 10px);
+  font: inherit; color: var(--es-color-text-primary, #e8ecf4);
+  background: var(--es-color-bg-sunken, #0b1019);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #31384a);
+  border-radius: var(--es-radius-md, 6px);
+}
+.help-search-row input::placeholder { color: var(--es-color-text-tertiary, #7d869a); }
+.help-glossary > div { align-content: start; }
+.help-glossary-group { margin-bottom: var(--es-space-6, 16px); }
+.help-glossary-group > h3 { margin: 0; color: var(--es-color-accent, #4fd8c0); }
 .help-glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--es-space-3, 6px) var(--es-space-7, 20px); }
 .help-glossary > div { display: grid; gap: var(--es-space-1, 3px); padding: var(--es-space-4, 10px) 0; border-bottom: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, #252b39); }
 .help-glossary span { color: var(--es-color-text-secondary, #aab2c3); }
@@ -500,7 +535,7 @@ tr.me td:first-child { box-shadow: inset 3px 0 0 var(--es-color-brand, var(--es-
 }
 
 @media (max-width: 720px) {
-  .help-screen-grid, .help-glossary { grid-template-columns: 1fr; }
+  .help-screen-grid, .help-glossary, .help-loop { grid-template-columns: 1fr; }
   .help-steps li { grid-template-columns: 28px minmax(0, 1fr); }
   .help-steps li .btn { grid-column: 2; justify-self: start; }
 }
@@ -2436,14 +2471,60 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
   opacity: 0;
   transform: translateY(var(--es-space-2, 4px));
   transition: opacity 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1)), transform 0.12s var(--es-ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
-  max-width: min(330px, calc(100vw - 16px));
-  line-height: 1.4;
+  max-width: min(320px, calc(100vw - 16px));
+  line-height: 1.45;
   word-wrap: break-word;
   box-sizing: border-box;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: var(--es-weight-regular, 400);
+  white-space: normal;
+}
+/* Motion: the bubble grows out of its caret, leaves faster than it arrives,
+   and glides (rather than blinking) between neighbouring labels. */
+#es-tooltip {
+  transform-origin: var(--tooltip-caret-x, 50%) 100%;
+  transform: translateY(var(--es-space-2, 4px)) scale(.96);
+  transition: opacity 90ms linear, transform 90ms var(--es-ease-in-out, ease-in-out);
+}
+#es-tooltip[data-placement="bottom"] {
+  transform-origin: var(--tooltip-caret-x, 50%) 0;
+  transform: translateY(calc(-1 * var(--es-space-2, 4px))) scale(.96);
 }
 #es-tooltip.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  transition: opacity 140ms var(--es-ease-out, ease-out), transform 180ms var(--es-ease-out, ease-out);
+}
+#es-tooltip.active.glide {
+  transition: opacity 140ms var(--es-ease-out, ease-out), transform 180ms var(--es-ease-out, ease-out),
+    top 170ms var(--es-ease-out, ease-out), left 170ms var(--es-ease-out, ease-out);
+}
+#es-tooltip.glide::after { transition: left 170ms var(--es-ease-out, ease-out); }
+#es-tooltip .tooltip-body { animation: tooltip-body-in 160ms var(--es-ease-out, ease-out); }
+@keyframes tooltip-body-in { from { opacity: 0; } }
+/* Caret: a rotated square that borrows the bubble's own border, pinned to
+   the anchor's centre by the engine (--tooltip-caret-x). */
+#es-tooltip::after {
+  content: "";
+  position: absolute;
+  left: var(--tooltip-caret-x, 50%);
+  width: 8px; height: 8px;
+  margin-left: -4px;
+  background: inherit;
+  border: inherit;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(45deg);
+  bottom: -5px;
+}
+#es-tooltip[data-placement="bottom"]::after {
+  bottom: auto; top: -5px;
+  transform: rotate(225deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  #es-tooltip { transition: none; transform: none; }
 }
 #es-tooltip h4 {
   margin: 0 0 var(--es-space-2, 4px) 0;
@@ -2456,12 +2537,12 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
 }
 #es-tooltip .tooltip-desc {
   color: var(--es-color-text-primary, var(--es-color-text-primary));
-  font-size: var(--es-text-xs, 11px);
+  font-size: var(--es-text-sm, 12px);
 }
 #es-tooltip .tooltip-sub {
   margin-top: var(--es-space-3, 6px);
   color: var(--es-color-text-secondary, var(--es-color-text-secondary));
-  font-size: var(--es-text-2xs, 10px);
+  font-size: var(--es-text-xs, 11px);
   border-top: var(--es-border-normal, 1px) solid var(--es-color-border-secondary, var(--es-color-border-secondary));
   padding-top: var(--es-space-2, 4px);
 }
@@ -2496,7 +2577,263 @@ td.bad, .num.bad { color: var(--es-color-text-danger, var(--es-color-text-danger
   outline: 2px solid var(--es-color-accent, #4fd8c0);
   outline-offset: 2px;
 }
-[data-tooltip-key] { cursor: help; }
+/* Self-explaining labels. A dotted underline is the one signal that a term
+   has a glossary tooltip; sortable headings keep their pointer cursor. */
+th[data-tooltip-key], .term {
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    text-decoration-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.term, table[data-nosort] th[data-tooltip-key], .pill[data-tooltip-key] { cursor: help; }
+.term:hover, th[data-tooltip-key]:hover, .term:focus-visible {
+  color: var(--es-color-text-primary, #e8ecf4);
+  text-decoration-color: var(--es-color-accent, #4fd8c0);
+}
+.pill[data-tooltip-key] {
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    filter var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.pill[data-tooltip-key]:hover { transform: translateY(-1px); filter: brightness(1.2); }
+.term:focus-visible, th[data-tooltip-key]:focus-visible, .pill[data-tooltip-key]:focus-visible {
+  outline: 2px solid var(--es-color-accent, #4fd8c0);
+  outline-offset: 2px;
+  border-radius: var(--es-radius-sm, 3px);
+}
+
+/* First-week coach bar: app chrome under the nav, never a Dashboard card. */
+.coach {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--es-space-5, 12px) var(--es-space-6, 16px); flex-wrap: wrap;
+  padding: var(--es-space-4, 10px) var(--es-space-6, 16px);
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 9%, var(--es-color-bg-surface, #0f1420));
+  border-bottom: var(--es-border-normal, 1px) solid color-mix(in srgb, var(--es-color-accent, #4fd8c0) 40%, transparent);
+  position: relative; overflow: hidden;
+  /* Unfolds from the nav and pushes the page down smoothly. Fill is
+     backwards only, so the settled bar is never height-capped. */
+  animation: coach-in var(--es-duration-slow, 300ms) var(--es-ease-out, ease-out) backwards;
+}
+.coach.leaving { animation: coach-out 240ms var(--es-ease-in-out, ease-in-out) forwards; pointer-events: none; }
+@keyframes coach-in {
+  from { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
+  to { opacity: 1; max-height: 220px; }
+}
+@keyframes coach-out {
+  from { opacity: 1; max-height: 220px; }
+  to { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; border-bottom-color: transparent; }
+}
+/* Each new step slides its lines in from the direction of travel. The bar
+   repaints only when its content changes, so this never replays in place. */
+.coach-text > *, .coach-actions, .coach-check {
+  animation: coach-step-in 280ms var(--es-ease-out, ease-out) backwards;
+}
+.coach-text > :nth-child(2) { animation-delay: 50ms; }
+.coach-text > :nth-child(3) { animation-delay: 100ms; }
+.coach-actions { animation-delay: 140ms; }
+@keyframes coach-step-in { from { opacity: 0; transform: translateX(12px); } }
+/* Final step: one sheen sweep says "this is the moment". */
+.coach.coach-ready::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 35%,
+    color-mix(in srgb, var(--es-color-accent, #4fd8c0) 20%, transparent) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: coach-sheen 1.5s var(--es-ease-in-out, ease-in-out) 350ms 1;
+}
+@keyframes coach-sheen { to { transform: translateX(100%); } }
+/* Week-two wrap-up: the tick draws itself, circle first. */
+.coach-check {
+  flex: none; width: 30px; height: 30px; fill: none;
+  stroke: var(--es-color-accent, #4fd8c0); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.coach-check circle { stroke-dasharray: 63; stroke-dashoffset: 63; animation: coach-draw 520ms var(--es-ease-out, ease-out) 180ms forwards; }
+.coach-check path { stroke-dasharray: 16; stroke-dashoffset: 16; animation: coach-draw 320ms var(--es-ease-out, ease-out) 620ms forwards; }
+@keyframes coach-draw { to { stroke-dashoffset: 0; } }
+.btn .btn-arrow {
+  display: inline-block; margin-left: 2px;
+  transition: transform var(--es-duration-base, 180ms) var(--es-ease-out, ease-out);
+}
+.btn:hover .btn-arrow, .btn:focus-visible .btn-arrow { transform: translateX(3px); }
+/* The nav tab the coach is pointing at breathes in the accent colour (red
+   stays reserved for the tab you are on). */
+#tabs .tab.coach-next:not(.active) {
+  color: var(--es-color-text-primary, #e8ecf4);
+  animation: coach-tab-next 1.6s var(--es-ease-in-out, ease-in-out) infinite;
+}
+@keyframes coach-tab-next {
+  0%, 100% { border-bottom-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 30%, transparent); }
+  50% { border-bottom-color: var(--es-color-accent, #4fd8c0); }
+}
+.coach-text { display: grid; gap: var(--es-space-1, 2px); min-width: 0; flex: 1 1 420px; }
+.coach-text > b { font-family: var(--es-font-display, inherit); font-size: var(--es-text-lg, 15px); letter-spacing: .02em; }
+.coach-text > span:not(.coach-kicker) { color: var(--es-color-text-secondary, #aab2c3); font-size: var(--es-text-sm, 12px); max-width: 900px; }
+.coach-text em { font-style: normal; color: var(--es-color-text-tertiary, #7d869a); }
+.coach-kicker {
+  display: inline-flex; align-items: center; gap: var(--es-space-4, 8px);
+  font-size: var(--es-text-2xs, 10px); text-transform: uppercase;
+  letter-spacing: var(--es-tracking-wider, .08em); color: var(--es-color-accent, #4fd8c0);
+}
+.coach-pips { display: inline-flex; gap: var(--es-space-1, 3px); }
+.coach-pips i {
+  position: relative; overflow: hidden;
+  width: 16px; height: 4px; border-radius: 2px;
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 22%, transparent);
+}
+/* A finished step is a filled pip; the one finished just now fills as you watch. */
+.coach-pips i::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: var(--es-color-accent, #4fd8c0);
+  transform: scaleX(0); transform-origin: left center;
+}
+.coach-pips i.done::after { transform: none; }
+.coach-pips i.fresh::after { animation: coach-pip-fill 560ms var(--es-ease-out, ease-out) 200ms backwards; }
+@keyframes coach-pip-fill { from { transform: scaleX(0); } }
+.coach-pips i.current:not(.done) { animation: coach-pip-now 1.6s var(--es-ease-in-out, ease-in-out) infinite; }
+@keyframes coach-pip-now {
+  50% { background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 60%, transparent); }
+}
+.coach-actions { display: flex; align-items: center; gap: var(--es-space-3, 6px); flex-wrap: wrap; }
+.coach-hide { opacity: .75; }
+.coach-hide:hover { opacity: 1; }
+/* Step five points at the real control instead of describing where it is. */
+#advance-btn.coach-target:not(:disabled) { animation: coach-target-pulse 1.8s var(--es-ease-out, ease-out) infinite; }
+@keyframes coach-target-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--es-color-brand, #ff4655) 60%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 10px transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Looping cues become steady ones; one-shot entrances are cut by the
+     global reduced-motion rule at the end of this file. */
+  .coach, .coach.coach-ready::before, #advance-btn.coach-target,
+  .coach-pips i.current:not(.done), #tabs .tab.coach-next:not(.active),
+  .help-steps li.next .help-step-num, .help-loop > div { animation: none; }
+  #advance-btn.coach-target { box-shadow: 0 0 0 2px var(--es-color-accent, #4fd8c0); }
+  #tabs .tab.coach-next:not(.active) { border-bottom-color: var(--es-color-accent, #4fd8c0); }
+  .coach-check circle, .coach-check path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* -- Handbook and lobby motion ---------------------------------------------- */
+#help:not(.hidden), #newgame:not(.hidden) {
+  animation: overlay-in var(--es-duration-base, 180ms) var(--es-ease-out, ease-out) backwards;
+}
+#help:not(.hidden) > .panel, #newgame:not(.hidden) > .panel {
+  animation: panel-in 260ms var(--es-ease-out, ease-out) backwards;
+}
+/* closeHelp marks the handbook hidden at once; "closing" keeps it painted
+   (and inert) for the exit animation, then is removed on a timer. */
+#help.closing {
+  display: flex !important;
+  animation: overlay-out 170ms var(--es-ease-in-out, ease-in-out) forwards; pointer-events: none;
+}
+#help.closing > .panel { animation: panel-out 170ms var(--es-ease-in-out, ease-in-out) forwards; }
+@keyframes overlay-in { from { opacity: 0; } }
+@keyframes overlay-out { to { opacity: 0; } }
+@keyframes panel-in { from { opacity: 0; transform: translateY(14px) scale(.975); } }
+@keyframes panel-out { to { opacity: 0; transform: translateY(8px) scale(.985); } }
+
+/* Switching section re-renders the body, so its blocks rise in turn. */
+.help-body > * { animation: help-rise 260ms var(--es-ease-out, ease-out) backwards; }
+.help-body > :nth-child(2) { animation-delay: 40ms; }
+.help-body > :nth-child(3) { animation-delay: 80ms; }
+.help-body > :nth-child(4) { animation-delay: 120ms; }
+.help-body > :nth-child(n + 5) { animation-delay: 160ms; }
+.help-steps li, .help-screen-card, .help-glossary-group {
+  animation: help-rise 300ms var(--es-ease-out, ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms + 90ms);
+}
+@keyframes help-rise { from { opacity: 0; transform: translateY(8px); } }
+
+/* Decide -> Advance -> Review: chevrons join the beats, and each card
+   lights once in order so the eye reads it as a cycle. */
+.help-loop > div {
+  position: relative;
+  animation: help-rise 300ms var(--es-ease-out, ease-out) calc(var(--i, 0) * 70ms + 60ms) backwards,
+    help-loop-beat 900ms var(--es-ease-in-out, ease-in-out) calc(var(--i, 0) * 420ms + 520ms) 1;
+}
+.help-loop > div:not(:last-child)::after {
+  content: "▸"; position: absolute; top: 50%; right: -11px; z-index: 1;
+  transform: translateY(-50%);
+  color: var(--es-color-accent, #4fd8c0); font-size: var(--es-text-sm, 12px);
+}
+@keyframes help-loop-beat {
+  35% {
+    border-color: var(--es-color-accent, #4fd8c0);
+    background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 9%, transparent);
+  }
+}
+
+/* Checklist: finished steps pop their tick in order; the next one pulses. */
+.help-steps li {
+  border-radius: var(--es-radius-md, 6px);
+  transition: background var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.help-steps li:hover { background: color-mix(in srgb, var(--es-color-bg-hover, #1b2233) 55%, transparent); }
+.help-steps li.done .help-step-num {
+  animation: help-check-pop 420ms cubic-bezier(.3, 1.6, .5, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms + 240ms);
+}
+@keyframes help-check-pop { from { opacity: 0; transform: scale(.3) rotate(-25deg); } }
+.help-steps li.next .help-step-num { animation: help-step-ring 1.8s var(--es-ease-out, ease-out) 600ms infinite; }
+@keyframes help-step-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--es-color-accent, #4fd8c0) 55%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 8px transparent; }
+}
+
+.help-screen-card {
+  transition: border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.help-screen-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 60%, transparent); }
+.help-glossary > div {
+  padding-inline: var(--es-space-3, 6px); border-radius: var(--es-radius-sm, 4px);
+  transition: background var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.help-glossary > div:hover { background: color-mix(in srgb, var(--es-color-bg-hover, #1b2233) 55%, transparent); }
+.help-glossary { margin-inline: calc(-1 * var(--es-space-3, 6px)); }  /* keep text on the heading's edge */
+.help-glossary mark {
+  color: inherit; border-radius: 2px; padding: 0 1px;
+  background: color-mix(in srgb, var(--es-color-accent, #4fd8c0) 30%, transparent);
+}
+.help-search-row input {
+  transition: border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    box-shadow var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out);
+}
+.help-search-row input:focus { border-color: var(--es-color-accent, #4fd8c0); }
+.help-sections .seg-btn {
+  transition: color var(--es-duration-base, 180ms) var(--es-ease-out, ease-out),
+    background var(--es-duration-base, 180ms) var(--es-ease-out, ease-out),
+    box-shadow var(--es-duration-base, 180ms) var(--es-ease-out, ease-out);
+}
+
+/* Lobby: the primer leads, then club cards rise in sequence and lift on hover. */
+.lobby-primer { animation: help-rise 300ms var(--es-ease-out, ease-out) backwards; }
+.team-pick {
+  animation: help-rise 280ms var(--es-ease-out, ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 18ms + 60ms);
+  transition: transform var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    border-color var(--es-duration-quick, 120ms) var(--es-ease-out, ease-out),
+    box-shadow var(--es-duration-base, 180ms) var(--es-ease-out, ease-out);
+}
+.team-pick:not(.taken):hover { transform: translateY(-2px); box-shadow: var(--es-shadow-md, 0 2px 8px rgba(2, 4, 10, .55)); }
+.team-pick:not(.taken):active { transform: translateY(0) scale(.99); }
+@media (max-width: 720px) {
+  .help-loop > div:not(:last-child)::after { display: none; }
+}
+
+/* Lobby: plain-language primer above the club picker. */
+.lobby-primer {
+  display: grid; gap: var(--es-space-2, 4px);
+  margin-top: var(--es-space-5, 12px);
+  padding: var(--es-space-4, 10px) var(--es-space-5, 12px);
+  border: var(--es-border-normal, 1px) solid var(--es-color-border-primary, #31384a);
+  border-left: var(--es-border-thick, 3px) solid var(--es-color-accent, #4fd8c0);
+  border-radius: var(--es-radius-md, 6px);
+  background: var(--es-color-bg-elevated, #141925);
+}
+.lobby-primer span { color: var(--es-color-text-secondary, #aab2c3); }
+.team-pick .term { text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
 
 @keyframes bar-grow {
   from { width: 0%; }
