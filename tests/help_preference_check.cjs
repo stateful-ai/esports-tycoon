@@ -16,6 +16,7 @@ const context = vm.createContext({
   document: {getElementById: id => nodes[id], addEventListener() {}, querySelectorAll: () => []},
   localStorage: {getItem: k => storage.get(k), setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k)},
   helpFirstWeekMarkup: () => '', helpScreensMarkup: () => '', helpGlossaryMarkup: () => '',
+  setTimeout, clearTimeout,   // closeHelp clears its exit-animation class on a timer
 });
 const app = fs.readFileSync('src/esports_sim/web/static/app.js', 'utf8');
 vm.runInContext(app.slice(app.indexOf('function helpSeenKey()'), app.indexOf('function helpFirstWeekMarkup()')), context);

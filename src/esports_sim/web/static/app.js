@@ -46,21 +46,101 @@ const tooltipMarkup = (title, description, sub = "") =>
   `<div class='tooltip-desc'>${esc(description)}</div>` +
   (sub ? `<div class='tooltip-sub'>${esc(sub)}</div>` : "");
 
+/* ONE glossary feeds both the hover tooltips (data-tooltip-key="<key>") and
+   the handbook's Key terms page, so an explanation cannot drift between the
+   two. Entry: [term, plain-language meaning, handbook group]. Wording only —
+   no formulas live here; numbers on screen always come from the server. */
 const TOOLTIP_LIBRARY = Object.freeze({
-  ovr: ["Overall rating", "A quick summary of the player's current attributes. Role comfort can move their match-day level away from this headline number."],
-  ability: ["Current ability", "The player's present playing level. This is what they can deliver now, before form, confidence, role comfort, and tactical fit shape a match."],
-  ceiling: ["Projected ceiling", "A scouting forecast of the player's likely peak, not a hard cap. Better scouting narrows the range; development and environment can still change the outcome."],
-  form: ["Form", "Recent match performance. Good form supports confidence and development; poor form can make a player less stable week to week."],
-  morale: ["Morale", "How happy the player is with their situation. It affects development, tilt risk, contract talks, and whether squad issues escalate."],
-  condition: ["Condition", "Current physical readiness. Matches and hard training drain it; rest and recovery staff restore it."],
-  confidence: ["Confidence", "Belief under pressure. It shapes duels, peeks, and clutch nerve, then gradually moves back toward neutral."],
-  salary: ["Weekly salary", "The player's wage paid every week. Long contracts protect the roster but keep this cost on the books."],
-  contract: ["Contract weeks", "Weeks remaining on the current deal. Expiring players can leave unless you renew them in time."],
-  languages: ["Languages", "Shared languages improve communication and chemistry. Proficiency matters, not just whether a language appears on the profile."],
-  scouting: ["Scouting read", "A summary of what your staff currently knows. More coverage sharpens ability ranges and unlocks deeper development and character reads."],
-  market_value: ["Asking price", "The opening cost of a deal. Contract protection, club stance, player interest, and your offer structure can move the final price."],
-  staff_ovr: ["Staff overall", "A role-weighted summary of the attributes that matter for this staff job. Specialty and system fit can matter as much as the headline number."],
+  // Players
+  ovr: ["Overall rating (OVR)", "A quick summary of the player's current attributes. Role comfort can move their match-day level away from this headline number.", "players"],
+  ability: ["Current ability", "The player's present playing level. This is what they can deliver now, before form, confidence, role comfort, and tactical fit shape a match.", "players"],
+  ceiling: ["Projected ceiling", "A scouting forecast of the player's likely peak, not a hard cap. Better scouting narrows the range; development and environment can still change the outcome.", "players"],
+  form: ["Form", "Recent match performance. Good form supports confidence and development; poor form can make a player less stable week to week.", "players"],
+  morale: ["Morale", "How happy the player is with their situation. It affects development, tilt risk, contract talks, and whether squad issues escalate.", "players"],
+  condition: ["Condition", "Current physical readiness. Matches and hard training drain it; rest and recovery staff restore it.", "players"],
+  confidence: ["Confidence", "Belief under pressure. It shapes duels, peeks, and clutch nerve, then gradually moves back toward neutral.", "players"],
+  role: ["Role", "The job a player does in the five. Duelists take first contact, initiators set up fights, controllers block sightlines, and sentinels hold and anchor sites.", "players"],
+  agent: ["Agent", "The character a player picks for a map. Each agent belongs to one role, and players are stronger on agents they know well.", "players"],
+  igl: ["In-game leader (IGL)", "The player who calls strategy during rounds. How well they call depends on calling experience and their tactical and comms skills.", "players"],
+  role_comfort: ["Role comfort", "Familiarity with the current role and playstyle assignment. A reassignment starts low and settles with time.", "players"],
+  chemistry: ["Team chemistry", "How well the five work together. Shared languages and good relationships raise it, and coordination-heavy tactics lean on it most.", "players"],
+  languages: ["Languages", "Shared languages improve communication and chemistry. Proficiency matters, not just whether a language appears on the profile.", "players"],
+  badge: ["Badge", "A public career marker earned from match or development events. Hover one to see its exact effect and how it can fade.", "players"],
+  scouting: ["Scouting read", "A summary of what your staff currently knows. More coverage sharpens ability ranges and unlocks deeper development and character reads.", "players"],
+  fog: ["Fog / scouting range", "Uncertainty in an outside read, shown as a range or a ~ before the number. More scouting narrows the band but never reveals private state perfectly.", "players"],
+
+  // Match day and tactics
+  default_five: ["Default five", "The five players who start unless a map-specific lineup says otherwise. Everyone else is on the bench and trains at a slower rate.", "match"],
+  dial: ["Coaching dial", "Every dial sits neutral at 50, which is always safe. Push one off centre only when your roster suits that style: a good fit earns an edge, a poor fit costs one.", "match"],
+  execution_edge: ["Execution edge", "Duel points gained or lost from how well your roster fits your tactics. It is exactly zero at neutral settings.", "match"],
+  game_plan: ["Game plan", "A one-match plan for your next opponent: a tactics swap, a focus target, and a prep edge from scouting. It is used up when the match is played.", "match"],
+  plan_status: ["Game plan status", "Whether an opponent-specific plan is set for the next fixture. Without one your team plays its standard coaching strategy, which is fine while you learn.", "match"],
+  scout_status: ["Opponent scouting", "How much your scout knows about the next opponent. At 50% you can read their coaching identity, and scouting feeds the prep edge a game plan can use.", "match"],
+  squad_status: ["Squad readiness", "Whether you can field a legal five, and whether anyone is tired enough that another heavy week risks burnout. Rest or rotate players flagged as a load risk.", "match"],
+  best_of: ["Best of 1 / 3 / 5", "How many maps decide the series. A best of 3 is won by the first team to take two maps.", "match"],
+
+  // League and season
+  rank: ["League position", "Your place in the regional table. Finishing above the playoff cutoff keeps the season alive.", "league"],
+  wins: ["Wins", "Matches won this season. The table is ordered by wins first.", "league"],
+  losses: ["Losses", "Matches lost this season.", "league"],
+  rounds_won: ["Rounds won (RW)", "Total rounds won across every map this season.", "league"],
+  rounds_lost: ["Rounds lost (RL)", "Total rounds lost across every map this season.", "league"],
+  round_diff: ["Round difference (+/-)", "Rounds won minus rounds lost. It helps separate teams tied on wins, alongside head-to-head results.", "league"],
+  rep: ["Reputation", "How big a name the club is, from 0 to 100. It makes players more willing to sign, raises sponsor income, and moves with results.", "league"],
+  league_form: ["Recent results", "The club's most recent results at a glance, so you can see who is on a run.", "league"],
+  playoff_cut: ["Playoff cutoff", "Teams above this line when the regular season ends qualify for the playoffs.", "league"],
+  remaining: ["Remaining (Rem)", "Regular-season matches still to play.", "league"],
+  proj_wins: ["Projected wins", "Where the win total lands if every team keeps playing at its current form. A forecast, not a guarantee.", "league"],
+
+  // Match stats
+  maps_played: ["Maps", "Maps played this season. Small samples swing wildly, so trust the numbers more as this grows.", "stats"],
+  rating: ["Rating", "One number for overall match impact, averaged per map. Higher is better.", "stats"],
+  acs: ["Average combat score (ACS)", "Combat score earned per round. The headline measure of how much a player gets done in fights.", "stats"],
+  kills: ["Kills (K)", "Total kills this season.", "stats"],
+  deaths: ["Deaths (D)", "Total deaths this season.", "stats"],
+  assists: ["Assists (A)", "Kills the player helped set up without landing the final shot.", "stats"],
+  kd: ["Kill/death ratio (K/D)", "Kills divided by deaths. Above 1.00 means more kills than deaths.", "stats"],
+  kast_pct: ["KAST%", "Share of rounds where the player got a Kill or an Assist, Survived, or was Traded. It rewards consistently useful rounds over highlight plays.", "stats"],
+  first_kills: ["First kills (FK)", "Rounds where this player got the opening kill. Opening kills swing rounds, because the other side plays one short.", "stats"],
+  first_deaths: ["First deaths (FD)", "Rounds where this player was the first to die.", "stats"],
+  fk_fd: ["First kill to first death ratio", "Above 1.00 means the player wins more opening duels than they lose.", "stats"],
+  hs_pct: ["Headshot %", "Share of the player's kills that were headshots.", "stats"],
+  trade_kills: ["Trade kills", "Kills that immediately avenge a teammate. High numbers point to good spacing and teamwork.", "stats"],
+  clutches: ["Clutches", "Rounds won as the last player alive, counting 1v1, 1v2, and bigger.", "stats"],
+  multikills: ["Multi-kill rounds (3K+)", "Rounds with three or more kills.", "stats"],
+  aces: ["Aces", "Rounds where the player killed all five opponents.", "stats"],
+  pistol_kills: ["Pistol-round kills", "Kills in the pistol rounds that open each half.", "stats"],
+  eco_kills: ["Eco kills", "Kills while your side was under-gunned and the opponent was not.", "stats"],
+  save_kills: ["Save kills", "Kills on a true save: sidearm in hand and no armour, during a gun round.", "stats"],
+  xduel: ["xDuel / xDE", "Actual duel wins compared with expected duel wins. A positive edge (xDE) means the player beats what the matchups predicted.", "stats"],
+  plants: ["Plants (Pl)", "Spike plants.", "stats"],
+  defuses: ["Defuses (Df)", "Spike defuses.", "stats"],
+  analytics_tier: ["Analytics department", "Your analysts decide how many stat columns and splits you can see. Better analytics staff and facilities unlock more.", "stats"],
+
+  // Money and market
+  credits: ["Credits (cr)", "The game's currency. Wages, upkeep, and sponsor income are all settled every week.", "money"],
+  balance: ["Club balance", "Cash in the bank. If it runs out the club becomes insolvent, so keep several weeks of wages in reserve.", "money"],
+  per_week: ["Credits per week", "What this line adds to or takes from the balance every time you advance a week.", "money"],
+  salary: ["Weekly salary", "The player's wage paid every week. Long contracts protect the roster but keep this cost on the books.", "money"],
+  contract: ["Contract weeks", "Weeks remaining on the current deal. Expiring players can leave unless you renew them in time.", "money"],
+  market_value: ["Asking price", "The opening cost of a deal. Contract protection, club stance, player interest, and your offer structure can move the final price.", "money"],
+  stream_revenue: ["Stream revenue", "What the player's stream earns each week. Their contract decides how it is split between player and club.", "money"],
+  swap_out: ["Release & sign", "Release one of your players and sign this free agent in the same move. This is not a player trade with another club.", "money"],
+  staff_ovr: ["Staff overall", "A role-weighted summary of the attributes that matter for this staff job. Specialty and system fit can matter as much as the headline number.", "money"],
+  marketability: ["Marketability", "A multiplier on what sponsors will pay. A bigger following and a stronger media department raise it.", "money"],
 });
+
+const GLOSSARY_GROUPS = Object.freeze([
+  ["players", "Players"],
+  ["match", "Match day & tactics"],
+  ["league", "League & season"],
+  ["stats", "Match stats"],
+  ["money", "Money & market"],
+]);
+
+// Inline glossary term: dotted underline + shared tooltip, keyboard focusable.
+const term = (key, text) =>
+  `<span class="term" data-tooltip-key="${esc(key)}" tabindex="0">${esc(text ?? TOOLTIP_LIBRARY[key]?.[0] ?? key)}</span>`;
 
 const badgeTooltip = (bd) => tooltipMarkup(
   bd.name || "Player badge",
@@ -227,40 +307,239 @@ const FIRST_WEEK_STEPS = Object.freeze([
   ["club", "Check the squad", "Confirm five starters, inspect condition and confidence, and set training."],
   ["tactics", "Prepare the fixture", "Read the opponent report and make a simple game plan."],
   ["market", "Know your options", "Scout one realistic target; you do not need to sign anyone immediately."],
-  ["dashboard", "Advance when ready", "Return to the Dashboard, check Needs You, then advance the week."],
+  ["dashboard", "Advance when ready", "Return to the Dashboard, check Needs You, then press Advance Week."],
 ]);
 
-const HELP_GLOSSARY = Object.freeze([
-  ["OVR / current ability", "What the player can deliver now. Role comfort, confidence, form, and tactics still shape match performance."],
-  ["Ceiling / potential", "A forecast of a player's likely peak, not a guaranteed maximum or hard cap."],
-  ["Form", "Recent performance. Useful, but noisier than attributes and a longer run of match data."],
-  ["Confidence", "Belief under pressure; it affects duels and clutch nerve and moves back toward neutral over time."],
-  ["Condition", "Physical readiness. Matches and hard training drain it; rest and recovery support restore it."],
-  ["Fog / scouting range", "Uncertainty in an external read. More scouting narrows the band but never reveals private state perfectly."],
-  ["Role comfort", "Familiarity with the current role and playstyle assignment. A reassignment starts low and settles with time."],
-  ["Badge", "A public career marker earned from match or development events. Hover it to see its exact effect and how it can fade."],
-  ["xDuel / xDE", "Actual duel wins compared with expected duel wins. It helps distinguish strong results from favorable matchups."],
+// The whole game in three beats, shown at the top of the handbook.
+const WEEK_LOOP = Object.freeze([
+  ["Decide", "Set your five, training, tactics, and any deals. Nothing happens until you say so."],
+  ["Advance", "Advance Week plays your match and settles training, scouting, and finances."],
+  ["Review", "Read the week report, see what changed, and adjust for the next fixture."],
 ]);
 
 function helpSeenKey() {
-  const world = App.mp?.code || App.state?.user_team?.id || "local";
-  return `esports-sim:first-week-guide:${world}`;
+  return `esports-sim:first-week-guide:${helpWorldKey()}`;
+}
+
+function helpWorldKey() {
+  return App.mp?.code || App.state?.user_team?.id || "local";
+}
+
+/* First-week progress is a per-browser UI preference (which guide steps the
+   manager has opened, whether they hid the coach bar). It never touches the
+   campaign: the save, the action log, and the sim know nothing about it. */
+function coachKey() {
+  return `esports-sim:first-week-progress:${helpWorldKey()}`;
+}
+
+function coachProgress() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(coachKey()) || "null"); } catch (_e) {}
+  return {
+    visited: Array.isArray(stored?.visited) ? stored.visited : [],
+    dismissed: !!stored?.dismissed,
+    wrapped: !!stored?.wrapped,
+  };
+}
+
+function saveCoachProgress(progress) {
+  try { localStorage.setItem(coachKey(), JSON.stringify(progress)); } catch (_e) {}
+}
+
+// The last step ("advance") completes by leaving week one, so only the
+// steps before it are tracked by visit.
+const coachVisitSteps = () => FIRST_WEEK_STEPS.slice(0, -1);
+const inFirstWeek = (state = App.state) =>
+  !!state && !state.draft_active && state.season === 1 && state.week === 1;
+
+function coachNextIndex(progress = coachProgress()) {
+  const index = coachVisitSteps().findIndex(([tab]) => !progress.visited.includes(tab));
+  return index === -1 ? FIRST_WEEK_STEPS.length - 1 : index;
+}
+
+function noteCoachVisit(tab) {
+  if (!inFirstWeek() || !coachVisitSteps().some(([stepTab]) => stepTab === tab)) return;
+  const progress = coachProgress();
+  if (progress.visited.includes(tab)) return;
+  progress.visited.push(tab);
+  saveCoachProgress(progress);
+}
+
+function coachPips(progress, currentIndex) {
+  return `<span class="coach-pips" aria-hidden="true">${FIRST_WEEK_STEPS.map(([tab], i) => {
+    const done = progress.visited.includes(tab);
+    return `<i data-pip="${tab}" class="${done ? "done" : ""}${i === currentIndex ? " current" : ""}"></i>`;
+  }).join("")}</span>`;
+}
+
+const COACH_LEAVE_MS = 240;   // matches the coach-out keyframes in app.css
+const coachArrow = `<span class="btn-arrow" aria-hidden="true">▸</span>`;
+let coachMarkup = "";         // last painted markup: an identical render is skipped, so motion never replays
+let coachDoneSeen = null;     // steps already drawn as done, so only a newly finished pip fills
+let coachLeaveTimer = 0;
+
+// Teal underline on the nav tab the coach is pointing at: the instruction
+// and the place to click light up together.
+function spotlightTab(tab) {
+  document.querySelectorAll("#tabs .tab.coach-next").forEach((button) => button.classList.remove("coach-next"));
+  if (tab) document.querySelector(`#tabs [data-tab="${tab}"]`)?.classList.add("coach-next");
+}
+
+function paintCoach(bar, markup, tone = "") {
+  clearTimeout(coachLeaveTimer);
+  bar.classList.remove("leaving");
+  bar.classList.toggle("coach-ready", tone === "ready");
+  bar.classList.toggle("coach-done", tone === "done");
+  if (!bar.classList.contains("hidden") && markup === coachMarkup) return false;
+  coachMarkup = markup;
+  bar.innerHTML = markup;
+  bar.classList.remove("hidden");
+  return true;
+}
+
+function hideCoach(bar, animate = false) {
+  spotlightTab(null);
+  document.getElementById("advance-btn")?.classList.remove("coach-target");
+  if (bar.classList.contains("hidden")) return;
+  // A collapse already in flight finishes on its own timer.
+  if (bar.classList.contains("leaving") && !animate) return;
+  coachMarkup = "";
+  clearTimeout(coachLeaveTimer);
+  const finish = () => {
+    bar.classList.add("hidden");
+    bar.classList.remove("leaving", "coach-ready", "coach-done");
+    bar.innerHTML = "";
+  };
+  if (!animate) return finish();
+  bar.classList.add("leaving");
+  coachLeaveTimer = setTimeout(finish, COACH_LEAVE_MS);
+}
+
+/* Coach bar: one slim strip under the nav during the first week. It names the
+   next step, or, when you are standing on a step's screen, what to do there.
+   It lives in the app chrome (not the Dashboard), so it spends none of the
+   Dashboard's card budget, and it can be hidden at any time. */
+function renderCoach(opts = {}) {
+  const bar = document.getElementById("coach");
+  const advance = document.getElementById("advance-btn");
+  if (!bar) return;
+  const state = App.state;
+  const progress = coachProgress();
+  if (!state || state.draft_active || progress.dismissed) return hideCoach(bar, !!opts.animate);
+
+  // Week two: a single closing note for managers who used the guide.
+  if (state.season === 1 && state.week === 2 && progress.visited.length && !progress.wrapped) {
+    advance?.classList.remove("coach-target");
+    spotlightTab(null);
+    paintCoach(bar,
+      `<svg class="coach-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>` +
+      `<div class="coach-text"><span class="coach-kicker">First week complete</span>` +
+      `<b>That is the whole loop: decide, advance, review.</b>` +
+      `<span>Start each week from Needs You on the Dashboard. The Guide button reopens the handbook and the list of key terms at any time.</span></div>` +
+      `<div class="coach-actions"><button class="btn btn-sm btn-primary" data-coach="wrap">Got it</button></div>`,
+      "done");
+    return;
+  }
+  if (!inFirstWeek(state)) return hideCoach(bar, !!opts.animate);
+
+  const steps = FIRST_WEEK_STEPS;
+  const nextIndex = coachNextIndex(progress);
+  const [nextTab, nextTitle, nextBody] = steps[nextIndex];
+  const allVisited = nextIndex === steps.length - 1;
+  const hereIndex = coachVisitSteps().findIndex(([tab]) => tab === App.tab);
+  const here = hereIndex >= 0 ? steps[hereIndex] : null;
+  const guide = here ? TAB_GUIDES[here[0]] : null;
+  advance?.classList.toggle("coach-target", allVisited);
+
+  let text, action, pointAt = null;
+  if (here) {
+    // Standing on a step's screen: teach it in place, then point onward.
+    text =
+      `<span class="coach-kicker">First week · Step ${hereIndex + 1} of ${steps.length}${coachPips(progress, hereIndex)}</span>` +
+      `<b>${esc(here[1])}</b>` +
+      `<span>${esc(guide.start)} <em>${esc(guide.watch)}</em></span>`;
+    pointAt = nextTab;
+    action = allVisited
+      ? `<button class="btn btn-sm btn-primary" data-coach="go" data-coach-tab="dashboard">Back to Dashboard ${coachArrow}</button>`
+      : `<button class="btn btn-sm btn-primary" data-coach="go" data-coach-tab="${nextTab}">Next: ${esc(nextTitle)} ${coachArrow}</button>`;
+  } else if (allVisited) {
+    text =
+      `<span class="coach-kicker">First week · Step ${steps.length} of ${steps.length}${coachPips(progress, nextIndex)}</span>` +
+      `<b>You are ready to advance</b>` +
+      `<span>Advance Week plays your match and settles training, scouting, and finances, then shows a report. Anything under Needs You can still be handled first.</span>`;
+    action = `<button class="btn btn-sm btn-primary" data-coach="advance">Advance Week ${coachArrow}</button>`;
+  } else {
+    text =
+      `<span class="coach-kicker">First week · Step ${nextIndex + 1} of ${steps.length}${coachPips(progress, nextIndex)}</span>` +
+      `<b>${esc(nextTitle)}</b><span>${esc(nextBody)}</span>`;
+    pointAt = nextTab;
+    action = `<button class="btn btn-sm btn-primary" data-coach="go" data-coach-tab="${nextTab}">Open ${esc(TAB_GUIDES[nextTab].label)} ${coachArrow}</button>`;
+  }
+  spotlightTab(pointAt && pointAt !== App.tab ? pointAt : null);
+
+  const painted = paintCoach(bar,
+    `<div class="coach-text">${text}</div>` +
+    `<div class="coach-actions">${action}` +
+    `<button class="btn btn-sm" data-coach="handbook">All steps</button>` +
+    `<button class="btn btn-sm coach-hide" data-coach="dismiss" aria-label="Hide first-week tips" ` +
+    `data-tooltip="${tooltipMarkup("Hide first-week tips", "The Guide button in the top bar brings them back.")}">Hide</button></div>`,
+    !here && allVisited ? "ready" : "");
+  // Only a step finished since the last paint fills its pip; the rest sit full.
+  if (painted && coachDoneSeen) {
+    for (const tab of progress.visited) {
+      if (!coachDoneSeen.includes(tab)) bar.querySelector(`[data-pip="${tab}"]`)?.classList.add("fresh");
+    }
+  }
+  coachDoneSeen = [...progress.visited];
+}
+
+function initCoach() {
+  document.getElementById("coach")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-coach]");
+    if (!button) return;
+    const progress = coachProgress();
+    const act = button.dataset.coach;
+    if (act === "go") return dashGoTab(button.dataset.coachTab);
+    if (act === "advance") return document.getElementById("advance-btn")?.click();
+    if (act === "handbook") return openHelp("first-week");
+    if (act === "dismiss") progress.dismissed = true;
+    if (act === "wrap") progress.wrapped = true;
+    saveCoachProgress(progress);
+    renderCoach({ animate: true });
+  });
 }
 
 function helpFirstWeekMarkup() {
-  return `<div class="help-intro"><b>Your first week</b><span>Do these five things, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span>` +
-    `<button class="btn btn-sm btn-primary help-tour-btn" data-tour-start>▶ Take the 1-minute tour</button></div>` +
-    `<ol class="help-steps">${FIRST_WEEK_STEPS.map(([tab, title, body], i) =>
-      `<li><span class="help-step-num">${i + 1}</span><div><b>${esc(title)}</b><p>${esc(body)}</p></div>` +
-      `<button class="btn btn-sm" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`
-    ).join("")}</ol>` +
+  const progress = coachProgress();
+  const tracking = inFirstWeek();
+  const nextIndex = tracking ? coachNextIndex(progress) : -1;
+  const loop = `<div class="help-loop">${WEEK_LOOP.map(([title, body], i) =>
+    `<div style="--i:${i}"><span class="microlabel">${i + 1} · ${esc(title)}</span><span>${esc(body)}</span></div>`
+  ).join("")}</div>`;
+  const steps = FIRST_WEEK_STEPS.map(([tab, title, body], i) => {
+    const done = tracking && progress.visited.includes(tab);
+    const next = i === nextIndex;
+    return `<li class="${done ? "done" : ""}${next ? " next" : ""}" style="--i:${i}">` +
+      `<span class="help-step-num" ${done ? 'aria-label="Done"' : ""}>${done ? "✓" : i + 1}</span>` +
+      `<div><b>${esc(title)}</b>${next ? ' <span class="pill">next</span>' : ""}<p>${esc(body)}</p></div>` +
+      `<button class="btn btn-sm${next ? " btn-primary" : ""}" data-help-tab="${tab}">Open ${esc(TAB_GUIDES[tab].label)}</button></li>`;
+  }).join("");
+  const tips = tracking && progress.dismissed
+    ? `<div class="help-note"><b>Step-by-step tips are hidden</b><span>The strip under the navigation walks you through these steps one screen at a time.</span>` +
+      `<button class="btn btn-sm" data-help-coach="show">Show tips again</button></div>`
+    : "";
+  return `<div class="help-intro"><b>How a week works</b><span>You run the club between matches. Every week follows the same three beats.</span></div>` +
+    loop +
+    `<div class="help-intro help-intro-steps"><b>Your first week</b><span>Five short stops, then advance. You cannot ruin a save by leaving advanced systems at their defaults.</span>` +
+    `<button class="btn btn-sm help-tour-btn" data-tour-start>▶ Take the 1-minute tour</button></div>` +
+    `<ol class="help-steps">${steps}</ol>` + tips +
     `<div class="help-note"><b>A safe learning setup</b><span>Keep tactics near 50, use normal training intensity, scout before buying, and leave cash for several weeks of wages.</span></div>`;
 }
 
 function helpScreensMarkup(selected = App.tab) {
   const current = selected === "tactics" ? "tactics" : selected;
-  return `<div class="help-screen-grid">${Object.entries(TAB_GUIDES).map(([tab, guide]) =>
-    `<article class="help-screen-card${tab === current ? " current" : ""}">` +
+  return `<div class="help-screen-grid">${Object.entries(TAB_GUIDES).map(([tab, guide], i) =>
+    `<article class="help-screen-card${tab === current ? " current" : ""}" style="--i:${i}">` +
       `<div class="help-screen-head"><b>${esc(guide.label)}</b>${tab === current ? '<span class="pill">current</span>' : ""}</div>` +
       `<p>${esc(guide.goal)}</p><div><span class="microlabel">Start here</span>${esc(guide.start)}</div>` +
       `<div><span class="microlabel">Watch for</span>${esc(guide.watch)}</div>` +
@@ -269,9 +548,51 @@ function helpScreensMarkup(selected = App.tab) {
 }
 
 function helpGlossaryMarkup() {
-  return `<div class="help-glossary">${HELP_GLOSSARY.map(([term, desc]) =>
-    `<div><b>${esc(term)}</b><span>${esc(desc)}</span></div>`
-  ).join("")}</div><div class="help-note"><b>Hover for detail</b><span>Most numbers, abbreviations, badges, controls, and table headings have tooltips. Keyboard users can focus badge and info icons to read the same explanations.</span></div>`;
+  const entries = Object.values(TOOLTIP_LIBRARY);
+  const groups = GLOSSARY_GROUPS.map(([id, label], i) =>
+    `<section class="help-glossary-group" data-glossary-group style="--i:${i}"><h3 class="microlabel">${esc(label)}</h3>` +
+    `<div class="help-glossary">${entries.filter((entry) => entry[2] === id).map(([name, desc]) =>
+      `<div data-glossary-entry><b>${esc(name)}</b><span>${esc(desc)}</span></div>`
+    ).join("")}</div></section>`
+  ).join("");
+  return `<div class="help-search-row">` +
+    `<input id="help-search" type="search" placeholder="Search ${entries.length} terms, e.g. ACS, morale, cutoff" aria-label="Search key terms" autocomplete="off">` +
+    `<span id="help-search-count" class="muted" aria-live="polite"></span></div>` +
+    groups +
+    `<p id="help-search-empty" class="muted hidden">No term matches that search. Try a shorter word, or hover the label on screen.</p>` +
+    `<div class="help-note"><b>The same text appears in place</b><span>Any label with a dotted underline explains itself on hover or keyboard focus, so you rarely need to come back here mid-task.</span></div>`;
+}
+
+// Escape text for innerHTML and wrap each case-insensitive match in <mark>.
+function markMatches(text, needle) {
+  if (!needle) return esc(text);
+  const lower = text.toLowerCase();
+  let out = "", from = 0, at = lower.indexOf(needle);
+  while (at !== -1) {
+    out += `${esc(text.slice(from, at))}<mark>${esc(text.slice(at, at + needle.length))}</mark>`;
+    from = at + needle.length;
+    at = lower.indexOf(needle, from);
+  }
+  return out + esc(text.slice(from));
+}
+
+function filterGlossary(query) {
+  const needle = query.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll("#help-body [data-glossary-group]").forEach((group) => {
+    let groupShown = 0;
+    group.querySelectorAll("[data-glossary-entry]").forEach((entry) => {
+      const match = !needle || entry.textContent.toLowerCase().includes(needle);
+      entry.classList.toggle("hidden", !match);
+      for (const part of entry.children) part.innerHTML = markMatches(part.textContent, match ? needle : "");
+      if (match) groupShown += 1;
+    });
+    group.classList.toggle("hidden", groupShown === 0);
+    shown += groupShown;
+  });
+  document.getElementById("help-search-empty")?.classList.toggle("hidden", shown > 0);
+  const count = document.getElementById("help-search-count");
+  if (count) count.textContent = needle ? `${shown} match${shown === 1 ? "" : "es"}` : "";
 }
 
 let helpUsageSection = null;
@@ -288,7 +609,10 @@ function renderHelp(section = "first-week", selected = App.tab) {
   if (!body) return;
   section = ["first-week", "screens", "glossary"].includes(section) ? section : "first-week";
   document.querySelectorAll("[data-help-section]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.helpSection === section);
+    const on = button.dataset.helpSection === section;
+    button.classList.toggle("active", on);
+    button.classList.toggle("on", on);
+    button.setAttribute("aria-selected", on ? "true" : "false");
   });
   body.innerHTML = section === "screens"
     ? helpScreensMarkup(selected)
@@ -296,11 +620,18 @@ function renderHelp(section = "first-week", selected = App.tab) {
   recordHelpSection(section);
 }
 
+const HELP_CLOSE_MS = 170;    // matches the overlay-out keyframes in app.css
+let helpCloseTimer = 0;
+let helpReturnFocus = null;
+
 function openHelp(section = "first-week", selected = App.tab, automatic = false) {
   const overlay = document.getElementById("help");
   if (!overlay) return;
   if (!document.getElementById("help-body")) return;
   const opening = overlay.classList.contains("hidden");
+  clearTimeout(helpCloseTimer);
+  overlay.classList.remove("closing");
+  if (opening) helpReturnFocus = document.activeElement;
   overlay.dataset.automatic = automatic ? "true" : "false";
   // The "don't open automatically again" box only makes sense for the
   // first-week auto-open; a manual open is always intentional.
@@ -325,10 +656,19 @@ function openHelp(section = "first-week", selected = App.tab, automatic = false)
 function closeHelp() {
   const overlay = document.getElementById("help");
   if (!overlay) return;
-  if (!overlay.classList.contains("hidden")) window.Usage?.interaction("handbook/close");
+  if (!overlay.classList.contains("hidden")) {
+    window.Usage?.interaction("handbook/close");
+    // The handbook is closed at once ("hidden" is what the rest of the app
+    // reads); "closing" only keeps it painted while the exit animation plays.
+    overlay.classList.add("closing");
+    clearTimeout(helpCloseTimer);
+    helpCloseTimer = setTimeout(() => overlay.classList.remove("closing"), HELP_CLOSE_MS);
+  }
   helpUsageSection = null;
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
+  if (helpReturnFocus?.isConnected && overlay.contains(document.activeElement)) helpReturnFocus.focus({ preventScroll: true });
+  helpReturnFocus = null;
   if (overlay.dataset.automatic === "true") {
     const key = overlay.dataset.preferenceKey || helpSeenKey();
     const skip = document.getElementById("help-skip");
@@ -338,6 +678,7 @@ function closeHelp() {
     } catch (_e) {}
   }
   overlay.dataset.automatic = "false";
+  renderCoach();
 }
 
 function maybeShowFirstWeekHelp(state) {
@@ -367,6 +708,11 @@ function initHelpSystem() {
     }
     const section = event.target.closest("[data-help-section]");
     if (section) return renderHelp(section.dataset.helpSection, App.tab);
+    if (event.target.closest("[data-help-coach]")) {
+      saveCoachProgress({ ...coachProgress(), dismissed: false });
+      renderCoach();
+      return renderHelp("first-week", App.tab);
+    }
     const destination = event.target.closest("[data-help-tab]");
     if (destination) {
       closeHelp();
@@ -374,6 +720,9 @@ function initHelpSystem() {
     } else if (event.target.id === "help") {
       closeHelp();
     }
+  });
+  document.getElementById("help")?.addEventListener("input", (event) => {
+    if (event.target.id === "help-search") filterGlossary(event.target.value);
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !document.getElementById("help")?.classList.contains("hidden")) closeHelp();
@@ -386,7 +735,9 @@ function initHelpSystem() {
 
 window.openHelp = openHelp;
 window.closeHelp = closeHelp;
+window.term = term;
 initHelpSystem();
+initCoach();
 
 window.askBreakdown = askBreakdown;
 window.humanize = humanize;
@@ -585,6 +936,18 @@ $("#worlds-btn").onclick = async () => {
 // render disabled. `onPick(team)` fires for a free pick.
 function renderTeamGrid(grid, teams, onPick) {
   grid.innerHTML = "";
+  // New-manager primer: the setup options above are all optional, and the
+  // two numbers on each card are the only ones that change how hard it is.
+  const hasEconomy = teams.some((t) => t.reputation !== undefined);
+  const primer = el("div", "lobby-primer",
+    `<b>First career? Just pick a club.</b>` +
+    `<span>Every option above can stay as it is. Choosing a club starts the campaign, and a short guide walks you through your first week.` +
+    (hasEconomy
+      ? ` On each card, <b>rep</b> is the club's reputation out of 100 and <b>cr</b> is its starting cash. A well-known club with a healthy balance forgives more mistakes; a small club on a thin budget is the harder start.`
+      : "") +
+    `</span>`);
+  primer.style.gridColumn = "1 / -1";
+  grid.appendChild(primer);
   const regions = [...new Set(teams.map((t) => t.region))].sort();
   for (const region of regions) {
     const head = el("div", "muted", region ? region.toUpperCase() : "");
@@ -597,7 +960,7 @@ function renderTeamGrid(grid, teams, onPick) {
       // world-preview teams carry rep/balance.
       const sub =
         t.reputation !== undefined
-          ? `rep ${t.reputation} · ${money(t.balance)}`
+          ? `<span data-tooltip-key="rep">rep ${t.reputation}</span> · <span data-tooltip-key="balance">${money(t.balance)}</span>`
           : t.region.toUpperCase();
       const btn = el(
         "button",
@@ -606,6 +969,7 @@ function renderTeamGrid(grid, teams, onPick) {
          <span class="muted">${sub}</span>`
       );
       btn.disabled = !!taken;
+      btn.style.setProperty("--i", String(Math.min(grid.querySelectorAll(".team-pick").length, 16)));
       if (!taken) btn.onclick = () => onPick(t);
       grid.appendChild(btn);
     }
@@ -1160,6 +1524,11 @@ function renderApp() {
   window.Usage?.view(App.tab + (sub ? `/${sub}` : ""));
   // Each render gets a fresh container; a slower, superseded async render
   // finishes into a detached node instead of double-appending.
+  // The old view is about to be detached: drop any tooltip anchored to it,
+  // then let the first-week coach react to the screen being opened.
+  window.hideTooltip?.();
+  noteCoachVisit(App.tab);
+  renderCoach();
   const container = el("div", "tab-panel-active");
   $("#view").replaceChildren(container);
   ({ inbox, dashboard, facilities: window.facilitiesScreen, roster, club, tactics, season, market, stats, company })[App.tab](container);
@@ -2182,9 +2551,9 @@ async function dashboard(v) {
       `<h2>Match day</h2>` +
       `<p class="muted">Everything to settle before you advance the week.</p>`));
     const readiness = el("div", "es-readiness",
-      `<span class="pill ${planSet ? "good" : "warn"}">${planSet ? "Plan locked" : "Plan needed"}</span>` +
-      `<span class="pill ${scoutReady?.ready ? "good" : ""}">${esc(scoutReady?.badge || "Scouting unassigned")}</span>` +
-      `<span class="pill ${rosterShort || burnoutWatch.length ? "warn" : "good"}">${rosterShort ? "Squad short" : burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
+      `<span class="pill ${planSet ? "good" : "warn"}" data-tooltip-key="plan_status" tabindex="0">${planSet ? "Plan locked" : "Plan needed"}</span>` +
+      `<span class="pill ${scoutReady?.ready ? "good" : ""}" data-tooltip-key="scout_status" tabindex="0">${esc(scoutReady?.badge || "Scouting unassigned")}</span>` +
+      `<span class="pill ${rosterShort || burnoutWatch.length ? "warn" : "good"}" data-tooltip-key="squad_status" tabindex="0">${rosterShort ? "Squad short" : burnoutWatch.length ? burnoutWatch.length + " load risk" : "Squad ready"}</span>`);
     const mdBtn = el("button", "btn btn-sm md-open", "Match day briefing ▸");
     mdBtn.title = "The full pre-match buildup: storylines, form, danger men, maps";
     mdBtn.onclick = openMatchday;
@@ -2736,8 +3105,8 @@ async function dashboard(v) {
       const t = el("table");
       t.dataset.nosort = "1";
       t.innerHTML =
-        `<thead><tr><th>#</th><th>Team</th><th class="num">W</th>` +
-        `<th class="num">L</th><th class="num">+/-</th></tr></thead>`;
+        `<thead><tr><th data-tooltip-key="rank">#</th><th>Team</th><th class="num" data-tooltip-key="wins">W</th>` +
+        `<th class="num" data-tooltip-key="losses">L</th><th class="num" data-tooltip-key="round_diff">+/-</th></tr></thead>`;
       const tb = el("tbody");
       const myIdx = rows.findIndex((r) => r.id === myId);
       const show = new Set();
@@ -3325,7 +3694,7 @@ async function roster(v, opts = {}) {
     : "";
   const t = el("table", "roster-table");
   t.innerHTML = overview
-    ? `<thead><tr>${starTh}<th>Player</th><th>Role</th><th>Agent</th>
+    ? `<thead><tr>${starTh}<th>Player</th><th data-tooltip-key="role">Role</th><th data-tooltip-key="agent">Agent</th>
        <th class="num">Age</th><th class="num" data-tooltip-key="ovr">OVR</th><th data-tooltip-key="ceiling">Ceiling</th>
        <th data-tooltip-key="form">Form</th><th data-tooltip-key="morale">Morale</th><th class="num" data-tooltip-key="condition">Condition</th><th data-tooltip-key="confidence">Confidence</th>
        <th class="num" data-tooltip-key="salary">Salary</th><th class="num" data-tooltip-key="contract">Wks</th><th></th></tr></thead>`
@@ -4264,7 +4633,7 @@ function tacticsStrategy(main, rail, data) {
     const tone = Math.abs(total) < 0.2 ? "" : total > 0 ? "good" : "bad";
     const sign = total > 0 ? "+" : "";
     edge.className = `tac-edge ${tone}`;
-    edge.innerHTML = `<span class="tac-edge-lab">Execution edge</span>
+    edge.innerHTML = `<span class="tac-edge-lab term" data-tooltip-key="execution_edge" tabindex="0">Execution edge</span>
       <span class="tac-edge-val">${sign}${total.toFixed(1)}</span>
       <span class="tac-edge-sub">duel points from how your roster fits this system
       (neutral = 0, capped ±${f.mod_cap})</span>`;
@@ -4283,7 +4652,7 @@ function tacticsStrategy(main, rail, data) {
     const block = el("div", "tac-dial");
 
     const tooltipText = `<h4>${d.label}</h4><div class='tooltip-desc'>${DIAL_DESCRIPTIONS[d.key]}</div>`;
-    const head = el("div", "tac-head", `<span class="tac-name">${d.label} <span class="info-btn" data-tooltip="${tooltipText}">i</span></span>`);
+    const head = el("div", "tac-head", `<span class="tac-name">${d.label} <span class="info-btn" tabindex="0" role="img" aria-label="About ${esc(d.label)}" data-tooltip="${tooltipText}">i</span></span>`);
     const desc = el("span", "tac-desc");
     const valBadge = el("span", "tac-val mono");
     head.appendChild(desc);
@@ -4378,7 +4747,7 @@ function tacticsStrategy(main, rail, data) {
   main.appendChild(card);
 
   /* -- rail: site focus + save --------------------------------------------- */
-  const siteCard = el("div", "card", `<h2>Site focus <span class="info-btn" data-tooltip="<h4>Site Focus</h4><div class='tooltip-desc'>Biases which bomb site your team targets on attack. Balanced has no bias. Commit A/B/C will heavily favor that site.</div>">i</span></h2>`);
+  const siteCard = el("div", "card", `<h2>Site focus <span class="info-btn" tabindex="0" role="img" aria-label="About site focus" data-tooltip="<h4>Site Focus</h4><div class='tooltip-desc'>Biases which bomb site your team targets on attack. Balanced has no bias. Commit A/B/C will heavily favor that site.</div>">i</span></h2>`);
   siteCard.appendChild(el("p", "muted",
     "Bias the attack toward one site. Pure macro — it steers where you hit, not who wins duels."));
   const seg = el("div", "tac-seg");
@@ -4436,7 +4805,7 @@ function lineupCard(v, lineup) {
   // The fixed column widths below assume four columns; flag the five-column
   // variant so the CSS can rebalance instead of clipping Edge off the card.
   if (hasEdge) t.classList.add("has-edge");
-  t.innerHTML = `<thead><tr><th>Player</th><th>Role</th><th>Agent</th>
+  t.innerHTML = `<thead><tr><th>Player</th><th data-tooltip-key="role">Role</th><th data-tooltip-key="agent">Agent</th>
     <th class="num">Mastery</th>${edgeTh}</tr></thead>`;
   const tb = el("tbody");
   const pending = {}; // pid -> agent_id ("" = auto)
@@ -4918,8 +5287,8 @@ function seasonLeague(ws, data, league, power) {
   const mkTable = (rows, cut) => {
     const t = el("table");
     t.dataset.nosort = "1";
-    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th>
-      <th class="num">RW</th><th class="num">RL</th><th class="num">+/-</th><th class="num">Rep</th><th>Form</th></tr></thead>`;
+    t.innerHTML = `<thead><tr><th data-tooltip-key="rank">#</th><th>Team</th><th class="num" data-tooltip-key="wins">W</th><th class="num" data-tooltip-key="losses">L</th>
+      <th class="num" data-tooltip-key="rounds_won">RW</th><th class="num" data-tooltip-key="rounds_lost">RL</th><th class="num" data-tooltip-key="round_diff">+/-</th><th class="num" data-tooltip-key="rep">Rep</th><th data-tooltip-key="league_form">Form</th></tr></thead>`;
     const tb = el("tbody");
     rows.forEach((r, i) => {
       const outTag = r.eliminated
@@ -4941,7 +5310,7 @@ function seasonLeague(ws, data, league, power) {
       // The top-4 playoff cutoff line inside the tier-1 table during the
       // regular season (server sends the cut + phase; rows are ranked).
       if (cut && i === cut - 1 && i < rows.length - 1) {
-        tb.appendChild(el("tr", "playoff-cut", `<td colspan="9">Playoff cutoff</td>`));
+        tb.appendChild(el("tr", "playoff-cut", `<td colspan="9"><span data-tooltip-key="playoff_cut">Playoff cutoff</span></td>`));
       }
     });
     t.appendChild(tb);
@@ -4989,7 +5358,7 @@ function seasonLeague(ws, data, league, power) {
     const scroll = el("div", "card-scroll");
     const t = el("table", "es-proj");
     t.dataset.nosort = "1";
-    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">Rem</th><th class="num">Proj W</th></tr></thead>`;
+    t.innerHTML = `<thead><tr><th>#</th><th>Team</th><th class="num" data-tooltip-key="wins">W</th><th class="num" data-tooltip-key="remaining">Rem</th><th class="num" data-tooltip-key="proj_wins">Proj W</th></tr></thead>`;
     const tb = el("tbody");
     for (const r of league.projection) {
       tb.appendChild(el("tr", "",
@@ -5845,10 +6214,10 @@ const FreeAgentTable = ({ data, freeAgents, triggerRefresh }) => {
           <th data-tooltip-key="ability">Ability</th>
           <th data-tooltip-key="ceiling">Ceiling</th>
           <th data-tooltip-key="languages">Languages</th>
-          <th class="num">Stream revenue</th>
+          <th class="num" data-tooltip-key="stream_revenue">Stream revenue</th>
           <th class="num" data-tooltip-key="market_value">Asking</th>
           <th></th>
-          <th>Swap out</th>
+          <th data-tooltip-key="swap_out">Swap out</th>
         </tr>
       </thead>
       <tbody>
@@ -7188,7 +7557,7 @@ async function scouting(v) {
 // fields your department can't compile — a column renders only when its
 // key is present in the rows (never recomputed client-side).
 const STAT_COLS = [
-  { k: "maps", h: "Maps" },
+  { k: "maps", h: "Maps", tip: "maps_played" },
   { k: "rating", h: "Rating", f: (v) => `<b>${v.toFixed(2)}</b>` },
   { k: "acs", h: "ACS" },
   { k: "kills", h: "K" },
@@ -7201,15 +7570,15 @@ const STAT_COLS = [
   { k: "fk_fd", h: "FK:FD", f: (v) => v.toFixed(2) },
   { k: "hs_pct", h: "HS%" },
   { k: "trade_kills", h: "Trades" },
-  { k: "clutches", h: "Clutch", t: "clutch round wins (1v1 + 1v2 + 1vX)" },
+  { k: "clutches", h: "Clutch" },
   { k: "multikills", h: "3K+" },
   { k: "aces", h: "Aces" },
   { k: "pistol_kills", h: "Pistol K" },
-  { k: "eco_kills", h: "Eco K", t: "kills while your side was under-gunned" },
-  { k: "save_kills", h: "Save K", t: "kills on a sidearm save" },
-  { k: "xduel_expected_wins", h: "xDuel Exp" },
-  { k: "xduel_actual_wins", h: "xDuel Act" },
-  { k: "xde", h: "xDE", f: (v) => v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2) },
+  { k: "eco_kills", h: "Eco K" },
+  { k: "save_kills", h: "Save K" },
+  { k: "xduel_expected_wins", h: "xDuel Exp", tip: "xduel" },
+  { k: "xduel_actual_wins", h: "xDuel Act", tip: "xduel" },
+  { k: "xde", h: "xDE", tip: "xduel", f: (v) => v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2) },
   { k: "plants", h: "Pl" },
   { k: "defuses", h: "Df" },
 ];
@@ -7314,7 +7683,7 @@ function statsLeaders(ws, data, tier, split, lgTier) {
     const wrap = el("div", "table-scroll");
     const t = el("table");
     t.innerHTML = `<thead><tr><th>#</th><th>Player</th><th>Team</th>${cols
-      .map((c) => `<th class="num" ${c.t ? `title="${c.t}"` : ""}>${c.h}</th>`)
+      .map((c) => `<th class="num" ${TOOLTIP_LIBRARY[c.tip || c.k] ? `data-tooltip-key="${c.tip || c.k}"` : ""}>${c.h}</th>`)
       .join("")}</tr></thead>`;
     const tb = el("tbody");
     data.players.slice(0, 40).forEach((r, i) => {
@@ -7336,7 +7705,7 @@ function statsLeaders(ws, data, tier, split, lgTier) {
   ws.appendChild(lead);
 
   const banner = el("div", "card ws-12");
-  banner.innerHTML = `<h2>Analytics department — tier ${data.analytics.tier}</h2>
+  banner.innerHTML = `<h2>${term("analytics_tier", "Analytics department")} — tier ${data.analytics.tier}</h2>
     <p class="muted">${esc(data.analytics.label)}${
       data.analytics.next_unlock
         ? ` · hire a better analyst / upgrade the analytics suite to unlock: <b>${esc(data.analytics.next_unlock)}</b>`
@@ -8245,7 +8614,7 @@ const FinancesTab = ({ onOpenBrand }) => {
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th class="num">cr / wk</th>
+                  <th class="num" data-tooltip-key="per_week">cr / wk</th>
                 </tr>
               </thead>
               <tbody>
@@ -8919,7 +9288,11 @@ function closeReport() {
 window.closeReport = closeReport;
 window.render = render;
 
-/* -- Global Tooltip System ---------------------------------------------------- */
+/* -- Global Tooltip System ----------------------------------------------------
+   One delegated layer for every [data-tooltip], [data-tooltip-key] (shared
+   glossary) and legacy [title]. Hover waits a beat so sweeping the mouse over
+   a table does not strobe; keyboard focus shows at once; a press, a scroll
+   that moves the anchor away, Escape, or the anchor leaving the DOM hides. */
 (function initTooltipSystem() {
   let tooltipEl = document.getElementById("es-tooltip");
   if (!tooltipEl) {
@@ -8930,40 +9303,101 @@ window.render = render;
   tooltipEl.setAttribute("role", "tooltip");
   tooltipEl.setAttribute("aria-hidden", "true");
 
+  const SELECTOR = "[data-tooltip], [data-tooltip-key], [title]";
+  const HOVER_DELAY_MS = 280;   // first tooltip: wait for intent
+  const WARM_DELAY_MS = 60;     // moving between labels: stay responsive
+  const WARM_WINDOW_MS = 400;
+  const LINGER_MS = 110;        // grace after leaving a label; longer than WARM_DELAY_MS so a neighbour takes over
+  const GAP = 10;               // anchor-to-tooltip distance (room for the caret)
+  const EDGE = 8;               // minimum distance from the viewport edge
+
   let activeTooltipTarget = null;
+  let pendingTarget = null;
+  let pendingTimer = 0;
+  let lastHiddenAt = 0;
+  let pressedTarget = null;     // a mouse press silences its own anchor until the pointer leaves
+  let lingerTimer = 0;
+
+  function cancelPending() {
+    clearTimeout(pendingTimer);
+    pendingTimer = 0;
+    pendingTarget = null;
+  }
 
   function showTooltip(target, html) {
-    if (!html) return;
+    cancelPending();
+    clearTimeout(lingerTimer);
+    if (!html || !target.isConnected) return;
+    if (activeTooltipTarget && activeTooltipTarget !== target) {
+      activeTooltipTarget.removeAttribute("aria-describedby");
+    }
     activeTooltipTarget = target;
-    tooltipEl.innerHTML = html;
-    tooltipEl.classList.add("active");
-    tooltipEl.setAttribute("aria-hidden", "false");
+    const wasVisible = tooltipEl.classList.contains("active");
+    tooltipEl.classList.toggle("glide", wasVisible);
+    tooltipEl.innerHTML = `<div class="tooltip-body">${html}</div>`;
     target.setAttribute("aria-describedby", "es-tooltip");
     positionTooltip(target);
+    if (activeTooltipTarget !== target) return;   // anchor vanished while measuring
+    if (!wasVisible) void tooltipEl.offsetWidth;  // commit the resting pose first
+    tooltipEl.classList.add("active");
+    tooltipEl.setAttribute("aria-hidden", "false");
+  }
+
+  // Hide soon, unless another label claims the bubble first.
+  function lingerThenHide(target) {
+    clearTimeout(lingerTimer);
+    lingerTimer = setTimeout(() => {
+      if (activeTooltipTarget === target) hideTooltip(target);
+    }, LINGER_MS);
   }
 
   function hideTooltip(target) {
-    if (activeTooltipTarget === target) {
-      activeTooltipTarget = null;
-      tooltipEl.classList.remove("active");
-      tooltipEl.setAttribute("aria-hidden", "true");
-      target.removeAttribute("aria-describedby");
-    }
+    cancelPending();
+    if (!activeTooltipTarget || (target && activeTooltipTarget !== target)) return;
+    clearTimeout(lingerTimer);
+    activeTooltipTarget.removeAttribute("aria-describedby");
+    activeTooltipTarget = null;
+    lastHiddenAt = Date.now();
+    tooltipEl.classList.remove("active");
+    tooltipEl.setAttribute("aria-hidden", "true");
+  }
+
+  function scheduleTooltip(target) {
+    // Back on the label that is already showing: cancel its pending goodbye.
+    if (target === activeTooltipTarget) return clearTimeout(lingerTimer);
+    if (target === pendingTarget) return;
+    const html = resolveTooltip(target);
+    if (!html) return;
+    cancelPending();
+    const warm = !!activeTooltipTarget || Date.now() - lastHiddenAt < WARM_WINDOW_MS;
+    pendingTarget = target;
+    pendingTimer = setTimeout(() => {
+      pendingTimer = 0;
+      pendingTarget = null;
+      showTooltip(target, html);
+    }, warm ? WARM_DELAY_MS : HOVER_DELAY_MS);
   }
 
   function resolveTooltip(target) {
     let html = target.getAttribute("data-tooltip");
     const key = target.getAttribute("data-tooltip-key");
     if (!html && key && TOOLTIP_LIBRARY[key]) {
-      html = tooltipMarkup(...TOOLTIP_LIBRARY[key]);
+      const [title, description] = TOOLTIP_LIBRARY[key];
+      html = tooltipMarkup(title, description);
       target.setAttribute("data-tooltip", html);
     }
     if (!html && target.hasAttribute("title")) {
-      const titleVal = target.getAttribute("title");
-      if (titleVal && titleVal.trim()) {
-        const heading = (target.getAttribute("aria-label") || target.textContent || "").trim();
-        html = tooltipMarkup(heading && heading !== titleVal ? heading : "More information", titleVal);
+      const titleVal = (target.getAttribute("title") || "").trim();
+      if (titleVal) {
+        // Name the tooltip after the control when it has a short label of its
+        // own; a long text body (a card, a paragraph) gets no heading at all.
+        const label = (target.getAttribute("aria-label") || target.textContent || "").replace(/\s+/g, " ").trim();
+        const heading = label && label !== titleVal && label.length <= 32 && /[a-z0-9]/i.test(label) ? label : "";
+        html = tooltipMarkup(heading, titleVal);
         target.setAttribute("data-tooltip", html);
+        // The native title would double up with ours; keep the text reachable
+        // for assistive tech when the element has no other accessible name.
+        if (!target.getAttribute("aria-label") && !label) target.setAttribute("aria-label", titleVal);
       }
       target.removeAttribute("title");
     }
@@ -8972,78 +9406,97 @@ window.render = render;
 
   function positionTooltip(target) {
     if (activeTooltipTarget !== target) return;
+    if (!target.isConnected) return hideTooltip(target);
     const rect = target.getBoundingClientRect();
-    
-    // Temporarily set display to measure height/width
-    tooltipEl.style.visibility = "hidden";
-    tooltipEl.style.display = "block";
-    const tooltipRect = tooltipEl.getBoundingClientRect();
-    tooltipEl.style.display = "";
-    tooltipEl.style.visibility = "";
-    
-    let top = rect.top - tooltipRect.height - 8;
-    let left = rect.left + (rect.width - tooltipRect.width) / 2;
-    
-    // If off the top of screen, show below target instead
-    if (top < 8) {
-      top = rect.bottom + 8;
-    }
-    
-    // Constraint boundaries
-    if (left < 8) {
-      left = 8;
-    } else if (left + tooltipRect.width > window.innerWidth - 8) {
-      left = window.innerWidth - tooltipRect.width - 8;
-    }
-    
-    tooltipEl.style.top = `${top}px`;
-    tooltipEl.style.left = `${left}px`;
+    // A zero box means the anchor was hidden (tab switch, collapsed section).
+    if (!rect.width && !rect.height) return hideTooltip(target);
+    const width = tooltipEl.offsetWidth;
+    const height = tooltipEl.offsetHeight;
+
+    const fitsAbove = rect.top - height - GAP >= EDGE;
+    const fitsBelow = rect.bottom + height + GAP <= window.innerHeight - EDGE;
+    const below = !fitsAbove && (fitsBelow || rect.top < window.innerHeight - rect.bottom);
+    let top = below ? rect.bottom + GAP : rect.top - height - GAP;
+    top = Math.max(EDGE, Math.min(top, window.innerHeight - height - EDGE));
+
+    const anchorX = rect.left + rect.width / 2;
+    let left = anchorX - width / 2;
+    left = Math.max(EDGE, Math.min(left, window.innerWidth - width - EDGE));
+
+    tooltipEl.dataset.placement = below ? "bottom" : "top";
+    tooltipEl.style.top = `${Math.round(top)}px`;
+    tooltipEl.style.left = `${Math.round(left)}px`;
+    // Keep the caret on the anchor even when the bubble is pushed sideways.
+    const caret = Math.max(12, Math.min(anchorX - left, width - 12));
+    tooltipEl.style.setProperty("--tooltip-caret-x", `${Math.round(caret)}px`);
   }
 
-  // Event Delegation for mouse hover
   document.addEventListener("mouseover", (e) => {
-    const target = e.target.closest("[data-tooltip], [data-tooltip-key], [title]");
-    if (!target) return;
-    const html = resolveTooltip(target);
-    if (html) {
-      showTooltip(target, html);
+    const target = e.target.closest?.(SELECTOR);
+    if (!target) {
+      // Pointer is over plain content: nothing should still be showing.
+      if (activeTooltipTarget && !activeTooltipTarget.contains(e.target)) lingerThenHide(activeTooltipTarget);
+      cancelPending();
+      return;
     }
+    if (target === pressedTarget) return;
+    scheduleTooltip(target);
   });
 
   document.addEventListener("mouseout", (e) => {
-    const target = e.target.closest("[data-tooltip], [data-tooltip-key]");
+    const target = e.target.closest?.(SELECTOR);
     if (!target) return;
-    
     // Ensure we are genuinely leaving the target boundary
     if (!e.relatedTarget || !target.contains(e.relatedTarget)) {
-      hideTooltip(target);
+      if (pressedTarget === target) pressedTarget = null;
+      if (pendingTarget === target) cancelPending();
+      if (activeTooltipTarget === target) lingerThenHide(target);
     }
   });
 
+  // A press means the reader is acting, not reading. Touch has no hover, so
+  // there the tap itself is what opens the tooltip (via the emulated
+  // mouseover that follows) and the next tap anywhere closes it.
+  document.addEventListener("pointerdown", (e) => {
+    const target = e.target.closest?.(SELECTOR);
+    pressedTarget = e.pointerType === "mouse" ? target || null : null;
+    hideTooltip();
+  }, true);
+
   document.addEventListener("focusin", (e) => {
-    const target = e.target.closest("[data-tooltip], [data-tooltip-key], [title]");
-    if (!target) return;
+    const target = e.target.closest?.(SELECTOR);
+    if (!target || target === pressedTarget) return;
+    // Only announce on keyboard focus; a mouse click focusing a button
+    // should not pop its tooltip back up.
+    if (!e.target.matches?.(":focus-visible")) return;
     const html = resolveTooltip(target);
     if (html) showTooltip(target, html);
   });
 
   document.addEventListener("focusout", (e) => {
-    const target = e.target.closest("[data-tooltip], [data-tooltip-key]");
+    const target = e.target.closest?.(SELECTOR);
     if (target) hideTooltip(target);
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && activeTooltipTarget) hideTooltip(activeTooltipTarget);
+    if (e.key === "Escape" && activeTooltipTarget) hideTooltip();
   });
 
-  // Keep positioning accurate during viewport actions
+  // Keep positioning accurate during viewport actions. Capture phase so
+  // scrolling an inner panel (table-scroll, overlays) is seen too.
   window.addEventListener("scroll", () => {
-    if (activeTooltipTarget) positionTooltip(activeTooltipTarget);
-  }, { passive: true });
+    if (!activeTooltipTarget) return;
+    tooltipEl.classList.remove("glide");   // track the anchor exactly, no easing lag
+    positionTooltip(activeTooltipTarget);
+  }, { passive: true, capture: true });
 
   window.addEventListener("resize", () => {
     if (activeTooltipTarget) positionTooltip(activeTooltipTarget);
   }, { passive: true });
+
+  // Screens that rebuild their DOM call this so a tooltip never outlives
+  // the element it was describing.
+  window.hideTooltip = () => hideTooltip();
 })();
 
 boot();
